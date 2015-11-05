@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Base;
-
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
     public function run($data)
@@ -47,14 +46,7 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
 
         $this->beforeRunAction();
 
-        /* delete a package *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+        /* delete a package */
         $this->deletePackage();
 
         $this->afterRunAction();

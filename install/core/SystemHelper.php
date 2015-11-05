@@ -27,7 +27,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
 class SystemHelper extends \Espo\Core\Utils\System
 {
 
@@ -154,14 +153,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 			$result['success'] = false;
 		}
 
-		/** Check MySQL settings *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+		/** Check MySQL settings */
 		if ($result['success']) {
 			$currentMysqlVersion = $this->getMysqlSetting('version', $dbh);
 			if (isset($currentMysqlVersion) && version_compare($currentMysqlVersion, $this->requirements['mysqlVersion']) == -1) {
@@ -169,14 +161,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 				$result['success'] = false;
 			}
 
-			/** Check required MySQL settings *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+			/** Check required MySQL settings */
 			foreach ($this->requirements['mysqlRequires'] as $name => $requiredValue) {
 				$currentValue = $this->getMysqlSetting($name, $dbh);
 				$acceptable = ( isset($currentValue) && $this->convertToBytes($currentValue) >= $this->convertToBytes($requiredValue) ) ? true : false;
@@ -191,14 +176,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 			}
 		}
 
-		/** try to create a database *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+		/** try to create a database */
 		if ($isCreateDatabase && !$result['success'] && $result['errors']['dbConnect']['errorCode'] == '1049')
 		{
 			$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port}" : '');
@@ -215,14 +193,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 				return $this->checkDbConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName, false);
 			}
 		}
-		/** END: try to create a database *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+		/** END: try to create a database */
 
 		return $result;
 	}
@@ -354,14 +325,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 	 * @param  boolean $isSudo
 	 * @param  bool  $isFile
 	 * @return string
-	 *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+	 */
 	public function getPermissionCommands($path, $permissions = array('644', '755'), $isSudo = false, $isFile = null, $changeOwner = true)
 	{
 		if (is_string($path)) {

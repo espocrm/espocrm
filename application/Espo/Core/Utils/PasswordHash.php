@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-
 use Espo\Core\Exceptions\Error;
 
 class PasswordHash
@@ -39,14 +38,7 @@ class PasswordHash
      * Salt format of SHA-512
      *
      * @var string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $saltFormat = '$6${0}$';
 
     public function __construct(Config $config)
@@ -64,14 +56,7 @@ class PasswordHash
      *
      * @param  string $password
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function hash($password, $useMd5 = true)
     {
         $salt = $this->getSalt();
@@ -90,14 +75,7 @@ class PasswordHash
      * Get a salt from config and normalize it
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getSalt()
     {
         $salt = $this->getConfig()->get('passwordSalt');
@@ -115,14 +93,7 @@ class PasswordHash
      *
      * @param  string $salt
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function normalizeSalt($salt)
     {
         return str_replace("{0}", $salt, $this->saltFormat);
@@ -132,14 +103,7 @@ class PasswordHash
      * Generate a new salt
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function generateSalt()
     {
         return substr(md5(uniqid()), 0, 16);

@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-
 class Config
 {
     /**
@@ -36,14 +35,7 @@ class Config
      *
      * @access private
      * @var string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $defaultConfigPath = 'application/Espo/Core/defaults/config.php';
 
     private $systemConfigPath = 'application/Espo/Core/defaults/systemConfig.php';
@@ -57,14 +49,7 @@ class Config
      *
      * @access protected
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $adminItems = array();
 
 
@@ -73,14 +58,7 @@ class Config
      *
      * @access private
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $data;
 
     private $changedData = array();
@@ -110,14 +88,7 @@ class Config
      * @param string $name
      * @param string $default
      * @return string | array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function get($name, $default = null)
     {
         $keys = explode('.', $name);
@@ -140,14 +111,7 @@ class Config
      * @param string $name
      * @param string $value
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function set($name, $value = '')
     {
         if (!is_array($name)) {
@@ -170,14 +134,7 @@ class Config
      *
      * @param  string $name
      * @return bool | null - null if an option doesn't exist
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function remove($name)
     {
         if (array_key_exists($name, $this->data)) {
@@ -229,14 +186,7 @@ class Config
      * Return an Object of all configs
      * @param  boolean $reload
      * @return array()
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function loadConfig($reload = false)
     {
         if (!$reload && isset($this->data) && !empty($this->data)) {
@@ -259,14 +209,7 @@ class Config
      *
      * @param $isAdmin
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getData($isAdmin = false)
     {
         $data = $this->loadConfig();
@@ -287,14 +230,7 @@ class Config
      *
      * @param $isAdmin
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function setData($data, $isAdmin = false)
     {
         $restrictItems = $this->getRestrictItems($isAdmin);
@@ -314,14 +250,7 @@ class Config
      *
      * @param $onlyValue - If need to return just timestamp array
      * @return bool | array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function updateCacheTimestamp($onlyValue = false)
     {
         $timestamp = array(
@@ -339,14 +268,7 @@ class Config
      * Get admin items
      *
      * @return object
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getRestrictItems($onlySystemItems = false)
     {
         $data = $this->loadConfig();
@@ -369,14 +291,7 @@ class Config
      * @param $name
      * @param $isAdmin
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function isAllowed($name, $isAdmin = false)
     {
         if (in_array($name, $this->getRestrictItems($isAdmin))) {

@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
-
 use Doctrine\DBAL\Types\Type;
 
 class Table extends \Doctrine\DBAL\Schema\Table
@@ -40,14 +39,7 @@ class Table extends \Doctrine\DBAL\Schema\Table
      * @param array  $options
      *
      * @return \Doctrine\DBAL\Schema\Column
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function addColumn($columnName, $typeName, array $options=array())
     {
         $column = new Column($columnName, Type::getType($typeName), $options);

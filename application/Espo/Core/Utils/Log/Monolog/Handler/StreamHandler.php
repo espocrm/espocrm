@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Log\Monolog\Handler;
-
 use Monolog\Logger;
 
 class StreamHandler extends \Monolog\Handler\StreamHandler
@@ -83,14 +82,7 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
      *
      * @param  array  $record
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function pruneMessage(array $record)
     {
         $message = (string) $record['message'];

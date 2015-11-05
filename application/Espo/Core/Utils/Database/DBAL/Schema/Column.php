@@ -29,32 +29,17 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
-
 class Column extends \Doctrine\DBAL\Schema\Column
 {
 
     /**
      * @var boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $_notnull = false;
 
     /**
      * @var boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $_unique = false;
 
 
@@ -62,14 +47,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
      * @param boolean $unique
      *
      * @return \Doctrine\DBAL\Schema\Column
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function setUnique($unique)
     {
         $this->_unique = (bool)$unique;
@@ -79,14 +57,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
 
     /**
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getUnique()
     {
         return $this->_unique;
@@ -94,14 +65,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
 
     /**
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function toArray()
     {
         return array_merge(array(

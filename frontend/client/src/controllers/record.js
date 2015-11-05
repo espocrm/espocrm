@@ -28,7 +28,6 @@
 Espo.define('controllers/record', 'controller', function (Dep) {
 
     return Dep.extend({
-
         viewMap: null,
 
         defaultAction: 'list',
@@ -233,14 +232,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         /**
          * Get collection for the current controller.
          * @param {collection}.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
 
@@ -267,14 +259,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         /**
          * Get model for the current controller.
          * @param {model}.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         getModel: function (callback, context) {
             context = context || this;
 

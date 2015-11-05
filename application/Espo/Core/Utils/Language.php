@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-
 use \Espo\Core\Utils\Util,
     \Espo\Core\Exceptions\NotFound,
     \Espo\Core\Exceptions\Error;
@@ -45,14 +44,7 @@ class Language
      * Data of all languages
      *
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $data = array();
 
     private $deletedData = array();
@@ -69,14 +61,7 @@ class Language
 
     /**
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $paths = array(
         'corePath' => 'application/Espo/Resources/i18n',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
@@ -155,14 +140,7 @@ class Language
      *  "language" option has only array('en_US' => 'English (United States)',)
      *  Result will be array('en_US' => 'English (United States)', 'de_DE' => 'de_DE',)
      * @return string | array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
     {
         if (is_array($label)) {
@@ -227,14 +205,7 @@ class Language
      * Save changes
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function save()
     {
         $path = $this->paths['customPath'];
@@ -270,14 +241,7 @@ class Language
      * Clear unsaved changes
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function clearChanges()
     {
         $this->changedData = array();
@@ -289,14 +253,7 @@ class Language
      * Get data of Unifier language files
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getData()
     {
         $currentLanguage = $this->getLanguage();
@@ -316,14 +273,7 @@ class Language
      * @param mixed $value
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function set($scope, $category, $name, $value)
     {
         if (is_array($name)) {
@@ -352,14 +302,7 @@ class Language
      * @param  string $scope
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function delete($scope, $category, $name)
     {
         if (is_array($name)) {

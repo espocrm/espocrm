@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
-
 class Schema extends \Doctrine\DBAL\Schema\Schema
 {
 
@@ -38,14 +37,7 @@ class Schema extends \Doctrine\DBAL\Schema\Schema
      * @param string $tableName
      *
      * @return \Doctrine\DBAL\Schema\Table
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function createTable($tableName)
     {
         $table = new Table($tableName);

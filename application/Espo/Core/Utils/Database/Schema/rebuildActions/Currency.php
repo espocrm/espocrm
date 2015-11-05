@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
-
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
 
@@ -69,14 +68,7 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
      * @param  string $defaultCurrency
      * @param  array $currencyRates   [description]
      * @return array  - List of new currency rates
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function exchangeRates($baseCurrency, $defaultCurrency, array $currencyRates)
     {
         $precision = 5;

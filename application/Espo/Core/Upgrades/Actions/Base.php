@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions;
-
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
@@ -63,38 +62,17 @@ abstract class Base
 
     /**
      * Directory name of files in a package
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     const FILES = 'files';
 
     /**
      * Directory name of scripts in a package
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     const SCRIPTS = 'scripts';
 
     /**
      * Package types
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $packageTypes = array(
         'upgrade' => 'upgrade',
         'extension' => 'extension',
@@ -102,14 +80,7 @@ abstract class Base
 
     /**
      * Default package type
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $defaultPackageType = 'extension';
 
 
@@ -215,14 +186,7 @@ abstract class Base
      *
      * @param  string  $version
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function isAcceptable()
     {
         $manifest = $this->getManifest();
@@ -285,14 +249,7 @@ abstract class Base
     {
         $manifest = $this->getManifest();
 
-        /** check package type *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+        /** check package type */
         $type = strtolower( $this->getParams('name') );
         $manifestType = isset($manifest['type']) ? strtolower($manifest['type']) : $this->defaultPackageType;
 
@@ -316,14 +273,7 @@ abstract class Base
      * Run scripts by type
      * @param  string $type Ex. "before", "after"
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function runScript($type)
     {
         $packagePath = $this->getPackagePath();
@@ -353,14 +303,7 @@ abstract class Base
      *
      * @param  string $processId
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getPath($name = 'packagePath', $isPackage = false)
     {
         $postfix = $isPackage ? $this->packagePostfix : '';
@@ -380,14 +323,7 @@ abstract class Base
      * Get a list of files defined in manifest.json
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getDeleteFileList()
     {
         $manifest = $this->getManifest();
@@ -403,14 +339,7 @@ abstract class Base
      * Delete files defined in a manifest
      *
      * @return boolen
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function deleteFiles($withEmptyDirs = false)
     {
         $deleteFileList = $this->getDeleteFileList();
@@ -469,14 +398,7 @@ abstract class Base
      *
      * @param  string $processId
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function copyFiles()
     {
         $packagePath = $this->getPackagePath();
@@ -515,14 +437,7 @@ abstract class Base
      *
      * @param  array  $manifest
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function checkManifest(array $manifest)
     {
         $requiredFields = array(
@@ -543,14 +458,7 @@ abstract class Base
      * Unzip a package archieve
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function unzipArchive($packagePath = null)
     {
         $packagePath = isset($packagePath) ? $packagePath : $this->getPackagePath();
@@ -570,14 +478,7 @@ abstract class Base
      * Delete temporary package files
      *
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function deletePackageFiles()
     {
         $packagePath = $this->getPackagePath();
@@ -590,14 +491,7 @@ abstract class Base
      * Delete temporary package archive
      *
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function deletePackageArchive()
     {
         $packageArchive = $this->getPackagePath(true);
@@ -618,14 +512,7 @@ abstract class Base
      * @param  string $data
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function executeAction($actionName, $data)
     {
         $actionManager = $this->getActionManager();

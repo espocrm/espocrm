@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Api;
-
 class Output
 {
     private $slim;
@@ -57,14 +56,7 @@ class Output
     * Output the result
     *
     * @param mixed $data - JSON
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function render($data = null)
     {
         if (is_array($data)) {
@@ -96,14 +88,7 @@ class Output
     * @param int $statusCode
     *
     * @return void
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function displayError($text, $statusCode = 500, $isPrint = false)
     {
         $GLOBALS['log']->error('Display Error: '.$text.', Code: '.$statusCode.' URL: '.$_SERVER['REQUEST_URI']);
@@ -132,14 +117,7 @@ class Output
      *
      * @param  int $statusCode
      * @return string | null
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getCodeDesc($statusCode)
     {
         if (isset($this->errorDesc[$statusCode])) {
@@ -155,14 +133,7 @@ class Output
      * @param  string $inputData
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function clearPasswords($inputData)
     {
         return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $inputData);

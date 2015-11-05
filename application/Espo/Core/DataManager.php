@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core;
-
 class DataManager
 {
     private $container;
@@ -50,14 +49,7 @@ class DataManager
      * Rebuild the system with metadata, database and cache clearing
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function rebuild($entityList = null)
     {
         $result = $this->clearCache();
@@ -73,14 +65,7 @@ class DataManager
      * Clear a cache
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function clearCache()
     {
         $result = $this->getContainer()->get('fileManager')->removeInDir($this->cachePath);
@@ -98,14 +83,7 @@ class DataManager
      * Rebuild database
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function rebuildDatabase($entityList = null)
     {
         try {
@@ -128,14 +106,7 @@ class DataManager
      * Rebuild metadata
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function rebuildMetadata()
     {
         $metadata = $this->getContainer()->get('metadata');
@@ -153,14 +124,7 @@ class DataManager
      * Update cache timestamp
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function updateCacheTimestamp()
     {
         $this->getContainer()->get('config')->updateCacheTimestamp();

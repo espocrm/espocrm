@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core;
-
 use \Espo\Core\Exceptions\Error,
     \Espo\Core\Utils\Util;
 
@@ -46,14 +45,7 @@ class HookManager
      * List of defined hooks
      *
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $hookList = array(
         'beforeSave',
         'afterSave',
@@ -148,14 +140,7 @@ class HookManager
      * @param array $hookDirs - it can be an array('Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Modules/Crm/Hooks')
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getHookData($hookDirs)
     {
         if (is_string($hookDirs)) {

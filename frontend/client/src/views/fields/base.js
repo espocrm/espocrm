@@ -27,7 +27,6 @@
  ************************************************************************/
 
 Espo.define('views/fields/base', 'view', function (Dep) {
-
     return Dep.extend({
 
         type: 'base',
@@ -73,14 +72,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         /**
          * Get cell element. Works only after rendered.
          * {jQuery}
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         getCellElement: function () {
             return this.$el.parent();
         },
@@ -97,28 +89,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         /**
          * Get label element. Works only after rendered.
          * {jQuery}
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         getLabelElement: function () {
             return this.$el.parent().children('label');
         },
 
         /**
          * Hide field and label. Works only after rendered.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         hide: function () {
             this.$el.addClass('hidden');
             var $cell = this.getCellElement();
@@ -128,14 +106,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         /**
          * Show field and label. Works only after rendered.
-         *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+         */
         show: function () {
             this.$el.removeClass('hidden');
             var $cell = this.getCellElement();

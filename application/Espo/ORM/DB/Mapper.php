@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\ORM\DB;
-
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
@@ -38,14 +37,7 @@ use PDO;
  * Abstraction for DB.
  * Mapping of Entity to DB.
  * Should be used internally only.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+ */
 abstract class Mapper implements IMapper
 {
     public $pdo;
@@ -145,14 +137,7 @@ abstract class Mapper implements IMapper
         return $this->selectByQuery($entity, $sql);
     }
 
-    /* TODO ability to pass offset and limit *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    /* TODO ability to pass offset and limit */
     public function selectByQuery(IEntity $entity, $sql)
     {
         $dataArr = array();

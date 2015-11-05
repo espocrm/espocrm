@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\ORM\DB;
-
 use Espo\ORM\IEntity;
 use Espo\ORM\Classes\EntityFactory;
 
@@ -40,14 +39,7 @@ interface IMapper
      * @param IEntity $entity
      * @param string $id Id of the needed bean
      * @return IEntity $entity
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function selectById(IEntity $entity, $id);
 
     /**
@@ -56,14 +48,7 @@ interface IMapper
      * @param IEntity $entity
      * @param array $params Parameters (whereClause, offset, limit, orderBy, order, customWhere, joins, distinct)
      * @return array Array of beans
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function select(IEntity $entity, $params);
 
     /**
@@ -75,14 +60,7 @@ interface IMapper
      * @param string $aggregationBy Field to aggregate
      * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Result of the aggregation
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted);
 
     /**
@@ -91,14 +69,7 @@ interface IMapper
      * @param IEntity $entity
      * @param array $params Parameters (ordering, and limitig are not used)
      * @return int Count of record
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function count(IEntity $entity, $params);
 
     /**
@@ -109,14 +80,7 @@ interface IMapper
      * @param string $field Needed field.
      * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Max value
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function max(IEntity $entity, $params, $field, $deleted);
 
     /**
@@ -127,14 +91,7 @@ interface IMapper
      * @param string $field Needed field.
      * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Min value
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function min(IEntity $entity, $params, $field, $deleted);
 
     /**
@@ -145,14 +102,7 @@ interface IMapper
      * @param string $field Needed field.
      * @param bool $deleted True to consider records marked as deleted either.
      * @return mixed Sum value
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function sum(IEntity $entity, $params);
 
     /**
@@ -163,14 +113,7 @@ interface IMapper
      * @param array $params (whereClause, offset, limit, orderBy, order, customWhere)
      * @param bool $totalCount used by DB::countRelated to make this method return total count
      * @return array List of beans or total count if $totalCount was passed as true
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function selectRelated(IEntity $entity, $relName, $params, $totalCount);
 
     /**
@@ -180,14 +123,7 @@ interface IMapper
      * @param string $relName Relation name
      * @param array $params (whereClause, customWhere)
      * @return int Count of records
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function countRelated(IEntity $entity, $relName, $params);
 
     /**
@@ -197,14 +133,7 @@ interface IMapper
      * @param string $relName Relation name
      * @param string $id Id of the foreign record.
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function addRelation(IEntity $entity, $relName, $id);
 
     /**
@@ -214,14 +143,7 @@ interface IMapper
      * @param string $relName Relation name
      * @param string $id Id of the foreign record.
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function removeRelation(IEntity $entity, $relName, $id);
 
     /**
@@ -230,14 +152,7 @@ interface IMapper
      * @param IEntity $entity
      * @param string $relName Relation name
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function removeAllRelations(IEntity $entity, $relName);
 
     /**
@@ -245,14 +160,7 @@ interface IMapper
      *
      * @param IEntity $entity
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function insert(IEntity $entity);
 
     /**
@@ -260,14 +168,7 @@ interface IMapper
      *
      * @param IEntity $entity
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function update(IEntity $entity);
 
 
@@ -277,28 +178,14 @@ interface IMapper
      *
      * @param IEntity $entity
      * @return bool True if success
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function delete(IEntity $entity);
 
     /**
      * Sets class name of a model collection that will be returned by operations such as select.
      *
      * @param string $collectionClass Class name of a model collection.
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     function setCollectionClass($collectionClass);
 }
 

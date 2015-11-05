@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication\LDAP;
-
 use \Espo\Core\Utils\Config;
 
 class Utils
@@ -40,14 +39,7 @@ class Utils
     /**
      * Association between LDAP and Espo fields
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $fieldMap = array(
         'host' => 'ldapHost',
         'port' => 'ldapPort',
@@ -72,14 +64,7 @@ class Utils
      * Permitted Espo Options
      *
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $permittedEspoOptions = array(
         'createEspoUser' => false,
         'userLoginFilter' => null,
@@ -89,14 +74,7 @@ class Utils
      * accountCanonicalForm Map between Espo and Zend value
      *
      * @var array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $accountCanonicalFormMap = array(
         'Dn' => 1,
         'Username' => 2,
@@ -119,14 +97,7 @@ class Utils
      * Get Options from espo config according to $this->fieldMap
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getOptions()
     {
         if (isset($this->options)) {
@@ -142,14 +113,7 @@ class Utils
             }
         }
 
-        /** peculiar fields *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+        /** peculiar fields */
         $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
         $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
         $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
@@ -165,14 +129,7 @@ class Utils
      * @param  string $name
      * @param  mixed $returns Return value
      * @return mixed
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getOption($name, $returns = null)
     {
         if (isset($this->options)) {
@@ -190,14 +147,7 @@ class Utils
      * Get Zend options for using Zend\Ldap
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getZendOptions()
     {
         $options = $this->getOptions();

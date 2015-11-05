@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
-
 use Espo\Core\Utils\Util;
 
 class Base
@@ -69,14 +68,7 @@ class Base
      * Set current Field name OR Link name
      *
      * @param void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function setItemName($itemName)
     {
         $this->itemName = $itemName;
@@ -86,14 +78,7 @@ class Base
      * Get current Field name
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getFieldName()
     {
         return $this->itemName;
@@ -103,14 +88,7 @@ class Base
      * Get current Link name
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getLinkName()
     {
         return $this->itemName;
@@ -120,14 +98,7 @@ class Base
      * Set current Entity Name
      *
      * @param void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function setEntityName($entityName)
     {
         $this->entityName = $entityName;
@@ -137,14 +108,7 @@ class Base
      * Get current Entity Name
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getEntityName()
     {
         return $this->entityName;
@@ -165,14 +129,7 @@ class Base
      *
      * @param  boolean $isOrmEntityDefs
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getDefs($isOrmEntityDefs = false)
     {
         $entityDefs = $isOrmEntityDefs ? $this->getOrmEntityDefs() : $this->getEntityDefs();
@@ -187,14 +144,7 @@ class Base
      * @param  bool $isOrmEntityDefs
      * @param  mixed $returns
      * @return mixed
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getEntityParams($entityName = null, $isOrmEntityDefs = false, $returns = null)
     {
         if (!isset($entityName)) {
@@ -218,14 +168,7 @@ class Base
      * @param  bool $isOrmEntityDefs
      * @param  mixed $returns
      * @return mixed
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getFieldParams($fieldName = null, $entityName = null, $isOrmEntityDefs = false, $returns = null)
     {
         if (!isset($fieldName)) {
@@ -252,14 +195,7 @@ class Base
      * @param  bool $isOrmEntityDefs
      * @param  mixed $returns
      * @return mixed
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getLinkParams($linkName = null, $entityName = null, $isOrmEntityDefs = false, $returns = null)
     {
         if (!isset($linkName)) {
@@ -285,14 +221,7 @@ class Base
      * @param  string $name
      * @param  string $entityName
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getForeignField($name, $entityName)
     {
         $foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
@@ -311,14 +240,7 @@ class Base
      *
      * @param string $value
      * @param array  $array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function setArrayValue($inputValue, array $array)
     {
         foreach ($array as &$value) {

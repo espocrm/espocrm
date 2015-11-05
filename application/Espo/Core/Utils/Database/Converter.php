@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database;
-
 use Espo\Core\Utils\Util,
     Espo\ORM\Entity;
 
@@ -80,14 +79,7 @@ class Converter
     * Main method of convertation from metadata to orm metadata and database schema
     *
     * @return bool
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function process()
     {
         $GLOBALS['log']->debug('Orm\Converter - Start: orm convertation');

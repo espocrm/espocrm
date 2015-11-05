@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
-
 use Espo\Core\Utils;
 
 class Unifier
@@ -65,14 +64,7 @@ class Unifier
      * @param  boolean $recursively Note: only for first level of sub directory, other levels of sub directories will be ignored
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function unify($name, $paths, $recursively = false)
     {
         $content = $this->unifySingle($paths['corePath'], $name, $recursively);
@@ -104,14 +96,7 @@ class Unifier
      * @param string $moduleName - name of module if exists
      *
      * @return string - content of the files
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function unifySingle($dirPath, $type, $recursively = false, $moduleName = '')
     {
         if (empty($dirPath) || !file_exists($dirPath)) {
@@ -162,14 +147,7 @@ class Unifier
      * @param string | array() $defaults - It can be a string like ["metadata","layouts"] OR an array with default values
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function unifyGetContents($paths, $defaults)
     {
         $fileContent = $this->getFileManager()->getContents($paths);
@@ -191,14 +169,7 @@ class Unifier
      * @param string $type - [metadata, layouts]
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function loadDefaultValues($name, $type = 'metadata')
     {
         $defaultPath = $this->params['defaultsPath'];

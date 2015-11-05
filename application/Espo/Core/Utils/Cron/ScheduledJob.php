@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Cron;
-
 use \PDO;
 use \Espo\Core\Utils\Config;
 use \Espo\Core\ORM\EntityManager;
@@ -59,14 +58,7 @@ class ScheduledJob
      * Get active Scheduler Jobs
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getActiveJobs()
     {
         $query = "SELECT * FROM scheduled_job WHERE
@@ -94,14 +86,7 @@ class ScheduledJob
      * @param string $status
      *
      * @return string ID of created ScheduledJobLogRecord
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function addLogRecord($scheduledJobId, $status, $runTime = null)
     {
         if (!isset($runTime)) {

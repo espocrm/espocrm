@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Controllers;
-
 use \Espo\Core\Container;
 use \Espo\Core\ServiceFactory;
 use \Espo\Core\Utils\Util;
@@ -76,14 +75,7 @@ abstract class Base
      * Get request method name (Uppercase)
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getRequestMethod()
     {
         return $this->requestMethod;

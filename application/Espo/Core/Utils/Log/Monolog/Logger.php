@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Log\Monolog;
-
 class Logger extends \Monolog\Logger
 {
     protected $defaultLevelName = 'DEBUG';
@@ -38,14 +37,7 @@ class Logger extends \Monolog\Logger
      * Get Level Code
      * @param  string $level Ex. DEBUG, ...
      * @return int
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getLevelCode($levelName)
     {
         $levelName = strtoupper($levelName);

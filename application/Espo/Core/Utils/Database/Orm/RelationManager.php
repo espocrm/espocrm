@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
-
 use Espo\Core\Utils\Util;
 
 class RelationManager
@@ -90,14 +89,7 @@ class RelationManager
     * @param array $currentEntityDefs
     *
     * @return array - in format array('name', 'params')
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     private function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
     {
         if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {

@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Utils\Api;
 
-
 class Slim extends \Slim\Slim
 {
 
@@ -37,14 +36,7 @@ class Slim extends \Slim\Slim
      * Redefine the run method
      *
      * We no need to use a Slim handler
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function run()
     {
         //set_error_handler(array('\Slim\Slim', 'handleErrors')); //Espo: no needs to use this handler

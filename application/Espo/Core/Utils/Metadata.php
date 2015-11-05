@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-
 use Espo\Core\Exceptions\Error;
 
 class Metadata
@@ -44,28 +43,14 @@ class Metadata
 
     /**
      * @var string - uses for loading default values
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $name = 'metadata';
 
     /**
      * Path to modules
      *
      * @var string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     private $pathToModules = 'application/Espo/Modules';
 
     private $cacheFile = 'data/cache/application/metadata.php';
@@ -85,14 +70,7 @@ class Metadata
     /**
      * Default module order
      * @var integer
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $defaultModuleOrder = 10;
 
     private $deletedData = array();
@@ -169,14 +147,7 @@ class Metadata
      *
      * @param  boolean $reload
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function init($reload = false)
     {
         if (!$this->getConfig()->get('useCache')) {
@@ -204,14 +175,7 @@ class Metadata
      * Get metadata array
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getData()
     {
         if (empty($this->meta) || !is_array($this->meta)) {
@@ -228,14 +192,7 @@ class Metadata
     * @param mixed $default
     *
     * @return array
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function get($key = null, $default = null)
     {
         return Util::getValueByKey($this->getData(), $key, $default);
@@ -248,14 +205,7 @@ class Metadata
     * @param bool $reload
     *
     * @return json | array
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function getAll($isJSON = false, $reload = false)
     {
         if ($reload) {
@@ -274,14 +224,7 @@ class Metadata
      *
      * @param array $data Meta
      * @return array $data
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function setLanguageFromConfig($data)
     {
         $entityList = array(
@@ -307,14 +250,7 @@ class Metadata
      * Add additional fields defined from metadata -> fields
      *
      * @param array $meta
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function addAdditionalFields(array $meta)
     {
         $metaCopy = $meta;
@@ -349,14 +285,7 @@ class Metadata
     * @param JSON string $data
     *
     * @return bool
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public function set($key1, $key2, $data)
     {
         $newData = array(
@@ -379,14 +308,7 @@ class Metadata
      * @param  array | string $unsets Ex. 'fields.name'
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function delete($key1, $key2, $unsets)
     {
         if (!is_array($unsets)) {
@@ -421,14 +343,7 @@ class Metadata
      * @param  string $key2
      * @param  array $data
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function undelete($key1, $key2, $data)
     {
         if (isset($this->deletedData[$key1][$key2])) {
@@ -445,14 +360,7 @@ class Metadata
      * Clear unsaved changes
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function clearChanges()
     {
         $this->changedData = array();
@@ -464,14 +372,7 @@ class Metadata
      * Save changes
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function save()
     {
         $path = $this->paths['customPath'];
@@ -550,14 +451,7 @@ class Metadata
      * @param bool $delim - delimiter
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getEntityPath($entityName, $delim = '\\')
     {
         $path = $this->getScopePath($entityName, $delim);
@@ -576,14 +470,7 @@ class Metadata
      * Load modules
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function loadModuleList()
     {
         $modules = $this->getFileManager()->getFileList($this->pathToModules, false, '', false);
@@ -606,14 +493,7 @@ class Metadata
      * Get Module List
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getModuleList()
     {
         if (!isset($this->moduleList)) {
@@ -629,14 +509,7 @@ class Metadata
      * @param string $scopeName
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getScopeModuleName($scopeName)
     {
         return $this->get('scopes.' . $scopeName . '.module', false);
@@ -649,14 +522,7 @@ class Metadata
      * @param string $delim - delimiter
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getScopePath($scopeName, $delim = '/')
     {
         $moduleName = $this->getScopeModuleName($scopeName);
@@ -674,14 +540,7 @@ class Metadata
      * Clear metadata variables when reload meta
      *
      * @return void
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function clearVars()
     {
         $this->meta = null;

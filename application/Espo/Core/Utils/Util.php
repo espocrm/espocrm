@@ -29,19 +29,11 @@
 
 namespace Espo\Core\Utils;
 
-
 class Util
 {
     /**
      * @var string - default directory separator
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected static $separator = DIRECTORY_SEPARATOR;
 
     protected static $reservedWords = array('Case');
@@ -51,14 +43,7 @@ class Util
      * Get a folder separator
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function getSeparator()
     {
         return static::$separator;
@@ -73,14 +58,7 @@ class Util
      * @param string $delim - delimiter
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function toFormat($name, $delim = '/')
     {
         return preg_replace("/[\/\\\]/", $delim, $name);
@@ -95,14 +73,7 @@ class Util
      * @param  boolean $capitaliseFirstChar
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function toCamelCase($name, $symbol = '_', $capitaliseFirstChar = false)
     {
         if (is_array($name)) {
@@ -131,14 +102,7 @@ class Util
      * @param string | array $name
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function fromCamelCase($name, $symbol = '_')
     {
         if (is_array($name)) {
@@ -162,14 +126,7 @@ class Util
      * @param string | array $name
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function toUnderScore($name)
     {
         return static::fromCamelCase($name, '_');
@@ -182,14 +139,7 @@ class Util
      * @param array $newArray - chief array (priority is same as for array_merge())
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function merge($currentArray, $newArray)
     {
         $mergeIdentifier = '__APPEND__';
@@ -239,14 +189,7 @@ class Util
      * @param  array  $haystack
      * @param  bool   $reIndex
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
     {
         $doReindex = false;
@@ -278,14 +221,7 @@ class Util
      * @param string $filePath - File path, Ex. file.json
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function concatPath($folderPath, $filePath = null)
     {
         if (is_array($folderPath)) {
@@ -314,14 +250,7 @@ class Util
      *
      * @param  string $path
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function fixPath($path)
     {
         return str_replace('/', static::getSeparator(), $path);
@@ -332,14 +261,7 @@ class Util
      *
      * @param array $array
      * @return object
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function arrayToObject($array)
     {
         if (is_array($array)) {
@@ -354,14 +276,7 @@ class Util
      *
      * @param object $object
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function objectToArray($object)
     {
         if (is_object($object)) {
@@ -376,14 +291,7 @@ class Util
      *
      * @param string $name
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function normilizeClassName($name)
     {
         if (in_array($name, self::$reservedWords)) {
@@ -397,14 +305,7 @@ class Util
      *
      * @param string $name
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function normilizeScopeName($name)
     {
         foreach (self::$reservedWords as $reservedWord) {
@@ -424,14 +325,7 @@ class Util
     * @param string $type
     *
     * @return string
-    *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+    */
     public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '_')
     {
         if ($type == 'prefix') {
@@ -452,14 +346,7 @@ class Util
      * @param string $isKeys
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
     {
         if (!is_array($array)) {
@@ -496,14 +383,7 @@ class Util
      * @param bool $unsetParentEmptyArray - If unset empty parent array after unsets
      *
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function unsetInArray(array $content, $unsets, $unsetParentEmptyArray = false)
     {
         if (empty($unsets)) {
@@ -555,14 +435,7 @@ class Util
      * @param  string $filePath
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function getClassName($filePath)
     {
         $className = preg_replace('/\.php$/i', '', $filePath);
@@ -579,14 +452,7 @@ class Util
      * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
      * @param  mixed $default
      * @return mixed
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function getValueByKey(array $array, $key = null, $default = null)
     {
         if (!isset($key) || empty($key)) {
@@ -613,14 +479,7 @@ class Util
      * @param  mixed  $var1
      * @param  mixed  $var2
      * @return boolean
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function isEquals($var1, $var2)
     {
         if (is_array($var1)) {
@@ -637,14 +496,7 @@ class Util
      * Sort array recursively
      * @param  array $array
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function ksortRecursive(&$array)
     {
         if (!is_array($array)) {

@@ -28,21 +28,13 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
-
 class System
 {
     /**
      * Get web server name
      *
      * @return string Ex. "microsoft-iis", "nginx", "apache"
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getServerType()
     {
         $serverSoft = $_SERVER['SERVER_SOFTWARE'];
@@ -60,14 +52,7 @@ class System
      * Get Operating System of web server. Details http://en.wikipedia.org/wiki/Uname
      *
      * @return string  Ex. "windows", "mac", "linux"
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getOS()
     {
         $osList = array(
@@ -104,14 +89,7 @@ class System
      * Get root directory of EspoCRM
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getRootDir()
     {
         $bPath = realpath('bootstrap.php');
@@ -124,14 +102,7 @@ class System
      * Get path to PHP
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getPhpBin()
     {
         return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
@@ -141,14 +112,7 @@ class System
      * Get php version (only digits and dots)
      *
      * @return string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public static function getPhpVersion()
     {
         $version = phpversion();

@@ -28,7 +28,6 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
-
 use Espo\Core\Utils,
     Espo\Core\Exceptions\Error;
 
@@ -40,14 +39,7 @@ class Permission
      * Last permission error
      *
      * @var array | string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected $permissionError = null;
 
     protected $permissionErrorRules = null;
@@ -61,27 +53,13 @@ class Permission
         ),
         'permissionMap' => array(
 
-            /** array('0664', '0775') *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+            /** array('0664', '0775') */
             'writable' => array(
                 'data',
                 'custom',
             ),
 
-            /** array('0644', '0755') *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+            /** array('0644', '0755') */
             'readable' => array(
                 'api',
                 'application',
@@ -124,14 +102,7 @@ class Permission
      * Get default settings
      *
      * @return object
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getDefaultPermissions()
     {
         $params = $this->getParams();
@@ -151,14 +122,7 @@ class Permission
      * @param bool $recurse
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function setDefaultPermissions($path, $recurse = false)
     {
         if (!file_exists($path)) {
@@ -183,14 +147,7 @@ class Permission
      *
      * @param string $filename
      * @return string | bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getCurrentPermission($filePath)
     {
         if (!file_exists($filePath)) {
@@ -210,14 +167,7 @@ class Permission
      * @param bool $recurse
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function chmod($path, $octal, $recurse = false)
     {
         if (!file_exists($path)) {
@@ -278,14 +228,7 @@ class Permission
      * @param int $dirOctal - ex. 0755
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function chmodRecurse($path, $fileOctal = 0644, $dirOctal = 0755)
     {
         if (!file_exists($path)) {
@@ -314,14 +257,7 @@ class Permission
      * @param bool $recurse
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function chown($path, $user = '', $recurse = false)
     {
         if (!file_exists($path)) {
@@ -348,14 +284,7 @@ class Permission
      * @param string $user
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function chownRecurse($path, $user)
     {
         if (!file_exists($path)) {
@@ -384,14 +313,7 @@ class Permission
      * @param bool $recurse
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function chgrp($path, $group = null, $recurse = false)
     {
         if (!file_exists($path)) {
@@ -419,14 +341,7 @@ class Permission
      * @param int $dirOctal - ex. 0755
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function chgrpRecurse($path, $group) {
 
         if (!file_exists($path)) {
@@ -454,14 +369,7 @@ class Permission
      * @param int $mode - ex. 0644
      *
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function chmodReal($filename, $mode)
     {
         try {
@@ -510,14 +418,7 @@ class Permission
      * Get default owner user
      *
      * @return int  - owner id
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getDefaultOwner($usePosix = false)
     {
         $defaultPermissions = $this->getDefaultPermissions();
@@ -538,14 +439,7 @@ class Permission
      * Get default group user
      *
      * @return int  - group id
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getDefaultGroup($usePosix = false)
     {
         $defaultPermissions = $this->getDefaultPermissions();
@@ -566,14 +460,7 @@ class Permission
      * Set permission regarding defined in permissionMap
      *
      * @return  bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function setMapPermission($mode = null)
     {
         $this->permissionError = array();
@@ -604,14 +491,7 @@ class Permission
 
                     $res = is_readable($item);
 
-                    /** check is wtitable *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+                    /** check is wtitable */
                     if ($type == 'writable') {
 
                         $res &= is_writable($item);
@@ -644,14 +524,7 @@ class Permission
      * Get last permission error
      *
      * @return array | string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getLastError()
     {
         return $this->permissionError;
@@ -661,14 +534,7 @@ class Permission
      * Get last permission error rules
      *
      * @return array | string
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function getLastErrorRules()
     {
         return $this->permissionErrorRules;
@@ -680,14 +546,7 @@ class Permission
      *
      * @param  array $fileList
      * @return array
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     public function arrangePermissionList($fileList)
     {
         $betterList = array();
@@ -715,14 +574,7 @@ class Permission
      * @param  string $search
      * @param  array  $array
      * @return bool
-     *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/
+     */
     protected function getSearchCount($search, array $array)
     {
         $search = $this->getPregQuote($search);
