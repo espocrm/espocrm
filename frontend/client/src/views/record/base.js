@@ -43,7 +43,7 @@ Espo.define('views/record/base', 'view', function (Dep) {
         fieldList: null,
 
         hideField: function (name) {
-            if (this.isRendered()) {
+            if (this.isRendered() || this.isBeingRendered()) {
                 var $field = this.$el.find('div.field-' + name);
                 var $label = this.$el.find('label.field-label-' + name);
 
@@ -59,7 +59,7 @@ Espo.define('views/record/base', 'view', function (Dep) {
         },
 
         showField: function (name) {
-            if (this.isRendered()) {
+            if (this.isRendered() || this.isBeingRendered()) {
                 var $field = this.$el.find('div.field-' + name);
                 var $label = this.$el.find('label.field-label-' + name);
 
