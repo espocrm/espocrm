@@ -329,6 +329,8 @@ class EmailAccount extends Record
             $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
         }
 
+        $storage->close();
+
         return true;
     }
 

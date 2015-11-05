@@ -344,6 +344,8 @@ class Sender
 
             $this->transport->send($message);
 
+            $this->transport->disconnect();
+
             $email->set('messageId', '<' . $messageId . '>');
             $email->set('status', 'Sent');
             $email->set('dateSent', date("Y-m-d H:i:s"));

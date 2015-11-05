@@ -332,6 +332,8 @@ class InboundEmail extends \Espo\Services\Record
             $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
         }
 
+        $storage->close();
+
         return true;
     }
 
