@@ -31,6 +31,23 @@ namespace Espo\SelectManagers;
 
 class Email extends \Espo\Core\SelectManagers\Base
 {
+    public function getSelectParams(array $params, $withAcl = false)
+    {
+        $result = parent::getSelectParams($params, $withAcl);
+
+        if (!in_array('users', $result['joins']) && !in_array('users', $result['leftJoins'])) {
+            $result['leftJoins'][] = 'users';
+            $result['joinConditions']['users'] = array(
+                'userId' => $this->getUser()->id
+            );
+        }
+
+        $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
+        $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
+
+        return $result;
+    }
+
     protected function boolFilterOnlyMy(&$result)
     {
         if (!in_array('users', $result['joins'])) {
@@ -39,6 +56,9 @@ class Email extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = array(
             'usersMiddle.userId' => $this->getUser()->id
         );
+
+        $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
+        $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
     }
 
     protected function filterInbox(&$result)

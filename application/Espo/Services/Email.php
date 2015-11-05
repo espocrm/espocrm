@@ -408,8 +408,6 @@ class Email extends Record
                 }
             }
         }
-
-        $this->loadUserColumnFields($entity);
     }
 
     public function loadUserColumnFields(Entity $entity)

@@ -38,7 +38,12 @@ class Email extends \Espo\Core\ORM\Entity
 
     protected function _setSubject($value)
     {
-        return $this->set('name', $value);
+        $this->set('name', $value);
+    }
+
+    protected function _setIsRead($value)
+    {
+        $this->setValue('isRead', $value !== false);
     }
 
     public function addAttachment(\Espo\Entities\Attachment $attachment)

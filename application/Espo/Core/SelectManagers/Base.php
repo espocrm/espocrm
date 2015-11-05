@@ -316,6 +316,12 @@ class Base
         if (empty($result['customJoin'])) {
             $result['customJoin'] = '';
         }
+        if (empty($result['additionalSelectColumns'])) {
+            $result['additionalSelectColumns'] = array();
+        }
+        if (empty($result['joinConditions'])) {
+            $result['joinConditions'] = array();
+        }
     }
 
     protected function access(&$result)
