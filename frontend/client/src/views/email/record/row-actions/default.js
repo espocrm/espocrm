@@ -40,7 +40,33 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
         },
 
         getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+            var list = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                }
+            }];
+            if (this.options.acl.edit) {
+                list = list.concat([
+                    {
+                        action: 'quickEdit',
+                        label: 'Edit',
+                        data: {
+                            id: this.model.id
+                        }
+                    }
+                ]);
+            }
+            if (this.getAcl().checkModel(this.model, 'delete')) {
+                list.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
             if (this.model.get('isUsers')) {
                 if (!this.model.get('isImportant')) {
                     list.push({
