@@ -336,7 +336,7 @@ abstract class Base
         $relationsToJoin = array();
         if (is_array($select)) {
             foreach ($select as $field) {
-                if (!empty($fieldDefs[$field]) && $fieldDefs[$field]['type'] == 'foreign' && !empty($fieldDefs[$field]['relation'])) {
+                if (!empty($fieldDefs[$field]) && !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'foreign' && !empty($fieldDefs[$field]['relation'])) {
                     $relationsToJoin[] = $fieldDefs[$field]['relation'];
                 }
             }
