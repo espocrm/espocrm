@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         mkdir: {
             tmp: {
                 options: {
-                    mode: 0775,
+                    mode: 0755,
                     create: [
                         'build/tmp',
                     ]
@@ -187,6 +187,16 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/client/**/*.tpl',
                     'build/EspoCRM-<%= pkg.version %>/**/*.html',
                     'build/EspoCRM-<%= pkg.version %>/**/*.txt',
+                ]
+            },
+            folders: {
+                options: {
+                    mode: '755'
+                },
+                src: [
+                    'build/EspoCRM-<%= pkg.version %>/install',
+                    'build/EspoCRM-<%= pkg.version %>/api',
+                    'build/EspoCRM-<%= pkg.version %>/api/v1',
                 ]
             }
         },
