@@ -296,6 +296,9 @@ class Import extends \Espo\Services\Record
             'duplicateIds' => array(),
         );
         $i = -1;
+
+        $contents = str_replace("\r\n", "\n", $contents);
+
         while ($arr = $this->readCsvString($contents, $delimiter, $enclosure)) {
             $i++;
             if ($i == 0 && !empty($params['headerRow'])) {
