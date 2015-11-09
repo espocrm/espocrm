@@ -334,7 +334,7 @@ abstract class Base
         $fieldDefs = $entity->fields;
 
         $relationsToJoin = array();
-        if (is_array($select)) {
+        if (is_array($select) && is_array($fieldDefs)) {
             foreach ($select as $field) {
                 if (!empty($fieldDefs[$field]) && !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'foreign' && !empty($fieldDefs[$field]['relation'])) {
                     $relationsToJoin[] = $fieldDefs[$field]['relation'];
