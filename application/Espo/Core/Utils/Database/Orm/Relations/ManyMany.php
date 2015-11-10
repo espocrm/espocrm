@@ -37,6 +37,14 @@ class ManyMany extends Base
     {
         $foreignEntityName = $this->getForeignEntityName();
 
+        $linkParams = $this->getLinkParams();
+
+        if (!empty($linkParams['relationName'])) {
+            $relationName = $linkParams['relationName'];
+        } else {
+            $relationName = $this->getJoinTable($entityName, $foreignEntityName);
+        }
+
         return array(
             $entityName => array(
                 'fields' => array(
@@ -53,7 +61,7 @@ class ManyMany extends Base
                     $linkName => array(
                         'type' => 'manyMany',
                         'entity' => $foreignEntityName,
-                        'relationName' => $this->getJoinTable($entityName, $foreignEntityName),
+                        'relationName' => $relationName,
                         'key' => 'id', //todo specify 'key'
                         'foreignKey' => 'id', //todo specify 'foreignKey'
                         'midKeys' => array(

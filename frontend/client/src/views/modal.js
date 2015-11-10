@@ -146,10 +146,12 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         actionCancel: function () {
             this.dialog.close();
+            this.trigger('close');
         },
 
         close: function () {
             this.dialog.close();
+            this.trigger('close');
         },
 
         disableButton: function (name) {

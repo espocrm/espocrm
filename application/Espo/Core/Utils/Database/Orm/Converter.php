@@ -385,7 +385,7 @@ class Converter
         }
 
         $relationships = array();
-        foreach($entityMeta['links'] as $linkName => $linkParams) {
+        foreach ($entityMeta['links'] as $linkName => $linkParams) {
 
             $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityName, $ormMeta);
 

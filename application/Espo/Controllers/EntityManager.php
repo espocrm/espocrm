@@ -165,15 +165,24 @@ class EntityManager extends \Espo\Core\Controllers\Base
         	'linkType'
         ];
 
-        $d = array();
+        $additionalParamList = [
+            'relationName'
+        ];
+
+        $params = array();
+
         foreach ($paramList as $item) {
         	if (empty($data[$item])) {
         		throw new BadRequest();
         	}
-        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        	$params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->createLink($d);
+        foreach ($additionalParamList as $item) {
+            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
 
         if ($result) {
             $this->getContainer()->get('dataManager')->rebuild();

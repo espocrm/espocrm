@@ -108,6 +108,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         $this->setMethods($inputs);
 
         $convertedDefs = $this->load($linkName, $entityName);
+
         $convertedDefs = $this->mergeAllowedParams($convertedDefs);
 
         $inputs = $this->setArrayValue(null, $inputs);
@@ -120,6 +121,8 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     {
         $linkName = $this->getLinkName();
         $entityName = $this->getEntityName();
+
+
 
         if (!empty($this->allowedParams)) {
             $linkParams = &$loads[$entityName]['relations'][$linkName];
@@ -150,8 +153,20 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
         $additionalParrams = null;
 
+        $linkName = $this->getLinkName();
+        $entityName = $this->getEntityName();
+
+
+
+
         if (isset($itemLinkParams) && isset($itemForeignLinkParams)) {
-            $additionalParrams = Util::merge($itemLinkParams, $itemForeignLinkParams);
+            if (!empty($itemLinkParams) && !is_array($itemLinkParams)) {
+                $additionalParrams = $itemLinkParams;
+            } else if (!empty($itemForeignLinkParams) && !is_array($itemForeignLinkParams)) {
+                $additionalParrams = $itemForeignLinkParams;
+            } else {
+                $additionalParrams = Util::merge($itemLinkParams, $itemForeignLinkParams);
+            }
         } else if (isset($itemLinkParams)) {
             $additionalParrams = $itemLinkParams;
         } else if (isset($itemForeignLinkParams)) {

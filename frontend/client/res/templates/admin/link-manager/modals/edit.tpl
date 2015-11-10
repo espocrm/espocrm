@@ -21,7 +21,14 @@
 			{{{linkForeign}}}
 		</div>
 	</div>
-	<div class="cell form-group col-md-4"></div>
+	<div class="cell form-group col-md-4 cell-relationName">
+		{{#if relationName}}
+		<label class="field-label-relationName control-label">{{translate 'relationName' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-relationName">
+			{{{relationName}}}
+		</div>
+		{{/if}}
+	</div>
 	<div class="cell cell-link form-group col-md-4">
 		<label class="field-label-link control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
 		<div class="field field-link">

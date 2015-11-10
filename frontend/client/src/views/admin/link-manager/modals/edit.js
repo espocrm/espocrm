@@ -32,7 +32,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
         cssName: 'edit',
 
-        template: 'admin.link-manager.modals.edit',
+        template: 'admin/link-manager/modals/edit',
 
         setup: function () {
 
@@ -90,6 +90,11 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 this.model.set('linkForeign', linkForeign);
                 this.model.set('label', label);
                 this.model.set('labelForeign', labelForeign);
+
+                if (linkType == 'manyToMany') {
+                    var relationName = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.relationName');
+                    this.model.set('relationName', relationName);
+                }
             }
 
 
@@ -106,7 +111,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             entityList.unshift('');
 
 
-            this.createView('entity', 'Fields.Varchar', {
+            this.createView('entity', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-entity',
@@ -115,7 +120,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: true
             });
-            this.createView('entityForeign', 'Fields.Enum', {
+            this.createView('entityForeign', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-entityForeign',
@@ -129,7 +134,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew
             });
-            this.createView('linkType', 'Fields.Enum', {
+            this.createView('linkType', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-linkType',
@@ -143,7 +148,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 readOnly: !isNew
             });
 
-            this.createView('link', 'Fields.Varchar', {
+            this.createView('link', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-link',
@@ -155,7 +160,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew
             });
-            this.createView('linkForeign', 'Fields.Varchar', {
+            this.createView('linkForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-linkForeign',
@@ -167,7 +172,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew
             });
-            this.createView('label', 'Fields.Varchar', {
+            this.createView('label', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-label',
@@ -178,7 +183,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     }
                 }
             });
-            this.createView('labelForeign', 'Fields.Varchar', {
+            this.createView('labelForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-labelForeign',
@@ -189,6 +194,21 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     }
                 }
             });
+
+
+            this.createView('relationName', 'views/fields/varchar', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-relationName',
+                defs: {
+                    name: 'relationName',
+                    params: {
+                        required: true
+                    }
+                },
+                readOnly: !isNew
+            });
+
         },
 
         toPlural: function (string) {
@@ -197,7 +217,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             } else {
                 return string + 's';
             }
-
         },
 
         populateFields: function () {
@@ -243,6 +262,13 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                         link = link + 'Right';
                         linkForeign = linkForeign + 'Left';
                     }
+                    var relationName;
+                    if (this.scope.localeCompare(entityForeign)) {
+                        relationName = Espo.Utils.lowerCaseFirst(this.scope) + entityForeign;
+                    } else {
+                        relationName = Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
+                    }
+                    this.model.set('relationName', relationName);
                     break;
             }
 
@@ -268,8 +294,28 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.model.set(field, value);
         },
 
+        handleLinkTypeChange: function () {
+            var linkType = this.model.get('linkType');
+            if (linkType == 'manyToMany') {
+                var relationNameView = this.getView('relationName');
+                if (relationNameView) {
+                    relationNameView.enabled = true;
+                }
+                this.$el.find('.cell-relationName').css('visibility', 'visible');
+            } else {
+                var relationNameView = this.getView('relationName');
+                if (relationNameView) {
+                    relationNameView.enabled = false;
+                }
+                this.$el.find('.cell-relationName').css('visibility', 'hidden');
+            }
+        },
+
         afterRender: function () {
+            this.handleLinkTypeChange();
+
             this.getView('linkType').on('change', function (m) {
+                this.handleLinkTypeChange();
                 this.populateFields();
             }, this);
             this.getView('entityForeign').on('change', function (m) {

@@ -268,6 +268,14 @@ class EntityManager
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];
 
+        if ($linkType === 'manyToMany') {
+            if (!empty($params['relationName'])) {
+                $relationName = $params['relationName'];
+            } else {
+                $relationName = lcfirst($entity) . $entityForeign;
+            }
+        }
+
         if (empty($linkType)) {
             throw new Error();
         }
@@ -390,6 +398,7 @@ class EntityManager
                     'links' => array(
                         $link => array(
                             'type' => 'hasMany',
+                            'relationName' => $relationName,
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
                             'isCustom' => true
@@ -411,6 +420,7 @@ class EntityManager
                     'links' => array(
                         $linkForeign => array(
                             'type' => 'hasMany',
+                            'relationName' => $relationName,
                             'foreign' => $link,
                             'entity' => $entity,
                             'isCustom' => true

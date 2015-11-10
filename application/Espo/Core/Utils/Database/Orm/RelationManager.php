@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
+
 use Espo\Core\Utils\Util;
 
 class RelationManager
@@ -120,9 +121,13 @@ class RelationManager
         $relationName = $this->isRelationExists($method) ? $method /*hasManyHasMany*/ : $currentType /*hasMany*/;
 
         //relationDefs defined in separate file
-        if (isset($linkParams['relationName']) && $this->isMethodExists($linkParams['relationName'])) {
+        if (isset($linkParams['relationName'])) {
             $className = $this->getRelationClass($linkParams['relationName']);
-        } else if ($this->isMethodExists($relationName)) {
+            if (!$className) {
+                $relationName = $this->isRelationExists($method) ? $method : $currentType;
+                $className = $this->getRelationClass($relationName);
+            }
+        } else {
             $className = $this->getRelationClass($relationName);
         }
 

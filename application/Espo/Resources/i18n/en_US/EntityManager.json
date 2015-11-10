@@ -16,7 +16,8 @@
         "link": "Link",
         "labelForeign": "Foreign Label",
         "sortBy": "Default Order (field)",
-        "sortDirection": "Default Order (direction)"
+        "sortDirection": "Default Order (direction)",
+        "relationName": "Middle Table Name"
     },
     "options": {
         "type": {

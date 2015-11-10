@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
+Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.link-manager.index',
+        template: 'admin/link-manager/index',
 
         scopeDataList: null,
 
@@ -133,7 +133,7 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
         },
 
         createLink: function () {
-            this.createView('edit', 'Admin.LinkManager.Modals.Edit', {
+            this.createView('edit', 'views/admin/link-manager/modals/edit', {
                 scope: this.scope
             }, function (view) {
                 view.render();
@@ -143,11 +143,15 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                     this.setupLinkData();
                     this.render();
                 }, this);
+
+                this.listenTo(view, 'close', function () {
+                    this.clearView('edit');
+                }, this);
             }.bind(this));
         },
 
         editLink: function (link) {
-            this.createView('edit', 'Admin.LinkManager.Modals.Edit', {
+            this.createView('edit', 'views/admin/link-manager/modals/edit', {
                 scope: this.scope,
                 link: link
             }, function (view) {
@@ -157,6 +161,10 @@ Espo.define('Views.Admin.LinkManager.Index', 'View', function (Dep) {
                     this.clearView('edit');
                     this.setupLinkData();
                     this.render();
+                }, this);
+
+                this.listenTo(view, 'close', function () {
+                    this.clearView('edit');
                 }, this);
             }.bind(this));
         },
