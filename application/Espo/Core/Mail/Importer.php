@@ -384,9 +384,10 @@ class Importer
                 $contentId = null;
 
                 if ($contentDisposition) {
+
                     if ($contentDisposition === 'attachment') {
-                        if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-                            $fileName = $m[1];
+                        $fileName = $this->fetchFileNameFromContentDisposition($part->ContentDisposition);
+                        if ($fileName) {
                             $disposition = 'attachment';
                         }
                     } else if ($contentDisposition ===  'inline') {
@@ -395,10 +396,10 @@ class Importer
                             $fileName = $contentId;
                             $disposition = 'inline';
                         } else {
-                            // hack for iOS not proper attachments
+                            // for iOS attachments
                             if (empty($fileName)) {
-                                if (preg_match('/filename="?([^"]+)"?/i', $part->ContentDisposition, $m)) {
-                                    $fileName = $m[1];
+                                $fileName = $this->fetchFileNameFromContentDisposition($part->ContentDisposition);
+                                if ($fileName) {
                                     $disposition = 'attachment';
                                 }
                             }
@@ -440,6 +441,26 @@ class Importer
                 }
             }
         } catch (\Exception $e) {}
+    }
+
+    protected function fetchFileNameFromContentDisposition($contentDisposition)
+    {
+        $m = array();
+        if (preg_match('/filename="?([^"]+)"?/i', $contentDisposition, $m)) {
+            $fileName = $m[1];
+            return $fileName;
+        } else if (preg_match('/filename\*="?([^"]+)"?/i', $contentDisposition, $m)) {
+            $fileName = $m[1];
+            if ($fileName && stripos($fileName, "''") !== false) {
+                list($encoding, $fileName) = explode("''", $fileName);
+                $fileName = rawurldecode($fileName);
+                if (strtoupper($encoding) !== 'UTF-8') {
+                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
+                }
+                return $fileName;
+            }
+        }
+        return false;
     }
 
     protected function getContentFromPart($part)
