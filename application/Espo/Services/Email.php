@@ -116,7 +116,15 @@ class Email extends Record
 
         $message = null;
 
-        $emailSender->send($entity, $params, $message);
+        try {
+            $emailSender->send($entity, $params, $message);
+        } catch (\Exception $e) {
+            $entity->set('status', 'Failed');
+            $this->getEntityManager()->saveEntity($entity, array(
+                'silent' => true
+            ));
+            throw new Error($e->getMessage(), $e->getCode());
+        }
 
         if ($entity->get('from') && $message) {
             $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where(array(

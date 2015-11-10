@@ -32,11 +32,14 @@
         "replies": "Replies"
     },
     "options": {
-        "Draft": "Draft",
-        "Sending": "Sending",
-        "Sent": "Sent",
-        "Archived": "Archived",
-        "Received": "Received"
+        "status": {
+            "Draft": "Draft",
+            "Sending": "Sending",
+            "Sent": "Sent",
+            "Archived": "Archived",
+            "Received": "Received",
+            "Failed": "Failed"
+        }
     },
     "labels": {
         "Create Email": "Archive Email",

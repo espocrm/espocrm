@@ -126,7 +126,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Draft", "Sending", "Sent", "Archived"],
+            "options": ["Draft", "Sending", "Sent", "Archived", "Failed"],
             "readOnly": true,
             "default": "Archived"
         },
