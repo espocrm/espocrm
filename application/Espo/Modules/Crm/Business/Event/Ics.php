@@ -40,13 +40,13 @@ class Ics
     private $_s_description;
 
     private $_s_html;
-    
+
     private $_s_who;
-    
+
     private $_s_email;
 
     private $_s_uri;
-    
+
     private $_s_uid;
 
     private $_s_summary;
@@ -54,7 +54,7 @@ class Ics
     private $_s_output;
 
     private $_s_prodid;
-    
+
     public function __construct($prodid, array $attributes = array())
     {
         if (!is_string($prodid) || $prodid === '') {
@@ -67,7 +67,7 @@ class Ics
             $this->$key = $value;
         }
     }
-    
+
     public function __set($name, $value)
     {
         switch ($name) {
@@ -86,11 +86,11 @@ class Ics
             case 'summary':
                 $this->_s_summary = $value;
                 break;
-                
+
             case 'who':
                 $this->_s_who = $value;
                 break;
-                
+
             case 'email':
                 $this->_s_email = $value;
                 break;
@@ -98,7 +98,7 @@ class Ics
             case 'uri':
                 $this->_s_uri = $value;
                 break;
-                
+
             case 'uid':
                 $this->_s_uid = $value;
                 break;
@@ -114,7 +114,7 @@ class Ics
 
         return $this;
     }
-    
+
     public function __get($name) {
         switch ($name)
         {
@@ -137,15 +137,15 @@ class Ics
             case 'uri':
                 return $this->_s_uri;
                 break;
-                
+
             case 'who':
                 return $this->_s_who;
                 break;
-                
+
             case 'email':
                 return $this->_s_email;
                 break;
-                
+
             case 'uid':
                 return $this->_s_uid;
                 break;
@@ -159,14 +159,14 @@ class Ics
                 break;
         }
     }
-    
+
     public function get()
     {
         ($this->_s_output) ? $this->_s_output : $this->_generate();
 
         return $this->_s_output;
     }
-    
+
     private function _generate()
     {
         $this->_s_output = "BEGIN:VCALENDAR\n".
@@ -188,7 +188,7 @@ class Ics
                  "END:VEVENT\n".
                  "END:VCALENDAR\n";
     }
-    
+
     private function _dateToCal($timestamp)
     {
         return date('Ymd\THis\Z', ($timestamp) ? $timestamp : time());
@@ -197,6 +197,6 @@ class Ics
     private function _escapeString($string)
     {
         return preg_replace('/([\,;])/','\\\$1', ($string) ? $string : '');
-    }    
+    }
 }
 
