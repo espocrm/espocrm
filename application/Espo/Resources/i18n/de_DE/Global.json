@@ -416,7 +416,9 @@
         "varcharSearchRanges": {
             "equals": "Gleich",
             "startsWith": "Beginnt mit",
-            "contains": "Enthält"
+            "contains": "Enthält",
+            "isEmpty": "Ist leer",
+            "isNotEmpty": "Ist nicht leer"
         },
         "intSearchRanges": {
             "equals": "Gleich",

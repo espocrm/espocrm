@@ -435,7 +435,9 @@
         "varcharSearchRanges": {
             "equals": "Equals",
             "startsWith": "Starts With",
-            "contains": "Contains"
+            "contains": "Contains",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
         },
         "intSearchRanges": {
             "equals": "Equals",

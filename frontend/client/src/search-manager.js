@@ -125,7 +125,7 @@ Espo.define('search-manager', [], function () {
             var field = name;
 
             if ('where' in defs) {
-                where.push(defs.where);
+                return defs.where;
             } else {
                 var type = defs.type;
 

@@ -386,13 +386,15 @@
         },
         "searchRanges": {
             "is": "Is",
-            "isEmpty": "Is Empty",
-            "isNotEmpty": "Is Not Empty"
+            "isEmpty": "Пусто",
+            "isNotEmpty": "Не пусто"
         },
         "varcharSearchRanges": {
             "equals": "Дорівнює",
             "startsWith": "Starts With",
-            "contains": "Contains"
+            "contains": "Contains",
+            "isEmpty": "Пусто",
+            "isNotEmpty": "Не пусто"
         },
         "intSearchRanges": {
             "equals": "Дорівнює",
