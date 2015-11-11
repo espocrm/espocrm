@@ -112,19 +112,19 @@ class RelationManager
 
         $currentType = $linkParams['type'];
 
-        $method = $currentType;
+        $relType = $currentType;
         if ($foreignLink !== false) {
-            $method .= '_' . $foreignLink['params']['type'];
+            $relType .= '_' . $foreignLink['params']['type'];
         }
-        $method = Util::toCamelCase($method);
+        $relType = Util::toCamelCase($relType);
 
-        $relationName = $this->isRelationExists($method) ? $method /*hasManyHasMany*/ : $currentType /*hasMany*/;
+        $relationName = $this->isRelationExists($relType) ? $relType /*hasManyHasMany*/ : $currentType /*hasMany*/;
 
         //relationDefs defined in separate file
         if (isset($linkParams['relationName'])) {
             $className = $this->getRelationClass($linkParams['relationName']);
             if (!$className) {
-                $relationName = $this->isRelationExists($method) ? $method : $currentType;
+                $relationName = $this->isRelationExists($relType) ? $relType : $currentType;
                 $className = $this->getRelationClass($relationName);
             }
         } else {

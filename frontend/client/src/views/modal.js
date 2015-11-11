@@ -125,6 +125,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
                     onRemove: function () {
+                        this.trigger('close');
                         this.remove();
                     }.bind(this)
                 });
@@ -146,12 +147,10 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         actionCancel: function () {
             this.dialog.close();
-            this.trigger('close');
         },
 
         close: function () {
             this.dialog.close();
-            this.trigger('close');
         },
 
         disableButton: function (name) {

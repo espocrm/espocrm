@@ -122,19 +122,16 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         $linkName = $this->getLinkName();
         $entityName = $this->getEntityName();
 
-
-
         if (!empty($this->allowedParams)) {
             $linkParams = &$loads[$entityName]['relations'][$linkName];
 
             foreach ($this->allowedParams as $name) {
+                $additionalParam = $this->getAllowedAdditionalParam($name);
 
-                $additionalParrams = $this->getAllowedAdditionalParams($name);
-
-                if (isset($additionalParrams)) {
-                    $linkParams[$name] = $additionalParrams;
+                if (isset($additionalParam)) {
+                    $linkParams[$name] = $additionalParam;
                     if (isset($linkParams[$name]) && is_array($linkParams[$name])) {
-                        $linkParams[$name] = Util::merge($linkParams[$name], $additionalParrams);
+                        $linkParams[$name] = Util::merge($linkParams[$name], $additionalParam);
                     }
                 }
             }
@@ -143,7 +140,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $loads;
     }
 
-    private function getAllowedAdditionalParams($allowedItemName)
+    private function getAllowedAdditionalParam($allowedItemName)
     {
         $linkParams = $this->getLinkParams();
         $foreignLinkParams = $this->getForeignLinkParams();
@@ -151,29 +148,26 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         $itemLinkParams = isset($linkParams[$allowedItemName]) ? $linkParams[$allowedItemName] : null;
         $itemForeignLinkParams = isset($foreignLinkParams[$allowedItemName]) ? $foreignLinkParams[$allowedItemName] : null;
 
-        $additionalParrams = null;
+        $additionalParam = null;
 
         $linkName = $this->getLinkName();
         $entityName = $this->getEntityName();
 
-
-
-
         if (isset($itemLinkParams) && isset($itemForeignLinkParams)) {
             if (!empty($itemLinkParams) && !is_array($itemLinkParams)) {
-                $additionalParrams = $itemLinkParams;
+                $additionalParam = $itemLinkParams;
             } else if (!empty($itemForeignLinkParams) && !is_array($itemForeignLinkParams)) {
-                $additionalParrams = $itemForeignLinkParams;
+                $additionalParam = $itemForeignLinkParams;
             } else {
-                $additionalParrams = Util::merge($itemLinkParams, $itemForeignLinkParams);
+                $additionalParam = Util::merge($itemLinkParams, $itemForeignLinkParams);
             }
         } else if (isset($itemLinkParams)) {
-            $additionalParrams = $itemLinkParams;
+            $additionalParam = $itemLinkParams;
         } else if (isset($itemForeignLinkParams)) {
-            $additionalParrams = $itemForeignLinkParams;
+            $additionalParam = $itemForeignLinkParams;
         }
 
-        return $additionalParrams;
+        return $additionalParam;
     }
 
 }

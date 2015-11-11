@@ -36,7 +36,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
         setup: function () {
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
@@ -49,8 +49,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     name: 'cancel',
                     label: 'Cancel',
                     onClick: function (dialog) {
-                        dialog.close();
-                    }
+                        this.close();
+                    }.bind(this)
                 }
             ];
 
