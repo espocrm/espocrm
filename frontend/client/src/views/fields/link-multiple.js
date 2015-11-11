@@ -234,11 +234,11 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         },
 
         addLinkHtml: function (id, name) {
-            var conteiner = this.$el.find('.link-container');
+            var container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
             $el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
-            conteiner.append($el);
+            container.append($el);
 
             return $el;
         },
