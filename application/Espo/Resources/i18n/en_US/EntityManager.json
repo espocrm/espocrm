@@ -17,7 +17,9 @@
         "labelForeign": "Foreign Label",
         "sortBy": "Default Order (field)",
         "sortDirection": "Default Order (direction)",
-        "relationName": "Middle Table Name"
+        "relationName": "Middle Table Name",
+        "linkMultipleField": "Link Multiple Field",
+        "linkMultipleFieldForeign": "Foreign Link Multiple Field"
     },
     "options": {
         "type": {

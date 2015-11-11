@@ -73,6 +73,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
             this.model.set('entity', scope);
 
+            var isCustom = true;
+
             if (!isNew) {
                 var entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
                 var linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
@@ -91,10 +93,28 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 this.model.set('label', label);
                 this.model.set('labelForeign', labelForeign);
 
+                var linkMultipleField = false;
+                if (this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.type') == 'linkMultiple') {
+                    if (!this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.noLoad')) {
+                        linkMultipleField = true;
+                    }
+                }
+                this.model.set('linkMultipleField', linkMultipleField);
+
+                var linkMultipleFieldForeign = false;
+                if (this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.type') == 'linkMultiple') {
+                    if (!this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.noLoad')) {
+                        linkMultipleFieldForeign = true;
+                    }
+                }
+                this.model.set('linkMultipleFieldForeign', linkMultipleFieldForeign);
+
                 if (linkType == 'manyToMany') {
                     var relationName = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.relationName');
                     this.model.set('relationName', relationName);
                 }
+
+                isCustom = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.isCustom');
             }
 
 
@@ -109,7 +129,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             }.bind(this));
 
             entityList.unshift('');
-
 
             this.createView('entity', 'views/fields/varchar', {
                 model: model,
@@ -210,6 +229,25 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 });
             }
 
+            this.createView('linkMultipleField', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-linkMultipleField',
+                defs: {
+                    name: 'linkMultipleField'
+                },
+                readOnly: !isCustom
+            });
+
+            this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-linkMultipleFieldForeign',
+                defs: {
+                    name: 'linkMultipleFieldForeign'
+                },
+                readOnly: !isCustom
+            });
         },
 
         toPlural: function (string) {
@@ -295,20 +333,43 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.model.set(field, value);
         },
 
+        hideField: function (name) {
+            var view = this.getView(name);
+            if (view) {
+                view.enabled = false;
+            }
+            this.$el.find('.cell-' + name).css('visibility', 'hidden');
+        },
+
+        showField: function (name) {
+            var view = this.getView(name);
+            if (view) {
+                view.enabled = true;
+            }
+            this.$el.find('.cell-' + name).css('visibility', 'visible');
+        },
+
         handleLinkTypeChange: function () {
             var linkType = this.model.get('linkType');
-            if (linkType == 'manyToMany') {
+            if (linkType === 'manyToMany') {
                 var relationNameView = this.getView('relationName');
-                if (relationNameView) {
-                    relationNameView.enabled = true;
-                }
-                this.$el.find('.cell-relationName').css('visibility', 'visible');
+                this.showField('relationName');
+                this.showField('relationName');
+
+                this.showField('linkMultipleField');
+                this.showField('linkMultipleFieldForeign');
             } else {
-                var relationNameView = this.getView('relationName');
-                if (relationNameView) {
-                    relationNameView.enabled = false;
+                this.hideField('relationName');
+                if (linkType === 'oneToMany') {
+                    this.showField('linkMultipleField');
+                    this.hideField('linkMultipleFieldForeign');
+                } else if (linkType === 'manyToOne') {
+                    this.hideField('linkMultipleField');
+                    this.showField('linkMultipleFieldForeign');
+                } else {
+                    this.hideField('linkMultipleField');
+                    this.hideField('linkMultipleFieldForeign');
                 }
-                this.$el.find('.cell-relationName').css('visibility', 'hidden');
             }
         },
 
@@ -338,7 +399,10 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 'label',
                 'labelForeign',
                 'linkType',
-                'entityForeign'
+                'entityForeign',
+                'relationName',
+                'linkMultipleField',
+                'linkMultipleFieldForeign'
             ];
 
             var notValid = false;
@@ -351,8 +415,11 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
             arr.forEach(function (item) {
                 if (!this.hasView(item)) return;
-                if (this.getView(item).mode != 'edit') return;
-                notValid = this.getView(item).validate() || notValid;
+                var view = this.getView(item);
+                if (view.mode != 'edit') return;
+                if (view.enabled) {
+                    notValid = view.validate() || notValid;
+                }
             }, this);
 
             if (notValid) {
@@ -372,6 +439,10 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             var linkForeign = this.model.get('linkForeign');
             var label = this.model.get('label');
             var labelForeign = this.model.get('labelForeign');
+            var relationName = this.model.get('relationName');
+
+            var linkMultipleField = this.model.get('linkMultipleField');
+            var linkMultipleFieldForeign = this.model.get('linkMultipleFieldForeign');
 
             $.ajax({
                 url: url,
@@ -383,7 +454,10 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     linkForeign: linkForeign,
                     label: label,
                     labelForeign: labelForeign,
-                    linkType: this.model.get('linkType')
+                    linkType: this.model.get('linkType'),
+                    relationName: relationName,
+                    linkMultipleField: linkMultipleField,
+                    linkMultipleFieldForeign: linkMultipleFieldForeign
                 }),
                 error: function (x) {
                     if (x.status == 409) {

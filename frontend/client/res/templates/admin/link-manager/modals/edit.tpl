@@ -51,4 +51,19 @@
 		</div>
 	</div>
 </div>
+<div class="row">
+	<div class="cell cell-linkMultipleFieldForeign form-group col-md-4">
+		<label class="field-label-linkMultipleFieldForeign control-label">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-linkMultipleFieldForeign">
+			{{{linkMultipleFieldForeign}}}
+		</div>
+	</div>
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell cell-linkMultipleField form-group col-md-4">
+		<label class="field-label-linkMultipleField control-label">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-linkMultipleField">
+			{{{linkMultipleField}}}
+		</div>
+	</div>
+</div>
 

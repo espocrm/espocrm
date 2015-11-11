@@ -276,6 +276,16 @@ class EntityManager
             }
         }
 
+        $linkMultipleField = false;
+        if (!empty($params['linkMultipleField'])) {
+            $linkMultipleField = true;
+        }
+
+        $linkMultipleFieldForeign = false;
+        if (!empty($params['linkMultipleFieldForeign'])) {
+            $linkMultipleFieldForeign = true;
+        }
+
         if (empty($linkType)) {
             throw new Error();
         }
@@ -308,11 +318,11 @@ class EntityManager
                     'fields' => array(
                         $link => array(
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => true,
+                            "layoutDetailDisabled"  => !$linkMultipleField,
                             "layoutListDisabled"  => true,
-                            "layoutMassUpdateDisabled"  => true,
-                            "noLoad"  => true,
-                            "importDisabled" => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "noLoad"  => !$linkMultipleField,
+                            "importDisabled" => !$linkMultipleField,
                             'isCustom' => true
                         )
                     ),
@@ -364,11 +374,11 @@ class EntityManager
                     'fields' => array(
                         $linkForeign => array(
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => true,
+                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
                             "layoutListDisabled"  => true,
-                            "layoutMassUpdateDisabled"  => true,
-                            "noLoad"  => true,
-                            "importDisabled" => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "noLoad"  => !$linkMultipleFieldForeign,
+                            "importDisabled" => !$linkMultipleFieldForeign,
                             'isCustom' => true
                         )
                     ),
@@ -387,11 +397,11 @@ class EntityManager
                     'fields' => array(
                         $link => array(
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => true,
+                            "layoutDetailDisabled"  => !$linkMultipleField,
                             "layoutListDisabled"  => true,
-                            "layoutMassUpdateDisabled"  => true,
-                            "importDisabled" => true,
-                            "noLoad"  => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "importDisabled" => !$linkMultipleField,
+                            "noLoad"  => !$linkMultipleField,
                             'isCustom' => true
                         )
                     ),
@@ -409,11 +419,11 @@ class EntityManager
                     'fields' => array(
                         $linkForeign => array(
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => true,
+                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
                             "layoutListDisabled"  => true,
-                            "layoutMassUpdateDisabled"  => true,
-                            "importDisabled" => true,
-                            "noLoad"  => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "importDisabled" => !$linkMultipleFieldForeign,
+                            "noLoad"  => !$linkMultipleFieldForeign,
                             'isCustom' => true
                         )
                     ),
@@ -463,6 +473,48 @@ class EntityManager
         }
         if (empty($entityForeign) || empty($linkForeign)) {
             throw new Error();
+        }
+
+        if ($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany') {
+            if (array_key_exists('linkMultipleField', $params)) {
+                $linkMultipleField = $params['linkMultipleField'];
+                $dataLeft = array(
+                    'fields' => array(
+                        $link => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => !$linkMultipleField,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "noLoad"  => !$linkMultipleField,
+                            "importDisabled" => !$linkMultipleField,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+                $this->getMetadata()->save();
+            }
+        }
+
+        if ($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany') {
+            if (array_key_exists('linkMultipleFieldForeign', $params)) {
+                $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
+                $dataRight = array(
+                    'fields' => array(
+                        $linkForeign => array(
+                            "type" => "linkMultiple",
+                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
+                            "layoutListDisabled"  => true,
+                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "noLoad"  => !$linkMultipleFieldForeign,
+                            "importDisabled" => !$linkMultipleFieldForeign,
+                            'isCustom' => true
+                        )
+                    )
+                );
+                $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
+                $this->getMetadata()->save();
+            }
         }
 
         $this->getLanguage()->set($entity, 'fields', $link, $label);

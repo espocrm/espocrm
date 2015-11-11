@@ -166,7 +166,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
         ];
 
         $additionalParamList = [
-            'relationName'
+            'relationName',
         ];
 
         $params = array();
@@ -180,6 +180,13 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         foreach ($additionalParamList as $item) {
             $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        if (array_key_exists('linkMultipleField', $data)) {
+            $params['linkMultipleField'] = $data['linkMultipleField'];
+        }
+        if (array_key_exists('linkMultipleFieldForeign', $data)) {
+            $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
 
         $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
@@ -208,12 +215,25 @@ class EntityManager extends \Espo\Core\Controllers\Base
         	'labelForeign'
         ];
 
-        $d = array();
+        $additionalParamList = [];
+
+        $params = array();
         foreach ($paramList as $item) {
-        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        	$params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->updateLink($d);
+        foreach ($additionalParamList as $item) {
+            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+        }
+
+        if (array_key_exists('linkMultipleField', $data)) {
+            $params['linkMultipleField'] = $data['linkMultipleField'];
+        }
+        if (array_key_exists('linkMultipleFieldForeign', $data)) {
+            $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
+        }
+
+        $result = $this->getContainer()->get('entityManagerUtil')->updateLink($params);
 
         if ($result) {
             $this->getContainer()->get('dataManager')->clearCache();
