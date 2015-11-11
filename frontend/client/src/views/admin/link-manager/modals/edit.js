@@ -195,19 +195,20 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 }
             });
 
-
-            this.createView('relationName', 'views/fields/varchar', {
-                model: model,
-                mode: 'edit',
-                el: this.options.el + ' .field-relationName',
-                defs: {
-                    name: 'relationName',
-                    params: {
-                        required: true
-                    }
-                },
-                readOnly: !isNew
-            });
+            if (isNew || this.model.get('relationName')) {
+                this.createView('relationName', 'views/fields/varchar', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field-relationName',
+                    defs: {
+                        name: 'relationName',
+                        params: {
+                            required: true
+                        }
+                    },
+                    readOnly: !isNew
+                });
+            }
 
         },
 
