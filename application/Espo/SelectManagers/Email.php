@@ -112,7 +112,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 
         $d['name*'] = '%' . $textFilter . '%';
 
-        if (strlen($value) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
+        if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
             $d['bodyPlain*'] = '%' . $textFilter . '%';
             $d['body*'] = '%' . $textFilter . '%';
 
