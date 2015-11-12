@@ -475,7 +475,11 @@ class EntityManager
             throw new Error();
         }
 
-        if ($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany') {
+        if (
+            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
+            &&
+            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom")
+        ) {
             if (array_key_exists('linkMultipleField', $params)) {
                 $linkMultipleField = $params['linkMultipleField'];
                 $dataLeft = array(
@@ -496,7 +500,11 @@ class EntityManager
             }
         }
 
-        if ($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany') {
+        if (
+            $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
+            &&
+            $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.isCustom")
+        ) {
             if (array_key_exists('linkMultipleFieldForeign', $params)) {
                 $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
                 $dataRight = array(
