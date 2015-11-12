@@ -115,8 +115,11 @@ class EmailNotification extends \Espo\Core\Services\Base
                     'to' => $emailAddress,
                     'isSystem' => true
                 ));
-
-                $this->getMailSender()->send($email);
+                try {
+                    $this->getMailSender()->send($email);
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+                }
             }
         }
 

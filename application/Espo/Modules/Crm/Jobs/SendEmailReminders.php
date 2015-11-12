@@ -58,12 +58,16 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
             );
             $pdo = $this->getEntityManager()->getPDO();
         }
-        
+
         foreach ($collection as $i => $entity) {
             if ($i >= self::MAX_PORTION_SIZE) {
                 break;
             }
-            $emailReminder->send($entity);
+            try {
+                $emailReminder->send($entity);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+            }
 
             $sql = "DELETE FROM `reminder` WHERE id = ". $pdo->quote($entity->id);
             $pdo->query($sql);
