@@ -430,7 +430,8 @@
         "searchRanges": {
             "is": "Is",
             "isEmpty": "Is Empty",
-            "isNotEmpty": "Is Not Empty"
+            "isNotEmpty": "Is Not Empty",
+            "isOneOf": "Is One Of"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

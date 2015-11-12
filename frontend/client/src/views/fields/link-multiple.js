@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'linkMultiple',
 
-        listTemplate: 'fields.link-multiple.detail',
+        listTemplate: 'fields/link-multiple/detail',
 
-        detailTemplate: 'fields.link-multiple.detail',
+        detailTemplate: 'fields/link-multiple/detail',
 
-        editTemplate: 'fields.link-multiple.edit',
+        editTemplate: 'fields/link-multiple/edit',
 
-        searchTemplate: 'fields.link-multiple.search',
+        searchTemplate: 'fields/link-multiple/search',
 
         nameHashName: null,
 
@@ -52,7 +52,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
 
         autocompleteDisabled: false,
 
-        selectRecordsViewName: 'Modals.SelectRecords',
+        selectRecordsViewName: 'views/modals/select-records',
 
         createDisabled: false,
 
@@ -115,7 +115,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);
-                        dialog.once('select', function (models) {
+                        this.listenToOnce(dialog, 'select', function (models) {
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
@@ -123,7 +123,7 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                                 self.addLink(model.id, model.get('name'));
                             });
                         });
-                    });
+                    }, this);
                 });
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
@@ -150,6 +150,12 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('input.main-element');
+
+                var $element = this.$element;
+
+                $element.on('change', function () {
+                    $element.val('');
+                });
 
                 if (!this.autocompleteDisabled) {
                     this.$element.autocomplete({
@@ -181,25 +187,18 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
                             this.$element.val('');
                         }.bind(this)
                     });
+
+
+                    this.once('render', function () {
+                        $element.autocomplete('dispose');
+                    }, this);
+
+                    this.once('remove', function () {
+                        $element.autocomplete('dispose');
+                    }, this);
                 }
 
-
-                var $element = this.$element;
-
-                $element.on('change', function () {
-                    $element.val('');
-                });
-
-                this.once('render', function () {
-                    $element.autocomplete('dispose');
-                }, this);
-
-                this.once('remove', function () {
-                    $element.autocomplete('dispose');
-                }, this);
-
                 this.renderLinks();
-
             }
         },
 
@@ -234,11 +233,11 @@ Espo.define('Views.Fields.LinkMultiple', 'Views.Fields.Base', function (Dep) {
         },
 
         addLinkHtml: function (id, name) {
-            var container = this.$el.find('.link-container');
+            var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
             $el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
-            container.append($el);
+            $container.append($el);
 
             return $el;
         },

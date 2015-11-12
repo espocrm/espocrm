@@ -12,4 +12,16 @@
 	<input type="hidden" name="{{idName}}" value="{{searchParams.value}}">
 </div>
 
+<div class="one-of-container hidden">
+    <div class="link-container list-group">
+    </div>
+
+    <div class="input-group add-team">
+        <input class="form-control input-sm element-one-of" type="text" name="" value="" autocomplete="off" placeholder="{{translate 'Select'}}">
+        <span class="input-group-btn">
+            <button data-action="selectLinkOneOf" class="btn btn-default btn-sm" type="button" tabindex="-1" title="{{translate 'Select'}}"><span class="glyphicon glyphicon-arrow-up"></span></button>
+        </span>
+    </div>
+</div>
+
 

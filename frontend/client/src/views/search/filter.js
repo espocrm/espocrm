@@ -24,40 +24,40 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Search.Filter', 'View', function (Dep) {
+Espo.define('views/search/filter', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'search.filter',
-        
+        template: 'search/filter',
+
         data: function () {
             return {
                 name: this.name,
                 scope: this.model.name,
                 notRemovable: this.options.notRemovable
             };
-        },            
-        
+        },
+
         setup: function () {
-            var name = this.name = this.options.name;                
+            var name = this.name = this.options.name;
             var type = this.model.getFieldType(name);
-            
-            if (type) {            
+
+            if (type) {
                 var viewName = this.model.getFieldParam(name, 'view') || 'Fields.' + Espo.Utils.upperCaseFirst(type);
-            
+
                 this.createView('field', viewName, {
                     mode: 'search',
                     model: this.model,
                     el: this.options.el + ' .field',
                     defs: {
-                        name: name,                        
+                        name: name,
                     },
                     searchParams: this.options.params,
                 });
             }
         },
-    });    
+    });
 });
 

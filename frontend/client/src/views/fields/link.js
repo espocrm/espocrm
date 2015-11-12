@@ -106,6 +106,39 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.clearLink();
                 });
             }
+
+            if (this.mode == 'search') {
+                this.addActionHandler('selectLinkOneOf', function () {
+                    this.notify('Loading...');
+
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsViewName;
+
+                    this.createView('dialog', viewName, {
+                        scope: this.foreignScope,
+                        createButton: !this.createDisabled && this.mode != 'search',
+                        filters: this.getSelectFilters(),
+                        boolFilterList: this.getSelectBoolFilterList(),
+                        primaryFilterName: this.getSelectPrimaryFilterName(),
+                        multiple: true
+                    }, function (view) {
+                        view.render();
+                        this.notify(false);
+                        this.listenToOnce(view, 'select', function (models) {
+                            if (Object.prototype.toString.call(models) !== '[object Array]') {
+                                models = [models];
+                            }
+                            models.forEach(function (model) {
+                                this.addLinkOneOf(model.id, model.get('name'));
+                            }, this);
+                        });
+                    }, this);
+                });
+
+                this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
+                    var id = $(e.currentTarget).data('id').toString();
+                    this.deleteLinkOneOf(id);
+                };
+            }
         },
 
         select: function (model) {
@@ -121,7 +154,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
+            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'];
+            this.searchParams.oneOfIdList = this.searchParams.oneOfIdList || [];
+            this.searchParams.oneOfNameHash = this.searchParams.oneOfNameHash || {};
+
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
@@ -131,10 +167,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         handleSearchType: function (type) {
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                this.$el.find('div.primary').addClass('hidden');
-            } else {
+            if (~['is'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
+            } else {
+                this.$el.find('div.primary').addClass('hidden');
+            }
+
+            if (type === 'isOneOf') {
+                this.$el.find('div.one-of-container').removeClass('hidden');
+            } else {
+                this.$el.find('div.one-of-container').addClass('hidden');
             }
         },
 
@@ -177,6 +219,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }.bind(this));
                 }
 
+                var $elementName = this.$elementName;
 
                 if (!this.autocompleteDisabled) {
                     this.$elementName.autocomplete({
@@ -212,28 +255,75 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }, this);
                         }.bind(this)
                     });
-                }
 
-                var $elementName = this.$elementName;
+                    this.once('render', function () {
+                        $elementName.autocomplete('dispose');
+                    }, this);
+
+                    this.once('remove', function () {
+                        $elementName.autocomplete('dispose');
+                    }, this);
+
+
+                    if (this.mode == 'search') {
+                        var $elementOneOf = this.$el.find('input.element-one-of');
+                        $elementOneOf.autocomplete({
+                            serviceUrl: function (q) {
+                                return this.getAutocompleteUrl(q);
+                            }.bind(this),
+                            minChars: 1,
+                            paramName: 'q',
+                               formatResult: function (suggestion) {
+                                return suggestion.name;
+                            },
+                            transformResult: function (response) {
+                                var response = JSON.parse(response);
+                                var list = [];
+                                response.list.forEach(function(item) {
+                                    list.push({
+                                        id: item.id,
+                                        name: item.name,
+                                        data: item.id,
+                                        value: item.name
+                                    });
+                                }, this);
+                                return {
+                                    suggestions: list
+                                };
+                            }.bind(this),
+                            onSelect: function (s) {
+                                this.addLinkOneOf(s.id, s.name);
+                                $elementOneOf.val('');
+                            }.bind(this)
+                        });
+
+
+                        this.once('render', function () {
+                            $elementOneOf.autocomplete('dispose');
+                        }, this);
+
+                        this.once('remove', function () {
+                            $elementOneOf.autocomplete('dispose');
+                        }, this);
+                    }
+                }
 
                 $elementName.on('change', function () {
                     if (!this.model.get(this.idName)) {
                         $elementName.val(this.model.get(this.nameName));
                     }
                 }.bind(this));
-
-                this.once('render', function () {
-                    $elementName.autocomplete('dispose');
-                }, this);
-
-                this.once('remove', function () {
-                    $elementName.autocomplete('dispose');
-                }, this);
             }
 
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
+
+                if (type == 'isOneOf') {
+                    this.searchParams.oneOfIdList.forEach(function (id) {
+                        this.addLinkOneOfHtml(id, this.searchParams.oneOfNameHash[id]);
+                    }, this);
+                }
             }
         },
 
@@ -249,6 +339,38 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     return true;
                 }
             }
+        },
+
+        deleteLinkOneOf: function (id) {
+            this.deleteLinkOneOfHtml(id);
+
+            var index = this.searchParams.oneOfIdList.indexOf(id);
+            if (index > -1) {
+                this.searchParams.oneOfIdList.splice(index, 1);
+            }
+            delete this.searchParams.oneOfNameHash[id];
+        },
+
+        addLinkOneOf: function (id, name) {
+            if (!~this.searchParams.oneOfIdList.indexOf(id)) {
+                this.searchParams.oneOfIdList.push(id);
+                this.searchParams.oneOfNameHash[id] = name;
+                this.addLinkOneOfHtml(id, name);
+            }
+        },
+
+        deleteLinkOneOfHtml: function (id) {
+            this.$el.find('.link-container .link-' + id).remove();
+        },
+
+        addLinkOneOfHtml: function (id, name) {
+            var $container = this.$el.find('.link-container');
+            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+            $el.html(name + '&nbsp');
+            $el.append('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="glyphicon glyphicon-remove"></a>');
+            $container.append($el);
+
+            return $el;
         },
 
         fetch: function () {
@@ -277,6 +399,17 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     field: this.idName
                 };
                 return data;
+            } else if (type == 'isOneOf') {
+                var data = {
+                    type: 'in',
+                    typeFront: type,
+                    field: this.idName,
+                    value: this.searchParams.oneOfIdList,
+                    oneOfIdList: this.searchParams.oneOfIdList,
+                    oneOfNameHash: this.searchParams.oneOfNameHash
+                };
+                return data;
+
             } else {
                 if (!value) {
                     return false;
