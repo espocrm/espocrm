@@ -68,7 +68,7 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true
+        "sortBy": "createdAt",
+        "asc": false
     }
 }
