@@ -136,6 +136,23 @@
         },
         "teams": {
             "type": "linkMultiple"
+        },
+        "targetLists": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "importDisabled": true,
+            "noLoad": true
+        },
+        "targetList": {
+            "type": "link",
+            "notStorable": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
+            "entity": "TargetList"
         }
     },
     "links": {

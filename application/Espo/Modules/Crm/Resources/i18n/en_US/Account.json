@@ -11,7 +11,9 @@
         "industry": "Industry",
         "type": "Type",
         "contactRole": "Title",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "targetLists": "Target Lists",
+        "targetList": "Target List"
     },
     "links": {
         "contacts": "Contacts",
