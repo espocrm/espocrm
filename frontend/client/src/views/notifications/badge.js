@@ -50,6 +50,8 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
         },
 
         setup: function () {
+            this.soundPath = this.getConfig().get('notificationSound') || this.soundPath;
+
             this.once('remove', function () {
                 if (this.timeout) {
                     clearTimeout(this.timeout);
