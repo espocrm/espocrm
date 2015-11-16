@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
+Espo.define('crm:views/document/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        template: 'crm:document.list',
+        template: 'crm:document/list',
 
         quickCreate: true,
 
@@ -40,58 +40,80 @@ Espo.define('Crm:Views.Document.List', 'Views.List', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            this.loadFolders();
+            if (!this.hasView('folders')) {
+                this.loadFolders();
+            }
         },
 
-        loadFolders: function () {
+        getTreeCollection: function (callback) {
             this.getCollectionFactory().create('DocumentFolder', function (collection) {
                 collection.url = collection.name + '/action/listTree';
 
+                this.collection.treeCollection = collection;
+
                 this.listenToOnce(collection, 'sync', function () {
-                    this.createView('folders', 'Record.ListTree', {
-                        collection: collection,
-                        el: this.options.el + ' .folders-container',
-                        selectable: true,
-                        createDisabled: true,
-                        showRoot: true,
-                        rootName: this.translate('Document', 'scopeNamesPlural'),
-                        buttonsDisabled: true,
-                        checkboxes: false,
-                        showEditLink: this.getAcl().check('DocumentFolder', 'edit')
-                    }, function (view) {
-                        view.render();
-
-                        this.listenTo(view, 'select', function (model) {
-                            this.currentFolderId = null;
-                            this.currentFolderName = '';
-
-                            if (model && model.id) {
-                                this.currentFolderId = model.id;
-                                this.currentFolderName = model.get('name');
-                            }
-                            this.collection.whereAdditional = null;
-
-                            if (this.currentFolderId) {
-                                this.collection.whereAdditional = [
-                                    {
-                                        field: 'folder',
-                                        type: 'inCategory',
-                                        value: model.id
-                                    }
-                                ];
-                            }
-
-                            this.notify('Please wait...');
-                            this.listenToOnce(this.collection, 'sync', function () {
-                                this.notify(false);
-                            }, this);
-                            this.collection.fetch();
-
-                        }, this);
-                    }.bind(this));
+                    callback.call(this, collection);
                 }, this);
                 collection.fetch();
+
             }, this);
+        },
+
+        loadFolders: function () {
+            this.getTreeCollection(function (collection) {
+                this.createView('folders', 'views/record/list-tree', {
+                    collection: collection,
+                    el: this.options.el + ' .folders-container',
+                    selectable: true,
+                    createDisabled: true,
+                    showRoot: true,
+                    rootName: this.translate('Document', 'scopeNamesPlural'),
+                    buttonsDisabled: true,
+                    checkboxes: false,
+                    showEditLink: this.getAcl().check('DocumentFolder', 'edit')
+                }, function (view) {
+                    view.render();
+
+                    this.listenTo(view, 'select', function (model) {
+                        this.currentFolderId = null;
+                        this.currentFolderName = '';
+
+                        if (model && model.id) {
+                            this.currentFolderId = model.id;
+                            this.currentFolderName = model.get('name');
+                        }
+                        this.collection.whereAdditional = null;
+
+                        if (this.currentFolderId) {
+                            this.collection.whereAdditional = [
+                                {
+                                    field: 'folder',
+                                    type: 'inCategory',
+                                    value: model.id
+                                }
+                            ];
+                        }
+
+                        this.notify('Please wait...');
+                        this.listenToOnce(this.collection, 'sync', function () {
+                            this.notify(false);
+                        }, this);
+                        this.collection.fetch();
+
+                    }, this);
+                }, this);
+
+            }, this);
+            /*this.getCollectionFactory().create('DocumentFolder', function (collection) {
+                collection.url = collection.name + '/action/listTree';
+
+                this.collection.treeCollection = collection;
+
+                this.listenToOnce(collection, 'sync', function () {
+
+                }, this);
+                collection.fetch();
+            }, this);*/
         },
 
         getCreateAttributes: function () {

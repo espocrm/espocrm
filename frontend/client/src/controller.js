@@ -241,7 +241,7 @@ Espo.define('controller', [], function () {
                 options.el = '#main';
 
                 var process = function (main) {
-                    if (useStored) {
+                    if (storedKey) {
                         this.storeMainView(storedKey, main);
                     }
                     main.once('render', function () {
