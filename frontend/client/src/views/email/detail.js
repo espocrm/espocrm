@@ -307,7 +307,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
             this.notify('Loading...');
-            this.createView('quickCreate', 'Modals.ComposeEmail', {
+            this.createView('quickCreate', 'views/modals/compose-email', {
                 attributes: attributes,
             }, function (view) {
                 view.render(function () {
@@ -315,7 +315,11 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 });
 
                 view.notify(false);
-            });
+
+                this.listenToOnce(view, 'after:save', function () {
+                    this.model.trigger('reply');
+                }, this);
+            }, this);
         },
 
         actionReplyToAll: function () {

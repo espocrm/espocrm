@@ -30,7 +30,7 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'Email.Record.DetailSide',
+        sideView: 'views/email/record/detail-side',
 
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
@@ -97,6 +97,11 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     this.hideActionItem('markAsNotImportant');
                     this.showActionItem('markAsImportant');
                 }
+            }, this);
+
+            this.listenTo(this.model, 'reply', function () {
+                this.showField('replies');
+                this.model.fetch();
             }, this);
         },
 

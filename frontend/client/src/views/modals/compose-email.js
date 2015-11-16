@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
+Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -38,7 +38,7 @@ Espo.define('Views.Modals.ComposeEmail', 'Views.Modals.Edit', function (Dep) {
 
         fullFormDisabled: true,
 
-        editViewName: 'Email.Record.Compose',
+        editViewName: 'views/email/record/compose',
 
         columnCount: 2,
 

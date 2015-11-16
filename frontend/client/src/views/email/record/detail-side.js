@@ -34,12 +34,12 @@ Espo.define('views/email/record/detail-side', 'views/record/detail-side', functi
             {
                 name: 'default',
                 label: false,
-                view: 'Record.Panels.DefaultSide',
+                view: 'views/record/panels/default-side',
                 options: {
                     fieldList: [
                         {
                             name: 'teams',
-                            view: 'Fields.Teams'
+                            view: 'views/fields/teams'
                         },
                         'replied',
                         'replies'
