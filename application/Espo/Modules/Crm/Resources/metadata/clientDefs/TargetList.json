@@ -6,7 +6,7 @@
          {
             "name":"optedOut",
             "label":"Opted Out",
-            "view":"Crm:TargetList.Record.Panels.OptedOut"
+            "view":"crm:views/target-list/record/panels/opted-out"
          }
       ]
    },
@@ -22,7 +22,8 @@
                }
             }
          ],
-         "rowActionsView": "views/record/row-actions/relationship-no-remove"
+         "rowActionsView": "crm:views/target-list/record/row-actions/default",
+         "view": "crm:views/target-list/record/panels/relationship"
       },
       "leads": {
          "actionList": [
@@ -35,7 +36,8 @@
                }
             }
          ],
-         "rowActionsView": "views/record/row-actions/relationship-no-remove"
+         "rowActionsView": "crm:views/target-list/record/row-actions/default",
+         "view": "crm:views/target-list/record/panels/relationship"
       },
       "accounts": {
          "actionList": [
@@ -48,7 +50,8 @@
                }
             }
          ],
-         "rowActionsView": "views/record/row-actions/relationship-no-remove"
+         "rowActionsView": "crm:views/target-list/record/row-actions/default",
+         "view": "crm:views/target-list/record/panels/relationship"
       },
       "users": {
          "create": false,
@@ -62,7 +65,8 @@
                }
             }
          ],
-         "rowActionsView": "views/record/row-actions/relationship-no-remove"
+         "rowActionsView": "crm:views/target-list/record/row-actions/default",
+         "view": "crm:views/target-list/record/panels/relationship"
       }
    }
 }

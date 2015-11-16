@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,57 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/panels/relationship', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class TargetList extends \Espo\Core\Controllers\Record
-{
-	public function actionUnlinkAll($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new BadRequest();
-		}
+        actionOptOut: function (data) {
+            if (confirm(this.translate('confirmation', 'messages'))) {
+                $.ajax({
+                    url: 'TargetList/action/optOut',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.model.id,
+                        targetId: data.id,
+                        targetType: data.type
+                    })
+                }).done(function () {
+                    this.collection.fetch();
+                    Espo.Ui.success(this.translate('Done'));
+                    this.model.trigger('opt-out');
+                }.bind(this));
+            }
+        }
 
-		if (empty($data['id'])) {
-			throw new BadRequest();
-		}
+    });
+});
 
-		if (empty($data['link'])) {
-			throw new BadRequest();
-		}
-
-		return $this->getRecordService()->unlinkAll($data['id'], $data['link']);
-	}
-
-	public function postActionOptOut($params, $data)
-	{
-		if (empty($data['id'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetType'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetId'])) {
-			throw new BadRequest();
-		}
-		return $this->getRecordService()->optOut($data['id'], $data['targetType'], $data['targetId']);
-	}
-
-	public function postActionCancelOptOut($params, $data)
-	{
-		if (empty($data['id'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetType'])) {
-			throw new BadRequest();
-		}
-		if (empty($data['targetId'])) {
-			throw new BadRequest();
-		}
-		return $this->getRecordService()->cancelOptOut($data['id'], $data['targetType'], $data['targetId']);
-	}
-
-}

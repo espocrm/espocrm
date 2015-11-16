@@ -168,6 +168,33 @@ class TargetList extends \Espo\Services\Record
         );
     }
 
+    public function optOut($id, $targetType, $targetId)
+    {
+        $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+        if (!$targetList) {
+            throw new NotFound();
+        }
+        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        if (!$target) {
+            throw new NotFound();
+        }
+        $map = array(
+            'Account' => 'accounts',
+            'Contact' => 'contacts',
+            'Lead' => 'leads',
+            'User' => 'users'
+        );
+
+        if (empty($map[$targetType])) {
+            throw new Error();
+        }
+        $link = $map[$targetType];
+
+        return $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
+            'optedOut' => true
+        ));
+    }
+
     public function cancelOptOut($id, $targetType, $targetId)
     {
         $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
