@@ -2,8 +2,9 @@
     {
         "label":"",
         "rows":[
-            [{"name":"name"}],
-            [{"name":"subject"}],
+            [{"name":"name","fullWidth":true}],
+            [{"name":"oneOff","fullWidth":true}],
+            [{"name":"subject","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
             [{"name":"attachments"},{"name":"isHtml"}]
         ]

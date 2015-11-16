@@ -15,6 +15,11 @@
             "type": "bool",
             "default": true
         },
+        "oneOff": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
         "attachments": {
             "type": "linkMultiple",
             "view": "Fields.AttachmentMultiple"

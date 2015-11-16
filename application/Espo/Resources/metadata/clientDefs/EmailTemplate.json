@@ -20,5 +20,8 @@
        }
     ]
   },
-  "boolFilterList": ["onlyMy"]
+  "boolFilterList": ["onlyMy"],
+  "filterList": [
+    "actual"
+  ]
 }

@@ -6,7 +6,8 @@
         "body": "Body",
         "subject": "Subject",
         "attachments": "Attachments",
-        "insertField": "Insert Field"
+        "insertField": "Insert Field",
+        "oneOff": "One-off"
     },
     "links": {
     },
@@ -16,5 +17,11 @@
     },
     "messages": {
         "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
+    },
+    "tooltips": {
+        "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
+    },
+    "presetFilters": {
+        "actual": "Actual"
     }
 }

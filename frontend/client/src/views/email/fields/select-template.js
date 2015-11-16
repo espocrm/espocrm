@@ -46,6 +46,10 @@ Espo.define('views/email/fields/select-template', 'views/fields/link', function 
             }, this);
         },
 
+        getSelectPrimaryFilterName: function () {
+            return 'actual';
+        },
+
         loadTemplate: function (id) {
             var to = this.model.get('to') || '';
             var emailAddress = null;

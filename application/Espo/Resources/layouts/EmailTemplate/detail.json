@@ -6,7 +6,9 @@
                 {
                     "name":"name"
                 },
-                false
+                {
+                    "name":"oneOff"
+                }
             ],
             [{"name":"subject","fullWidth":true}],
             [
