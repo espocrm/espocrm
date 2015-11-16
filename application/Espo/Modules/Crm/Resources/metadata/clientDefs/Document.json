@@ -4,7 +4,7 @@
         "list": "crm:document/list"
     },
     "modalViews": {
-        "select": "crm:document/modals/select-records"
+        "select": "crm:views/document/modals/select-records"
     },
     "filterList": [
         "active",
