@@ -1,7 +1,7 @@
 {
     "controller": "controllers/record",
     "views": {
-        "list": "crm:document/list"
+        "list": "crm:views/document/list"
     },
     "modalViews": {
         "select": "crm:views/document/modals/select-records"
