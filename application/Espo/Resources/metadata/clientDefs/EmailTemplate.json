@@ -1,8 +1,9 @@
 {
   "controller": "controllers/record",
   "recordViews":{
-    "edit": "EmailTemplate.Record.Edit",
-    "detail": "EmailTemplate.Record.Detail"
+    "edit": "views/email-template/record/edit",
+    "detail": "views/email-template/record/detail",
+    "editQuick": "views/email-template/record/edit-quick"
   },
   "sidePanels":{
     "detail":[
