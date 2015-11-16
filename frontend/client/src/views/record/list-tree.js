@@ -76,7 +76,6 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 data.rootIsSelected = true;
             }
 
-
             return data;
         },
 
@@ -134,6 +133,9 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
         },
 
         setSelected: function (id) {
+            if (id === null) {
+                this.selectedData.id = null;
+            }
             this.rows.forEach(function (key) {
                 var view = this.getView(key);
 
