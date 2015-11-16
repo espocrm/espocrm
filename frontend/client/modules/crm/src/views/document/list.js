@@ -104,16 +104,6 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
                 }, this);
 
             }, this);
-            /*this.getCollectionFactory().create('DocumentFolder', function (collection) {
-                collection.url = collection.name + '/action/listTree';
-
-                this.collection.treeCollection = collection;
-
-                this.listenToOnce(collection, 'sync', function () {
-
-                }, this);
-                collection.fetch();
-            }, this);*/
         },
 
         getCreateAttributes: function () {
