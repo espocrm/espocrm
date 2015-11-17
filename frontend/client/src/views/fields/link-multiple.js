@@ -156,10 +156,6 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 var $element = this.$element;
 
-                $element.on('change', function () {
-                    $element.val('');
-                });
-
                 if (!this.autocompleteDisabled) {
                     this.$element.autocomplete({
                         serviceUrl: function (q) {
@@ -200,6 +196,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         $element.autocomplete('dispose');
                     }, this);
                 }
+
+                $element.on('change', function () {
+                    $element.val('');
+                });
 
                 this.renderLinks();
             }
