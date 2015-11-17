@@ -170,23 +170,21 @@ class Ics
     private function _generate()
     {
         $this->_s_output = "BEGIN:VCALENDAR\n".
-               "VERSION:2.0\n".
-                 "PRODID:-".$this->_s_prodid."\n".
-                 "METHOD:REQUEST\n".
-                 "BEGIN:VEVENT\n".
-                 "DTSTART:".$this->_dateToCal($this->startDate)."\n".
-                 "DTEND:".$this->_dateToCal($this->endDate)."\n".
-                 "SUMMARY:New ".$this->_escapeString($this->summary)."\n".
-                 "LOCATION:".$this->_escapeString($this->address)."\n".
-                 "ORGANIZER;CN=".$this->_escapeString($this->who).":MAILTO:" . $this->_escapeString($this->email)."\n".
-                 "DESCRIPTION:".$this->_escapeString($this->description)."\n".
-                 "X-ALT-DESC;FMTTYPE=text/html:".$this->_escapeString($this->html)."\n".
-                 "URL;VALUE=URI:".$this->_escapeString($this->uri)."\n".
-                 "UID:".$this->uid."\n".
-                 "SEQUENCE:0\n".
-                 "DTSTAMP:".$this->_dateToCal(time())."\n".
-                 "END:VEVENT\n".
-                 "END:VCALENDAR\n";
+             "VERSION:2.0\n".
+             "PRODID:-".$this->_s_prodid."\n".
+             "METHOD:REQUEST\n".
+             "BEGIN:VEVENT\n".
+             "DTSTART:".$this->_dateToCal($this->startDate)."\n".
+             "DTEND:".$this->_dateToCal($this->endDate)."\n".
+             "SUMMARY:New ".$this->_escapeString($this->summary)."\n".
+             "LOCATION:".$this->_escapeString($this->address)."\n".
+             "ORGANIZER;CN=".$this->_escapeString($this->who).":MAILTO:" . $this->_escapeString($this->email)."\n".
+             "DESCRIPTION:".$this->_escapeString($this->description)."\n".
+             "UID:".$this->uid."\n".
+             "SEQUENCE:0\n".
+             "DTSTAMP:".$this->_dateToCal(time())."\n".
+             "END:VEVENT\n".
+             "END:VCALENDAR";
     }
 
     private function _dateToCal($timestamp)
