@@ -118,9 +118,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             },
 
             'click .record-checkbox': function (e) {
-                var target = $(e.currentTarget);
-                var id = target.data('id');
-                this._checkRecord(id, e.currentTarget.checked, target);
+                var $target = $(e.currentTarget);
+                var id = $target.data('id');
+                if (e.currentTarget.checked) {
+                    this.checkRecord(id, $target);
+                } else {
+                    this.uncheckRecord(id, $target);
+                }
             },
             'click .select-all': function (e) {
                 this.checkedList = [];
@@ -542,6 +546,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.buildRows();
         },
 
+        afterRender: function () {
+            if (this.allResultIsChecked) {
+                this.selectAllResult();
+            } else {
+                if (this.checkedList.length) {
+                    this.checkedList.forEach(function (id) {
+                        this.checkRecord(id);
+                    }, this);
+                }
+            }
+        },
+
         _loadListLayout: function (callback) {
             this.layoutLoadCallbackList.push(callback);
 
@@ -639,38 +655,44 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return layout;
         },
 
-        checkRecord: function (id) {
-            var $target = this.$el.find('.record-checkbox[data-id="' + id + '"]');
+        checkRecord: function (id, $target) {
+            $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
             $target.get(0).checked = true;
-            this._checkRecord(id, true, $target);
+
+            var index = this.checkedList.indexOf(id);
+            if (index == -1) {
+                this.checkedList.push(id);
+            }
+
+            $target.closest('tr').addClass('active');
+
+            this.handleAfterCheck();
         },
 
-        _checkRecord: function (id, checked, target) {
-                var index = this.checkedList.indexOf(id);
+        uncheckRecord: function (id, $target) {
+            $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
+            $target.get(0).checked = false;
 
-                if (checked) {
-                    if (index == -1) {
-                        this.checkedList.push(id);
-                    }
-                    target.closest('tr').addClass('active');
-                } else {
-                    if (index != -1) {
-                        this.checkedList.splice(index, 1);
-                    }
-                    target.closest('tr').removeClass('active');
-                }
+            var index = this.checkedList.indexOf(id);
+            if (index != -1) {
+                this.checkedList.splice(index, 1);
+            }
 
-                if (this.checkedList.length) {
-                    this.$el.find('.actions-button').removeAttr('disabled');
-                } else {
-                    this.$el.find('.actions-button').attr('disabled', true);
-                }
+            $target.closest('tr').removeClass('active');
+        },
 
-                if (this.checkedList.length == this.collection.models.length) {
-                    this.$el.find('.select-all').prop('checked', true);
-                } else {
-                    this.$el.find('.select-all').prop('checked', false);
-                }
+        handleAfterCheck: function () {
+            if (this.checkedList.length) {
+                this.$el.find('.actions-button').removeAttr('disabled');
+            } else {
+                this.$el.find('.actions-button').attr('disabled', true);
+            }
+
+            if (this.checkedList.length == this.collection.models.length) {
+                this.$el.find('.select-all').prop('checked', true);
+            } else {
+                this.$el.find('.select-all').prop('checked', false);
+            }
         },
 
         getRowActionsDefs: function () {
