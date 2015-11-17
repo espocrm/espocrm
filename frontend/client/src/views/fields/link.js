@@ -70,6 +70,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         getSelectPrimaryFilterName: function () {},
 
+        getCreateAttributes: function () {},
+
         setup: function () {
             this.nameName = this.name + 'Name';
             this.idName = this.name + 'Id';
@@ -93,7 +95,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
-                        primaryFilterName: this.getSelectPrimaryFilterName()
+                        primaryFilterName: this.getSelectPrimaryFilterName(),
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
                     }, function (view) {
                         view.render();
                         this.notify(false);

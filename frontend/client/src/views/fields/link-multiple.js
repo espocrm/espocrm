@@ -73,6 +73,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getSelectPrimaryFilterName: function () {},
 
+        getCreateAttributes: function () {},
+
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
@@ -111,7 +113,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true
+                        multiple: true,
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);

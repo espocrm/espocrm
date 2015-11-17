@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'linkParent',
 
-        listTemplate: 'fields.link.list',
+        listTemplate: 'fields/link/list',
 
-        detailTemplate: 'fields.link.detail',
+        detailTemplate: 'fields/link/detail',
 
-        editTemplate: 'fields.link-parent.edit',
+        editTemplate: 'fields/link-parent/edit',
 
-        searchTemplate: 'fields.link-parent.search',
+        searchTemplate: 'fields/link-parent/search',
 
         nameName: null,
 
@@ -50,7 +50,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
 
         autocompleteDisabled: false,
 
-        selectRecordsViewName: 'Modals.SelectRecords',
+        selectRecordsViewName: 'views/modals/select-records',
 
         createDisabled: false,
 
@@ -72,6 +72,8 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
         getSelectBoolFilterList: function () {},
 
         getSelectPrimaryFilterName: function () {},
+
+        getCreateAttributes: function () {},
 
         setup: function () {
             this.nameName = this.name + 'Name';
@@ -108,6 +110,7 @@ Espo.define('Views.Fields.LinkParent', 'Views.Fields.Base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
                     }, function (dialog) {
                         dialog.render();
                         Espo.Ui.notify(false);

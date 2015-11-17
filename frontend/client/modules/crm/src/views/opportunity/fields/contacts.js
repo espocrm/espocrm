@@ -24,12 +24,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Opportunity.Fields.Contacts', 'Views.Fields.LinkMultipleWithRole', function (Dep) {
+Espo.define('crm:views/opportunity/fields/contacts', 'views/fields/link-multiple-with-role', function (Dep) {
 
     return Dep.extend({
-    
+
         getSelectFilters: function () {
             if (this.model.get('accountId')) {
                 return {
@@ -39,9 +39,19 @@ Espo.define('Crm:Views.Opportunity.Fields.Contacts', 'Views.Fields.LinkMultipleW
                         value: this.model.get('accountId'),
                         valueName: this.model.get('accountName'),
                     }
-                };                
+                };
             }
         },
+
+        getCreateAttributes: function () {
+            if (this.model.get('accountId')) {
+                return {
+                    accountId: this.model.get('accountId'),
+                    accountName: this.model.get('accountName')
+                }
+            }
+        }
+
     });
 
 });

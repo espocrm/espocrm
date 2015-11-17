@@ -39,7 +39,8 @@
         },
         "emailTemplate": {
             "type": "link",
-            "required": true
+            "required": true,
+            "view": "crm:views/mass-email/fields/email-template"
         },
         "campaign": {
             "type": "link"

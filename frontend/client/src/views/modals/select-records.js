@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -36,7 +36,7 @@ Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], func
 
         header: false,
 
-        template: 'modals.select-records',
+        template: 'modals/select-records',
 
         createButton: true,
 
@@ -193,9 +193,10 @@ Espo.define('Views.Modals.SelectRecords', ['Views.Modal', 'SearchManager'], func
             var self = this;
 
             this.notify('Loading...');
-            this.createView('quickCreate', 'Modals.Edit', {
+            this.createView('quickCreate', 'views/modals/edit', {
                 scope: this.scope,
                 fullFormDisabled: true,
+                attributes: this.options.createAttributes,
             }, function (view) {
                 view.once('after:render', function () {
                     self.notify(false);
