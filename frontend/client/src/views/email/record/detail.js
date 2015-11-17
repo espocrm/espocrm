@@ -61,11 +61,12 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.model.has('isRead') && !this.model.get('isRead')) {
+                this.model.set('isRead', true);
+            }
             this.listenTo(this.model, 'sync', function () {
                 if (!this.model.get('isRead')) {
-                    this.model.set({
-                        isRead: true
-                    });
+                    this.model.set('isRead', true);
                 }
             }, this);
 
