@@ -192,7 +192,11 @@
             "type": "linkMultiple"
         },
         "users": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "noLoad": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true
         }
     },
     "links": {

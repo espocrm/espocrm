@@ -58,6 +58,10 @@
             "type": "link",
             "tooltip": true
         },
+        "addAllTeamUsers": {
+            "type": "bool",
+            "tooltip": true
+        },
         "createCase": {
             "type": "bool",
             "tooltip": true

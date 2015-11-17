@@ -15,6 +15,10 @@
                 {"name":"fetchSince"}
             ],
             [
+                {"name":"addAllTeamUsers"},
+                false
+            ],
+            [
                 {"name":"assignToUser"},
                 false
             ]

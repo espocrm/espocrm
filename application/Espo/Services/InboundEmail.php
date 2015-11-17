@@ -162,13 +162,27 @@ class InboundEmail extends \Espo\Services\Record
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
         $teamId = $emailAccount->get('teamId');
-        $userId = $this->getUser()->id;
+        $userId = null;
         if ($emailAccount->get('assignToUserId')) {
             $userId = $emailAccount->get('assignToUserId');
         }
-        $teamIds = array();
+        $teamIdList = [];
+        $userIdList = [];
         if (!empty($teamId)) {
-            $teamIds[] = $teamId;
+            $teamIdList[] = $teamId;
+            if ($emailAccount->get('addAllTeamUsers')) {
+                $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                if ($team) {
+                    $userList = $this->getEntityManager()->getRepository('Team')->findRelated($team, 'users', array(
+                        'whereClause' => array(
+                            'isActive' => true
+                        )
+                    ));
+                    foreach ($userList as $user) {
+                        $userIdList[] = $user->id;
+                    }
+                }
+            }
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
@@ -284,7 +298,7 @@ class InboundEmail extends \Espo\Services\Record
                     }
                     if (!$toSkip) {
                         try {
-                            $email = $importer->importMessage($message, $userId, $teamIds, $filterCollection);
+                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection);
                         } catch (\Exception $e) {
                             $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
                         }

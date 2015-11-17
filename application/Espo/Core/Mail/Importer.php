@@ -71,7 +71,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $userId, $teamsIds = [], $filterList = [])
+    public function importMessage($message, $userId = null, $teamsIdList = [], $userIdList = [], $filterList = [])
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -85,8 +85,14 @@ class Importer
             $email->set('name', $subject);
             $email->set('status', 'Archived');
             $email->set('attachmentsIds', array());
-            $email->set('assignedUserId', $userId);
-            $email->set('teamsIds', $teamsIds);
+            if ($userId) {
+                $email->set('assignedUserId', $userId);
+            }
+            $email->set('teamsIds', $teamsIdList);
+
+            if (!empty($userIdList)) {
+                $email->set('usersIds', $userIdList);
+            }
 
             $fromArr = $this->getAddressListFromMessage($message, 'from');
             if (isset($message->from)) {
@@ -123,13 +129,24 @@ class Importer
             if ($duplicate = $this->findDuplicate($email)) {
             	$duplicate->loadLinkMultipleField('users');
             	$usersIds = $duplicate->get('usersIds');
-            	$usersIds[] = $userId;
+                if ($userId) {
+                    if (!in_array($userId, $usersIds)) {
+            	       $usersIds[] = $userId;
+                    }
+                }
+                if (!empty($userIdList)) {
+                    foreach ($userIdList as $additionalUserId) {
+                        if (!in_array($additionalUserId, $usersIds)) {
+                            $usersIds[] = $additionalUserId;
+                        }
+                    }
+                }
             	$duplicate->set('usersIds', $usersIds);
 
             	$this->getEntityManager()->saveEntity($duplicate);
 
-                if (!empty($teamsIds)) {
-                    foreach ($teamsIds as $teamId) {
+                if (!empty($teamsIdList)) {
+                    foreach ($teamsIdList as $teamId) {
                         $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
                     }
                 }

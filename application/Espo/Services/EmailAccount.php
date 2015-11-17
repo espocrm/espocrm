@@ -189,9 +189,9 @@ class EmailAccount extends Record
 
         $userId = $user->id;
         $teamId = $user->get('defaultTeamId');
-        $teamIds = array();
+        $teamIdList = [];
         if (!empty($teamId)) {
-            $teamIds[] = $teamId;
+            $teamIdList[] = $teamId;
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
@@ -284,7 +284,7 @@ class EmailAccount extends Record
                         $flags = $message->getFlags();
                     }
                     try {
-                    	$email = $importer->importMessage($message, $userId, $teamIds, $filterCollection);
+                    	$email = $importer->importMessage($message, $userId, $teamIdList, null, $filterCollection);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }

@@ -20,7 +20,8 @@
         "replyToAddress": "Reply To Address",
         "replyFromName": "Reply From Name",
         "targetUserPosition": "Target User Position",
-        "fetchSince": "Fetch Since"
+        "fetchSince": "Fetch Since",
+        "addAllTeamUsers": "For all team users"
     },
     "tooltips": {
         "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
@@ -29,7 +30,8 @@
         "caseDistribution": "How cases will be assigned to. Assigned directly to the user or among the team.",
         "assignToUser": "User emails/cases will be assigned to.",
         "team": "Team emails/cases will be related to.",
-        "targetUserPosition": "Define the position of users which will be destributed with cases."
+        "targetUserPosition": "Define the position of users which will be destributed with cases.",
+        "addAllTeamUsers": "Emails will appear in Inbox of all users of a specified team."
     },
     "links": {
         "filters": "Filters"
