@@ -474,6 +474,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 throw new Error('Collection has not been injected into Record.List view.');
             }
 
+            this.layoutLoadCallbackList = [];
+
             this.scope = this.collection.name || null;
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
@@ -541,9 +543,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         _loadListLayout: function (callback) {
+            this.layoutLoadCallbackList.push(callback);
+
+            if (this.layoutIsBeingLoaded) return;
+
+            this.layoutIsBeingLoaded = true;
             this._helper.layoutManager.get(this.collection.name, this.type, function (listLayout) {
-                callback(listLayout);
-            });
+                this.layoutLoadCallbackList.forEach(function (c) {
+                    c(listLayout)
+                    this.layoutLoadCallbackList = [];
+                    this.layoutIsBeingLoaded = false;
+                }, this);
+            }.bind(this));
         },
 
         _getHeaderDefs: function () {

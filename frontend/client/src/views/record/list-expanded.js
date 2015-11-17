@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
+Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.list-expanded',
+        template: 'record/list-expanded',
 
         checkboxes: false,
 
@@ -54,9 +54,19 @@ Espo.define('Views.Record.ListExpanded', 'Views.Record.List', function (Dep) {
 
         _loadListLayout: function (callback) {
             var type = this.type + 'Expanded';
+
+            this.layoutLoadCallbackList.push(callback);
+
+            if (this.layoutIsBeingLoaded) return;
+
+            this.layoutIsBeingLoaded = true;
             this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
-                callback(listLayout);
-            });
+                this.layoutLoadCallbackList.forEach(function (c) {
+                    c(listLayout)
+                    this.layoutLoadCallbackList = [];
+                    this.layoutIsBeingLoaded = false;
+                }, this);
+            }.bind(this));
         },
 
         _convertLayout: function (listLayout, model) {
