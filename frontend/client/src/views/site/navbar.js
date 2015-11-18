@@ -138,7 +138,7 @@ Espo.define('Views.Site.Navbar', 'View', function (Dep) {
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
             var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
 
-            var smallScreenWidth = 768;
+            var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
 
             if (!navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');

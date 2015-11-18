@@ -36,7 +36,7 @@ blockquote {
 
 .modal-footer {
     margin-top: 10px;
-    padding: 15px 15px 15px;
+    padding: @panel-padding @panel-padding @panel-padding;
 }
 
 .table thead > tr > th {
@@ -209,7 +209,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .list-buttons-container > div {
     float: left;
-    margin-right: 15px;
+    margin-right: @panel-padding;
 }
 
 .list-buttons-container > div.total-count {
@@ -224,7 +224,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .floated-row > div  {
     float: left;
-    margin-right: 15px;
+    margin-right: @panel-padding;
 }
 
 .search-row {
@@ -308,6 +308,16 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin: -2px;
 }
 
+@media screen and (max-width: @screen-sm-min) {
+    .modal-dialog {
+        margin: 10px 0;
+    }
+    .modal-dialog .image-container {
+        margin-left: -@panel-padding;
+        margin-right: -@panel-padding;
+    }
+}
+
 @media screen and (min-width: @screen-sm-min) {
     .modal-dialog {
         width: 740px !important;
@@ -385,20 +395,20 @@ select[multiple].input-sm {
 }
 
 .panel-body > .list-container > .list-expanded {
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
 }
 .panel-body > .list-container > .list {
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
 }
 .panel-body > .list-container > .list > table td:first-child,
 .panel-body > .list-container > .list > table th:first-child {
-    padding-left: 15px;
+    padding-left: @panel-padding;
 }
 .panel-body > .list-container > .list > table td:last-child,
 .panel-body > .list-container > .list > table th:last-child {
-    padding-right: 15px;
+    padding-right: @panel-padding;
 }
 
 .list-expanded > .show-more {
@@ -423,17 +433,17 @@ select[multiple].input-sm {
 }
 
 .panel-body > .list-container:first-child > .list-expanded:first-child {
-    margin-top: -15px;
+    margin-top: -@panel-padding;
 }
 .panel-body > .list-container:last-child > .list-expanded:last-child {
-    margin-bottom: -15px;
+    margin-bottom: -@panel-padding;
 }
 
 .panel-body > .list-container:first-child > .list:first-child {
-    margin-top: -15px;
+    margin-top: -@panel-padding;
 }
 .panel-body > .list-container:last-child > .list:last-child {
-    margin-bottom: -15px;
+    margin-bottom: -@panel-padding;
 }
 
 .expanded-row {
@@ -558,7 +568,7 @@ td.cell-buttons > .btn-group {
 
 .show-more > .btn-block {
     text-align: left;
-    padding-left: 15px;
+    padding-left: @panel-padding;
 }
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
@@ -654,7 +664,7 @@ body > footer {
 
 
 body > footer > p {
-    padding: 6px 15px;
+    padding: 6px @panel-padding;
 }
 body > footer > p.credit {
     margin: 0;
@@ -684,7 +694,7 @@ body > footer > p a:visited {
     max-height: 294px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-bottom: 15px;
+    padding-bottom: @panel-padding;
 }
 
 #notifications-panel > .panel > .panel-body {
@@ -875,7 +885,7 @@ img.avatar.avatar-link {
 }
 .list-group-tree > li {
     border: 0;
-    padding: 0 0 0 15px;
+    padding: 0 0 0 @panel-padding;
 }
 
 .list-group-tree > li .cell {

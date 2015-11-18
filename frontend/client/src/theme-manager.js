@@ -35,6 +35,10 @@ Espo.define('theme-manager', [], function () {
 
     _.extend(ThemeManager.prototype, {
 
+        defaultParams: {
+            screenWidthXs: 768
+        },
+
         getName: function () {
             if (!this.config.get('userThemesDisabled')) {
                 var name = this.preferences.get('theme');
@@ -50,7 +54,7 @@ Espo.define('theme-manager', [], function () {
         },
 
         getParam: function (name) {
-            return this.metadata.get('themes.' + this.getName() + '.' + name) || null;
+            return this.metadata.get('themes.' + this.getName() + '.' + name) || this.defaultParams[name] || null;
         },
 
         isUserTheme: function () {

@@ -69,12 +69,8 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
             }
 
             var manageSize = function () {
-                var width = this.$el.width();
-                if (width < 868) {
-                    $img.attr('width', width);
-                } else {
-                    $img.removeAttr('width');
-                }
+                var width = $container.width();
+                $img.css('maxWidth', width);
             }.bind(this);
 
             $(window).on('resize', function () {
