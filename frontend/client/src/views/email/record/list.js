@@ -45,6 +45,8 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.massActionList.push('moveToTrash');
+
             this.massActionList.push('markAsRead');
             this.massActionList.push('markAsNotRead');
             this.massActionList.push('markAsImportant');
@@ -131,6 +133,23 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             }, this);
         },
 
+        massActionMoveToTrash: function () {
+            var ids = [];
+            for (var i in this.checkedList) {
+                ids.push(this.checkedList[i]);
+            }
+            $.ajax({
+                url: 'Email/action/moveToTrash',
+                type: 'POST',
+                data: JSON.stringify({
+                    ids: ids
+                })
+            });
+            ids.forEach(function (id) {
+                this.removeRecordFromList(id);
+            }, this);
+        },
+
         actionMarkAsImportant: function (data) {
             data = data || {};
             var id = data.id;
@@ -171,7 +190,29 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.collection.forEach(function (model) {
                 model.set('isRead', true);
             }, this);
+        },
+
+        actionMoveToTrash: function (data) {
+            var id = data.id;
+            this.ajaxPostRequest('Email/action/moveToTrash', {
+                id: id
+            }).then(function () {
+                Espo.Ui.warning('Moved to Trash');
+                this.removeRecordFromList(id);
+            }.bind(this));
+        },
+
+        actionRetrieveFromTrash: function (data) {
+            var id = data.id;
+            this.ajaxPostRequest('Email/action/retrieveFromTrash', {
+                id: id
+            }).then(function () {
+                Espo.Ui.warning('Retrieved from Trash');
+                this.removeRecordFromList(id);
+
+            }.bind(this));
         }
+
 
     });
 });

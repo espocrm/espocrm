@@ -25,7 +25,10 @@
         "replies": "Replies",
         "isRead": "Is Read",
         "isImportant": "Is Important",
-        "isUsers": "Is User's"
+        "isUsers": "Is User's",
+        "inTrash": "In Trash",
+        "Move to Trash": "Move to Trash",
+        "Retrieve from Trash": "Retrieve from Trash"
     },
     "links": {
         "replied": "Replied",
@@ -74,12 +77,14 @@
         "sent": "Sent",
         "archived": "Archived",
         "inbox": "Inbox",
-        "drafts": "Drafts"
+        "drafts": "Drafts",
+        "trash": "Trash"
     },
     "massActions": {
         "markAsRead": "Mark as Read",
         "markAsNotRead": "Mark as Not Read",
         "markAsImportant": "Mark as Important",
-        "markAsNotImportant": "Unmark Importance"
+        "markAsNotImportant": "Unmark Importance",
+        "moveToTrash": "Move to Trash"
     }
 }

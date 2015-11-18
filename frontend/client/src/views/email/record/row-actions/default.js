@@ -58,6 +58,25 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                     }
                 ]);
             }
+            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+                if (!this.model.get('inTrash')) {
+                    list.push({
+                        action: 'moveToTrash',
+                        label: 'Move to Trash',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                } else {
+                    list.push({
+                        action: 'retrieveFromTrash',
+                        label: 'Retrieve from Trash',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
+            }
             if (this.getAcl().checkModel(this.model, 'delete')) {
                 list.push({
                     action: 'quickRemove',

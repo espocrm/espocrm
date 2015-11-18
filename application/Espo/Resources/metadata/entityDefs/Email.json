@@ -61,6 +61,11 @@
             "notStorable": true,
             "default": false
         },
+        "inTrash": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
         "isUsers": {
             "type": "bool",
             "notStorable": true,
@@ -227,6 +232,10 @@
                     "default": false
                 },
                 "isImportant": {
+                    "type": "bool",
+                    "default": false
+                },
+                "inTrash": {
                     "type": "bool",
                     "default": false
                 }

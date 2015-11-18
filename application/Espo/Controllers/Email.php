@@ -81,7 +81,7 @@ class Email extends \Espo\Core\Controllers\Record
                 throw new BadRequest();
             }
         }
-        return $this->getRecordService()->markAsReadByIds($ids);
+        return $this->getRecordService()->markAsReadByIdList($ids);
     }
 
     public function postActionMarkAsNotRead($params, $data, $request)
@@ -95,7 +95,7 @@ class Email extends \Espo\Core\Controllers\Record
                 throw new BadRequest();
             }
         }
-        return $this->getRecordService()->markAsNotReadByIds($ids);
+        return $this->getRecordService()->markAsNotReadByIdList($ids);
     }
 
     public function postActionMarkAllAsRead($params, $data, $request)
@@ -114,7 +114,7 @@ class Email extends \Espo\Core\Controllers\Record
                 throw new BadRequest();
             }
         }
-        return $this->getRecordService()->markAsImportantByIds($ids);
+        return $this->getRecordService()->markAsImportantByIdList($ids);
     }
 
     public function postActionMarkAsNotImportant($params, $data, $request)
@@ -128,7 +128,35 @@ class Email extends \Espo\Core\Controllers\Record
                 throw new BadRequest();
             }
         }
-        return $this->getRecordService()->markAsNotImportantByIds($ids);
+        return $this->getRecordService()->markAsNotImportantByIdList($ids);
+    }
+
+    public function postActionMoveToTrash($params, $data)
+    {
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
+        }
+        return $this->getRecordService()->moveToTrashByIdList($ids);
+    }
+
+    public function postActionRetrieveFromTrash($params, $data)
+    {
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
+        }
+        return $this->getRecordService()->retrieveFromTrashByIdList($ids);
     }
 }
 

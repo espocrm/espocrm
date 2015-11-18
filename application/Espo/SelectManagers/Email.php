@@ -44,6 +44,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 
         $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
         $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
+        $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
 
         return $result;
     }
@@ -59,6 +60,7 @@ class Email extends \Espo\Core\SelectManagers\Base
 
         $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
         $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
+        $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
     }
 
     protected function filterInbox(&$result)
@@ -69,7 +71,8 @@ class Email extends \Espo\Core\SelectManagers\Base
             $idList[] = $ea->id;
         }
         $result['whereClause'][] = array(
-            'fromEmailAddressId!=' => $idList
+            'fromEmailAddressId!=' => $idList,
+            'usersMiddle.inTrash=' => false
         );
         $this->boolFilterOnlyMy($result);
     }
@@ -82,8 +85,17 @@ class Email extends \Espo\Core\SelectManagers\Base
             $idList[] = $ea->id;
         }
         $result['whereClause'][] = array(
-            'fromEmailAddressId=' => $idList
+            'fromEmailAddressId=' => $idList,
+            'usersMiddle.inTrash=' => false
         );
+    }
+
+    protected function filterTrash(&$result)
+    {
+        $result['whereClause'][] = array(
+            'usersMiddle.inTrash=' => true
+        );
+        $this->boolFilterOnlyMy($result);
     }
 
     protected function filterDrafts(&$result)

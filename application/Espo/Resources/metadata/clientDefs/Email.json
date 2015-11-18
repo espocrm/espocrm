@@ -75,7 +75,8 @@
    "filterList": [
       "inbox",
       "sent",
-      "drafts"
+      "drafts",
+      "trash"
    ],
    "defaultFilterData": {
        "presetName": "inbox",

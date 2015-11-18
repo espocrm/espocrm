@@ -45,17 +45,17 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         actionComposeEmail: function () {
             this.notify('Loading...');
-            this.createView('quickCreate', 'Modals.ComposeEmail', {
+            this.createView('quickCreate', 'views/modals/compose-email', {
                 attributes: {
                     status: 'Draft'
-                },
+                }
             }, function (view) {
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
                     this.collection.fetch();
                 }, this);
-            }.bind(this));
+            }, this);
         },
 
     });

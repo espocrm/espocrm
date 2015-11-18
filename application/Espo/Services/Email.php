@@ -257,105 +257,166 @@ class Email extends Record
         $this->loadUserColumnFields($entity);
     }
 
-    public function markAsReadByIds(array $ids)
+    public function markAsReadByIdList(array $idList, $userId = null)
     {
-        foreach ($ids as $id) {
-            $this->markAsRead($id);
+        foreach ($idList as $id) {
+            $this->markAsRead($id, $userId);
         }
         return true;
     }
 
-    public function markAsNotReadByIds(array $ids)
+    public function markAsNotReadByIdList(array $idList, $userId = null)
     {
-        foreach ($ids as $id) {
-            $this->markAsNotRead($id);
+        foreach ($idList as $id) {
+            $this->markAsNotRead($id, $userId);
         }
         return true;
     }
 
-    public function markAsImportantByIds(array $ids)
+    public function markAsImportantByIdList(array $idList, $userId = null)
     {
-        foreach ($ids as $id) {
-            $this->markAsImportant($id);
+        foreach ($idList as $id) {
+            $this->markAsImportant($id, $userId);
         }
         return true;
     }
 
-    public function markAsNotImportantByIds(array $ids)
+    public function markAsNotImportantByIdList(array $idList, $userId = null)
     {
-        foreach ($ids as $id) {
-            $this->markAsNotImportant($id);
+        foreach ($idList as $id) {
+            $this->markAsNotImportant($id, $userId);
         }
         return true;
     }
 
-    public function markAllAsRead()
+    public function moveToTrashByIdList(array $idList, $userId = null)
     {
+        foreach ($idList as $id) {
+            $this->moveToTrash($id, $userId);
+        }
+        return true;
+    }
+
+    public function retrieveFromTrashByIdList(array $idList, $userId = null)
+    {
+        foreach ($idList as $id) {
+            $this->retrieveFromTrash($id, $userId);
+        }
+        return true;
+    }
+
+    public function markAllAsRead($userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_read = 1
             WHERE
                 deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . "
+                user_id = " . $pdo->quote($userId) . "
         ";
         $pdo->query($sql);
         return true;
     }
 
-    public function markAsRead($id)
+    public function markAsRead($id, $userId = null)
     {
-
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_read = 1
             WHERE
                 deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                user_id = " . $pdo->quote($userId) . " AND
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
         return true;
     }
 
-    public function markAsNotRead($id)
+    public function markAsNotRead($id, $userId = null)
     {
-
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_read = 0
             WHERE
                 deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                user_id = " . $pdo->quote($userId) . " AND
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
         return true;
     }
 
-    public function markAsImportant($id)
+    public function markAsImportant($id, $userId = null)
     {
-
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_important = 1
             WHERE
                 deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                user_id = " . $pdo->quote($userId) . " AND
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
         return true;
     }
 
-    public function markAsNotImportant($id)
+    public function markAsNotImportant($id, $userId = null)
     {
-
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             UPDATE email_user SET is_important = 0
             WHERE
                 deleted = 0 AND
-                user_id = " . $pdo->quote($this->getUser()->id) . " AND
+                user_id = " . $pdo->quote($userId) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
+    public function moveToTrash($id, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET in_trash = 1
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($userId) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
+    public function retrieveFromTrash($id, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET in_trash = 0
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($userId) . " AND
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
@@ -423,7 +484,7 @@ class Email extends Record
         $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "
-            SELECT is_read AS 'isRead', is_important AS 'isImportant' FROM email_user
+            SELECT is_read AS 'isRead', is_important AS 'isImportant', in_trash AS 'inTrash' FROM email_user
             WHERE
                 deleted = 0 AND
                 user_id = " . $pdo->quote($this->getUser()->id) . " AND
@@ -435,12 +496,15 @@ class Email extends Record
         if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $isRead = !empty($row['isRead']) ? true : false;
             $isImportant = !empty($row['isImportant']) ? true : false;
+            $inTrash = !empty($row['inTrash']) ? true : false;
 
             $entity->set('isRead', $isRead);
             $entity->set('isImportant', $isImportant);
+            $entity->set('inTrash', $inTrash);
         } else {
             $entity->set('isRead', null);
             $entity->clear('isImportant');
+            $entity->clear('inTrash');
         }
     }
 
