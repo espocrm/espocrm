@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
 
         header: true,
 
-        template: 'modals.image-preview',
+        template: 'modals/image-preview',
 
         size: 'x-large',
 
@@ -51,11 +51,22 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
         setup: function () {
             this.buttons = [];
             this.header = '&nbsp;';
+
+            this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
+
+            this.imageList = this.options.imageList || [];
         },
 
         afterRender: function () {
             $container = this.$el.find('.image-container');
             $img = this.$el.find('.image-container img');
+
+            if (this.navigationEnabled) {
+                $img.css('cursor', 'pointer');
+                $img.click(function () {
+                    this.switchToNext();
+                }.bind(this));
+            }
 
             var manageSize = function () {
                 var width = this.$el.width();
@@ -73,7 +84,24 @@ Espo.define('Views.Modals.ImagePreview', 'Views.Modal', function (Dep) {
             setTimeout(function () {
                 manageSize();
             }, 100);
+        },
 
+        switchToNext: function () {
+            var index = -1;
+            this.imageList.forEach(function (d, i) {
+                if (d.id === this.options.id) {
+                    index = i;
+                }
+            }, this);
+
+            index++;
+            if (index > this.imageList.length - 1) {
+                index = 0;
+            }
+
+            this.options.id = this.imageList[index].id
+            this.options.name = this.imageList[index].name;
+            this.reRender();
         },
 
     });

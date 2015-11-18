@@ -80,6 +80,10 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.buttons = Espo.Utils.clone(this.buttons);
 
             this.on('render', function () {
+                if (this.dialog) {
+                    this.dialog.close();
+                }
+
                 $(containerSelector).remove();
                 $('<div />').css('display', 'none').attr('id', id).appendTo('body');
 
@@ -125,8 +129,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
                     onRemove: function () {
-                        this.trigger('close');
-                        this.remove();
+                        this.onDialogClose();
                     }.bind(this)
                 });
                 this.setElement(containerSelector + ' .body');
@@ -143,6 +146,13 @@ Espo.define('views/modal', 'view', function (Dep) {
                 }
                 $(containerSelector).remove();
             });
+        },
+
+        onDialogClose: function () {
+            if (!this.isBeingRendered()) {
+                this.trigger('close');
+                this.remove();
+            }
         },
 
         actionCancel: function () {

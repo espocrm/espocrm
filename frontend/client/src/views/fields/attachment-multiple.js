@@ -74,10 +74,46 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 e.preventDefault();
 
                 var id = $(e.currentTarget).data('id');
-                this.createView('preview', 'Modals.ImagePreview', {
+                var attachmentIdList = this.model.get(this.idsName) || [];
+
+                var typeHash = this.model.get(this.typeHashName) || {};
+
+                var imageIdListRight = [];
+                var imageIdListLeft = [];
+
+                imageIdListLeft.push(id);
+
+                var met = false;
+                attachmentIdList.forEach(function (cId) {
+                    if (cId === id) {
+                        met = true;
+                        return;
+                    }
+                    if (!this.isTypeIsImage(typeHash[cId])) {
+                        return;
+                    }
+                    if (met) {
+                        imageIdListLeft.push(cId);
+                    } else {
+                        imageIdListRight.push(cId);
+                    }
+                }, this);
+
+                var imageIdList = imageIdListLeft.concat(imageIdListRight);
+
+                var imageList = [];
+                imageIdList.forEach(function (cId) {
+                    imageList.push({
+                        id: cId,
+                        name: this.nameHash[cId]
+                    });
+                }, this);
+
+                this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
-                    name: this.nameHash[id]
+                    name: this.nameHash[id],
+                    imageList: imageList
                 }, function (view) {
                     view.render();
                 });
@@ -295,14 +331,21 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
         },
 
-        getDetailPreview: function (name, type, id) {
-            var preview = name;
-
+        isTypeIsImage: function (type) {
             switch (type) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+                    return true;
+            }
+            return false
+        },
+
+        getDetailPreview: function (name, type, id) {
+            var preview = name;
+
+            if (this.isTypeIsImage(type)) {
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
             }
             return preview;
         },
