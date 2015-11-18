@@ -374,13 +374,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 	                        idsRemoved.forEach(function (id) {
 	                            Espo.Ui.notify(false);
 	                            this.checkedList = [];
-	                            var model = this.collection.get(id);
-	                            this.collection.remove(model);
 
-	                            this.$el.find(this.getRowSelector(id)).remove();
-	                            if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total == -2)) {
-	                                this.render();
-	                            }
+                                this.removeRecordFromList(id);
+
 	                        }, this);
 	                        var msg = 'massRemoveResult';
 	                        if (count == 1) {
@@ -679,6 +675,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             $target.closest('tr').removeClass('active');
+
+            this.handleAfterCheck();
         },
 
         handleAfterCheck: function () {
@@ -1008,19 +1006,34 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify('Removing...');
                 model.destroy({
                     success: function () {
-                        self.notify('Removed', 'success');
-                        self.$el.find(self.getRowSelector(id)).remove();
-                        if (self.collection.total > 0) {
-                            self.collection.total--;
-                        }
-                        if (self.collection.length == 0 && self.collection.total == 0) {
-                            self.render();
-                        }
-                    },
+                        this.notify('Removed', 'success');
+                        this.removeRecordFromList(id);
+                    }.bind(this),
                     error: function () {
                         self.notify('Error occured', 'error');
                     },
                 });
+            }
+        },
+
+        removeRecordFromList: function (id) {
+            this.collection.remove(id);
+            if (this.collection.total > 0) {
+                this.collection.total--;
+            }
+
+            var index = this.checkedList.indexOf(id);
+            if (index != -1) {
+                this.checkedList.splice(index, 1);
+            }
+
+            this.removeRowHtml(id);
+        },
+
+        removeRowHtml: function (id) {
+            this.$el.find(this.getRowSelector(id)).remove();
+            if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
+                this.reRender();
             }
         }
     });
