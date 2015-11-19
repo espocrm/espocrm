@@ -94,7 +94,8 @@
         "rangeInt": "Range Integer",
         "rangeFloat": "Range Float",
         "rangeCurrency": "Range Currency",
-        "wysiwyg": "Wysiwyg"
+        "wysiwyg": "Wysiwyg",
+        "map": "Map"
     },
     "fields": {
         "type": "Type",
@@ -119,7 +120,8 @@
         "isSorted": "Is Sorted (alphabetically)",
         "audited": "Audited",
         "trim": "Trim",
-        "height": "Height (px)"
+        "height": "Height (px)",
+        "provider": "Provider"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

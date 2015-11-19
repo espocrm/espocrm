@@ -71,16 +71,19 @@
         "billingAddressPostalCode": "Postal Code",
         "billingAddressState": "State",
         "billingAddressStreet": "Street",
+        "billingAddressMap": "Map",
         "addressCity": "City",
         "addressStreet": "Street",
         "addressCountry": "Country",
         "addressState": "State",
         "addressPostalCode": "Postal Code",
+        "addressMap": "Map",
         "shippingAddressCity": "City (Shipping)",
         "shippingAddressStreet": "Street (Shipping)",
         "shippingAddressCountry": "Country (Shipping)",
         "shippingAddressState": "State (Shipping)",
-        "shippingAddressPostalCode": "Postal Code (Shipping)"
+        "shippingAddressPostalCode": "Postal Code (Shipping)",
+        "shippingAddressState": "Map (Shipping)"
     },
     "links": {
         "contacts": "Contacts",
