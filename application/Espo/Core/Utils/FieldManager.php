@@ -70,47 +70,47 @@ class FieldManager
 
     public function read($name, $scope)
     {
-        $fieldDef = $this->getFieldDef($name, $scope);
+        $fieldDefs = $this->getFieldDefs($name, $scope);
 
-        $fieldDef['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
+        $fieldDefs['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
 
-        return $fieldDef;
+        return $fieldDefs;
     }
 
-    public function create($name, $fieldDef, $scope)
+    public function create($name, $fieldDefs, $scope)
     {
-        $existingField = $this->getFieldDef($name, $scope);
+        $existingField = $this->getFieldDefs($name, $scope);
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
         }
 
-        return $this->update($name, $fieldDef, $scope);
+        return $this->update($name, $fieldDefs, $scope);
     }
 
-    public function update($name, $fieldDef, $scope)
+    public function update($name, $fieldDefs, $scope)
     {
         /*Add option to metadata to identify the custom field*/
         if (!$this->isCore($name, $scope)) {
-            $fieldDef[$this->customOptionName] = true;
+            $fieldDefs[$this->customOptionName] = true;
         }
 
         $res = true;
-        if (isset($fieldDef['label'])) {
-            $this->setLabel($name, $fieldDef['label'], $scope);
+        if (isset($fieldDefs['label'])) {
+            $this->setLabel($name, $fieldDefs['label'], $scope);
         }
 
-        if (isset($fieldDef['type']) && $fieldDef['type'] == 'enum') {
-            if (isset($fieldDef['translatedOptions'])) {
-                $this->setTranslatedOptions($name, $fieldDef['translatedOptions'], $scope);
+        if (isset($fieldDefs['type']) && $fieldDefs['type'] == 'enum') {
+            if (isset($fieldDefs['translatedOptions'])) {
+                $this->setTranslatedOptions($name, $fieldDefs['translatedOptions'], $scope);
             }
         }
 
-        if (isset($fieldDef['label']) || isset($fieldDef['translatedOptions'])) {
+        if (isset($fieldDefs['label']) || isset($fieldDefs['translatedOptions'])) {
             $res &= $this->getLanguage()->save();
         }
 
-        if ($this->isDefsChanged($name, $fieldDef, $scope)) {
-            $res &= $this->setEntityDefs($name, $fieldDef, $scope);
+        if ($this->isDefsChanged($name, $fieldDefs, $scope)) {
+            $res &= $this->setEntityDefs($name, $fieldDefs, $scope);
         }
 
         return (bool) $res;
@@ -134,11 +134,11 @@ class FieldManager
         return (bool) $res;
     }
 
-    protected function setEntityDefs($name, $fieldDef, $scope)
+    protected function setEntityDefs($name, $fieldDefs, $scope)
     {
-        $fieldDef = $this->normalizeDefs($name, $fieldDef, $scope);
+        $fieldDefs = $this->normalizeDefs($name, $fieldDefs, $scope);
 
-        $this->getMetadata()->set($this->metadataType, $scope, $fieldDef);
+        $this->getMetadata()->set($this->metadataType, $scope, $fieldDefs);
         $res = $this->getMetadata()->save();
 
         return $res;
@@ -161,12 +161,12 @@ class FieldManager
         return $this->getLanguage()->save();
     }
 
-    protected function getFieldDef($name, $scope)
+    protected function getFieldDefs($name, $scope)
     {
         return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
     }
 
-    protected function getLinkDef($name, $scope)
+    protected function getLinkDefs($name, $scope)
     {
         return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
     }
@@ -175,11 +175,11 @@ class FieldManager
      * Prepare input fieldDefs, remove unnecessary fields
      *
      * @param string $fieldName
-     * @param array $fieldDef
+     * @param array $fieldDefs
      * @param string $scope
      * @return array
      */
-    protected function prepareFieldDef($name, $fieldDef, $scope)
+    protected function prepareFieldDefs($name, $fieldDefs, $scope)
     {
         $unnecessaryFields = array(
             'name',
@@ -188,53 +188,53 @@ class FieldManager
         );
 
         foreach ($unnecessaryFields as $fieldName) {
-            if (isset($fieldDef[$fieldName])) {
-                unset($fieldDef[$fieldName]);
+            if (isset($fieldDefs[$fieldName])) {
+                unset($fieldDefs[$fieldName]);
             }
         }
 
-        $currentOptionList = array_keys((array) $this->getFieldDef($name, $scope));
-        foreach ($fieldDef as $defName => $defValue) {
+        $currentOptionList = array_keys((array) $this->getFieldDefs($name, $scope));
+        foreach ($fieldDefs as $defName => $defValue) {
             if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
-                unset($fieldDef[$defName]);
+                unset($fieldDefs[$defName]);
             }
         }
 
-        return $fieldDef;
+        return $fieldDefs;
     }
 
     /**
      * Add all needed block for a field defenition
      *
      * @param string $fieldName
-     * @param array $fieldDef
+     * @param array $fieldDefs
      * @param string $scope
      * @return array
      */
-    protected function normalizeDefs($fieldName, array $fieldDef, $scope)
+    protected function normalizeDefs($fieldName, array $fieldDefs, $scope)
     {
-        $fieldDef = $this->prepareFieldDef($fieldName, $fieldDef, $scope);
+        $fieldDefs = $this->prepareFieldDefs($fieldName, $fieldDefs, $scope);
 
-        $metaFieldDef = $this->getMetadataHelper()->getFieldDefsInFieldMeta($fieldDef);
-        if (isset($metaFieldDef)) {
-            $fieldDef = Util::merge($metaFieldDef, $fieldDef);
+        $metaFieldDefs = $this->getMetadataHelper()->getFieldDefsInFieldMeta($fieldDefs);
+        if (isset($metaFieldDefs)) {
+            $fieldDefs = Util::merge($metaFieldDefs, $fieldDefs);
         }
 
-        if (isset($fieldDef['linkDefs'])) {
-            $linkDefs = $fieldDef['linkDefs'];
-            unset($fieldDef['linkDefs']);
+        if (isset($fieldDefs['linkDefs'])) {
+            $linkDefs = $fieldDefs['linkDefs'];
+            unset($fieldDefs['linkDefs']);
         }
 
         $defs = array(
             'fields' => array(
-                $fieldName => $fieldDef,
+                $fieldName => $fieldDefs,
             ),
         );
 
         /** Save links for a field. */
-        $metaLinkDef = $this->getMetadataHelper()->getLinkDefsInFieldMeta($scope, $fieldDef);
-        if (isset($linkDefs) || isset($metaLinkDef)) {
-            $linkDefs = Util::merge((array) $metaLinkDef, (array) $linkDefs);
+        $metaLinkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($scope, $fieldDefs);
+        if (isset($linkDefs) || isset($metaLinkDefs)) {
+            $linkDefs = Util::merge((array) $metaLinkDefs, (array) $linkDefs);
             $defs['links'] = array(
                 $fieldName => $linkDefs,
             );
@@ -248,12 +248,12 @@ class FieldManager
      *
      * @return boolean
      */
-    protected function isDefsChanged($name, $fieldDef, $scope)
+    protected function isDefsChanged($name, $fieldDefs, $scope)
     {
-        $fieldDef = $this->prepareFieldDef($name, $fieldDef, $scope);
-        $currentFieldDef = $this->getFieldDef($name, $scope);
+        $fieldDefs = $this->prepareFieldDefs($name, $fieldDefs, $scope);
+        $currentFieldDefs = $this->getFieldDefs($name, $scope);
 
-        $this->isChanged = Util::isEquals($fieldDef, $currentFieldDef) ? false : true;
+        $this->isChanged = Util::isEquals($fieldDefs, $currentFieldDefs) ? false : true;
 
         return $this->isChanged;
     }
@@ -277,7 +277,7 @@ class FieldManager
      */
     protected function isCore($name, $scope)
     {
-        $existingField = $this->getFieldDef($name, $scope);
+        $existingField = $this->getFieldDefs($name, $scope);
         if (isset($existingField) && (!isset($existingField[$this->customOptionName]) || !$existingField[$this->customOptionName])) {
             return true;
         }
