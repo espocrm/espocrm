@@ -3,7 +3,7 @@
         <a class="minimizer" href="javascript:">
             <span class="glyphicon glyphicon-menu-hamburger"></span>
         </a>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}"><span class="home-icon glyphicon glyphicon-home"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon glyphicon glyphicon-home"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

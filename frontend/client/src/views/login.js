@@ -58,9 +58,9 @@ Espo.define('views/login', 'view', function (Dep) {
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
             if (!companyLogoId) {
-                return 'client/img/logo.png';
+                return this.getThemeManager().getParam('logo') || 'client/img/logo.png';
             }
-            return '?entryPoint=LogoImage&size=small-logo';
+            return '?entryPoint=LogoImage';
         },
 
         login: function () {
