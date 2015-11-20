@@ -106,7 +106,7 @@ class Avatar extends Image
 
                 ob_clean();
                 flush();
-                $identicon->displayImage($userId, $width, $this->getColor($userId));
+                echo $identicon->getImageData($userId, $width, $this->getColor($userId));
                 exit;
             }
         }
