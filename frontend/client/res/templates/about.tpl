@@ -40,7 +40,7 @@
         </section>
 
         <section style="margin-top: 30px;">
-        <h5>Javascript libraries</h5>
+        <h5>Javascript libraries used</h5>
         <ul>
             <li>Backbone.js</li>
             <li>Handlebars</li>
@@ -62,7 +62,7 @@
         </ul>
         </section>
         <section style="margin-top: 30px;">
-            <h5>PHP libraries</h5>
+            <h5>PHP libraries used</h5>
             <ul>
                 <li>Composer</li>
                 <li>Doctrine (DBAL)</li>
