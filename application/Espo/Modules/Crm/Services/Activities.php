@@ -694,7 +694,7 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getUpcomingActivities($userId, $params)
+    public function getUpcomingActivities($userId, $params = array())
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
@@ -716,7 +716,11 @@ class Activities extends \Espo\Core\Services\Base
 
 
             $selectManager->applyAccess($selectParams);
-            $selectManager->applyTextFilter($query, $selectParams);
+
+            if (!empty($prams['textFilter'])) {
+                $selectManager->applyTextFilter($prams['textFilter'], $selectParams);
+            }
+
             $selectManager->applyPrimaryFilter('planned', $selectParams);
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
             $selectManager->applyWhere(array(
