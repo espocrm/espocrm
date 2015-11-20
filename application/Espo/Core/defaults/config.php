@@ -80,8 +80,8 @@ return array (
     array (
         'path' => 'data/logs/espo.log',
         'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
-        'rotation' => true, /** create log */
-        'maxFileNumber' => 30, /** max number of log files */
+        'rotation' => true,
+        'maxFileNumber' => 30,
     ),
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' =>
