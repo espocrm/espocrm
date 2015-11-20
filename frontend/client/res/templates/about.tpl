@@ -50,7 +50,7 @@
             <li>Selectize.js by Brian Reavis</li>
             <li>Summernote</li>
             <li>Bootstrap</li>
-            <li>Bootstrap-datepicker.js</li>
+            <li>Bootstrap Datepicker by Andrew Rowls</li>
             <li>Flotr2</li>
             <li>Fullcalendar</li>
             <li>Cropper by Fengyuan Chen</li>
