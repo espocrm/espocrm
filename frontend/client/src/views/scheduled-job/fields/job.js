@@ -46,8 +46,16 @@ Espo.define('views/scheduled-job/fields/job', 'views/fields/enum', function (Dep
 
             if (this.model.isNew()) {
                 this.on('change', function () {
-                    var label = this.getLanguage().translateOption(this.model.get('job'), 'job', 'ScheduledJob');
-                    this.model.set('name', label);
+                    var job = this.model.get('job');
+                    if (job) {
+                        var label = this.getLanguage().translateOption(job, 'job', 'ScheduledJob');
+                        var scheduling = this.getMetadata().get('entityDefs.ScheduledJob.jobSchedulingMap.' + job) || '*/10 * * * *';
+                        this.model.set('name', label);
+                        this.model.set('scheduling', scheduling);
+                    } else {
+                        this.model.set('name', '');
+                        this.model.set('scheduling', '');
+                    }
                 }, this);
             }
         }

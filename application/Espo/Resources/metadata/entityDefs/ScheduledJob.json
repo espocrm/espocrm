@@ -17,7 +17,6 @@
             "type": "varchar",
             "required": true,
             "view": "views/scheduled-job/fields/scheduling",
-            "default": "*/10 * * * *",
             "tooltip": true
         },
         "lastRun": {
@@ -59,5 +58,13 @@
     "collection": {
         "sortBy": "name",
         "asc": true
+    },
+    "jobSchedulingMap": {
+        "CheckInboundEmails": "*/4 * * * *",
+        "CheckEmailAccounts": "*/5 * * * *",
+        "SendEmailReminders": "/2 * * * *",
+        "Cleanup": "1 1 * * 0",
+        "ProcessMassEmail": "15 * * * *",
+        "AuthTokenControl": "*/6 * * * *"
     }
 }
