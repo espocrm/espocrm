@@ -27,8 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array (    'database' =>
-    array (
+return array (
+    'database' => array (
         'driver' => 'pdo_mysql',
         'host' => 'localhost',
         'port' => '',
@@ -48,13 +48,10 @@ return array (    'database' =>
     'thousandSeparator' => ',',
     'decimalMark' => '.',
     'exportDelimiter' => ';',
-    'currencyList' =>
-    array (
-    ),
+    'currencyList' => ['USD'],
     'defaultCurrency' => 'USD',
     'baseCurrency' => 'USD',
-    'currencyRates' => array(
-    ),
+    'currencyRates' => [],
     'outboundEmailIsShared' => true,
     'outboundEmailFromName' => 'EspoCRM',
     'outboundEmailFromAddress' => '',
@@ -64,7 +61,7 @@ return array (    'database' =>
     'smtpSecurity' => '',
     'smtpUsername' => '',
     'smtpPassword' => '',
-    'languageList' => array(
+    'languageList' => [
         'en_US',
         'de_DE',
         'es_ES',
@@ -77,14 +74,14 @@ return array (    'database' =>
         'pt_BR',
         'uk_UA',
         'vi_VN'
-    ),
+    ],
     'language' => 'en_US',
     'logger' =>
     array (
         'path' => 'data/logs/espo.log',
         'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
-        'isRotate' => true, /** rotate log files every day */
-        'maxRotateFiles' => 30, /** max number of rotate files */
+        'rotation' => true, /** create log */
+        'maxFileNumber' => 30, /** max number of log files */
     ),
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' =>
@@ -94,16 +91,16 @@ return array (    'database' =>
         'Lead',
         'Opportunity',
     ),
-    "tabList" => array("Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email", "Document", "Campaign"),
-    "quickCreateList" => array("Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"),
+    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email", "Document", "Campaign"],
+    "quickCreateList" => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"],
     'calendarDefaultEntity' => 'Meeting',
     'exportDisabled' => false,
     'assignmentEmailNotifications' => false,
-    'assignmentEmailNotificationsEntityList' => array('Lead', 'Opportunity', 'Task', 'Case'),
-    'assignmentNotificationsEntityList' => array('Meeting', 'Call', 'Task', 'Email'),
+    'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
+    'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Task', 'Email'],
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
-    'disabledCountQueryEntityList' => array('Email'),
+    'disabledCountQueryEntityList' => ['Email'],
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
     'b2cMode' => false,
@@ -112,6 +109,8 @@ return array (    'database' =>
     'massEmailMaxPerHourCount' => 100,
     'personalEmailMaxPortionSize' => 10,
     'inboundEmailMaxPortionSize' => 20,
+    'authTokenLifetime' => 0,
+    'authTokenMaxIdleTime' => 120
     'isInstalled' => false,
 );
 

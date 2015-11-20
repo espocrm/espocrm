@@ -2,7 +2,8 @@
     {
         "label": "Configuration",
         "rows": [
-            [{"name": "authenticationMethod"}]
+            [{"name": "authenticationMethod"}, {"name": "authTokenLifetime"}],
+            [false, {"name": "authTokenMaxIdleTime"}]
         ]
     },
     {

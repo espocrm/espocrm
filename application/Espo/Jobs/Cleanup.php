@@ -78,8 +78,10 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
     }
 
-    protected function getCleanupFromDate($format = 'Y-m-d')
+    protected function getCleanupFromDate()
     {
+        $format = 'Y-m-d';
+
         $datetime = new \DateTime();
         $datetime->modify($this->period);
         return $datetime->format($format);

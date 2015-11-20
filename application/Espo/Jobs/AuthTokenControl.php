@@ -27,51 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-	'EmailTemplate' => array(
-		array(
-			'name' => 'Case-to-Email auto-reply',
-			'subject' => 'Case has been created',
-			'body' => '<p>{Person.name},</p><p>Case \'{Case.name}\' has been created with number {Case.number} and assigned to {User.name}.</p>',
-			'isHtml ' => '1',
-		),
-	),
-	'ScheduledJob' => array(
-		array(
-			'name' => 'Check Group Email Accounts',
-			'job' => 'CheckInboundEmails',
-			'status' => 'Active',
-			'scheduling' => '*/4 * * * *',
-		),
-		array(
-			'name' => 'Check Personal Email Accounts',
-			'job' => 'CheckEmailAccounts',
-			'status' => 'Active',
-			'scheduling' => '*/5 * * * *',
-		),
-		array(
-			'name' => 'Send Email Reminders',
-			'job' => 'SendEmailReminders',
-			'status' => 'Active',
-			'scheduling' => '*/2 * * * *',
-		),
-		array(
-			'name' => 'Clean-up',
-			'job' => 'Cleanup',
-			'status' => 'Active',
-			'scheduling' => '1 1 * * 0',
-		),
-		array(
-			'name' => 'Send Mass Emails',
-			'job' => 'ProcessMassEmail',
-			'status' => 'Active',
-			'scheduling' => '15 * * * *',
-		),
-		array(
-			'name' => 'Auth Token Control',
-			'job' => 'AuthTokenControl',
-			'status' => 'Active',
-			'scheduling' => '*/6 * * * *',
-		)
-	),
-);
+namespace Espo\Jobs;
+
+use \Espo\Core\Exceptions;
+
+class AuthTokenControl extends \Espo\Core\Jobs\Base
+{
+    public function run()
+    {
+        $authTokenLifetime = $this->getConfig()->get('authTokenLifetime');
+        $authTokenMaxIdleTime = $this->getConfig()->get('authTokenMaxIdleTime');
+
+        if (!$authTokenLifetime && !$authTokenMaxIdleTime) {
+            return;
+        }
+
+        $whereClause = array();
+
+        if ($authTokenLifetime) {
+            $dt = new \DateTime();
+            $dt->modify('-' . $authTokenLifetime . ' hours');
+            $authTokenLifetimeThreshold = $dt->format('Y-m-d H:i:s');
+
+            $whereClause['createdAt<'] = $authTokenLifetimeThreshold;
+        }
+
+        if ($authTokenMaxIdleTime) {
+            $dt = new \DateTime();
+            $dt->modify('-' . $authTokenMaxIdleTime . ' hours');
+            $authTokenMaxIdleTimeThreshold = $dt->format('Y-m-d H:i:s');
+
+            $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
+        }
+
+        $tokenList = $this->getEntityManager()->getRepository('AuthToken')->where($whereClause)->limit(0, 100)->find();
+
+        foreach ($tokenList as $token) {
+            $this->getEntityManager()->removeEntity($token);
+        }
+    }
+}
+

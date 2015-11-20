@@ -125,7 +125,9 @@ return array (    'defaultPermissions' =>
         'maxEmailAccountCount',
         'massEmailMaxPerHourCount',
         'personalEmailMaxPortionSize',
-        'inboundEmailMaxPortionSize'
+        'inboundEmailMaxPortionSize',
+        'authTokenLifetime',
+        'authTokenMaxIdleTime'
     ),
     'isInstalled' => false,
 );

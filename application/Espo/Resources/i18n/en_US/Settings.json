@@ -59,7 +59,9 @@
         "massEmailMaxPerHourCount": "Max count of emails sent per hour",
         "personalEmailMaxPortionSize": "Max email portion size for a personal account fetching",
         "inboundEmailMaxPortionSize": "Max email portion size for a group account fetching",
-        "maxEmailAccountCount": "Max count of personal email accounts per user"
+        "maxEmailAccountCount": "Max count of personal email accounts per user",
+        "authTokenLifetime": "Auth Token Lifetime (hours)",
+        "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)"
     },
     "options": {
         "weekStart": {
@@ -71,7 +73,9 @@
         "recordsPerPageSmall": "Count of records in relatinship panels.",
         "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
         "followCreatedEntities": "Users will automatically follow records they created.",
-        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped."
+        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped.",
+        "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
+        "authTokenMaxIdleTime": "Defines how long since a last access tokens can exist.\n0 - means no expiration."
     },
     "labels": {
         "System": "System",

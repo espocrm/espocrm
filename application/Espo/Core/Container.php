@@ -87,16 +87,19 @@ class Container
 
     protected function loadLog()
     {
-        $logConfig = $this->get('config')->get('logger');
+        $config = $this->get('config');
+
+        $path = $config->get('logger.path', 'data/logs');
+        $rotation = $config->get('logger.rotation', true);
+        $levelCode = $config->get('logger.level', 'WARNING');
 
         $log = new \Espo\Core\Utils\Log('Espo');
 
-        $levelCode = $log->getLevelCode($logConfig['level']);
-
-        if ($logConfig['isRotate']) {
-            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler($logConfig['path'], $logConfig['maxRotateFiles'], $levelCode);
+        if ($rotation) {
+            $maxFileNumber = $config->get('logger.maxFileNumber', 30);
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler($path, $maxFileNumber, $levelCode);
         } else {
-            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\StreamHandler($logConfig['path'], $levelCode);
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\StreamHandler($path, $levelCode);
         }
         $log->pushHandler($handler);
 
