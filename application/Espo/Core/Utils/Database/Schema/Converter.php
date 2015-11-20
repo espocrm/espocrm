@@ -326,7 +326,11 @@ class Converter
                 break;
 
             case 'bool':
-                $dbFieldParams['default'] = intval($dbFieldParams['default']);
+                $default = false;
+                if (array_key_exists('default', $dbFieldParams)) {
+                    $default = $dbFieldParams['default'];
+                }
+                $dbFieldParams['default'] = intval($default);
                 break;
         }
 

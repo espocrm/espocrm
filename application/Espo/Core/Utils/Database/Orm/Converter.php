@@ -296,9 +296,9 @@ class Converter
 
         $entityMeta = $ormMeta[$entityName];
         //load custom field definitions and customCodes
-        foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
+        foreach ($entityMeta['fields'] as $fieldName => $fieldParams) {
+            if (empty($fieldParams['type'])) continue;
 
-            //load custom field definitions
             $fieldType = ucfirst($fieldParams['type']);
             $className = '\Espo\Custom\Core\Utils\Database\Orm\Fields\\' . $fieldType;
             if (!class_exists($className)) {
@@ -315,7 +315,7 @@ class Converter
 
                 $ormMeta = Util::merge($ormMeta, $fieldResult);
 
-            } //END: load custom field definitions
+            }
         }
 
         //todo move to separate file
@@ -371,7 +371,7 @@ class Converter
         }
 
         /** check and set the field length */
-        if (!isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
+        if (isset($fieldDefs['type']) && !isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
             $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
         }
 

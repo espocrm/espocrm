@@ -89,11 +89,11 @@ class Container
     {
         $config = $this->get('config');
 
-        $path = $config->get('logger.path', 'data/logs');
+        $path = $config->get('logger.path', 'data/logs/espo.log');
         $rotation = $config->get('logger.rotation', true);
-        $levelCode = $config->get('logger.level', 'WARNING');
 
         $log = new \Espo\Core\Utils\Log('Espo');
+        $levelCode = $log->getLevelCode($config->get('logger.level', 'WARNING'));
 
         if ($rotation) {
             $maxFileNumber = $config->get('logger.maxFileNumber', 30);

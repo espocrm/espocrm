@@ -158,12 +158,16 @@ class Config
 
         $data = include($this->configPath);
 
-        foreach ($values as $key => $value) {
-            $data[$key] = $value;
+        if (is_array($values)) {
+            foreach ($values as $key => $value) {
+                $data[$key] = $value;
+            }
         }
 
-        foreach ($removeData as $key) {
-            unset($data[$key]);
+        if (is_array($removeData)) {
+            foreach ($removeData as $key) {
+                unset($data[$key]);
+            }
         }
 
         $result = $this->getFileManager()->putPhpContents($this->configPath, $data);
