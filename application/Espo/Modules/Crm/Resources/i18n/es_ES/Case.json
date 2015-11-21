@@ -23,11 +23,11 @@
     },
     "options": {
         "status": {
-            "New": "Nuevo",
+            "New": "New",
             "Assigned": "Asignado",
             "Pending": "Pendiente",
             "Closed": "Cerrados",
-            "Rejected": "Rechazado",
+            "Rejected": "Rejected",
             "Duplicate": "Duplicar"
         },
         "priority" : {
@@ -47,7 +47,7 @@
         "Close": "Cerrar",
         "Reject": "Rechazar",
         "Closed": "Cerrados",
-        "Rejected": "Rechazado"
+        "Rejected": "Rejected"
     },
     "presetFilters": {
         "open": "Abiertos",

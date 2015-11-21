@@ -11,7 +11,7 @@
     },
     "tooltips": {
         "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
-        "userPermission": "Allows users to view activities of other users.\n\nall - can view all\n\nteam - can view user's activities from own teams\n\nno - can't view"
+        "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view"
     },
     "labels": {
         "Access": "Acceso",

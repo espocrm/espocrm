@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Subject",
         "parent": "Padre",
         "status": "Estado",
         "dateSent": "Enviado",
@@ -12,7 +12,7 @@
         "replyToString": "Responder a (String)",
         "isHtml": "Es Html",
         "body": "Cuerpo",
-        "subject": "Asunto",
+        "subject": "Subject",
         "attachments": "Adjuntos",
         "selectTemplate": "Seleccione una Plantilla",
         "fromEmailAddress": "De la dirección",
@@ -38,7 +38,7 @@
         "status": {
             "Draft": "Borrador",
             "Sending": "Enviando",
-            "Sent": "Enviado",
+            "Sent": "Sent",
             "Archived": "Archivado",
             "Received": "Recibido",
             "Failed": "Falló"
@@ -74,14 +74,14 @@
         "savedAsDraft": "Guardado como borrador"
     },
     "presetFilters": {
-        "sent": "Enviado",
+        "sent": "Sent",
         "archived": "Archivado",
         "inbox": "Bandeja de Entrada",
         "drafts": "Borradores",
         "trash": "Papelera"
     },
     "massActions": {
-        "markAsRead": "Marcar como Leído",
+        "markAsRead": "Mark as Read",
         "markAsNotRead": "Marcar como No Leído",
         "markAsImportant": "Marcar como Importante",
         "markAsNotImportant": "Marcar como No Importante",

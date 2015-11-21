@@ -4,7 +4,7 @@
         "status": "Estado",
         "isHtml": "Es Html",
         "body": "Cuerpo",
-        "subject": "Asunto",
+        "subject": "Subject",
         "attachments": "Adjuntos",
         "insertField": "Insertar Campo",
         "oneOff": "Único"

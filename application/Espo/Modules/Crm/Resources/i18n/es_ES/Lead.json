@@ -23,7 +23,7 @@
         "createdOpportunity": "Oportunidad",
         "campaign": "Campaña",
         "targetLists": "Lista de Objetivos",
-        "targetList": "Lista de Objetivos"
+        "targetList": "Target List"
     },
     "links": {
         "targetLists": "Lista de Objetivos",
@@ -35,7 +35,7 @@
     },
     "options": {
         "status": {
-            "New": "Nuevo",
+            "New": "New",
             "Assigned": "Asignado",
             "In Process": "En Proceso",
             "Converted": "Convertidos",

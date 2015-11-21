@@ -104,7 +104,7 @@
         "required": "Requerido",
         "default": "Por Defecto",
         "maxLength": "Longitud máxima",
-        "options": "Opciones",
+        "options": "Options",
         "after": "Después (campo)",
         "before": "Antes (campo)",
         "link": "Enlace",
