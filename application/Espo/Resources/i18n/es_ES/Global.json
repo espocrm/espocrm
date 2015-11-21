@@ -97,7 +97,7 @@
         "About": "Acerca",
         "Refresh": "Refrescar",
         "Remove": "Remover",
-        "Options": "Opciones",
+        "Options": "Options",
         "Username": "Nombre de Usuario",
         "Password": "Contraseña",
         "Login": "Entrar",
@@ -227,7 +227,7 @@
         "export": "Exportar"
     },
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "firstName": "Primer Nombre",
         "lastName": "Apellidos",
         "salutationName": "Saludo",

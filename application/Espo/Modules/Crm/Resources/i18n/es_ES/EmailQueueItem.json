@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "status": "Estado",
         "target": "Objetivo",
         "sentAt": "Enviado",
@@ -16,13 +16,13 @@
     "options": {
         "status": {
             "Pending": "Pendiente",
-            "Sent": "Sent",
+            "Sent": "Enviado",
             "Failed": "Falló"
         }
     },
     "presetFilters": {
         "pending": "Pendiente",
-        "sent": "Sent",
+        "sent": "Enviado",
         "failed": "Falló"
     }
 }

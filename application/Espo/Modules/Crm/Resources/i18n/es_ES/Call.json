@@ -1,11 +1,11 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "parent": "Padre",
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",
         "dateEnd": "Fecha de Finalización",
-        "direction": "Dirección\t",
+        "direction": "Dirección",
         "duration": "Duración",
         "description": "Descripción",
         "users": "Usuarios",

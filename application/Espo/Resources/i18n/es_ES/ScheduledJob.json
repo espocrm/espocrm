@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "status": "Estado",
         "job": "Trabajo",
         "scheduling": "Programación (crontab anotación)"

@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo electrónico",
         "website": "Sito Web",
         "phoneNumber": "Teléfono",
@@ -13,7 +13,7 @@
         "contactRole": "Título",
         "campaign": "Campaña",
         "targetLists": "Lista de Objetivos",
-        "targetList": "Target List"
+        "targetList": "Lista de Objetivos"
     },
     "links": {
         "contacts": "Contactos",

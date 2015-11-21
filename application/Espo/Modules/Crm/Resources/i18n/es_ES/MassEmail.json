@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "status": "Estado",
         "storeSentEmails": "Almacenar Correos Enviados",
         "startAt": "Fecha de Comienzo",

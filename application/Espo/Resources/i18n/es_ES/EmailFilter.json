@@ -2,7 +2,7 @@
     "fields": {
         "from": "De",
         "to": "Para",
-        "subject": "Subject",
+        "subject": "Asunto",
         "bodyContains": "Contenido del Cuerpo"
     },
     "labels": {

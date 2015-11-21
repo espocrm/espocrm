@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "number": "Número",
         "status": "Estado",
         "account": "Cuenta",
@@ -23,11 +23,11 @@
     },
     "options": {
         "status": {
-            "New": "New",
+            "New": "Nuevo",
             "Assigned": "Asignado",
             "Pending": "Pendiente",
             "Closed": "Cerrados",
-            "Rejected": "Rejected",
+            "Rejected": "Rechazado",
             "Duplicate": "Duplicar"
         },
         "priority" : {
@@ -47,7 +47,7 @@
         "Close": "Cerrar",
         "Reject": "Rechazar",
         "Closed": "Cerrados",
-        "Rejected": "Rejected"
+        "Rejected": "Rechazado"
     },
     "presetFilters": {
         "open": "Abiertos",

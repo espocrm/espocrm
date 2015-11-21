@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "description": "Descripción",
         "status": "Estado",
         "type": "Tipo",
@@ -8,7 +8,7 @@
         "endDate": "Fecha de Fin",
         "targetLists": "Lista de Objetivos",
         "excludingTargetLists": "Lista de Objetivos Excluídos",
-        "sentCount": "Sent",
+        "sentCount": "Enviado",
         "openedCount": "Abierto",
         "clickedCount": "Cliqueados",
         "optedOutCount": "optado por no",

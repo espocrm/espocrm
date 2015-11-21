@@ -5,7 +5,7 @@
         "Convert": "Convertir"
     },
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "website": "Sito Web",
@@ -23,7 +23,7 @@
         "createdOpportunity": "Oportunidad",
         "campaign": "Campaña",
         "targetLists": "Lista de Objetivos",
-        "targetList": "Target List"
+        "targetList": "Lista de Objetivos"
     },
     "links": {
         "targetLists": "Lista de Objetivos",
@@ -35,7 +35,7 @@
     },
     "options": {
         "status": {
-            "New": "New",
+            "New": "Nuevo",
             "Assigned": "Asignado",
             "In Process": "En Proceso",
             "Converted": "Convertidos",

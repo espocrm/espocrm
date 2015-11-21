@@ -1,10 +1,10 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "status": "Estado",
         "isHtml": "Es Html",
         "body": "Cuerpo",
-        "subject": "Subject",
+        "subject": "Asunto",
         "attachments": "Adjuntos",
         "insertField": "Insertar Campo",
         "oneOff": "Único"

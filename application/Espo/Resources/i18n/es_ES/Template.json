@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Asunto",
+        "name": "Nombre",
         "body": "Cuerpo",
         "entityType": "Tipo de Entidad",
         "header": "Cabecera",

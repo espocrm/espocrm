@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Subject",
+        "name": "Asunto",
         "parent": "Padre",
         "status": "Estado",
         "dateSent": "Enviado",
@@ -12,7 +12,7 @@
         "replyToString": "Responder a (String)",
         "isHtml": "Es Html",
         "body": "Cuerpo",
-        "subject": "Subject",
+        "subject": "Asunto",
         "attachments": "Adjuntos",
         "selectTemplate": "Seleccione una Plantilla",
         "fromEmailAddress": "De la dirección",
@@ -38,7 +38,7 @@
         "status": {
             "Draft": "Borrador",
             "Sending": "Enviando",
-            "Sent": "Sent",
+            "Sent": "Enviado",
             "Archived": "Archivado",
             "Received": "Recibido",
             "Failed": "Falló"
@@ -74,7 +74,7 @@
         "savedAsDraft": "Guardado como borrador"
     },
     "presetFilters": {
-        "sent": "Sent",
+        "sent": "Enviado",
         "archived": "Archivado",
         "inbox": "Bandeja de Entrada",
         "drafts": "Borradores",
