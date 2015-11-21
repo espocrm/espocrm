@@ -4,7 +4,7 @@
         "Details": "Detalles"
     },
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "status": "Estado",
         "file": "Archivo",
         "type": "Tipo",

@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "number": "Número",
         "status": "Estado",
         "account": "Cuenta",

@@ -227,7 +227,7 @@
         "export": "Exportar"
     },
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "firstName": "Primer Nombre",
         "lastName": "Apellidos",
         "salutationName": "Saludo",
@@ -430,7 +430,8 @@
         "searchRanges": {
             "is": "Es",
             "isEmpty": "Está vacío",
-            "isNotEmpty": "No Está Vacío"
+            "isNotEmpty": "No Está Vacío",
+            "isOneOf": "Es Uno De"
         },
         "varcharSearchRanges": {
             "equals": "Equivale",

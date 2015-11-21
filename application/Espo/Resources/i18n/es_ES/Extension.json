@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "version": "Version",
         "description": "Descripción",
         "isInstalled": "Instalado"

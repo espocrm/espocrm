@@ -71,16 +71,19 @@
         "billingAddressPostalCode": "Código Postal",
         "billingAddressState": "Estado/Distrito",
         "billingAddressStreet": "Calle",
+        "billingAddressMap": "Mapa",
         "addressCity": "Ciudad",
         "addressStreet": "Calle",
         "addressCountry": "País",
         "addressState": "Estado/Distrito",
         "addressPostalCode": "Código Postal",
+        "addressMap": "Mapa",
         "shippingAddressCity": "Ciudad (Envío)",
         "shippingAddressStreet": "Calle (Envío)",
         "shippingAddressCountry": "País (Envío)",
-        "shippingAddressState": "Estado (Envío)",
-        "shippingAddressPostalCode": "Código Postal (Envío)"
+        "shippingAddressState": "State (Shipping)",
+        "shippingAddressPostalCode": "Código Postal (Envío)",
+        "shippingAddressState": "Estado (Envío)"
     },
     "links": {
         "contacts": "Contactos",

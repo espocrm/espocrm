@@ -1,12 +1,13 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "status": "Estado",
         "isHtml": "Es Html",
         "body": "Cuerpo",
         "subject": "Asunto",
         "attachments": "Adjuntos",
-        "insertField": ""
+        "insertField": "Insertar Campo",
+        "oneOff": "Único"
     },
     "links": {
     },
@@ -16,5 +17,11 @@
     },
     "messages": {
         "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
+    },
+    "tooltips": {
+        "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
+    },
+    "presetFilters": {
+        "actual": "Actuales"
     }
 }

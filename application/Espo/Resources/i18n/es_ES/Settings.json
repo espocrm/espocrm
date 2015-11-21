@@ -59,7 +59,9 @@
         "massEmailMaxPerHourCount": "mäximo número de mensajes de correo enviado por hora",
         "personalEmailMaxPortionSize": "Máximo tamaño de la porción de correo  para recuperar de una cuenta personal",
         "inboundEmailMaxPortionSize": "Máximo tamaño de la porción de correo para recuperar de una cuenta de grupo",
-        "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario"
+        "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario",
+        "authTokenLifetime": "Vida del Token de Autenticación (horas)",
+        "authTokenMaxIdleTime": "Máximo tiempo de inactividad del Token de Autenticación (horas)"
     },
     "options": {
         "weekStart": {
@@ -71,7 +73,9 @@
         "recordsPerPageSmall": "Contador de registros en los paneles de relación",
         "outboundEmailIsShared": "Permitir a los usuarios enviar mensajes a través de esta SMTP.",
         "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos crearon.",
-        "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán."
+        "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán.",
+        "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
+        "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca."
     },
     "labels": {
         "System": "Sistema",

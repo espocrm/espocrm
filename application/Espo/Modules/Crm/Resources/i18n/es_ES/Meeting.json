@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "parent": "Padre",
         "status": "Estado",
         "dateStart": "Fecha de Comienzo",

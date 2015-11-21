@@ -24,18 +24,25 @@
         "replied": "Respondió",
         "replies": "Respuestas",
         "isRead": "Es leído",
-        "isImportant": "Es Importante"
+        "isImportant": "Es Importante",
+        "isUsers": "Es del Usuario",
+        "inTrash": "En Papelera",
+        "Move to Trash": "Mover a la Papelera",
+        "Retrieve from Trash": "Recuperar de la Papelera"
     },
     "links": {
         "replied": "Respondió",
         "replies": "Respuestas"
     },
     "options": {
-        "Draft": "Borrador",
-        "Sending": "Enviando",
-        "Sent": "Enviados",
-        "Archived": "Archivado",
-        "Received": "Recibido"
+        "status": {
+            "Draft": "Borrador",
+            "Sending": "Enviando",
+            "Sent": "Enviado",
+            "Archived": "Archivado",
+            "Received": "Recibido",
+            "Failed": "Falló"
+        }
     },
     "labels": {
         "Create Email": "Archivar Correo",
@@ -67,15 +74,17 @@
         "savedAsDraft": "Guardado como borrador"
     },
     "presetFilters": {
-        "sent": "Enviados",
+        "sent": "Enviado",
         "archived": "Archivado",
         "inbox": "Bandeja de Entrada",
-        "drafts": "Borradores"
+        "drafts": "Borradores",
+        "trash": "Papelera"
     },
     "massActions": {
         "markAsRead": "Marcar como Leído",
         "markAsNotRead": "Marcar como No Leído",
         "markAsImportant": "Marcar como Importante",
-        "markAsNotImportant": "Marcar como No Importante"
+        "markAsNotImportant": "Marcar como No Importante",
+        "moveToTrash": "Mover a la Papelera"
     }
 }

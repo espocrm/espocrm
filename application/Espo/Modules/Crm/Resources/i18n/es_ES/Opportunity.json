@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "account": "Cuenta",
         "stage": "Etapa",
         "amount": "Cantidad",

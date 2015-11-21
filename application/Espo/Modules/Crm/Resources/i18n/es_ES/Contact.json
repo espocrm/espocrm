@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "account": "Cuenta",

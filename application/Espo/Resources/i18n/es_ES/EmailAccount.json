@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "status": "Estado",
         "host": "Host",
         "username": "Nombre de Usuario",

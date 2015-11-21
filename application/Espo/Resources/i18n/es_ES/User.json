@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "userName": "Nombre Usuario",
         "title": "Título",
         "isAdmin": "Es Administrador",

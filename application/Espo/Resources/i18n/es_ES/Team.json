@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "roles": "Roles",
         "positionList": "Lista de Posiciones"
     },

@@ -5,7 +5,7 @@
         "Convert": "Convertir"
     },
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "emailAddress": "Correo electrónico",
         "title": "Título",
         "website": "Sito Web",

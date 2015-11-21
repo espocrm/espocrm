@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "roles": "Roles",
         "assignmentPermission": "Asignación de permisos",
         "userPermission": "Permisos de Usuario"

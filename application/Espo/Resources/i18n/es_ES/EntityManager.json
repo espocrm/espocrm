@@ -4,7 +4,7 @@
         "Relationships": "Relaciones"
     },
     "fields": {
-        "name": "Nombre",
+        "name": "Asunto",
         "type": "Tipo",
         "labelSingular": "Etiqueta en Singular",
         "labelPlural": "Etiqueta en Plural",
@@ -16,7 +16,10 @@
         "link": "Enlace",
         "labelForeign": "Etiqueta Foránea",
         "sortBy": "Orden por defecto (campo)",
-        "sortDirection": "Orden por defecto (dirección)"
+        "sortDirection": "Orden por defecto (dirección)",
+        "relationName": "Nombre de la Tabla Intermedia\t",
+        "linkMultipleField": "Enlaza Múltiples Campos",
+        "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos"
     },
     "options": {
         "type": {
