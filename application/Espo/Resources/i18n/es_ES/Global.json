@@ -11,9 +11,9 @@
         "ScheduledJob": "Tarea Programada",
         "ExternalAccount": "Cuenta Externa",
         "Extension": "Extension",
-        "Dashboard": "Dashboard",
+        "Dashboard": "Escritorio",
         "InboundEmail": "Correo Entrante",
-        "Stream": "Stream",
+        "Stream": "Actividad",
         "Import": "Importar",
         "Template": "Plantilla",
         "Job": "Trabajo",
@@ -31,9 +31,9 @@
         "ScheduledJob": "Tareas Programadas",
         "ExternalAccount": "Cuentas Externas",
         "Extension": "Extensiones",
-        "Dashboard": "Dashboard",
+        "Dashboard": "Escritorio",
         "InboundEmail": "Grupo de Cuentas de Correo",
-        "Stream": "Stream",
+        "Stream": "Actividad",
         "Import": "Importar Resultados",
         "Template": "Plantillas",
         "Job": "Trabajos",
@@ -82,9 +82,9 @@
         "Overview": "Vista",
         "Details": "Detalles",
         "Add Field": "Añadir Campo",
-        "Add Dashlet": "Añadir Dashlet",
+        "Add Dashlet": "Añadir Cuadro",
         "Filter": "Filtro",
-        "Edit Dashboard": "Editar Dashboard",
+        "Edit Dashboard": "Editar Escritorio",
         "Add": "Añadir",
         "Add Item": "Agregar item",
         "Reset": "Resetear",
@@ -130,9 +130,9 @@
         "Inactive": "Inactivo",
         "Write your comment here": "Escriba su comentario aquí",
         "Post": "Entrada",
-        "Stream": "Stream",
+        "Stream": "Actividad",
         "Show more": "Mostrar mas",
-        "Dashlet Options": "Opciones Dashlet",
+        "Dashlet Options": "Opciones de Cuadros",
         "Full Form": "Formulario Completo",
         "Insert": "Insertar",
         "Person": "Persona",
@@ -263,7 +263,7 @@
         "children": "Hijos"
     },
     "dashlets": {
-        "Stream": "Stream"
+        "Stream": "Actividad"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} ha sido asignado a usted",
@@ -430,7 +430,8 @@
         "searchRanges": {
             "is": "Es",
             "isEmpty": "Está vacío",
-            "isNotEmpty": "No Está Vacío"
+            "isNotEmpty": "No Está Vacío",
+            "isOneOf": "Es Uno De"
         },
         "varcharSearchRanges": {
             "equals": "Equivale",

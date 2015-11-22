@@ -16,13 +16,13 @@
     "options": {
         "status": {
             "Pending": "Pendiente",
-            "Sent": "Enviados",
+            "Sent": "Enviado",
             "Failed": "Falló"
         }
     },
     "presetFilters": {
         "pending": "Pendiente",
-        "sent": "Enviados",
+        "sent": "Enviado",
         "failed": "Falló"
     }
 }

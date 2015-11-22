@@ -94,7 +94,8 @@
         "rangeInt": "Rango de Enteros",
         "rangeFloat": "Rango de Flotantes",
         "rangeCurrency": "Rango de Moneda",
-        "wysiwyg": "Wysiwyg"
+        "wysiwyg": "Wysiwyg",
+        "map": "Mapa"
     },
     "fields": {
         "type": "Tipo",
@@ -119,7 +120,8 @@
         "isSorted": "Esta ordenado (alfabeticamente)",
         "audited": "Auditada",
         "trim": "recortado",
-        "height": "Altura (px)"
+        "height": "Altura (px)",
+        "provider": "Proveedor"
     },
     "messages": {
         "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Tomará algún tiempo.",

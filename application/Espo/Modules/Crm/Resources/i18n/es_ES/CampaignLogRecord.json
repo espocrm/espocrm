@@ -11,8 +11,8 @@
     },
     "options": {
     	"action": {
-            "Sent": "Enviados",
-            "Opened": "Abiertos",
+            "Sent": "Enviado",
+            "Opened": "Abierto",
             "Opted Out": "optado por no",
             "Bounced": "Rebotados",
             "Clicked": "Cliqueados",
@@ -23,8 +23,8 @@
         "All": "Todos"
     },
     "presetFilters": {
-        "sent": "Enviados",
-        "opened": "Abiertos",
+        "sent": "Enviado",
+        "opened": "Abierto",
         "optedOut": "optado por no",
         "bounced": "Rebotados",
         "clicked": "Cliqueados",

@@ -20,7 +20,8 @@
         "replyToAddress": "Responder a la Dirección",
         "replyFromName": "Respuesta de Nombre",
         "targetUserPosition": "Objetivo Posición Usuario",
-        "fetchSince": "Traer Desde"
+        "fetchSince": "Traer Desde",
+        "addAllTeamUsers": "Para todos los usuarios del equipo"
     },
     "tooltips": {
         "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
@@ -29,7 +30,8 @@
         "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
         "assignToUser": "Correos de usuarios/Casos serán asignados a.",
         "team": "Correo del equipo/Casos relacionados con.",
-        "targetUserPosition": "Definir la posición de los usuarios que se distribuirán con los casos."
+        "targetUserPosition": "Definir la posición de los usuarios que se distribuirán con los casos.",
+        "addAllTeamUsers": "Los correos van a aparecer en la Bandeja de Entrada de todos los usuarios de un equipo específico."
     },
     "links": {
         "filters": "Filtros"

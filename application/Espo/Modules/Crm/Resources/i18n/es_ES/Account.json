@@ -11,7 +11,9 @@
         "industry": "Industria",
         "type": "Tipo",
         "contactRole": "Título",
-        "campaign": "Campaña"
+        "campaign": "Campaña",
+        "targetLists": "Lista de Objetivos",
+        "targetList": "Lista de Objetivos"
     },
     "links": {
         "contacts": "Contactos",

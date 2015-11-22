@@ -8,7 +8,7 @@
         "type": "Tipo",
         "labelSingular": "Etiqueta en Singular",
         "labelPlural": "Etiqueta en Plural",
-        "stream": "Stream",
+        "stream": "Actividad",
         "label": "Etiqueta",
         "linkType": "Tipo de enlace",
         "entityForeign": "Entidad Foránea",
@@ -16,7 +16,10 @@
         "link": "Enlace",
         "labelForeign": "Etiqueta Foránea",
         "sortBy": "Orden por defecto (campo)",
-        "sortDirection": "Orden por defecto (dirección)"
+        "sortDirection": "Orden por defecto (dirección)",
+        "relationName": "Nombre de la Tabla Intermedia",
+        "linkMultipleField": "Enlaza Múltiples Campos",
+        "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos"
     },
     "options": {
         "type": {
