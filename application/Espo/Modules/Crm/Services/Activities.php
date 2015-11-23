@@ -45,6 +45,8 @@ class Activities extends \Espo\Core\Services\Base
         'selectManagerFactory'
     );
 
+    protected $calendarEntityTypeList = ['Meeting', 'Call', 'Task'];
+
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
@@ -608,6 +610,111 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
+    protected function getCalendarMeetingQuery($userId, $from, $to)
+    {
+        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
+
+        $selectParams = array(
+            'select' => [
+                ['VALUE:Meeting', 'scope'],
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                'status',
+                ['VALUE:', 'dateStartDate'],
+                ['VALUE:', 'dateEndDate'],
+                'parentType',
+                'parentId',
+                'createdAt'
+            ],
+            'leftJoins' => ['users'],
+            'whereClause' => array(
+                'usersMiddle.userId' => $userId,
+                'dateStart>=' => $from,
+                'dateStart<' => $to,
+                'usersMiddle.status!=' => 'Declined'
+            )
+        );
+
+        return $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
+    }
+
+    protected function getCalendarCallQuery($userId, $from, $to)
+    {
+        $selectManager = $this->getSelectManagerFactory()->create('Call');
+
+        $selectParams = array(
+            'select' => [
+                ['VALUE:Call', 'scope'],
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                'status',
+                ['VALUE:', 'dateStartDate'],
+                ['VALUE:', 'dateEndDate'],
+                'parentType',
+                'parentId',
+                'createdAt'
+            ],
+            'leftJoins' => ['users'],
+            'whereClause' => array(
+                'usersMiddle.userId' => $userId,
+                'dateStart>=' => $from,
+                'dateStart<' => $to,
+                'usersMiddle.status!=' => 'Declined'
+            )
+        );
+
+        return $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
+    }
+
+    protected function getCalendarTaskQuery($userId, $from, $to)
+    {
+        $selectManager = $this->getSelectManagerFactory()->create('Task');
+
+        $selectParams = array(
+            'select' => [
+                ['VALUE:Task', 'scope'],
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                'status',
+                ['dateStartDate', 'dateStartDate'],
+                ['dateEndDate', 'dateEndDate'],
+                'parentType',
+                'parentId',
+                'createdAt'
+            ],
+            'whereClause' => array(
+                'assignedUserId' => $userId,
+
+                array(
+                    'OR' => array(
+                        array(
+                            'dateEnd' => null,
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ),
+                        array(
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ),
+                        array(
+                            'dateEndDate!=' => null,
+                            'dateEndDate>=' => $from,
+                            'dateEndDate<' => $to,
+                        )
+                    )
+                )
+            )
+        );
+
+        return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
+    }
+
     public function getEvents($userId, $from, $to, $scopeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
@@ -619,80 +726,21 @@ class Activities extends \Espo\Core\Services\Base
         $pdo = $this->getPDO();
 
         if (is_null($scopeList)) {
-            $scopeList = ['Meeting', 'Call', 'Task'];
+            $scopeList = $this->calendarEntityTypeList;
         }
 
         $sqlPartList = [];
 
-        if (in_array('Meeting', $scopeList) && $this->getAcl()->checkScope('Meeting')) {
-            $sqlPartList[] = "
-                SELECT
-                    'Meeting' AS scope,
-                    meeting.id AS id, meeting.name AS name,
-                    meeting.date_start AS dateStart,
-                    meeting.date_end AS dateEnd,
-                    meeting.status AS status,
-                    '' AS dateStartDate,
-                    '' AS dateEndDate
-                FROM `meeting`
-                JOIN meeting_user ON meeting_user.meeting_id = meeting.id AND meeting_user.deleted = 0 AND meeting_user.status <> 'Declined'
-                WHERE
-                    meeting.deleted = 0 AND
-                    meeting.date_start >= ".$pdo->quote($from)." AND
-                    meeting.date_start < ".$pdo->quote($to)." AND
-                    meeting_user.user_id =".$pdo->quote($userId)."
-            ";
-        };
-        if (in_array('Call', $scopeList) && $this->getAcl()->checkScope('Call')) {
-            $sqlPartList[] = "
-                SELECT
-                    'Call' AS scope,
-                    call.id AS id,
-                    call.name AS name,
-                    call.date_start AS dateStart,
-                    call.date_end AS dateEnd,
-                    call.status AS status,
-                    '' AS dateStartDate,
-                    '' AS dateEndDate
-                FROM `call`
-                JOIN call_user ON call_user.call_id = call.id AND call_user.deleted = 0 AND call_user.status <> 'Declined'
-                WHERE
-                    call.deleted = 0 AND
-                    call.date_start >= ".$pdo->quote($from)." AND
-                    call.date_start < ".$pdo->quote($to)." AND
-                    call_user.user_id = ".$pdo->quote($userId)."
-            ";
-        }
-        if (in_array('Task', $scopeList) && $this->getAcl()->checkScope('Task')) {
-            $sqlPartList[] = "
-                SELECT
-                    'Task' AS scope,
-                    task.id AS id,
-                    task.name AS name,
-                    task.date_start AS dateStart,
-                    task.date_end AS dateEnd,
-                    task.status AS status,
-                    task.date_start_date AS dateStartDate,
-                    task.date_end_date AS dateEndDate
-                FROM `task`
-                WHERE
-                    task.deleted = 0 AND
-                    (
-                        (
-                            task.date_end IS NULL AND
-                            task.date_start >= ".$pdo->quote($from)." AND
-                            task.date_start < ".$pdo->quote($to)."
-                        ) OR (
-                            task.date_end >= ".$pdo->quote($from)." AND
-                            task.date_end < ".$pdo->quote($to)."
-                        ) OR (
-                            task.date_end_date IS NOT NULL AND
-                            task.date_end_date >= ".$pdo->quote($from)." AND
-                            task.date_end_date < ".$pdo->quote($to)."
-                        )
-                    ) AND
-                    task.assigned_user_id = ".$pdo->quote($userId)."
-            ";
+        foreach ($scopeList as $scope) {
+            if (!in_array($scope, $this->calendarEntityTypeList)) {
+                continue;
+            }
+            if ($this->getAcl()->checkScope($scopeList)) {
+                $methodName = 'getCalendar' . $scope . 'Query';
+                if (method_exists($this, $methodName)) {
+                    $sqlPartList[] = $this->$methodName($userId, $from, $to);
+                }
+            }
         }
 
         if (empty($sqlPartList)) {
