@@ -221,7 +221,15 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         fieldInEditMode.inlineEditClose();
                     }
                     fieldInEditMode = view;
-                }.bind(this));
+                }, this);
+
+                this.listenTo(fieldView, 'inline-edit-on', function () {
+                    this.inlineEditModeIsOn = true;
+                }, this);
+                this.listenTo(fieldView, 'inline-edit-off', function () {
+                    this.inlineEditModeIsOn = false;
+                    this.setConfirmLeaveOut(false);
+                }, this);
             }
         },
 
@@ -489,7 +497,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             }.bind(this));
 
             this.listenTo(this.model, 'change', function () {
-                if (this.mode == 'edit') {
+                if (this.mode == 'edit' || this.inlineEditModeIsOn) {
                     this.setConfirmLeaveOut(true);
                 }
             }, this);

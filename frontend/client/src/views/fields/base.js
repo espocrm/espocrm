@@ -396,6 +396,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEditClose: function (dontReset) {
+            this.trigger('inline-edit-off');
             if (this.mode != 'edit') {
                 return;
             }
@@ -425,6 +426,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.render();
+            this.trigger('inline-edit-on');
         },
 
         showValidationMessage: function (message, selector) {
