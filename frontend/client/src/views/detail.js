@@ -46,7 +46,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 view: 'Header'
             },
             body: {
-                view: 'Record.Detail',
+                view: 'views/record/detail',
                 el: '#main > .body',
             }
         },

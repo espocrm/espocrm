@@ -228,7 +228,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 }, this);
                 this.listenTo(fieldView, 'inline-edit-off', function () {
                     this.inlineEditModeIsOn = false;
-                    this.setConfirmLeaveOut(false);
+                    this.setIsNotChanged();
                 }, this);
             }
         },
@@ -287,7 +287,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         cancelEdit: function () {
             this.model.set(this.attributes);
             this.setDetailMode();
-            this.setConfirmLeaveOut(false);
+            this.setIsNotChanged();
         },
 
         delete: function () {
@@ -423,7 +423,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             }
 
             this.on('remove', function () {
-                this.setConfirmLeaveOut(false);
+                if (this.isChanged) {
+                    this.model.set(this.attributes);
+                }
+                this.setIsNotChanged();
             }, this);
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
@@ -433,9 +436,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 this.events = {};
             }
 
-            // TODO remove this in future as deprecated
-            if ('editModeEnabled' in this) {
-                this.editModeDisabled = !this.editModeEnabled;
+            if (!this.editModeDisabled) {
+                if ('editModeDisabled' in this.options) {
+                    this.editModeDisabled = this.options.editModeDisabled;
+                }
             }
 
             if ('buttonsPosition' in this.options) {
@@ -494,11 +498,11 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             this.build();
             this.listenTo(this.model, 'sync', function () {
                 this.attributes = this.model.getClonedAttributes();
-            }.bind(this));
+            }, this);
 
             this.listenTo(this.model, 'change', function () {
                 if (this.mode == 'edit' || this.inlineEditModeIsOn) {
-                    this.setConfirmLeaveOut(true);
+                    this.setIsChanged();
                 }
             }, this);
 
@@ -513,6 +517,16 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     });
                 }
             }
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
         },
 
         switchToModelByIndex: function (indexOfRecord) {
@@ -579,7 +593,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 this.notify('Saved', 'success');
             }
             this.enableButtons();
-            this.setConfirmLeaveOut(false);
+            this.setIsNotChanged();
         },
 
         beforeSave: function () {

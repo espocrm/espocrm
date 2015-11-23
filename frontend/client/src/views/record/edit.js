@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
+Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.edit',
+        template: 'record/edit',
 
         type: 'edit',
 
@@ -54,20 +54,23 @@ Espo.define('Views.Record.Edit', 'Views.Record.Detail', function (Dep) {
 
         dropdownItemList: [],
 
-        sideView: 'Record.EditSide',
+        sideView: 'views/record/edit-side',
 
-        bottomView: 'Record.EditBottom',
+        bottomView: 'views/record/edit-bottom',
 
         actionSave: function () {
             this.save();
         },
 
         actionCancel: function () {
-            this.setConfirmLeaveOut(false);
             this.cancel();
         },
 
         cancel: function () {
+            if (this.isChanged) {
+                this.model.set(this.attributes);
+            }
+            this.setIsNotChanged();
             this.exit('cancel');
         },
 

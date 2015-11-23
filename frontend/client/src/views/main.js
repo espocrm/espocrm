@@ -168,11 +168,14 @@ Espo.define('views/main', 'view', function (Dep) {
 
         actionNavigateToRoot: function (data, e) {
             e.stopPropagation();
-            var options = {
-                isReturn: true
-            };
-            this.getRouter().dispatch(this.scope, null, options);
-            this.getRouter().navigate('#' + this.scope, {trigger: false});
+
+            this.getRouter().checkConfirmLeaveOut(function () {
+                var options = {
+                    isReturn: true
+                };
+                this.getRouter().dispatch(this.scope, null, options);
+                this.getRouter().navigate('#' + this.scope, {trigger: false});
+            }, this);
         },
 
         hideHeaderActionItem: function (name) {

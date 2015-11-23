@@ -139,7 +139,10 @@ Espo.define('views/record/base', 'view', function (Dep) {
             }
 
             this.on('remove', function () {
-                this.setConfirmLeaveOut(false);
+                if (this.isChanged) {
+                    this.model.set(this.attributes);
+                }
+                this.setIsNotChanged();
             }, this);
 
             this.events = this.events || {};
@@ -161,6 +164,12 @@ Espo.define('views/record/base', 'view', function (Dep) {
             }
 
             this._initDependancy();
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.mode == 'edit') {
+                    this.setIsChanged();
+                }
+            }, this);
         },
 
         applyDependancy: function () {
@@ -177,6 +186,14 @@ Espo.define('views/record/base', 'view', function (Dep) {
             this.on('after:render', function () {
                 this._handleDependencyAttributes();
             }, this);
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
         },
 
         validate: function () {
@@ -198,6 +215,7 @@ Espo.define('views/record/base', 'view', function (Dep) {
             } else {
                 this.notify('Saved', 'success');
             }
+            this.setIsNotChanged();
         },
 
         beforeBeforeSave: function () {
@@ -214,6 +232,7 @@ Espo.define('views/record/base', 'view', function (Dep) {
         afterNotModified: function () {
             var msg = this.translate('notModified', 'messages');
             Espo.Ui.warning(msg, 'warning');
+            this.setIsNotChanged();
         },
 
         afterNotValid: function () {

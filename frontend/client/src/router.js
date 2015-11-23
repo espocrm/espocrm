@@ -92,17 +92,24 @@ Espo.define('router', [], function () {
             });
         },
 
-        execute: function (callback, args, name) {
+        checkConfirmLeaveOut: function (callback, context) {
+            context = context || this;
             if (this.confirmLeaveOut) {
                 if (confirm(this.confirmLeaveOutMessage)) {
                     this.confirmLeaveOut = false;
-                    Backbone.Router.prototype.execute.call(this, callback, args, name);
+                    callback.call(context);
                 } else {
                     this.navigateBack({trigger: false});
                 }
             } else {
-                Backbone.Router.prototype.execute.call(this, callback, args, name);
+                callback.call(context);
             }
+        },
+
+        execute: function (callback, args, name) {
+            this.checkConfirmLeaveOut(function () {
+                Backbone.Router.prototype.execute.call(this, callback, args, name);
+            });
         },
 
         navigate: function (fragment, options) {
