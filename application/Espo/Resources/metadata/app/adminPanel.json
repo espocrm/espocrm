@@ -93,6 +93,11 @@
             "description":"groupEmailAccounts"
          },
          {
+            "url":"#EmailAccount",
+            "label":"Personal Email Accounts",
+            "description":"personalEmailAccounts"
+         },
+         {
             "url":"#EmailFilter",
             "label":"Email Filters",
             "description":"emailFilters"
