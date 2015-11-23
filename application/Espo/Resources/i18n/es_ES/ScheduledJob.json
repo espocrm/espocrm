@@ -16,7 +16,8 @@
             "Cleanup": "Limpiar",
             "CheckInboundEmails": "Comprobar Correos Entrantes",
             "CheckEmailAccounts": "Compruebe cuentas de correo personales",
-            "SendEmailReminders": "Enviar Recordatorios por Email"
+            "SendEmailReminders": "Enviar Recordatorios por Email",
+            "AuthTokenControl": "Control del Token de Autenticación"
         },
         "cronSetup": {
             "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",

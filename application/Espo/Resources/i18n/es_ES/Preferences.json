@@ -43,6 +43,6 @@
         "Locale": "Localización"
     },
     "tooltips": {
-        "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en el stream y recibirá notificaciones."
+        "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en las actividades y recibirá notificaciones."
     }
 }
