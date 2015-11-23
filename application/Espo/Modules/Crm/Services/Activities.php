@@ -487,8 +487,15 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getResult($parts, $scope, $id, $params)
+    protected function getResultFromQueryParts($parts, $scope, $id, $params)
     {
+        if (empty($parts)) {
+            return array(
+                'list' => [],
+                'total' => 0
+            );
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $onlyScope = false;
@@ -578,7 +585,7 @@ class Activities extends \Espo\Core\Services\Base
         if ($this->getAcl()->checkScope('Call')) {
             $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [];
         }
-        return $this->getResult($parts, $scope, $id, $params);
+        return $this->getResultFromQueryParts($parts, $scope, $id, $params);
     }
 
     public function getHistory($scope, $id, $params)
@@ -599,7 +606,7 @@ class Activities extends \Espo\Core\Services\Base
         if ($this->getAcl()->checkScope('Email')) {
             $parts['Email'] = ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', ['Archived', 'Sent']) : [];
         }
-        $result = $this->getResult($parts, $scope, $id, $params);
+        $result = $this->getResultFromQueryParts($parts, $scope, $id, $params);
 
         foreach ($result['list'] as &$item) {
             if ($item['_scope'] == 'Email') {
