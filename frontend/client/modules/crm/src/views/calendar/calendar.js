@@ -42,6 +42,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         allDayScopeList: ['Task'],
 
+        scopeList: ['Meeting', 'Call', 'Task'],
+
         canceledStatusList: ['Not Held', 'Canceled'],
 
         completedStatusList: ['Held', 'Completed'],
@@ -128,8 +130,14 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.header = ('header' in this.options) ? this.options.header : this.header;
             this.slotDuration = this.options.slotDuration || this.slotDuration;
 
+            this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
+            this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
+            this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
+            this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
+            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
+
             this.scopeFilter = false;
-            this.scopeList = ['Meeting', 'Call', 'Task'];
+
             var scopeList = [];
             this.scopeList.forEach(function (scope) {
                 if (this.getAcl().check(scope)) {

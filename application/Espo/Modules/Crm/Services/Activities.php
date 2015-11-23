@@ -45,7 +45,7 @@ class Activities extends \Espo\Core\Services\Base
         'selectManagerFactory'
     );
 
-    protected $calendarEntityTypeList = ['Meeting', 'Call', 'Task'];
+    protected $calendarScopeList = ['Meeting', 'Call', 'Task'];
 
     protected function getPDO()
     {
@@ -726,13 +726,13 @@ class Activities extends \Espo\Core\Services\Base
         $pdo = $this->getPDO();
 
         if (is_null($scopeList)) {
-            $scopeList = $this->calendarEntityTypeList;
+            $scopeList = $this->calendarScopeList;
         }
 
         $sqlPartList = [];
 
         foreach ($scopeList as $scope) {
-            if (!in_array($scope, $this->calendarEntityTypeList)) {
+            if (!in_array($scope, $this->calendarScopeList)) {
                 continue;
             }
             if ($this->getAcl()->checkScope($scopeList)) {

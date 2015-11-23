@@ -1,0 +1,11 @@
+{
+    "colors": {
+        "Meeting": "#558BBD",
+        "Call": "#CF605D",
+        "Task": "#76BA4E"
+    },
+    "scopeList": ["Meeting", "Call", "Task"],
+    "allDayScopeList": ["Task"],
+    "modeList": ["month", "agendaWeek", "agendaDay"],
+    "completedStatusList": ["Held", "Completed"]
+}
