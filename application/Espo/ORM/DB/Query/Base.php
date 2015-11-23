@@ -662,10 +662,10 @@ abstract class Base
                         }
                         $oppose = '';
                         if ($operator == '<>') {
-                            $oppose = 'NOT';
+                            $oppose = 'NOT ';
                         }
                         if (!empty($valArr)) {
-                            $whereParts[] = $leftPart . " {$oppose} IN " . "(" . implode(',', $valArr) . ")";
+                            $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
                         } else {
                             $whereParts[] = " 0";
                         }

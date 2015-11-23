@@ -357,10 +357,8 @@ class Base
         if (!$this->getSeed()->hasField('teamsIds')) {
             return;
         }
-        $result['distinct'] = true;
-        if (!in_array('teams', $result['joins'])) {
-            $result['leftJoins'][] = 'teams';
-        }
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin('teams', $result);
         $result['whereClause'][] = array(
             'OR' => array(
                 'teams.id' => $this->user->get('teamsIds'),
@@ -798,6 +796,33 @@ class Base
     {
         $this->prepareResult($result);
         $this->textFilter($textFilter, $result);
+    }
+
+    public function addJoin($join, &$result)
+    {
+        if (empty($result['joins'])) {
+            $result['joins'] = [];
+        }
+
+        if (!in_array($join, $result['joins'])) {
+            $result['joins'][] = $join;
+        }
+    }
+
+    public function addLeftJoin($leftJoin, &$result)
+    {
+        if (empty($result['leftJoins'])) {
+            $result['leftJoins'] = [];
+        }
+
+        if (!in_array($leftJoin, $result['leftJoins'])) {
+            $result['leftJoins'][] = $leftJoin;
+        }
+    }
+
+    public function setDistinct($distinct, &$result)
+    {
+        $result['distinct'] = (bool) $distinct;
     }
 
     protected function textFilter($textFilter, &$result)

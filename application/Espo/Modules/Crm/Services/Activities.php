@@ -80,330 +80,406 @@ class Activities extends \Espo\Core\Services\Base
         return in_array($scope, ['Contact', 'Lead', 'User']);
     }
 
-    protected function getUserMeetingQuery($id, $op, $notIn)
+    protected function getUserMeetingQuery($id, $op = 'IN', $statusList = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
-                   meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
-                   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
-            FROM `meeting`
-            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = meeting.assigned_user_id
-            JOIN `meeting_user` AS `usersMiddle` ON usersMiddle.meeting_id = meeting.id AND usersMiddle.deleted = 0 AND usersMiddle.status <> 'Declined'
-            WHERE meeting.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
-        ";
-        if (!empty($notIn)) {
-            $sql .= "
-                AND meeting.status {$op} ('". implode("', '", $notIn) . "')
-            ";
+        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
+
+        $selectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                ['VALUE:Meeting', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'leftJoins' => ['users'],
+            'whereClause' => array(
+                'usersMiddle.userId' => $id
+            )
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $selectParams['whereClause'][$statusOpKey] = $statusList;
         }
+
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
+
         return $sql;
     }
 
-    protected function getUserCallQuery($id, $op, $notIn)
+    protected function getUserCallQuery($id, $op = 'IN', $statusList = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
-                   call.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
-                   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
-            FROM `call`
-            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = call.assigned_user_id
-            JOIN `call_user` AS `usersMiddle` ON usersMiddle.call_id = call.id AND usersMiddle.deleted = 0  AND usersMiddle.status <> 'Declined'
-            WHERE call.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
-        ";
-        if (!empty($notIn)) {
-            $sql .= "
-                AND call.status {$op} ('". implode("', '", $notIn) . "')
-            ";
+        $selectManager = $this->getSelectManagerFactory()->create('Call');
+
+        $selectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                ['VALUE:Call', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'leftJoins' => ['users'],
+            'whereClause' => array(
+                'usersMiddle.userId' => $id
+            )
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $selectParams['whereClause'][$statusOpKey] = $statusList;
         }
+
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
+
         return $sql;
     }
 
-    protected function getUserEmailQuery($id, $op, $notIn)
+    protected function getUserEmailQuery($id, $op = 'IN', $statusList = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
-                   email.assigned_user_id AS assignedUserId, TRIM(CONCAT(assignedUser.first_name, ' ', assignedUser.last_name)) AS assignedUserName,
-                   email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status, email.created_at AS createdAt
-            FROM `email`
-            LEFT JOIN `user` AS `assignedUser` ON assignedUser.id = email.assigned_user_id
-            JOIN `email_user` AS `usersMiddle` ON usersMiddle.email_id = email.id AND usersMiddle.deleted = 0
-            WHERE email.deleted = 0 AND usersMiddle.user_id = ".$pdo->quote($id)."
-        ";
-        if (!empty($notIn)) {
-            $sql .= "
-                AND email.status {$op} ('". implode("', '", $notIn) . "')
-            ";
+        $selectManager = $this->getSelectManagerFactory()->create('Email');
+
+        $selectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateSent', 'dateStart'],
+                ['VALUE:', 'dateEnd'],
+                ['VALUE:Email', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'leftJoins' => ['users'],
+            'whereClause' => array(
+                'usersMiddle.userId' => $id
+            )
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $selectParams['whereClause'][$statusOpKey] = $statusList;
         }
+
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
+
         return $sql;
     }
 
-    protected function getMeetingQuery($scope, $id, $op = 'IN', $notIn = [])
+    protected function getMeetingQuery($scope, $id, $op = 'IN', $statusList = null)
     {
         $methodName = 'get' .$scope . 'MeetingQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $notIn);
+            return $this->$methodName($id, $op, $statusList);
         }
 
-        $baseSql = "
-            SELECT meeting.id AS 'id', meeting.name AS 'name', meeting.date_start AS 'dateStart', meeting.date_end AS 'dateEnd', 'Meeting' AS '_scope',
-                   meeting.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-                   meeting.parent_type AS 'parentType', meeting.parent_id AS 'parentId', meeting.status AS status, meeting.created_at AS createdAt
-            FROM `meeting`
-            LEFT JOIN `user` ON user.id = meeting.assigned_user_id
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
-        $sql = $baseSql;
-        $sql .= "
-            WHERE
-                meeting.deleted = 0 AND
-        ";
+        $baseSelectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                ['VALUE:Meeting', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'whereClause' => array()
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+        }
+
+        $selectParams = $baseSelectParams;
+
         if ($scope == 'Account') {
-            $sql .= "
-                (meeting.parent_type = ".$this->getPDO()->quote($scope)." AND meeting.parent_id = ".$this->getPDO()->quote($id)."
-                OR
-                meeting.account_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Account'
+                    ),
+                    array(
+                        'accountId' => $id
+                    )
+                )
+            );
         } else {
-            $sql .= "
-                (meeting.parent_type = ".$this->getPDO()->quote($scope)." AND meeting.parent_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause']['parentId'] = $id;
+            $selectParams['whereClause']['parentType'] = $scope;
         }
 
-        if (!empty($notIn)) {
-            $sql .= "
-                AND meeting.status {$op} ('". implode("', '", $notIn) . "')
-            ";
-        }
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
 
         if ($this->isPerson($scope)) {
-            $sql = $sql . "
-                UNION
-            " . $baseSql;
-
+            $link = null;
             switch ($scope) {
                 case 'Contact':
-                    $joinTable = 'contact_meeting';
-                    $key = 'contact_id';
+                    $link = 'contacts';
                     break;
                 case 'Lead':
-                    $joinTable = 'lead_meeting';
-                    $key = 'lead_id';
+                    $link = 'leads';
                     break;
                 case 'User':
-                    $joinTable = 'meeting_user';
-                    $key = 'user_id';
+                    $link = 'users';
                     break;
             }
-            $sql .= "
-                JOIN `{$joinTable}` ON
-                    meeting.id = {$joinTable}.meeting_id AND
-                    {$joinTable}.deleted = 0 AND
-                    {$joinTable}.{$key} = ".$this->getPDO()->quote($id)."
-            ";
-            $sql .= "
-                WHERE
-                    (
-                        meeting.parent_type <> ".$this->getPDO()->quote($scope)." OR 
-                        meeting.parent_id <> ".$this->getPDO()->quote($id)." OR
-                        meeting.parent_type IS NULL OR
-                        meeting.parent_id IS NULL
-                    ) AND
-                    meeting.deleted = 0
-            ";
-            if (!empty($notIn)) {
-                $sql .= "
-                    AND meeting.status {$op} ('". implode("', '", $notIn) . "')
-                ";
-            }
+            if ($link) {
+                $selectParams = $baseSelectParams;
+                $selectManager->addJoin($link, $selectParams);
+                $selectParams['whereClause'][$link .'.id'] = $id;
+                $selectParams['whereClause'][] = array(
+                    'OR' => array(
+                        'parentType!=' => $scope,
+                        'parentId!=' => $id,
+                        'parentType' => null,
+                        'parentId' => null
+                    )
+                );
 
+                $selectManager->applyAccess($selectParams);
+
+                $sql .= ' UNION ' . $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
+            }
         }
 
         return $sql;
     }
 
-    protected function getCallQuery($scope, $id, $op = 'IN', $notIn = [])
+    protected function getCallQuery($scope, $id, $op = 'IN', $statusList = null)
     {
         $methodName = 'get' .$scope . 'CallQuery';
         if (method_exists($this, $methodName)) {
             return $this->$methodName($id, $op, $notIn);
         }
 
-        $baseSql = "
-            SELECT call.id AS 'id', call.name AS 'name', call.date_start AS 'dateStart', call.date_end AS 'dateEnd', 'Call' AS '_scope',
-                   call.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-                   call.parent_type AS 'parentType', call.parent_id AS 'parentId', call.status AS status, call.created_at AS createdAt
-            FROM `call`
-            LEFT JOIN `user` ON user.id = call.assigned_user_id
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Call');
 
-        $sql = $baseSql;
-        $sql .= "
-            WHERE
-                call.deleted = 0 AND
-        ";
+        $baseSelectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateStart', 'dateStart'],
+                ['dateEnd', 'dateEnd'],
+                ['VALUE:Call', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'whereClause' => array()
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+        }
+
+        $selectParams = $baseSelectParams;
+
         if ($scope == 'Account') {
-            $sql .= "
-                (call.parent_type = ".$this->getPDO()->quote($scope)." AND call.parent_id = ".$this->getPDO()->quote($id)."
-                OR
-                call.account_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Account'
+                    ),
+                    array(
+                        'accountId' => $id
+                    )
+                )
+            );
         } else {
-            $sql .= "
-                (call.parent_type = ".$this->getPDO()->quote($scope)." AND call.parent_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause']['parentId'] = $id;
+            $selectParams['whereClause']['parentType'] = $scope;
         }
 
-        if (!empty($notIn)) {
-            $sql .= "
-                AND call.status {$op} ('". implode("', '", $notIn) . "')
-            ";
-        }
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
 
         if ($this->isPerson($scope)) {
-            $sql = $sql . "
-                UNION
-            " . $baseSql;
-
+            $link = null;
             switch ($scope) {
                 case 'Contact':
-                    $joinTable = 'call_contact';
-                    $key = 'contact_id';
+                    $link = 'contacts';
                     break;
                 case 'Lead':
-                    $joinTable = 'call_lead';
-                    $key = 'lead_id';
+                    $link = 'leads';
                     break;
                 case 'User':
-                    $joinTable = 'call_user';
-                    $key = 'user_id';
+                    $link = 'users';
                     break;
             }
-            $sql .= "
-                JOIN `{$joinTable}` ON
-                    call.id = {$joinTable}.call_id AND
-                    {$joinTable}.deleted = 0 AND
-                    {$joinTable}.{$key} = ".$this->getPDO()->quote($id)."
-            ";
-            $sql .= "
-                WHERE
-                    (
-                        call.parent_type <> ".$this->getPDO()->quote($scope)." OR
-                        call.parent_id <> ".$this->getPDO()->quote($id)." OR
-                        call.parent_type IS NULL OR
-                        call.parent_id IS NULL
-                    ) AND
-                    call.deleted = 0
-            ";
-            if (!empty($notIn)) {
-                $sql .= "
-                    AND call.status {$op} ('". implode("', '", $notIn) . "')
-                ";
-            }
+            if ($link) {
+                $selectParams = $baseSelectParams;
+                $selectManager->addJoin($link, $selectParams);
+                $selectParams['whereClause'][$link .'.id'] = $id;
+                $selectParams['whereClause'][] = array(
+                    'OR' => array(
+                        'parentType!=' => $scope,
+                        'parentId!=' => $id,
+                        'parentType' => null,
+                        'parentId' => null
+                    )
+                );
 
+                $selectManager->applyAccess($selectParams);
+
+                $sql .= ' UNION ' . $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
+            }
         }
 
         return $sql;
     }
 
-    protected function getEmailQuery($scope, $id, $op = 'IN', $notIn = [])
+    protected function getEmailQuery($scope, $id, $op = 'IN', $statusList = null)
     {
         $methodName = 'get' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $notIn);
+            return $this->$methodName($id, $op, $statusList);
         }
 
-        $baseSql = "
-            SELECT DISTINCT
-                email.id AS 'id', email.name AS 'name', email.date_sent AS 'dateStart', '' AS 'dateEnd', 'Email' AS '_scope',
-                email.assigned_user_id AS assignedUserId, TRIM(CONCAT(user.first_name, ' ', user.last_name)) AS assignedUserName,
-                email.parent_type AS 'parentType', email.parent_id AS 'parentId', email.status AS status, email.created_at AS createdAt
-            FROM `email`
-            LEFT JOIN `user` ON user.id = email.assigned_user_id
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Email');
 
-        $sql = $baseSql;
-        $sql .= "
-            WHERE
-                email.deleted = 0 AND
-        ";
+        $baseSelectParams = array(
+            'select' => [
+                'id',
+                'name',
+                ['dateSent', 'dateStart'],
+                ['VALUE:', 'dateEnd'],
+                ['VALUE:Email', '_scope'],
+                'assignedUserId',
+                'assignedUserName',
+                'parentType',
+                'parentId',
+                'status',
+                'createdAt'
+            ],
+            'whereClause' => array()
+        );
+
+        if (!empty($statusList)) {
+            $statusOpKey = 'status';
+            if ($op == 'NOT IN') {
+                $statusOpKey .= '!=';
+            }
+            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+        }
+
+        $selectParams = $baseSelectParams;
+
         if ($scope == 'Account') {
-            $sql .= "
-                (email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id)."
-                OR
-                email.account_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Account'
+                    ),
+                    array(
+                        'accountId' => $id
+                    )
+                )
+            );
         } else {
-            $sql .= "
-                (email.parent_type = ".$this->getPDO()->quote($scope)." AND email.parent_id = ".$this->getPDO()->quote($id).")
-            ";
+            $selectParams['whereClause']['parentId'] = $id;
+            $selectParams['whereClause']['parentType'] = $scope;
         }
 
-        if (!empty($notIn)) {
-            $sql .= "
-                AND email.status {$op} ('". implode("', '", $notIn) . "')
-            ";
-        }
+        $selectManager->applyAccess($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
         if ($this->isPerson($scope) || $scope == 'Account') {
-            $sql = $sql . "
-                UNION
-            " . $baseSql;
-            $sql .= "
-                LEFT JOIN entity_email_address AS entity_email_address_2 ON
-                    entity_email_address_2.email_address_id = email.from_email_address_id AND
-                    entity_email_address_2.entity_type = " . $this->getPDO()->quote($scope) . " AND
-                    entity_email_address_2.deleted = 0
-
+            $selectParams = $baseSelectParams;
+            $selectParams['customJoin'] .= "
+                LEFT JOIN entity_email_address AS entityEmailAddress2 ON
+                    entityEmailAddress2.email_address_id = email.from_email_address_id AND
+                    entityEmailAddress2.entity_type = " . $this->getPDO()->quote($scope) . " AND
+                    entityEmailAddress2.deleted = 0
             ";
-            $sql .= "
-                WHERE
-                    email.deleted = 0 AND
-                    (
-                        email.parent_type <> ".$this->getPDO()->quote($scope)." OR
-                        email.parent_id <> ".$this->getPDO()->quote($id)." OR
-                        email.parent_type IS NULL OR
-                        email.parent_id IS NULL
-                    ) AND
-                    (entity_email_address_2.entity_id = ".$this->getPDO()->quote($id).")
-            ";
-            if (!empty($notIn)) {
-                $sql .= "
-                    AND email.status {$op} ('". implode("', '", $notIn) . "')
-                ";
-            }
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    'parentType!=' => $scope,
+                    'parentId!=' => $id,
+                    'parentType' => null,
+                    'parentId' => null
+                )
+            );
+            $selectParams['whereClause']['entityEmailAddress2.entityId'] = $id;
+            $selectManager->applyAccess($selectParams);
+            $sql .= "\n UNION \n" . $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
-            $sql = $sql . "
-                UNION
-            " . $baseSql;
-            $sql .= "
+            $selectParams = $baseSelectParams;
+            $selectParams['customJoin'] .= "
                 LEFT JOIN email_email_address ON
                     email_email_address.email_id = email.id AND
                     email_email_address.deleted = 0
-                LEFT JOIN entity_email_address AS entity_email_address_1 ON
-                    entity_email_address_1.email_address_id = email_email_address.email_address_id AND
+                LEFT JOIN entity_email_address AS entityEmailAddress1 ON
+                    entityEmailAddress1.email_address_id = email_email_address.email_address_id AND
 
-                    entity_email_address_1.entity_type = " . $this->getPDO()->quote($scope) . " AND
-                    entity_email_address_1.deleted = 0
+                    entityEmailAddress1.entity_type = " . $this->getPDO()->quote($scope) . " AND
+                    entityEmailAddress1.deleted = 0
             ";
-            $sql .= "
-                WHERE
-                    email.deleted = 0 AND
-                    (
-                        email.parent_type <> ".$this->getPDO()->quote($scope)." OR
-                        email.parent_id <> ".$this->getPDO()->quote($id)." OR
-                        email.parent_type IS NULL OR
-                        email.parent_id IS NULL
-                    ) AND
-                    (entity_email_address_1.entity_id = ".$this->getPDO()->quote($id).")
-            ";
-            if (!empty($notIn)) {
-                $sql .= "
-                    AND email.status {$op} ('". implode("', '", $notIn) . "')
-                ";
-            }
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    'parentType!=' => $scope,
+                    'parentId!=' => $id,
+                    'parentType' => null,
+                    'parentId' => null
+                )
+            );
+            $selectParams['whereClause']['entityEmailAddress1.entityId'] = $id;
+            $selectManager->applyAccess($selectParams);
+            $sql .= "\n UNION \n" . $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
         }
 
         return $sql;
