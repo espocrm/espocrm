@@ -47,7 +47,7 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             };
             this.optionsFields['enabledScopeList'] = {
                 type: 'multiEnum',
-                options: ['Meeting', 'Call', 'Task'],
+                options: this.getMetadata().get('clientDefs.Calendar.scopeList') || ['Meeting', 'Call', 'Task'],
                 translation: 'Global.scopeNamesPlural',
                 required: true
             };
