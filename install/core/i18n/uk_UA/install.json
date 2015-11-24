@@ -1,7 +1,7 @@
 {
 	"labels": {
 		"Main page title": "Ласкаво просимо до EspoCRM",
-		"Main page header": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-04-14 18:44+0300\nLast-Translator: alihor <ihor.aleksejev@gmail.com>\nLanguage-Team: EspoCRM <infobox@espocrm.com>\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\nX-Generator: Virtaal 0.7.1\n",
+		"Main page header": "",
 		"Start page title": "Ліцензійна угода",
 		"Step1 page title": "Ліцензійна угода",
 		"License Agreement": "Ліцензійна угода",
@@ -120,7 +120,7 @@
 				"windows": "<br> <pre>1. Знайти файл httpd.conf файл (зазвичай його можна знайти у теці, званій conf, config або ще якось так)<br> Н2. Всередині файла httpd.conf розкоментувати рядок LoadModule rewrite_module модулі/через mod_rewrite.so (видалити знак '#' на початку рядка)<br> 3. Також пересвідчитися, що рядок ClearModuleList некоментований і переконайтеся, що рядок AddModule mod_rewrite.c не закомментирований.</pre>"
 			},
 			"microsoft-iis": {
-				"windows": "Project-Id-Version: \nPOT-Creation-Date: \nPO-Revision-Date: 2015-04-14 18:44+0300\nLast-Translator: alihor <ihor.aleksejev@gmail.com>\nLanguage-Team: EspoCRM <infobox@espocrm.com>\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\nX-Generator: Virtaal 0.7.1\n"
+				"windows": ""
 			}
 		},
 		"modRewriteHelp": {

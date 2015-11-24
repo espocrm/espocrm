@@ -1,7 +1,7 @@
 {
 	"labels": {
 		"Main page title": "Willkommen bei EspoCRM",
-		"Main page header": "Project-Id-Version: Espo de_DE\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: Robert Laussegger <info@iscongroup.net>\nLanguage-Team: iscon group <info@iscongroup.net>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=iso-8859-1\nContent-Transfer-Encoding: 8bit\nLanguage: de_DE\nX-Generator: Poedit 1.6.5\n",
+		"Main page header": "",
 		"Start page title": "Lizenz Vereinbarung",
 		"Step1 page title": "Lizenz Vereinbarung",
 		"License Agreement": "Lizenz Vereinbarung",
@@ -120,7 +120,7 @@
 				"windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br> 2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile LoadModule rewrite_module modules/mod_rewrite.so (entfernen Sie das # Zeichen vom Anfang der Zeile)<br> 3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. </pre>"
 			},
 			"microsoft-iis": {
-				"windows": "Project-Id-Version: Espo de_DE\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: Robert Laussegger <info@iscongroup.net>\nLanguage-Team: iscon group <info@iscongroup.net>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=iso-8859-1\nContent-Transfer-Encoding: 8bit\nLanguage: de_DE\nX-Generator: Poedit 1.6.5\n"
+				"windows": ""
 			}
 		},
 		"modRewriteHelp": {
