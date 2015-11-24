@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
+Espo.define('views/notifications/badge', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'notifications.badge',
+        template: 'notifications/badge',
 
         notificationsCheckInterval: 10,
 
@@ -190,7 +190,13 @@ Espo.define('Views.Notifications.Badge', 'View', function (Dep) {
 
             if (id) {
                 id = name + '_' + id;
-                if (~this.shownNotificationIds.indexOf(id)) return;
+                if (~this.shownNotificationIds.indexOf(id)) {
+                    var notificationView = this.getView('popup-' + id);
+                    if (notificationView) {
+                        notificationView.trigger('update-data', data.data);
+                    }
+                    return;
+                }
                 if (~this.closedNotificationIds.indexOf(id)) return;
             } else {
                 id = this.lastId++;
