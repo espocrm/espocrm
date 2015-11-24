@@ -47,12 +47,12 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             this.buttonList.unshift({
                 name: 'saveDraft',
-                text: this.translate('Save Draft'),
+                text: this.translate('Save Draft', 'labels', 'Email'),
             });
 
             this.buttonList.unshift({
                 name: 'send',
-                text: this.getLanguage().translate('Send'),
+                text: this.translate('Send', 'labels', 'Email'),
                 style: 'primary'
             });
 

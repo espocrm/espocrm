@@ -210,7 +210,8 @@
         "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
-        "writeMessageToSelf": "Write a message to self"
+        "writeMessageToSelf": "Write a message to self",
+        "typeAndPressEnter": "Type & press enter"
     },
     "boolFilters": {
         "onlyMy": "Only My",
