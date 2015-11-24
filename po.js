@@ -99,11 +99,12 @@ PO.prototype.run = function () {
 
     }, this);
 
+
     if (self.language == self.baseLanguage) {
         langMessageList = messageList;
     }
 
-    for(var index in messageList) {
+    for (var index in messageList) {
         poContents += 'msgid "' + messageList[index] + '"\n';
 
         var langMessage = langMessageList[index] || "";
@@ -141,7 +142,7 @@ PO.prototype.convertToSigleObject = function (dataObject, prefix, currentMessage
 
     prefix = prefix || '';
 
-    for(var index in dataObject) {
+    for (var index in dataObject) {
         if (dataObject[index] === null || dataObject[index] === "") {
             continue;
         }
@@ -168,7 +169,7 @@ PO.prototype.convertToSigleObject = function (dataObject, prefix, currentMessage
 }
 
 PO.prototype.objectIndexOf = function (value, data) {
-    for(var index in data) {
+    for (var index in data) {
         if (data[index] !== null && data[index] === value) {
             return true;
         }
