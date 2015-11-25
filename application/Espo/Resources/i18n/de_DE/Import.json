@@ -13,12 +13,13 @@
         "Show records": "Datensätze zeigen",
         "Remove Duplicates": "Duplikate entfernen",
         "importedCount": "Importiert (Anzahl)",
-        "duplicateCount": "Duplicate (Anzahl)",
+        "duplicateCount": "Duplikate (Anzahl)",
         "updatedCount": "Aktualisiert (Anzahl)",
         "Create Only": "Nur erstellen",
         "Create and Update": "Erstellen und aktualisieren",
         "Update Only": "Nur aktualisieren",
         "Update by": "Aktualisieren durch",
+        "Set as Not Duplicate": "Als keine Dublette markieren",
         "File (CSV)": "Datei (CSV)"
     },
     "messages": {

@@ -6,7 +6,8 @@
         "autorefreshInterval": "Aktualisierungsintervall",
         "displayRecords": "Sätze anzeigen",
         "isDoubleHeight": "Zweifache Höhe",
-        "mode": "Modus"
+        "mode": "Modus",
+        "enabledScopeList": "Was soll angezeigt werden"
     },
     "options": {
     	"mode": {

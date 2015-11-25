@@ -16,7 +16,8 @@
             "Cleanup": "Aufräumen",
             "CheckInboundEmails": "Gruppen E-Mail Konten überprüfen",
             "CheckEmailAccounts": "Persönliche E-Mail Konten prüfen",
-            "SendEmailReminders": "E-Mail Erinnerungen senden"
+            "SendEmailReminders": "E-Mail Erinnerungen senden",
+            "AuthTokenControl": "Auth Token Control"
         },
         "cronSetup": {
             "linux": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
@@ -30,6 +31,6 @@
         }
     },
     "tooltips": {
-        "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
+        "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*\/5 * * * * - alle 5 Minuten\n\n0 *\/2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
     }
 }

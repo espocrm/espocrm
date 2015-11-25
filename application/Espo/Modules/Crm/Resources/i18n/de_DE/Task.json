@@ -25,7 +25,7 @@
             "Canceled": "Storniert",
             "Deferred": "Zurückgestellt"
         },
-        "priority" : {
+        "priority": {
             "Low": "Niedrig",
             "Normal": "Normal",
             "High": "Hoch",
@@ -37,7 +37,7 @@
         "Complete": "Fertig"
     },
     "presetFilters": {
-        "actual": "Tatsächlich",
+        "actual": "Aktuell",
         "completed": "Abgeschlossen",
         "todays": "Heutige",
         "overdue": "Überfällig"

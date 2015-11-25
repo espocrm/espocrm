@@ -26,6 +26,7 @@
     "labels": {
         "Create TargetList": "Kontaktliste erstellen",
         "Opted Out": "Keine E-Mails",
-        "Cancel Opt-Out": "Opt-Out zurücksetzen"
+        "Cancel Opt-Out": "Opt-Out zurücksetzen",
+        "Opt-Out": "Keine E-Mails"
     }
 }

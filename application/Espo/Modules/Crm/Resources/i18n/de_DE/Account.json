@@ -10,8 +10,10 @@
         "sicCode": "WKN Nummer",
         "industry": "Branche",
         "type": "Typ",
-        "contactRole": "Funktion",
-        "campaign": "Kampagne"
+        "contactRole": "Rolle",
+        "campaign": "Kampagne",
+        "targetLists": "Kontaktlisten",
+        "targetList": "Kontaktliste"
     },
     "links": {
         "contacts": "Kontakte",
@@ -40,6 +42,7 @@
             "Automotive": "Automobilindustrie",
             "Banking": "Bankwesen",
             "Biotechnology": "Biotechnologie",
+            "Building Materials & Equipment": "Baumaterial & -ausstattung",
             "Chemical": "Chemieindustrie",
             "Computer": "Informationstechnologie",
             "Education": "Bildungswesen",

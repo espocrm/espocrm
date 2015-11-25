@@ -1,11 +1,25 @@
 {
     "fields": {
         "post": "Senden",
-        "attachments": "Anhänge"
+        "attachments": "Anhänge",
+        "targetType": "Zielkontakt",
+        "teams": "Teams",
+        "users": "Benutzer"
     },
     "filters": {
         "all": "Alle",
         "posts": "Posts",
         "updates": "Aktualisierungen"
+    },
+    "options": {
+        "targetType": {
+            "self": "An sich selbst",
+            "users": "An (einen) bestimmte(n) Benutzer",
+            "teams": "An (ein) bestimmte(s) Team(s)",
+            "all": "An alle Benutzer"
+        }
+    },
+    "messages": {
+        "writeMessage": "Schreiben Sie hier Ihre Nachricht"
     }
 }

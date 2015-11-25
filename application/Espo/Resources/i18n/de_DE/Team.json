@@ -5,11 +5,13 @@
         "positionList": "Stellungen"
     },
     "links": {
-        "users": "Benutzer"
+        "users": "Benutzer",
+        "notes": "Notizen",
+        "roles": "Rollen"
     },
     "tooltips": {
-        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen",
-        "positionList": "Verfügbare Positionen in diesem Team Z.B. Verkäufer, Manager etc."
+        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen.",
+        "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
     },
     "labels": {
         "Create Team": "Team erstellen"

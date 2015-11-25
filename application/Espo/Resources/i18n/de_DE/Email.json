@@ -24,18 +24,25 @@
         "replied": "Beantwortet",
         "replies": "Antworten",
         "isRead": "Ist gelesen",
-        "isImportant": "Ist wichtig"
+        "isImportant": "Ist wichtig",
+        "isUsers": "Gehört Benutzer",
+        "inTrash": "Im Papierkorb",
+        "Move to Trash": "In den Papierkorb verschieben",
+        "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
     },
     "links": {
         "replied": "Beantwortet",
         "replies": "Antworten"
     },
     "options": {
-        "Draft": "Entwurf",
-        "Sending": "Wird gesendet",
-        "Sent": "Gesendet",
-        "Archived": "Archiviert",
-        "Received": "Empfangen"
+        "status": {
+            "Draft": "Entwurf",
+            "Sending": "Wird gesendet",
+            "Sent": "Gesendet",
+            "Archived": "Archiviert",
+            "Received": "Empfangen",
+            "Failed": "Fehlgeschlagen"
+        }
     },
     "labels": {
         "Create Email": "E-Mail archivieren",
@@ -58,10 +65,10 @@
         "Mark all as read": "Als gelesen markieren",
         "Show Plain Text": "Als Text zeigen",
         "Mark as Important": "Als wichtig markieren",
-        "Mark as Not Important": "Als unwichtig markieren"
+        "Unmark Importance": "Wichtig Markierung entfernen"
     },
     "messages": {
-        "noSmtpSetup": "Keine SMTP Einstellung, {link}. ",
+        "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
         "testEmailSent": "Eine Test E-Mail wurde gesendet",
         "emailSent": "E-Mail wurde gesendet",
         "savedAsDraft": "Als Entwurf gepeichert"
@@ -70,12 +77,14 @@
         "sent": "Gesendet",
         "archived": "Archiviert",
         "inbox": "Posteingang",
-        "drafts": "Entwürfe"
+        "drafts": "Entwürfe",
+        "trash": "Papierkorb"
     },
     "massActions": {
         "markAsRead": "Als gelesen markieren",
         "markAsNotRead": "Als ungelesen markieren",
         "markAsImportant": "Als wichtig markieren",
-        "markAsNotImportant": "Als unwichtig markieren"
+        "markAsNotImportant": "Wichtig Markierung entfernen",
+        "moveToTrash": "In den Papierkorb verschieben"
     }
 }

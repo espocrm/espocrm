@@ -9,10 +9,10 @@
         "priority": "Priorität",
         "type": "Typ",
         "description": "Beschreibung",
-        "inboundEmail": "Eingehende E-Mails"
+        "inboundEmail": "Eingehende E-Mail"
     },
     "links": {
-        "inboundEmail": "Eingehende E-Mails",
+        "inboundEmail": "Eingehende E-Mail",
         "account": "Firma",
         "contact": "Kontakt (Primär)",
         "Contacts": "Kontakte",
@@ -30,7 +30,7 @@
             "Rejected": "Abgelehnt",
             "Duplicate": "Duplizieren"
         },
-        "priority" : {
+        "priority": {
             "Low": "Niedrig",
             "Normal": "Normal",
             "High": "Hoch",

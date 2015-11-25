@@ -28,7 +28,7 @@
             "Id. Decision Makers": "Entscheider ident.",
             "Perception Analysis": "Analyse Sichtweise",
             "Proposal/Price Quote": "Preisangebot",
-            "Negotiation/Review": "Verhandlung/Überarbeitung",
+            "Negotiation/Review": "Verhandlung\/Überarbeitung",
             "Closed Won": "Gewonnen",
             "Closed Lost": "Verloren"
         }
@@ -39,6 +39,6 @@
     "presetFilters": {
         "open": "Offen",
         "won": "Gewonnen",
-        "lost": "Lost"
+        "lost": "Verloren"
     }
 }

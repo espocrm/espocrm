@@ -7,6 +7,7 @@
         "startDate": "Startdatum",
         "endDate": "Enddatum",
         "targetLists": "Kontaktlisten",
+        "excludingTargetLists": "Kontaktlisten ausschließen",
         "sentCount": "Gesendet",
         "openedCount": "Geöffnet",
         "clickedCount": "Geklickt",
@@ -21,6 +22,7 @@
     },
     "links": {
         "targetLists": "Kontaktlisten",
+        "excludingTargetLists": "Kontaktlisten ausschließen",
         "accounts": "Firmen",
         "contacts": "Kontakte",
         "leads": "Interessenten",
@@ -58,5 +60,9 @@
     },
     "messages": {
         "unsubscribed": "Sie wurden erfolgreich von unserem Verteiler entfernt"
+    },
+    "tooltips": {
+        "targetLists": "Zielkontakte die Nachrichten empfangen sollen ",
+        "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen "
     }
 }

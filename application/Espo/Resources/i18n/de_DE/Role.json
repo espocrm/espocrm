@@ -10,8 +10,8 @@
         "teams": "Teams"
     },
     "tooltips": {
-        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\n\nNein - Kann nur sich selbst zuweisen",
-        "userPermission": "Erlaubt Benutzern die Aktivitäten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen"
+        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\/senden\n\nNein - Kann nur sich selbst zuweisen\/senden",
+        "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Vorgänge anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen"
     },
     "labels": {
         "Access": "Zugang",

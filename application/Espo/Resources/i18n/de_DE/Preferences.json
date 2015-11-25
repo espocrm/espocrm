@@ -27,8 +27,7 @@
         "useCustomTabList": "Benutzerdefinierte Reiter Liste",
         "tabList": "Reiter Liste"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "weekStart": {
             "0": "Sonntag",

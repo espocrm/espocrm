@@ -19,7 +19,8 @@
     },
     "links": {
         "teams": "Teams",
-        "roles": "Rollen"
+        "roles": "Rollen",
+        "notes": "Notizen"
     },
     "labels": {
         "Create User": "Benutzer erstellen",
@@ -47,10 +48,10 @@
         "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
         "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
         "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
-        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern Diese eindeutige URL ist nur für kurze Zeit gültig.",
+        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
         "passwordChanged": "Das Passwort wurde geändert",
         "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
-        "wrongUsernamePasword": "Falscher Benutzername/Passwort",
+        "wrongUsernamePasword": "Falscher Benutzername\/Passwort",
         "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
         "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
         "forbidden": "Verboten, bitte später nochmals versuchen",

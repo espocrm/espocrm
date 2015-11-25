@@ -13,8 +13,7 @@
         "reminders": "Erinnerungen",
         "account": "Firma"
     },
-    "links": {
-    },
+    "links": {},
     "options": {
         "status": {
             "Planned": "Geplant",
@@ -38,7 +37,7 @@
         "Set Not Held": "Auf nicht gehalten setzen",
         "Send Invitations": "Einladungen versenden",
         "on time": "Aktuelle Zeit",
-        "before": "bevor"
+        "before": "vor"
     },
     "presetFilters": {
         "planned": "Geplant",

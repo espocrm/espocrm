@@ -26,7 +26,7 @@
     "labels": {
         "Create EmailAccount": "E-Mail Konto erstellen",
         "IMAP": "IMAP",
-        "Main": "Wichtig",
+        "Main": "Hauptteil",
         "Test Connection": "Verbindung überprüfen"
     },
     "messages": {
@@ -35,6 +35,6 @@
     },
     "tooltips": {
         "monitoredFolders": "Sie können einen 'Gesendet' Ordner hinzufügen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
-        "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein von der die E-Mail gesendet wurde."
+        "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde."
     }
 }
