@@ -26,9 +26,7 @@
         "isRead": "Is Read",
         "isImportant": "Is Important",
         "isUsers": "Is User's",
-        "inTrash": "In Trash",
-        "Move to Trash": "Move to Trash",
-        "Retrieve from Trash": "Retrieve from Trash"
+        "inTrash": "In Trash"
     },
     "links": {
         "replied": "Replied",
@@ -65,7 +63,9 @@
         "Mark all as read": "Mark all as read",
         "Show Plain Text": "Show Plain Text",
         "Mark as Important": "Mark as Important",
-        "Unmark Importance": "Unmark Importance"
+        "Unmark Importance": "Unmark Importance",
+        "Move to Trash": "Move to Trash",
+        "Retrieve from Trash": "Retrieve from Trash"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",

@@ -26,9 +26,7 @@
         "isRead": "Ist gelesen",
         "isImportant": "Ist wichtig",
         "isUsers": "Gehört Benutzer",
-        "inTrash": "Im Papierkorb",
-        "Move to Trash": "In den Papierkorb verschieben",
-        "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
+        "inTrash": "Im Papierkorb"
     },
     "links": {
         "replied": "Beantwortet",
@@ -65,7 +63,9 @@
         "Mark all as read": "Als gelesen markieren",
         "Show Plain Text": "Als Text zeigen",
         "Mark as Important": "Als wichtig markieren",
-        "Unmark Importance": "Wichtig Markierung entfernen"
+        "Unmark Importance": "Wichtig Markierung entfernen",
+        "Move to Trash": "In den Papierkorb verschieben",
+        "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
     },
     "messages": {
         "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
