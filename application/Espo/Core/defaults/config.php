@@ -110,7 +110,7 @@ return array (
     'personalEmailMaxPortionSize' => 10,
     'inboundEmailMaxPortionSize' => 20,
     'authTokenLifetime' => 0,
-    'authTokenMaxIdleTime' => 120
-    'isInstalled' => false,
+    'authTokenMaxIdleTime' => 120,
+    'isInstalled' => false
 );
 
