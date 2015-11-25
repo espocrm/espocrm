@@ -35,6 +35,7 @@ var path = require('path');
 var fs = require('fs');
 var nodePath = require('path');
 var os = require('os');
+var PO = require('pofile');
 var isWin = /^win/.test(os.platform());
 
 var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
@@ -100,84 +101,139 @@ Lang.prototype.escape = function(s) {
 };
 
 Lang.prototype.run = function () {
-
-    var translationHash = {};
+    var translationData = {};
     var dirs = this.dirs;
 
-    var contents = fs.readFileSync(this.poPath, 'utf8');
-    var matches = contents.match(new RegExp('msgid (\"(.*)\".*\n)+.*msgstr (\"(.*)\"(\n)?)+', 'g'));
+    PO.load(this.poPath, function (err, po) {
+        if (err) throw new Error("Could not parse " + this.poPath);
 
-    matches.forEach(function (part) {
+        po.items.forEach(function (item) {
+            if (!item.msgctxt) return;
+            var key = item.msgctxt + '__' + item.msgid;
+            var file = item.msgctxt.split('.')[0];
+            var path = item.msgctxt.split('.').slice(1);
 
-        //remove line break "\n"
-        part = part.replace(/"\n"/g, '');
+            var o = {
+                stringOriginal: item.msgid,
+                stringTranslated: item.msgstr[0],
+                context: item.msgctxt,
+                file: file,
+                path: path
+            };
+            translationData[file] = translationData[file] || [];
+            translationData[file].push(o);
+        });
 
-        var res = part.match(new RegExp('msgid \"(.*)\".*\n.*msgstr \"(.*)\"'));
-        translationHash[res[1]] = res[2];
-    }, this);
 
-    dirs.forEach(function (path) {
-        var resDirPath = this.dirNames[path];
+        dirs.forEach(function (path) {
+            var resDirPath = this.dirNames[path];
+            var resPath = this.currentPath + 'build/' + resLang + '/' + resDirPath;
 
-        var resPath = this.currentPath + 'build/' + resLang + '/' + resDirPath;
-
-        if (!fs.existsSync(resPath)) {
-            var d = '';
-            resPath.split('/').forEach(function (f) {
-
-                if (!f) {
-                    return;
-                }
-
-                if (isWin) {
-                    d = nodePath.join(d, f);
-                } else {
-                    d += '/' + f;
-                }
-
-                if (!fs.existsSync(d)) {
-                    fs.mkdirSync(d);
-                }
-            });
-        }
-
-        var list = fs.readdirSync(path);
-        list.forEach(function (fileName) {
-            var filePath = path + fileName;
-            var resFilePath = resPath + '/' + fileName;
-
-            var contents = fs.readFileSync(filePath, 'utf8');
-
-            for (var key in translationHash) {
-
-                if (!translationHash[key].trim()) {
-                    continue;
-                }
-
-                var escapedKey = this.escape(key);
-                contents = contents.replace(new RegExp(': *\"(' + escapedKey  + ')\"', 'g'), ': "' + translationHash[key] + '"');
+            if (!fs.existsSync(resPath)) {
+                var d = '';
+                resPath.split('/').forEach(function (f) {
+                    if (!f) {
+                        return;
+                    }
+                    if (isWin) {
+                        d = nodePath.join(d, f);
+                    } else {
+                        d += '/' + f;
+                    }
+                    if (!fs.existsSync(d)) {
+                        fs.mkdirSync(d);
+                    }
+                });
             }
 
-            for (var key in translationHash) {
-                if (key.substr(0, 2) == "\\\"") {
+            var list = fs.readdirSync(path);
+            list.forEach(function (fileName) {
 
-                    if (!translationHash[key].trim()) {
-                       continue;
+                var filePath = path + fileName;
+                var resFilePath = resPath + '/' + fileName;
+
+                var contents = fs.readFileSync(filePath, 'utf8');
+
+                var fileKey = fileName.split('.')[0];
+
+                var fileObject = JSON.parse(contents);
+                var targetFileObject = {};
+
+                if (!(fileKey in translationData)) return;
+
+                translationData[fileKey].forEach(function (item) {
+                    var isArray = false;
+                    var isMet = true;
+                    var c = fileObject;
+                    var path = item.path.slice(0);
+
+                    for (var i in item.path) {
+                        var key = item.path[i];
+                        if (key in c) {
+                            c = c[key];
+                            if (Array.isArray(c)) {
+                                isArray = true;
+                                break;
+                            }
+                        } else {
+                            isMet = false;
+                        }
                     }
 
-                    var escapedKey = this.escape(key);
-                     contents = contents.replace(new RegExp('(' + escapedKey.replace(/\\"/g, '"')  + ')', 'g'), '' + translationHash[key].replace(/\\"/g, '"') + '');
-                }
-            }
 
-            if (fs.existsSync(resFilePath)) {
-                fs.unlinkSync(resFilePath);
-            }
-            fs.writeFileSync(resFilePath , contents);
+                    if (isMet) {
+                        if (!isArray) {
+                            var isMet = false;
+                            for (var k in c) {
+                                if (c[k] === item.stringOriginal) {
+                                    path.push(k);
+                                    isMet = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!isMet) return;
+
+                    var targetValue = item.stringTranslated;
+                    if (targetValue === '') {
+                        targetValue = item.stringOriginal;
+                    }
+                    if (isArray) {
+                        try {
+                            var targetValue = JSON.parse('[' + targetValue  + ']');
+                        } catch (e) {
+                            targetValue = null;
+                        }
+                    }
+                    if (targetValue == null) return;
+
+                    var c = targetFileObject;
+                    path.forEach(function (pathKey, i) {
+                        if (i < path.length - 1) {
+                            c[pathKey] = c[pathKey] || {};
+                            c = c[pathKey];
+                        } else {
+                            c[pathKey] = targetValue;
+                        }
+                    }, this);
+                }, this);
+
+                var contents = JSON.stringify(targetFileObject, null, ' ');
+
+                if (fs.existsSync(resFilePath)) {
+                    fs.unlinkSync(resFilePath);
+                }
+                fs.writeFileSync(resFilePath, contents);
+
+                return;
+            }, this);
 
         }, this);
 
-    }, this);
+    }.bind(this))
+
+
 };
 
 var lang = new Lang(poPath, espoPath);

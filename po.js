@@ -75,8 +75,9 @@ function PO (espoPath, language) {
 
 PO.prototype.run = function () {
     var dirs = this.dirs;
-    var messageList = [];
-    var langMessageList = [];
+    var messageData = {};
+    var targetMessageData = {}
+
     var self = this;
     var poContents = this.poContentHeader;
 
@@ -86,29 +87,27 @@ PO.prototype.run = function () {
 
         var list = fs.readdirSync(dirPath);
         list.forEach(function (fileName) {
-
             var filePath = this.getDirPath(path, self.baseLanguage) + fileName;
-            messageList = this.getMessageList(filePath, messageList);
+            this.populateMessageDataFromFile(filePath, messageData);
 
             if (self.language != self.baseLanguage) {
                 var langFilePath = this.getDirPath(path, self.language) + fileName;
-                langMessageList = this.getMessageList(langFilePath, langMessageList);
+                this.populateMessageDataFromFile(langFilePath, targetMessageData);
             }
-
         }, this);
 
     }, this);
 
 
     if (self.language == self.baseLanguage) {
-        langMessageList = messageList;
+        targetMessageData = messageData;
     }
 
-    for (var index in messageList) {
-        poContents += 'msgid "' + messageList[index] + '"\n';
-
-        var langMessage = langMessageList[index] || "";
-        poContents += 'msgstr "' + langMessage + '"\n\n';
+    for (var key in messageData) {
+        poContents += 'msgid "' + messageData[key].value + '"\n';
+        poContents += 'msgctxt "' + messageData[key].context + '"\n';
+        var translatedValue = (targetMessageData[key] || {}).value || "";
+        poContents += 'msgstr "' + translatedValue + '"\n\n';
     }
 
     var resFilePath = this.currentPath + 'build/' + this.outputFileName;
@@ -120,17 +119,17 @@ PO.prototype.run = function () {
     fs.writeFileSync(resFilePath, poContents);
 };
 
-PO.prototype.getMessageList = function (filePath, currentMessageList) {
+PO.prototype.populateMessageDataFromFile = function (filePath, messageData) {
     if (!fs.existsSync(filePath)) {
-        return currentMessageList;
+        return messageData;
     }
 
     var data = fs.readFileSync(filePath, 'utf8');
     data = JSON.parse(data);
 
-    currentMessageList = this.convertToSigleObject(data, '', currentMessageList);
+    var fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
 
-    return currentMessageList;
+    this.populateMessageData(fileName, data, '', messageData);
 }
 
 PO.prototype.getDirPath = function (path, language) {
@@ -138,8 +137,7 @@ PO.prototype.getDirPath = function (path, language) {
     return dirPath;
 }
 
-PO.prototype.convertToSigleObject = function (dataObject, prefix, currentMessageList) {
-
+PO.prototype.populateMessageData = function (fileName, dataObject, prefix, messageData) {
     prefix = prefix || '';
 
     for (var index in dataObject) {
@@ -147,51 +145,26 @@ PO.prototype.convertToSigleObject = function (dataObject, prefix, currentMessage
             continue;
         }
 
-        if (Array.isArray(dataObject[index])) {
-            dataObject[index] = '"' + dataObject[index].join('", "') + '"';
-        }
-
-        if (typeof dataObject[index] === 'object') {
-            var nextPrefix = prefix + index + ".";
-            currentMessageList = this.convertToSigleObject(dataObject[index], nextPrefix, currentMessageList);
+        if (typeof dataObject[index] === 'object' && !Array.isArray(dataObject[index])) {
+            var nextPrefix = prefix + (prefix ? '.' : '') + index;
+            this.populateMessageData(fileName, dataObject[index], nextPrefix, messageData);
         } else {
-            if (!this.objectIndexOf(dataObject[index], currentMessageList)) {
-                var key = prefix + index;
-                key = this.checkFixDuplicateKey(key, currentMessageList);
-                var savedString = this.fixString(dataObject[index]);
+            var path = fileName + '.' + prefix;
 
-                currentMessageList[key] = savedString;
+            var key = path + '.' + index;
+
+            var value = dataObject[index];
+            if (Array.isArray(value)) {
+                value = '"' + value.join('", "') + '"';
+                path = path + '.' + index;
             }
+
+            messageData[key] = {
+                context: path,
+                value: this.fixString(value)
+            };
         }
     }
-
-    return currentMessageList;
-}
-
-PO.prototype.objectIndexOf = function (value, data) {
-    for (var index in data) {
-        if (data[index] !== null && data[index] === value) {
-            return true;
-        }
-    }
-    return false;
-}
-
-PO.prototype.checkFixDuplicateKey = function (key, data) {
-    if (this.objectIndexOfKey(key, data)) {
-        key = key + "+";
-        key = this.checkFixDuplicateKey(key, data);
-    }
-    return key;
-}
-
-PO.prototype.objectIndexOfKey = function (key, data) {
-    for(var index in data) {
-        if (index !== null && index === key) {
-            return true;
-        }
-    }
-    return false;
 }
 
 PO.prototype.replaceAll = function (string, find, replace) {
