@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 if (process.argv.length < 2) {
     throw new Error('No dir argument passed');
 }
@@ -104,8 +105,8 @@ PO.prototype.run = function () {
     }
 
     for (var key in messageData) {
-        poContents += 'msgid "' + messageData[key].value + '"\n';
         poContents += 'msgctxt "' + messageData[key].context + '"\n';
+        poContents += 'msgid "' + messageData[key].value + '"\n';
         var translatedValue = (targetMessageData[key] || {}).value || "";
         poContents += 'msgstr "' + translatedValue + '"\n\n';
     }

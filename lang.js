@@ -25,8 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-﻿// node lang.js espocrm-nl_NL.po lastRelease nl_NL
-
+﻿
 if (process.argv.length < 2) {
     throw new Error('No dir argument passed');
 }
@@ -51,9 +50,9 @@ var deleteFolderRecursive = function (path) {
         files = fs.readdirSync(path);
         files.forEach(function(file,index){
             var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+            if(fs.lstatSync(curPath).isDirectory()) {
                 deleteFolderRecursive(curPath);
-            } else { // delete file
+            } else {
                 fs.unlinkSync(curPath);
             }
         });
@@ -180,16 +179,21 @@ Lang.prototype.run = function () {
                         }
                     }
 
+                    var pathList = [];
 
                     if (isMet) {
                         if (!isArray) {
                             var isMet = false;
                             for (var k in c) {
                                 if (c[k] === item.stringOriginal) {
-                                    path.push(k);
+                                    var p = path.slice(0);
+                                    p.push(k);
+                                    pathList.push(p);
                                     isMet = true;
                                 }
                             }
+                        } else {
+                            pathList.push(path);
                         }
                     }
 
@@ -208,18 +212,20 @@ Lang.prototype.run = function () {
                     }
                     if (targetValue == null) return;
 
-                    var c = targetFileObject;
-                    path.forEach(function (pathKey, i) {
-                        if (i < path.length - 1) {
-                            c[pathKey] = c[pathKey] || {};
-                            c = c[pathKey];
-                        } else {
-                            c[pathKey] = targetValue;
-                        }
+                    pathList.forEach(function (path) {
+                        var c = targetFileObject;
+                        path.forEach(function (pathKey, i) {
+                            if (i < path.length - 1) {
+                                c[pathKey] = c[pathKey] || {};
+                                c = c[pathKey];
+                            } else {
+                                c[pathKey] = targetValue;
+                            }
+                        }, this);
                     }, this);
                 }, this);
 
-                var contents = JSON.stringify(targetFileObject, null, ' ');
+                var contents = JSON.stringify(targetFileObject, null, '  ');
 
                 if (fs.existsSync(resFilePath)) {
                     fs.unlinkSync(resFilePath);
