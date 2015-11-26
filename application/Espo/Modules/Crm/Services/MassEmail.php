@@ -97,7 +97,8 @@ class MassEmail extends \Espo\Services\Record
             }
         }
 
-        $targetHash = array();
+        $metTargetHash = array();
+        $metEmailAddressHash = array();
         $entityList = [];
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -119,7 +120,11 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($accountList as $account) {
                     $hashId = $account->getEntityType() . '-'. $account->id;
-                    if (!empty($targetHash[$hashId])) {
+                    if (!empty($metTargetHash[$hashId])) {
+                        continue;
+                    }
+                    $emailAddress = $account->get('emailAddress');
+                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
                         continue;
                     }
                     $toExclude = false;
@@ -142,7 +147,8 @@ class MassEmail extends \Espo\Services\Record
                         continue;
                     }
                     $entityList[] = $account;
-                    $targetHash[$hashId] = true;
+                    $metTargetHash[$hashId] = true;
+                    $metEmailAddressHash[$emailAddress] = true;
                 }
 
                 $contactList = $targetList->get('contacts', array(
@@ -152,7 +158,11 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($contactList as $contact) {
                     $hashId = $contact->getEntityType() . '-'. $contact->id;
-                    if (!empty($targetHash[$hashId])) {
+                    if (!empty($metTargetHash[$hashId])) {
+                        continue;
+                    }
+                    $emailAddress = $contact->get('emailAddress');
+                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
                         continue;
                     }
                     $toExclude = false;
@@ -175,7 +185,8 @@ class MassEmail extends \Espo\Services\Record
                         continue;
                     }
                     $entityList[] = $contact;
-                    $targetHash[$hashId] = true;
+                    $metTargetHash[$hashId] = true;
+                    $metEmailAddressHash[$emailAddress] = true;
                 }
 
                 $leadList = $targetList->get('leads', array(
@@ -185,7 +196,11 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($leadList as $lead) {
                     $hashId = $lead->getEntityType() . '-'. $lead->id;
-                    if (!empty($targetHash[$hashId])) {
+                    if (!empty($metTargetHash[$hashId])) {
+                        continue;
+                    }
+                    $emailAddress = $lead->get('emailAddress');
+                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
                         continue;
                     }
                     $toExclude = false;
@@ -208,7 +223,8 @@ class MassEmail extends \Espo\Services\Record
                         continue;
                     }
                     $entityList[] = $lead;
-                    $targetHash[$hashId] = true;
+                    $metTargetHash[$hashId] = true;
+                    $metEmailAddressHash[$emailAddress] = true;
                 }
 
                 $userList = $targetList->get('users', array(
@@ -218,7 +234,11 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($userList as $user) {
                     $hashId = $user->getEntityType() . '-'. $user->id;
-                    if (!empty($targetHash[$hashId])) {
+                    if (!empty($metTargetHash[$hashId])) {
+                        continue;
+                    }
+                    $emailAddress = $user->get('emailAddress');
+                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
                         continue;
                     }
                     $toExclude = false;
@@ -241,7 +261,8 @@ class MassEmail extends \Espo\Services\Record
                         continue;
                     }
                     $entityList[] = $user;
-                    $targetHash[$hashId] = true;
+                    $metTargetHash[$hashId] = true;
+                    $metEmailAddressHash[$emailAddress] = true;
                 }
             }
         }
