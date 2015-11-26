@@ -133,6 +133,26 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
         },
 
+        setupSearch: function () {
+            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
+            this.searchParams.typeFront = this.searchParams.typeFront || 'is';
+
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            if (~['is'].indexOf(type)) {
+                this.$el.find('div.primary').removeClass('hidden');
+            } else {
+                this.$el.find('div.primary').addClass('hidden');
+            }
+        },
+
         select: function (model) {
             this.$elementName.val(model.get('name'));
             this.$elementId.val(model.get('id'));
@@ -236,6 +256,11 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     $elementName.autocomplete('dispose');
                 }, this);
             }
+
+            if (this.mode == 'search') {
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
+            }
         },
 
         getValueForDisplay: function () {
@@ -261,15 +286,35 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var id = this.$elementId.val();
-            var type = this.$elementType.val();
-            var name = this.$elementName.val()
+            var type = this.$el.find('select.search-type').val();
 
-            if (!name || !type) {
+            if (type == 'isEmpty') {
+                var data = {
+                    type: 'isNull',
+                    typeFront: type,
+                    field: this.idName
+                };
+                return data;
+            } else if (type == 'isNotEmpty') {
+                var data = {
+                    type: 'isNotNull',
+                    typeFront: type,
+                    field: this.idName
+                };
+                return data;
+            }
+
+
+            var entityType = this.$elementType.val();
+            var entityName = this.$elementName.val()
+            var entityId = this.$elementId.val();
+
+            if (!entityId || !entityType) {
                 return false;
             }
 
             var data = {
+                frontType: 'is',
                 type: 'and',
                 field: this.idName,
 
@@ -277,17 +322,17 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     {
                         type: 'equals',
                         field: this.idName,
-                        value: id,
+                        value: entityId,
                     },
                     {
                         type: 'equals',
                         field: this.typeName,
-                        value: type,
+                        value: entityType,
                     }
                 ],
-                valueId: id,
-                valueName: name,
-                valueType: type,
+                valueId: entityId,
+                valueName: entityName,
+                valueType: entityType,
             };
             return data;
         },
