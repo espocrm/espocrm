@@ -7,7 +7,14 @@
         "parent": "Target",
         "object": "Object",
         "application": "Application",
-        "queueItem": "Queue Item"
+        "queueItem": "Queue Item",
+        "stringData": "String Data",
+        "stringAdditionalData": "String Additional Data"
+    },
+    "links": {
+        "queueItem": "Queue Item",
+        "parent": "Parent",
+        "object": "Object"
     },
     "options": {
     	"action": {
