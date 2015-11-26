@@ -104,12 +104,19 @@ class MassEmail extends \Espo\Services\Record
         $pdo = $this->getEntityManager()->getPDO();
 
         if (!$isTest) {
-
-            if (!$massEmail->has('excludingTargetListsIds')) {
-                $massEmail->loadLinkMultipleField('excludingTargetLists');
+            $excludingTargetListList = $massEmail->get('excludingTargetLists');
+            foreach ($excludingTargetListList as $excludingTargetList) {
+                foreach (['accounts', 'contacts', 'leads', 'users'] as $link) {
+                    foreach ($excludingTargetList->get($link) as $excludingTarget) {
+                        $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
+                        $metTargetHash[$hashId] = true;
+                        $emailAddress = $excludingTarget->get('emailAddress');
+                        if ($emailAddress) {
+                            $metEmailAddressHash[$emailAddress] = true;
+                        }
+                    }
+                }
             }
-
-            $excludingTargetListIdList = $massEmail->get('excludingTargetListsIds');
 
             $targetListCollection = $massEmail->get('targetLists');
             foreach ($targetListCollection as $targetList) {
@@ -120,32 +127,17 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($accountList as $account) {
                     $hashId = $account->getEntityType() . '-'. $account->id;
+                    $emailAddress = $account->get('emailAddress');
+                    if (empty($emailAddress)) {
+                        continue;
+                    }
+                    if (!empty($metEmailAddressHash[$emailAddress])) {
+                        continue;
+                    }
                     if (!empty($metTargetHash[$hashId])) {
                         continue;
                     }
-                    $emailAddress = $account->get('emailAddress');
-                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    $toExclude = false;
-                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
-                        $sql = "
-                            SELECT id FROM account_target_list
-                            WHERE
-                                account_id = ".$pdo->quote($account->id)." AND
-                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
-                                deleted = 0
-                        ";
-                        $sth = $pdo->prepare($sql);
-                        $sth->execute();
-                        if ($sth->fetch()) {
-                            $toExclude = true;
-                            break;
-                        }
-                    }
-                    if ($toExclude) {
-                        continue;
-                    }
+
                     $entityList[] = $account;
                     $metTargetHash[$hashId] = true;
                     $metEmailAddressHash[$emailAddress] = true;
@@ -158,32 +150,17 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($contactList as $contact) {
                     $hashId = $contact->getEntityType() . '-'. $contact->id;
+                    $emailAddress = $contact->get('emailAddress');
+                    if (empty($emailAddress)) {
+                        continue;
+                    }
+                    if (!empty($metEmailAddressHash[$emailAddress])) {
+                        continue;
+                    }
                     if (!empty($metTargetHash[$hashId])) {
                         continue;
                     }
-                    $emailAddress = $contact->get('emailAddress');
-                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    $toExclude = false;
-                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
-                        $sql = "
-                            SELECT id FROM contact_target_list
-                            WHERE
-                                contact_id = ".$pdo->quote($contact->id)." AND
-                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
-                                deleted = 0
-                        ";
-                        $sth = $pdo->prepare($sql);
-                        $sth->execute();
-                        if ($sth->fetch()) {
-                            $toExclude = true;
-                            break;
-                        }
-                    }
-                    if ($toExclude) {
-                        continue;
-                    }
+
                     $entityList[] = $contact;
                     $metTargetHash[$hashId] = true;
                     $metEmailAddressHash[$emailAddress] = true;
@@ -196,32 +173,17 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($leadList as $lead) {
                     $hashId = $lead->getEntityType() . '-'. $lead->id;
+                    $emailAddress = $lead->get('emailAddress');
+                    if (empty($emailAddress)) {
+                        continue;
+                    }
+                    if (!empty($metEmailAddressHash[$emailAddress])) {
+                        continue;
+                    }
                     if (!empty($metTargetHash[$hashId])) {
                         continue;
                     }
-                    $emailAddress = $lead->get('emailAddress');
-                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    $toExclude = false;
-                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
-                        $sql = "
-                            SELECT id FROM lead_target_list
-                            WHERE
-                                lead_id = ".$pdo->quote($lead->id)." AND
-                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
-                                deleted = 0
-                        ";
-                        $sth = $pdo->prepare($sql);
-                        $sth->execute();
-                        if ($sth->fetch()) {
-                            $toExclude = true;
-                            break;
-                        }
-                    }
-                    if ($toExclude) {
-                        continue;
-                    }
+
                     $entityList[] = $lead;
                     $metTargetHash[$hashId] = true;
                     $metEmailAddressHash[$emailAddress] = true;
@@ -234,32 +196,17 @@ class MassEmail extends \Espo\Services\Record
                 ));
                 foreach ($userList as $user) {
                     $hashId = $user->getEntityType() . '-'. $user->id;
+                    $emailAddress = $user->get('emailAddress');
+                    if (empty($emailAddress)) {
+                        continue;
+                    }
+                    if (!empty($metEmailAddressHash[$emailAddress])) {
+                        continue;
+                    }
                     if (!empty($metTargetHash[$hashId])) {
                         continue;
                     }
-                    $emailAddress = $user->get('emailAddress');
-                    if (empty($emailAddress) || !empty($metEmailAddressHash[$emailAddress])) {
-                        continue;
-                    }
-                    $toExclude = false;
-                    foreach ($excludingTargetListIdList as $excludingTargetListId) {
-                        $sql = "
-                            SELECT id FROM target_list_user
-                            WHERE
-                                user_id = ".$pdo->quote($user->id)." AND
-                                target_list_id = ".$pdo->quote($excludingTargetListId)." AND
-                                deleted = 0
-                        ";
-                        $sth = $pdo->prepare($sql);
-                        $sth->execute();
-                        if ($sth->fetch()) {
-                            $toExclude = true;
-                            break;
-                        }
-                    }
-                    if ($toExclude) {
-                        continue;
-                    }
+
                     $entityList[] = $user;
                     $metTargetHash[$hashId] = true;
                     $metEmailAddressHash[$emailAddress] = true;
