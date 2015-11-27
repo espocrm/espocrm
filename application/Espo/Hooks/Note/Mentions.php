@@ -70,7 +70,7 @@ class Mentions extends \Espo\Core\Hooks\Base
                 $userName = substr($item, 1);
                 $user = $this->getEntityManager()->getRepository('User')->where(array('userName' => $userName))->findOne();
                 if ($user) {
-                    if (!$this->getAcl()->checkPermission('assignmentPermission', $user)) {
+                    if (!$this->getAcl()->checkUser('assignmentPermission', $user)) {
                         continue;
                     }
                     $m = array(

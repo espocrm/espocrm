@@ -286,7 +286,7 @@ class Stream extends \Espo\Core\Services\Base
             if (!$user) {
                 throw new NotFound();
             }
-            if (!$this->getAcl()->checkPermission('userPermission', $user)) {
+            if (!$this->getAcl()->checkUser('userPermission', $user)) {
                 throw new Forbidden();
             }
         }

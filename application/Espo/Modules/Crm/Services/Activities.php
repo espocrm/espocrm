@@ -556,7 +556,7 @@ class Activities extends \Espo\Core\Services\Base
     protected function accessCheck($entity)
     {
         if ($entity->getEntityType() == 'User') {
-            if (!$this->getAcl()->checkPermission('userPermission', $entity)) {
+            if (!$this->getAcl()->checkUser('userPermission', $entity)) {
                 throw new Forbidden();
             }
 
@@ -742,7 +742,7 @@ class Activities extends \Espo\Core\Services\Base
             if (!in_array($scope, $this->calendarScopeList)) {
                 continue;
             }
-            if ($this->getAcl()->checkScope($scopeList)) {
+            if ($this->getAcl()->checkScope($scope)) {
                 $methodName = 'getCalendar' . $scope . 'Query';
                 if (method_exists($this, $methodName)) {
                     $sqlPartList[] = $this->$methodName($userId, $from, $to);

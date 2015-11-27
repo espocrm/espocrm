@@ -185,7 +185,7 @@ class AclManager
         return $this->getImplementation($scope)->checkScope($user, $data, $scope, $action, $isOwner, $inTeam, $entity);
     }
 
-    public function checkPermission(User $user, $permission, User $entity)
+    public function checkUser(User $user, $permission, User $entity)
     {
         if ($user->isAdmin()) {
             return true;

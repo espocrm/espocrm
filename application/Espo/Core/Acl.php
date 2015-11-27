@@ -89,9 +89,9 @@ class Acl
         return $this->getAclManager()->checkScope($this->getUser(), $scope, $action, $isOwner, $inTeam, $entity) ;
     }
 
-    public function checkPermission($permission, User $entity)
+    public function checkUser($permission, User $entity)
     {
-        return $this->getAclManager()->checkPermission($this->getUser(), $permission, $entity);
+        return $this->getAclManager()->checkUser($this->getUser(), $permission, $entity);
     }
 }
 
