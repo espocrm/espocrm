@@ -56,18 +56,12 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         }
 
         $runScript = "
-                    app.getController('PasswordChangeRequest', function (controller) {
-                        controller.doAction('passwordChange', '{$requestId}');
-                    });
+            app.getController('PasswordChangeRequest', function (controller) {
+                controller.doAction('passwordChange', '{$requestId}');
+            });
         ";
 
-        $html = file_get_contents('main.html');
-        $html = str_replace('{{cacheTimestamp}}', $config->get('cacheTimestamp', 0), $html);
-        $html = str_replace('{{useCache}}', $config->get('useCache') ? 'true' : 'false' , $html);
-        $html = str_replace('{{stylesheet}}', $themeManager->getStylesheet(), $html);
-        $html = str_replace('{{runScript}}', $runScript , $html);
-        echo $html;
-        exit;
+        $this->getClientManager()->display($runScript);
     }
 
     protected function getThemeManager()

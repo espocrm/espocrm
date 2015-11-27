@@ -36,12 +36,6 @@ if (!empty($_GET['entryPoint'])) {
     exit;
 }
 
-$themeManager = $app->getContainer()->get('themeManager');
-
-$runScript = "app.start();";
-$html = file_get_contents("frontend/main.html");
-$html = str_replace('{{stylesheet}}', $themeManager->getStylesheet() , $html);
-$html = str_replace('{{runScript}}', $runScript , $html);
-echo $html;
-exit;
+$clientManager = $app->getContainer()->get('clientManager');
+$clientManager->display();
 

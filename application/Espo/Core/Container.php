@@ -295,6 +295,14 @@ class Container
         );
     }
 
+    private function loadClientManager()
+    {
+        return new \Espo\Core\Utils\ClientManager(
+            $this->get('config'),
+            $this->get('themeManager')
+        );
+    }
+
     public function setUser($user)
     {
         $this->data['user'] = $user;

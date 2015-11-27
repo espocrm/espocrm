@@ -94,6 +94,11 @@ abstract class Base
         return $this->getContainer()->get('language');
     }
 
+    protected function getClientManager()
+    {
+        return $this->getContainer()->get('clientManager');
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;
