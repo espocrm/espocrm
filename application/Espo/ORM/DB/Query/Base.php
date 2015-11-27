@@ -693,21 +693,33 @@ abstract class Base
     {
         $joinsArr = array();
         foreach ($joins as $relationName) {
+            $joinAlias = null;
+            if (is_array($relationName)) {
+                $arr = $relationName;
+                $relationName = $arr[0];
+                if (count($arr) > 1) {
+                    $joinAlias = $arr[1];
+                }
+            }
             $conditions = array();
             if (!empty($joinConditions[$relationName])) {
                 $conditions = $joinConditions[$relationName];
             }
-            if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions)) {
+            if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions, $joinAlias)) {
                 $joinsArr[] = $joinRelated;
             }
         }
         return implode(' ', $joinsArr);
     }
 
-    protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array())
+    protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array(), $joinAlias = null)
     {
         $relOpt = $entity->relations[$relationName];
         $keySet = $this->getKeys($entity, $relationName);
+
+        if (!$joinAlias) {
+            $joinAlias = $relationName;
+        }
 
         $pre = ($left) ? 'LEFT ' : '';
 
@@ -723,7 +735,7 @@ abstract class Base
 
             $distantTable = $this->toDb($relOpt['entity']);
 
-            $alias = $this->sanitize($relationName);
+            $alias = $this->sanitize($joinAlias);
 
             $midAlias = $alias . 'Middle';
 

@@ -100,9 +100,9 @@ class Activities extends \Espo\Core\Services\Base
                 'status',
                 'createdAt'
             ],
-            'leftJoins' => ['users'],
+            'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $id
             )
         );
 
@@ -139,9 +139,9 @@ class Activities extends \Espo\Core\Services\Base
                 'status',
                 'createdAt'
             ],
-            'leftJoins' => ['users'],
+            'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $id
             )
         );
 
@@ -178,9 +178,9 @@ class Activities extends \Espo\Core\Services\Base
                 'status',
                 'createdAt'
             ],
-            'leftJoins' => ['users'],
+            'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $id
             )
         );
 

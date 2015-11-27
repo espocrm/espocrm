@@ -42,9 +42,11 @@ class Email extends \Espo\Core\SelectManagers\Base
             );
         }
 
-        $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
-        $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
-        $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+        if (!isset($result['select'])) {
+            $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
+            $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
+            $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+        }
 
         return $result;
     }
@@ -58,9 +60,11 @@ class Email extends \Espo\Core\SelectManagers\Base
             'usersMiddle.userId' => $this->getUser()->id
         );
 
-        $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
-        $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
-        $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+        if (!isset($result['select'])) {
+            $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
+            $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
+            $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+        }
     }
 
     protected function filterInbox(&$result)
