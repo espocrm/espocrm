@@ -59,7 +59,7 @@
             "required": true
         },
         "fetchData": {
-            "type": "text",
+            "type": "jsonObject",
             "readOnly": true
         },
         "createdAt": {

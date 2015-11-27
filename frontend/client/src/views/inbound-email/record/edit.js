@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.InboundEmail.Record.Edit', ['Views.Record.Edit', 'Views.InboundEmail.Record.Detail'], function (Dep, Detail) {
+Espo.define('views/inbound-email/record/edit', ['views/record/edit', 'views/inbound-email/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -34,6 +34,9 @@ Espo.define('Views.InboundEmail.Record.Edit', ['Views.Record.Edit', 'Views.Inbou
             Dep.prototype.setup.call(this);
             Detail.prototype.handleDistributionField.call(this);
 
+            if (Detail.prototype.wasFetched.call(this)) {
+                this.setFieldReadOnly('fetchSince');
+            }
         },
 
         afterRender: function () {

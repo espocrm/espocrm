@@ -206,15 +206,15 @@ class EmailAccount extends Record
             ]
         ])->find();
 
-        $fetchData = json_decode($emailAccount->get('fetchData'), true);
+        $fetchData = $emailAccount->get('fetchData');
         if (empty($fetchData)) {
-            $fetchData = array();
+            $fetchData = new \StdClass();
         }
-        if (!array_key_exists('lastUID', $fetchData)) {
-            $fetchData['lastUID'] = array();
+        if (!property_exists($fetchData, 'lastUID')) {
+            $fetchData->lastUID = new \StdClass();;
         }
-        if (!array_key_exists('lastUID', $fetchData)) {
-            $fetchData['lastDate'] = array();
+        if (!property_exists($fetchData, 'lastDate')) {
+            $fetchData->lastDate = new \StdClass();;
         }
 
         $storage = $this->getStorage($emailAccount);
@@ -239,11 +239,11 @@ class EmailAccount extends Record
 
             $lastUID = 0;
             $lastDate = 0;
-            if (!empty($fetchData['lastUID'][$folder])) {
-                $lastUID = $fetchData['lastUID'][$folder];
+            if (!empty($fetchData->lastUID->$folder)) {
+                $lastUID = $fetchData->lastUID->$folder;
             }
-            if (!empty($fetchData['lastDate'][$folder])) {
-                $lastDate = $fetchData['lastDate'][$folder];
+            if (!empty($fetchData->lastDate->$folder)) {
+                $lastDate = $fetchData->lastDate->$folder;
             }
 
             if (!empty($lastUID)) {
@@ -322,10 +322,10 @@ class EmailAccount extends Record
                 $k++;
             }
 
-            $fetchData['lastUID'][$folder] = $lastUID;
-            $fetchData['lastDate'][$folder] = $lastDate;
+            $fetchData->lastUID->$folder = $lastUID;
+            $fetchData->lastDate->$folder = $lastDate;
+            $emailAccount->set('fetchData', $fetchData);
 
-            $emailAccount->set('fetchData', json_encode($fetchData));
             $this->getEntityManager()->saveEntity($emailAccount, array('silent' => true));
         }
 

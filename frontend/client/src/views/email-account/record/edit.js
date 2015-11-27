@@ -35,6 +35,10 @@ Espo.define('views/email-account/record/edit', ['views/record/edit', 'views/emai
 
             Detail.prototype.initSslFieldListening.call(this);
 
+            if (Detail.prototype.wasFetched.call(this)) {
+                this.setFieldReadOnly('fetchSince');
+            }
+
             if (this.getUser().isAdmin()) {
                 var fieldView = this.getFieldView('assignedUser');
                 if (fieldView) {
