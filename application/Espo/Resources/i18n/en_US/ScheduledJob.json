@@ -3,7 +3,7 @@
         "name": "Name",
         "status": "Status",
         "job": "Job",
-        "scheduling": "Scheduling (crontab notation)"
+        "scheduling": "Scheduling"
     },
     "links": {
         "log": "Log"
@@ -31,6 +31,6 @@
         }
     },
     "tooltips": {
-        "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+        "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
     }
 }
