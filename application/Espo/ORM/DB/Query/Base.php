@@ -693,17 +693,20 @@ abstract class Base
     {
         $joinsArr = array();
         foreach ($joins as $relationName) {
-            $joinAlias = null;
             if (is_array($relationName)) {
                 $arr = $relationName;
                 $relationName = $arr[0];
                 if (count($arr) > 1) {
                     $joinAlias = $arr[1];
+                } else {
+                    $joinAlias = $relationName;
                 }
+            } else {
+                $joinAlias = $relationName;
             }
             $conditions = array();
-            if (!empty($joinConditions[$relationName])) {
-                $conditions = $joinConditions[$relationName];
+            if (!empty($joinConditions[$joinAlias])) {
+                $conditions = $joinConditions[$joinAlias];
             }
             if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions, $joinAlias)) {
                 $joinsArr[] = $joinRelated;
