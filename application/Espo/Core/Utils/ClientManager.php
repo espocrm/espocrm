@@ -35,9 +35,9 @@ class ClientManager
 
     private $config;
 
-    protected $mainHtmlFilePath = 'main.html';
+    protected $mainHtmlFilePath = 'html/main.html';
 
-    protected $htmlFilePathForDeveloperMode = 'frontend/main.html';
+    protected $htmlFilePathForDeveloperMode = 'frontend/html/main.html';
 
     protected $runScript = "app.start();";
 

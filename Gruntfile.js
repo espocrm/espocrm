@@ -128,7 +128,7 @@ module.exports = function (grunt) {
                 dest: 'build/tmp/client',
             },
             frontendHtml: {
-                src: 'frontend/html/reset.html',
+                src: 'frontend/reset.html',
                 dest: 'build/tmp/reset.html'
             },
             frontendLib: {
@@ -148,6 +148,7 @@ module.exports = function (grunt) {
                     'data/.data',
                     'install/**',
                     'vendor/**',
+                    'html/**',
                     'bootstrap.php',
                     'cron.php',
                     'rebuild.php',
@@ -212,8 +213,8 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: 'frontend/html/main.html',
-                        dest: 'build/tmp/main.html'
+                        src: 'build/tmp/html/main.html',
+                        dest: 'build/tmp/html/main.html'
                     }
                 ]
             },
