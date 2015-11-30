@@ -99,7 +99,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
             'limit' => 20
         ));
 
-        $expectedSql = 
+        $expectedSql =
             "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted` FROM `account` " .
             "WHERE account.deleted = '0' ORDER BY account.name ASC LIMIT 10, 20";
 
@@ -112,7 +112,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
         ));
 
-        $expectedSql = 
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0'";
@@ -125,7 +125,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $sql = $this->query->createSelectQuery('Comment', array(
             'select' => array('id', 'name')
         ));
-        $expectedSql = 
+        $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
             "WHERE comment.deleted = '0'";
 
@@ -189,6 +189,21 @@ class QueryTest extends PHPUnit_Framework_TestCase
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectWithJoinChildren()
+    {
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'leftJoins' => [['notes', 'notesLeft']]
+        ));
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' " .
+            "WHERE post.deleted = '0'";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
