@@ -214,8 +214,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
+                var $a;
                 this.once('after:render', function () {
-                    var $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
+                    $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
                     var $label = this.getLabelElement();
                     $label.append(' ');
                     this.getLabelElement().append($a);
@@ -230,6 +231,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             $a.popover('hide');
                         });
                     });
+                }, this);
+                this.on('remove', function () {
+                    if ($a) {
+                        $a.popover('destroy')
+                    }
                 }, this);
             }
 
