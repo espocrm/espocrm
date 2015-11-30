@@ -46,7 +46,7 @@ class ClientManager
         $this->config = $config;
         $this->themeManager = $themeManager;
 
-        if ($this->config->get('isDeveperMode')) {
+        if ($this->config->get('isDeveloperMode')) {
             $this->mainHtmlFilePath = $this->htmlFilePathForDeveloperMode;
         }
     }
