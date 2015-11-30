@@ -14,11 +14,11 @@ class Account extends TEntity
 {
     public $fields = array(
             'id' => array(
-                'type' => Entity::ID,            
+                'type' => Entity::ID,
             ),
             'name' => array(
                 'type' => Entity::VARCHAR,
-                'len' => 255,            
+                'len' => 255,
             ),
             'deleted' => array(
                 'type' => Entity::BOOL,
@@ -34,20 +34,20 @@ class Account extends TEntity
                     'entityId',
                     'teamId',
                 ),
-                'conditions' => array('entityType' => 'Account')                
+                'conditions' => array('entityType' => 'Account')
             ),
     );
 }
 
 class Team extends TEntity
-{    
+{
     public $fields = array(
             'id' => array(
-                'type' => Entity::ID,            
+                'type' => Entity::ID,
             ),
             'name' => array(
                 'type' => Entity::VARCHAR,
-                'len' => 255,            
+                'len' => 255,
             ),
             'deleted' => array(
                 'type' => Entity::BOOL,
@@ -58,10 +58,10 @@ class Team extends TEntity
 }
 
 class Contact extends TEntity
-{    
+{
     public $fields = array(
             'id' => array(
-                'type' => Entity::ID,            
+                'type' => Entity::ID,
             ),
             'name' => array(
                 'type' => Entity::VARCHAR,
@@ -73,10 +73,10 @@ class Contact extends TEntity
                 'orderBy' => "contact.first_name {direction}, contact.last_name {direction}",
             ),
             'firstName' => array(
-                'type' => Entity::VARCHAR,    
+                'type' => Entity::VARCHAR,
             ),
             'lastName' => array(
-                'type' => Entity::VARCHAR,    
+                'type' => Entity::VARCHAR,
             ),
             'deleted' => array(
                 'type' => Entity::BOOL,
@@ -87,14 +87,14 @@ class Contact extends TEntity
 }
 
 class Post extends TEntity
-{    
+{
     public $fields = array(
             'id' => array(
-                'type' => Entity::ID,            
+                'type' => Entity::ID,
             ),
             'name' => array(
                 'type' => Entity::VARCHAR,
-                'len' => 255,            
+                'len' => 255,
             ),
             'privateField' => array(
                 'notStorable' => true,
@@ -111,7 +111,7 @@ class Post extends TEntity
                 'type' => Entity::BOOL,
                 'default' => 0,
             ),
-    );    
+    );
     public $relations = array(
             'tags' => array(
                 'type' => Entity::MANY_MANY,
@@ -144,10 +144,10 @@ class Post extends TEntity
 }
 
 class Comment extends TEntity
-{    
+{
     public $fields = array(
             'id' => array(
-                'type' => Entity::ID,            
+                'type' => Entity::ID,
             ),
             'postId' => array(
                 'type' => Entity::FOREIGN_ID,
@@ -159,14 +159,14 @@ class Comment extends TEntity
             ),
             'name' => array(
                 'type' => Entity::VARCHAR,
-                'len' => 255,            
+                'len' => 255,
             ),
             'deleted' => array(
                 'type' => Entity::BOOL,
                 'default' => 0,
             ),
     );
-    
+
     public $relations = array(
             'post' => array(
                 'type' => Entity::BELONGS_TO,
@@ -178,14 +178,14 @@ class Comment extends TEntity
 }
 
 class Tag extends TEntity
-{    
+{
     public $fields = array(
         'id' => array(
-            'type' => Entity::ID,            
+            'type' => Entity::ID,
         ),
         'name' => array(
             'type' => Entity::VARCHAR,
-            'len' => 50,            
+            'len' => 50,
         ),
         'deleted' => array(
             'type' => Entity::BOOL,
@@ -196,14 +196,14 @@ class Tag extends TEntity
 
 
 class Note extends TEntity
-{    
+{
     public $fields = array(
         'id' => array(
-            'type' => Entity::ID,            
+            'type' => Entity::ID,
         ),
         'name' => array(
             'type' => Entity::VARCHAR,
-            'len' => 50,            
+            'len' => 50,
         ),
         'parentId' => array(
             'type' => Entity::FOREIGN_ID,

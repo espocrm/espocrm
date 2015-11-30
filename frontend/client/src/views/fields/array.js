@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Array', ['Views.Fields.Base', 'lib!Selectize'], function (Dep) {
+Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
         type: 'array',
 
-        listTemplate: 'fields.array.detail',
+        listTemplate: 'fields/array/detail',
 
-        detailTemplate: 'fields.array.detail',
+        detailTemplate: 'fields/array/detail',
 
-        editTemplate: 'fields.array.edit',
+        editTemplate: 'fields/array/edit',
 
-        searchTemplate: 'fields.array.search',
+        searchTemplate: 'fields/array/search',
 
         data: function () {
             var itemHtmlList = [];

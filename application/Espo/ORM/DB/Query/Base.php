@@ -724,6 +724,8 @@ abstract class Base
             $joinAlias = $relationName;
         }
 
+        $joinAlias = $this->sanitize($joinAlias);
+
         $pre = ($left) ? 'LEFT ' : '';
 
         if ($relOpt['type'] == IEntity::MANY_MANY) {
@@ -738,7 +740,7 @@ abstract class Base
 
             $distantTable = $this->toDb($relOpt['entity']);
 
-            $alias = $this->sanitize($joinAlias);
+            $alias = $joinAlias;
 
             $midAlias = $alias . 'Middle';
 
@@ -759,14 +761,12 @@ abstract class Base
                 . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
             return $join;
-        }
-
-        if ($relOpt['type'] == IEntity::HAS_MANY) {
+        } else if ($relOpt['type'] == IEntity::HAS_MANY) {
 
             $foreignKey = $keySet['foreignKey'];
             $distantTable = $this->toDb($relOpt['entity']);
 
-            $alias = $this->sanitize($relationName);
+            $alias = $joinAlias;
 
             // TODO conditions
 
@@ -776,9 +776,23 @@ abstract class Base
                 . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
             return $join;
-        }
+        } else if ($relOpt['type'] == IEntity::HAS_CHILDREN) {
+            $foreignKey = $keySet['foreignKey'];
+            $foreignType = $keySet['foreignType'];
+            $distantTable = $this->toDb($relOpt['entity']);
 
-        if ($relOpt['type'] == IEntity::BELONGS_TO) {
+            $alias = $joinAlias;
+
+            $join =
+                "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                . " AND "
+                . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
+                . " AND "
+                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+
+            return $join;
+
+        }  else if ($relOpt['type'] == IEntity::BELONGS_TO) {
             return $pre . $this->getBelongsToJoin($entity, $relationName);
         }
 
