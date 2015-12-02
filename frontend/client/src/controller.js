@@ -143,7 +143,7 @@ Espo.define('controller', [], function () {
         clearStoredMainView: function (key) {
             var view = this.getStoredMainView(key);
             if (view) {
-                view.remove();
+                view.remove(true);
             }
             this.unset('storedMainView-' + key);
         },
