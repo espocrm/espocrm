@@ -193,7 +193,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 var models = [];
 
                 var proceed = function () {
-                    this.main('Merge', {
+                    this.main('views/merge', {
                         models: models,
                         scope: this.name
                     });
