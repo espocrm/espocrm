@@ -37,37 +37,37 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         },
 
         index: function () {
-            this.main('Admin.Index', null);
+            this.main('views/admin/index', null);
         },
 
         layouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;
 
-            this.main('Admin.Layouts.Index', {scope: scope, type: type});
+            this.main('views/admin/layouts/index', {scope: scope, type: type});
         },
 
         fieldManager: function (options) {
             var scope = options.scope || null;
             var field = options.field || null;
 
-            this.main('Admin.FieldManager.Index', {scope: scope, field: field});
+            this.main('views/admin/field-manager/index', {scope: scope, field: field});
         },
 
         entityManager: function (options) {
             var scope = options.scope || null;
 
-            this.main('Admin.EntityManager.Index', {scope: scope});
+            this.main('views/admin/entity-manager/index', {scope: scope});
         },
 
         linkManager: function (options) {
             var scope = options.scope || null;
 
-            this.main('Admin.LinkManager.Index', {scope: scope});
+            this.main('views/admin/link-manager/index', {scope: scope});
         },
 
         upgrade: function (options) {
-            this.main('Admin.Upgrade.Index');
+            this.main('views/admin/upgrade/index');
         },
 
         getSettingsModel: function () {
@@ -82,12 +82,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin.settings.header'},
-                        body: {view: 'Admin.Settings'},
-                    },
+                    headerTemplate: 'admin/settings/headers/settings',
+                    recordViewName: 'views/admin/settings'
                 });
             }, this);
             model.fetch();
@@ -98,12 +96,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin.settings.header-notifications'},
-                        body: {view: 'Admin.Notifications'}
-                    },
+                    headerTemplate: 'admin/settings/headers/notifications',
+                    recordViewName: 'views/admin/notifications'
                 });
             }, this);
             model.fetch();
@@ -114,12 +110,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin/settings/header-outbound-emails'},
-                        body: {view: 'Admin.OutboundEmails'},
-                    },
+                    headerTemplate: 'admin/settings/headers/outbound-emails',
+                    recordViewName: 'views/admin/outbound-emails'
                 });
             }, this);
             model.fetch();
@@ -130,12 +124,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin/settings/header-inbound-emails'},
-                        body: {view: 'Admin.InboundEmails'},
-                    },
+                    headerTemplate: 'admin/settings/headers/inbound-emails',
+                    recordViewName: 'views/admin/inbound-emails'
                 });
             }, this);
             model.fetch();
@@ -146,12 +138,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin.settings.header-currency'},
-                        body: {view: 'Admin.Currency'},
-                    },
+                    headerTemplate: 'admin/settings/headers/currency',
+                    recordViewName: 'views/admin/currency'
                 });
             }, this);
             model.fetch();
@@ -164,10 +154,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
-                this.main('Admin.AuthToken.List', {
+                this.main('views/admin/auth-token/list', {
                     scope: 'AuthToken',
                     collection: collection,
-                    searchManager: searchManager,
+                    searchManager: searchManager
                 });
             }, this);
         },
@@ -179,7 +169,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
-                this.main('Admin.Job.List', {
+                this.main('views/admin/job/list', {
                     scope: 'Job',
                     collection: collection,
                     searchManager: searchManager,
@@ -192,12 +182,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin.settings.header-user-interface'},
-                        body: {view: 'Admin.UserInterface'},
-                    },
+                    headerTemplate: 'admin/settings/headers/user-interface',
+                    recordViewName: 'views/admin/user-interface'
                 });
             }, this);
             model.fetch();
@@ -208,12 +196,10 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
 
             model.once('sync', function () {
                 model.id = '1';
-                this.main('Edit', {
+                this.main('views/settings/edit', {
                     model: model,
-                    views: {
-                        header: {template: 'admin.settings.header-authentication'},
-                        body: {view: 'Admin.Authentication'},
-                    },
+                    headerTemplate: 'admin/settings/headers/authentication',
+                    recordViewName: 'views/admin/authentication'
                 });
             }, this);
             model.fetch();
@@ -222,11 +208,11 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         integrations: function (options) {
             var integration = options.name || null;
 
-            this.main('Admin.Integrations.Index', {integration: integration});
+            this.main('views/admin/integrations/index', {integration: integration});
         },
 
         extensions: function (options) {
-            this.main('Admin.Extensions.Index');
+            this.main('views/admin/extensions/index');
         },
 
         rebuild: function (options) {

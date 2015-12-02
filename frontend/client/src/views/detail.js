@@ -71,6 +71,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.headerViewName = this.options.headerViewName || this.headerViewName;
+            this.recordViewName = this.options.recordViewName || this.recordViewName;
+
             this.setupHeader();
             this.setupRecord();
 

@@ -61,6 +61,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.searchPanel = false;
             }
 
+            this.headerViewName = this.options.headerViewName || this.headerViewName;
+            this.recordViewName = this.options.recordViewName || this.recordViewName;
+            this.searchViewName = this.options.searchViewName || this.searchViewName;
+
             this.setupHeader();
 
             if (this.searchPanel) {

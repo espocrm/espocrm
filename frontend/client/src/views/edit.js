@@ -47,6 +47,9 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         recordViewName: 'views/record/edit',
 
         setup: function () {
+            this.headerViewName = this.options.headerViewName || this.headerViewName;
+            this.recordViewName = this.options.recordViewName || this.recordViewName;
+
             this.setupHeader();
             this.setupRecord();
         },
