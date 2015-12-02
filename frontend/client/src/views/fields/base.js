@@ -27,6 +27,7 @@
  ************************************************************************/
 
 Espo.define('views/fields/base', 'view', function (Dep) {
+
     return Dep.extend({
 
         type: 'base',
@@ -451,7 +452,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             });
 
             this.once('render remove', function () {
-                $el.popover('destroy');
+                if ($el) {
+                    $el.popover('destroy');
+                }
             });
 
             if (this._timeout) {
