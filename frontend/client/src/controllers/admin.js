@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
@@ -85,7 +86,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/settings',
-                    recordViewName: 'views/admin/settings'
+                    recordView: 'views/admin/settings'
                 });
             }, this);
             model.fetch();
@@ -99,7 +100,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/notifications',
-                    recordViewName: 'views/admin/notifications'
+                    recordView: 'views/admin/notifications'
                 });
             }, this);
             model.fetch();
@@ -113,7 +114,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/outbound-emails',
-                    recordViewName: 'views/admin/outbound-emails'
+                    recordView: 'views/admin/outbound-emails'
                 });
             }, this);
             model.fetch();
@@ -127,7 +128,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/inbound-emails',
-                    recordViewName: 'views/admin/inbound-emails'
+                    recordView: 'views/admin/inbound-emails'
                 });
             }, this);
             model.fetch();
@@ -141,7 +142,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/currency',
-                    recordViewName: 'views/admin/currency'
+                    recordView: 'views/admin/currency'
                 });
             }, this);
             model.fetch();
@@ -185,7 +186,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/user-interface',
-                    recordViewName: 'views/admin/user-interface'
+                    recordView: 'views/admin/user-interface'
                 });
             }, this);
             model.fetch();
@@ -199,7 +200,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/authentication',
-                    recordViewName: 'views/admin/authentication'
+                    recordView: 'views/admin/authentication'
                 });
             }, this);
             model.fetch();

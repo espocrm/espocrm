@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 Espo.define('controllers/record', 'controller', function (Dep) {
 
     return Dep.extend({
@@ -50,18 +51,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
         getViewName: function (type) {
             return this.viewMap[type] || this.getMetadata().get('clientDefs.' + this.name + '.views.' + type) || Espo.Utils.upperCaseFirst(type);
-        },
-
-        getViews: function (type) {
-            var views = {};
-            var recordView = this.getMetadata().get('clientDefs.' + this.name + '.recordViews.' + type);
-            if (recordView) {
-                if (!views.body) {
-                    views.body = {};
-                }
-                views.body.view = recordView;
-            }
-            return views;
         },
 
         beforeList: function () {

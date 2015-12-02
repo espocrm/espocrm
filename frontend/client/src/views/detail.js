@@ -40,9 +40,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams'],
 
-        headerViewName: 'views/header',
+        headerView: 'views/header',
 
-        recordViewName: 'views/record/detail',
+        recordView: 'views/record/detail',
 
         addUnfollowButtonToMenu: function () {
             this.removeMenuItem('follow', true);
@@ -71,8 +71,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerViewName = this.options.headerViewName || this.headerViewName;
-            this.recordViewName = this.options.recordViewName || this.recordViewName;
+            this.headerView = this.options.headerView || this.headerView;
+            this.recordView = this.options.recordView || this.recordView;
 
             this.setupHeader();
             this.setupRecord();
@@ -89,7 +89,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         setupHeader: function () {
-            this.createView('header', this.headerViewName, {
+            this.createView('header', this.headerView, {
                 model: this.model,
                 el: '#main > .header'
             });
@@ -107,7 +107,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordViewName;
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
         },
 
         handleFollowButton: function () {
@@ -201,7 +201,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
             this.createView('quickCreate', viewName, {
                 scope: scope,
                 relate: {
@@ -260,7 +260,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 boolFilterList = boolFilterList.call(this);
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'Modals.SelectRecords';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
 
             this.notify('Loading...');
             this.createView('dialog', viewName, {

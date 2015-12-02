@@ -38,11 +38,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         name: 'List',
 
-        headerViewName: 'views/header',
+        headerView: 'views/header',
 
-        searchViewName: 'views/record/search',
+        searchView: 'views/record/search',
 
-        recordViewName: 'views/record/list',
+        recordView: 'views/record/list',
 
         searchPanel: true,
 
@@ -61,9 +61,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.searchPanel = false;
             }
 
-            this.headerViewName = this.options.headerViewName || this.headerViewName;
-            this.recordViewName = this.options.recordViewName || this.recordViewName;
-            this.searchViewName = this.options.searchViewName || this.searchViewName;
+            this.headerView = this.options.headerView || this.headerView;
+            this.recordView = this.options.recordView || this.recordView;
+            this.searchView = this.options.searchView || this.searchView;
 
             this.setupHeader();
 
@@ -84,7 +84,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setupHeader: function () {
-            this.createView('header', this.headerViewName, {
+            this.createView('header', this.headerView, {
                 collection: this.collection,
                 el: '#main > .page-header'
             });
@@ -110,7 +110,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setupSearchPanel: function () {
-            this.createView('search', this.searchViewName, {
+            this.createView('search', this.searchView, {
                 collection: this.collection,
                 el: '#main > .search-container',
                 searchManager: this.searchManager,
@@ -156,7 +156,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || this.recordViewName;
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || this.recordView;
         },
 
         afterRender: function () {
@@ -218,10 +218,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'Modals.Edit';
-            this.createView('quickCreate', 'Modals.Edit', {
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
+            this.createView('quickCreate', 'views/modals/edit', {
                 scope: this.scope,
-                attributes: attributes,
+                attributes: attributes
             }, function (view) {
                 view.render();
                 view.notify(false);
