@@ -134,7 +134,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.mode = mode;
             var property = mode + 'Template';
             if (!(property in this)) {
-                this[property] = 'fields.' + Espo.Utils.camelCaseToHyphen(this.type) + '.' + this.mode;
+                this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
             }
             this.template = this[property];
         },
