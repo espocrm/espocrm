@@ -1,2 +1,2 @@
-<div class="page-header">{{{header}}}</div>
-<div class="body">{{{body}}}</div>
+<div class="header page-header">{{{header}}}</div>
+<div class="record">{{{record}}}</div>

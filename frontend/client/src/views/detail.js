@@ -40,16 +40,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams'],
 
-        views: {
-            header: {
-                el: '#main > .page-header',
-                view: 'Header'
-            },
-            body: {
-                view: 'views/record/detail',
-                el: '#main > .body',
-            }
-        },
+        headerViewName: 'views/header',
+
+        recordViewName: 'views/record/detail',
 
         addUnfollowButtonToMenu: function () {
             this.removeMenuItem('follow', true);
@@ -78,6 +71,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.setupHeader();
+            this.setupRecord();
+
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
@@ -87,6 +83,28 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     this.handleFollowButton();
                 }, this);
             }
+        },
+
+        setupHeader: function () {
+            this.createView('header', this.headerViewName, {
+                model: this.model,
+                el: '#main > .header'
+            });
+        },
+
+        setupRecord: function () {
+            var o = {
+                model: this.model,
+                el: '#main > .record'
+            };
+            this.optionsToPass.forEach(function (option) {
+                o[option] = this.options[option];
+            }, this);
+            this.createView('record', this.getRecordViewName(), o);
+        },
+
+        getRecordViewName: function () {
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordViewName;
         },
 
         handleFollowButton: function () {
@@ -144,7 +162,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         updateRelationshipPanel: function (name) {
-            var bottom = this.getView('body').getView('bottom');
+            var bottom = this.getView('record').getView('bottom');
             if (bottom) {
                 var rel = bottom.getView(name);
                 if (rel) {

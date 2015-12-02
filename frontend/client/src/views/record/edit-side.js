@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
+Espo.define('views/record/edit-side', 'views/record/detail-side', function (Dep) {
 
     return Dep.extend({
 
@@ -36,16 +36,16 @@ Espo.define('Views.Record.EditSide', 'Views.Record.DetailSide', function (Dep) {
             {
                 name: 'default',
                 label: false,
-                view: 'Record.Panels.Side',
+                view: 'views/record/panels/side',
                 options: {
                     fieldList: [
                         {
                             name: 'assignedUser',
-                            view: 'Fields.AssignedUser'
+                            view: 'views/fields/assigned-user'
                         },
                         {
                             name: 'teams',
-                            view: 'Fields.Teams'
+                            view: 'views/fields/teams'
                         }
                     ],
                     mode: 'edit',

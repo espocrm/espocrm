@@ -42,18 +42,35 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes'],
 
-        views: {
-            header: {
-                selector: '> .page-header',
-                view: 'Header'
-            },
-            body: {
-                view: 'Record.Edit',
-                selector: '> .body'
-            }
-        },
+        headerViewName: 'views/header',
+
+        recordViewName: 'views/record/edit',
 
         setup: function () {
+            this.setupHeader();
+            this.setupRecord();
+        },
+
+        setupHeader: function () {
+            this.createView('header', this.headerViewName, {
+                model: this.model,
+                el: '#main > .header'
+            });
+        },
+
+        setupRecord: function () {
+            var o = {
+                model: this.model,
+                el: '#main > .record'
+            };
+            this.optionsToPass.forEach(function (option) {
+                o[option] = this.options[option];
+            }, this);
+            this.createView('record', this.getRecordViewName(), o);
+        },
+
+        getRecordViewName: function () {
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordViewName;
         },
 
         getHeader: function () {

@@ -24,7 +24,7 @@
         {{else}}
         <div class="{{#unless isSmall}} col-md-8{{else}} col-md-7{{/unless}}">
         {{/if}}
-            <div class="record">{{{record}}}</div>
+            <div class="middle">{{{middle}}}</div>
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>
         </div>

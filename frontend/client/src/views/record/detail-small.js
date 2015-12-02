@@ -25,7 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('Views.Record.DetailSmall', 'Views.Record.Detail', function (Dep) {
+Espo.define('views/record/detail-small', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 

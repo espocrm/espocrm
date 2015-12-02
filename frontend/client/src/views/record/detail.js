@@ -28,6 +28,7 @@
 Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
     return Dep.extend({
+
         template: 'record/detail',
 
         type: 'detail',
@@ -165,7 +166,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
 
             var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $record = this.getView('record').$el;
+            var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             $window.off('scroll.detail-' + this.numId);
@@ -177,7 +178,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     return;
                 }
 
-                var edge = $record.position().top + $record.outerHeight(true);
+                var edge = $middle.position().top + $middle.outerHeight(true);
                 var scrollTop = $window.scrollTop();
 
                 if (scrollTop < edge) {
@@ -313,7 +314,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         getFields: function () {
-            var fields = _.clone(this.getView('record').nestedViews);
+            var fields = _.clone(this.getView('middle').nestedViews);
             if (this.hasView('side')) {
                 _.extend(fields, this.getView('side').getFields());
             }
@@ -324,7 +325,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         getFieldView: function (name) {
-            var view = this.getView('record').getView(name) || null;
+            var view = this.getView('middle').getView(name) || null;
             if (!view && this.getView('side')) {
                 view = (this.getView('side').getFields() || {})[name];
             }
@@ -699,7 +700,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
 
                         var o = {
-                            el: el + ' .record .field-' + cellDefs.name,
+                            el: el + ' .middle .field-' + cellDefs.name,
                             defs: {
                                 name: cellDefs.name,
                                 params: cellDefs.params || {}
@@ -729,7 +730,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         var cell = {
                             name: cellDefs.name,
                             view: viewName,
-                            el: el + ' .record .field-' + cellDefs.name,
+                            el: el + ' .middle .field-' + cellDefs.name,
                             fullWidth: fullWidth,
                             options: o
                         };
@@ -776,7 +777,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         build: function (callback) {
-            this.waitForView('record');
+            this.waitForView('middle');
 
             var self = this;
 
@@ -793,10 +794,10 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             }
 
             this.getGridLayout(function (layout) {
-                this.createView('record', 'Base', {
+                this.createView('middle', 'Base', {
                     model: this.model,
                     _layout: layout,
-                    el: el + ' .record',
+                    el: el + ' .middle',
                     layoutData: {
                         model: this.model,
                         columnCount: this.columnCount,

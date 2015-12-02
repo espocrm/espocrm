@@ -102,7 +102,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 this.main(this.getViewName('detail'), {
                     scope: this.name,
                     model: model,
-                    views: this.getViews('detail'),
                     returnUrl: options.returnUrl,
                     returnDispatchParams: options.returnDispatchParams,
                 });
@@ -146,8 +145,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                     model: model,
                     returnUrl: options.returnUrl,
-                    returnDispatchParams: options.returnDispatchParams,
-                    views: this.getViews('edit'),
+                    returnDispatchParams: options.returnDispatchParams
                 };
 
                 if (options.attributes) {
@@ -182,8 +180,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                         scope: this.name,
                         model: model,
                         returnUrl: options.returnUrl,
-                        returnDispatchParams: options.returnDispatchParams,
-                        views: this.getViews('edit'),
+                        returnDispatchParams: options.returnDispatchParams
                     };
 
                     if (options.attributes) {

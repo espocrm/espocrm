@@ -25,11 +25,11 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-    Espo.define('Views.Record.DetailSide', 'View', function (Dep) {
+    Espo.define('views/record/detail-side', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.side',
+        template: 'record/side',
 
         mode: 'detail',
 
@@ -41,16 +41,16 @@
             {
                 name: 'default',
                 label: false,
-                view: 'Record.Panels.DefaultSide',
+                view: 'views/record/panels/default-side',
                 options: {
                     fieldList: [
                         {
                             name: 'assignedUser',
-                            view: 'Fields.AssignedUser'
+                            view: 'views/fields/assigned-user'
                         },
                         {
                             name: 'teams',
-                            view: 'Fields.Teams'
+                            view: 'views/fields/teams'
                         }
                     ],
                     mode: 'detail',

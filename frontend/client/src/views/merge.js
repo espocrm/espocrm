@@ -38,21 +38,29 @@ Espo.define('views/merge', 'views/main', function (Dep) {
 
         name: 'Merge',
 
-        views: {
-            header: {
-                selector: '> .page-header',
-                view: 'Header',
-            },
-        },
+        headerViewName: 'views/header',
+
+        recordViewName: 'views/record/merge',
 
         setup: function () {
             this.models = this.options.models;
 
-            this.createView('body', 'Record.Merge', {
+            this.setupHeader();
+            this.setupRecord();
+        },
+
+        setupHeader: function () {
+            this.createView('header', this.headerViewName, {
+                model: this.model,
+                el: '#main > .page-header'
+            });
+        },
+
+        setupRecord: function () {
+            this.createView('body', this.recordViewName, {
                 el: '#main > .body',
                 models: this.models
             });
-
         },
 
         getHeader: function () {
