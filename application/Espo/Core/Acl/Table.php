@@ -56,7 +56,7 @@ class Table
         $this->metadata = $metadata;
 
         if (!$this->user->isFetched()) {
-            //throw new Error();
+            throw new Error('User must be fetched before ACL check.');
         }
 
         $this->user->loadLinkMultipleField('teams');

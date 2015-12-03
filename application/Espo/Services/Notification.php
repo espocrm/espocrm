@@ -91,6 +91,7 @@ class Notification extends \Espo\Core\Services\Base
 
             $user = $this->getEntityManager()->getEntity('User');
             $user->id = $userId;
+            $user->setAsFetched();
             if (!$this->checkUserNoteAccess($user, $note)) {
                 continue;
             }
