@@ -42,6 +42,7 @@ class Notification extends \Espo\Core\Services\Base
         'entityManager',
         'user',
         'metadata',
+        'aclManager'
     );
 
     protected function getEntityManager()
@@ -57,6 +58,11 @@ class Notification extends \Espo\Core\Services\Base
     protected function getMetadata()
     {
         return $this->injections['metadata'];
+    }
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
     }
 
     public function notifyAboutMentionInPost($userId, $noteId)
@@ -76,13 +82,18 @@ class Notification extends \Espo\Core\Services\Base
         $encodedData = Json::encode($data);
 
         $now = date('Y-m-d H:i:s');
-
         $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`) VALUES ";
         $arr = [];
         foreach ($userIds as $userId) {
             if (empty($userId)) continue;
+
+            $user = $this->getEntityManager()->getEntity('User');
+            $user->id = $userId;
+            if (!$this->checkUserNoteAccess($user, $note)) {
+                continue;
+            }
             $id = uniqid();
             $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).")";
         }
@@ -93,6 +104,28 @@ class Notification extends \Espo\Core\Services\Base
 
         $sql .= implode(", ", $arr);
         $pdo->query($sql);
+    }
+
+    public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)
+    {
+        if (in_array($note->get('type'), ['EmailSent', 'EmailReceived'])) {
+            if (!$this->getAclManager()->checkScope($user, 'Email')) {
+                return false;
+            }
+        }
+        if ($note->get('relatedType')) {
+            if (!$this->getAclManager()->checkScope($user, $note->get('relatedType'))) {
+                return false;
+            }
+        }
+
+        if ($note->get('parentType')) {
+            if (!$this->getAclManager()->checkScope($user, $note->get('parentType'))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getNotReadCount($userId)
