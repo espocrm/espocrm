@@ -122,7 +122,8 @@
         "audited": "Audited",
         "trim": "Trim",
         "height": "Height (px)",
-        "provider": "Provider"
+        "provider": "Provider",
+        "typeList": "Type List"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

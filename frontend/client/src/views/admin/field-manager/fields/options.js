@@ -33,7 +33,11 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.translatedOptions = this.getLanguage().get(this.options.scope, 'options', this.options.field) || {};
+            this.translatedOptions = {};
+            var list = this.model.get(this.name) || [];
+            list.forEach(function (value) {
+                this.translatedOptions[value] = this.getLanguage().translateOption(value, this.options.field, this.options.scope);
+            }, this);
         },
 
         getItemHtml: function (value) {

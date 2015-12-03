@@ -99,7 +99,7 @@ class FieldManager
             $this->setLabel($name, $fieldDefs['label'], $scope);
         }
 
-        if (isset($fieldDefs['type']) && $fieldDefs['type'] == 'enum') {
+        if (isset($fieldDefs['type']) && ($fieldDefs['type'] == 'enum' || $fieldDefs['type'] == 'phone')) {
             if (isset($fieldDefs['translatedOptions'])) {
                 $this->setTranslatedOptions($name, $fieldDefs['translatedOptions'], $scope);
             }
