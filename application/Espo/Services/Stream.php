@@ -450,6 +450,20 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
+        $ignoreScopeList = $this->getIgnoreScopeList();
+
+        if (!empty($ignoreScopeList)) {
+            $ignoreScopeListQuoted = [];
+            foreach ($ignoreScopeList as $scope) {
+                $ignoreScopeListQuoted[] = $pdo->quote($scope);
+            }
+            $where .= " AND (note.related_type IS NULL OR note.related_type NOT IN (".implode(', ', $ignoreScopeListQuoted)."))";
+            $where .= " AND (note.parent_type IS NULL OR note.parent_type NOT IN (".implode(', ', $ignoreScopeListQuoted)."))";
+            if (in_array('Email', $ignoreScopeList)) {
+                $where .= " AND note.type NOT IN ('EmailReceived', 'EmailSent')";
+            }
+        }
+
         $sql = str_replace('{where}', $where, $sql);
         $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
 
@@ -539,6 +553,27 @@ class Stream extends \Espo\Core\Services\Base
                   case 'updates':
                     $where['type'] = ['Update', 'Status'];
                     break;
+            }
+        }
+
+        $ignoreScopeList = $this->getIgnoreScopeList();
+        if (!empty($ignoreScopeList)) {
+            $where[] = array(
+                'OR' => array(
+                    'relatedType' => null,
+                    'relatedType!=' => $ignoreScopeList
+                )
+            );
+            $where[] = array(
+                'OR' => array(
+                    'parentType' => null,
+                    'parentType!=' => $ignoreScopeList
+                )
+            );
+            if (in_array('Email', $ignoreScopeList)) {
+                $where[] = array(
+                    'type!=' => ['EmailReceived', 'EmailSent']
+                );
             }
         }
 
@@ -944,6 +979,20 @@ class Stream extends \Espo\Core\Services\Base
 
         return $data;
 
+    }
+
+    protected function getIgnoreScopeList()
+    {
+        $ignoreScopeList = [];
+        $scopes = $this->getMetadata()->get('scopes', array());
+        foreach ($scopes as $scope => $d) {
+            if (!$d['entity']) continue;
+            if (!$d['object']) continue;
+            if (!$this->getAcl()->checkScope($scope)) {
+                $ignoreScopeList[] = $scope;
+            }
+        }
+        return $ignoreScopeList;
     }
 }
 
