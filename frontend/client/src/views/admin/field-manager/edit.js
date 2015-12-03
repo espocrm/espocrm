@@ -186,19 +186,17 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.trigger('after:save');
                 }.bind(this), true);
 
-                var data = this.getLanguage().data;
-                if (this.scope in data) {
-                    if (!('fields' in data[this.scope])) {
-                        data[this.scope]['fields'] = {};
+                var langData = this.getLanguage().data;
+                if (this.scope in langData) {
+                    if (!('fields' in langData[this.scope])) {
+                        langData[this.scope]['fields'] = {};
                     }
-                    data[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
+                    langData[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
 
 
-                    if (this.model.get('type') == 'enum' && this.model.get('translatedOptions')) {
-                        if (!('options' in data[this.scope])) {
-                            data[this.scope]['options'] = {};
-                        }
-                        data[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
+                    if (~['enum', 'phone'].indexOf(this.model.get('type')) && this.model.get('translatedOptions')) {
+                        langData[this.scope].options = langData[this.scope].options || {};
+                        langData[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
                     }
                 }
             }.bind(this));

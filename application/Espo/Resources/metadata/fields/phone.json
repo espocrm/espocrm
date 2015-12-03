@@ -7,8 +7,9 @@
       },
       {
          "name":"typeList",
-         "type":"array",         
-         "options": ["Mobile", "Office", "Home", "Fax", "Other"]         
+         "type":"array",
+         "default": ["Mobile", "Office", "Home", "Fax", "Other"],
+         "view": "views/admin/field-manager/fields/options"
       },
       {
          "name":"defaultType",
