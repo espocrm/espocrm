@@ -36,9 +36,15 @@ class Email extends \Espo\Core\Notificators\Base
     protected function init()
     {
         $this->addDependency('serviceFactory');
+        $this->addDependency('aclManager');
     }
 
     private $streamService = null;
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
+    }
 
     protected function getStreamService()
     {
@@ -118,6 +124,11 @@ class Email extends \Espo\Core\Notificators\Base
 
         foreach ($userIdList as $userId) {
             if ($userIdFrom == $userId) {
+                continue;
+            }
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (!$user) continue;
+            if (!$this->getAclManager()->checkScope($user, 'Email')) {
                 continue;
             }
             if ($entity->get('status') == 'Archived') {
