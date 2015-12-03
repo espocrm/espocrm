@@ -63,25 +63,25 @@ Espo.define('acl', [], function () {
             return this.data[name] || null;
         },
 
-        check: function (controller, action, isOwner, inTeam) {
+        check: function (scope, action, isOwner, inTeam) {
             if (this.user.isAdmin()) {
                 return true;
             }
 
-            if (controller in this.data.table) {
-                if (this.data.table[controller] === false) {
+            if (scope in this.data.table) {
+                if (this.data.table[scope] === false) {
                     return false;
                 }
-                if (this.data.table[controller] === true) {
+                if (this.data.table[scope] === true) {
                     return true;
                 }
-                if (typeof this.data.table[controller] === 'string') {
+                if (typeof this.data.table[scope] === 'string') {
                     return true;
                 }
 
                 if (typeof action !== 'undefined') {
-                    if (action in this.data.table[controller]) {
-                        var value = this.data.table[controller][action];
+                    if (action in this.data.table[scope]) {
+                        var value = this.data.table[scope][action];
 
                         if (value === 'all' || value === true) {
                             return true;
@@ -96,7 +96,7 @@ Espo.define('acl', [], function () {
                         }
 
                         if (isOwner && action == 'delete' && value === 'no') {
-                            return this.check(controller, 'edit', isOwner);
+                            return this.check(scope, 'edit', isOwner);
                         }
 
                         if (!value || value === 'no') {
@@ -119,6 +119,10 @@ Espo.define('acl', [], function () {
                 return true;
             }
             return true;
+        },
+
+        checkScope: function (scope, action) {
+            return this.check(scope, action);
         },
 
         checkModel: function (model, action) {

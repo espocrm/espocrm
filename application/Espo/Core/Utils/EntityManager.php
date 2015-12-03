@@ -123,6 +123,10 @@ class EntityManager
         if (!empty($params['stream'])) {
             $stream = $params['stream'];
         }
+        $disabled = false;
+        if (!empty($params['disabled'])) {
+            $disabled = $params['disabled'];
+        }
         $labelSingular = $name;
         if (!empty($params['labelSingular'])) {
             $labelSingular = $params['labelSingular'];
@@ -139,6 +143,7 @@ class EntityManager
         $scopesData = Json::decode($scopesDataContents, true);
 
         $scopesData['stream'] = $stream;
+        $scopesData['disabled'] = $disabled;
         $scopesData['type'] = $type;
         $scopesData['module'] = 'Custom';
         $scopesData['object'] = true;
@@ -179,10 +184,14 @@ class EntityManager
             throw new Error('Entity ['.$name.'] does not exist.');
         }
 
-        if (isset($data['stream'])) {
-            $scopeData = array(
-                'stream' => (true == $data['stream'])
-            );
+        if (isset($data['stream']) || isset($data['disabled'])) {
+            $scopeData = array();
+            if (isset($data['stream'])) {
+                $scopeData['stream'] = true == $data['stream'];
+            }
+            if (isset($data['disabled'])) {
+                $scopeData['disabled'] = true == $data['disabled'];
+            }
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 

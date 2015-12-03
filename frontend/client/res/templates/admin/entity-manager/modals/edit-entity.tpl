@@ -26,16 +26,24 @@
 		</div>
 	</div>
 </div>
-{{#if stream}}
+
 <div class="row">
+	<div class="cell cell-disabled form-group col-md-6">
+		<label class="field-label-disabled control-label">{{translate 'disabled' category='fields' scope='EntityManager'}}</label>
+		<div class="field field-disabled">
+			{{{disabled}}}
+		</div>
+	</div>
+	{{#if stream}}
 	<div class="cell cell-stream form-group col-md-6">
 		<label class="field-label-stream control-label">{{translate 'stream' category='fields' scope='EntityManager'}}</label>
 		<div class="field field-stream">
 			{{{stream}}}
 		</div>
 	</div>
+	{{/if}}
 </div>
-{{/if}}
+
 {{#if sortBy}}
 <div class="row">
 	<div class="cell cell-sortBy form-group col-md-6">

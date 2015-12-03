@@ -12,17 +12,20 @@
          {
             "name":"activities",
             "label":"Activities",
-            "view":"Crm:Case.Record.Panels.Activities"
+            "view":"crm:views/record/panels/activities",
+            "aclScope": "Activities"
          },
          {
             "name":"history",
             "label":"History",
-            "view":"Crm:Record.Panels.History"
+            "view":"crm:views/record/panels/history",
+            "aclScope": "Activities"
          },
          {
             "name":"tasks",
             "label":"Tasks",
-            "view":"Crm:Record.Panels.Tasks"
+            "view":"crm:views/record/panels/tasks",
+            "aclScope": "Task"
          }
       ]
    },

@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
+Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.bottom',
+        template: 'record/bottom',
 
         mode: 'detail',
 
@@ -72,7 +72,7 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                 panelList.push({
                     "name":"stream",
                     "label":"Stream",
-                    "view":"Stream.Panel",
+                    "view":"views/stream/panel",
                     "sticked": true
                 });
             }
@@ -112,6 +112,18 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
             this.scope = this.model.name;
 
             this.setupPanels();
+
+            var panelList = [];
+            this.panelList.forEach(function (p) {
+                if (p.aclScope) {
+                    if (!this.getAcl().checkScope(p.aclScope)) {
+                        return;
+                    }
+                }
+                panelList.push(p);
+            }, this);
+            this.panelList = panelList;
+
             this.setupPanelViews();
 
             if (this.relationshipPanels) {
@@ -121,6 +133,8 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
 
         setupRelationshipPanels: function () {
             var scope = this.scope;
+
+            var scopesDefs = this.getMetadata().get('scopes') || {};
 
             this.wait(true);
             this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
@@ -144,6 +158,9 @@ Espo.define('Views.Record.DetailBottom', 'View', function (Dep) {
                     }
 
                     var foreignScope = links[name].entity;
+
+                    if ((scopesDefs[foreignScope] || {}).disabled) return;
+
                     if (!this.getAcl().check(foreignScope, 'read')) {
                         return;
                     }

@@ -34,7 +34,7 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
             {
                 name: 'default',
                 label: false,
-                view: 'Record.Panels.Side',
+                view: 'views/record/panels/side',
                 options: {
                     fieldList: ['avatar'],
                     mode: 'detail',
@@ -65,13 +65,15 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                 "name":"activities",
                 "label":"Activities",
                 "view":"crm:views/record/panels/activities",
-                "hidden": !showActivities
+                "hidden": !showActivities,
+                "aclScope": "Activities"
             });
             this.panelList.push({
                 "name":"history",
                 "label":"History",
                 "view":"crm:views/record/panels/history",
-                "hidden": !showActivities
+                "hidden": !showActivities,
+                "aclScope": "Activities"
             });
         }
 

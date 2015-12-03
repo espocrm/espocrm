@@ -105,6 +105,10 @@ class Activities extends \Espo\Core\Controllers\Base
 
     public function actionList($params, $data, $request)
     {
+        if (!$this->getAcl()->check('Activities')) {
+            throw new Forbidden();
+        }
+
         $name = $params['name'];
 
         if (!in_array($name, ['activities', 'history'])) {

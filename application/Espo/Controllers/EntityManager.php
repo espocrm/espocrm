@@ -69,6 +69,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['stream'])) {
             $params['stream'] = $data['stream'];
         }
+        if (!empty($data['disabled'])) {
+            $params['disabled'] = $data['disabled'];
+        }
         if (!empty($data['sortBy'])) {
             $params['sortBy'] = $data['sortBy'];
         }

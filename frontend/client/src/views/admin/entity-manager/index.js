@@ -106,7 +106,7 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
         },
 
         createEntity: function () {
-            this.createView('edit', 'Admin.EntityManager.Modals.EditEntity', {}, function (view) {
+            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, function (view) {
                 view.render();
 
                 this.listenTo(view, 'after:save', function () {
@@ -114,11 +114,15 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                     this.setupScopeData();
                     this.render();
                 }, this);
-            }.bind(this));
+
+                this.listenTo(view, 'close', function () {
+                    this.clearView('edit');
+                }, this);
+            }, this);
         },
 
         editEntity: function (scope) {
-            this.createView('edit', 'Admin.EntityManager.Modals.EditEntity', {
+            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
                 scope: scope
             }, function (view) {
                 view.render();
@@ -128,7 +132,11 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                     this.setupScopeData();
                     this.render();
                 }, this);
-            }.bind(this));
+
+                this.listenTo(view, 'close', function () {
+                    this.clearView('edit');
+                }, this);
+            }, this);
         },
 
         removeEntity: function (scope) {

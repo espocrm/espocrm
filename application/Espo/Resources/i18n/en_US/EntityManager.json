@@ -19,7 +19,8 @@
         "sortDirection": "Default Order (direction)",
         "relationName": "Middle Table Name",
         "linkMultipleField": "Link Multiple Field",
-        "linkMultipleFieldForeign": "Foreign Link Multiple Field"
+        "linkMultipleFieldForeign": "Foreign Link Multiple Field",
+        "disabled": "Disabled"
     },
     "options": {
         "type": {

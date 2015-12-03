@@ -122,14 +122,14 @@ class Table
 
     private function load()
     {
-        $aclTables = [];
+        $aclTableList = [];
         $assignmentPermissionList = [];
         $userPermissionList = [];
 
         $userRoles = $this->user->get('roles');
 
         foreach ($userRoles as $role) {
-            $aclTables[] = $role->get('data');
+            $aclTableList[] = $role->get('data');
             $assignmentPermissionList[] = $role->get('assignmentPermission');
             $userPermissionList[] = $role->get('userPermission');
         }
@@ -138,13 +138,21 @@ class Table
         foreach ($teams as $team) {
             $teamRoles = $team->get('roles');
             foreach ($teamRoles as $role) {
-                $aclTables[] = $role->get('data');
+                $aclTableList[] = $role->get('data');
                 $assignmentPermissionList[] = $role->get('assignmentPermission');
                 $userPermissionList[] = $role->get('userPermission');
             }
         }
 
-        $this->data['table'] = $this->merge($aclTables);
+        $aclTable = $this->merge($aclTableList);
+
+        foreach ($this->getScopeList() as $scope) {
+            if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
+                $aclTable[$scope] = false;
+            }
+        }
+
+        $this->data['table'] = $aclTable;
 
         $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
         $this->data['userPermission'] = $this->mergeValues($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
@@ -183,7 +191,7 @@ class Table
         return $result;
     }
 
-    private function getScopeList()
+    private function getScopeWithAclList()
     {
         $scopeList = [];
         $scopes = $this->metadata->get('scopes');
@@ -195,10 +203,20 @@ class Table
         return $scopeList;
     }
 
+    private function getScopeList()
+    {
+        $scopeList = [];
+        $scopes = $this->metadata->get('scopes');
+        foreach ($scopes as $scope => $d) {
+            $scopeList[] = $scope;
+        }
+        return $scopeList;
+    }
+
     private function merge($tables)
     {
         $data = array();
-        $scopeList = $this->getScopeList();
+        $scopeList = $this->getScopeWithAclList();
 
         foreach ($tables as $table) {
             foreach ($scopeList as $scope) {

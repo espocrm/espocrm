@@ -106,6 +106,41 @@ Espo.define('metadata', [], function () {
             }
         },
 
+        getScopeList: function () {
+            var scopes = this.get('scopes') || {};
+            var scopeList = [];
+            for (scope in scopes) {
+                var d = scopes[scope];
+                if (d.disabled) continue;
+                scopeList.push(scope);
+            }
+            return scopeList;
+        },
+
+        getScopeObjectList: function () {
+            var scopes = this.get('scopes') || {};
+            var scopeList = [];
+            for (scope in scopes) {
+                var d = scopes[scope];
+                if (d.disabled) continue;
+                if (!d.object) continue;
+                scopeList.push(scope);
+            }
+            return scopeList;
+        },
+
+        getScopeEntityList: function () {
+            var scopes = this.get('scopes') || {};
+            var scopeList = [];
+            for (scope in scopes) {
+                var d = scopes[scope];
+                if (d.disabled) continue;
+                if (!d.entity) continue;
+                scopeList.push(scope);
+            }
+            return scopeList;
+        }
+
     }, Backbone.Events);
 
     return Metadata;

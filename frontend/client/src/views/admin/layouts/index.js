@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
+Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.layouts.index',
+        template: 'admin/layouts/index',
 
         scopeList: null,
 
@@ -82,16 +82,16 @@ Espo.define('Views.Admin.Layouts.Index', 'View', function (Dep) {
         setup: function () {
             this.scopeList = [];
 
-            var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
+            var scopeFullList = this.getMetadata().getScopeList().sort(function (v1, v2) {
                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
 
-            scopesAll.forEach(function (scope) {
+            scopeFullList.forEach(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.entity') &&
                     this.getMetadata().get('scopes.' + scope + '.layouts')) {
                     this.scopeList.push(scope);
                 }
-            }.bind(this));
+            }, this);
 
             this.on('after:render', function () {
                 $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');

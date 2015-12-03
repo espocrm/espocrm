@@ -80,12 +80,13 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
                 this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
                 this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
+                this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
 
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
             }
 
-            this.createView('type', 'Fields.Enum', {
+            this.createView('type', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-type',
@@ -100,7 +101,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             });
 
             if (this.hasStreamField) {
-                this.createView('stream', 'Fields.Bool', {
+                this.createView('stream', 'views/fields/bool', {
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field-stream',
@@ -109,6 +110,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
             }
+
+            this.createView('disabled', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field-disabled',
+                defs: {
+                    name: 'disabled'
+                }
+            });
 
             this.createView('name', 'Fields.Varchar', {
                 model: model,
@@ -122,7 +132,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 },
                 readOnly: scope != false
             });
-            this.createView('labelSingular', 'Fields.Varchar', {
+            this.createView('labelSingular', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-labelSingular',
@@ -133,7 +143,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 }
             });
-            this.createView('labelPlural', 'Fields.Varchar', {
+            this.createView('labelPlural', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field-labelPlural',
@@ -161,7 +171,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     translatedOptions[item] = this.translate(item, 'fields', scope);
                 }, this);
 
-                this.createView('sortBy', 'Fields.Enum', {
+                this.createView('sortBy', 'views/fields/enum', {
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field-sortBy',
@@ -174,7 +184,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
 
-                this.createView('sortDirection', 'Fields.Enum', {
+                this.createView('sortDirection', 'views/fields/enum', {
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field-sortDirection',
@@ -214,7 +224,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'type',
                 'labelSingular',
                 'labelPlural',
-                'stream'
+                'stream',
+                'disabled'
             ];
 
             if (this.scope) {
@@ -254,7 +265,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 labelSingular: this.model.get('labelSingular'),
                 labelPlural: this.model.get('labelPlural'),
                 type: this.model.get('type'),
-                stream: this.model.get('stream')
+                stream: this.model.get('stream'),
+                disabled: this.model.get('disabled')
             };
 
             if (this.scope) {

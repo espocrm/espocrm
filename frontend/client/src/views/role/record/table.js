@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
+Espo.define('views/role/record/table', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'role.table',
+        template: 'role/table',
 
         scopeList: null,
 
@@ -139,6 +139,7 @@ Espo.define('Views.Role.Record.Table', 'View', function (Dep) {
             }.bind(this));
 
             scopesAll.forEach(function (scope) {
+                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 var acl = this.getMetadata().get('scopes.' + scope + '.acl');
                 if (acl) {
                     this.scopeList.push(scope);

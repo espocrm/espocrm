@@ -30,7 +30,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'site.navbar',
+        template: 'site/navbar',
 
         currentTab: null,
 
@@ -102,15 +102,19 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             tabList = tabList || [];
 
+            var scopes = this.getMetadata().get('scopes') || {};
+
             this.tabList = tabList.filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.acl')) {
+                if ((scopes[scope] || {}).disabled) return;
+                if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope);
                 }
                 return true;
             }, this);
 
             this.quickCreateList = (this.getConfig().get('quickCreateList') || []).filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.acl')) {
+                if ((scopes[scope] || {}).disabled) return;
+                if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope, 'edit');
                 }
                 return true;
