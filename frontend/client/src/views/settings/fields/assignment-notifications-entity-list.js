@@ -32,6 +32,7 @@ Espo.define('Views.Settings.Fields.AssignmentNotificationsEntityList', 'Views.Fi
         setup: function () {
 
             this.params.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
+                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 return this.getMetadata().get('scopes.' + scope + '.notifications') &&
                        !this.getMetadata().get('scopes.' + scope + '.stream') &&
                        this.getMetadata().get('scopes.' + scope + '.entity');
