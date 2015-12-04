@@ -134,11 +134,11 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
             this.scopeList = [];
 
-            var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
+            var scopeListAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
                  return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
 
-            scopesAll.forEach(function (scope) {
+            scopeListAll.forEach(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 var acl = this.getMetadata().get('scopes.' + scope + '.acl');
                 if (acl) {
@@ -147,6 +147,66 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     if (acl === true) {
                         this.aclTypeMap[scope] = 'recordAllTeamOwnNo';
                     }
+                }
+            }, this);
+        },
+
+        afterRender: function () {
+            if (this.mode == 'edit') {
+                this.scopeList.forEach(function (scope) {
+                    var $read = this.$el.find('select[name="'+scope+'-read"]');
+                    $read.on('change', function () {
+                        var value = $read.val();
+                        this.controlEditSelect(scope, value);
+                        this.controlDeleteSelect(scope, value);
+                    }.bind(this));
+
+                    var $edit = this.$el.find('select[name="'+scope+'-edit"]');
+                    $edit.on('change', function () {
+                        var value = $edit.val();
+                        this.controlDeleteSelect(scope, value);
+                    }.bind(this));
+
+                    this.controlEditSelect(scope, $read.val(), true);
+                    this.controlDeleteSelect(scope, $edit.val(), true);
+                }, this);
+            }
+        },
+
+        controlEditSelect: function (scope, value, dontChange) {
+            var $edit = this.$el.find('select[name="'+scope+'-edit"]');
+
+            if (!dontChange) {
+                if (this.levelListMap.record.indexOf($edit.val()) < this.levelListMap.record.indexOf(value)) {
+                    $edit.val(value);
+                }
+            }
+
+            $edit.find('option').each(function (i, o) {
+                var $o = $(o);
+                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                    $o.attr('disabled', 'disabled');
+                } else {
+                    $o.removeAttr('disabled');
+                }
+            }.bind(this));
+        },
+
+        controlDeleteSelect: function (scope, value, dontChange) {
+            var $delete = this.$el.find('select[name="'+scope+'-delete"]');
+
+            if (!dontChange) {
+                if (this.levelListMap.record.indexOf($delete.val()) < this.levelListMap.record.indexOf(value)) {
+                    $delete.val(value);
+                }
+            }
+
+            $delete.find('option').each(function (i, o) {
+                var $o = $(o);
+                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                    $o.attr('disabled', 'disabled');
+                } else {
+                    $o.removeAttr('disabled');
                 }
             }.bind(this));
         },
