@@ -51,10 +51,12 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', function () {
                             if (this.getAcl().checkUserPermission(this.model)) {
-                                this.getParentView().showPanel('activities');
-                                this.getParentView().showPanel('history');
-                                this.getView('activities').actionRefresh();
-                                this.getView('history').actionRefresh();
+                                this.showPanel('activities', function () {
+                                    this.getView('activities').actionRefresh();
+                                });
+                                this.showPanel('history', function () {
+                                    this.getView('history').actionRefresh();
+                                });
                             }
                         }, this);
                     }

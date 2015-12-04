@@ -63,6 +63,60 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             }
         },
 
+        showPanel: function (name, callback) {
+            var isFound = false;
+            this.panelList.forEach(function (d) {
+                if (d.name == name) {
+                    d.hidden = false;
+                    isFound = true;
+                }
+            }, this);
+            if (!isFound) return;
+
+            if (this.isRendered()) {
+                var view = this.getView(name);
+                if (view) {
+                    view.$el.closest('.panel').removeClass('hidden');
+                }
+                if (callback) {
+                    callback.call(this);
+                }
+            } else {
+                if (callback) {
+                    this.once('after:render', function () {
+                        callback.call(this);
+                    }, this);
+                }
+            }
+        },
+
+        hidePanel: function (name, callback) {
+            var isFound = false;
+            this.panelList.forEach(function (d) {
+                if (d.name == name) {
+                    d.hidden = true;
+                    isFound = true;
+                }
+            }, this);
+            if (!isFound) return;
+
+            if (this.isRendered()) {
+                var view = this.getView(name);
+                if (view) {
+                    view.$el.closest('.panel').addClass('hidden');
+                }
+                if (callback) {
+                    callback.call(this);
+                }
+            } else {
+                if (callback) {
+                    this.once('after:render', function () {
+                        callback.call(this);
+                    }, this);
+                }
+            }
+        },
+
         setupPanels: function () {
             var scope = this.scope;
 
@@ -74,11 +128,9 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     this.listenToOnce(this.model, 'sync', function () {
                         streamAllowed = this.getAcl().checkModel(this.model, 'stream');
                         if (streamAllowed) {
-                            var parentView = this.getParentView();
-                            if (parentView) {
-                                this.getParentView().showPanel('stream');
+                            this.showPanel('stream', function () {
                                 this.getView('stream').collection.fetch();
-                            }
+                            });
                         }
                     }, this);
                 }

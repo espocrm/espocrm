@@ -187,6 +187,61 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             }, this);
             return filtered;
         },
+
+        showPanel: function (name, callback) {
+            var isFound = false;
+            this.panelList.forEach(function (d) {
+                if (d.name == name) {
+                    d.hidden = false;
+                    isFound = true;
+                }
+            }, this);
+            if (!isFound) return;
+
+            if (this.isRendered()) {
+                var view = this.getView(name);
+                if (view) {
+                    view.$el.closest('.panel').removeClass('hidden');
+                }
+                if (callback) {
+                    callback.call(this);
+                }
+            } else {
+                if (callback) {
+                    this.once('after:render', function () {
+                        callback.call(this);
+                    }, this);
+                }
+            }
+        },
+
+        hidePanel: function (name, callback) {
+            var isFound = false;
+            this.panelList.forEach(function (d) {
+                if (d.name == name) {
+                    d.hidden = true;
+                    isFound = true;
+                }
+            }, this);
+            if (!isFound) return;
+
+            if (this.isRendered()) {
+                var view = this.getView(name);
+                if (view) {
+                    view.$el.closest('.panel').addClass('hidden');
+                }
+                if (callback) {
+                    callback.call(this);
+                }
+            } else {
+                if (callback) {
+                    this.once('after:render', function () {
+                        callback.call(this);
+                    }, this);
+                }
+            }
+        }
+
     });
 });
 

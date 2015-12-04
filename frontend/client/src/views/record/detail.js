@@ -159,6 +159,48 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             this.$el.find('button.action[data-action="'+name+'"]').removeClass('hidden');
         },
 
+        showPanel: function (name) {
+            var middleView = this.getView('middle');
+            if (middleView) {
+                middleView.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
+            }
+
+            var bottomView = this.getView('bottom');
+            if (bottomView) {
+                if ('showPanel' in bottomView) {
+                    bottomView.showPanel(name);
+                }
+            }
+
+            var sideView = this.getView('sideView');
+            if (sideView) {
+                if ('showPanel' in sideView) {
+                    sideView.showPanel(name);
+                }
+            }
+        },
+
+        hidePanel: function (name) {
+            var middleView = this.getView('middle');
+            if (middleView) {
+                middleView.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
+            }
+
+            var bottomView = this.getView('bottom');
+            if (bottomView) {
+                if ('hidePanel' in bottomView) {
+                    bottomView.hidePanel(name);
+                }
+            }
+
+            var sideView = this.getView('sideView');
+            if (sideView) {
+                if ('hidePanel' in sideView) {
+                    sideView.hidePanel(name);
+                }
+            }
+        },
+
         afterRender: function () {
             var $container = this.$el.find('.detail-button-container');
 
