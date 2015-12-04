@@ -386,7 +386,7 @@ class Record extends Base
         if (!$request->isPut()) {
             throw new BadRequest();
         }
-        if (!$this->getAcl()->check($this->name, 'read')) {
+        if (!$this->getAcl()->check($this->name, 'stream')) {
             throw new Forbidden();
         }
         $id = $params['id'];

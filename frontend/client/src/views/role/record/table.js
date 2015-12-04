@@ -34,7 +34,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
         scopeList: null,
 
-        actionList: ['read', 'edit', 'delete'],
+        actionList: ['read', 'stream', 'edit', 'delete'],
 
         accessList: ['not-set', 'enabled', 'disabled'],
 
@@ -100,6 +100,11 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 if (aclData[controller] !== true) {
                                     if (action in aclData[controller]) {
                                         level = aclData[controller][action];
+                                    } else {
+                                        // TODO remove it
+                                        if (j > 0) {
+                                            level = o[this.actionList[j - 1]].level;
+                                        }
                                     }
                                 }
                             } else {
@@ -149,6 +154,12 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     }
                 }
             }, this);
+
+            this.listenTo(this.model, 'sync', function () {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }, this);
         },
 
         afterRender: function () {
@@ -159,6 +170,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                         var value = $read.val();
                         this.controlEditSelect(scope, value);
                         this.controlDeleteSelect(scope, value);
+                        this.controlStreamSelect(scope, value);
                     }.bind(this));
 
                     var $edit = this.$el.find('select[name="'+scope+'-edit"]');
@@ -168,6 +180,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     }.bind(this));
 
                     this.controlEditSelect(scope, $read.val(), true);
+                    this.controlStreamSelect(scope, $read.val(), true);
                     this.controlDeleteSelect(scope, $edit.val(), true);
                 }, this);
             }
@@ -183,6 +196,25 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             }
 
             $edit.find('option').each(function (i, o) {
+                var $o = $(o);
+                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                    $o.attr('disabled', 'disabled');
+                } else {
+                    $o.removeAttr('disabled');
+                }
+            }.bind(this));
+        },
+
+        controlStreamSelect: function (scope, value, dontChange) {
+            var $stream = this.$el.find('select[name="'+scope+'-stream"]');
+
+            if (!dontChange) {
+                if (this.levelListMap.record.indexOf($stream.val()) < this.levelListMap.record.indexOf(value)) {
+                    $stream.val(value);
+                }
+            }
+
+            $stream.find('option').each(function (i, o) {
                 var $o = $(o);
                 if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
                     $o.attr('disabled', 'disabled');

@@ -1,9 +1,9 @@
     <table class="table table-bordered">
         <tr>
             <th></th>
-            <th>{{translate 'Access' scope='Role'}}</th>
+            <th width="18%">{{translate 'Access' scope='Role'}}</th>
             {{#each actionList}}
-                <th>{{translate this scope='Role' category='actions'}}</th>
+                <th width="12%">{{translate this scope='Role' category='actions'}}</th>
             {{/each}}
         </tr>
     {{#each aclTable}}

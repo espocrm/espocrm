@@ -34,7 +34,8 @@
     "actions": {
         "read": "Read",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "stream": "Stream"
     },
     "messages": {
         "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."

@@ -114,7 +114,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
             } else {
-                this.addFollowButtonToMenu();
+                if (this.getAcl().checkModel(this.model, 'stream')) {
+                    this.addFollowButtonToMenu();
+                }
             }
         },
 

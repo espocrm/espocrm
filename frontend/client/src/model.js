@@ -199,7 +199,7 @@ Espo.define('model', [], function () {
             return this.getFieldParam(field, 'required') || false;
         },
 
-        getTeamIds: function () {
+        getTeamIdList: function () {
             return this.get('teamsIds') || [];
         },
 

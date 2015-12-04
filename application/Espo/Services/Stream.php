@@ -122,7 +122,7 @@ class Stream extends \Espo\Core\Services\Base
             if (!$user){
                 continue;
             }
-            if (!$this->getAclManager()->check($user, $entity, 'read')) {
+            if (!$this->getAclManager()->check($user, $entity, 'stream')) {
                 unset($userIdList[$i]);
             }
         }
@@ -524,7 +524,7 @@ class Stream extends \Espo\Core\Services\Base
             throw new NotFound();
         }
 
-        if (!$this->getAcl($entity, 'read')) {
+        if (!$this->getAcl($entity, 'stream')) {
             throw new Forbidden();
         }
 

@@ -69,12 +69,28 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             var panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
             if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
-                panelList.push({
-                    "name":"stream",
-                    "label":"Stream",
-                    "view":"views/stream/panel",
-                    "sticked": true
-                });
+                var streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+                if (streamAllowed === null) {
+                    this.listenToOnce(this.model, 'sync', function () {
+                        streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+                        if (streamAllowed) {
+                            var parentView = this.getParentView();
+                            if (parentView) {
+                                this.getParentView().showPanel('stream');
+                                this.getView('stream').collection.fetch();
+                            }
+                        }
+                    }, this);
+                }
+                if (streamAllowed !== false) {
+                    panelList.push({
+                        "name":"stream",
+                        "label":"Stream",
+                        "view":"views/stream/panel",
+                        "sticked": true,
+                        "hidden": !streamAllowed
+                    });
+                }
             }
 
             panelList.forEach(function (p) {

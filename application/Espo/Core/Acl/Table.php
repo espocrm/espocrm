@@ -41,7 +41,7 @@ class Table
 
     private $cacheFile;
 
-    private $actionList = ['read', 'edit', 'delete'];
+    private $actionList = ['read', 'stream', 'edit', 'delete'];
 
     private $levelList = ['all', 'team', 'own', 'no'];
 
@@ -274,7 +274,7 @@ class Table
                     }
 
                     if (is_array($row)) {
-                        foreach ($this->actionList as $action) {
+                        foreach ($this->actionList as $i => $action) {
                             if (isset($row[$action])) {
                                 $level = $row[$action];
                                 if (!isset($data[$scope][$action])) {
@@ -282,6 +282,14 @@ class Table
                                 } else {
                                     if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
                                         $data[$scope][$action] = $level;
+                                    }
+                                }
+                            } else {
+                                if ($i > 0) {
+                                    // TODO remove it
+                                    $previousAction = $this->actionList[$i - 1];
+                                    if (isset($data[$scope][$previousAction])) {
+                                        $data[$scope][$action] = $data[$scope][$previousAction];
                                     }
                                 }
                             }

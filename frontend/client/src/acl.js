@@ -87,7 +87,7 @@ Espo.define('acl', [], function () {
                             return true;
                         }
 
-                        if ((action == 'edit' || action == 'read') && (value == 'no' || value === false)) {
+                        if (action != 'delete' && (value == 'no' || value === false)) {
                             return false;
                         }
 
@@ -110,7 +110,15 @@ Espo.define('acl', [], function () {
                         }
 
                         if (value === 'team') {
-                            return true;
+                            if (inTeam === null) {
+                                if (action === 'stream') {
+                                    return null;
+                                } else {
+                                    return true;
+                                }
+                            } else {
+                                return inTeam;
+                            }
                         }
 
                         return false;
@@ -163,17 +171,21 @@ Espo.define('acl', [], function () {
         },
 
         checkInTeam: function (model) {
-            var userTeamIds = this.user.getTeamIds();
-
+            var userTeamIdList = this.user.getTeamIdList();
             if (model.name == 'Team') {
                 return (userTeamIds.indexOf(model.id) != -1);
             } else {
-                var teamIds = model.getTeamIds();
-                for (var i in userTeamIds) {
-                    if (teamIds.indexOf(i) != -1) {
-                        return true;
-                    }
+                if (!model.has('teamsIds')) {
+                    return null;
                 }
+                var teamIdList = model.getTeamIdList();
+                var inTeam = false;
+                userTeamIdList.forEach(function (id) {
+                    if (~teamIdList.indexOf(id)) {
+                        inTeam = true;
+                    }
+                });
+                return inTeam;
             }
             return false;
         },

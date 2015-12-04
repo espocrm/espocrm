@@ -899,7 +899,7 @@ class Record extends \Espo\Core\Services\Base
     {
         $entity = $this->getRepository()->get($id);
 
-        if (!$this->getAcl()->check($entity, 'read')) {
+        if (!$this->getAcl()->check($entity, 'stream')) {
             throw new Forbidden();
         }
 
