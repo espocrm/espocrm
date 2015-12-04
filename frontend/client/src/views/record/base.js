@@ -43,13 +43,20 @@ Espo.define('views/record/base', 'view', function (Dep) {
         fieldList: null,
 
         hideField: function (name) {
-            if (this.isRendered() || this.isBeingRendered()) {
+            var processHtml = function () {
                 var $field = this.$el.find('div.field-' + name);
                 var $label = this.$el.find('label.field-label-' + name);
 
                 $field.addClass('hidden');
                 $label.addClass('hidden');
                 $field.closest('.cell-' + name).addClass('hidden-cell');
+            }.bind(this);
+            if (this.isRendered() || this.isBeingRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
             }
 
             var view = this.getFieldView(name);
@@ -59,13 +66,21 @@ Espo.define('views/record/base', 'view', function (Dep) {
         },
 
         showField: function (name) {
-            if (this.isRendered() || this.isBeingRendered()) {
+            var processHtml = function () {
                 var $field = this.$el.find('div.field-' + name);
                 var $label = this.$el.find('label.field-label-' + name);
 
                 $field.removeClass('hidden');
                 $label.removeClass('hidden');
                 $field.closest('.cell-' + name).removeClass('hidden-cell');
+            }.bind(this);
+
+            if (this.isRendered() || this.isBeingRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
             }
 
             var view = this.getFieldView(name);
