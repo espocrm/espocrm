@@ -126,41 +126,68 @@ class Table
         $assignmentPermissionList = [];
         $userPermissionList = [];
 
-        $userRoles = $this->user->get('roles');
+        if (!$this->user->isAdmin()) {
 
-        foreach ($userRoles as $role) {
-            $aclTableList[] = $role->get('data');
-            $assignmentPermissionList[] = $role->get('assignmentPermission');
-            $userPermissionList[] = $role->get('userPermission');
-        }
+            $userRoles = $this->user->get('roles');
 
-        $teams = $this->user->get('teams');
-        foreach ($teams as $team) {
-            $teamRoles = $team->get('roles');
-            foreach ($teamRoles as $role) {
+            foreach ($userRoles as $role) {
                 $aclTableList[] = $role->get('data');
                 $assignmentPermissionList[] = $role->get('assignmentPermission');
                 $userPermissionList[] = $role->get('userPermission');
             }
-        }
 
-        $aclTable = $this->merge($aclTableList);
-
-        foreach ($this->getScopeList() as $scope) {
-            if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
-                $aclTable[$scope] = false;
+            $teams = $this->user->get('teams');
+            foreach ($teams as $team) {
+                $teamRoles = $team->get('roles');
+                foreach ($teamRoles as $role) {
+                    $aclTableList[] = $role->get('data');
+                    $assignmentPermissionList[] = $role->get('assignmentPermission');
+                    $userPermissionList[] = $role->get('userPermission');
+                }
             }
+
+            $aclTable = $this->merge($aclTableList);
+
+            foreach ($this->getScopeList() as $scope) {
+                if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
+                    $aclTable[$scope] = false;
+                }
+            }
+
+            $this->data['table'] = $aclTable;
+        } else {
+            $aclTable = array();
+            foreach ($this->getScopeList() as $scope) {
+                if ($this->metadata->get("scopes.{$scope}.acl") === 'boolean') {
+                    $aclTable[$scope] = true;
+                } else {
+                    if ($this->metadata->get("scopes.{$scope}.entity")) {
+                        $aclTable[$scope] = array();
+                        foreach ($this->actionList as $action) {
+                            $aclTable[$scope][$action] = 'all';
+                        }
+                    }
+                }
+            }
+            $this->data['table'] = $aclTable;
         }
 
-        $this->data['table'] = $aclTable;
-
-        $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
-        $this->data['userPermission'] = $this->mergeValues($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
+        if (!$this->user->isAdmin()) {
+            $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
+            $this->data['userPermission'] = $this->mergeValues($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
+        } else {
+            $this->data['assignmentPermission'] = 'all';
+            $this->data['userPermission'] = 'all';
+        }
     }
 
     private function initSolid()
     {
         if (!$this->metadata) {
+            return;
+        }
+
+        if ($this->user->isAdmin()) {
             return;
         }
 
@@ -213,17 +240,20 @@ class Table
         return $scopeList;
     }
 
-    private function merge($tables)
+    private function merge($tableList)
     {
         $data = array();
         $scopeList = $this->getScopeWithAclList();
 
-        foreach ($tables as $table) {
+        foreach ($tableList as $table) {
+            if ($table instanceof \stdClass) {
+                $table = get_object_vars($table);
+            }
             foreach ($scopeList as $scope) {
-            	if (!isset($table->$scope)) {
+            	if (!isset($table[$scope])) {
             		continue;
             	}
-            	$row = $table->$scope;
+            	$row = $table[$scope];
 
                 if ($row == false) {
                     if (!isset($data[$scope])) {
@@ -239,13 +269,20 @@ class Table
                         $data[$scope] = array();
                     }
 
-                    if (is_array($row) || $row instanceof \stdClass) {
-                        foreach ($row as $action => $level) {
-                            if (!isset($data[$scope][$action])) {
-                                $data[$scope][$action] = $level;
-                            } else {
-                                if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
+                    if ($row instanceof \stdClass) {
+                        $row = get_object_vars($row);
+                    }
+
+                    if (is_array($row)) {
+                        foreach ($this->actionList as $action) {
+                            if (isset($row[$action])) {
+                                $level = $row[$action];
+                                if (!isset($data[$scope][$action])) {
                                     $data[$scope][$action] = $level;
+                                } else {
+                                    if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
+                                        $data[$scope][$action] = $level;
+                                    }
                                 }
                             }
                         }

@@ -40,13 +40,11 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                if (!this.model.get('isAdmin')) {
-                    this.buttonList.push({
-                        name: 'access',
-                        label: 'Access',
-                        style: 'default'
-                    });
-                }
+                this.buttonList.push({
+                    name: 'access',
+                    label: 'Access',
+                    style: 'default'
+                });
 
                 if (this.model.id == this.getUser().id) {
                     this.dropdownItemList.push({
