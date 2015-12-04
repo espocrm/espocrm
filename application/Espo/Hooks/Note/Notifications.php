@@ -84,14 +84,14 @@ class Notifications extends \Espo\Core\Hooks\Base
             $parentType = $entity->get('parentType');
             $parentId = $entity->get('parentId');
             $superParentType = $entity->get('superParentType');
-            $superParentTypeId = $entity->get('superParentTypeId');
+            $superParentId = $entity->get('superParentId');
 
             $userIdList = [];
 
             if ($parentType && $parentId) {
 				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId));
-                if ($superParentType && $superParentTypeId) {
-                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentTypeId));
+                if ($superParentType && $superParentId) {
+                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentId));
                 }
             } else {
                 $targetType = $entity->get('targetType');
