@@ -89,7 +89,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.createView('type', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-type',
+                el: this.options.el + ' .field[data-name="type"]',
                 defs: {
                     name: 'type',
                     params: {
@@ -104,7 +104,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.createView('stream', 'views/fields/bool', {
                     model: model,
                     mode: 'edit',
-                    el: this.options.el + ' .field-stream',
+                    el: this.options.el + ' .field[data-name="stream"]',
                     defs: {
                         name: 'stream'
                     }
@@ -114,16 +114,16 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.createView('disabled', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-disabled',
+                el: this.options.el + ' .field[data-name="disabled"]',
                 defs: {
                     name: 'disabled'
                 }
             });
 
-            this.createView('name', 'Fields.Varchar', {
+            this.createView('name', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-name',
+                el: this.options.el + ' .field[data-name="name"]',
                 defs: {
                     name: 'name',
                     params: {
@@ -135,7 +135,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.createView('labelSingular', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-labelSingular',
+                el: this.options.el + ' .field[data-name="labelSingular"]',
                 defs: {
                     name: 'labelSingular',
                     params: {
@@ -146,7 +146,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.createView('labelPlural', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-labelPlural',
+                el: this.options.el + ' .field[data-name="labelPlural"]',
                 defs: {
                     name: 'labelPlural',
                     params: {
@@ -174,7 +174,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.createView('sortBy', 'views/fields/enum', {
                     model: model,
                     mode: 'edit',
-                    el: this.options.el + ' .field-sortBy',
+                    el: this.options.el + ' .field[data-name="sortBy"]',
                     defs: {
                         name: 'sortBy',
                         params: {
@@ -187,7 +187,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.createView('sortDirection', 'views/fields/enum', {
                     model: model,
                     mode: 'edit',
-                    el: this.options.el + ' .field-sortDirection',
+                    el: this.options.el + ' .field[data-name="sortDirection"]',
                     defs: {
                         name: 'sortDirection',
                         params: {

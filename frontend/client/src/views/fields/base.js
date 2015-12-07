@@ -58,7 +58,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
-        enabled: true,
+        disabled: false,
 
         readOnly: false,
 
@@ -152,12 +152,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
 
-            this.getFieldManager().getParams(this.type).forEach(function (d) {
+            this.getFieldManager().getParamList(this.type).forEach(function (d) {
                 var name = d.name;
                 if (!(name in this.params)) {
                     this.params[name] = this.model.getFieldParam(this.name, name) || null;
                 }
-            }.bind(this));
+            }, this);
 
             this.mode = this.options.mode || this.mode;
 
@@ -176,6 +176,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
+            }
+
+            if (this.options.disabled) {
+                this.disabled = true;
             }
 
             if (this.mode == 'edit' && this.readOnly) {
@@ -264,7 +268,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                         $cell.on('mouseenter', function (e) {
                             e.stopPropagation();
-                            if (!this.enabled || this.readOnly) {
+                            if (this.disabled || this.readOnly) {
                                 return;
                             }
                             if (this.mode == 'detail') {

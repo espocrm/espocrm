@@ -88,11 +88,12 @@ Espo.define('views/admin/authentication', 'views/settings/record/edit', function
                     'ldapCreateEspoUser'
                 ]
             };
+
+            this.handlePanelsVisibility();
         },
 
 
         afterRender: function () {
-            this.handlePanelsVisibility();
             this.listenTo(this.model, 'change:authenticationMethod', function () {
                 this.handlePanelsVisibility();
             }, this);

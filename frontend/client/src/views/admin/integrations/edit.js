@@ -99,20 +99,20 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
         },
 
         hideField: function (name) {
-            this.$el.find('label.field-label-' + name).addClass('hide');
-            this.$el.find('div.field-' + name).addClass('hide');
+            this.$el.find('label[data-name="'+name+'"]').addClass('hide');
+            this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
             var view = this.getView(name);
             if (view) {
-                view.enabled = false;
+                view.disabled = true;
             }
         },
 
         showField: function (name) {
-            this.$el.find('label.field-label-' + name).removeClass('hide');
-            this.$el.find('div.field-' + name).removeClass('hide');
+            this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
+            this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
             var view = this.getView(name);
             if (view) {
-                view.enabled = true;
+                view.disabled = false;
             }
         },
 
@@ -139,7 +139,7 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
         createFieldView: function (type, name, readOnly, params) {
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.options.el + ' .field-' + name,
+                el: this.options.el + ' .field[data-name="'+name+'"]',
                 defs: {
                     name: name,
                     params: params

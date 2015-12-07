@@ -27,13 +27,13 @@
  ************************************************************************/
 
 
-Espo.define('Views.Modals.SaveFilters', ['Views.Modal', 'Model'], function (Dep, Model) {
+Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         cssName: 'save-filters',
 
-        template: 'modals.save-filters',
+        template: 'modals/save-filters',
 
         data: function () {
             return {
@@ -63,8 +63,8 @@ Espo.define('Views.Modals.SaveFilters', ['Views.Modal', 'Model'], function (Dep,
             this.header = this.translate('Save Filters');
 
             var model = new Model();
-            this.createView('name', 'Fields.Varchar', {
-                el: this.options.el + ' .field-name',
+            this.createView('name', 'views/fields/varchar', {
+                el: this.options.el + ' .field[data-name="name"]',
                 defs: {
                     name: 'name',
                     params: {

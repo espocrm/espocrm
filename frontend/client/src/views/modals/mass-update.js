@@ -112,7 +112,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
-            var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field field-'+name+'" /></div>';
+            var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
             this.$el.find('.fields-container').append(html);
 
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
@@ -121,7 +121,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.createView(name, viewName, {
                 model: this.model,
-                el: this.$el.selector + ' .field-' + name,
+                el: this.$el.selector + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                 },

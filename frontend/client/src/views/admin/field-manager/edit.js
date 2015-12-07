@@ -149,7 +149,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             var viewName = (params || {}).view || this.getFieldManager().getViewName(type);
             this.createView(name, viewName, {
                 model: this.model,
-                el: this.options.el + ' .field-' + name,
+                el: this.options.el + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params

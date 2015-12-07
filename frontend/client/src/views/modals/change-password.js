@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'change-password',
 
-        template: 'modals.change-password',
+        template: 'modals/change-password',
 
         setup: function () {
 
@@ -61,10 +61,10 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
             this.getModelFactory().create('User', function (user) {
                 this.model = user;
 
-                this.createView('currentPassword', 'Fields.Password', {
+                this.createView('currentPassword', 'views/fields/password', {
                     model: user,
                     mode: 'edit',
-                    el: this.options.el + ' .field-currentPassword',
+                    el: this.options.el + ' .field[data-name="currentPassword"]',
                     defs: {
                         name: 'currentPassword',
                         params: {
@@ -73,10 +73,10 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                     }
                 });
 
-                this.createView('password', 'Fields.Password', {
+                this.createView('password', 'views/fields/password', {
                     model: user,
                     mode: 'edit',
-                    el: this.options.el + ' .field-password',
+                    el: this.options.el + ' .field[data-name="password"]',
                     defs: {
                         name: 'password',
                         params: {
@@ -84,10 +84,10 @@ Espo.define('Views.Modals.ChangePassword', 'Views.Modal', function (Dep) {
                         }
                     }
                 });
-                this.createView('passwordConfirm', 'Fields.Password', {
+                this.createView('passwordConfirm', 'views/fields/password', {
                     model: user,
                     mode: 'edit',
-                    el: this.options.el + ' .field-passwordConfirm',
+                    el: this.options.el + ' .field[data-name="passwordConfirm"]',
                     defs: {
                         name: 'passwordConfirm',
                         params: {

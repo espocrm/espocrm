@@ -54,7 +54,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 if (~index) {
                     this.additionalFields.splice(index, 1);
                 }
-                this.$el.find('.field-' + field).parent().remove();
+                this.$el.find('.field[data-name="' + field + '"]').parent().remove();
             },
         },
 
@@ -259,13 +259,13 @@ Espo.define('views/import/step2', 'view', function (Dep) {
 
             var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'"><span class="glyphicon glyphicon-remove"></span></a>';
 
-            var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label + '</label><div class="field field-'+name+'" /></div>';
+            var html = '<div class="cell form-group col-sm-3">'+removeLink+'<label class="control-label">' + label + '</label><div class="field" data-name="'+name+'"/></div>';
             $('#default-values-container').append(html);
 
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.$el.selector + ' .field-' + name,
+                el: this.$el.selector + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                 },

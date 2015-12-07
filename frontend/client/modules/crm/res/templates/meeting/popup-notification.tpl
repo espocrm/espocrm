@@ -11,8 +11,8 @@
 
 </div>
 
-<div class="cell cell-dateStart form-group">
-    <div class="field field-dateStart">
+<div class="cell form-group" data-name="dateStart">
+    <div class="field" data-name="dateStart">
         {{{dateStart}}}
     </div>
 </div>

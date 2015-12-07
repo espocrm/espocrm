@@ -4,11 +4,11 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-6">    
+    <div class="col-sm-6">
         <div>
-            <div class="cell cell-enabled form-group">
-                <label class="control-label">{{translate 'enabled' scope='Integration' category='fields'}}</label>
-                <div class="field field-enabled">{{{enabled}}}</div>
+            <div class="cell form-group" data-name="enabled">
+                <label class="control-label" data-name="enabled">{{translate 'enabled' scope='Integration' category='fields'}}</label>
+                <div class="field" data-name="enabled">{{{enabled}}}</div>
             </div>
         </div>
         <div class="data-panel">
@@ -18,8 +18,8 @@
     </div>
     <div class="col-sm-6">
         {{#if helpText}}
-        <div class="well">            
-            {{{../helpText}}}            
+        <div class="well">
+            {{{../helpText}}}
         </div>
         {{/if}}
     </div>

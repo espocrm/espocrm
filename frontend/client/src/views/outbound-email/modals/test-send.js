@@ -24,16 +24,16 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 
-Espo.define('Views.OutboundEmail.Modals.TestSend', 'Views.Modal', function (Dep) {
+Espo.define('views/outbound-email/modals/test-send', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'test-send',
 
-        _template: '<label class="field-label-outboundEmailFromName control-label">{{translate \'Email Address\' scope=\'Email\'}}</label><input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control">',
+        _template: '<label class="control-label">{{translate \'Email Address\' scope=\'Email\'}}</label><input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control">',
 
         data: function () {
             return {
@@ -42,7 +42,7 @@ Espo.define('Views.OutboundEmail.Modals.TestSend', 'Views.Modal', function (Dep)
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'send',
                     text: this.translate('Send', 'labels', 'Email'),
@@ -63,7 +63,7 @@ Espo.define('Views.OutboundEmail.Modals.TestSend', 'Views.Modal', function (Dep)
                     }
                 }
             ];
-             
+
         },
     });
 });

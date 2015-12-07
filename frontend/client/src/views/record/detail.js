@@ -160,9 +160,13 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         showPanel: function (name) {
+            this.setPanelStateParam(name, 'hidden', false);
+            delete this.hiddenPanels[name];
             var middleView = this.getView('middle');
             if (middleView) {
-                middleView.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
+                if (this.isRendered()) {
+                    middleView.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
+                }
             }
 
             var bottomView = this.getView('bottom');
@@ -181,9 +185,14 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         hidePanel: function (name) {
+            this.setPanelStateParam(name, 'hidden', true);
+            this.hiddenPanels[name] = true;
+
             var middleView = this.getView('middle');
             if (middleView) {
-                middleView.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
+                if (this.isRendered()) {
+                    middleView.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
+                }
             }
 
             var bottomView = this.getView('bottom');
@@ -367,9 +376,15 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         getFieldView: function (name) {
-            var view = this.getView('middle').getView(name) || null;
-            if (!view && this.getView('side')) {
+            var view;
+            if (this.hasView('middle')) {
+                view = this.getView('middle').getView(name) || null;
+            }
+            if (!view && this.hasView('side')) {
                 view = (this.getView('side').getFields() || {})[name];
+            }
+            if (!view && this.hasView('bottom')) {
+                view = (this.getView('bottom').getFields() || {})[name];
             }
             return view || null;
         },
@@ -450,6 +465,12 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
             }
+
+            this.fieldStateMap = {};
+            this.panelStateMap = {};
+
+            this.hiddenPanels = {};
+            this.hiddenFields = {};
 
             var collection = this.model.collection;
             if (collection) {
@@ -538,7 +559,6 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 this.model.set(this.options.attributes);
             }
 
-            this.build();
             this.listenTo(this.model, 'sync', function () {
                 this.attributes = this.model.getClonedAttributes();
             }, this);
@@ -551,6 +571,9 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this._initDependancy();
+
+            this.build();
+
 
             if (this.duplicateAction) {
                 if (this.getAcl().checkModel(this.model, 'edit')) {
@@ -738,13 +761,15 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                             continue;
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(cellDefs.name) || 'base';
-                        var viewName = cellDefs.view || this.model.getFieldParam(cellDefs.name, 'view') || this.getFieldManager().getViewName(type);
+                        var name = cellDefs.name;
+
+                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
+                        var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                         var o = {
-                            el: el + ' .middle .field-' + cellDefs.name,
+                            el: el + ' .middle .field[data-name="' + name + '"]',
                             defs: {
-                                name: cellDefs.name,
+                                name: name,
                                 params: cellDefs.params || {}
                             },
                             mode: this.fieldsMode
@@ -769,10 +794,21 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                             }
                         }
 
+                        if (this.getFieldStateParam(name, 'hidden')) {
+                            o.disabled = true;
+                        }
+                        if (this.getFieldStateParam(name, 'readOnly')) {
+                            o.readOnly = true;
+                        }
+                        if (this.getFieldStateParam(name, 'required') !== null) {
+                            o.defs.params = o.defs.params || {};
+                            o.defs.params.required = this.getFieldStateParam(name, 'required');
+                        }
+
                         var cell = {
-                            name: cellDefs.name,
+                            name: name,
                             view: viewName,
-                            el: el + ' .middle .field-' + cellDefs.name,
+                            el: el + ' .middle .field[data-name="' + name + '"]',
                             fullWidth: fullWidth,
                             options: o
                         };
@@ -842,8 +878,14 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     el: el + ' .middle',
                     layoutData: {
                         model: this.model,
-                        columnCount: this.columnCount,
+                        columnCount: this.columnCount
                     },
+                    data: function () {
+                        return {
+                            hiddenPanels: this.hiddenPanels,
+                            hiddenFields: this.hiddenFields
+                        }
+                    }.bind(this)
                 }, callback);
             }.bind(this));
 

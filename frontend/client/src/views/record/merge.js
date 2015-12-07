@@ -86,7 +86,7 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                     var id = $(el).data('id');
                     if (model.id != id) {
                         var fieldType = model.getFieldParam(field, 'type');
-                        var fields = self.getFieldManager().getActualAttributes(fieldType, field);
+                        var fields = self.getFieldManager().getActualAttributeList(fieldType, field);
                         var modelFrom;
                         self.models.forEach(function (m) {
                             if (m.id == id) {
@@ -151,7 +151,7 @@ Espo.define('views/record/merge', 'view', function (Dep) {
             for (var field in fieldsDefs) {
                 var type = fieldsDefs[field].type;
                 if (fieldManager.isMergable(type) && !this.models[0].isFieldReadOnly(field)) {
-                    var actualFields = fieldManager.getActualAttributes(type, field);
+                    var actualFields = fieldManager.getActualAttributeList(type, field);
                     var differs = false;
                     actualFields.forEach(function (field) {
                         var values = [];
@@ -180,7 +180,7 @@ Espo.define('views/record/merge', 'view', function (Dep) {
 
                     this.createView(model.id + '-' + field, viewName, {
                         model: model,
-                        el: '.merge .' + model.id + ' .field-' + field,
+                        el: '.merge .' + model.id + ' .field[data-name="' + field + '"]',
                         defs: {
                             name: field,
                         },

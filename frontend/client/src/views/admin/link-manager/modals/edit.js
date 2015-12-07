@@ -133,7 +133,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('entity', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-entity',
+                el: this.options.el + ' .field[data-name="entity"]',
                 defs: {
                     name: 'entity'
                 },
@@ -142,7 +142,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('entityForeign', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-entityForeign',
+                el: this.options.el + ' .field[data-name="entityForeign"]',
                 defs: {
                     name: 'entityForeign',
                     params: {
@@ -156,7 +156,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('linkType', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-linkType',
+                el: this.options.el + ' .field[data-name="linkType"]',
                 defs: {
                     name: 'linkType',
                     params: {
@@ -170,7 +170,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('link', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-link',
+                el: this.options.el + ' .field[data-name="link"]',
                 defs: {
                     name: 'link',
                     params: {
@@ -182,7 +182,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('linkForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-linkForeign',
+                el: this.options.el + ' .field[data-name="linkForeign"]',
                 defs: {
                     name: 'linkForeign',
                     params: {
@@ -194,7 +194,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('label', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-label',
+                el: this.options.el + ' .field[data-name="label"]',
                 defs: {
                     name: 'label',
                     params: {
@@ -205,7 +205,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('labelForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-labelForeign',
+                el: this.options.el + ' .field[data-name="labelForeign"]',
                 defs: {
                     name: 'labelForeign',
                     params: {
@@ -218,7 +218,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 this.createView('relationName', 'views/fields/varchar', {
                     model: model,
                     mode: 'edit',
-                    el: this.options.el + ' .field-relationName',
+                    el: this.options.el + ' .field[data-name="relationName"]',
                     defs: {
                         name: 'relationName',
                         params: {
@@ -232,7 +232,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('linkMultipleField', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-linkMultipleField',
+                el: this.options.el + ' .field[data-name="linkMultipleField"]',
                 defs: {
                     name: 'linkMultipleField'
                 },
@@ -242,7 +242,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field-linkMultipleFieldForeign',
+                el: this.options.el + ' .field[data-name="linkMultipleFieldForeign"]',
                 defs: {
                     name: 'linkMultipleFieldForeign'
                 },
@@ -336,7 +336,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
         hideField: function (name) {
             var view = this.getView(name);
             if (view) {
-                view.enabled = false;
+                view.disabled = true;
             }
             this.$el.find('.cell-' + name).css('visibility', 'hidden');
         },
@@ -344,7 +344,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
         showField: function (name) {
             var view = this.getView(name);
             if (view) {
-                view.enabled = true;
+                view.disabled = false;
             }
             this.$el.find('.cell-' + name).css('visibility', 'visible');
         },
@@ -417,7 +417,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 if (!this.hasView(item)) return;
                 var view = this.getView(item);
                 if (view.mode != 'edit') return;
-                if (view.enabled) {
+                if (!view.disabled) {
                     notValid = view.validate() || notValid;
                 }
             }, this);

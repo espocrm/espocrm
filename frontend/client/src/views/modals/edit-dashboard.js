@@ -27,13 +27,13 @@
  ************************************************************************/
 
 
-Espo.define('Views.Modals.EditDashboard', ['Views.Modal', 'Model'], function (Dep, Model) {
+Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         cssName: 'edit-dashboard',
 
-        template: 'modals.edit-dashboard',
+        template: 'modals/edit-dashboard',
 
         data: function () {
             return {
@@ -83,8 +83,8 @@ Espo.define('Views.Modals.EditDashboard', ['Views.Modal', 'Model'], function (De
             model.name = 'Preferences';
 
             model.set('dashboardTabList', dashboardTabList);
-            this.createView('dashboardTabList', 'Fields.Array', {
-                el: this.options.el + ' .field-dashboardTabList',
+            this.createView('dashboardTabList', 'views/fields/array', {
+                el: this.options.el + ' .field[data-name="dashboardTabList"]',
                 defs: {
                     name: 'dashboardTabList',
                     params: {

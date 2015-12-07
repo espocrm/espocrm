@@ -160,7 +160,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         afterRender: function () {
-            if (!this.isRendered()) {
+            if (!this.hasView('list')) {
                 this.loadList();
             }
         },

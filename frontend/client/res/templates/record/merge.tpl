@@ -25,7 +25,7 @@
                     <input type="radio" name="{{../name}}" value="{{id}}" data-id="{{id}}" class="pull-right field-radio">
                 </td>
                 <td class="{{id}}">
-                    <div class="field field-{{name}}">
+                    <div class="field" data-name="{{name}}">
                         {{{var fieldVariable ../../this}}}
                     </div>
                 </td>

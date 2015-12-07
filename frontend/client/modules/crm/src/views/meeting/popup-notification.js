@@ -49,7 +49,7 @@ Espo.define('Crm:Views.Meeting.PopupNotification', 'Views.PopupNotification', fu
                     this.createView('dateStart', 'Fields.Datetime', {
                         model: model,
                         mode: 'detail',
-                        el: this.options.el + ' .field-dateStart',
+                        el: this.options.el + ' .field[data-name="dateStart"]',
                         defs: {
                             name: 'dateStart'
                         },

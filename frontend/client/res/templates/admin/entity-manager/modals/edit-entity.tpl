@@ -1,43 +1,43 @@
 <div class="row">
-	<div class="cell cell-name form-group col-md-6">
-		<label class="field-label-name control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-name">
+	<div class="cell form-group col-md-6" data-name="name">
+		<label class="control-label" data-name="name">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="name">
 			{{{name}}}
 		</div>
 	</div>
-	<div class="cell cell-type form-group col-md-6">
-		<label class="field-label-type control-label">{{translate 'type' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-type">
+	<div class="cell form-group col-md-6" data-name="type">
+		<label class="control-label" data-name="type">{{translate 'type' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="type">
 			{{{type}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-labelSingular form-group col-md-6">
-		<label class="field-label-labelSingular control-label">{{translate 'labelSingular' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-labelSingular">
+	<div class="cell form-group col-md-6" data-name="labelSingular">
+		<label class="control-label" data-name="labelSingular">{{translate 'labelSingular' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="labelSingular">
 			{{{labelSingular}}}
 		</div>
 	</div>
-	<div class="cell cell-labelPlural form-group col-md-6">
-		<label class="field-label-labelPlural control-label">{{translate 'labelPlural' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-labelPlural">
+	<div class="cell form-group col-md-6" data-name="labelPlural">
+		<label class="control-label" data-name="labelPlural">{{translate 'labelPlural' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="labelPlural">
 			{{{labelPlural}}}
 		</div>
 	</div>
 </div>
 
 <div class="row">
-	<div class="cell cell-disabled form-group col-md-6">
-		<label class="field-label-disabled control-label">{{translate 'disabled' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-disabled">
+	<div class="cell form-group col-md-6" data-name="disabled">
+		<label class="control-label" data-name="disabled">{{translate 'disabled' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="disabled">
 			{{{disabled}}}
 		</div>
 	</div>
 	{{#if stream}}
-	<div class="cell cell-stream form-group col-md-6">
-		<label class="field-label-stream control-label">{{translate 'stream' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-stream">
+	<div class="cell form-group col-md-6" data-name="stream">
+		<label class="control-label" data-name="stream">{{translate 'stream' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="stream">
 			{{{stream}}}
 		</div>
 	</div>
@@ -46,15 +46,15 @@
 
 {{#if sortBy}}
 <div class="row">
-	<div class="cell cell-sortBy form-group col-md-6">
-		<label class="field-label-sortBy control-label">{{translate 'sortBy' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-sortBy">
+	<div class="cell form-group col-md-6" data-name="sortBy">
+		<label class="control-label" data-name="sortBy">{{translate 'sortBy' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="sortBy">
 			{{{sortBy}}}
 		</div>
 	</div>
-	<div class="cell cell-sortDirection form-group col-md-6">
-		<label class="field-label-sortDirection control-label">{{translate 'sortDirection' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-sortDirection">
+	<div class="cell form-group col-md-6" data-name="sortDirection">
+		<label class="control-label" data-name="sortDirection">{{translate 'sortDirection' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="sortDirection">
 			{{{sortDirection}}}
 		</div>
 	</div>

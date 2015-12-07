@@ -1,13 +1,13 @@
 
-<div class="cell cell-currentPassword form-group">
-    <label class="field-label-currentPassword control-label">{{translate 'currentPassword' scope='User' category='fields'}}</label>
-    <div class="field field-currentPassword">{{{currentPassword}}}</div>
+<div class="cell form-group" data-name="currentPassword">
+    <label class="control-label" data-name="currentPassword">{{translate 'currentPassword' scope='User' category='fields'}}</label>
+    <div class="field" data-name="currentPassword">{{{currentPassword}}}</div>
 </div>
-<div class="cell cell-password form-group">
-    <label class="field-label-password control-label">{{translate 'newPassword' scope='User' category='fields'}}</label>
-    <div class="field field-password">{{{password}}}</div>
+<div class="cell form-group" data-name="password">
+    <label class="control-label" data-name="password">{{translate 'newPassword' scope='User' category='fields'}}</label>
+    <div class="field" data-name="password">{{{password}}}</div>
 </div>
-<div class="cell cell-passwordConfirm form-group">
-    <label class="field-label-passwordConfirm control-label">{{translate 'passwordConfirm' scope='User' category='fields'}}</label>
-    <div class="field field-passwordConfirm">{{{passwordConfirm}}}</div>
+<div class="cell form-group" data-name="passwordConfirm">
+    <label class="control-label" data-name="passwordConfirm">{{translate 'passwordConfirm' scope='User' category='fields'}}</label>
+    <div class="field" data-name="passwordConfirm">{{{passwordConfirm}}}</div>
 </div>

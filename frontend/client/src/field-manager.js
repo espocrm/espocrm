@@ -39,7 +39,7 @@
 
         metadata: null,
 
-        getParams: function (fieldType) {
+        getParamList: function (fieldType) {
             if (fieldType in this.defs) {
                 return this.defs[fieldType].params || [];
             }
@@ -68,12 +68,12 @@
             return false;
         },
 
-        getEntityAttributes: function (entityName) {
+        getEntityAttributeList: function (entityType) {
             var list = [];
 
-            var defs = this.metadata.get('entityDefs.' + entityName + '.fields') || {};
+            var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
             Object.keys(defs).forEach(function (field) {
-                this.getAttributes(defs[field]['type'], field).forEach(function (attr) {
+                this.getAttributeList(defs[field]['type'], field).forEach(function (attr) {
                     if (!~list.indexOf(attr)) {
                         list.push(attr);
                     }
@@ -82,7 +82,7 @@
             return list;
         },
 
-        getActualAttributes: function (fieldType, fieldName) {
+        getActualAttributeList: function (fieldType, fieldName) {
             var fieldNames = [];
             if (fieldType in this.defs) {
                 if ('actualFields' in this.defs[fieldType]) {
@@ -108,7 +108,7 @@
             return fieldNames;
         },
 
-        getNotActualAttributes: function (fieldType, fieldName) {
+        getNotActualAttributeList: function (fieldType, fieldName) {
             var fieldNames = [];
             if (fieldType in this.defs) {
                 if ('notActualFields' in this.defs[fieldType]) {
@@ -132,8 +132,8 @@
             return fieldNames;
         },
 
-        getAttributes: function (fieldType, fieldName) {
-            return _.union(this.getActualAttributes(fieldType, fieldName), this.getNotActualAttributes(fieldType, fieldName));
+        getAttributeList: function (fieldType, fieldName) {
+            return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
         },
 
         getViewName: function (fieldType) {
@@ -144,6 +144,27 @@
             }
             return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);
         },
+
+        getParams: function (fieldType) {
+            return this.getParamList(fieldType);
+        },
+
+        getEntityAttributes: function (entityType) {
+            return this.getEntityAttributeList(entityType);
+        },
+
+        getAttributes: function (fieldType, fieldName) {
+            return this.getAttributeList(fieldType, fieldName);
+        },
+
+        getActualAttributes: function (fieldType, fieldName) {
+            return this.getActualAttributeList(fieldType, fieldName);
+        },
+
+        getNotActualAttributes: function (fieldType, fieldName) {
+            return this.getNotActualAttributeList(fieldType, fieldName);
+        }
+
     });
 
     return FieldManager;

@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.ExternalAccount.OAuth2', ['View', 'Model'], function (Dep, Model) {
+Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        template: 'external-account.oauth2',
+        template: 'external-account/oauth2',
 
         events: {
 
@@ -110,20 +110,20 @@ Espo.define('Views.ExternalAccount.OAuth2', ['View', 'Model'], function (Dep, Mo
         },
 
         hideField: function (name) {
-            this.$el.find('label.field-label-' + name).addClass('hide');
-            this.$el.find('div.field-' + name).addClass('hide');
+            this.$el.find('label[data-name="'+name+'"]').addClass('hide');
+            this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
             var view = this.getView(name);
             if (view) {
-                view.enabled = false;
+                view.disabled = true;
             }
         },
 
         showField: function (name) {
-            this.$el.find('label.field-label-' + name).removeClass('hide');
-            this.$el.find('div.field-' + name).removeClass('hide');
+            this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
+            this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
             var view = this.getView(name);
             if (view) {
-                view.enabled = true;
+                view.disabled = false;
             }
         },
 
@@ -144,7 +144,7 @@ Espo.define('Views.ExternalAccount.OAuth2', ['View', 'Model'], function (Dep, Mo
         createFieldView: function (type, name, readOnly, params) {
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.options.el + ' .field-' + name,
+                el: this.options.el + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params

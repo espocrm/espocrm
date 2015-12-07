@@ -4,28 +4,28 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-6">    
-        <div class="cell cell-enabled form-group">
-            <label class="control-label">{{translate 'enabled' scope='Integration' category='fields'}}</label>
-            <div class="field field-enabled">{{{enabled}}}</div>
-        </div>    
+    <div class="col-sm-6">
+        <div class="cell form-group" data-name="enabled">
+            <label class="control-label" data-name="enabled">{{translate 'enabled' scope='Integration' category='fields'}}</label>
+            <div class="field" data-name="enabled">{{{enabled}}}</div>
+        </div>
         {{#each dataFieldList}}
-            <div class="cell cell-{{./this}} form-group">
-                <label class="control-label field-label-{{./this}}">{{translate this scope='Integration' category='fields'}}</label>
-                <div class="field field-{{this}}">{{{var this ../this}}}</div>
+            <div class="cell form-group" data-name="{{./this}}">
+                <label class="control-label" data-name="{{./this}}">{{translate this scope='Integration' category='fields'}}</label>
+                <div class="field" data-name="{{./this}}">{{{var this ../this}}}</div>
             </div>
         {{/each}}
-        <div class="cell cell-enabled form-group">
-            <label class="control-label field-label-redirectUri">{{translate 'redirectUri' scope='Integration' category='fields'}}</label>
-            <div class="field field-enabled">
+        <div class="cell form-group" data-name="redirectUri">
+            <label class="control-label" data-name="redirectUri">{{translate 'redirectUri' scope='Integration' category='fields'}}</label>
+            <div class="field" data-name="redirectUri">
                 <input type="text" class="form-control" readonly value="{{redirectUri}}">
             </div>
-        </div>    
+        </div>
     </div>
     <div class="col-sm-6">
         {{#if helpText}}
-        <div class="well">            
-            {{{../helpText}}}            
+        <div class="well">
+            {{{../helpText}}}
         </div>
         {{/if}}
     </div>

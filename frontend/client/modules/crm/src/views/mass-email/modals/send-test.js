@@ -47,7 +47,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
             this.createView('users', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field-users',
+                el: this.options.el + ' .field[data-name="users"]',
                 foreignScope: 'User',
                 defs: {
                     name: 'users',
@@ -59,7 +59,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
             this.createView('contacts', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field-contacts',
+                el: this.options.el + ' .field[data-name="contacts"]',
                 foreignScope: 'Contact',
                 defs: {
                     name: 'contacts',
@@ -71,7 +71,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
             this.createView('leads', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field-leads',
+                el: this.options.el + ' .field[data-name="leads"]',
                 foreignScope: 'Lead',
                 defs: {
                     name: 'leads',
@@ -83,7 +83,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
             this.createView('accounts', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field-accounts',
+                el: this.options.el + ' .field[data-name="accounts"]',
                 foreignScope: 'Account',
                 defs: {
                     name: 'accounts',

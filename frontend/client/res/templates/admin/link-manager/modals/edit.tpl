@@ -1,67 +1,67 @@
 <div class="row">
-	<div class="cell cell-entityForeign form-group col-md-4 col-md-offset-4">
-		<label class="field-label-entityForeign control-label">{{translate 'entityForeign' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-entityForeign">
+	<div class="cell form-group col-md-4 col-md-offset-4" data-name="entityForeign">
+		<label class="control-label" data-name="entityForeign">{{translate 'entityForeign' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="entityForeign">
 			{{{entityForeign}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-linkType form-group col-md-4 col-md-offset-4">
-		<label class="field-label-linkType control-label">{{translate 'linkType' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-linkType">
+	<div class="cell form-group col-md-4 col-md-offset-4" data-name="linkType">
+		<label class="control-label" data-name="linkType">{{translate 'linkType' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="linkType">
 			{{{linkType}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-linkForeign form-group col-md-4">
-		<label class="field-label-linkForeign control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-linkForeign">
+	<div class="cell form-group col-md-4" data-name="linkForeign">
+		<label class="control-label" data-name="linkForeign">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="linkForeign">
 			{{{linkForeign}}}
 		</div>
 	</div>
-	<div class="cell form-group col-md-4 cell-relationName">
+	<div class="cell form-group col-md-4" data-name="relationName">
 		{{#if relationName}}
-		<label class="field-label-relationName control-label">{{translate 'relationName' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-relationName">
+		<label class="control-label" data-name="relationName">{{translate 'relationName' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="relationName">
 			{{{relationName}}}
 		</div>
 		{{/if}}
 	</div>
-	<div class="cell cell-link form-group col-md-4">
-		<label class="field-label-link control-label">{{translate 'name' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-link">
+	<div class="cell form-group col-md-4" data-name="link">
+		<label class="control-label" data-name="link">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="link">
 			{{{link}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-labelForeign form-group col-md-4">
-		<label class="field-label-labelForeign control-label">{{translate 'label' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-labelForeign">
+	<div class="cell form-group col-md-4" data-name="labelForeign">
+		<label class="control-label" data-name="labelForeign">{{translate 'label' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="labelForeign">
 			{{{labelForeign}}}
 		</div>
 	</div>
 	<div class="cell form-group col-md-4"></div>
-	<div class="cell cell-label form-group col-md-4">
-		<label class="field-label-label control-label">{{translate 'label' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-label">
+	<div class="cell form-group col-md-4" data-name="label">
+		<label class="control-label" data-name="label">{{translate 'label' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="label">
 			{{{label}}}
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="cell cell-linkMultipleFieldForeign form-group col-md-4">
-		<label class="field-label-linkMultipleFieldForeign control-label">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-linkMultipleFieldForeign">
+	<div class="cell form-group col-md-4" data-name="linkMultipleFieldForeign">
+		<label class="control-label" data-name="linkMultipleFieldForeign">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="linkMultipleFieldForeign">
 			{{{linkMultipleFieldForeign}}}
 		</div>
 	</div>
 	<div class="cell form-group col-md-4"></div>
-	<div class="cell cell-linkMultipleField form-group col-md-4">
-		<label class="field-label-linkMultipleField control-label">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
-		<div class="field field-linkMultipleField">
+	<div class="cell form-group col-md-4" data-name="linkMultipleField">
+		<label class="control-label" data-name="linkMultipleField">{{translate 'linkMultipleField' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="linkMultipleField">
 			{{{linkMultipleField}}}
 		</div>
 	</div>

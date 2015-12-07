@@ -1,6 +1,6 @@
-<div class="cell cell-name form-group">
-    <label class="field-label-name control-label">{{translate 'Name' category='fields'}}</label>
-    <div class="field field-name">
+<div class="cell form-group" data-name="name">
+    <label class="control-label" data-name="name">{{translate 'Name' category='fields'}}</label>
+    <div class="field" data-name="name">
         {{{name}}}
     </div>
 </div>
