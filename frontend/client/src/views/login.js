@@ -60,7 +60,7 @@ Espo.define('views/login', 'view', function (Dep) {
             if (!companyLogoId) {
                 return this.getThemeManager().getParam('logo') || 'client/img/logo.png';
             }
-            return '?entryPoint=LogoImage';
+            return '?entryPoint=LogoImage&t=' + companyLogoId;
         },
 
         login: function () {
