@@ -34,7 +34,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         bottomView: 'views/user/record/detail-bottom',
 
-        editModeEnabled: false,
+        editModeDisabled: true,
 
         setup: function () {
             Dep.prototype.setup.call(this);
