@@ -1,6 +1,6 @@
 <div class="edit" id="{{id}}">
     {{#if buttonsTop}}
-    <div class="detail-button-container button-container record-buttons">
+    <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group" role="group">
         {{#each buttonList}}{{button name scope=../../scope label=label style=style}}{{/each}}
         {{#if dropdownItemList}}

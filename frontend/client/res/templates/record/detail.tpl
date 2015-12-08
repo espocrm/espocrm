@@ -1,6 +1,6 @@
 <div class="detail" id="{{id}}">
     {{#if buttonsTop}}
-    <div class="detail-button-container button-container record-buttons">
+    <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group" role="group">
         {{#each buttonList}}{{button name scope=../../scope label=label style=style hidden=hidden}}{{/each}}
         {{#if dropdownItemList}}
@@ -27,7 +27,7 @@
         </div>
         {{/if}}
     </div>
-    <div class="detail-button-container button-container edit-buttons hidden">
+    <div class="detail-button-container button-container edit-buttons hidden clearfix">
         <div class="btn-group" role="group">
         {{#each buttonEditList}}{{button name scope=../../scope label=label style=style hidden=hidden}}{{/each}}
         {{#if dropdownEditItemList}}
