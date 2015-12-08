@@ -26,25 +26,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/lead/record/panels/converted-to', 'views/record/panels/side', function (Dep) {
+Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
     return Dep.extend({
 
-        setupFields: function () {
-            this.fieldList = [];
+        init: function () {
+            this.recordHelper = this.options.recordHelper;
+            this.scope = this.model.name;
+        },
 
-            if (this.getAcl().check('Account') && !this.getMetadata().get('scopes.Account.disabled')) {
-                this.fieldList.push('createdAccount');
-            }
+        data: function () {
+            return {
+                hiddenPanels: this.recordHelper.getHiddenPanels(),
+                hiddenFields: this.recordHelper.getHiddenFields()
+            };
+        },
 
-            if (this.getAcl().check('Contact') && !this.getMetadata().get('scopes.Contact.disabled')) {
-                this.fieldList.push('createdContact');
+        showPanel: function (name) {
+            if (this.isRendered()) {
+                this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
             }
-            if (this.getAcl().check('Opportunity') && !this.getMetadata().get('scopes.Opportunity.disabled')) {
-                this.fieldList.push('createdOpportunity');
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+        },
+
+        hidePanel: function (name) {
+            if (this.isRendered()) {
+                this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
         }
-
     });
-
 });
+
+

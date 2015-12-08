@@ -30,7 +30,7 @@ Espo.define('crm:views/meeting/record/panels/attendees', 'views/record/panels/si
 
     return Dep.extend({
 
-        setup: function () {
+        setupFields: function () {
             this.fieldList = [];
 
             this.fieldList.push('users');
@@ -41,8 +41,6 @@ Espo.define('crm:views/meeting/record/panels/attendees', 'views/record/panels/si
             if (this.getAcl().check('Lead') && !this.getMetadata().get('scopes.Lead.disabled')) {
                 this.fieldList.push('leads');
             }
-
-            Dep.prototype.setup.call(this);
         }
 
     });

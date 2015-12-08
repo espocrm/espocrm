@@ -79,6 +79,7 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 var view = this.getView(name);
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
+                    view.disabled = false;
                 }
                 if (callback) {
                     callback.call(this);
@@ -108,6 +109,7 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 var view = this.getView(name);
                 if (view) {
                     view.$el.closest('.panel').addClass('hidden');
+                    view.disabled = true;
                 }
                 if (callback) {
                     callback.call(this);
@@ -124,40 +126,34 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         setupPanels: function () {
             var scope = this.scope;
 
-            this.recordHelper = this.options.recordHelper;
-
-            var panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
+            this.panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || this.panelList || []);
 
             if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
-                var streamAllowed = this.getAcl().checkModel(this.model, 'stream');
-                if (streamAllowed === null) {
-                    this.listenToOnce(this.model, 'sync', function () {
-                        streamAllowed = this.getAcl().checkModel(this.model, 'stream');
-                        if (streamAllowed) {
-                            this.showPanel('stream', function () {
-                                this.getView('stream').collection.fetch();
-                            });
-                        }
-                    }, this);
-                }
-                if (streamAllowed !== false) {
-                    panelList.push({
-                        "name":"stream",
-                        "label":"Stream",
-                        "view":"views/stream/panel",
-                        "sticked": true,
-                        "hidden": !streamAllowed
-                    });
-                }
+                this.setupStreamPanel();
             }
+        },
 
-            this.panelList = this.panelList.map(function (p) {
-                var item = Espo.Utils.clone(p);
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                }
-                return item;
-            }, this);
+        setupStreamPanel: function () {
+            var streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+            if (streamAllowed === null) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+                    if (streamAllowed) {
+                        this.showPanel('stream', function () {
+                            this.getView('stream').collection.fetch();
+                        });
+                    }
+                }, this);
+            }
+            if (streamAllowed !== false) {
+                this.panelList.push({
+                    "name":"stream",
+                    "label":"Stream",
+                    "view":"views/stream/panel",
+                    "sticked": true,
+                    "hidden": !streamAllowed
+                });
+            }
         },
 
         setupPanelViews: function () {
@@ -169,7 +165,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
                     defs: p,
                     mode: this.mode,
-                    recordHelper: this.recordHelper
+                    recordHelper: this.recordHelper,
+                    disabled: p.hidden || false
                 }, function (view) {
                     if ('getActionList' in view) {
                         p.actionList = this.filterActions(view.getActionList());
@@ -186,15 +183,29 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             }, this);
         },
 
+        init: function () {
+            this.recordHelper = this.options.recordHelper;
+            this.scope = this.model.name;
+        },
+
         setup: function () {
             this.panelList = [];
-            this.scope = this.model.name;
+
+            this.setupPanels();
+
+            this.panelList = this.panelList.map(function (p) {
+                var item = Espo.Utils.clone(p);
+                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                } else {
+                    this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
+                }
+                return item;
+            }, this);
 
             this.wait(true);
 
             var proceed = function () {
-                this.setupPanels();
-
                 this.panelList = this.panelList.filter(function (p) {
                     if (p.aclScope) {
                         if (!this.getAcl().checkScope(p.aclScope)) {
@@ -268,11 +279,15 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
                 p = _.extend(p, defs);
 
+                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                    p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                } else {
+                    this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
+                }
+
                 this.panelList.push(p);
             }, this);
-
         },
-
 
         filterActions: function (actions) {
             var filtered = [];

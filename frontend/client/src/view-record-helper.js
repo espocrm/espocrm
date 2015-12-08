@@ -28,10 +28,10 @@
 Espo.define('view-record-helper', [], function () {
 
     var ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
-        if (this.defaultFieldStates) {
+        if (defaultFieldStates) {
             this.defaultFieldStates = defaultFieldStates;
         }
-        if (this.defaultPanelStates) {
+        if (defaultPanelStates) {
             this.defaultPanelStates = defaultPanelStates;
         }
         this.fieldStateMap = {};
@@ -43,14 +43,9 @@ Espo.define('view-record-helper', [], function () {
 
     _.extend(ViewRecordHelper.prototype, {
 
-        defaultFieldStates: {
-            hidden: false,
-            readOnly: false
-        },
+        defaultFieldStates: {},
 
-        defaultPanelStates: {
-            hidden: false
-        },
+        defaultPanelStates: {},
 
         getHiddenFields: function () {
             return this.hiddenFields;
@@ -79,10 +74,9 @@ Espo.define('view-record-helper', [], function () {
                 if (name in this.fieldStateMap[field]) {
                     return this.fieldStateMap[field][name];
                 }
-            } else {
-                if (name in this.defaultFieldStates) {
-                    return this.defaultFieldStates[name];
-                }
+            }
+            if (name in this.defaultFieldStates) {
+                return this.defaultFieldStates[name];
             }
             return null;
         },
@@ -106,10 +100,9 @@ Espo.define('view-record-helper', [], function () {
                 if (name in this.panelStateMap[panel]) {
                     return this.panelStateMap[panel][name];
                 }
-            } else {
-                if (name in this.defaultPanelStates) {
-                    return this.defaultPanelStates[name];
-                }
+            }
+            if (name in this.defaultPanelStates) {
+                return this.defaultPanelStates[name];
             }
             return null;
         }

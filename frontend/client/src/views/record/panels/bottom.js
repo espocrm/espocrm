@@ -42,6 +42,8 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
 
         fieldList: null,
 
+        disabled: false,
+
         events: {
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
@@ -69,12 +71,20 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             this.defs = this.options.defs || {};
             this.recordHelper = this.options.recordHelper;
 
+            if ('disabled' in this.options) {
+                this.disabled = this.options.disabled;
+            }
+
             this.mode = this.options.mode || this.mode;
 
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
+        },
+
+        setup: function () {
+            this.setupFields();
 
             this.fieldList = this.fieldList.map(function (d) {
                 var item = d;
@@ -87,19 +97,22 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
+                } else {
+                    this.recordHelper.setFieldStateParam(item.name, item.hidden || false);
                 }
                 return item;
             }, this);
 
             this.fieldList = this.fieldList.filter(function (item) {
                 if (!item.name) return;
-                if (!(item.name in ((this.model.defs || {}).fields) || {})) return;
+                if (!(item.name in (((this.model.defs || {}).fields) || {}))) return;
                 return true;
             }, this);
+
+            this.createFields();
         },
 
-        setup: function () {
-
+        setupFields: function () {
         },
 
         getButtonList: function () {

@@ -89,9 +89,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             this.panelList = this.options.panelList || this.panelList;
             this.scope = this.options.model.name;
 
-            this.panelStateMap = this.options.panelStateMap;
-            this.fieldStateMap = this.options.fieldStateMap;
-
             this.recordHelper = this.options.recordHelper;
 
             this.panelList = _.clone(this.panelList);
@@ -108,7 +105,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         },
 
         setupPanels: function () {
-
         },
 
         setup: function () {
@@ -137,10 +133,16 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 var item = Espo.Utils.clone(p);
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                } else {
+                    this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
                 }
                 return item;
             }, this);
 
+            this.setupPanelViews();
+        },
+
+        setupPanelViews: function () {
             this.panelList.forEach(function (p) {
                 var o = {
                     model: this.options.model,
@@ -149,7 +151,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                     inlineEditDisabled: this.inlineEditDisabled,
                     mode: this.mode,
                     recordHelper: this.recordHelper,
-                    defs: p
+                    defs: p,
+                    disabled: p.hidden || false
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {
@@ -217,6 +220,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 var view = this.getView(name);
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
+                    view.disabled = false;
                 }
                 if (callback) {
                     callback.call(this);
@@ -246,6 +250,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 var view = this.getView(name);
                 if (view) {
                     view.$el.closest('.panel').addClass('hidden');
+                    view.disabled = true;
                 }
                 if (callback) {
                     callback.call(this);

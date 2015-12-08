@@ -42,15 +42,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
         fieldList: null,
 
-        defaultFieldStates: {
-            hidden: false,
-            readOnly: false
-        },
-
-        defaultPanelStates: {
-            hidden: false
-        },
-
         hideField: function (name) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
@@ -206,7 +197,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 throw new Error('Model has not been injected into record view.');
             }
 
-            this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
+            this.recordHelper = new ViewRecordHelper();
 
             this.on('remove', function () {
                 if (this.isChanged) {

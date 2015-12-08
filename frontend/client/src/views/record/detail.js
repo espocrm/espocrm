@@ -91,6 +91,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         returnDispatchParams: null,
 
+        middleView: 'views/record/detail-middle',
+
         sideView: 'views/record/detail-side',
 
         bottomView: 'views/record/detail-bottom',
@@ -164,9 +166,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var middleView = this.getView('middle');
             if (middleView) {
-                if (this.isRendered()) {
-                    middleView.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
-                }
+                middleView.showPanel(name);
             }
 
             var bottomView = this.getView('bottom');
@@ -189,9 +189,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var middleView = this.getView('middle');
             if (middleView) {
-                if (this.isRendered()) {
-                    middleView.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
-                }
+                middleView.hidePanel(name);
             }
 
             var bottomView = this.getView('bottom');
@@ -569,7 +567,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.build();
 
-
             if (this.duplicateAction) {
                 if (this.getAcl().checkModel(this.model, 'edit')) {
                     this.dropdownItemList.push({
@@ -849,26 +846,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        build: function (callback) {
-            this.waitForView('middle');
-
-            var self = this;
-
+        createSideView: function () {
             var el = this.options.el || '#' + (this.id);
+            this.createView('side', this.sideView, {
+                model: this.model,
+                el: el + ' .side',
+                type: this.type,
+                readOnly: this.readOnly,
+                inlineEditDisabled: this.inlineEditDisabled,
+                recordHelper: this.recordHelper
+            });
+        },
 
-            if (this.sideView) {
-                this.createView('side', this.sideView, {
-                    model: this.model,
-                    el: el + ' .side',
-                    type: this.type,
-                    readOnly: this.readOnly,
-                    inlineEditDisabled: this.inlineEditDisabled,
-                    recordHelper: this.recordHelper
-                });
-            }
-
+        createMiddleView: function (callback) {
+            var el = this.options.el || '#' + (this.id);
+            this.waitForView('middle');
             this.getGridLayout(function (layout) {
-                this.createView('middle', 'Base', {
+                this.createView('middle', this.middleView, {
                     model: this.model,
                     _layout: layout,
                     el: el + ' .middle',
@@ -876,30 +870,40 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         model: this.model,
                         columnCount: this.columnCount
                     },
-                    data: function () {
-                        return {
-                            hiddenPanels: this.recordHelper.getHiddenPanels(),
-                            hiddenFields: this.recordHelper.getHiddenFields()
-                        }
-                    }.bind(this)
+                    recordHelper: this.recordHelper
                 }, callback);
             }.bind(this));
+        },
 
+        createBottomView: function () {
+            var el = this.options.el || '#' + (this.id);
+            this.createView('bottom', this.bottomView, {
+                model: this.model,
+                el: el + ' .bottom',
+                notToRender: true,
+                readOnly: this.readOnly,
+                inlineEditDisabled: this.inlineEditDisabled,
+                recordHelper: this.recordHelper
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this, false);
+        },
+
+        build: function (callback) {
+            if (this.sideView) {
+                this.createSideView();
+            }
+
+            if (this.middleView) {
+                this.createMiddleView(callback);
+            }
 
             if (this.bottomView) {
                 this.once('after:render', function () {
-                    this.createView('bottom', this.bottomView, {
-                        model: this.model,
-                        el: el + ' .bottom',
-                        notToRender: true,
-                        readOnly: this.readOnly,
-                        inlineEditDisabled: this.inlineEditDisabled,
-                        recordHelper: this.recordHelper
-                    }, function (view) {
-                        view.render();
-                    }, this, false);
+                    this.createBottomView();
                 }, this);
-
             }
         },
 

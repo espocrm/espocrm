@@ -64,18 +64,40 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
+        disabled: false,
+
         init: function () {
             this.panelName = this.options.panelName;
             this.defs = this.options.defs || {};
             this.recordHelper = this.options.recordHelper;
 
+            if ('disabled' in this.options) {
+                this.disabled = this.options.disabled;
+            }
+
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
+
+            this.mode = this.options.mode || this.mode;
+
+            if (!this.readOnly) {
+                if ('readOnly' in this.options) {
+                    this.readOnly = this.options.readOnly;
+                }
+            }
+
+            if (!this.inlineEditDisabled) {
+                if ('inlineEditDisabled' in this.options) {
+                    this.inlineEditDisabled = this.options.inlineEditDisabled;
+                }
+            }
         },
 
         setup: function () {
+            this.setupFields();
+
             this.fieldList = this.fieldList.map(function (d) {
                 var item = d;
                 if (typeof item !== 'object') {
@@ -87,28 +109,23 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
+                } else {
+                    this.recordHelper.setFieldStateParam(item.name, item.hidden || false);
                 }
                 return item;
             }, this);
 
             this.fieldList = this.fieldList.filter(function (item) {
                 if (!item.name) return;
-                if (!(item.name in ((this.model.defs || {}).fields) || {})) return;
+                if (!(item.name in (((this.model.defs || {}).fields) || {}))) return;
                 return true;
             }, this);
 
-            this.mode = this.options.mode || this.mode;
-            if (!this.readOnly) {
-                if ('readOnly' in this.options) {
-                    this.readOnly = this.options.readOnly;
-                }
-            }
-            if (!this.inlineEditDisabled) {
-                if ('inlineEditDisabled' in this.options) {
-                    this.inlineEditDisabled = this.options.inlineEditDisabled;
-                }
-            }
+
             this.createFields();
+        },
+
+        setupFields: function () {
         },
 
         createField: function (field, readOnly, viewName) {

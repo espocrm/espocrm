@@ -45,6 +45,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             this.link = this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
