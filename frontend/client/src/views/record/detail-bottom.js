@@ -73,6 +73,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             }, this);
             if (!isFound) return;
 
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             if (this.isRendered()) {
                 var view = this.getView(name);
                 if (view) {
@@ -100,6 +102,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             }, this);
             if (!isFound) return;
 
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
             if (this.isRendered()) {
                 var view = this.getView(name);
                 if (view) {
@@ -119,6 +123,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
         setupPanels: function () {
             var scope = this.scope;
+
+            this.recordHelper = this.options.recordHelper;
 
             var panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.mode) || []);
 
@@ -145,8 +151,12 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 }
             }
 
-            panelList.forEach(function (p) {
-                this.panelList.push(p);
+            this.panelList = this.panelList.map(function (p) {
+                var item = Espo.Utils.clone(p);
+                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                }
+                return item;
             }, this);
         },
 
@@ -156,9 +166,10 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 this.createView(name, p.view, {
                     model: this.model,
                     panelName: name,
-                    el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(name),
+                    el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
                     defs: p,
-                    mode: this.mode
+                    mode: this.mode,
+                    recordHelper: this.recordHelper
                 }, function (view) {
                     if ('getActionList' in view) {
                         p.actionList = this.filterActions(view.getActionList());
@@ -171,7 +182,7 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     } else {
                         p.title = view.title;
                     }
-                }.bind(this));
+                }, this);
             }, this);
         },
 
@@ -179,24 +190,43 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             this.panelList = [];
             this.scope = this.model.name;
 
-            this.setupPanels();
+            this.wait(true);
 
-            var panelList = [];
-            this.panelList.forEach(function (p) {
-                if (p.aclScope) {
-                    if (!this.getAcl().checkScope(p.aclScope)) {
-                        return;
+            var proceed = function () {
+                this.setupPanels();
+
+                this.panelList = this.panelList.filter(function (p) {
+                    if (p.aclScope) {
+                        if (!this.getAcl().checkScope(p.aclScope)) {
+                            return;
+                        }
                     }
-                }
-                panelList.push(p);
-            }, this);
-            this.panelList = panelList;
+                    return true;
+                }, this);
 
-            this.setupPanelViews();
+                if (this.relationshipPanels) {
+                    this.setupRelationshipPanels();
+                }
+
+                this.setupPanelViews();
+                this.wait(false);
+            }.bind(this);
+
 
             if (this.relationshipPanels) {
-                this.setupRelationshipPanels();
+                this.loadRelationshipsLayout(function () {
+                    proceed();
+                });
+            } else {
+                proceed();
             }
+        },
+
+        loadRelationshipsLayout: function (callback) {
+            this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
+                this.relationshipsLayout = layout;
+                callback.call(this);
+            }.bind(this));
         },
 
         setupRelationshipPanels: function () {
@@ -204,59 +234,43 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
             var scopesDefs = this.getMetadata().get('scopes') || {};
 
-            this.wait(true);
-            this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
-                var panelList = layout;
-                panelList.forEach(function (item) {
-                    var p;
-                    if (typeof item == 'string' || item instanceof String) {
-                        p = {name: item};
-                    } else {
-                        p = item || {};
-                    }
-                    if (!p.name) {
-                        return;
-                    }
+            var panelList = this.relationshipsLayout;
+            panelList.forEach(function (item) {
+                var p;
+                if (typeof item == 'string' || item instanceof String) {
+                    p = {name: item};
+                } else {
+                    p = item || {};
+                }
+                if (!p.name) {
+                    return;
+                }
 
-                    var name = p.name;
+                var name = p.name;
 
-                    var links = (this.model.defs || {}).links || {};
-                    if (!(name in links)) {
-                        return;
-                    }
+                var links = (this.model.defs || {}).links || {};
+                if (!(name in links)) {
+                    return;
+                }
 
-                    var foreignScope = links[name].entity;
+                var foreignScope = links[name].entity;
 
-                    if ((scopesDefs[foreignScope] || {}).disabled) return;
+                if ((scopesDefs[foreignScope] || {}).disabled) return;
 
-                    if (!this.getAcl().check(foreignScope, 'read')) {
-                        return;
-                    }
+                if (!this.getAcl().check(foreignScope, 'read')) {
+                    return;
+                }
 
-                    this.panelList.push(p);
+                p.view = 'views/record/panels/relationship';
 
-                    var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
+                var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
+                defs = Espo.Utils.clone(defs);
 
-                    var viewName = defs.view || 'views/record/panels/relationship';
+                p = _.extend(p, defs);
 
-                    this.createView(name, viewName, {
-                        model: this.model,
-                        panelName: name,
-                        defs: defs,
-                        el: this.options.el + ' .panel-body-' + Espo.Utils.toDom(p.name)
-                    }, function (view) {
-                        if ('getActionList' in view) {
-                            p.actionList = this.filterActions(view.getActionList());
-                        }
-                        if ('getButtonList' in view) {
-                            p.buttonList = this.filterActions(view.getButtonList());
-                        }
-                        p.title = view.title;
-                    }.bind(this));
-                }.bind(this));
+                this.panelList.push(p);
+            }, this);
 
-                this.wait(false);
-            }.bind(this));
         },
 
 
@@ -291,8 +305,7 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 }
             }, this);
             return data;
-        },
-
+        }
     });
 });
 

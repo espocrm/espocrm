@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.Panels.DefaultSide', 'Views.Record.Panels.Side', function (Dep) {
+Espo.define('views/record/panels/default-side', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record.panels.default-side',
+        template: 'record/panels/default-side',
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -39,7 +39,7 @@ Espo.define('Views.Record.Panels.DefaultSide', 'Views.Record.Panels.Side', funct
             this.createField('createdBy', true);
             this.createField('createdAt', true);
             if (this.getMetadata().get('scopes.' + this.model.name + '.stream')) {
-                this.createField('followers', true, 'Fields.Followers');
+                this.createField('followers', true, 'views/fields/followers');
             }
         },
     });

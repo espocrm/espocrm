@@ -37,7 +37,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         data: function () {
             return {
                 fieldList: this.getFieldList(),
-                dates: this.dates,
+                hiddenFields: this.recordHelper.getHiddenFields()
             };
         },
 
@@ -67,14 +67,36 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         init: function () {
             this.panelName = this.options.panelName;
             this.defs = this.options.defs || {};
-        },
+            this.recordHelper = this.options.recordHelper;
 
-        setup: function () {
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
-            this.dates = ('dates' in this.options) ? this.options.dates : false;
+        },
+
+        setup: function () {
+            this.fieldList = this.fieldList.map(function (d) {
+                var item = d;
+                if (typeof item !== 'object') {
+                    item = {
+                        name: item
+                    }
+                }
+                item = Espo.Utils.clone(item);
+
+                if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
+                    item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
+                }
+                return item;
+            }, this);
+
+            this.fieldList = this.fieldList.filter(function (item) {
+                if (!item.name) return;
+                if (!(item.name in ((this.model.defs || {}).fields) || {})) return;
+                return true;
+            }, this);
+
             this.mode = this.options.mode || this.mode;
             if (!this.readOnly) {
                 if ('readOnly' in this.options) {
@@ -87,22 +109,6 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 }
             }
             this.createFields();
-        },
-
-        getFieldList: function () {
-            var fieldList = [];
-            this.fieldList.forEach(function (item) {
-                var field;
-                if (typeof item === 'object') {
-                    field = item.name;
-                } else {
-                   field = item;
-                }
-                if (field in this.model.defs.fields) {
-                    fieldList.push(field);
-                }
-            }, this);
-            return fieldList;
         },
 
         createField: function (field, readOnly, viewName) {
@@ -129,11 +135,21 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 o.inlineEditDisabled = true;
             }
 
+            if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
+                o.disabled = true;
+            }
+            if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
+                o.readOnly = true;
+            }
+            if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
+                o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
+            }
+
             this.createView(field, viewName, o);
         },
 
         createFields: function () {
-            this.fieldList.forEach(function (item) {
+            this.getFieldList().forEach(function (item) {
                 var view = null;
                 var field;
                 var readOnly = null;
@@ -157,10 +173,23 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         getFields: function () {
             var fields = {};
 
-            this.getFieldList().forEach(function (name) {
-                fields[name] = this.getView(name);
+            this.getFieldList().forEach(function (item) {
+                if (this.hasView(item.name)) {
+                    fields[item.name] = this.getView(item.name);
+                }
             }, this);
             return fields;
+        },
+
+        getFieldList: function () {
+            return this.fieldList.map(function (item) {
+                if (typeof item !== 'object') {
+                    return {
+                        name: item
+                    };
+                }
+                return item;
+            }, this);
         },
 
         getActionList: function () {

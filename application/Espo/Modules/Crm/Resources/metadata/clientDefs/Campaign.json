@@ -24,14 +24,14 @@
          {
             "name":"statistics",
             "label":"Statistics",
-            "view":"Crm:Campaign.Record.Panels.Statistics",
+            "view":"crm:views/campaign/record/panels/statistics",
             "hidden": false
          }
       ]
     },
     "relationshipPanels": {
       "campaignLogRecords": {
-        "view": "Crm:Campaign.Record.Panels.CampaignLogRecords",
+        "view": "crm:views/campaign/record/panels/campaign-log-records",
         "layout": "listForCampaign",
         "rowActionsView": "views/record/row-actions/remove-only",
         "select": false,

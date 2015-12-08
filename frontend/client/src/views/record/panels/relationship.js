@@ -40,14 +40,18 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         readOnly: false,
 
+        init: function () {
+            Dep.prototype.init.call(this);
+        },
+
         setup: function () {
             this.link = this.panelName;
+
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.scope = this.scope || this.model.defs.links[this.link].entity;
-
             this.title = this.translate(this.link, 'links', this.model.name);
+            this.scope = this.scope || this.model.defs.links[this.link].entity;
 
             var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
@@ -65,9 +69,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.filterList && this.filterList.length) {
                 this.filter = this.getStoredFilter();
             }
-
-            this.buttonList = _.clone(this.defs.buttonList || []);
-            this.actionList = _.clone(this.defs.actionList || []);
 
             if (this.defs.create) {
                 if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {

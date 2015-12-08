@@ -1,5 +1,5 @@
 {{#each panelList}}
-<div class="panel panel-default panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-panel-name="{{name}}">
+<div class="panel panel-default panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-name="{{name}}" data-name="{{name}}">
     {{#if label}}
     <div class="panel-heading">
         <div class="pull-right btn-group">
@@ -30,7 +30,7 @@
         </h4>
     </div>
     {{/if}}
-    <div class="panel-body panel-body-{{name}}">
+    <div class="panel-body" data-name="{{name}}">
         {{{var name ../this}}}
     </div>
 </div>

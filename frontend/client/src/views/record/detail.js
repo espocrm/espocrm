@@ -25,7 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/record/detail', 'views/record/base', function (Dep) {
+Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -160,12 +160,12 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         showPanel: function (name) {
-            this.setPanelStateParam(name, 'hidden', false);
-            delete this.hiddenPanels[name];
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             var middleView = this.getView('middle');
             if (middleView) {
                 if (this.isRendered()) {
-                    middleView.$el.find('.panel[data-panel-name="'+name+'"]').removeClass('hidden');
+                    middleView.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
                 }
             }
 
@@ -176,7 +176,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 }
             }
 
-            var sideView = this.getView('sideView');
+            var sideView = this.getView('side');
             if (sideView) {
                 if ('showPanel' in sideView) {
                     sideView.showPanel(name);
@@ -185,13 +185,12 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
         },
 
         hidePanel: function (name) {
-            this.setPanelStateParam(name, 'hidden', true);
-            this.hiddenPanels[name] = true;
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             var middleView = this.getView('middle');
             if (middleView) {
                 if (this.isRendered()) {
-                    middleView.$el.find('.panel[data-panel-name="'+name+'"]').addClass('hidden');
+                    middleView.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
                 }
             }
 
@@ -202,7 +201,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 }
             }
 
-            var sideView = this.getView('sideView');
+            var sideView = this.getView('side');
             if (sideView) {
                 if ('hidePanel' in sideView) {
                     sideView.hidePanel(name);
@@ -466,11 +465,7 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                 throw new Error('Model has not been injected into record view.');
             }
 
-            this.fieldStateMap = {};
-            this.panelStateMap = {};
-
-            this.hiddenPanels = {};
-            this.hiddenFields = {};
+            this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             var collection = this.model.collection;
             if (collection) {
@@ -794,15 +789,15 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                             }
                         }
 
-                        if (this.getFieldStateParam(name, 'hidden')) {
+                        if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
                             o.disabled = true;
                         }
-                        if (this.getFieldStateParam(name, 'readOnly')) {
+                        if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
                             o.readOnly = true;
                         }
-                        if (this.getFieldStateParam(name, 'required') !== null) {
+                        if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                             o.defs.params = o.defs.params || {};
-                            o.defs.params.required = this.getFieldStateParam(name, 'required');
+                            o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
                         }
 
                         var cell = {
@@ -867,7 +862,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     el: el + ' .side',
                     type: this.type,
                     readOnly: this.readOnly,
-                    inlineEditDisabled: this.inlineEditDisabled
+                    inlineEditDisabled: this.inlineEditDisabled,
+                    recordHelper: this.recordHelper
                 });
             }
 
@@ -882,8 +878,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                     },
                     data: function () {
                         return {
-                            hiddenPanels: this.hiddenPanels,
-                            hiddenFields: this.hiddenFields
+                            hiddenPanels: this.recordHelper.getHiddenPanels(),
+                            hiddenFields: this.recordHelper.getHiddenFields()
                         }
                     }.bind(this)
                 }, callback);
@@ -897,7 +893,8 @@ Espo.define('views/record/detail', 'views/record/base', function (Dep) {
                         el: el + ' .bottom',
                         notToRender: true,
                         readOnly: this.readOnly,
-                        inlineEditDisabled: this.inlineEditDisabled
+                        inlineEditDisabled: this.inlineEditDisabled,
+                        recordHelper: this.recordHelper
                     }, function (view) {
                         view.render();
                     }, this, false);

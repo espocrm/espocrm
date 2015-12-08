@@ -60,7 +60,7 @@ Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.
             this.listenTo(this.model, 'change:type', function () {
             	this.setupFieldList();
             	if (this.isRendered()) {
-            		this.render();
+            		this.reRender();
             	}
             }, this);
     	},

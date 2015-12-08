@@ -88,6 +88,12 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         init: function () {
             this.panelList = this.options.panelList || this.panelList;
             this.scope = this.options.model.name;
+
+            this.panelStateMap = this.options.panelStateMap;
+            this.fieldStateMap = this.options.fieldStateMap;
+
+            this.recordHelper = this.options.recordHelper;
+
             this.panelList = _.clone(this.panelList);
             if (!this.readOnly) {
                 if ('readOnly' in this.options)    {
@@ -118,24 +124,31 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 this.panelList.push(panel);
             }, this);
 
-            var panelList = [];
-            this.panelList.forEach(function (p) {
+            this.panelList = this.panelList.filter(function (p) {
                 if (p.aclScope) {
                     if (!this.getAcl().checkScope(p.aclScope)) {
                         return;
                     }
                 }
-                panelList.push(p);
+                return true;
             }, this);
-            this.panelList = panelList;
+
+            this.panelList = this.panelList.map(function (p) {
+                var item = Espo.Utils.clone(p);
+                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                }
+                return item;
+            }, this);
 
             this.panelList.forEach(function (p) {
                 var o = {
                     model: this.options.model,
-                    el: this.options.el + ' .panel-body-' + p.name,
+                    el: this.options.el + ' .panel[data-name="' + p.name + '"] > .panel-body',
                     readOnly: this.readOnly,
                     inlineEditDisabled: this.inlineEditDisabled,
                     mode: this.mode,
+                    recordHelper: this.recordHelper,
                     defs: p
                 };
                 o = _.extend(o, p.options);
@@ -198,6 +211,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             }, this);
             if (!isFound) return;
 
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             if (this.isRendered()) {
                 var view = this.getView(name);
                 if (view) {
@@ -224,6 +239,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
             }, this);
             if (!isFound) return;
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             if (this.isRendered()) {
                 var view = this.getView(name);
