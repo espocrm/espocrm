@@ -86,7 +86,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             if (!companyLogoId) {
                 return this.getThemeManager().getParam('logo') || 'client/img/logo.png';
             }
-            return '?entryPoint=LogoImage';
+            return '?entryPoint=LogoImage&t=' + companyLogoId;
         },
 
         setup: function () {
