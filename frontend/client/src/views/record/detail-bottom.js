@@ -307,15 +307,19 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             return filtered;
         },
 
-        getFields: function () {
+        getFieldViews: function () {
             var fields = {};
             this.panelList.forEach(function (p) {
                 var panelView = this.getView(p.name);
-                if (!panelView.disabled && 'getFields' in panelView) {
-                    fields = _.extend(fields, panelView.getFields());
+                if (!panelView.disabled && 'getFieldViews' in panelView) {
+                    fields = _.extend(fields, panelView.getFieldViews());
                 }
             }, this);
             return fields;
+        },
+
+        getFields: function () {
+            return this.getFieldViews();
         },
 
         fetch: function () {

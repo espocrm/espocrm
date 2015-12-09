@@ -165,12 +165,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             }
         },
 
-
         setConfirmLeaveOut: function (value) {
             this.getRouter().confirmLeaveOut = value;
         },
 
-        getFields: function () {
+        getFieldViews: function () {
             var fields = {};
             this.fieldList.forEach(function (item) {
                 var view = this.getFieldView(item);
@@ -181,12 +180,16 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             return fields;
         },
 
-        getFieldViews: function () {
-            return this.getFields();
+        getFields: function () {
+            return this.getFieldViews();
         },
 
         getFieldView: function (name) {
             return this.getView(name) || null;
+        },
+
+        getField: function (name) {
+            return this.getFieldView(name);
         },
 
         data: function () {

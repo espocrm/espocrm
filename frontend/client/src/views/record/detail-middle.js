@@ -54,6 +54,14 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                 this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
+        },
+
+        getFields: function () {
+            return this.getFieldViews();
+        },
+
+        getFieldViews: function () {
+            return Espo.Utils.clone(this.nestedViews);
         }
     });
 });

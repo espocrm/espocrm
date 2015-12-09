@@ -190,6 +190,10 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         },
 
         getFields: function () {
+            return this.getFields();
+        },
+
+        getFieldViews: function () {
             var fields = {};
 
             this.getFieldList().forEach(function (item) {

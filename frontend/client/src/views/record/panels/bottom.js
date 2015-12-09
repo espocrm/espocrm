@@ -146,7 +146,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             }.bind(this));
         },
 
-        getFields: function () {
+        getFieldViews: function () {
             var fields = {};
 
             this.getFieldList().forEach(function (item) {
@@ -155,6 +155,10 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 }
             }, this);
             return fields;
+        },
+
+        getFields: function () {
+            return this.getFields();
         },
 
         getFieldList: function () {

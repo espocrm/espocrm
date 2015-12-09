@@ -294,7 +294,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }.bind(this));
 
-            var fields = this.getFields();
+            var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
             for (var field in fields) {
@@ -337,7 +337,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
-            var fields = this.getFields();
+            var fields = this.getFieldViews();
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
@@ -356,7 +356,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
 
-            var fields = this.getFields();
+            var fields = this.getFieldViews();
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (fieldView.mode != 'detail') {
@@ -395,13 +395,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        getFields: function () {
-            var fields = _.clone(this.getView('middle').nestedViews);
+        getFieldViews: function () {
+            var fields = {};
+
+            if (this.hasView('middle')) {
+                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews()));
+            }
             if (this.hasView('side')) {
-                _.extend(fields, this.getView('side').getFields());
+                _.extend(fields, this.getView('side').getFieldViews());
             }
             if (this.hasView('bottom')) {
-                _.extend(fields, this.getView('bottom').getFields());
+                _.extend(fields, this.getView('bottom').getFieldViews());
             }
             return fields;
         },
@@ -409,13 +413,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = this.getView('middle').getView(name) || null;
+                view = (this.getView('middle').getFieldViews() || {})[name];
             }
             if (!view && this.hasView('side')) {
-                view = (this.getView('side').getFields() || {})[name];
+                view = (this.getView('side').getFieldViews() || {})[name];
             }
             if (!view && this.hasView('bottom')) {
-                view = (this.getView('bottom').getFields() || {})[name];
+                view = (this.getView('bottom').getFieldViews() || {})[name];
             }
             return view || null;
         },
