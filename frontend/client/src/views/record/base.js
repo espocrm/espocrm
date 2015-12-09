@@ -48,9 +48,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
             var processHtml = function () {
-                var $field = this.$el.find('div.field[data-name="' + name + '"]');
-                var $label = this.$el.find('label.control-label[data-name="' + name + '"]');
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var fieldView = this.getFieldView(name);
+                $field = fieldView.$el;
+                $cell = $field.closest('.cell[data-name="' + name + '"]');
+                $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.addClass('hidden');
                 $label.addClass('hidden');
@@ -60,7 +61,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 processHtml();
             } else {
                 this.once('after:render', function () {
-                    //processHtml();
+                    processHtml();
                 }, this);
             }
 
@@ -74,9 +75,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
             var processHtml = function () {
-                var $field = this.$el.find('div.field[data-name="' + name + '"]');
-                var $label = this.$el.find('label.control-label[data-name="' + name + '"]');
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var fieldView = this.getFieldView(name);
+                $field = fieldView.$el;
+                $cell = $field.closest('.cell[data-name="' + name + '"]');
+                $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.removeClass('hidden');
                 $label.removeClass('hidden');
@@ -87,7 +89,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 processHtml();
             } else {
                 this.once('after:render', function () {
-                    //processHtml();
+                    processHtml();
                 }, this);
             }
 
@@ -447,43 +449,43 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 return;
             }
 
-            var fields = data.fields || [];
-            var panels = data.panels || [];
+            var fieldList = data.fieldList || data.fields || [];
+            var panelList = data.panelList || data.panels || [];
 
             switch (action) {
                 case 'hide':
-                    fields.forEach(function (item) {
+                    fieldList.forEach(function (item) {
                         this.hideField(item);
                     }, this);
-                    panels.forEach(function (item) {
+                    panelList.forEach(function (item) {
                         this.hidePanel(item);
                     }, this);
                     break;
                 case 'show':
-                    fields.forEach(function (item) {
+                    fieldList.forEach(function (item) {
                         this.showField(item);
                     }, this);
-                    panels.forEach(function (item) {
+                    panelList.forEach(function (item) {
                         this.showPanel(item);
                     }, this);
                     break;
                 case 'setRequired':
-                    fields.forEach(function (field) {
+                    fieldList.forEach(function (field) {
                         this.setFieldRequired(field);
                     }, this);
                     break;
                 case 'setNotRequired':
-                    fields.forEach(function (field) {
+                    fieldList.forEach(function (field) {
                         this.setFieldNotRequired(field);
                     }, this);
                     break;
                 case 'setReadOnly':
-                    fields.forEach(function (field) {
+                    fieldList.forEach(function (field) {
                         this.setFieldReadOnly(field);
                     }, this);
                     break;
                 case 'setNotReadOnly':
-                    fields.forEach(function (field) {
+                    fieldList.forEach(function (field) {
                         this.setFieldNotReadOnly(field);
                     }, this);
                     break;
