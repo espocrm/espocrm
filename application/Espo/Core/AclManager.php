@@ -75,7 +75,7 @@ class AclManager
             }
 
             if (class_exists($className)) {
-                $acl = new $className();
+                $acl = new $className($scope);
                 $dependencies = $acl->getDependencyList();
                 foreach ($dependencies as $name) {
                     $acl->inject($name, $this->container->get($name));
@@ -143,25 +143,16 @@ class AclManager
         return $this->getImplementation($scope)->checkReadOnlyOwn($user, $data);
     }
 
-    public function check(User $user, $subject, $action = null, $isOwner = null, $inTeam = null)
+    public function check(User $user, $subject, $action = null)
     {
         if ($user->isAdmin()) {
             return true;
         }
         if (is_string($subject)) {
-            return $this->checkScope($user, $subject, $action, $isOwner, $inTeam);
+            return $this->checkScope($user, $subject, $action);
         } else {
             $entity = $subject;
             if ($entity instanceof Entity) {
-                $entityType = $entity->getEntityType();
-
-                $impl = $this->getImplementation($entityType);
-                $methodName = 'checkEntity' . ucfirst($action);
-                if (method_exists($impl, $methodName)) {
-                    $data = $this->getTable($user)->getScopeData($entityType);
-                    return $impl->$methodName($user, $entity, $data);
-                }
-
                 return $this->checkEntity($user, $entity, $action);
             }
         }
@@ -169,20 +160,34 @@ class AclManager
 
     public function checkEntity(User $user, Entity $entity, $action)
     {
-        if ($user->isAdmin()) {
-            return true;
+        $scope = $entity->getEntityType();
+
+        $data = $this->getTable($user)->getScopeData($scope);
+
+        $impl = $this->getImplementation($scope);
+
+        $methodName = 'checkEntity' . ucfirst($action);
+        if (method_exists($impl, $methodName)) {
+            return $impl->$methodName($user, $entity, $data);
         }
-        $data = $this->getTable($user)->getScopeData($entity->getEntityType());
-        return $this->getImplementation($entity->getEntityType())->checkEntity($user, $entity, $data, $action);
+
+        return $impl->checkEntity($user, $entity, $data, $action);
     }
 
-    public function checkScope(User $user, $scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
+    public function checkIsOwner(User $user, Entity $entity)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        return $this->getImplementation($entity->getEntityType())->checkIsOwner($user, $entity);
+    }
+
+    public function checkInTeam(User $user, Entity $entity, $action)
+    {
+        return $this->getImplementation($entity->getEntityType())->checkInTeam($user, $entity);
+    }
+
+    public function checkScope(User $user, $scope, $action = null)
+    {
         $data = $this->getTable($user)->getScopeData($scope);
-        return $this->getImplementation($scope)->checkScope($user, $data, $scope, $action, $isOwner, $inTeam, $entity);
+        return $this->getImplementation($scope)->checkScope($user, $data, $action);
     }
 
     public function checkUser(User $user, $permission, User $entity)

@@ -79,19 +79,34 @@ class Acl
         return $this->getAclManager()->checkReadOnlyOwn($this->getUser(), $scope);
     }
 
-    public function check($subject, $action = null, $isOwner = null, $inTeam = null)
+    public function check($subject, $action = null)
     {
-        return $this->getAclManager()->check($this->getUser(), $subject, $action, $isOwner, $inTeam) ;
+        return $this->getAclManager()->check($this->getUser(), $subject, $action) ;
     }
 
-    public function checkScope($scope, $action = null, $isOwner = null, $inTeam = null, $entity = null)
+    public function checkScope($scope, $action = null)
     {
-        return $this->getAclManager()->checkScope($this->getUser(), $scope, $action, $isOwner, $inTeam, $entity) ;
+        return $this->getAclManager()->checkScope($this->getUser(), $scope, $action) ;
+    }
+
+    public function checkEntity(Entity $entity, $action)
+    {
+        return $this->getAclManager()->checkEntity($this->getUser(), $entity, $action);
     }
 
     public function checkUser($permission, User $entity)
     {
         return $this->getAclManager()->checkUser($this->getUser(), $permission, $entity);
+    }
+
+    public function checkIsOwner(Entity $entity)
+    {
+        return $this->getAclManager()->checkUser($this->getUser(), $entity);
+    }
+
+    public function checkInTeam(Entity $entity)
+    {
+        return $this->getAclManager()->checkUser($this->getUser(), $entity);
     }
 }
 

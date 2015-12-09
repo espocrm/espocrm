@@ -42,6 +42,8 @@ class Base implements Injectable
         'aclManager'
     );
 
+    protected $scope;
+
     protected $injections = array();
 
     public function inject($name, $object)
@@ -49,9 +51,10 @@ class Base implements Injectable
         $this->injections[$name] = $object;
     }
 
-    public function __construct()
+    public function __construct($scope)
     {
         $this->init();
+        $this->scope = $scope;
     }
 
     protected function init()
@@ -106,11 +109,18 @@ class Base implements Injectable
 
     public function checkEntity(User $user, Entity $entity, $data, $action)
     {
-        return $this->checkScope($user, $data, $entity->getEntityType(), $action, null, null, $entity);
+        if ($user->isAdmin()) {
+            return true;
+        }
+        return $this->checkScope($user, $data, $action, null, null, $entity);
     }
 
-    public function checkScope(User $user, $data, $scope, $action = null, $isOwner = null, $inTeam = null, Entity $entity = null)
+    public function checkScope(User $user, $data, $action = null, $isOwner = null, $inTeam = null, Entity $entity = null)
     {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         if (is_null($data)) {
             return false;
         }
@@ -205,6 +215,10 @@ class Base implements Injectable
 
     public function checkEntityDelete(User $user, Entity $entity, $data)
     {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         $result = $this->checkEntity($user, $entity, $data, 'delete');
         if (!$result) {
             if (is_array($data)) {

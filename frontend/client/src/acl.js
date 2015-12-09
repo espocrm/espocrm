@@ -37,131 +37,93 @@
 
 Espo.define('acl', [], function () {
 
-    var Acl = function (user) {
-        this.data = {
-            table: {}
-        };
+    var Acl = function (user, scope) {
         this.user = user || null;
+        this.scope = scope;
     }
 
     _.extend(Acl.prototype, {
 
-        data: null,
-
         user: null,
 
-        set: function (data) {
-            data = data || {};
-            this.data = data;
-            this.data.table = this.data.table || {};
+        getUser: function () {
+            return this.user;
         },
 
-        get: function (name) {
-            if (this.user.isAdmin()) {
-                return true;
-            }
-            return this.data[name] || null;
-        },
-
-        check: function (scope, action, isOwner, inTeam, precise) {
-            if (this.user.isAdmin()) {
+        checkScope: function (data, action, precise, isOwner, inTeam) {
+            if (this.getUser().isAdmin()) {
                 return true;
             }
 
-            if (scope in this.data.table) {
-                if (this.data.table[scope] === false) {
-                    return false;
-                }
-                if (this.data.table[scope] === true) {
-                    return true;
-                }
-                if (typeof this.data.table[scope] === 'string') {
-                    return true;
-                }
+            if (data === false) {
+                return false;
+            }
+            if (data === true) {
+                return true;
+            }
+            if (typeof data === 'string') {
+                return true;
+            }
+            if (data === null) {
+                return true;
+            }
 
-                if (typeof action !== 'undefined') {
-                    if (action in this.data.table[scope]) {
-                        var value = this.data.table[scope][action];
+            action = action || null;
 
-                        if (value === 'all' || value === true) {
-                            return true;
-                        }
+            if (action !== null) {
+                if (action in data) {
+                    var value = data[action];
 
-                        if (action != 'delete' && (value == 'no' || value === false)) {
-                            return false;
-                        }
+                    if (value === 'all' || value === true) {
+                        return true;
+                    }
 
-                        if (typeof isOwner === 'undefined') {
-                            return true;
-                        }
-
-                        if (isOwner && action == 'delete' && value === 'no') {
-                            return this.check(scope, 'edit', isOwner);
-                        }
-
-                        if (!value || value === 'no') {
-                            return false;
-                        }
-
-                        if (isOwner) {
-                            if (value === 'own' || value === 'team') {
-                                return true;
-                            }
-                        }
-
-                        if (value === 'team') {
-                            if (inTeam === null) {
-                                if (precise) {
-                                    return null;
-                                } else {
-                                    return true;
-                                }
-                            } else {
-                                return inTeam;
-                            }
-                        }
-
+                    if (action != 'delete' && (value == 'no' || value === false)) {
                         return false;
                     }
+
+                    if (typeof isOwner === 'undefined') {
+                        return true;
+                    }
+
+                    if (isOwner && action == 'delete' && value === 'no') {
+                        return this.checkScope(data, 'edit', precise, isOwner);
+                    }
+
+                    if (!value || value === 'no') {
+                        return false;
+                    }
+
+                    if (isOwner) {
+                        if (value === 'own' || value === 'team') {
+                            return true;
+                        }
+                    }
+
+                    if (value === 'team') {
+                        if (inTeam === null) {
+                            if (precise) {
+                                return null;
+                            } else {
+                                return true;
+                            }
+                        } else {
+                            return inTeam;
+                        }
+                    }
+
+                    return false;
                 }
-                return true;
             }
             return true;
         },
 
-        checkScope: function (scope, action) {
-            return this.check(scope, action);
-        },
-
-        checkModel: function (model, action, precise) {
-            if (action == 'edit') {
-                if (!model.isEditable()) {
-                    return false;
-                }
-            }
-            if (action == 'delete') {
-                if (!model.isRemovable()) {
-                    return false;
-                }
-            }
-            if (this.user.isAdmin()) {
-                return true;
-            }
-            if (action == 'edit') {
-                if (model.has('isEditable')) {
-                    return model.get('isEditable');
-                }
-            }
-            if (action == 'delete') {
-                if (model.has('isRemovable')) {
-                    return model.get('isRemovable');
-                }
-            }
-            return this.check(model.name, action, this.checkIsOwner(model), this.checkInTeam(model), precise);
+        checkModel: function (model, data, action, precise) {
+            return this.checkScope(data, action, precise, this.checkIsOwner(model), this.checkInTeam(model));
         },
 
         checkIsOwner: function (model) {
-            var result = this.user.id === model.get('assignedUserId') || this.user.id === model.get('createdById');
+            var result = this.getUser().id === model.get('assignedUserId') || this.getUser().id === model.get('createdById');
             if (!result) {
                 if (!model.hasField('assignedUser') && !model.hasField('createdBy')) {
                     return true;
@@ -171,9 +133,9 @@ Espo.define('acl', [], function () {
         },
 
         checkInTeam: function (model) {
-            var userTeamIdList = this.user.getTeamIdList();
+            var userTeamIdList = this.getUser().getTeamIdList();
             if (model.name == 'Team') {
-                return (userTeamIds.indexOf(model.id) != -1);
+                return (userTeamIdList.indexOf(model.id) != -1);
             } else {
                 if (!model.has('teamsIds')) {
                     return null;
@@ -188,50 +150,9 @@ Espo.define('acl', [], function () {
                 return inTeam;
             }
             return false;
-        },
-
-        clear: function () {
-            this.data = {
-                table: {}
-            };
-        },
-
-        checkAssignmentPermission: function (user) {
-            return this.checkPermission('assignmentPermission', user);
-        },
-
-        checkUserPermission: function (user) {
-            return this.checkPermission('userPermission', user);
-        },
-
-        checkPermission: function (permission, user) {
-            var result = false;
-
-            if (this.user.isAdmin()) {
-                result = true;
-            } else {
-                if (this.get(permission) === 'no') {
-                    if (user.id == this.user.id) {
-                        result = true;
-                    }
-                } else if (this.get(permission) === 'team') {
-                    if (user.has('teamsIds')) {
-                        user.get('teamsIds').forEach(function (id) {
-                            if (~(this.user.get('teamsIds') || []).indexOf(id)) {
-                                result = true;
-                            }
-                        }, this);
-                    }
-                } else {
-                    result = true;
-                }
-            }
-            return result;
-
         }
     });
 
     return Acl;
-
 });
 

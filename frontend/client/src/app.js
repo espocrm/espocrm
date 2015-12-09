@@ -29,8 +29,8 @@
 
 Espo.define(
     'app',
-    ['ui', 'utils', 'acl', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager', 'theme-manager'],
-    function (Ui, Utils, Acl, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager) {
+    ['ui', 'utils', 'acl-manager', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager', 'theme-manager'],
+    function (Ui, Utils, AclManager, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager) {
 
     var App = function (options, callback) {
         var options = options || {};
@@ -66,7 +66,7 @@ Espo.define(
             this.user = new User();
             this.preferences = new Preferences();
             this.preferences.settings = this.settings;
-            this.acl = new Acl(this.user);
+            this.acl = new AclManager(this.user);
 
             this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
 
@@ -184,10 +184,10 @@ Espo.define(
             this.trigger('action', params);
 
             this.getController(params.controller, function (controller) {
-                try {
+                //try {
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
-                } catch (e) {
+                /*} catch (e) {
                     switch (e.name) {
                         case 'AccessDenied':
                             this.baseController.error403();
@@ -198,7 +198,7 @@ Espo.define(
                         default:
                             throw e;
                     }
-                }
+                }*/
             }.bind(this));
         },
 
