@@ -38,6 +38,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
         relationshipPanels: true,
 
+        readOnly: false,
+
         data: function () {
             return {
                 panelList: this.panelList
@@ -134,10 +136,10 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         },
 
         setupStreamPanel: function () {
-            var streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+            var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
             if (streamAllowed === null) {
                 this.listenToOnce(this.model, 'sync', function () {
-                    streamAllowed = this.getAcl().checkModel(this.model, 'stream');
+                    streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
                     if (streamAllowed) {
                         this.showPanel('stream', function () {
                             this.getView('stream').collection.fetch();
@@ -166,6 +168,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     defs: p,
                     mode: this.mode,
                     recordHelper: this.recordHelper,
+                    inlineEditDisabled: this.inlineEditDisabled,
+                    readOnly: this.readOnly,
                     disabled: p.hidden || false
                 }, function (view) {
                     if ('getActionList' in view) {
@@ -186,6 +190,10 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         init: function () {
             this.recordHelper = this.options.recordHelper;
             this.scope = this.model.name;
+
+            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+            this.readOnly = this.options.readOnly || this.readOnly;
+            this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
         },
 
         setup: function () {

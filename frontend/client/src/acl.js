@@ -63,7 +63,7 @@ Espo.define('acl', [], function () {
             return this.data[name] || null;
         },
 
-        check: function (scope, action, isOwner, inTeam) {
+        check: function (scope, action, isOwner, inTeam, precise) {
             if (this.user.isAdmin()) {
                 return true;
             }
@@ -111,7 +111,7 @@ Espo.define('acl', [], function () {
 
                         if (value === 'team') {
                             if (inTeam === null) {
-                                if (action === 'stream') {
+                                if (precise) {
                                     return null;
                                 } else {
                                     return true;
@@ -133,7 +133,7 @@ Espo.define('acl', [], function () {
             return this.check(scope, action);
         },
 
-        checkModel: function (model, action) {
+        checkModel: function (model, action, precise) {
             if (action == 'edit') {
                 if (!model.isEditable()) {
                     return false;
@@ -157,7 +157,7 @@ Espo.define('acl', [], function () {
                     return model.get('isRemovable');
                 }
             }
-            return this.check(model.name, action, this.checkIsOwner(model), this.checkInTeam(model));
+            return this.check(model.name, action, this.checkIsOwner(model), this.checkInTeam(model), precise);
         },
 
         checkIsOwner: function (model) {

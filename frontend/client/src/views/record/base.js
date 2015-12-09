@@ -42,6 +42,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
         fieldList: null,
 
+        mode: null,
+
         hideField: function (name) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
@@ -101,11 +103,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             var view = this.getFieldView(name);
             if (view) {
                 if (!view.readOnly) {
-                    view.readOnly = true;
-                    view.setMode('detail');
-                    if (view.isRendered()) {
-                        view.reRender();
-                    }
+                    view.setReadOnly();
                 }
             }
         },
@@ -116,12 +114,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             var view = this.getFieldView(name);
             if (view) {
                 if (view.readOnly) {
-                    view.readOnly = false;
+                    view.setNotReadOnly();
                     if (this.mode == 'edit') {
-                        view.setMode('edit');
-                    }
-                    if (view.isRendered()) {
-                        view.reRender();
+                        if (!view.readOnlyLocked && view.mode == 'detail') {
+                            view.setMode('edit');
+                            if (view.isRendered()) {
+                                view.reRender();
+                            }
+                        }
                     }
                 }
             }
@@ -179,6 +179,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 }
             }, this);
             return fields;
+        },
+
+        getFieldViews: function () {
+            return this.getFields();
         },
 
         getFieldView: function (name) {

@@ -2,17 +2,17 @@
     {{#if buttonsTop}}
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group" role="group">
-        {{#each buttonList}}{{button name scope=../../scope label=label style=style hidden=hidden}}{{/each}}
-        {{#if dropdownItemList}}
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu pull-left">
-            {{#each dropdownItemList}}
-            <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
-            {{/each}}
-        </ul>
-        {{/if}}
+            {{#each buttonList}}{{button name scope=../../scope label=label style=style hidden=hidden}}{{/each}}
+            {{#if dropdownItemList}}
+            <button type="button" class="btn btn-default dropdown-toggle dropdown-item-list-button{{#if dropdownItemListEmpty}} hidden{{/if}}" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-left">
+                {{#each dropdownItemList}}
+                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{translate label scope=../scope}}</a></li>
+                {{/each}}
+            </ul>
+            {{/if}}
         </div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">

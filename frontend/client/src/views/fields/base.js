@@ -87,6 +87,22 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.getCellElement().removeClass('has-error');
         },
 
+        setReadOnly: function () {
+            if (this.readOnlyLocked) return;
+            this.readOnly = true;
+            if (this.mode == 'edit') {
+                this.setMode('detail');
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }
+        },
+
+        setNotReadOnly: function () {
+            if (this.readOnlyLocked) return;
+            this.readOnly = false;
+        },
+
         /**
          * Get label element. Works only after rendered.
          * {jQuery}
@@ -161,37 +177,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.mode = this.options.mode || this.mode;
 
-            if (this.mode == 'edit' || this.mode == 'detail') {
-                var isReadOnlyField = this.model.getFieldParam(this.name, 'readOnly');
-                if (isReadOnlyField) {
-                    this.readOnly = true;
-                } else {
-                    if ('readOnly' in this.params) {
-                        this.readOnly = this.params.readOnly;
-                    } else {
-                        this.readOnly = ('readOnly' in this.options) ? this.options.readOnly : this.readOnly;
-                    }
-                }
-            }
+            this.readOnly = this.readOnly || this.params.readOnly;
+            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+            this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
+            this.readOnly = this.options.readOnly || false;
 
-            if (this.options.readOnlyDisabled) {
-                this.readOnly = false;
-            }
 
-            if (this.options.disabled) {
+           if (this.options.disabled) {
                 this.disabled = true;
             }
 
             if (this.mode == 'edit' && this.readOnly) {
                 this.mode = 'detail';
-            }
-
-            if ('inlineEditDisabled' in this.options) {
-                this.inlineEditDisabled = this.options.inlineEditDisabled;
-            } else {
-                if ('inlineEditDisabled' in this.params) {
-                    this.inlineEditDisabled = this.params.inlineEditDisabled;
-                }
             }
 
             this.setMode(this.mode || 'detail');
@@ -245,44 +242,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.mode == 'detail') {
-                var self = this;
-
-                if (!this.readOnly && !this.inlineEditDisabled) {
-
-                    var initInlineEdit = function () {
-
-                        var $cell = this.getCellElement();
-                        var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="glyphicon glyphicon-pencil"></span></a>');
-
-                        // sometimes field is being re-rendered in this time so need to init once again
-                        if ($cell.size() == 0) {
-                            this.listenToOnce(this, 'after:render', initInlineEdit);
-                            return;
-                        }
-
-                        $cell.prepend($editLink);
-
-                        $editLink.on('click', function () {
-                            this.inlineEdit();
-                        }.bind(this));
-
-                        $cell.on('mouseenter', function (e) {
-                            e.stopPropagation();
-                            if (this.disabled || this.readOnly) {
-                                return;
-                            }
-                            if (this.mode == 'detail') {
-                                $editLink.removeClass('hidden');
-                            }
-                        }.bind(this)).on('mouseleave', function (e) {
-                            e.stopPropagation();
-                            if (this.mode == 'detail') {
-                                $editLink.addClass('hidden');
-                            }
-                        }.bind(this));
-                    }.bind(this);
-
-                    this.listenToOnce(this, 'after:render', initInlineEdit);
+                if (!this.inlineEditDisabled) {
+                    this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
                 }
             }
 
@@ -313,6 +274,37 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        initInlineEdit: function () {
+            var $cell = this.getCellElement();
+            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="glyphicon glyphicon-pencil"></span></a>');
+
+            if ($cell.size() == 0) {
+                this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
+                return;
+            }
+
+            $cell.prepend($editLink);
+
+            $editLink.on('click', function () {
+                this.inlineEdit();
+            }.bind(this));
+
+            $cell.on('mouseenter', function (e) {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode == 'detail') {
+                    $editLink.removeClass('hidden');
+                }
+            }.bind(this)).on('mouseleave', function (e) {
+                e.stopPropagation();
+                if (this.mode == 'detail') {
+                    $editLink.addClass('hidden');
+                }
+            }.bind(this));
         },
 
         initElement: function () {

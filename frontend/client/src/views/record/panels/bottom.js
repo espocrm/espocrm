@@ -77,6 +77,10 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
 
             this.mode = this.options.mode || this.mode;
 
+            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+            this.readOnly = this.readOnly || this.options.readOnly;
+            this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
+
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
@@ -199,11 +203,17 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 },
                 mode: this.mode
             };
+
+            var readOnlyLocked = this.readOnlyLocked;
+
             if (this.readOnly) {
                 o.readOnly = true;
             } else {
                 if (readOnly !== null) {
                     o.readOnly = readOnly
+                }
+                if (readOnly) {
+                    readOnlyLocked = true;
                 }
             }
             if (this.inlineEditDisabled) {
@@ -218,6 +228,10 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             }
             if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                 o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
+            }
+
+            if (readOnlyLocked) {
+                o.readOnlyLocked = readOnlyLocked;
             }
 
             this.createView(field, viewName, o);

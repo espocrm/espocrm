@@ -91,17 +91,11 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
             this.recordHelper = this.options.recordHelper;
 
-            this.panelList = _.clone(this.panelList);
-            if (!this.readOnly) {
-                if ('readOnly' in this.options)    {
-                    this.readOnly = this.options.readOnly;
-                }
-            }
-            if (!this.inlineEditDisabled) {
-                if ('inlineEditDisabled' in this.options) {
-                    this.inlineEditDisabled = this.options.inlineEditDisabled;
-                }
-            }
+            this.panelList = Espo.Utils.clone(this.panelList);
+
+            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+            this.readOnly = this.options.readOnly || this.readOnly;
+            this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
         },
 
         setupPanels: function () {

@@ -150,15 +150,49 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         hideActionItem: function (name) {
-            if (!this.isRendered()) return;
-            this.$el.find('li > .action[data-action="'+name+'"]').parent().addClass('hidden');
-            this.$el.find('button.action[data-action="'+name+'"]').addClass('hidden');
+            for (var i in this.buttonList) {
+                if (this.buttonList[i].name == name) {
+                    this.buttonList[i].hidden = true;
+                    break;
+                }
+            }
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    this.dropdownItemList[i].hidden = true;
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer.find('li > .action[data-action="'+name+'"]').parent().addClass('hidden');
+                this.$detailButtonContainer.find('button.action[data-action="'+name+'"]').addClass('hidden');
+                if (this.isDropdownItemListEmpty()) {
+                    this.$dropdownItemListButton.addClass('hidden');
+                }
+            }
         },
 
         showActionItem: function (name) {
-            if (!this.isRendered()) return;
-            this.$el.find('li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
-            this.$el.find('button.action[data-action="'+name+'"]').removeClass('hidden');
+            for (var i in this.buttonList) {
+                if (this.buttonList[i].name == name) {
+                    this.buttonList[i].hidden = false;
+                    break;
+                }
+            }
+            for (var i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name == name) {
+                    this.dropdownItemList[i].hidden = false;
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer.find('li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
+                this.$detailButtonContainer.find('button.action[data-action="'+name+'"]').removeClass('hidden');
+                if (!this.isDropdownItemListEmpty()) {
+                    this.$dropdownItemListButton.removeClass('hidden');
+                }
+            }
         },
 
         showPanel: function (name) {
@@ -419,6 +453,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 buttonEditList: this.buttonEditList,
                 dropdownItemList: this.dropdownItemList,
                 dropdownEditItemList: this.dropdownEditItemList,
+                dropdownItemListEmpty: this.isDropdownItemListEmpty(),
                 buttonsTop: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'top',
                 buttonsBottom: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'bottom',
                 name: this.name,
@@ -456,6 +491,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.columnCount = this.options.columnCount || this.columnCount;
 
             Bull.View.prototype.init.call(this);
+        },
+
+        isDropdownItemListEmpty: function () {
+            if (this.dropdownItemList.length === 0) {
+                return true;
+            }
+
+            var isEmpty = true;
+            this.dropdownItemList.forEach(function (item) {
+                if (!item.hidden) {
+                    isEmpty = false;
+                }
+            }, this);
+
+            return isEmpty;
         },
 
         setup: function () {
@@ -515,34 +565,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.bottomView = this.options.bottomView;
             }
 
-            if (!this.readOnly) {
-                if ('readOnly' in this.options) {
-                    this.readOnly = this.options.readOnly;
-                }
-            }
+            this.readOnlyLocked = this.readOnly;
+            this.readOnly = this.options.readOnly || this.readOnly;
 
-            if (!this.inlineEditDisabled) {
-                if ('inlineEditDisabled' in this.options) {
-                    this.inlineEditDisabled = this.options.inlineEditDisabled;
-                }
-            }
+            this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
+            this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
-            if (!this.navigateButtonsDisabled) {
-                if ('navigateButtonsDisabled' in this.options) {
-                    this.navigateButtonsDisabled = this.options.navigateButtonsDisabled;
-                }
-            }
 
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
             }
 
-            if (!this.isNew) {
-                if (!this.getAcl().checkModel(this.model, 'edit')) {
-                    this.readOnly = true;
-                }
-            }
 
             this.manageAccess();
 
@@ -575,6 +609,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
             }
+
+            this.on('after:render', function () {
+                this.$detailButtonContainer = this.$el.find('.detail-button-container');
+                this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
+            }, this);
         },
 
         setIsChanged: function () {
@@ -693,13 +732,96 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
+        setReadOnly: function () {
+            if (!this.readOnlyLocked) {
+                this.readOnly = true;
+            }
+
+            var bottomView = this.getView('bottom');
+            if (bottomView && 'setReadOnly' in bottomView) {
+                bottomView.setReadOnly();
+            }
+
+            var sideView = this.getView('side');
+            if (sideView && 'setReadOnly' in sideView) {
+                sideView.setReadOnly();
+            }
+
+            var fieldViews = this.getFieldViews();
+            for (var i in fieldViews) {
+                fieldViews[i].setReadOnly();
+            }
+        },
+
+        setNotReadOnly: function () {
+            if (!this.readOnlyLocked) {
+                this.readOnly = false;
+            }
+
+            var bottomView = this.getView('bottom');
+            if (bottomView && 'setNotReadOnly' in bottomView) {
+                bottomView.setNotReadOnly();
+            }
+
+            var sideView = this.getView('side');
+            if (sideView && 'setNotReadOnly' in sideView) {
+                sideView.setNotReadOnly();
+            }
+
+            var fieldViews = this.getFieldViews();
+
+            for (var i in fieldViews) {
+                var fieldView = fieldViews[i];
+                fieldView.setNotReadOnly();
+            }
+        },
+
+        manageAccessEdit: function (second) {
+            if (this.isNew) return;
+
+            var editAccess = this.getAcl().checkModel(this.model, 'edit', true);
+
+            if (!editAccess) {
+                this.readOnly = true;
+                this.hideActionItem('edit');
+            } else {
+                this.showActionItem('edit');
+                if (!this.readOnlyLocked) {
+                    if (this.readOnly && second) {
+                        this.setNotReadOnly();
+                    }
+                    this.readOnly = false;
+                }
+            }
+
+            if (editAccess === null) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    this.manageAccessEdit(true);
+                }, this);
+            }
+        },
+
+        manageAccessDelete: function () {
+            if (this.isNew) return;
+
+            var deleteAccess = this.getAcl().checkModel(this.model, 'delete', true);
+
+            if (!deleteAccess) {
+                this.hideActionItem('delete');
+            } else {
+                this.showActionItem('delete');
+            }
+
+            if (deleteAccess === null) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    this.manageAccessDelete();
+                }, this);
+            }
+        },
+
         manageAccess: function () {
-            if (this.readOnly) {
-                this.removeButton('edit');
-            }
-            if (!this.getAcl().checkModel(this.model, 'delete')) {
-                this.removeButton('delete');
-            }
+            this.manageAccessEdit();
+            this.manageAccessDelete();
         },
 
         enableButtons: function () {
@@ -772,7 +894,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         } else {
                             if (cellDefs.readOnly) {
                                 o.readOnly = true;
+                                o.readOnlyLocked = true;
                             }
+                        }
+
+                        if (this.readOnlyLocked) {
+                            o.readOnlyLocked = true;
                         }
 
                         if (this.inlineEditDisabled || cellDefs.inlineEditDisabled) {
