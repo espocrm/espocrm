@@ -8,7 +8,7 @@
             <div class="row">
             <% _.each(row, function (cell, cellNumber) { %>
                 <% if (cell != false) { %>
-                    <div class="cell <% if (columnCount == 1 || cell.fullWidth) { %>col-sm-12<% } else {%> col-sm-6 <% } %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>">
+                    <div class="cell<% if (columnCount == 1 || cell.fullWidth) { %> col-sm-12<% } else {%> col-sm-6<% } %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.name %>">
                         <label class="control-label<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
                         <%
                             if ('customLabel' in cell) {
@@ -18,7 +18,7 @@
                             }
                         %>
                         </label>
-                        <div class="field <% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
+                        <div class="field<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
                         <%
                             if ('customCode' in cell) {
                                 print (cell.customCode);

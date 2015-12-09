@@ -49,9 +49,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-                $field = fieldView.$el;
-                $cell = $field.closest('.cell[data-name="' + name + '"]');
-                $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                var $field = fieldView.$el;
+                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.addClass('hidden');
                 $label.addClass('hidden');
@@ -76,9 +77,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-                $field = fieldView.$el;
-                $cell = $field.closest('.cell[data-name="' + name + '"]');
-                $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                var $field = fieldView.$el;
+                var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.removeClass('hidden');
                 $label.removeClass('hidden');
