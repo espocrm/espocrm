@@ -50,13 +50,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
 
-                var $field = fieldView.$el;
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
-                $field.addClass('hidden');
-                $label.addClass('hidden');
-                $cell.addClass('hidden-cell');
+                    $field.addClass('hidden');
+                    $label.addClass('hidden');
+                    $cell.addClass('hidden-cell');
+                }
             }.bind(this);
             if (this.isRendered()) {
                 processHtml();
@@ -78,13 +80,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
 
-                var $field = fieldView.$el;
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
-                $field.removeClass('hidden');
-                $label.removeClass('hidden');
-                $cell.removeClass('hidden-cell');
+                    $field.removeClass('hidden');
+                    $label.removeClass('hidden');
+                    $cell.removeClass('hidden-cell');
+                }
             }.bind(this);
 
             if (this.isRendered()) {

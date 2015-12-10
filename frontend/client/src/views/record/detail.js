@@ -902,11 +902,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         if (this.readOnly) {
                             o.readOnly = true;
-                        } else {
-                            if (cellDefs.readOnly) {
-                                o.readOnly = true;
-                                o.readOnlyLocked = true;
-                            }
+                        }
+
+                        if (cellDefs.readOnly) {
+                            o.readOnly = true;
+                            o.readOnlyLocked = true;
                         }
 
                         if (this.readOnlyLocked) {

@@ -2,7 +2,7 @@
     {
         "label":"",
         "rows":[
-            [{"name":"status"},{"name":"from", "readOnly": true}],
+            [{"name":"status", "readOnly": true},{"name":"from", "readOnly": true}],
             [{"name":"dateSent", "readOnly": true}, {"name":"to", "readOnly": true}],
             [{"name":"parent"}, {"name":"cc", "readOnly": true}],
             [false, {"name":"bcc", "readOnly": true}],
