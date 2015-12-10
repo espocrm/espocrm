@@ -130,7 +130,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
 
             var methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
             if (methodName in impl) {
-                return impl.methodName(model, data, precise);
+                return impl[methodName](model, data, precise);
             }
 
             return impl.checkModel(model, data, action, precise);

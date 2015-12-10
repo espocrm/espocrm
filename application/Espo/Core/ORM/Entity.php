@@ -72,5 +72,21 @@ class Entity extends \Espo\ORM\Entity
             }
         }
     }
+
+    public function getLinkMultipleColumn($field, $column, $id)
+    {
+        $columnField = $field . 'Columns';
+
+        if ($this->has($columnField)) {
+            $columns = $this->get($columnField);
+            if ($columns instanceof \StdClass) {
+                if (isset($columns->$id)) {
+                    if (isset($columns->$id->$column)) {
+                        return $columns->$id->$column;
+                    }
+                }
+            }
+        }
+    }
 }
 

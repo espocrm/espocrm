@@ -45,7 +45,7 @@ class Email extends \Espo\Core\Acl\Base
             return false;
         }
         if (is_array($data)) {
-            if (empty($data['read']) || $data['read'] == 'no') {
+            if ($data['read'] === false || $data['read'] === 'no') {
                 return false;
             }
         }
@@ -74,6 +74,5 @@ class Email extends \Espo\Core\Acl\Base
 
         return false;
     }
-
 }
 

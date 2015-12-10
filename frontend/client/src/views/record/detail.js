@@ -149,6 +149,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             $(window).scrollTop(0);
         },
 
+        setupActionItems: function () {
+            if (this.model.isNew()) {
+                this.isNew = true;
+                this.removeButton('delete');
+            }
+
+            if (this.duplicateAction) {
+                this.dropdownItemList.push({
+                    'label': 'Duplicate',
+                    'name': 'duplicate'
+                });
+            }
+        },
+
         hideActionItem: function (name) {
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name == name) {
@@ -575,12 +589,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
-
-            if (this.model.isNew()) {
-                this.isNew = true;
-                this.removeButton('delete');
-            }
-
+            this.setupActionItems();
 
             this.manageAccess();
 
@@ -605,14 +614,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.build();
 
-            if (this.duplicateAction) {
-                if (this.getAcl().checkModel(this.model, 'edit')) {
-                    this.dropdownItemList.push({
-                        'label': 'Duplicate',
-                        'name': 'Duplicate'
-                    });
-                }
-            }
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
@@ -788,8 +789,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!editAccess) {
                 this.readOnly = true;
                 this.hideActionItem('edit');
+                if (this.duplicateAction) {
+                    this.hideActionItem('duplicate');
+                }
             } else {
                 this.showActionItem('edit');
+                if (this.duplicateAction) {
+                    this.showActionItem('duplicate');
+                }
                 if (!this.readOnlyLocked) {
                     if (this.readOnly && second) {
                         this.setNotReadOnly();

@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 Espo.define('model', [], function () {
 
     var Dep = Backbone.Model;
@@ -125,6 +126,10 @@ Espo.define('model', [], function () {
                 defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
             }
             return defaultValue;
+        },
+
+        getLinkMultipleColumn: function (field, column, id) {
+            return ((this.get(field + 'Columns') || {}).id || {}).column;
         },
 
         setRelate: function (data) {

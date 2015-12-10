@@ -30,8 +30,31 @@ Espo.define('acl/email', 'acl', function (Dep) {
 
     return Dep.extend({
 
-        checkModel: function (model, data, action, precise) {
-            return Dep.prototype.checkModel.call(this, model, data, action, precise);
+        checkModelRead: function (model, data, precise) {
+            if (this.checkModel(model, data, 'read', precise)) {
+                return true;
+            }
+
+            if (data === false) {
+                return false;
+            }
+
+            var d = data || {};
+            if (d.read === false || d.read === 'no') {
+                return false;
+            }
+
+            if (model.has('usersIds')) {
+                if (~(model.get('usersIds') || []).indexOf(this.getUser().id)) {
+                    return true;
+                }
+            } else {
+                if (precise) {
+                    return null;
+                }
+            }
+
+            return false;
         }
 
     });

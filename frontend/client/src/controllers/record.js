@@ -34,9 +34,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         defaultAction: 'list',
 
         checkAccess: function (action) {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
             if (this.getAcl().check(this.name, action)) {
                 return true;
             }
