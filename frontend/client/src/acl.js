@@ -153,6 +153,8 @@ Espo.define('acl', [], function () {
         }
     });
 
+    Acl.extend = Backbone.Router.extend;
+
     return Acl;
 });
 

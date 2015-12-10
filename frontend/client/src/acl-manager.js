@@ -44,7 +44,6 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         this.user = user || null;
 
         this.implementationHash = {};
-
         this.implementationClassMap = implementationClassMap || {};
     }
 

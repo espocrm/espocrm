@@ -1,19 +1,20 @@
 {
    "controller": "controllers/record",
+   "acl": "acl/email",
    "model": "models/email",
-   "views":{
-      "list":"Email.List",
-      "detail":"Email.Detail"
+   "views": {
+      "list": "views/email/list",
+      "detail": "views/email/detail"
    },
    "recordViews":{
-      "list":"Email.Record.List",
-      "detail":"Email.Record.Detail",
-      "edit":"Email.Record.Edit",
-      "editQuick":"Email.Record.EditQuick",
-      "detailQuick":"Email.Record.DetailQuick"
+      "list": "views/email/record/list",
+      "detail": "views/email/record/detail",
+      "edit": "views/email/record/edit",
+      "editQuick":"views/email/record/edit-quick",
+      "detailQuick":"views/email/record/detail-quick"
    },
    "modalViews": {
-      "detail": "Email.Modals.Detail"
+      "detail": "views/email/modals/detail"
    },
    "menu": {
       "list": {

@@ -26,63 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+Espo.define('acl/email', 'acl', function (Dep) {
 
-Espo.define('model-offline', 'model', function (Model) {
+    return Dep.extend({
 
-    var ModelOffline = Model.extend({
-
-        name: null,
-
-        cache: null,
-
-        _key: null,
-
-        initialize: function (attributes, options) {
-            options = options || {};
-            Model.prototype.initialize.apply(this, arguments);
-            this._key = this.url = this.name;
-            this.cache = options.cache || null;
-        },
-
-        load: function (callback, disableCache, sync) {
-            this.once('sync', callback);
-
-            if (!disableCache) {
-                if (this.loadFromCache()) {
-                    this.trigger('sync');
-                    return;
-                }
-            }
-
-            this.fetch({
-                async: !(sync || false)
-            });
-        },
-
-        loadFromCache: function () {
-            if (this.cache) {
-                var cached = this.cache.get('app', this._key);
-                if (cached) {
-                    this.set(cached);
-                    return true;
-                }
-            }
-            return null;
-        },
-
-        storeToCache: function () {
-            if (this.cache) {
-                this.cache.set('app', this._key, this.toJSON());
-            }
-        },
-
-        isNew: function () {
-            return false;
+        checkModel: function (model, data, action, precise) {
+            return Dep.prototype.checkModel.call(this, model, data, action, precise);
         }
 
     });
-
-    return ModelOffline;
 
 });
 

@@ -67,6 +67,10 @@ Espo.define('controller', [], function () {
 
         initialize: function () {},
 
+        setRouter: function (router) {
+            this._router = router;
+        },
+
         getConfig: function () {
             return this._settings;
         },
