@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function (Dep) {
+Espo.define('views/fields/assigned-user', 'views/fields/user-with-avatar', function (Dep) {
 
     return Dep.extend({
 
         init: function () {
             this.assignmentPermission = this.getAcl().get('assignmentPermission');
             if (this.assignmentPermission == 'no') {
-                this.readOnly = true;
+                this.setReadOnly(true);
             }
             Dep.prototype.init.call(this);
         },
@@ -46,7 +46,7 @@ Espo.define('Views.Fields.AssignedUser', 'Views.Fields.UserWithAvatar', function
 
         getSelectPrimaryFilterName: function () {
             return 'active';
-        },
+        }
 
     });
 });

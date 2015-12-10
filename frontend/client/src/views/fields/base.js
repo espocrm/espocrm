@@ -87,9 +87,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.getCellElement().removeClass('has-error');
         },
 
-        setReadOnly: function () {
+        setReadOnly: function (locked) {
             if (this.readOnlyLocked) return;
             this.readOnly = true;
+            if (locked) {
+                this.readOnlyLocked = true;
+            }
             if (this.mode == 'edit') {
                 this.setMode('detail');
                 if (this.isRendered()) {
