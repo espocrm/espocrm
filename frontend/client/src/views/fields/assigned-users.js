@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,58 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+Espo.define('views/fields/assigned-users', 'views/fields/link-multiple', function (Dep) {
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class Email extends \Espo\Core\Acl\Base
-{
-
-    public function checkEntityRead(User $user, Entity $entity, $data)
-    {
-        if ($this->checkEntity($user, $entity, $data, 'read')) {
-            return true;
-        }
-
-        if ($data === false) {
-            return false;
-        }
-        if (is_array($data)) {
-            if ($data['read'] === false || $data['read'] === 'no') {
-                return false;
+        init: function () {
+            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+            if (this.assignmentPermission == 'no') {
+                this.readOnly = true;
             }
-        }
+            Dep.prototype.init.call(this);
+        },
 
-        if (!$entity->has('usersIds')) {
-            $entity->loadLinkMultipleField('users');
-        }
-        $userIdList = $entity->get('usersIds');
-        if (is_array($userIdList) && in_array($user->id, $userIdList)) {
-            return true;
-        }
-        return false;
-    }
-
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('assignedUserId')) {
-            if ($user->id === $entity->get('assignedUserId')) {
-                return true;
+        getSelectBoolFilterList: function () {
+            if (this.assignmentPermission == 'team') {
+                return ['onlyMyTeam'];
             }
+        },
+
+        getSelectPrimaryFilterName: function () {
+            return 'active';
         }
 
-        if ($user->id === $entity->get('createdById')) {
-            return true;
-        }
+    });
+});
 
-        if ($entity->hasField('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
-            if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
 

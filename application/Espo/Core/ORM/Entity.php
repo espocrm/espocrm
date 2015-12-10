@@ -75,18 +75,87 @@ class Entity extends \Espo\ORM\Entity
 
     public function getLinkMultipleColumn($field, $column, $id)
     {
-        $columnField = $field . 'Columns';
+        $columnsField = $field . 'Columns';
 
-        if ($this->has($columnField)) {
-            $columns = $this->get($columnField);
-            if ($columns instanceof \StdClass) {
-                if (isset($columns->$id)) {
-                    if (isset($columns->$id->$column)) {
-                        return $columns->$id->$column;
-                    }
+        if (!$this->has($columnsField)) {
+            $this->loadLinkMultipleField($field, true);
+        }
+        if (!$this->has($columnsField)) {
+            return;
+        }
+        $columns = $this->get($columnsField);
+        if ($columns instanceof \StdClass) {
+            if (isset($columns->$id)) {
+                if (isset($columns->$id->$column)) {
+                    return $columns->$id->$column;
                 }
             }
         }
+
+    }
+
+    public function setLinkMulitpleIdList($field, array $idList)
+    {
+        $idsField = $field . 'Ids';
+        $this->set($idsField, $idList);
+    }
+
+    public function addLinkMultipleId($field, $id)
+    {
+        $idsField = $field . 'Ids';
+
+        if (!$this->hasField($idsField)) return;
+
+        if (!$this->has($idsField)) {
+            if (!$this->isNew()) {
+                $this->loadLinkMultipleField($field, true);
+            } else {
+                $this->set($idsField, []);
+            }
+        }
+        if (!$this->has($idsField)) {
+            return;
+        }
+        $idList = $this->get($idsField);
+        if (!in_array($id, $idList)) {
+            $idList[] = $id;
+            $this->set($idsField, $idList);
+        }
+    }
+
+    public function getLinkMultipleIdList($field)
+    {
+        $idsField = $field . 'Ids';
+
+        if (!$this->hasField($idsField)) return null;
+
+        if (!$this->has($idsField)) {
+            $this->loadLinkMultipleField($field, true);
+        }
+        return $this->get($idsField);
+    }
+
+    public function hasLinkMultipleId($field, $id)
+    {
+        $idsField = $field . 'Ids';
+
+        if (!$this->hasField($idsField)) return null;
+
+        if (!$this->has($idsField)) {
+            if (!$this->isNew()) {
+                $this->loadLinkMultipleField($field, true);
+            }
+        }
+
+        if (!$this->has($idsField)) {
+            return;
+        }
+
+        $idList = $this->get($idsField);
+        if (in_array($id, $idList)) {
+            return true;
+        }
+        return false;
     }
 }
 

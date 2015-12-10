@@ -27,58 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Core\Utils\Database\Orm\Relations;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
-
-class Email extends \Espo\Core\Acl\Base
+class EntityUser extends Base
 {
-
-    public function checkEntityRead(User $user, Entity $entity, $data)
+    protected function load($linkName, $entityType)
     {
-        if ($this->checkEntity($user, $entity, $data, 'read')) {
-            return true;
-        }
+        $linkParams = $this->getLinkParams();
+        $foreignEntityName = $this->getForeignEntityName();
 
-        if ($data === false) {
-            return false;
-        }
-        if (is_array($data)) {
-            if ($data['read'] === false || $data['read'] === 'no') {
-                return false;
-            }
-        }
-
-        if (!$entity->has('usersIds')) {
-            $entity->loadLinkMultipleField('users');
-        }
-        $userIdList = $entity->get('usersIds');
-        if (is_array($userIdList) && in_array($user->id, $userIdList)) {
-            return true;
-        }
-        return false;
+        return array(
+            $entityType => array(
+                'relations' => array(
+                    $linkName => array(
+                        'type' => 'manyMany',
+                        'entity' => $foreignEntityName,
+                        'relationName' => lcfirst($linkParams['relationName']),
+                        'midKeys' => array(
+                            'entityId',
+                            'userId'
+                        ),
+                        'conditions' => array(
+                            'entityType' => $entityType
+                        ),
+                        'additionalColumns' => array(
+                            'entityType' => array(
+                                'type' => 'varchar',
+                                'len' => 100
+                            )
+                        )
+                    )
+                )
+            )
+        );
     }
 
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('assignedUserId')) {
-            if ($user->id === $entity->get('assignedUserId')) {
-                return true;
-            }
-        }
-
-        if ($user->id === $entity->get('createdById')) {
-            return true;
-        }
-
-        if ($entity->hasField('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
-            if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
-

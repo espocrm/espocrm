@@ -33,7 +33,12 @@ use Espo\ORM\Entity;
 
 class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function getIds($arr = array())
+    public function getIdListFormAddressList(array $arr = [])
+    {
+        return $this->getIds($arr);
+    }
+
+    public function getIds(array $arr = [])
     {
         $ids = array();
         if (!empty($arr)) {

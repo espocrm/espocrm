@@ -112,6 +112,14 @@ Espo.define('acl', [], function () {
                         }
                     }
 
+                    if (value === 'own' || value === 'team') {
+                        if (isOwner === null) {
+                            if (precise) {
+                                return null;
+                            }
+                        }
+                    }
+
                     return false;
                 }
             }

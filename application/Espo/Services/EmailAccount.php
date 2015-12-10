@@ -284,7 +284,7 @@ class EmailAccount extends Record
                         $flags = $message->getFlags();
                     }
                     try {
-                    	$email = $importer->importMessage($message, $userId, $teamIdList, null, $filterCollection);
+                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }

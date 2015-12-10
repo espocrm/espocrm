@@ -201,7 +201,14 @@
             "noLoad": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
+        "assignedUsers": {
+            "type": "linkMultiple",
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
         }
     },
     "links": {
@@ -221,6 +228,11 @@
             "type": "hasMany",
             "entity": "Team",
             "relationName": "entityTeam"
+        },
+        "assignedUsers": {
+            "type": "hasMany",
+            "entity": "User",
+            "relationName": "entityUser"
         },
         "users": {
             "type": "hasMany",

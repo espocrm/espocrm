@@ -233,6 +233,7 @@
         "lastName": "Last Name",
         "salutationName": "Salutation",
         "assignedUser": "Assigned User",
+        "assignedUsers": "Assigned Users",
         "emailAddress": "Email",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",

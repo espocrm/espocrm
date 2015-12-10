@@ -71,7 +71,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $userId = null, $teamsIdList = [], $userIdList = [], $filterList = [])
+    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [])
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -84,9 +84,10 @@ class Importer
             $email->set('isHtml', false);
             $email->set('name', $subject);
             $email->set('status', 'Archived');
-            $email->set('attachmentsIds', array());
-            if ($userId) {
-                $email->set('assignedUserId', $userId);
+            $email->set('attachmentsIds', []);
+            if ($assignedUserId) {
+                $email->set('assignedUserId', $assignedUserId);
+                $email->set('assignedUsersIds', [$assignedUserId]);
             }
             $email->set('teamsIds', $teamsIdList);
 
@@ -115,7 +116,6 @@ class Importer
                 return false;
             }
 
-
             if (isset($message->messageId) && !empty($message->messageId)) {
                 $email->set('messageId', $message->messageId);
                 if (isset($message->deliveredTo)) {
@@ -127,21 +127,15 @@ class Importer
             }
 
             if ($duplicate = $this->findDuplicate($email)) {
-            	$duplicate->loadLinkMultipleField('users');
-            	$usersIds = $duplicate->get('usersIds');
                 if ($userId) {
-                    if (!in_array($userId, $usersIds)) {
-            	       $usersIds[] = $userId;
-                    }
+                    $duplicate->addLinkMultipleId('users', $assignedUserId);
+                    $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
                 }
                 if (!empty($userIdList)) {
                     foreach ($userIdList as $additionalUserId) {
-                        if (!in_array($additionalUserId, $usersIds)) {
-                            $usersIds[] = $additionalUserId;
-                        }
+                        $duplicate->addLinkMultipleId('users', $additionalUserId);
                     }
                 }
-            	$duplicate->set('usersIds', $usersIds);
 
             	$this->getEntityManager()->saveEntity($duplicate);
 

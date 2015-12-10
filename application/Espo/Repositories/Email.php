@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class Email extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function prepareAddressess(Entity $entity, $type)
+    protected function prepareAddressess(Entity $entity, $type, $addAssignedUser = false)
     {
         if (!$entity->has($type)) {
             return;
@@ -42,32 +42,28 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
         $address = $entity->get($type);
-        $ids = [];
+        $idList = [];
         if (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
             $arr = array_map(function ($e) {
                 return trim($e);
             }, explode(';', $address));
 
-            $ids = $eaRepositoty->getIds($arr);
-            foreach ($ids as $id) {
-                $this->setUsersIdsByEmailAddressId($entity, $id);
+            $idList = $eaRepositoty->getIdListFormAddressList($arr);
+            foreach ($idList as $id) {
+                $this->setUsersIdsByEmailAddressId($entity, $id, $addAssignedUser);
             }
         }
-        $entity->set($type . 'EmailAddressesIds', $ids);
+        $entity->setLinkMulitpleIdList($type . 'EmailAddresses', $idList);
     }
 
-    protected function setUsersIdsByEmailAddressId(Entity $entity, $emailAddressId)
+    protected function setUsersIdsByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
         $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
         if ($user) {
-            $usersIds = $entity->get('usersIds');
-            if (empty($usersIds)) {
-                $usersIds = array();
+            $entity->addLinkMultipleId('users', $user->id);
+            if ($addAssignedUser) {
+                $entity->addLinkMultipleId('assignedUsers', $user->id);
             }
-            if (!in_array($user->id, $usersIds)) {
-                $usersIds[] = $user->id;
-            }
-            $entity->set('usersIds', $usersIds);
         }
     }
 
@@ -142,7 +138,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $ids = $eaRepositoty->getIds(array($from));
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
-                        $this->setUsersIdsByEmailAddressId($entity, $ids[0]);
+                        $this->setUsersIdsByEmailAddressId($entity, $ids[0], true);
                     }
                 } else {
                     $entity->set('fromEmailAddressId', null);
@@ -150,7 +146,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
 
             if ($entity->has('to')) {
-                $this->prepareAddressess($entity, 'to');
+                $this->prepareAddressess($entity, 'to', true);
             }
             if ($entity->has('cc')) {
                 $this->prepareAddressess($entity, 'cc');
@@ -162,13 +158,10 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 $this->prepareAddressess($entity, 'replyTo');
             }
 
-            $usersIds = $entity->get('usersIds');
             $assignedUserId = $entity->get('assignedUserId');
-
-            if (!empty($assignedUserId) && !in_array($assignedUserId, $usersIds)) {
-                $usersIds[] = $assignedUserId;
+            if ($assignedUserId) {
+                $entity->addLinkMultipleId('users', $assignedUserId);
             }
-            $entity->set('usersIds', $usersIds);
         }
 
         parent::beforeSave($entity, $options);

@@ -55,6 +55,22 @@ Espo.define('acl/email', 'acl', function (Dep) {
             }
 
             return false;
+        },
+
+        checkIsOwner: function (model) {
+            if (Dep.prototype.checkIsOwner.call(this, model)) {
+                return true;
+            }
+
+            if (!model.has('assignedUsersIds')) {
+                return null;
+            }
+
+            if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
+                return true;
+            }
+
+            return false;
         }
 
     });
