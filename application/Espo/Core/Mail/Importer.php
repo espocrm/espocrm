@@ -127,13 +127,13 @@ class Importer
             }
 
             if ($duplicate = $this->findDuplicate($email)) {
-                if ($userId) {
+                if ($assignedUserId) {
                     $duplicate->addLinkMultipleId('users', $assignedUserId);
                     $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
                 }
                 if (!empty($userIdList)) {
-                    foreach ($userIdList as $additionalUserId) {
-                        $duplicate->addLinkMultipleId('users', $additionalUserId);
+                    foreach ($userIdList as $uId) {
+                        $duplicate->addLinkMultipleId('users', $uId);
                     }
                 }
 

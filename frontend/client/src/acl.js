@@ -74,11 +74,11 @@ Espo.define('acl', [], function () {
                 if (action in data) {
                     var value = data[action];
 
-                    if (value === 'all' || value === true) {
+                    if (value === 'all') {
                         return true;
                     }
 
-                    if (action != 'delete' && (value == 'no' || value === false)) {
+                    if (value == 'no') {
                         return false;
                     }
 
@@ -86,11 +86,7 @@ Espo.define('acl', [], function () {
                         return true;
                     }
 
-                    if (isOwner && action == 'delete' && value === 'no') {
-                        return this.checkScope(data, 'edit', precise, isOwner);
-                    }
-
-                    if (!value || value === 'no') {
+                    if (value === 'no') {
                         return false;
                     }
 
@@ -130,14 +126,64 @@ Espo.define('acl', [], function () {
             return this.checkScope(data, action, precise, this.checkIsOwner(model), this.checkInTeam(model));
         },
 
+        checkModelDelete: function (model, data, precise) {
+            var result = this.checkModel(model, data, 'delete', precise);
+
+            if (result) {
+                return true;
+            }
+
+            if (data === false) {
+                return false;
+            }
+
+            var d = data || {};
+            if (d.read === 'no') {
+                return false;
+            }
+
+            if (model.has('createdById')) {
+                if (model.get('createdById') === this.getUser().id) {
+                    if (!model.has('assignedUserId')) {
+                        return true;
+                    } else {
+                        if (!model.get('assignedUserId')) {
+                            return true;
+                        }
+                        if (model.get('assignedUserId') === this.getUser().id) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        },
+
         checkIsOwner: function (model) {
-            var result = this.getUser().id === model.get('assignedUserId') || this.getUser().id === model.get('createdById');
-            if (!result) {
-                if (!model.hasField('assignedUser') && !model.hasField('createdBy')) {
+            if (model.hasField('assignedUser')) {
+                if (this.getUser().id === model.get('assignedUserId')) {
+                    return true;
+                }
+            } else {
+                if (model.hasField('createdBy')) {
+                    if (this.getUser().id === model.get('createdById')) {
+                        return true;
+                    }
+                }
+            }
+
+            if (model.hasField('assignedUsers')) {
+                if (!model.has('assignedUsersIds')) {
+                    return null;
+                }
+
+                if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
                     return true;
                 }
             }
-            return result;
+
+            return false;
         },
 
         checkInTeam: function (model) {

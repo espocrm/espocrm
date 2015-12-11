@@ -31,7 +31,9 @@ Espo.define('acl/email', 'acl', function (Dep) {
     return Dep.extend({
 
         checkModelRead: function (model, data, precise) {
-            if (this.checkModel(model, data, 'read', precise)) {
+            var result = this.checkModel(model, data, 'read', precise);
+
+            if (result) {
                 return true;
             }
 
@@ -40,7 +42,7 @@ Espo.define('acl/email', 'acl', function (Dep) {
             }
 
             var d = data || {};
-            if (d.read === false || d.read === 'no') {
+            if (d.read === 'no') {
                 return false;
             }
 
@@ -54,11 +56,11 @@ Espo.define('acl/email', 'acl', function (Dep) {
                 }
             }
 
-            return false;
+            return result;
         },
 
         checkIsOwner: function (model) {
-            if (Dep.prototype.checkIsOwner.call(this, model)) {
+            if (this.getUser().id === model.get('assignedUserId') || this.getUser().id === model.get('createdById')) {
                 return true;
             }
 

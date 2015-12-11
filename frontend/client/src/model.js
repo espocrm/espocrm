@@ -69,6 +69,11 @@ Espo.define('model', [], function () {
             return Dep.prototype.get.call(this, key);
         },
 
+        has: function (key) {
+            var value = this.get(key);
+            return (typeof value !== 'undefined');
+        },
+
         isNew: function () {
             return !this.id;
         },

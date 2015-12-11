@@ -62,20 +62,16 @@ class Email extends \Espo\Core\Acl\Base
 
     public function checkIsOwner(User $user, Entity $entity)
     {
-        if ($entity->has('assignedUserId')) {
-            if ($user->id === $entity->get('assignedUserId')) {
-                return true;
-            }
+        if ($user->id === $entity->get('assignedUserId')) {
+            return true;
         }
 
         if ($user->id === $entity->get('createdById')) {
             return true;
         }
 
-        if ($entity->hasField('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
-            if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
-                return true;
-            }
+        if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
+            return true;
         }
 
         return false;

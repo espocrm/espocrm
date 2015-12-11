@@ -184,6 +184,13 @@ class Base implements Injectable
                 }
             }
         }
+
+        if ($entity->hasField('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
+            if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -219,27 +226,28 @@ class Base implements Injectable
             return true;
         }
 
-        $result = $this->checkEntity($user, $entity, $data, 'delete');
-        if (!$result) {
-            if (is_array($data)) {
-                if ($data['edit'] != 'no') {
-                    if ($entity->has('createdById') && $entity->get('createdById') == $user->id) {
-                        if (!$entity->has('assignedUserId')) {
+        if ($this->checkEntity($user, $entity, $data, 'delete')) {
+            return true;
+        }
+
+        if (is_array($data)) {
+            if ($data['edit'] != 'no') {
+                if ($entity->has('createdById') && $entity->get('createdById') == $user->id) {
+                    if (!$entity->has('assignedUserId')) {
+                        return true;
+                    } else {
+                        if (!$entity->get('assignedUserId')) {
                             return true;
-                        } else {
-                            if (!$entity->get('assignedUserId')) {
-                                return true;
-                            }
-                            if ($entity->get('assignedUserId') == $entity->get('createdById')) {
-                                return true;
-                            }
+                        }
+                        if ($entity->get('assignedUserId') == $entity->get('createdById')) {
+                            return true;
                         }
                     }
                 }
             }
         }
 
-        return $result;
+        return false;
     }
 }
 
