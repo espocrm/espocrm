@@ -130,9 +130,15 @@ class Entity extends \Espo\ORM\Entity
         if (!$this->hasField($idsField)) return null;
 
         if (!$this->has($idsField)) {
-            $this->loadLinkMultipleField($field, true);
+            if (!$this->isNew()) {
+                $this->loadLinkMultipleField($field, true);
+            }
         }
-        return $this->get($idsField);
+        $valueList = $this->get($idsField);
+        if (empty($valueList)) {
+            return [];
+        }
+        return $valueList;
     }
 
     public function hasLinkMultipleId($field, $id)
