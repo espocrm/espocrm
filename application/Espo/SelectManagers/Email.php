@@ -35,31 +35,30 @@ class Email extends \Espo\Core\SelectManagers\Base
     {
         $result = parent::getSelectParams($params, $withAcl);
 
-        if (!in_array('users', $result['joins']) && !in_array('users', $result['leftJoins'])) {
-            $result['leftJoins'][] = 'users';
-            $result['joinConditions']['users'] = array(
+        if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
+            $this->addLeftJoin('users', $result);
+            $this->setJoinCondition('users', array(
                 'userId' => $this->getUser()->id
-            );
+            ));
         }
 
-        if (!isset($result['select'])) {
-            $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
-            $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
-            $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
-        }
+        $this->addUsersColumns($result);
 
         return $result;
     }
 
     protected function boolFilterOnlyMy(&$result)
     {
-        if (!in_array('users', $result['joins'])) {
-            $result['joins'][] = 'users';
-        }
+        $this->addJoin('users', $result);
         $result['whereClause'][] = array(
             'usersMiddle.userId' => $this->getUser()->id
         );
 
+        $this->addUsersColumns($result);
+    }
+
+    protected function addUsersColumns(&$result)
+    {
         if (!isset($result['select'])) {
             $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
             $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
@@ -120,6 +119,20 @@ class Email extends \Espo\Core\SelectManagers\Base
     protected function accessOnlyOwn(&$result)
     {
         $this->boolFilterOnlyMy($result);
+    }
+
+    protected function accessOnlyTeam(&$result)
+    {
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+        $this->addLeftJoin(['users', 'usersAccess'], $result);
+
+        $result['whereClause'][] = array(
+            'OR' => array(
+                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+                'usersAccess.id' => $this->getUser()->id
+            )
+        );
     }
 
     protected function textFilter($textFilter, &$result)

@@ -337,34 +337,88 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
-        if ($this->getSeed()->hasField('assignedUserId')) {
+        if ($this->hasAssignedUsersField()) {
+            $this->setDistinct(true, $result);
+            $this->addLeftJoin('assignedUsers', $result);
+            $result['whereClause'][] = array(
+                'assignedUsers.id' => $this->getUser()->id
+            );
+            return;
+        }
+
+        if ($this->hasAssignedUserField()) {
             $result['whereClause'][] = array(
                 'assignedUserId' => $this->getUser()->id
             );
             return;
         }
 
-        if ($this->getSeed()->hasField('createdById')) {
+        if ($this->hasCreatedByField()) {
             $result['whereClause'][] = array(
                 'createdById' => $this->getUser()->id
             );
-            return;
         }
     }
 
     protected function accessOnlyTeam(&$result)
     {
-        if (!$this->getSeed()->hasField('teamsIds')) {
+        if (!$this->hasTeamsField()) {
             return;
         }
+
         $this->setDistinct(true, $result);
-        $this->addLeftJoin('teams', $result);
-        $result['whereClause'][] = array(
-            'OR' => array(
-                'teams.id' => $this->user->get('teamsIds'),
-                'assignedUserId' => $this->getUser()->id
-            )
+        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+
+        if ($this->hasAssignedUsersField()) {
+            $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
+            $result['whereClause'][] = array(
+                'OR' => array(
+                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+                    'assignedUsersAccess.id' => $this->getUser()->id
+                )
+            );
+            return;
+        }
+
+        $d = array(
+            'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
         );
+        if ($this->hasAssignedUserField()) {
+            $d['assignedUserId'] = $this->getUser()->id;
+        } else if ($this->hasCreatedByField()) {
+            $d['createdById'] = $this->getUser()->id;
+        }
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
+    }
+
+    protected function hasAssignedUsersField()
+    {
+        if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasField('assignedUsersIds')) {
+            return true;
+        }
+    }
+
+    protected function hasAssignedUserField()
+    {
+        if ($this->getSeed()->hasField('assignedUserId')) {
+            return true;
+        }
+    }
+
+    protected function hasCreatedByField()
+    {
+        if ($this->getSeed()->hasField('createdById')) {
+            return true;
+        }
+    }
+
+    protected function hasTeamsField()
+    {
+        if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasField('teamsIds')) {
+            return true;
+        }
     }
 
     public function getAclParams()
@@ -798,13 +852,23 @@ class Base
         $this->textFilter($textFilter, $result);
     }
 
+    public function hasJoin($join, &$result)
+    {
+        return in_array($join, $result['joins']);
+    }
+
+    public function hasLeftJoin($leftJoin, &$result)
+    {
+        return in_array($leftJoin, $result['leftJoin']);
+    }
+
     public function addJoin($join, &$result)
     {
         if (empty($result['joins'])) {
             $result['joins'] = [];
         }
 
-        if (!in_array($join, $result['joins'])) {
+        if (is_array($join) || !in_array($join, $result['joins'])) {
             $result['joins'][] = $join;
         }
     }
@@ -815,9 +879,14 @@ class Base
             $result['leftJoins'] = [];
         }
 
-        if (!in_array($leftJoin, $result['leftJoins'])) {
+        if (!is_array($leftJoin) || !in_array($leftJoin, $result['leftJoins'])) {
             $result['leftJoins'][] = $leftJoin;
         }
+    }
+
+    public function setJoinCondition($join, $condition, &$result)
+    {
+        $result['joinConditions'][$join] = $condition;
     }
 
     public function setDistinct($distinct, &$result)
