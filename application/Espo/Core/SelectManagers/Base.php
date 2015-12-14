@@ -868,9 +868,29 @@ class Base
             $result['joins'] = [];
         }
 
-        if (is_array($join) || !in_array($join, $result['joins'])) {
-            $result['joins'][] = $join;
+        $alias = $join;
+        if (is_array($join)) {
+            if (count($join) > 1) {
+                $alias = $join[1];
+            } else {
+                $alias = $join[0];
+            }
         }
+        foreach ($result['joins'] as $j) {
+            $a = $j;
+            if (is_array($j)) {
+                if (count($j) > 1) {
+                    $a = $j[1];
+                } else {
+                    $a = $j[0];
+                }
+            }
+            if ($a === $alias) {
+                return;
+            }
+        }
+
+        $result['joins'][] = $join;
     }
 
     public function addLeftJoin($leftJoin, &$result)
@@ -879,9 +899,29 @@ class Base
             $result['leftJoins'] = [];
         }
 
-        if (!is_array($leftJoin) || !in_array($leftJoin, $result['leftJoins'])) {
-            $result['leftJoins'][] = $leftJoin;
+        $alias = $leftJoin;
+        if (is_array($leftJoin)) {
+            if (count($leftJoin) > 1) {
+                $alias = $leftJoin[1];
+            } else {
+                $alias = $leftJoin[0];
+            }
         }
+        foreach ($result['leftJoins'] as $j) {
+            $a = $j;
+            if (is_array($j)) {
+                if (count($j) > 1) {
+                    $a = $j[1];
+                } else {
+                    $a = $j[0];
+                }
+            }
+            if ($a === $alias) {
+                return;
+            }
+        }
+
+        $result['leftJoins'][] = $leftJoin;
     }
 
     public function setJoinCondition($join, $condition, &$result)
