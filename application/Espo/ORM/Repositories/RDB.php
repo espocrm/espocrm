@@ -247,16 +247,37 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return;
         }
-        if ($data instanceof \stdClass) {
-            $data = get_object_vars($data);
+
+        $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
+        if (method_exists($this, $beforeMethodName)) {
+            $this->$beforeMethodName($entity, $foreign, $data);
         }
-        if ($foreign instanceof Entity) {
-            return $this->getMapper()->relate($entity, $relationName, $foreign, $data);
+
+        $result = false;
+        $methodName = 'relate' . ucfirst($relationName);
+        if (method_exists($this, $methodName)) {
+            $result = $this->$methodName($entity, $foreign, $data);
+        } else {
+            $d = $data;
+            if ($d instanceof \stdClass) {
+                $d = get_object_vars($d);
+            }
+            if ($foreign instanceof Entity) {
+                $result = $this->getMapper()->relate($entity, $relationName, $foreign, $d);
+            }
+            if (is_string($foreign)) {
+                $result = $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $d);
+            }
         }
-        if (is_string($foreign)) {
-            return $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $data);
+
+        if ($result) {
+            $afterMethodName = 'afterRelate' . ucfirst($relationName);
+            if (method_exists($this, $afterMethodName)) {
+                $this->$afterMethodName($entity, $foreign, $data);
+            }
         }
-        return false;
+
+        return $result;
     }
 
     public function unrelate(Entity $entity, $relationName, $foreign)
@@ -264,16 +285,36 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return;
         }
-        if ($foreign instanceof Entity) {
-            return $this->getMapper()->unrelate($entity, $relationName, $foreign);
+
+        $beforeMethodName = 'beforeUnrelate' . ucfirst($relationName);
+        if (method_exists($this, $beforeMethodName)) {
+            $this->$beforeMethodName($entity, $foreign);
         }
-        if (is_string($foreign)) {
-            return $this->getMapper()->removeRelation($entity, $relationName, $foreign);
+
+        $result = false;
+        $methodName = 'unrelate' . ucfirst($relationName);
+        if (method_exists($this, $methodName)) {
+            $result = $this->$methodName($entity, $foreign);
+        } else {
+            if ($foreign instanceof Entity) {
+                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign);
+            }
+            if (is_string($foreign)) {
+                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign);
+            }
+            if ($foreign === true) {
+                $result = $this->getMapper()->removeAllRelations($entity, $relationName);
+            }
         }
-        if ($foreign === true) {
-            return $this->getMapper()->removeAllRelations($entity, $relationName);
+
+        if ($result) {
+            $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
+            if (method_exists($this, $afterMethodName)) {
+                $this->$afterMethodName($entity, $foreign);
+            }
         }
-        return false;
+
+        return $result;
     }
 
     public function updateRelation(Entity $entity, $relationName, $foreign, $data)
