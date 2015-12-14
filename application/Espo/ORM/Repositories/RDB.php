@@ -248,6 +248,7 @@ class RDB extends \Espo\ORM\Repository
             return;
         }
 
+        $this->beforeRelate($entity, $relationName, $foreign, $data);
         $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
             $this->$beforeMethodName($entity, $foreign, $data);
@@ -271,6 +272,7 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if ($result) {
+            $this->afterRelate($entity, $relationName, $foreign, $data);
             $afterMethodName = 'afterRelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
                 $this->$afterMethodName($entity, $foreign, $data);
@@ -280,12 +282,14 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
+
     public function unrelate(Entity $entity, $relationName, $foreign)
     {
         if (!$entity->id) {
             return;
         }
 
+        $this->beforeUnrelate($entity, $relationName, $foreign);
         $beforeMethodName = 'beforeUnrelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
             $this->$beforeMethodName($entity, $foreign);
@@ -308,6 +312,7 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if ($result) {
+            $this->afterUnrelate($entity, $relationName, $foreign);
             $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
                 $this->$afterMethodName($entity, $foreign);
@@ -315,6 +320,26 @@ class RDB extends \Espo\ORM\Repository
         }
 
         return $result;
+    }
+
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null)
+    {
+
+    }
+
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null)
+    {
+
+    }
+
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign)
+    {
+
+    }
+
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign)
+    {
+
     }
 
     public function updateRelation(Entity $entity, $relationName, $foreign, $data)
