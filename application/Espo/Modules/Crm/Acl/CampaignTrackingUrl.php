@@ -46,7 +46,7 @@ class CampaignTrackingUrl extends \Espo\Core\Acl\Base
                 return true;
             }
         }
-        return;
+        return false;
     }
 
     public function checkInTeam(User $user, Entity $entity)
@@ -60,7 +60,7 @@ class CampaignTrackingUrl extends \Espo\Core\Acl\Base
                 return true;
             }
         }
-        return;
+        return false;
     }
 }
 

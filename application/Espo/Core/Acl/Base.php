@@ -130,6 +130,9 @@ class Base implements Injectable
         if ($data === true) {
             return true;
         }
+        if (is_string($data)) {
+            return true;
+        }
 
         if (!is_null($action)) {
             if (array_key_exists($action, $data)) {

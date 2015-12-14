@@ -26,15 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-/** * Example:
- * Lead: {
- *   edit: 'own',
- *   read: 'team',
- *   delete: 'no',
- * }
- */
-
 Espo.define('acl', [], function () {
 
     var Acl = function (user, scope) {
@@ -78,7 +69,7 @@ Espo.define('acl', [], function () {
                         return true;
                     }
 
-                    if (value == 'no') {
+                    if (value === 'no') {
                         return false;
                     }
 
@@ -96,33 +87,39 @@ Espo.define('acl', [], function () {
                         }
                     }
 
+                    var result = false;
+
                     if (value === 'team') {
+                        result = inTeam;
                         if (inTeam === null) {
                             if (precise) {
-                                return null;
+                                result = null;
                             } else {
                                 return true;
                             }
+                        } else if (inTeam) {
+                            return true;
+                        }
+                    }
+
+                    if (isOwner === null) {
+                        if (precise) {
+                            result = null;
                         } else {
-                            return inTeam;
+                            return true;
                         }
                     }
 
-                    if (value === 'own' || value === 'team') {
-                        if (isOwner === null) {
-                            if (precise) {
-                                return null;
-                            }
-                        }
-                    }
-
-                    return false;
+                    return result;
                 }
             }
             return true;
         },
 
         checkModel: function (model, data, action, precise) {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
             return this.checkScope(data, action, precise, this.checkIsOwner(model), this.checkInTeam(model));
         },
 

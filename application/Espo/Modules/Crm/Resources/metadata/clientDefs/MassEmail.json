@@ -1,5 +1,6 @@
 {
   "controller": "controllers/record",
+  "acl": "crm:acl/mass-email",
   "recordViews": {
     "detail": "crm:views/mass-email/record/detail"
   },

@@ -45,8 +45,9 @@ class MassEmail extends \Espo\Core\Acl\Base
             if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
                 return true;
             }
+        } else {
+            return parent::checkIsOwner($user, $entity);
         }
-        return;
     }
 
     public function checkInTeam(User $user, Entity $entity)
@@ -59,8 +60,9 @@ class MassEmail extends \Espo\Core\Acl\Base
             if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
                 return true;
             }
+        } else {
+            return parent::checkInTeam($user, $entity);
         }
-        return;
     }
 }
 

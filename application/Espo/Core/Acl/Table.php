@@ -70,10 +70,8 @@ class Table
         if ($config && $config->get('useCache') && file_exists($this->cacheFile)) {
             $cached = include $this->cacheFile;
             $this->data = $cached;
-            $this->initSolid();
         } else {
             $this->load();
-            $this->initSolid();
             if ($config && $fileManager && $config->get('useCache')) {
                 $this->buildCache();
             }
@@ -127,7 +125,6 @@ class Table
         $userPermissionList = [];
 
         if (!$this->user->isAdmin()) {
-
             $userRoles = $this->user->get('roles');
 
             foreach ($userRoles as $role) {
@@ -154,7 +151,7 @@ class Table
                 }
             }
 
-            $this->data['table'] = $aclTable;
+            $this->applySolid($aclTable);
         } else {
             $aclTable = array();
             foreach ($this->getScopeList() as $scope) {
@@ -169,8 +166,17 @@ class Table
                     }
                 }
             }
-            $this->data['table'] = $aclTable;
         }
+
+        foreach ($aclTable as $scope => $data) {
+            if (is_string($data)) {
+                if (array_key_exists($data, $aclTable)) {
+                    $aclTable[$scope] = $aclTable[$data];
+                }
+            }
+        }
+
+        $this->data['table'] = $aclTable;
 
         if (!$this->user->isAdmin()) {
             $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
@@ -181,7 +187,7 @@ class Table
         }
     }
 
-    private function initSolid()
+    private function applySolid(&$table)
     {
         if (!$this->metadata) {
             return;
@@ -193,8 +199,8 @@ class Table
 
         $data = $this->metadata->get('app.acl.solid', array());
 
-        foreach ($data as $entityType => $item) {
-            $this->data['table'][$entityType] = $item;
+        foreach ($data as $scope => $item) {
+            $table[$scope] = $item;
         }
     }
 

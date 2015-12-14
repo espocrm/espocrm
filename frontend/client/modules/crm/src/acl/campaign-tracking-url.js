@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,40 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+Espo.define('crm:acl/campaign-tracking-url', 'acl', function (Dep) {
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class CampaignLogRecord extends \Espo\Core\Acl\Base
-{
-
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-            if (!$campaignId) return;
-
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
-            if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
+        checkIsOwner: function (model) {
+            if (model.has('campaignId')) {
                 return true;
             }
-        }
-        return false;
-    }
+            return false;
+        },
 
-    public function checkInTeam(User $user, Entity $entity)
-    {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-            if (!$campaignId) return;
-
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
-            if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
+        checkInTeam: function (model) {
+            if (model.has('campaignId')) {
                 return true;
             }
+            return false;
         }
-        return false;
-    }
-}
+    });
+
+});
 
