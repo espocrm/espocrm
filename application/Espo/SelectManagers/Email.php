@@ -39,7 +39,7 @@ class Email extends \Espo\Core\SelectManagers\Base
             $this->addLeftJoin('users', $result);
             $this->setJoinCondition('users', array(
                 'userId' => $this->getUser()->id
-            ));
+            ), $result);
         }
 
         $this->addUsersColumns($result);
