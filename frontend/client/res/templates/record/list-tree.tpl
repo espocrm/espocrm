@@ -7,7 +7,7 @@
 </div>
 {{/if}}
 
-{{#unless rows.length}}
+{{#unless rowList.length}}
     {{#if createDisabled}}
         {{#unless showRoot}}
             {{translate 'No Data'}}
@@ -24,7 +24,7 @@
     {{/if}}
 
     <ul class="list-group list-group-tree list-group-no-border">
-    {{#each rows}}
+    {{#each rowList}}
         {{{var this ../this}}}
     {{/each}}
     {{#unless createDisabled}}

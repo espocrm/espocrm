@@ -30,7 +30,7 @@
 
 <div class="list list-expanded">
     <ul class="list-group">
-    {{#each rows}}
+    {{#each rowList}}
         {{{var this ../this}}}
     {{/each}}
     </ul>
