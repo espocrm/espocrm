@@ -80,7 +80,7 @@
         </thead>
         {{/if}}
         <tbody>
-        {{#each rows}}
+        {{#each rowList}}
             {{{var this ../this}}}
         {{/each}}
         </tbody>

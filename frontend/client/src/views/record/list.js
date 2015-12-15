@@ -230,7 +230,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 moreCount: this.collection.total - this.collection.length,
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
-                rows: this.rows,
+                rowList: this.rowList,
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
@@ -771,7 +771,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
 
-            this.rows.push(key);
+            this.rowList.push(key);
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
@@ -794,7 +794,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         buildRows: function (callback) {
             this.checkedList = [];
-            this.rows = [];
+            this.rowList = [];
 
             if (this.collection.length > 0) {
                 var i = 0;
@@ -1028,6 +1028,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.removeRowHtml(id);
+            var key = 'row-' + id;
+            this.clearView(key);
+            var index = this.rowList.indexOf(key);
+            if (~index) {
+                this.rowList.splice(index, 1);
+            }
         },
 
         removeRowHtml: function (id) {
