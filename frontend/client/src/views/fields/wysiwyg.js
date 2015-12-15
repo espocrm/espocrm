@@ -90,6 +90,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
+            if (this.mode == 'edit') {
+                this.$summernote = this.$el.find('.summernote');
+            }
 
             var language = this.getConfig().get('language');
 
@@ -100,6 +103,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             if (this.mode == 'edit') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.enableWysiwygMode();
+                } else {
+                    this.$element.removeClass('hidden');
                 }
             }
 
@@ -151,42 +156,50 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             if (!this.$element) {
                 return;
             }
-            this.$summernote = this.$element.summernote({
+
+            this.$element.addClass('hidden');
+            this.$summernote.removeClass('hidden');
+
+            this.$summernote.html(this.$element.val());
+
+            this.$summernote.summernote({
                 height: this.height,
                 lang: this.getConfig().get('language'),
-                onImageUpload: function (files, editor, welEditable) {
-                    var file = files[0];
-                    this.notify('Uploading...');
-                    this.getModelFactory().create('Attachment', function (attachment) {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function (e) {
-                            $.ajax({
-                                type: 'POST',
-                                url: 'Attachment/action/upload',
-                                data: e.target.result,
-                                contentType: 'multipart/encrypted',
-                            }).done(function (data) {
-                                attachment.id = data.attachmentId;
-                                attachment.set('name', file.name);
-                                attachment.set('type', file.type);
-                                attachment.set('role', 'Inline Attachment');
-                                attachment.set('global', true);
-                                attachment.set('size', file.size);
-                                attachment.once('sync', function () {
-                                    var url = '?entryPoint=attachment&id=' + attachment.id;
-                                    this.$summernote.summernote('insertImage', url);
-                                    this.notify(false);
-                                }, this);
-                                attachment.save();
-                            }.bind(this));
-                        }.bind(this);
-                        fileReader.readAsDataURL(file);
+                callbacks: {
+                    onImageUpload: function (files) {
+                        var file = files[0];
+                        this.notify('Uploading...');
+                        this.getModelFactory().create('Attachment', function (attachment) {
+                            var fileReader = new FileReader();
+                            fileReader.onload = function (e) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'Attachment/action/upload',
+                                    data: e.target.result,
+                                    contentType: 'multipart/encrypted',
+                                }).done(function (data) {
+                                    attachment.id = data.attachmentId;
+                                    attachment.set('name', file.name);
+                                    attachment.set('type', file.type);
+                                    attachment.set('role', 'Inline Attachment');
+                                    attachment.set('global', true);
+                                    attachment.set('size', file.size);
+                                    attachment.once('sync', function () {
+                                        var url = '?entryPoint=attachment&id=' + attachment.id;
+                                        this.$summernote.summernote('insertImage', url);
+                                        this.notify(false);
+                                    }, this);
+                                    attachment.save();
+                                }.bind(this));
+                            }.bind(this);
+                            fileReader.readAsDataURL(file);
 
-                    }, this);
-                }.bind(this),
-                onblur: function () {
-                    this.trigger('change')
-                }.bind(this),
+                        }, this);
+                    }.bind(this),
+                    onBlur: function () {
+                        this.trigger('change')
+                    }.bind(this),
+                },
                 toolbar: this.toolbar
             });
         },
@@ -205,13 +218,16 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         disableWysiwygMode: function () {
-            this.$element.destroy();
+            this.$summernote.summernote('destroy');
+
+            this.$summernote.addClass('hidden');
+            this.$element.removeClass('hidden');
         },
 
         fetch: function () {
             var data = {};
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
-                data[this.name] = this.$element.code();
+                data[this.name] = this.$summernote.summernote('code');
             } else {
                 data[this.name] = this.$element.val();
             }

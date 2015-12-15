@@ -36,7 +36,7 @@ Espo.define('views/email/record/edit', ['views/record/edit', 'views/email/record
         },
 
         handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length == 0) {
+            if ((this.model.get('attachmentsIds') || []).length == 0 && !this.isNew) {
                 this.hideField('attachments');
             } else {
                 this.showField('attachments');
