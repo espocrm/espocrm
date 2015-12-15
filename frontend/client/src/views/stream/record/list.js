@@ -39,7 +39,7 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
 
         buildRow: function (i, model, callback) {
             var key = 'row-' + model.id;
-            this.rows.push(key);
+            this.rowList.push(key);
 
             var type = model.get('type');
             var viewName = this.itemViews[type] || 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(type);
@@ -60,7 +60,7 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
 
         buildRows: function (callback) {
             this.checkedList = [];
-            this.rows = [];
+            this.rowList = [];
 
             if (this.collection.length > 0) {
                 this.wait(true);
