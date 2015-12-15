@@ -136,7 +136,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
             if (id === null) {
                 this.selectedData.id = null;
             }
-            this.rows.forEach(function (key) {
+            this.rowList.forEach(function (key) {
                 var view = this.getView(key);
 
                 if (view.model.id == id) {
@@ -152,7 +152,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
 
         buildRows: function (callback) {
             this.checkedList = [];
-            this.rows = [];
+            this.rowList = [];
 
             if (this.collection.length > 0) {
                 this.wait(true);
@@ -161,7 +161,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 var count = modelList.length;
                 var built = 0;
                 modelList.forEach(function (model, i) {
-                    this.rows.push('row-' + i);
+                    this.rowList.push('row-' + i);
                     this.createView('row-' + i, this.itemViewName, {
                         model: model,
                         collection: this.collection,
