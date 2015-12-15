@@ -98,34 +98,23 @@ Espo.define('model', [], function () {
                     var defaultValue = this.getFieldParam(field, 'default');
 
                     if (defaultValue != null) {
-                        var defaultValue = this._getDefaultValue(defaultValue);
+                        var defaultValue = this.parseDefaultValue(defaultValue);
                         defaultHash[field] = defaultValue;
                     }
                 }
             }
 
-            var user = this.getUser();
-            if (user) {
-                if (this.hasField('assignedUser')) {
-                    this.set('assignedUserId', this.getUser().id);
-                    this.set('assignedUserName', this.getUser().get('name'));
-                }
-                var defaultTeamId = this.getUser().get('defaultTeamId');
-                if (defaultTeamId) {
-                    if (this.hasField('teams') && !this.getFieldParam('teams', 'default')) {
-                        defaultHash['teamsIds'] = [defaultTeamId];
-                        defaultHash['teamsNames'] = {};
-                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
-                    }
+            defaultHash = Espo.Utils.cloneDeep(defaultHash);
+            for (var attr in defaultHash) {
+                if (this.has(attr)) {
+                    delete defaultHash[attr];
                 }
             }
-
-            defaultHash = Espo.Utils.cloneDeep(defaultHash);
 
             this.set(defaultHash, {silent: true});
         },
 
-        _getDefaultValue: function (defaultValue) {
+        parseDefaultValue: function (defaultValue) {
             if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
                 var code = defaultValue.substring(11);
                 defaultValue = (new Function( "with(this) { " + code + "}")).call(this);

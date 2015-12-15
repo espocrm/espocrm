@@ -429,6 +429,33 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             return data;
         },
 
+        populateDefaults: function () {
+            this.model.populateDefaults();
+
+            var defaultHash = {};
+
+            if (this.model.hasField('assignedUser')) {
+                defaultHash['assignedUserId'] = this.getUser().id;
+                defaultHash['assignedUserName'] = this.getUser().get('name');
+            }
+            var defaultTeamId = this.getUser().get('defaultTeamId');
+            if (defaultTeamId) {
+                if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
+                    defaultHash['teamsIds'] = [defaultTeamId];
+                    defaultHash['teamsNames'] = {};
+                    defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
+                }
+            }
+
+            for (var attr in defaultHash) {
+                if (this.model.has(attr)) {
+                    delete defaultHash[attr];
+                }
+            }
+
+            this.model.set(defaultHash, {silent: true});
+        },
+
         showDuplicate: function (duplicates) {
         },
 

@@ -84,7 +84,8 @@
             "columns": {
                 "role": "userRole"
             },
-            "view": "User.Fields.Teams"
+            "view": "views/user/fields/teams",
+            "default": "javascript: return {teamsIds: []}"
         },
         "roles": {
             "type": "linkMultiple",

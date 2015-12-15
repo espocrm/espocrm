@@ -122,7 +122,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         create: function (options) {
             options = options || {};
             this.getModel(function (model) {
-                model.populateDefaults();
                 if (options.relate) {
                     model.setRelate(options.relate);
                 }

@@ -75,6 +75,9 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
         },
 
         setup: function () {
+            if (this.model.isNew()) {
+                this.populateDefaults();
+            }
             Dep.prototype.setup.call(this);
         },
 

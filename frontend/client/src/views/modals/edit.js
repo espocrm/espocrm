@@ -115,7 +115,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     }, this);
                     model.fetch();
                 } else {
-                    model.populateDefaults();
                     if (this.options.relate) {
                         model.setRelate(this.options.relate);
                     }
