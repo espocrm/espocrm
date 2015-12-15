@@ -52,7 +52,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['table', ['table', 'link', 'picture', 'hr']],
-                ['misc',['codeview']]
+                ['misc',['codeview', 'fullscreen']]
             ];
 
             this.listenTo(this.model, 'change:isHtml', function (model) {
