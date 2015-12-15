@@ -179,11 +179,11 @@
         "emailReceivedThis": "{entity} alındı"
     },
     "lists": {
-        "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        "monthNames": ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+        "monthNamesShort": ["Ock", "Şbt", "Mrt", "Nsn", "Mys", "Hzr", "Tmz", "Ağs ", "Eyl", "Ekm", "Ksm", "Arlk"],
+        "dayNames": ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+        "dayNamesShort": ["Pzr", "Pzrt", "Sal", "Çrşm", "Prşm", "Cma", "Cmrt"],
+        "dayNamesMin": ["Pa", "Ps", "Sa", "Ça", "Pe", "Cu", "Cr"]
     },
     "options": {
         "salutationName": {
