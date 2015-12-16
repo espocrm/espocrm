@@ -160,6 +160,11 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     this.reRender();
                 }
             }, this);
+
+            this.template = 'role/table';
+            if (this.mode == 'edit') {
+                this.template = 'role/table-edit';
+            }
         },
 
         afterRender: function () {

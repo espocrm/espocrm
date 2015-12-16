@@ -119,7 +119,7 @@ class ControllerManager
             $controller->$afterMethodName($params, $data, $request);
         }
 
-        if (is_array($result) || is_bool($result)) {
+        if (is_array($result) || is_bool($result) || $result instanceof \StdClass) {
             return \Espo\Core\Utils\Json::encode($result);
         }
 

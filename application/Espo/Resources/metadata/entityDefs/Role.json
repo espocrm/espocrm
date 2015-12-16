@@ -21,6 +21,9 @@
         },
         "data": {
             "type": "jsonObject"
+        },
+        "fieldLevelData": {
+            "type": "jsonObject"
         }
     },
     "links": {

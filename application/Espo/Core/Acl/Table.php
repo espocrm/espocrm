@@ -35,15 +35,20 @@ use \Espo\ORM\Entity;
 
 class Table
 {
-    private $data = array(
-        'table' => array()
-    );
+    private $data = null; /*array(
+        'table' => new \StdClass(),
+        'fieldLevelTable' => array()
+    );*/
 
-    private $cacheFile;
+    protected $cacheFile;
 
-    private $actionList = ['read', 'stream', 'edit', 'delete'];
+    protected $actionList = ['read', 'stream', 'edit', 'delete'];
 
-    private $levelList = ['all', 'team', 'own', 'no'];
+    protected $levelList = ['all', 'team', 'own', 'no'];
+
+    protected $fieldLevelActionList = ['read', 'edit'];
+
+    protected $fieldLevelLevelList = ['yes', 'no'];
 
     protected $fileManager;
 
@@ -51,6 +56,11 @@ class Table
 
     public function __construct(\Espo\Entities\User $user, $config = null, $fileManager = null, $metadata = null)
     {
+        $this->data = (object) [
+            'table' => (object) [],
+            'fieldLevelTable' => (object) []
+        ];
+
         $this->user = $user;
 
         $this->metadata = $metadata;
@@ -85,13 +95,13 @@ class Table
 
     public function getScopeData($scope)
     {
-        if (array_key_exists($scope, $this->data['table'])) {
-            $data = $this->data['table'][$scope];
+        if (isset($this->data->table->$scope)) {
+            $data = $this->data->table->$scope;
             if (is_string($data)) {
                 $data = $this->getScopeData($data);
                 return $data;
             }
-            return $data;
+            return get_object_vars($data);
         }
         return null;
     }
@@ -102,17 +112,17 @@ class Table
             return null;
         }
 
-        if (array_key_exists($permission, $this->data)) {
-            return $this->data[$permission];
+        if (isset($this->data->$permission)) {
+            return $this->data->$permission;
         }
         return null;
     }
 
     public function getLevel($scope, $action)
     {
-        if (array_key_exists($scope, $this->data['table'])) {
-            if (array_key_exists($action, $this->data['table'][$scope])) {
-                return $this->data['table'][$scope][$action];
+        if (isset($this->data->table->$scope)) {
+            if (isset($this->table->$scope->$action)) {
+                return $this->data->table->$scope->$action;
             }
         }
         return false;
@@ -121,6 +131,7 @@ class Table
     private function load()
     {
         $aclTableList = [];
+        $fieldLevelTableList = [];
         $assignmentPermissionList = [];
         $userPermissionList = [];
 
@@ -129,6 +140,7 @@ class Table
 
             foreach ($userRoles as $role) {
                 $aclTableList[] = $role->get('data');
+                $fieldLevelTableList[] = $role->get('fieldLevelData');
                 $assignmentPermissionList[] = $role->get('assignmentPermission');
                 $userPermissionList[] = $role->get('userPermission');
             }
@@ -138,56 +150,61 @@ class Table
                 $teamRoles = $team->get('roles');
                 foreach ($teamRoles as $role) {
                     $aclTableList[] = $role->get('data');
+                    $fieldLevelTableList[] = $role->get('fieldLevelData');
                     $assignmentPermissionList[] = $role->get('assignmentPermission');
                     $userPermissionList[] = $role->get('userPermission');
                 }
             }
 
-            $aclTable = $this->merge($aclTableList);
+            $aclTable = $this->mergeTableList($aclTableList);
+            $fieldLevelTable = $this->mergeFieldLevelTableList($fieldLevelTableList);
 
             foreach ($this->getScopeList() as $scope) {
                 if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
-                    $aclTable[$scope] = false;
+                    $aclTable->$scope = false;
+                    unset($fieldLevelTable->$scope);
                 }
             }
 
-            $this->applySolid($aclTable);
+            $this->applySolid($aclTable, $fieldLevelTable);
         } else {
-            $aclTable = array();
+            $aclTable = (object) [];
             foreach ($this->getScopeList() as $scope) {
                 if ($this->metadata->get("scopes.{$scope}.acl") === 'boolean') {
-                    $aclTable[$scope] = true;
+                    $aclTable->$scope = true;
                 } else {
                     if ($this->metadata->get("scopes.{$scope}.entity")) {
-                        $aclTable[$scope] = array();
+                        $aclTable->$scope = (object) [];
                         foreach ($this->actionList as $action) {
-                            $aclTable[$scope][$action] = 'all';
+                            $aclTable->$scope->$action = 'all';
                         }
                     }
                 }
             }
+            $fieldLevelTable = (object) [];
         }
 
         foreach ($aclTable as $scope => $data) {
             if (is_string($data)) {
-                if (array_key_exists($data, $aclTable)) {
-                    $aclTable[$scope] = $aclTable[$data];
+                if (isset($aclTable->$data)) {
+                    $aclTable->$scope = $aclTable->$data;
                 }
             }
         }
 
-        $this->data['table'] = $aclTable;
+        $this->data->table = $aclTable;
+        $this->data->fieldLevelTable = $fieldLevelTable;
 
         if (!$this->user->isAdmin()) {
-            $this->data['assignmentPermission'] = $this->mergeValues($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
-            $this->data['userPermission'] = $this->mergeValues($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
+            $this->data->assignmentPermission = $this->mergeValueList($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
+            $this->data->userPermission = $this->mergeValueList($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
         } else {
-            $this->data['assignmentPermission'] = 'all';
-            $this->data['userPermission'] = 'all';
+            $this->data->assignmentPermission = 'all';
+            $this->data->userPermission = 'all';
         }
     }
 
-    private function applySolid(&$table)
+    private function applySolid(&$table, &$fieldLevelTable)
     {
         if (!$this->metadata) {
             return;
@@ -200,11 +217,15 @@ class Table
         $data = $this->metadata->get('app.acl.solid', array());
 
         foreach ($data as $scope => $item) {
-            $table[$scope] = $item;
+            $value = $item;
+            if (is_array($item)) {
+                $value = (object) $item;
+            }
+            $table->$scope = $value;
         }
     }
 
-    private function mergeValues(array $list, $defaultValue)
+    private function mergeValueList(array $list, $defaultValue)
     {
         $result = null;
         foreach ($list as $level) {
@@ -246,57 +267,49 @@ class Table
         return $scopeList;
     }
 
-    private function merge($tableList)
+    private function mergeTableList(array $tableList)
     {
-        $data = array();
+        $data = (object) [];
         $scopeList = $this->getScopeWithAclList();
 
         foreach ($tableList as $table) {
-            if ($table instanceof \stdClass) {
-                $table = get_object_vars($table);
-            }
             foreach ($scopeList as $scope) {
-            	if (!isset($table[$scope])) {
-            		continue;
-            	}
-            	$row = $table[$scope];
+            	if (!isset($table->$scope)) continue;
+
+            	$row = $table->$scope;
 
                 if ($row == false) {
-                    if (!isset($data[$scope])) {
-                        $data[$scope] = false;
+                    if (!isset($data->$scope)) {
+                        $data->$scope = false;
                     }
                 } else if ($row === true) {
-                    $data[$scope] = true;
+                    $data->$scope = true;
                 } else {
-                    if (!isset($data[$scope])) {
-                        $data[$scope] = array();
+                    if (!isset($data->$scope)) {
+                        $data->$scope = (object) [];
                     }
-                    if ($data[$scope] == false) {
-                        $data[$scope] = array();
-                    }
-
-                    if ($row instanceof \stdClass) {
-                        $row = get_object_vars($row);
+                    if ($data->$scope === false) {
+                        $data->$scope = (object) [];
                     }
 
-                    if (is_array($row)) {
-                        foreach ($this->actionList as $i => $action) {
-                            if (isset($row[$action])) {
-                                $level = $row[$action];
-                                if (!isset($data[$scope][$action])) {
-                                    $data[$scope][$action] = $level;
-                                } else {
-                                    if (array_search($data[$scope][$action], $this->levelList) > array_search($level, $this->levelList)) {
-                                        $data[$scope][$action] = $level;
-                                    }
-                                }
+                    if (!is_object($row)) continue;
+
+                    foreach ($this->actionList as $i => $action) {
+                        if (isset($row->$action)) {
+                            $level = $row->$action;
+                            if (!isset($data->$scope->$action)) {
+                                $data->$scope->$action = $level;
                             } else {
-                                if ($i > 0) {
-                                    // TODO remove it
-                                    $previousAction = $this->actionList[$i - 1];
-                                    if (isset($data[$scope][$previousAction])) {
-                                        $data[$scope][$action] = $data[$scope][$previousAction];
-                                    }
+                                if (array_search($data->$scope->$action, $this->levelList) > array_search($level, $this->levelList)) {
+                                    $data->$scope->$action = $level;
+                                }
+                            }
+                        } else {
+                            if ($i > 0) {
+                                // TODO remove it
+                                $previousAction = $this->actionList[$i - 1];
+                                if (isset($data->$scope->$previousAction)) {
+                                    $data->$scope->$action = $data->$scope->$previousAction;
                                 }
                             }
                         }
@@ -306,23 +319,85 @@ class Table
         }
 
         foreach ($scopeList as $scope) {
-        	if (!array_key_exists($scope, $data)) {
+        	if (!isset($data->$scope)) {
         		$aclType = $this->metadata->get('scopes.' . $scope . '.acl');
                 if ($aclType === true) {
                     $aclType = 'recordAllTeamOwnNo';
                 }
         		if (!empty($aclType)) {
-	        		$data[$scope] = $this->metadata->get('app.acl.defaults.' . $aclType, true);
+                    $defaultValue = $this->metadata->get('app.acl.defaults.' . $aclType, true);
+                    if (is_array($defaultValue)) {
+                        $defaultValue = (object) $defaultValue;
+                    }
+	        		$data->$scope = $defaultValue;
         		}
         	}
         }
         return $data;
     }
 
+    private function mergeFieldLevelTableList(array $tableList)
+    {
+        $data = (object) [];
+        $scopeList = $this->getScopeWithAclList();
+
+        foreach ($tableList as $table) {
+            foreach ($scopeList as $scope) {
+                if (!isset($table->$scope)) continue;
+
+                if (!isset($data->$scope)) {
+                    $data->$scope = (object) [];
+                }
+
+                if (!is_object($table->$scope)) continue;
+
+                foreach (get_object_vars($table->$scope) as $field => $row) {
+                    if (!is_object($row)) continue;
+
+                    if (!isset($data->$scope->$field)) {
+                        $data->$scope->$field = (object) [];
+                    }
+
+                    foreach ($this->fieldLevelActionList as $i => $action) {
+                        if (!isset($row->$action)) continue;
+
+                        $level = $row->$action;
+                        if (!isset($data->$scope->$field->$action)) {
+                            $data->$scope->$field->$action = $level;
+                        } else {
+                            if (array_search($data->$scope->$field->$action, $this->fieldLevelLevelList) > array_search($level, $this->fieldLevelLevelList)) {
+                                $data->$scope->$field->$action = $level;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
     private function buildCache()
     {
-        $contents = '<' . '?'. 'php return ' .  var_export($this->data, true)  . ';';
+        $contents = '<' . '?'. 'php return ' .  $this->varExport($this->data)  . ';';
         $this->fileManager->putContents($this->cacheFile, $contents);
+    }
+
+    private function varExport($variable)
+    {
+        if ($variable instanceof \StdClass) {
+            $result = '(object) ' . $this->varExport(get_object_vars($variable), true);
+        } else if (is_array($variable)) {
+            $array = array();
+            foreach ($variable as $key => $value) {
+                $array[] = var_export($key, true).' => ' . $this->varExport($value, true);
+            }
+            $result = '['.implode(', ', $array).']';
+        } else {
+            $result = var_export($variable, true);
+        }
+
+        return $result;
     }
 }
 
