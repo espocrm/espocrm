@@ -57,19 +57,21 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             this.listenTo(this.model, 'change:isHtml', function (model) {
                 if (this.mode == 'edit') {
-                    if (!model.has('isHtml') || model.get('isHtml')) {
-    		            var value = this.plainToHtml(this.model.get(this.name));
-    		            this.model.set(this.name, value);
-                        this.enableWysiwygMode();
-                    } else {
-    		            var value = this.htmlToPlain(this.model.get(this.name));
-    		            this.model.set(this.name, value);
-                        this.disableWysiwygMode();
+                    if (this.isRendered()) {
+                        if (!model.has('isHtml') || model.get('isHtml')) {
+        		            var value = this.plainToHtml(this.model.get(this.name));
+        		            this.model.set(this.name, value);
+                            this.enableWysiwygMode();
+                        } else {
+        		            var value = this.htmlToPlain(this.model.get(this.name));
+        		            this.model.set(this.name, value);
+                            this.disableWysiwygMode();
+                        }
                     }
                 }
                 if (this.mode == 'detail') {
                     if (this.isRendered()) {
-                        this.render();
+                        this.reRender();
                     }
                 }
             }.bind(this));
@@ -160,7 +162,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
-            this.$summernote.html(this.$element.val());
+            var contents = this.model.get(this.name);
+
+            this.$summernote.html(contents);
+
+            this.$summernote.find('style').remove();
+            this.$summernote.find('link[ref="stylesheet"]').remove();
 
             this.$summernote.summernote({
                 height: this.height,
@@ -213,7 +220,13 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         htmlToPlain: function (text) {
         	text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
-            value = $('<div>').html(value).text();
+
+            var $div = $('<div>').html(value);
+            $div.find('style').remove();
+            $div.find('link[ref="stylesheet"]').remove();
+
+            value =  $div.text();
+
             return value;
         },
 
