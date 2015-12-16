@@ -93,18 +93,18 @@ class Base implements Injectable
 
     public function checkReadOnlyTeam(User $user, $data)
     {
-        if (empty($data) || !is_array($data) || !isset($data['read'])) {
+        if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data['read'] === 'team';
+        return $data->read === 'team';
     }
 
     public function checkReadOnlyOwn(User $user, $data)
     {
-        if (empty($data) || !is_array($data) || !isset($data['read'])) {
+        if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data['read'] === 'own';
+        return $data->read === 'own';
     }
 
     public function checkEntity(User $user, Entity $entity, $data, $action)
@@ -135,8 +135,8 @@ class Base implements Injectable
         }
 
         if (!is_null($action)) {
-            if (array_key_exists($action, $data)) {
-                $value = $data[$action];
+            if (isset($data->action)) {
+                $value = $data->action;
 
                 if ($value === 'all' || $value === true) {
                     return true;
@@ -199,24 +199,20 @@ class Base implements Injectable
 
     public function checkInTeam(User $user, Entity $entity)
     {
-        $userTeamIds = $user->get('teamsIds');
+        $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
         if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {
             return false;
         }
 
-        if (!$entity->has('teamsIds')) {
-            $entity->loadLinkMultipleField('teams');
-        }
+        $entityTeamIdList = $entity->getLinkMultipleIdList('teams');
 
-        $teamIds = $entity->get('teamsIds');
-
-        if (empty($teamIds)) {
+        if (empty($entityTeamIdList)) {
             return false;
         }
 
-        foreach ($userTeamIds as $id) {
-            if (in_array($id, $teamIds)) {
+        foreach ($userTeamIdList as $id) {
+            if (in_array($id, $entityTeamIdList)) {
                 return true;
             }
         }
@@ -233,8 +229,8 @@ class Base implements Injectable
             return true;
         }
 
-        if (is_array($data)) {
-            if ($data['edit'] != 'no') {
+        if (is_object($data)) {
+            if ($data->edit !== 'no') {
                 if ($entity->has('createdById') && $entity->get('createdById') == $user->id) {
                     if (!$entity->has('assignedUserId')) {
                         return true;

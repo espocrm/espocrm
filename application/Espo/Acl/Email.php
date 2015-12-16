@@ -44,8 +44,8 @@ class Email extends \Espo\Core\Acl\Base
         if ($data === false) {
             return false;
         }
-        if (is_array($data)) {
-            if ($data['read'] === false || $data['read'] === 'no') {
+        if (is_object($data)) {
+            if ($data->read === false || $data->read === 'no') {
                 return false;
             }
         }

@@ -101,7 +101,7 @@ class Table
                 $data = $this->getScopeData($data);
                 return $data;
             }
-            return get_object_vars($data);
+            return $data;
         }
         return null;
     }
