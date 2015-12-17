@@ -44,7 +44,7 @@ class User extends Record
         $this->dependencies[] = 'container';
     }
 
-    protected $internalFields = array('password');
+    protected $internalAttributeList = ['password'];
 
     protected function getMailSender()
     {

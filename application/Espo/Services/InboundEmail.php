@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class InboundEmail extends \Espo\Services\Record
 {
-    protected $internalFields = array('password');
+    protected $internalAttributeList = ['password'];
 
     private $campaignService = null;
 

@@ -188,7 +188,7 @@ class Base implements Injectable
             }
         }
 
-        if ($entity->hasField('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
+        if ($entity->hasAttribute('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
             if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
                 return true;
             }
@@ -201,7 +201,7 @@ class Base implements Injectable
     {
         $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
-        if (!$entity->hasRelation('teams') || !$entity->hasField('teamsIds')) {
+        if (!$entity->hasRelation('teams') || !$entity->hasAttribute('teamsIds')) {
             return false;
         }
 

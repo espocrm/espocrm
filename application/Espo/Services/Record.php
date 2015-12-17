@@ -62,19 +62,19 @@ class Record extends \Espo\Core\Services\Base
 
     private $streamService;
 
-    protected $notFilteringFields = array(); // TODO maybe remove it
+    protected $notFilteringAttributeList =[]; // TODO maybe remove it
 
-    protected $internalFields = array();
+    protected $internalAttributeList = [];
 
-    protected $readOnlyFields = array();
+    protected $readOnlyAttributeList = [];
 
-    protected $linkSelectParams = array();
+    protected $linkSelectParams = [];
 
-    protected $mergeLinkList = array();
+    protected $mergeLinkList = [];
 
-    protected $exportSkipFieldList = array();
+    protected $exportSkipAttributeList = [];
 
-    protected $exportAdditionalFieldList = array();
+    protected $exportAdditionalAttributeList = [];
 
     const FOLLOWERS_LIMIT = 4;
 
@@ -244,7 +244,7 @@ class Record extends \Espo\Core\Services\Base
                 if (!empty($defs['noJoin']) && !empty($defs['entity'])) {
                     $nameField = $link . 'Name';
                     $idField = $link . 'Id';
-                    if ($entity->hasField($nameField) && $entity->hasField($idField)) {
+                    if ($entity->hasAttribute($nameField) && $entity->hasAttribute($idField)) {
                         $id = $entity->get($idField);
                     }
 
@@ -308,8 +308,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected function isValid($entity)
     {
-        $fieldDefs = $entity->getFields();
-        if ($entity->hasField('name') && !empty($fieldDefs['name']['required'])) {
+        $fieldDefs = $entity->getAttributes();
+        if ($entity->hasAttribute('name') && !empty($fieldDefs['name']['required'])) {
             if (!$entity->get('name')) {
                 return false;
             }
@@ -331,7 +331,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function isPermittedAssignedUser(Entity $entity)
     {
-        if (!$entity->hasField('assignedUserId')) {
+        if (!$entity->hasAttribute('assignedUserId')) {
             return true;
         }
 
@@ -381,7 +381,7 @@ class Record extends \Espo\Core\Services\Base
             return true;
         }
 
-        if (!$entity->hasField('teamsIds')) {
+        if (!$entity->hasAttribute('teamsIds')) {
             return true;
         }
         $teamIds = $entity->get('teamsIds');
@@ -424,12 +424,12 @@ class Record extends \Espo\Core\Services\Base
         return strip_tags($string, '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>');
     }
 
-    protected function filterInputField($field, $value)
+    protected function filterInputAttribute($attribute, $value)
     {
-        if (in_array($field, $this->notFilteringFields)) {
+        if (in_array($attribute, $this->notFilteringAttributeList)) {
             return $value;
         }
-        $methodName = 'filterInputField' . ucfirst($field);
+        $methodName = 'filterInputAttribute' . ucfirst($attribute);
         if (method_exists($this, $methodName)) {
             $value = $this->$methodName($value);
         }
@@ -438,23 +438,27 @@ class Record extends \Espo\Core\Services\Base
 
     protected function filterInput(&$data)
     {
-        foreach ($this->readOnlyFields as $field) {
-            unset($data[$field]);
+        foreach ($this->readOnlyAttributeList as $attribute) {
+            unset($data[$attribute]);
         }
 
         foreach ($data as $key => $value) {
             if (is_array($data[$key])) {
                 foreach ($data[$key] as $i => $v) {
-                    $data[$key][$i] = $this->filterInputField($i, $data[$key][$i]);
+                    $data[$key][$i] = $this->filterInputAttribute($i, $data[$key][$i]);
                 }
             } else if ($data[$key] instanceof \stdClass) {
                 $propertyList = get_object_vars($data[$key]);
                 foreach ($propertyList as $property => $value) {
-                    $data[$key]->$property = $this->filterInputField($property, $data[$key]->$property);
+                    $data[$key]->$property = $this->filterInputAttribute($property, $data[$key]->$property);
                 }
             } else {
-                $data[$key] = $this->filterInputField($key, $data[$key]);
+                $data[$key] = $this->filterInputAttribute($key, $data[$key]);
             }
+        }
+
+        foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
+            unset($data[$attribute]);
         }
     }
 
@@ -802,12 +806,15 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
+        $data = get_object_vars($attributes);
+        $this->filterInput($data);
+
         if (array_key_exists('ids', $params) && is_array($params['ids'])) {
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
                 if ($this->getAcl()->check($entity, 'edit')) {
-                    $entity->set(get_object_vars($attributes));
+                    $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
                             $idsUpdated[] = $id;
@@ -828,7 +835,7 @@ class Record extends \Espo\Core\Services\Base
 
             foreach ($collection as $entity) {
                 if ($this->getAcl()->check($entity, 'edit')) {
-                    $entity->set(get_object_vars($attributes));
+                    $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
                             $idsUpdated[] = $id;
@@ -982,7 +989,7 @@ class Record extends \Espo\Core\Services\Base
             'deleted',
         );
 
-        foreach ($this->exportSkipFieldList as $field) {
+        foreach ($this->exportSkipAttributeList as $field) {
             $fieldListToSkip[] = $field;
         }
 
@@ -990,7 +997,7 @@ class Record extends \Espo\Core\Services\Base
         foreach ($collection as $entity) {
             if (empty($fieldList)) {
                 $fieldList = [];
-                foreach ($entity->getFields() as $field => $defs) {
+                foreach ($entity->getAttributes() as $field => $defs) {
                     if (in_array($field, $fieldListToSkip)) {
                         continue;
                     }
@@ -1005,7 +1012,7 @@ class Record extends \Espo\Core\Services\Base
                         }
                     }
                 }
-                foreach ($this->exportAdditionalFieldList as $field) {
+                foreach ($this->exportAdditionalAttributeList as $field) {
                     $fieldList[] = $field;
                 }
             }
@@ -1013,7 +1020,7 @@ class Record extends \Espo\Core\Services\Base
             $this->loadAdditionalFieldsForExport($entity);
             $row = array();
             foreach ($fieldList as $field) {
-                $value = $this->getFieldFromEntityForExport($entity, $field);
+                $value = $this->getAttributeFromEntityForExport($entity, $field);
                 $row[$field] = $value;
             }
             $arr[] = $row;
@@ -1050,14 +1057,14 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
-    protected function getFieldFromEntityForExport(Entity $entity, $field)
+    protected function getAttributeFromEntityForExport(Entity $entity, $field)
     {
-        $methodName = 'getField' . ucfirst($field). 'FromEntityForExport';
+        $methodName = 'getAttribute' . ucfirst($field). 'FromEntityForExport';
         if (method_exists($this, $methodName)) {
             return $this->$methodName($entity);
         }
 
-        $defs = $entity->getFields();
+        $defs = $entity->getAttributes();
         if (!empty($defs[$field]) && !empty($defs[$field]['type'])) {
             $type = $defs[$field]['type'];
             switch ($type) {
@@ -1079,8 +1086,11 @@ class Record extends \Espo\Core\Services\Base
 
     public function prepareEntityForOutput(Entity $entity)
     {
-        foreach ($this->internalFields as $field) {
+        foreach ($this->internalAttributeList as $field) {
             $entity->clear($field);
+        }
+        foreach ($this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
+            $entity->clear($attribute);
         }
     }
 
@@ -1136,7 +1146,6 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
         }
-
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);

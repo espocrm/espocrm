@@ -97,8 +97,9 @@ class AclManager
             $config = $this->getContainer()->get('config');
             $fileManager = $this->getContainer()->get('fileManager');
             $metadata = $this->getContainer()->get('metadata');
+            $fieldManager = $this->getContainer()->get('fieldManager');
 
-            $this->tableHashMap[$key] = new \Espo\Core\Acl\Table($user, $config, $fileManager, $metadata);
+            $this->tableHashMap[$key] = new \Espo\Core\Acl\Table($user, $config, $fileManager, $metadata, $fieldManager);
         }
 
         return $this->tableHashMap[$key];
@@ -217,6 +218,12 @@ class AclManager
             }
         }
         return true;
+    }
+
+    public function getScopeForbiddenAttributeList(User $user, $scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        if ($user->isAdmin()) return [];
+        return $this->getTable($user)->getScopeForbiddenAttributeList($scope, $action, $thresholdLevel);
     }
 }
 

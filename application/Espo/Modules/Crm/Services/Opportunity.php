@@ -165,7 +165,7 @@ class Opportunity extends \Espo\Services\Record
         foreach ($rows as $row) {
             $result[$row['month']] = floatval($row['amount']);
         }
-        
+
         return $result;
     }
 

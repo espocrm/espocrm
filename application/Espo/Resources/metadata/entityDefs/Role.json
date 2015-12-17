@@ -22,7 +22,7 @@
         "data": {
             "type": "jsonObject"
         },
-        "fieldLevelData": {
+        "fieldData": {
             "type": "jsonObject"
         }
     },

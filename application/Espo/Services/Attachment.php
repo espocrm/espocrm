@@ -31,8 +31,7 @@ namespace Espo\Services;
 
 class Attachment extends Record
 {
-
-    protected $notFilteringFields = array('contents');
+    protected $notFilteringAttributeList = ['contents'];
 
     public function createEntity($data)
     {

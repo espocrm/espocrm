@@ -35,6 +35,6 @@ use \Espo\Core\Exceptions\NotFound;
 
 class AuthToken extends Record
 {
-    protected $internalFields = array('hash', 'token');
+    protected $internalAttributeList = ['hash', 'token'];
 }
 

@@ -34,7 +34,7 @@ class Entity extends \Espo\ORM\Entity
 
     public function loadLinkMultipleField($field, $columns = null)
     {
-        if ($this->hasRelation($field) && $this->hasField($field . 'Ids')) {
+        if ($this->hasRelation($field) && $this->hasAttribute($field . 'Ids')) {
 
             $defs = array();
             if (!empty($columns)) {
@@ -127,7 +127,7 @@ class Entity extends \Espo\ORM\Entity
     {
         $idsField = $field . 'Ids';
 
-        if (!$this->hasField($idsField)) return null;
+        if (!$this->hasAttribute($idsField)) return null;
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {
@@ -145,7 +145,7 @@ class Entity extends \Espo\ORM\Entity
     {
         $idsField = $field . 'Ids';
 
-        if (!$this->hasField($idsField)) return null;
+        if (!$this->hasAttribute($idsField)) return null;
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {

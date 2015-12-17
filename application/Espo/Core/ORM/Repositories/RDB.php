@@ -153,10 +153,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity, $options);
 
         $nowString = date('Y-m-d H:i:s', time());
-        if ($entity->hasField('modifiedAt')) {
+        if ($entity->hasAttribute('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
         }
-        if ($entity->hasField('modifiedById')) {
+        if ($entity->hasAttribute('modifiedById')) {
             $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
         }
     }
@@ -208,13 +208,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $entity->set('id', Util::generateId());
             }
 
-            if ($entity->hasField('createdAt')) {
+            if ($entity->hasAttribute('createdAt')) {
                 $entity->set('createdAt', $nowString);
             }
-            if ($entity->hasField('modifiedAt')) {
+            if ($entity->hasAttribute('modifiedAt')) {
                 $entity->set('modifiedAt', $nowString);
             }
-            if ($entity->hasField('createdById')) {
+            if ($entity->hasAttribute('createdById')) {
                 $entity->set('createdById', $this->entityManager->getUser()->id);
             }
 
@@ -227,10 +227,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->clear('modifiedById');
         } else {
             if (empty($options['silent'])) {
-                if ($entity->hasField('modifiedAt')) {
+                if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
-                if ($entity->hasField('modifiedById')) {
+                if ($entity->hasAttribute('modifiedById')) {
                     $entity->set('modifiedById', $this->entityManager->getUser()->id);
                 }
             }
@@ -253,14 +253,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleEmailAddressSave(Entity $entity)
     {
-        if ($entity->hasRelation('emailAddresses') && $entity->hasField('emailAddress')) {
+        if ($entity->hasRelation('emailAddresses') && $entity->hasAttribute('emailAddress')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
         }
     }
 
     protected function handlePhoneNumberSave(Entity $entity)
     {
-        if ($entity->hasRelation('phoneNumbers') && $entity->hasField('phoneNumber')) {
+        if ($entity->hasRelation('phoneNumbers') && $entity->hasAttribute('phoneNumber')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }

@@ -115,9 +115,9 @@ class Base
         }
     }
 
-    protected function getTextFilterFields()
+    protected function getTextFilterFieldList()
     {
-        return $this->metadata->get("entityDefs.{$this->entityType}.collection.textFilterFields", array('name'));
+        return $this->metadata->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
     }
 
     protected function getSeed()
@@ -395,28 +395,28 @@ class Base
 
     protected function hasAssignedUsersField()
     {
-        if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasField('assignedUsersIds')) {
+        if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds')) {
             return true;
         }
     }
 
     protected function hasAssignedUserField()
     {
-        if ($this->getSeed()->hasField('assignedUserId')) {
+        if ($this->getSeed()->hasAttribute('assignedUserId')) {
             return true;
         }
     }
 
     protected function hasCreatedByField()
     {
-        if ($this->getSeed()->hasField('createdById')) {
+        if ($this->getSeed()->hasAttribute('createdById')) {
             return true;
         }
     }
 
     protected function hasTeamsField()
     {
-        if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasField('teamsIds')) {
+        if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds')) {
             return true;
         }
     }
@@ -936,8 +936,8 @@ class Base
 
     protected function textFilter($textFilter, &$result)
     {
-        $fieldDefs = $this->getSeed()->getFields();
-        $fieldList = $this->getTextFilterFields();
+        $fieldDefs = $this->getSeed()->getAttributes();
+        $fieldList = $this->getTextFilterFieldList();
         $d = array();
 
         foreach ($fieldList as $field) {

@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\ORM;
+
 abstract class Entity implements IEntity
 {
     public $id = null;
@@ -120,7 +121,7 @@ abstract class Entity implements IEntity
             if ($name == 'id') {
                 $this->id = $value;
             }
-            if ($this->hasField($name)) {
+            if ($this->hasAttribute($name)) {
                 $method = '_set' . ucfirst($name);
                 if (method_exists($this, $method)) {
                     $this->$method($value);
@@ -175,7 +176,7 @@ abstract class Entity implements IEntity
             $this->reset();
         }
 
-        foreach ($this->fields as $field => $fieldDefs) {
+        foreach ($this->getAttributes() as $field => $fieldDefs) {
             if (array_key_exists($field, $arr)) {
                 if ($field == 'id') {
                     $this->id = $arr[$field];
@@ -264,6 +265,11 @@ abstract class Entity implements IEntity
         return isset($this->fields[$fieldName]);
     }
 
+    public function hasAttribute($name)
+    {
+        return isset($this->fields[$name]);
+    }
+
     public function hasRelation($relationName)
     {
         return isset($this->relations[$relationName]);
@@ -292,6 +298,11 @@ abstract class Entity implements IEntity
         return $this->fields;
     }
 
+    public function getAttributes()
+    {
+        return $this->fields;
+    }
+
     public function getRelations()
     {
         return $this->relations;
@@ -303,6 +314,11 @@ abstract class Entity implements IEntity
     }
 
     public function isFieldChanged($fieldName)
+    {
+        return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
+    }
+
+    public function isAttributeChanged($fieldName)
     {
         return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
     }
