@@ -235,7 +235,7 @@ class Table
 
     public function getScopeForbiddenAttributeList($scope, $action = 'read', $thresholdLevel = 'no')
     {
-        $key = $scope . '_'. $thresholdLevel;
+        $key = $scope . '_'. $action . '_' . $thresholdLevel;
         if (isset($this->forbiddenAttributesCache[$key])) {
             return $this->forbiddenAttributesCache[$key];
         }
