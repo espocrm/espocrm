@@ -78,6 +78,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.$el.parent();
         },
 
+        setDisabled: function (locked) {
+            this.disabled = true;
+            if (locked) {
+                this.disabledLocked = true;
+            }
+        },
+
+        setNotDisabled: function () {
+            if (this.disabledLocked) return;
+            this.disabled = false;
+        },
+
         setRequired: function () {
             this.params.required = true;
         },
@@ -183,12 +195,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.readOnly = this.readOnly || this.params.readOnly;
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
-            this.readOnly = this.options.readOnly || false;
+            this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-
-           if (this.options.disabled) {
-                this.disabled = true;
-            }
+            this.disabledLocked = this.options.disabledLocked || false;
+            this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 
             if (this.mode == 'edit' && this.readOnly) {
                 this.mode = 'detail';

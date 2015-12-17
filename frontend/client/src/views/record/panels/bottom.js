@@ -227,11 +227,17 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
                 o.disabled = true;
             }
+            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+                o.disabledLocked = true;
+            }
             if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
                 o.readOnly = true;
             }
             if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                 o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
+            }
+            if (!readOnlyLocked && this.recordHelper.getFieldStateParam(name, 'readOnlyLocked')) {
+                readOnlyLocked = true;
             }
 
             if (readOnlyLocked) {

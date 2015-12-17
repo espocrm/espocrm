@@ -610,10 +610,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }, this);
 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
-            this._initDependancy();
+            this.initDependancy();
+
+            this.setupFieldLevelSecurity();
 
             this.build();
-
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
@@ -927,8 +928,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
                             o.disabled = true;
                         }
+                        if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+                            o.disabledLocked = true;
+                        }
                         if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
                             o.readOnly = true;
+                        }
+                        if (!o.readOnlyLocked && this.recordHelper.getFieldStateParam(name, 'readOnlyLocked')) {
+                            o.readOnlyLocked = true;
                         }
                         if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                             o.defs.params = o.defs.params || {};

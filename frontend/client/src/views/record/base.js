@@ -44,8 +44,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
         mode: null,
 
-        hideField: function (name) {
+        hideField: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
+            if (locked) {
+                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
+            }
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
@@ -74,11 +77,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var view = this.getFieldView(name);
             if (view) {
-                view.disabled = true;
+                view.setDisabled(locked);
             }
         },
 
         showField: function (name) {
+            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+                return;
+            }
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
             var processHtml = function () {
@@ -109,17 +115,22 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var view = this.getFieldView(name);
             if (view) {
-                view.disabled = false;
+                if (!view.disabledLocked) {
+                    view.setNotDisabled();
+                }
             }
         },
 
-        setFieldReadOnly: function (name) {
+        setFieldReadOnly: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'readOnly', true);
+            if (locked) {
+                this.recordHelper.setFieldStateParam(name, 'readOnlyLocked', true);
+            }
 
             var view = this.getFieldView(name);
             if (view) {
                 if (!view.readOnly) {
-                    view.setReadOnly();
+                    view.setReadOnly(locked);
                 }
             }
         },
@@ -247,7 +258,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 this.model.set(this.options.attributes);
             }
 
-            this._initDependancy();
+            this.initDependancy();
 
             this.listenTo(this.model, 'change', function () {
                 if (this.mode == 'edit') {
@@ -260,13 +271,25 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this._handleDependencyAttributes();
         },
 
-        _initDependancy: function () {
+        initDependancy: function () {
             Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
                 this.listenTo(this.model, 'change:' + attr, function () {
                     this._handleDependencyAttribute(attr);
                 }, this);
             }, this);
             this._handleDependencyAttributes();
+        },
+
+        setupFieldLevelSecurity: function () {
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+            forbiddenFieldList.forEach(function (field) {
+                this.hideField(field, true);
+            }, this);
+
+            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
+            readOnlyFieldList.forEach(function (field) {
+                this.setFieldReadOnly(field, true);
+            }, this);
         },
 
         setIsChanged: function () {

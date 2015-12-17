@@ -39,7 +39,9 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
 
     var AclManager = function (user, implementationClassMap) {
         this.data = {
-            table: {}
+            table: {},
+            fieldTable:  {},
+            fieldTableQuickAccess: {}
         };
         this.user = user || null;
 
@@ -52,6 +54,8 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         data: null,
 
         user: null,
+
+        fieldLevelList: ['yes', 'no'],
 
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
@@ -73,6 +77,8 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             data = data || {};
             this.data = data;
             this.data.table = this.data.table || {};
+            this.data.fieldTable = this.data.fieldTable || {};
+            this.data.attributeTable = this.data.attributeTable || {};
         },
 
         get: function (name) {
@@ -183,6 +189,37 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
                 }
             }
             return result;
+        },
+
+        getScopeForbiddenFieldList: function (scope, action, thresholdLevel) {
+            action = action || 'read';
+            thresholdLevel = thresholdLevel || 'no';
+
+            var key = scope + '_' + action + '_' + thresholdLevel;
+            this.forbiddenFieldsCache = this.forbiddenFieldsCache || {};
+            if (key in this.forbiddenFieldsCache) {
+                return this.forbiddenFieldsCache[key];
+            }
+
+            var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+
+            var fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+            var scopeData = fieldTableQuickAccess[scope] || {};
+            var fieldsData = scopeData.fields || {};
+            var actionData = fieldsData[action] || {};
+
+            var fieldList = [];
+            levelList.forEach(function (level) {
+                var list = actionData[level] || [];
+                list.forEach(function (field) {
+                    if (~fieldList.indexOf(field)) return;
+                    fieldList.push(field);
+                }, this);
+            }, this);
+
+            this.forbiddenFieldsCache[key] = fieldList;
+
+            return fieldList;
         }
 
     });

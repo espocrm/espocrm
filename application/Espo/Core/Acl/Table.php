@@ -66,7 +66,7 @@ class Table
         $this->data = (object) [
             'table' => (object) [],
             'fieldTable' => (object) [],
-            'attributeTable' => (object) [],
+            'fieldTableQuickAccess' => (object) [],
         ];
 
         $this->user = $user;
@@ -222,7 +222,7 @@ class Table
         $this->data->table = $aclTable;
         $this->data->fieldTable = $fieldTable;
 
-        $this->fillAttributeTable();
+        $this->fillFieldTableQuickAccess();
 
         if (!$this->user->isAdmin()) {
             $this->data->assignmentPermission = $this->mergeValueList($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
@@ -240,9 +240,9 @@ class Table
             return $this->forbiddenAttributesCache[$key];
         }
 
-        $attributeTable = $this->data->attributeTable;
+        $fieldTableQuickAccess = $this->data->fieldTableQuickAccess;
 
-        if (!isset($attributeTable->$scope) || !isset($attributeTable->$scope->$action)) {
+        if (!isset($fieldTableQuickAccess->$scope) || !isset($fieldTableQuickAccess->$scope->attributes) || !isset($fieldTableQuickAccess->$scope->attributes->$action)) {
             $this->forbiddenAttributesCache[$key] = [];
             return [];
         }
@@ -257,8 +257,9 @@ class Table
         $attributeList = [];
 
         foreach ($levelList as $level) {
-            if (!isset($attributeTable->$scope->$action->$level)) continue;
-            foreach ($attributeTable->$scope->$action->$level as $attribute) {
+            if (!isset($fieldTableQuickAccess->$scope->attributes->$action->$level)) continue;
+            foreach ($fieldTableQuickAccess->$scope->attributes->$action->$level as $attribute) {
+                if (in_array($attribute, $attributeList)) continue;
                 $attributeList[] = $attribute;
             }
         }
@@ -268,19 +269,24 @@ class Table
         return $attributeList;
     }
 
-    protected function fillAttributeTable()
+    protected function fillFieldTableQuickAccess()
     {
         $fieldTable = $this->data->fieldTable;
 
-        $attributeTable = (object) [];
+        $fieldTableQuickAccess = (object) [];
 
         foreach (get_object_vars($fieldTable) as $scope => $scopeData) {
-            $attributeTable->$scope = (object) [];
+            $fieldTableQuickAccess->$scope = (object) [
+                'attributes' => (object) [],
+                'fields' => (object) []
+            ];
 
             foreach ($this->fieldActionList as $action) {
-                $attributeTable->$scope->$action = (object) [];
+                $fieldTableQuickAccess->$scope->attributes->$action = (object) [];
+                $fieldTableQuickAccess->$scope->fields->$action = (object) [];
                 foreach ($this->fieldLevelList as $level) {
-                    $attributeTable->$scope->$action->$level = [];
+                    $fieldTableQuickAccess->$scope->attributes->$action->$level = [];
+                    $fieldTableQuickAccess->$scope->fields->$action->$level = [];
                 }
             }
 
@@ -291,8 +297,9 @@ class Table
                     if (!isset($fieldData->$action)) continue;
                     foreach ($this->fieldLevelList as $level) {
                         if ($fieldData->$action === $level) {
+                            $fieldTableQuickAccess->$scope->fields->$action->{$level}[] = $field;
                             foreach ($attributeList as $attribute) {
-                                $attributeTable->$scope->$action->{$level}[] = $attribute;
+                                $fieldTableQuickAccess->$scope->attributes->$action->{$level}[] = $attribute;
                             }
                         }
                     }
@@ -300,7 +307,7 @@ class Table
             }
         }
 
-        $this->data->attributeTable = $attributeTable;
+        $this->data->fieldTableQuickAccess = $fieldTableQuickAccess;
     }
 
     protected function applySolid(&$table, &$fieldTable)
