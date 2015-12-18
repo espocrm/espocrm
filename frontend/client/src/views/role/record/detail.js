@@ -55,7 +55,10 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.createView('extra', 'views/role/record/table', {
-                aclData: this.model.get('data') || {},
+                acl: {
+                    data: this.model.get('data') || {},
+                    fieldData: this.model.get('fieldData') || {}
+                },
                 el: this.options.el + ' .extra'
             });
         },

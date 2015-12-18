@@ -135,6 +135,22 @@ Espo.define('language', [], function () {
             });
         },
 
+        sortFieldList: function (scope, fieldList) {
+            return fieldList.sort(function (v1, v2) {
+                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+            }.bind(this));
+        },
+
+        sortEntityList: function (entityList, plural) {
+            var category = 'scopeNames';
+            if (plural) {
+                category += 'Plural';
+            }
+            return entityList.sort(function (v1, v2) {
+                 return this.translate(v1, category).localeCompare(this.translate(v2, category));
+            }.bind(this));
+        }
+
     }, Backbone.Events);
 
     return Language;

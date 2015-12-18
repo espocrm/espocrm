@@ -34,7 +34,7 @@ Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
 
         multiple: false,
 
-        template: 'user.modals.access',
+        template: 'user/modals/access',
 
         header: false,
 
@@ -57,14 +57,16 @@ Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
                 }
             ];
 
-            this.createView('table', 'Role.Record.Table', {
-                aclData: this.options.aclData.table,
-                final: true,
+            this.createView('table', 'views/role/record/table', {
+                acl: {
+                    data: this.options.aclData.table,
+                    fieldData: this.options.aclData.fieldTable,
+                },
+                final: true
             });
 
             this.header = this.translate('Access');
-
-        },
+        }
 
     });
 });

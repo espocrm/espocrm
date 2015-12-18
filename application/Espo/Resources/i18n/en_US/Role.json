@@ -28,6 +28,7 @@
             "team": "team",
             "own": "own",
             "no": "no",
+            "yes": "yes",
             "not-set": "not-set"
         }
     },

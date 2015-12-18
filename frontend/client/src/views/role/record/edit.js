@@ -75,6 +75,8 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
             }
 
             data['data'] = data['data'];
+            data['fieldData'] = this.getView('extra').fetchFieldData();
+
             return data;
         },
 
@@ -101,7 +103,10 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
             this.createView('extra', 'views/role/record/table', {
                 mode: 'edit',
-                aclData: this.model.get('data') || {},
+                acl: {
+                    data: this.model.get('data') || {},
+                    fieldData: this.model.get('fieldData') || {}
+                },
                 el: this.options.el + ' .extra'
             });
         },

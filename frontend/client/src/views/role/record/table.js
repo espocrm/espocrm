@@ -38,44 +38,52 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
         accessList: ['not-set', 'enabled', 'disabled'],
 
-        colors: {
-            all: '#6BC924',
-            team: '#999900',
-            own: '#CC9900',
-            no: '#F23333',
+        fieldLevelList: ['yes', 'no'],
 
-            enabled: '#6BC924',
-            disabled: '#F23333',
-            'not-set': '#A8A8A8',
-        },
-
-        mode: 'detail',
-
-        aclData: null,
+        fieldActionList: ['read', 'edit'],
 
         levelListMap: {
             'recordAllTeamOwnNo': ['all', 'team', 'own', 'no'],
             'recordAllTeamNo': ['all', 'team', 'no'],
             'recordAllOwnNo': ['all', 'own', 'no'],
             'recordAllNo': ['all', 'no'],
-            'record': ['all', 'team', 'own', 'no'],
+            'record': ['all', 'team', 'own', 'no']
         },
+
+        colors: {
+            yes: '#6BC924',
+            all: '#6BC924',
+            team: '#999900',
+            own: '#CC9900',
+            no: '#F23333',
+            enabled: '#6BC924',
+            disabled: '#F23333',
+            'not-set': '#A8A8A8'
+        },
+
+        mode: 'detail',
+
+        tableData: null,
 
         data: function () {
             var data = {};
-            data['editMode'] = this.mode === 'edit';
-            data['actionList'] = this.actionList;
-            data['accessList'] = this.accessList;
-            data['colors'] = this.colors;
-            data['aclTable'] = this.getAclTable();
+            data.editMode = this.mode === 'edit';
+            data.actionList = this.actionList;
+            data.accessList = this.accessList;
+            data.fieldActionList = this.fieldActionList;
+            data.fieldLevelList = this.fieldLevelList;
+            data.colors = this.colors;
+
+            data.tableDataList = this.getTableDataList();
+            data.fieldTableDataList = this.fieldTableDataList;
             return data;
         },
 
-        getAclTable: function () {
-            var aclData = this.aclData;
-            var aclTable = {};
-            for (var i in this.scopeList) {
-                var controller = this.scopeList[i];
+        getTableDataList: function () {
+            var aclData = this.acl.data;
+            var aclDataList = [];
+
+            this.scopeList.forEach(function (scope) {
                 var o = {};
 
                 var access = 'not-set';
@@ -84,26 +92,26 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     access = 'enabled';
                 }
 
-                if (controller in aclData) {
-                    if (aclData[controller] === false) {
+                if (scope in aclData) {
+                    if (aclData[scope] === false) {
                         access = 'disabled';
                     } else {
                         access = 'enabled';
                     }
                 }
-                if (this.aclTypeMap[controller] != 'boolean') {
-                    for (var j in this.actionList) {
-                        var action = this.actionList[j];
+                var list = [];
+                if (this.aclTypeMap[scope] != 'boolean') {
+                    this.actionList.forEach(function (action, j) {
                         var level = 'all';
-                        if (controller in aclData) {
+                        if (scope in aclData) {
                             if (access == 'enabled') {
-                                if (aclData[controller] !== true) {
-                                    if (action in aclData[controller]) {
-                                        level = aclData[controller][action];
+                                if (aclData[scope] !== true) {
+                                    if (action in aclData[scope]) {
+                                        level = aclData[scope][action];
                                     } else {
                                         // TODO remove it
                                         if (j > 0) {
-                                            level = o[this.actionList[j - 1]].level;
+                                            level = (list[j - 1] || {}).level;
                                         }
                                     }
                                 }
@@ -111,28 +119,35 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 level = 'no';
                             }
                         }
-                        o[action] = {level: level, name: controller + '-' + action};
-                    }
+                        list.push({
+                            level: level,
+                            name: scope + '-' + action,
+                            action: action
+                        });
+                    }, this);
                 }
-                var type = this.aclTypeMap[controller];
-                aclTable[controller] = {
-                    acl: o,
+                var type = this.aclTypeMap[scope];
+
+                aclDataList.push({
+                    list: list,
                     access: access,
-                    name: controller,
+                    name: scope,
                     type: type,
                     levelList: this.levelListMap[type] || []
-                };
-            }
-            return aclTable;
-        },
+                });
+            }, this);
 
-        getAclList: function (type) {
-
+            return aclDataList;
         },
 
         setup: function () {
             this.mode = this.options.mode || 'detail';
-            this.aclData = this.options.aclData;
+
+            this.acl = this.options.acl || {};
+
+            this.acl.data = this.acl.data || {};
+            this.acl.fieldData = this.acl.fieldData || {};
+
             this.final = this.options.final || false;
 
             this.aclTypeMap = {};
@@ -161,10 +176,67 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                 }
             }, this);
 
+            this.setupFieldTableDataList();
+
             this.template = 'role/table';
             if (this.mode == 'edit') {
                 this.template = 'role/table-edit';
             }
+        },
+
+        setupFieldTableDataList: function () {
+            this.fieldTableDataList = [];
+            this.scopeList.forEach(function (scope) {
+                if (!(scope in this.acl.fieldData)) return;
+                var scopeData = this.acl.fieldData[scope];
+
+                var fieldList = this.getFieldManager().getScopeFieldList(scope);
+                this.getLanguage().sortFieldList(scope, fieldList);
+
+                var fieldDataList = [];
+                fieldList.forEach(function (field) {
+                    if (!(field in scopeData)) return;
+
+                    var list = [];
+
+                    this.fieldActionList.forEach(function (action) {
+                        list.push({
+                            name: action,
+                            value: scopeData[field][action] || 'yes'
+                        })
+                    }, this);
+
+                    fieldDataList.push({
+                        name: field,
+                        list: list
+                    });
+                }, this);
+
+
+                this.fieldTableDataList.push({
+                    name: scope,
+                    list: fieldDataList
+                });
+            }, this);
+        },
+
+        fetchFieldData: function () {
+            var data = {};
+            this.fieldTableDataList.forEach(function (scopeData) {
+                var scopeObj = {};
+                var scope = scopeData.name;
+                scopeData.list.forEach(function (fieldData) {
+                    var field = fieldData.name;
+                    var fieldObj = {};
+                    this.fieldActionList.forEach(function (action) {
+                        fieldObj[action] = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="'+action+'"]').val();
+                    }, this);
+                    scopeObj[field] = fieldObj;
+                }, this);
+                data[scope] = scopeObj;
+            }, this);
+
+            return data;
         },
 
         afterRender: function () {

@@ -69,8 +69,11 @@
         },
 
         getEntityAttributeList: function (entityType) {
-            var list = [];
+            return this.getScopeAttributeList(entityType);
+        },
 
+        getScopeAttributeList: function (entityType) {
+            var list = [];
             var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
             Object.keys(defs).forEach(function (field) {
                 this.getAttributeList(defs[field]['type'], field).forEach(function (attr) {
@@ -134,6 +137,10 @@
 
         getAttributeList: function (fieldType, fieldName) {
             return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
+        },
+
+        getScopeFieldList: function (scope) {
+            return Object.keys(this.metadata.get('entityDefs.' + scope + '.fields') || {});
         },
 
         getViewName: function (fieldType) {

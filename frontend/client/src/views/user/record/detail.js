@@ -110,9 +110,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     view.render();
                 }.bind(this));
             }.bind(this));
-
-
-        },
+        }
 
     });
 
