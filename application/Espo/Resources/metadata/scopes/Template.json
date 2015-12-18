@@ -3,5 +3,6 @@
     "layouts": false,
     "tab": false,
     "acl": "recordAllTeamNo",
-    "customizable": false
+    "customizable": false,
+    "disabled": true
 }
