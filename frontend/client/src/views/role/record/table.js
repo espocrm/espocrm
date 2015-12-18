@@ -260,7 +260,42 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     this.controlStreamSelect(scope, $read.val(), true);
                     this.controlDeleteSelect(scope, $edit.val(), true);
                 }, this);
+
+                this.fieldTableDataList.forEach(function (o) {
+                    var scope = o.name;
+                    o.list.forEach(function (f) {
+                        var field = f.name;
+
+                        var $read = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="read"]');
+                        $read.on('change', function () {
+                            var value = $read.val();
+                            this.controlFieldEditSelect(scope, field, value);
+                        }.bind(this));
+
+                        this.controlFieldEditSelect(scope, field, $read.val(), true);
+                    }, this);
+
+                }, this);
             }
+        },
+
+        controlFieldEditSelect: function (scope, field, value, dontChange) {
+            var $edit = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="edit"]');
+
+            if (!dontChange) {
+                if (this.fieldLevelList.indexOf($edit.val()) < this.fieldLevelList.indexOf(value)) {
+                    $edit.val(value);
+                }
+            }
+
+            $edit.find('option').each(function (i, o) {
+                var $o = $(o);
+                if (this.fieldLevelList.indexOf($o.val()) < this.fieldLevelList.indexOf(value)) {
+                    $o.attr('disabled', 'disabled');
+                } else {
+                    $o.removeAttr('disabled');
+                }
+            }.bind(this));
         },
 
         controlEditSelect: function (scope, value, dontChange) {
