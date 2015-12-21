@@ -810,23 +810,23 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
 
                 this.wait(true);
-                //this.getInternalLayout(function (internalLayout) {
-                    var modelList = this.collection.models;
-                    var count = modelList.length;
-                    var built = 0;
-                    modelList.forEach(function (model) {
-                        this.buildRow(i, model, function () {
-                            built++;
-                            if (built == count) {
-                                func();
-                                this.wait(false);
-                            }
-                        }.bind(this));
-                    }, this);
-                //}.bind(this)
+
+                var modelList = this.collection.models;
+                var count = modelList.length;
+                var built = 0;
+                modelList.forEach(function (model) {
+                    this.buildRow(i, model, function () {
+                        built++;
+                        if (built == count) {
+                            func();
+                            this.wait(false);
+                        }
+                    }.bind(this));
+                }, this);
+
 
                 if (this.pagination) {
-                    this.createView('pagination', 'Record.ListPagination', {
+                    this.createView('pagination', 'views/record/list-pagination', {
                         collection: this.collection
                     }, func);
                 }

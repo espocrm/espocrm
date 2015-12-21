@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
         header: false,
 
-        template: 'modals.detail',
+        template: 'modals/detail',
 
         editDisabled: false,
 
@@ -72,14 +72,35 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                 label: 'Close'
             });
 
+            if (this.model.collection && !this.navigateButtonsDisabled) {
+                this.buttonList.push({
+                    name: 'previous',
+                    html: '<span class="glyphicon glyphicon-chevron-left"></span>',
+                    title: this.translate('Previous Entry'),
+                    pullLeft: true,
+                    disabled: true
+                });
+                this.buttonList.push({
+                    name: 'next',
+                    html: '<span class="glyphicon glyphicon-chevron-right"></span>',
+                    title: this.translate('Next Entry'),
+                    pullLeft: true,
+                    disabled: true
+                });
+            }
+
             this.scope = this.scope || this.options.scope;
             this.id = this.options.id;
-
-            this.header = this.getLanguage().translate(this.scope, 'scopeNames');
 
             this.waitForView('record');
 
             this.sourceModel = this.model;
+
+            if (this.model) {
+                if (this.model.collection) {
+                    this.indexOfRecord = this.model.collection.indexOf(this.model);
+                }
+            }
 
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.sourceModel) {
@@ -90,7 +111,11 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
                     }, this);
                     model.fetch();
                 } else {
+                    var collection = this.model.collection;
+
                     model = this.model = this.model.clone();
+                    model.collection = collection;
+
                     this.once('after:render', function () {
                         model.fetch();
                     });
@@ -104,6 +129,14 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
         },
 
         addEditButton: function () {
+            var index = -1;
+            this.buttonList.forEach(function (item, i) {
+                if (item.name === 'edit') {
+                    index = i;
+                }
+            }, this);
+            if (~index) return;
+
             this.buttonList.unshift({
                 name: 'edit',
                 label: 'Edit',
@@ -111,7 +144,21 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             });
         },
 
+        removeEditButton: function () {
+            var index = -1;
+            this.buttonList.forEach(function (item, i) {
+                if (item.name === 'edit') {
+                    index = i;
+                }
+            }, this);
+            if (~index) {
+                this.buttonList.unshift(index, 1);
+            }
+        },
+
         createRecord: function (model, callback) {
+            this.header = this.getLanguage().translate(this.scope, 'scopeNames');
+
             if (model.get('name')) {
                 this.header += ' &raquo; ' + model.get('name');
             }
@@ -121,6 +168,8 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
 
             if (!this.editDisabled && this.getAcl().check(model, 'edit')) {
                 this.addEditButton();
+            } else {
+                this.removeEditButton();
             }
 
             var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
@@ -143,10 +192,123 @@ Espo.define('Views.Modals.Detail', 'Views.Modal', function (Dep) {
             setTimeout(function () {
                 this.$el.children(0).scrollTop(0);
             }.bind(this), 50);
+
+            if (!this.navigateButtonsEnabled) {
+                this.controlNavigationButtons();
+            }
+        },
+
+        controlNavigationButtons: function () {
+            var recordView = this.getView('record');
+            if (!recordView) return;
+
+            var indexOfRecord = this.indexOfRecord;
+
+            var previousButtonEnabled = false;
+            var nextButtonEnabled = false;
+
+            if (indexOfRecord > 0) {
+                previousButtonEnabled = true;
+            }
+
+            if (indexOfRecord < this.model.collection.total - 1) {
+                nextButtonEnabled = true;
+            } else {
+                if (this.model.collection.total === -1) {
+                    nextButtonEnabled = true;
+                } else if (this.model.collection.total === -2) {
+                    if (indexOfRecord < this.model.collection.length - 1) {
+                        nextButtonEnabled = true;
+                    }
+                }
+            }
+
+            var $previous = this.$el.find('footer button[data-name="previous"]');
+            var $next = this.$el.find('footer button[data-name="next"]');
+
+            if (previousButtonEnabled) {
+                $previous.removeClass('disabled');
+            } else {
+                $previous.addClass('disabled');
+            }
+
+            if (nextButtonEnabled) {
+                $next.removeClass('disabled');
+            } else {
+                $next.addClass('disabled');
+            }
+        },
+
+        switchToModelByIndex: function (indexOfRecord) {
+            if (!this.model.collection) return;
+            var model = this.model.collection.at(indexOfRecord);
+            if (!model) {
+                throw new Error("Model is not found in collection by index.");
+            }
+
+            this.indexOfRecord = indexOfRecord;
+
+            this.id = model.id;
+            this.scope = model.name;
+
+            this.model = this.sourceModel = model;
+
+            var collection = this.model.collection;
+            this.model = this.model.clone();
+            this.model.collection = collection;
+
+            this.once('after:render', function () {
+                this.model.fetch();
+            }, this);
+
+            this.listenTo(this.model, 'change', function () {
+                this.sourceModel.set(this.model.getClonedAttributes());
+            }, this);
+
+
+            this.createRecord(this.model, function () {
+                this.reRender();
+            }.bind(this));
+
+            this.controlNavigationButtons();
+        },
+
+        actionPrevious: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord > 0)) return;
+
+            var indexOfRecord = this.indexOfRecord - 1;
+            this.switchToModelByIndex(indexOfRecord);
+        },
+
+        actionNext: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
+            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+                return;
+            }
+
+            var collection = this.model.collection;
+
+            var indexOfRecord = this.indexOfRecord + 1;
+            if (indexOfRecord <= collection.length - 1) {
+                this.switchToModelByIndex(indexOfRecord);
+            } else {
+                var initialCount = collection.length;
+
+                this.listenToOnce(collection, 'sync', function () {
+                    var model = collection.at(indexOfRecord);
+                    this.switchToModelByIndex(indexOfRecord);
+                }, this);
+                collection.fetch({
+                    more: true,
+                    remove: false,
+                });
+            }
         },
 
         actionEdit: function () {
-            this.createView('quickEdit', 'Modals.Edit', {
+            this.createView('quickEdit', 'views/modals/edit', {
                 scope: this.scope,
                 id: this.id,
                 fullFormDisabled: this.fullFormDisabled

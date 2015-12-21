@@ -66,7 +66,11 @@ Espo.define('ui', [], function () {
         if (this.buttons.length) {
             this.contents += '<footer class="modal-footer">';
             this.buttons.forEach(function (o) {
-                this.contents += '<button type="button" class="btn btn-' + (o.style || 'default') + '" data-name="' + o.name + '">' + o.text + '</button> ';
+                this.contents +=
+                    '<button type="button" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.pullLeft ? ' pull-left' : '') + (o.disabled ? ' disabled' : '') + '" ' +
+                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
+                    (o.html || o.text) + '</button> ';
             }.bind(this));
             this.contents += '</footer>';
         }

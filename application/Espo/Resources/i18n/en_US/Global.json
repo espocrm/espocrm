@@ -171,7 +171,9 @@
         "Number": "Number",
         "From": "From",
         "To": "To",
-        "Create Post": "Create Post"
+        "Create Post": "Create Post",
+        "Previous Entry": "Previous Entry",
+        "Next Entry": "Next Entry"
     },
     "messages": {
         "pleaseWait": "Please wait...",

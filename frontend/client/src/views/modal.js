@@ -114,7 +114,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                             o.text = this.translate(o.name, 'modalActions', this.scope);
                         }
                     }
-                    o.onClick = o.onClick || this['action' + Espo.Utils.upperCaseFirst(o.name)].bind(this);
+                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
 
                     buttonListExt.push(o);
                 }, this);
