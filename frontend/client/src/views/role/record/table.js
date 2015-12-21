@@ -79,6 +79,18 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             return data;
         },
 
+        events: {
+            'click .action[data-action="addField"]': function (e) {
+                var scope = $(e.currentTarget).data().scope;
+                this.showAddFieldModal(scope);
+            },
+            'click .action[data-action="removeField"]': function (e) {
+                var scope = $(e.currentTarget).data().scope;
+                var field = $(e.currentTarget).data().field;
+                this.removeField(scope, field);
+            }
+        },
+
         getTableDataList: function () {
             var aclData = this.acl.data;
             var aclDataList = [];
@@ -187,7 +199,16 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         setupFieldTableDataList: function () {
             this.fieldTableDataList = [];
             this.scopeList.forEach(function (scope) {
-                if (!(scope in this.acl.fieldData)) return;
+                var d = this.getMetadata().get('scopes.' + scope) || {};
+                if (!d.entity) return;
+
+                if (!(scope in this.acl.fieldData)) {
+                    this.fieldTableDataList.push({
+                        name: scope,
+                        list: []
+                    });
+                    return;
+                };
                 var scopeData = this.acl.fieldData[scope];
 
                 var fieldList = this.getFieldManager().getScopeFieldList(scope);
@@ -353,6 +374,64 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     $o.removeAttr('disabled');
                 }
             }.bind(this));
+        },
+
+        showAddFieldModal: function (scope) {
+            var ignoreFieldList = Object.keys(this.acl.fieldData[scope] || {});
+
+            this.createView('addField', 'views/role/modals/add-field', {
+                scope: scope,
+                ignoreFieldList: ignoreFieldList
+            }, function (view) {
+                view.render();
+
+                this.listenTo(view, 'add-field', function (field) {
+                    view.close();
+
+                    this.fieldTableDataList.forEach(function (scopeData) {
+                        if (scopeData.name !== scope) return;
+                        var found = false;
+                        scopeData.list.forEach(function (d) {
+                            if (d.name === field) {
+                                found = true;
+                            }
+                        }, this);
+                        if (found) return;
+                        scopeData.list.unshift({
+                            name: field,
+                            list: [
+                                {
+                                    name: 'read',
+                                    value: 'yes'
+                                },
+                                {
+                                    name: 'edit',
+                                    value: 'yes'
+                                }
+                            ]
+                        });
+                    }, this);
+
+                    this.reRender();
+                }, this);
+            }, this);
+        },
+
+        removeField: function (scope, field) {
+            this.fieldTableDataList.forEach(function (scopeData) {
+                if (scopeData.name !== scope) return;
+                var index = -1;
+                scopeData.list.forEach(function (d, i) {
+                    if (d.name === field) {
+                        index = i;
+                    }
+                }, this);
+                if (~index) {
+                    scopeData.list.splice(index, 1);
+                    this.reRender();
+                };
+
+            }, this);
         },
     });
 });

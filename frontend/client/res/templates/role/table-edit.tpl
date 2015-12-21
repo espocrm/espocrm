@@ -33,19 +33,28 @@
         <th></th>
         <th width="20%"></th>
         {{#each fieldActionList}}
-            <th width="26%">{{translate this scope='Role' category='actions'}}</th>
+            <th width="13%">{{translate this scope='Role' category='actions'}}</th>
         {{/each}}
+        <th width="26%"></th>
     </tr>
     {{#each fieldTableDataList}}
+        <tr>
+            <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
+            <td><button type="button" class="btn btn-link btn-sm action" data-action="addField" data-scope="{{name}}" title="{{translate 'Add Field'}}"><span class="glyphicon glyphicon-plus"></span></button></td>
+            <td colspan="3"></td>
+        </tr>
         {{#each list}}
         <tr>
-            <td>{{#ifEqual @index 0}}<b>{{translate ../../name category='scopeNamesPlural'}}</b>{{/ifEqual}}</td>
+            <td></td>
             <td><b>{{translate name category='fields' scope=../name}}</b></td>
             {{#each list}}
             <td>
                 <select name="field-{{../../name}}-{{../name}}" class="form-control" data-field="{{../name}}" data-scope="{{../../name}}" data-action="{{name}}">{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
             </td>
             {{/each}}
+            <td colspan="2">
+                <a href="javascript:" class="btn btn-link action" title="{{translate 'Remove'}}" data-action="removeField" data-field={{name}} data-scope="{{../name}}"><span class="glyphicon glyphicon-minus"></span></a>
+            </td>
         </tr>
         {{/each}}
     {{/each}}

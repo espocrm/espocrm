@@ -109,7 +109,8 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
                 },
                 el: this.options.el + ' .extra'
             });
-        },
+        }
+
     });
 });
 

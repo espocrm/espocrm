@@ -33,19 +33,28 @@
         <th></th>
         <th width="20%"></th>
         {{#each fieldActionList}}
-            <th width="26%">{{translate this scope='Role' category='actions'}}</th>
+            <th width="13%">{{translate this scope='Role' category='actions'}}</th>
         {{/each}}
+        <th width="26%"></th>
     </tr>
     {{#each fieldTableDataList}}
+        {{#if list.length}}
+        <tr>
+            <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
+            <td></td>
+            <td colspan="3"></td>
+        </tr>
+        {{/if}}
         {{#each list}}
         <tr>
-            <td>{{#ifEqual @index 0}}<b>{{translate ../../name category='scopeNamesPlural'}}</b>{{/ifEqual}}</td>
+            <td></td>
             <td><b>{{translate name category='fields' scope=../name}}</b></td>
             {{#each list}}
             <td>
                 <span style="color: {{prop ../../../colors value}};">{{translateOption value scope='Role' field='accessList'}}</span>
             </td>
             {{/each}}
+            <td colspan="2"></td>
         </tr>
         {{/each}}
     {{/each}}
