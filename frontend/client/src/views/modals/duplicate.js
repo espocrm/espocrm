@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.Duplicate', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Views.Modals.Duplicate', 'Views.Modal', function (Dep) {
 
         header: false,
 
-        template: 'modals.duplicate',
+        template: 'modals/duplicate',
 
         data: function () {
             return {

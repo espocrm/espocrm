@@ -5,7 +5,7 @@
     {{#each duplicates}}
         <tr>
             <td>
-                <a href="#{{../scope}}/view/{{@key}}">{{./this}}</a>
+                <a href="#{{../scope}}/view/{{id}}">{{name}}</a>
             </td>
         </tr>
     {{/each}}

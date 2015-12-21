@@ -724,7 +724,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         showDuplicate: function (duplicates) {
             this.notify(false);
-            this.createView('duplicate', 'Modals.Duplicate', {
+            this.createView('duplicate', 'views/modals/duplicate', {
                 scope: this.scope,
                 duplicates: duplicates,
             }, function (view) {

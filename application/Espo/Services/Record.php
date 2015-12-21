@@ -76,6 +76,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $exportAdditionalAttributeList = [];
 
+    protected $checkForDuplicatesInUpdate = false;
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -467,6 +469,20 @@ class Record extends \Espo\Core\Services\Base
 
     }
 
+    protected function processDuplicateCheck(Entity $entity, $data)
+    {
+        if (empty($data['forceDuplicate'])) {
+            $duplicates = $this->checkEntityForDuplicate($entity, $data);
+            if (!empty($duplicates)) {
+                $reason = array(
+                    'reason' => 'Duplicate',
+                    'data' => $duplicates
+                );
+                throw new Conflict(json_encode($reason));
+            }
+        }
+    }
+
     public function createEntity($data)
     {
         $entity = $this->getRepository()->get();
@@ -486,16 +502,7 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if (empty($data['forceDuplicate'])) {
-            $duplicates = $this->checkEntityForDuplicate($entity);
-            if (!empty($duplicates)) {
-                $reason = array(
-                    'reason' => 'Duplicate',
-                    'data' => $duplicates
-                );
-                throw new Conflict(json_encode($reason));
-            }
-        }
+        $this->processDuplicateCheck($entity, $data);
 
         if ($this->storeEntity($entity)) {
             $this->afterCreate($entity, $data);
@@ -532,12 +539,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $dataBefore = $entity->toArray();
-
-        $this->beforeUpdate($entity, $data);
+        $dataBefore = $entity->getValues();
 
         $entity->set($data);
 
+        $this->beforeUpdate($entity, $data);
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
@@ -545,6 +551,10 @@ class Record extends \Espo\Core\Services\Base
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
+        }
+
+        if ($this->checkForDuplicatesInUpdate) {
+            $this->processDuplicateCheck($entity, $data);
         }
 
         if ($this->storeEntity($entity)) {
@@ -932,21 +942,24 @@ class Record extends \Espo\Core\Services\Base
         return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 
-    protected function getDuplicateWhereClause(Entity $entity)
+    protected function getDuplicateWhereClause(Entity $entity, $data)
     {
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity)
+    public function checkEntityForDuplicate(Entity $entity, $data)
     {
-        $where = $this->getDuplicateWhereClause($entity);
+        $where = $this->getDuplicateWhereClause($entity, $data);
 
         if ($where) {
-            $duplicates = $this->getRepository()->where($where)->find();
-            if (count($duplicates)) {
+            if ($entity->id) {
+                $where['id!='] = $entity->id;
+            }
+            $duplicateList = $this->getRepository()->where($where)->find();
+            if (count($duplicateList)) {
                 $result = array();
-                foreach ($duplicates as $e) {
-                    $result[$e->id] = $e->get('name');
+                foreach ($duplicateList as $e) {
+                    $result[$e->id] = $e->getValues();
                 }
                 return $result;
             }
