@@ -17,10 +17,10 @@
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous">
+                <button type="button" class="btn btn-default action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous" title="{{translate 'Previous Entry'}}">
                     <span class="glyphicon glyphicon-chevron-left"></span>
                 </button>
-                <button type="button" class="btn btn-default action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next">
+                <button type="button" class="btn btn-default action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next" title="{{translate 'Next Entry'}}">
                     <span class="glyphicon glyphicon-chevron-right"></span>
                 </button>
             </div>
