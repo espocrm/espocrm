@@ -3,7 +3,7 @@
     <tr>
     {{#each this}}
         <td>
-            <a href="javascript:" data-action="addField" data-name="{{this}}">{{this}}</a>
+            <a href="javascript:" data-action="addField" data-name="{{this}}">{{translate this scope=../../scope category='fields'}}</a>
         </td>
     {{/each}}
     </tr>
