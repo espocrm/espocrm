@@ -15,7 +15,9 @@
     },
     "labels": {
         "Access": "Access",
-        "Create Role": "Create Role"
+        "Create Role": "Create Role",
+        "Scope Level": "Scope Level",
+        "Field Level": "Field Level"
     },
     "options": {
         "accessList": {
