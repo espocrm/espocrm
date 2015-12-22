@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'email',
 
-        editTemplate: 'fields.email.edit',
+        editTemplate: 'fields/email/edit',
 
-        detailTemplate: 'fields.email.detail',
+        detailTemplate: 'fields/email/detail',
 
-        listTemplate: 'fields.email.list',
+        listTemplate: 'fields/email/list',
 
-        searchTemplate: 'fields.email.search',
+        searchTemplate: 'fields/email/search',
 
         validations: ['required', 'emailData'],
 
@@ -164,7 +164,8 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                     emailAddress: '',
                     primary: data.length ? false : true,
                     optOut: false,
-                    invalid: false
+                    invalid: false,
+                    lower: ''
                 };
 
                 data.push(o);
@@ -325,6 +326,7 @@ Espo.define('Views.Fields.Email', 'Views.Fields.Base', function (Dep) {
                     row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
                     row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
                     row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
+                    row.lower = row.emailAddress.toLowerCase()
                     data.push(row);
                 }.bind(this));
             }

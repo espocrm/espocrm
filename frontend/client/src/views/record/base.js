@@ -351,21 +351,21 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             var self = this;
             var model = this.model;
 
-            var attrsInitialy = this.attributes;
+            var initialAttributes = this.attributes;
 
-            var attrsBefore = this.model.getClonedAttributes();
+            var beforeSaveAttributes = this.model.getClonedAttributes();
 
-            data = _.extend(Espo.Utils.cloneDeep(attrsBefore), data);
+            data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
 
             var attrs = false;
             if (model.isNew()) {
                 attrs = data;
             } else {
-                for (var attr in data) {
-                    if (_.isEqual(attrsInitialy[attr], data[attr])) {
+                for (var name in data) {
+                    if (_.isEqual(initialAttributes[name], data[name])) {
                         continue;
                     }
-                    (attrs || (attrs = {}))[attr] =    data[attr];
+                    (attrs || (attrs = {}))[name] = data[name];
                 }
             }
 
@@ -378,7 +378,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             model.set(attrs, {silent: true});
 
             if (this.validate()) {
-                model.attributes = attrsBefore;
+                model.attributes = beforeSaveAttributes;
                 this.trigger('cancel:save');
                 this.afterNotValid();
                 return;
@@ -430,7 +430,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
                     this.afterSaveError();
 
-                    model.attributes = attrsBefore;
+                    model.attributes = beforeSaveAttributes;
                     self.trigger('cancel:save');
 
                 }.bind(this),
