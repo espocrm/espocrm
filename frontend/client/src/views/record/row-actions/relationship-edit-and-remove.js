@@ -34,7 +34,7 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
             if (this.options.acl.edit) {
                 return [
                     {
-                        action: 'editRelated',
+                        action: 'quickEdit',
                         label: 'Edit',
                         data: {
                             id: this.model.id

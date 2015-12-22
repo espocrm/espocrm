@@ -904,28 +904,41 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var id = data.id;
             if (!id) return;
 
-            var scope = data.scope || this.scope;
+            var model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!data.scope && !model) {
+                return;
+            }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
+            var scope = data.scope || model.name || this.scope;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
             if (!this.quickDetailDisabled) {
                 this.notify('Loading...');
                 this.createView('modal', viewName, {
                     scope: scope,
-                    model: this.collection.get(id),
+                    model: model,
                     id: id
                 }, function (view) {
-                    view.once('after:render', function () {
+                    this.listenToOnce(view, 'after:render', function () {
                         Espo.Ui.notify(false);
                     });
                     view.render();
-                    view.once('after:save', function () {
-                        var model = this.collection.get(id);
+                    this.listenToOnce(view, 'after:save', function (m) {
+                        var model = this.collection.get(m.id);
                         if (model) {
-                            model.fetch();
+                            model.set(m.getClonedAttributes());
+                            this.actionQuickView({id: m.id, scope: model.name});
                         }
                     }, this);
-                }.bind(this));
+
+                    this.listenToOnce(view, 'after:edit-cancel', function () {
+                        this.actionQuickView({id: view.model.id, scope: view.model.name});
+                    }, this);
+                }, this);
             } else {
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
@@ -936,16 +949,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var id = data.id;
             if (!id) return;
 
-            var scope = data.scope || this.scope;
+            var model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!data.scope && !model) {
+                return;
+            }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            var scope = data.scope || model.name || this.scope;
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             if (!this.quickEditDisabled) {
                 this.notify('Loading...');
                 this.createView('modal', viewName, {
                     scope: scope,
                     id: id,
-                    model: this.collection.get(id),
+                    model: model,
                     fullFormDisabled: data.noFullForm,
                     returnUrl: '#' + scope,
                     returnDispatchParams: {
@@ -962,14 +983,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     view.render();
 
-                    this.listenToOnce(view, 'after:save', function () {
-                        var model = this.collection.get(id);
+                    this.listenToOnce(view, 'after:save', function (m) {
+                        var model = this.collection.get(m.id);
                         if (model) {
-                            model.fetch();
+                            model.set(m.getClonedAttributes());
                         }
                     }, this);
 
-                }.bind(this));
+                }, this);
             } else {
                 this.getRouter().dispatch(scope, 'edit', {
                     id: id,

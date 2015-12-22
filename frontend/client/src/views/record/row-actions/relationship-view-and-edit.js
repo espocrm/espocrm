@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.RelationshipViewAndEdit', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
             var list = [{
-                action: 'viewRelated',
+                action: 'quickView',
                 label: 'View',
                 data: {
                     id: this.model.id
@@ -40,7 +40,7 @@ Espo.define('Views.Record.RowActions.RelationshipViewAndEdit', 'Views.Record.Row
             }];
             if (this.options.acl.edit) {
                 list.push({
-                    action: 'editRelated',
+                    action: 'quickEdit',
                     label: 'Edit',
                     data: {
                         id: this.model.id

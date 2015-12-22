@@ -32,7 +32,7 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
 
         getActionList: function () {
             var list = [{
-                action: 'viewRelated',
+                action: 'quickView',
                 label: 'View',
                 data: {
                     id: this.model.id
@@ -41,7 +41,7 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
             if (this.options.acl.edit) {
                 list = list.concat([
                     {
-                        action: 'editRelated',
+                        action: 'quickEdit',
                         label: 'Edit',
                         data: {
                             id: this.model.id

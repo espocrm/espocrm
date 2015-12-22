@@ -32,7 +32,7 @@ Espo.define('views/record/row-actions/relationship-view-and-unlink', 'views/reco
 
         getActionList: function () {
             var list = [{
-                action: 'viewRelated',
+                action: 'quickView',
                 label: 'View',
                 data: {
                     id: this.model.id

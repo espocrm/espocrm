@@ -26,27 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Notifications.List', 'Views.Record.ListExpanded', function (Dep) {
+Espo.define('views/notifications/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
-
-        actionViewRecord: function (data) {
-            var id = data.id;
-            var scope = data.scope;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
-
-            this.notify('Loading...');
-            this.createView('quickDetail', viewName, {
-                scope: scope,
-                id: id
-            }, function (view) {
-                view.once('after:render', function () {
-                    Espo.Ui.notify(false);
-                });
-                view.render();
-            }.bind(this));
-        }
 
     });
 

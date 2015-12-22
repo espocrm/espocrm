@@ -156,6 +156,7 @@ Espo.define('views/modal', 'view', function (Dep) {
         },
 
         actionCancel: function () {
+            this.trigger('cancel');
             this.dialog.close();
         },
 

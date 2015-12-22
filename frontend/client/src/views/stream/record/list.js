@@ -115,26 +115,6 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
             collection.fetchNew({
                 success: success,
             });
-        },
-
-        actionViewRecord: function (data, e) {
-            e.stopPropagation();
-
-            var id = data.id;
-            var scope = data.scope;
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
-
-            this.notify('Loading...');
-            this.createView('modal', viewName, {
-                scope: scope,
-                id: id
-            }, function (view) {
-                view.once('after:render', function () {
-                    Espo.Ui.notify(false);
-                });
-                view.render();
-            }.bind(this));
         }
 
     });

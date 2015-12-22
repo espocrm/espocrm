@@ -72,7 +72,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 label: 'Close'
             });
 
-            if (this.model.collection && !this.navigateButtonsDisabled) {
+            if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
                     html: '<span class="glyphicon glyphicon-chevron-left"></span>',
@@ -87,6 +87,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     pullLeft: true,
                     disabled: true
                 });
+                this.indexOfRecord = this.model.collection.indexOf(this.model);
+            } else {
+                this.navigateButtonsDisabled = true;
             }
 
             this.scope = this.scope || this.options.scope;
@@ -96,34 +99,27 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.sourceModel = this.model;
 
-            if (this.model) {
-                if (this.model.collection) {
-                    this.indexOfRecord = this.model.collection.indexOf(this.model);
-                }
-            }
-
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.sourceModel) {
                     this.model = model;
-                    model.id = this.id;
-                    model.once('sync', function () {
-                        this.createRecord(model);
-                    }, this);
-                    model.fetch();
-                } else {
-                    var collection = this.model.collection;
+                    this.model.id = this.id;
 
-                    model = this.model = this.model.clone();
-                    model.collection = collection;
+                    this.listenToOnce(this.model, 'sync', function () {
+                        this.createRecordView();
+                    }, this);
+                    this.model.fetch();
+                } else {
+                    this.model = this.sourceModel.clone();
+                    this.model.collection = this.sourceModel.collection;
+
+                    this.listenTo(this.model, 'change', function () {
+                        this.sourceModel.set(this.model.getClonedAttributes());
+                    }, this);
 
                     this.once('after:render', function () {
-                        model.fetch();
-                    });
-                    this.createRecord(model);
-
-                    this.listenTo(model, 'change', function () {
-                        this.sourceModel.set(model.getClonedAttributes());
+                        this.model.fetch();
                     }, this);
+                    this.createRecordView();
                 }
             }, this);
         },
@@ -156,7 +152,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
         },
 
-        createRecord: function (model, callback) {
+        createRecordView: function (callback) {
+            var model = this.model;
             this.header = this.getLanguage().translate(this.scope, 'scopeNames');
 
             if (model.get('name')) {
@@ -193,7 +190,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.$el.children(0).scrollTop(0);
             }.bind(this), 50);
 
-            if (!this.navigateButtonsEnabled) {
+            if (!this.navigateButtonsDisabled) {
                 this.controlNavigationButtons();
             }
         },
@@ -241,32 +238,30 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         switchToModelByIndex: function (indexOfRecord) {
             if (!this.model.collection) return;
-            var model = this.model.collection.at(indexOfRecord);
-            if (!model) {
+
+            this.sourceModel = this.model.collection.at(indexOfRecord);
+
+            if (!this.sourceModel) {
                 throw new Error("Model is not found in collection by index.");
             }
 
             this.indexOfRecord = indexOfRecord;
 
-            this.id = model.id;
-            this.scope = model.name;
+            this.id = this.sourceModel.id;
+            this.scope = this.sourceModel.name;
 
-            this.model = this.sourceModel = model;
-
-            var collection = this.model.collection;
-            this.model = this.model.clone();
-            this.model.collection = collection;
-
-            this.once('after:render', function () {
-                this.model.fetch();
-            }, this);
+            this.model = this.sourceModel.clone();
+            this.model.collection = this.sourceModel.collection;
 
             this.listenTo(this.model, 'change', function () {
                 this.sourceModel.set(this.model.getClonedAttributes());
             }, this);
 
+            this.once('after:render', function () {
+                this.model.fetch();
+            }, this);
 
-            this.createRecord(this.model, function () {
+            this.createRecordView(function () {
                 this.reRender();
             }.bind(this));
 
@@ -322,12 +317,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.close();
                 }, this);
 
-                this.listenToOnce(view, 'after:save', function () {
-                    this.trigger('after:save');
+                this.listenToOnce(view, 'after:save', function (model) {
+                    this.trigger('after:save', model);
+                }, this);
+
+                this.listenToOnce(view, 'cancel', function () {
+                    this.trigger('after:edit-cancel');
                 }, this);
 
                 view.render();
-            }.bind(this));
+            }, this);
         },
 
         actionFullForm: function () {

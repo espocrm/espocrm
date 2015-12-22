@@ -25,7 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('Crm:Views.Fields.Ico', 'Views.Fields.Base', function (Dep) {
+Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -36,7 +36,7 @@ Espo.define('Crm:Views.Fields.Ico', 'Views.Fields.Base', function (Dep) {
             if (this.params.notRelationship) {
                 icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
             } else {
-                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="viewRelated" data-id="'+this.model.id+'"></span>';
+                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
             }
 
             switch (this.model.name) {

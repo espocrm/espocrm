@@ -228,7 +228,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var id = data.id;
             var scope = this.collection.get(id).name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'Modals.Detail';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
             this.notify('Loading...');
             this.createView('quickDetail', viewName, {
@@ -250,7 +250,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var id = data.id;
             var scope = this.collection.get(id).name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickEdit', viewName, {

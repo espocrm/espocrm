@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.RelationshipUnlinkOnly', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 

@@ -32,7 +32,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
 
         getActionList: function () {
             var list = [{
-                action: 'viewRelated',
+                action: 'quickView',
                 label: 'View',
                 data: {
                     id: this.model.id
@@ -40,7 +40,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
             }];
             if (this.options.acl.edit) {
                 list.push({
-                    action: 'editRelated',
+                    action: 'quickEdit',
                     label: 'Edit',
                     data: {
                         id: this.model.id

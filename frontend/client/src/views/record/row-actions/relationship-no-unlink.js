@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowActions.Relationship', function (Dep) {
+Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
             var list = [{
-                action: 'viewRelated',
+                action: 'quickView',
                 label: 'View',
                 data: {
                     id: this.model.id
@@ -41,7 +41,7 @@ Espo.define('Views.Record.RowActions.RelationshipNoUnlink', 'Views.Record.RowAct
             if (this.options.acl.edit) {
                 list = list.concat([
                     {
-                        action: 'editRelated',
+                        action: 'quickEdit',
                         label: 'Edit',
                         data: {
                             id: this.model.id
