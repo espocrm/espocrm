@@ -1002,8 +1002,16 @@ class Record extends \Espo\Core\Services\Base
             'deleted',
         );
 
-        foreach ($this->exportSkipAttributeList as $field) {
-            $fieldListToSkip[] = $field;
+        foreach ($this->exportSkipAttributeList as $attribute) {
+            $fieldListToSkip[] = $attribute;
+        }
+
+        foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType(), 'read') as $attribute) {
+            $fieldListToSkip[] = $attribute;
+        }
+
+        foreach ($this->internalAttributeList as $attribute) {
+            $fieldListToSkip[] = $attribute;
         }
 
         $fieldList = null;
