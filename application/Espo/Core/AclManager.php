@@ -225,5 +225,11 @@ class AclManager
         if ($user->isAdmin()) return [];
         return $this->getTable($user)->getScopeForbiddenAttributeList($scope, $action, $thresholdLevel);
     }
+
+    public function getScopeForbiddenFieldList(User $user, $scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        if ($user->isAdmin()) return [];
+        return $this->getTable($user)->getScopeForbiddenFieldList($scope, $action, $thresholdLevel);
+    }
 }
 

@@ -30,6 +30,7 @@
 namespace Espo\Core\SelectManagers;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Forbidden;
 
 use \Espo\Core\Acl;
 
@@ -428,7 +429,7 @@ class Base
         return $result;
     }
 
-    public function getSelectParams(array $params, $withAcl = false)
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $result = array();
         $this->prepareResult($result);
@@ -459,6 +460,9 @@ class Base
         }
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            if ($checkWherePermission) {
+                $this->checkWhere($params['where']);
+            }
             $this->where($params['where'], $result);
         }
 
@@ -473,6 +477,26 @@ class Base
         }
 
         return $result;
+    }
+
+    protected function checkWhere($where)
+    {
+        foreach ($where as $w) {
+            if (isset($w['field'])) {
+                if (isset($w['type']) && $w['type'] === 'linkedWith') {
+                    if (in_array($w['field'], $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
+                        throw new Forbidden();
+                    }
+                } else {
+                    if (in_array($w['field'], $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
+                        throw new Forbidden();
+                    }
+                }
+            }
+            if (!empty($w['value']) && is_array($w['value'])) {
+                $this->checkWhere($w['value']);
+            }
+        }
     }
 
     protected function getUserTimeZone()

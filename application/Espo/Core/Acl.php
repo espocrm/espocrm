@@ -113,5 +113,10 @@ class Acl
     {
         return $this->getAclManager()->getScopeForbiddenAttributeList($this->getUser(), $scope, $action, $thresholdLevel);
     }
+
+    public function getScopeForbiddenFieldList($scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
+    }
 }
 

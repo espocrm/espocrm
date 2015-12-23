@@ -617,7 +617,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
 
         return $selectParams;
     }
@@ -803,7 +803,6 @@ class Record extends \Espo\Core\Services\Base
         }
         $params['where'] = $where;
 
-
         $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
 
         return $this->getRepository()->massRelate($entity, $link, $selectParams);
@@ -839,7 +838,7 @@ class Record extends \Espo\Core\Services\Base
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
-            $selectParams = $this->getSelectParams($p, true);
+            $selectParams = $this->getSelectParams($p);
 
             $collection = $repository->find($selectParams);
 
@@ -890,7 +889,7 @@ class Record extends \Espo\Core\Services\Base
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
-            $selectParams = $this->getSelectParams($p, true);
+            $selectParams = $this->getSelectParams($p);
             $collection = $repository->find($selectParams);
 
             foreach ($collection as $entity) {
@@ -978,13 +977,13 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams(array('where' => $where), true);
+            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams(array('where' => $where), true, true);
         } else if (array_key_exists('where', $params)) {
             $where = $params['where'];
 
             $p = array();
             $p['where'] = $where;
-            $selectParams = $this->getSelectParams($p, true);
+            $selectParams = $this->getSelectParams($p);
         } else {
             throw new BadRequest();
         }

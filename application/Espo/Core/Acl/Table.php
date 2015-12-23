@@ -61,6 +61,8 @@ class Table
 
     protected $forbiddenAttributesCache = array();
 
+    protected $forbiddenFieldsCache = array();
+
     public function __construct(User $user, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManager $fieldManager = null)
     {
         $this->data = (object) [
@@ -267,6 +269,42 @@ class Table
         $this->forbiddenAttributesCache[$key] = $attributeList;
 
         return $attributeList;
+    }
+
+    public function getScopeForbiddenFieldList($scope, $action = 'read', $thresholdLevel = 'no')
+    {
+        $key = $scope . '_'. $action . '_' . $thresholdLevel;
+        if (isset($this->forbiddenFieldsCache[$key])) {
+            return $this->forbiddenFieldsCache[$key];
+        }
+
+        $fieldTableQuickAccess = $this->data->fieldTableQuickAccess;
+
+        if (!isset($fieldTableQuickAccess->$scope) || !isset($fieldTableQuickAccess->$scope->fields) || !isset($fieldTableQuickAccess->$scope->fields->$action)) {
+            $this->forbiddenFieldsCache[$key] = [];
+            return [];
+        }
+
+        $levelList = [];
+        foreach ($this->fieldLevelList as $level) {
+            if (array_search($level, $this->fieldLevelList) >= array_search($thresholdLevel, $this->fieldLevelList)) {
+                $levelList[] = $level;
+            }
+        }
+
+        $fieldList = [];
+
+        foreach ($levelList as $level) {
+            if (!isset($fieldTableQuickAccess->$scope->fields->$action->$level)) continue;
+            foreach ($fieldTableQuickAccess->$scope->fields->$action->$level as $field) {
+                if (in_array($field, $fieldList)) continue;
+                $fieldList[] = $field;
+            }
+        }
+
+        $this->forbiddenFieldsCache[$key] = $fieldList;
+
+        return $fieldList;
     }
 
     protected function fillFieldTableQuickAccess()

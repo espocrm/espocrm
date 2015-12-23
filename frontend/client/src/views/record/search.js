@@ -36,7 +36,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         searchManager: null,
 
-        fields: ['name'],
+        fieldList: ['name'],
 
         textFilter: '',
 
@@ -73,14 +73,19 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
 
             this.addReadyCondition(function () {
-                return this.fields != null && this.moreFields != null;
+                return this.fieldList != null && this.moreFieldList != null;
             }.bind(this));
 
             this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []);
 
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
 
             this._helper.layoutManager.get(this.scope, 'filters', function (list) {
-                this.moreFields = list;
+                this.moreFieldList = [];
+                (list || []).forEach(function (field) {
+                    if (~forbiddenFieldList.indexOf(field)) return;
+                    this.moreFieldList.push(field);
+                }, this);
                 this.tryReady();
             }.bind(this));
 
@@ -632,8 +637,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         getAdvancedDefs: function () {
             var defs = [];
-            for (var i in this.moreFields) {
-                var field = this.moreFields[i];
+            for (var i in this.moreFieldList) {
+                var field = this.moreFieldList[i];
                 var o = {
                     name: field,
                     checked: (field in this.advanced),
@@ -641,7 +646,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 defs.push(o);
             }
             return defs;
-        },
+        }
+
     });
 });
 
