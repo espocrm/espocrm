@@ -38,14 +38,9 @@
 Espo.define('acl-manager', ['acl'], function (Acl) {
 
     var AclManager = function (user, implementationClassMap) {
-        this.data = {
-            table: {},
-            fieldTable:  {},
-            fieldTableQuickAccess: {}
-        };
-        this.user = user || null;
+        this.setEmpty();
 
-        this.implementationHash = {};
+        this.user = user || null;
         this.implementationClassMap = implementationClassMap || {};
     }
 
@@ -56,6 +51,17 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         user: null,
 
         fieldLevelList: ['yes', 'no'],
+
+        setEmpty: function () {
+            this.data = {
+                table: {},
+                fieldTable:  {},
+                fieldTableQuickAccess: {}
+            };
+            this.implementationHash = {};
+            this.forbiddenFieldsCache = {};
+            this.implementationClassMap = {};
+        },
 
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
@@ -89,9 +95,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         },
 
         clear: function () {
-            this.data = {
-                table: {}
-            };
+            this.setEmpty();
         },
 
         checkScope: function (scope, action, precise) {
@@ -196,7 +200,6 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             thresholdLevel = thresholdLevel || 'no';
 
             var key = scope + '_' + action + '_' + thresholdLevel;
-            this.forbiddenFieldsCache = this.forbiddenFieldsCache || {};
             if (key in this.forbiddenFieldsCache) {
                 return this.forbiddenFieldsCache[key];
             }
