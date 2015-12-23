@@ -28,7 +28,7 @@
         "Auth Tokens": "Auth Tokens",
         "Authentication": "Автентифікація",
         "Currency": "Валюта",
-        "Integrations": "Інтенрації",
+        "Integrations": "Інтеграції",
         "Extensions": "Розширення",
         "Upload": "Завантажити",
         "Installing...": "Установка...",
@@ -45,7 +45,10 @@
         "Edit Entity": "Змінити сутність",
         "Create Link": "Створити Link",
         "Edit Link": "Змінити Link",
-        "Notifications": "Оповіщення"
+        "Notifications": "Оповіщення",
+        "Group Email Accounts": "Групові скриньки",
+        "Personal Email Accounts": "Персональні скриньки",
+        "Email Filters": "Фільтри"
     },
     "layouts": {
         "list": "Список",
@@ -142,7 +145,10 @@
         "currency": "Налаштування та встановлення курсу обміну валют.",
         "extensions": "Встановлення або видалення розширень.",
         "integrations": "Інтеграція зі сторонніми сервісами.",
-        "notifications": "In-app and email notification settings."
+        "notifications": "In-app and email notification settings.",
+        "personalEmailAccounts": "Облікові записи електронної пошти користувачів.",
+        "emailFilters": "Листи, які не будуть імпортовані відповідно до фільтру.",
+        "groupEmailAccounts": "Групові IMAP облікові записи електронної пошти. E-mail імпорт та створення звернень."
     },
     "options": {
         "previewSize": {
