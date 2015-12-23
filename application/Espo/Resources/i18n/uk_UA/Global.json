@@ -247,7 +247,7 @@
     "streamMessages": {
         "create": "{user} створив {entityType} {entity}",
         "createAssigned": "{user} створив {entityType} {entity}, призначену {assignee}",
-        "assign": "{користувач} призначив {entityType} {entity} to {assignee}",
+        "assign": "{user} призначив {entityType} {entity} to {assignee}",
         "post": "{user} опублікований на {entityType} {entity}",
         "attach": "{user} прикріплений до {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
@@ -260,7 +260,7 @@
         "createAssignedThis": "{user} створив це {entityType} призначену до {assignee}",
         "assignThis": "{user} призначив це {entityType} до {assignee}",
         "postThis": "{user} опублікував",
-        "attachThis": "{користувач} приклав",
+        "attachThis": "{user} приклав",
         "statusThis": "{user} поновив {field}",
         "updateThis": "{user} поновив це {entityType}",
         "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} related to this {entityType}",
