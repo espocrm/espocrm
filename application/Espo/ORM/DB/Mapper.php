@@ -209,7 +209,6 @@ abstract class Mapper implements IMapper
         $foreignKey = $keySet['foreignKey'];
 
         switch ($relType) {
-
             case IEntity::BELONGS_TO:
                 $params['whereClause'][$foreignKey] = $entity->get($key);
                 $params['offset'] = 0;
@@ -229,11 +228,11 @@ abstract class Mapper implements IMapper
                         }
                     }
                 }
-            break;
+                return null;
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_CHILDREN:
-
+            case IEntity::HAS_ONE:
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == IEntity::HAS_CHILDREN) {
@@ -241,31 +240,41 @@ abstract class Mapper implements IMapper
                     $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
 
-                $dataArr = array();
+                if ($relType == IEntity::HAS_ONE) {
+                    $params['offset'] = 0;
+                    $params['limit'] = 1;
+                }
+
+                $resultArr = [];
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
                 $ps = $this->pdo->query($sql);
                 if ($ps) {
                     if (!$totalCount) {
-                        $dataArr = $ps->fetchAll();
-
+                        $resultArr = $ps->fetchAll();
                     } else {
                         foreach ($ps as $row) {
                             return $row['AggregateValue'];
                         }
                     }
                 }
-                if ($this->returnCollection) {
-                    $collectionClass = $this->collectionClass;
-                    return new $collectionClass($dataArr, $relEntity->getEntityType(), $this->entityFactory);
+
+                if ($relType == IEntity::HAS_ONE) {
+                    if (count($resultArr)) {
+                        return $this->fromRow($relEntity, $resultArr[0]);
+                    }
+                    return null;
                 } else {
-                    return $dataArr;
+                    if ($this->returnCollection) {
+                        $collectionClass = $this->collectionClass;
+                        return new $collectionClass($resultArr, $relEntity->getEntityType(), $this->entityFactory);
+                    } else {
+                        return $resultArr;
+                    }
                 }
-            break;
 
             case IEntity::MANY_MANY:
-
                 $additionalColumnsConditions = null;
                 if (!empty($params['additionalColumnsConditions'])) {
                     $additionalColumnsConditions = $params['additionalColumnsConditions'];
@@ -280,22 +289,16 @@ abstract class Mapper implements IMapper
                 }
                 $params['customJoin'] .= $MMJoinPart;
 
-
                 $params['relationName'] = $relOpt['relationName'];
-
-                // TODO total
-
 
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
-                $dataArr = array();
-
+                $resultArr = [];
 
                 $ps = $this->pdo->query($sql);
                 if ($ps) {
                     if (!$totalCount) {
-                        $dataArr = $ps->fetchAll();
-
+                        $resultArr = $ps->fetchAll();
                     } else {
                         foreach ($ps as $row) {
                             return $row['AggregateValue'];
@@ -304,11 +307,10 @@ abstract class Mapper implements IMapper
                 }
                 if ($this->returnCollection) {
                     $collectionClass = $this->collectionClass;
-                    return new $collectionClass($dataArr, $relEntity->getEntityType(), $this->entityFactory);
+                    return new $collectionClass($resultArr, $relEntity->getEntityType(), $this->entityFactory);
                 } else {
-                    return $dataArr;
+                    return $resultArr;
                 }
-            break;
         }
 
         return false;

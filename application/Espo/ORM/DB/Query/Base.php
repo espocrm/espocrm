@@ -728,72 +728,76 @@ abstract class Base
 
         $pre = ($left) ? 'LEFT ' : '';
 
-        if ($relOpt['type'] == IEntity::MANY_MANY) {
+        $type = $relOpt['type'];
 
-            $key = $keySet['key'];
-            $foreignKey = $keySet['foreignKey'];
-            $nearKey = $keySet['nearKey'];
-            $distantKey = $keySet['distantKey'];
+        switch ($type) {
+            case IEntity::MANY_MANY:
+                $key = $keySet['key'];
+                $foreignKey = $keySet['foreignKey'];
+                $nearKey = $keySet['nearKey'];
+                $distantKey = $keySet['distantKey'];
 
-            $relTable = $this->toDb($relOpt['relationName']);
-            $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
+                $relTable = $this->toDb($relOpt['relationName']);
+                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
 
-            $distantTable = $this->toDb($relOpt['entity']);
+                $distantTable = $this->toDb($relOpt['entity']);
 
-            $alias = $joinAlias;
+                $alias = $joinAlias;
 
-            $midAlias = $alias . 'Middle';
+                $midAlias = $alias . 'Middle';
 
-            $join =
-                "{$pre}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
-                . " AND "
-                . "{$midAlias}.deleted = " . $this->pdo->quote(0);
+                $join =
+                    "{$pre}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+                    . " AND "
+                    . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
-            if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                $conditions = array_merge($conditions, $relOpt['conditions']);
-            }
-            foreach ($conditions as $f => $v) {
-                $join .= " AND {$midAlias}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
-            }
+                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                    $conditions = array_merge($conditions, $relOpt['conditions']);
+                }
+                foreach ($conditions as $f => $v) {
+                    $join .= " AND {$midAlias}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
+                }
 
-            $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
-                . " AND "
-                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+                    . " AND "
+                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-            return $join;
-        } else if ($relOpt['type'] == IEntity::HAS_MANY) {
+                return $join;
 
-            $foreignKey = $keySet['foreignKey'];
-            $distantTable = $this->toDb($relOpt['entity']);
+            case IEntity::HAS_MANY:
+            case IEntity::HAS_ONE:
+                $foreignKey = $keySet['foreignKey'];
+                $distantTable = $this->toDb($relOpt['entity']);
 
-            $alias = $joinAlias;
+                $alias = $joinAlias;
 
-            // TODO conditions
+                // TODO conditions
 
-            $join =
-                "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
-                . " AND "
-                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                $join =
+                    "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                    . " AND "
+                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-            return $join;
-        } else if ($relOpt['type'] == IEntity::HAS_CHILDREN) {
-            $foreignKey = $keySet['foreignKey'];
-            $foreignType = $keySet['foreignType'];
-            $distantTable = $this->toDb($relOpt['entity']);
+                return $join;
 
-            $alias = $joinAlias;
+            case IEntity::HAS_CHILDREN:
+                $foreignKey = $keySet['foreignKey'];
+                $foreignType = $keySet['foreignType'];
+                $distantTable = $this->toDb($relOpt['entity']);
 
-            $join =
-                "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
-                . " AND "
-                . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
-                . " AND "
-                . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                $alias = $joinAlias;
 
-            return $join;
+                $join =
+                    "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                    . " AND "
+                    . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
+                    . " AND "
+                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-        }  else if ($relOpt['type'] == IEntity::BELONGS_TO) {
-            return $pre . $this->getBelongsToJoin($entity, $relationName);
+                return $join;
+
+            case IEntity::BELONGS_TO:
+                return $pre . $this->getBelongsToJoin($entity, $relationName);
         }
 
         return false;
@@ -846,7 +850,6 @@ abstract class Base
         $relType = $relOpt['type'];
 
         switch ($relType) {
-
             case IEntity::BELONGS_TO:
                 $key = $this->toDb($entity->getEntityType()) . 'Id';
                 if (isset($relOpt['key'])) {
@@ -862,6 +865,7 @@ abstract class Base
                 );
 
             case IEntity::HAS_MANY:
+            case IEntity::HAS_ONE:
                 $key = 'id';
                 if (isset($relOpt['key'])){
                     $key = $relOpt['key'];
@@ -874,6 +878,7 @@ abstract class Base
                     'key' => $key,
                     'foreignKey' => $foreignKey,
                 );
+
             case IEntity::HAS_CHILDREN:
                 $key = 'id';
                 if (isset($relOpt['key'])){

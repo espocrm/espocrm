@@ -5,7 +5,8 @@
             [{"name":"name"},{"name":"accounts"}],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
             [{"name":"address"},{"name":"doNotCall"}],
-            [{"name":"description", "fullWidth": true}]
+            [{"name":"description", "fullWidth": true}],
+            [{"name":"portalUser"}, false]
         ]
     }
 ]

@@ -12,9 +12,15 @@
         "rows": [
             [{"name":"defaultTeam"}, {"name":"isActive"}],
             [{"name":"teams"}, {"name":"isAdmin"}],
-            [{"name":"roles"}, {"name":"isPortalUser"}],
-            [false, {"name":"portals"}],
-            [false, {"name":"portalRoles"}]
+            [{"name":"roles"}, {"name":"isPortalUser"}]
+        ]
+    },
+    {
+        "label": "Portal",
+        "name": "portal",
+        "rows": [
+            [{"name":"portals"}, {"name":"contact"}],
+            [{"name":"portalRoles"}, {"name":"account"}]
         ]
     }
 ]

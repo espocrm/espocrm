@@ -258,6 +258,11 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "accounts"
+        },
+        "portalUsers": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "account"
         }
     },
     "collection": {

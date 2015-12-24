@@ -34,43 +34,60 @@ class Entity extends \Espo\ORM\Entity
 
     public function loadLinkMultipleField($field, $columns = null)
     {
-        if ($this->hasRelation($field) && $this->hasAttribute($field . 'Ids')) {
+        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) return;
 
-            $defs = array();
-            if (!empty($columns)) {
-                $defs['additionalColumns'] = $columns;
-            }
+        $defs = array();
+        if (!empty($columns)) {
+            $defs['additionalColumns'] = $columns;
+        }
 
-            $collection = $this->get($field, $defs);
-            $ids = array();
-            $names = new \stdClass();
-            $types = new \stdClass();
-            if (!empty($columns)) {
-                $columnsData = new \stdClass();
-            }
+        $collection = $this->get($field, $defs);
+        $ids = array();
+        $names = new \stdClass();
+        $types = new \stdClass();
+        if (!empty($columns)) {
+            $columnsData = new \stdClass();
+        }
 
-            if ($collection) {
-                foreach ($collection as $e) {
-                    $id = $e->id;
-                    $ids[] = $id;
-                    $names->$id = $e->get('name');
-                    $types->$id = $e->get('type');
-                    if (!empty($columns)) {
-                        $columnsData->$id = new \stdClass();
-                        foreach ($columns as $column => $f) {
-                            $columnsData->$id->$column = $e->get($f);
-                        }
+        if ($collection) {
+            foreach ($collection as $e) {
+                $id = $e->id;
+                $ids[] = $id;
+                $names->$id = $e->get('name');
+                $types->$id = $e->get('type');
+                if (!empty($columns)) {
+                    $columnsData->$id = new \stdClass();
+                    foreach ($columns as $column => $f) {
+                        $columnsData->$id->$column = $e->get($f);
                     }
                 }
             }
-
-            $this->set($field . 'Ids', $ids);
-            $this->set($field . 'Names', $names);
-            $this->set($field . 'Types', $types);
-            if (!empty($columns)) {
-                $this->set($field . 'Columns', $columnsData);
-            }
         }
+
+        $this->set($field . 'Ids', $ids);
+        $this->set($field . 'Names', $names);
+        $this->set($field . 'Types', $types);
+        if (!empty($columns)) {
+            $this->set($field . 'Columns', $columnsData);
+        }
+    }
+
+    public function loadLinkField($field)
+    {
+        if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Id')) return;
+        if ($this->getRelationType($field) !== 'hasOne' && $this->getRelationType($field) !== 'belongsTo') return;
+
+        $entity = $this->get($field);
+
+        $entityId = null;
+        $entityName = null;
+        if ($entity) {
+            $entityId = $entity->id;
+            $entityName = $entity->get('name');
+        }
+
+        $this->set($field . 'Id', $entityId);
+        $this->set($field . 'Name', $entityName);
     }
 
     public function getLinkMultipleColumn($field, $column, $id)

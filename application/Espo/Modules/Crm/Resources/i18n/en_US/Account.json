@@ -26,7 +26,8 @@
         "emailsPrimary": "Emails (expanded)",
         "targetLists": "Target Lists",
         "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "portalUsers": "Portal Users"
     },
     "options": {
         "type": {

@@ -142,6 +142,11 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "entity": "TargetList"
+        },
+        "portalUser": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true
         }
     },
     "links": {
@@ -234,6 +239,11 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "contacts"
+        },
+        "portalUser": {
+            "type": "hasOne",
+            "entity": "User",
+            "foreign": "contact"
         }
     },
     "collection": {

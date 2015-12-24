@@ -102,9 +102,16 @@
             "type": "linkMultiple",
             "tooltip": true
         },
+        "contact": {
+            "type": "link",
+            "view": "views/user/fields/contact"
+        },
+        "account": {
+            "type": "link"
+        },
         "avatar": {
             "type": "image",
-            "view": "User.Fields.Avatar",
+            "view": "views/user/fields/avatar",
             "previewSize": "small"
         },
         "createdAt": {
@@ -170,6 +177,16 @@
             "type": "hasMany",
             "entity": "Note",
             "foreign": "users"
+        },
+        "contact": {
+            "type": "belongsTo",
+            "entity": "Contact",
+            "foreign": "portalUser"
+        },
+        "account": {
+            "type": "belongsTo",
+            "entity": "Account",
+            "foreign": "portalUsers"
         }
     },
     "collection": {

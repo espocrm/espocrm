@@ -267,14 +267,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleSpecifiedRelations(Entity $entity)
     {
-        $relationTypes = array($entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN);
+        $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
-            if (in_array($defs['type'], $relationTypes)) {
+            if (in_array($defs['type'], $relationTypeList)) {
                 $fieldName = $name . 'Ids';
                 $columnsFieldsName = $name . 'Columns';
 
                 if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
-
                     if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
                         continue;
                     }
@@ -357,6 +356,41 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 $this->updateRelation($entity, $name, $id, $data);
                             }
                         }
+                    }
+                }
+            } else if ($defs['type'] === $entity::HAS_ONE) {
+                if (empty($defs['entity']) || empty($defs['foreignKey'])) return;
+                if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
+                    continue;
+                }
+
+                $foreignEntityType = $defs['entity'];
+                $foreignKey = $defs['foreignKey'];
+                $idFieldName = $name . 'Id';
+                $nameFieldName = $name . 'Name';
+
+                if (!$entity->has($idFieldName)) return;
+
+                $where = array();
+                $where[$foreignKey] = $entity->id;
+                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
+                if ($previousForeignEntity) {
+                    $entity->setFetched($idFieldName, $previousForeignEntity->id);
+                    if ($previousForeignEntity->id !== $entity->get($idFieldName)) {
+                        $previousForeignEntity->set($foreignKey, null);
+                        $this->getEntityManager()->saveEntity($previousForeignEntity);
+                    }
+                } else {
+                    $entity->setFetched($idFieldName, null);
+                }
+
+                if ($entity->get($idFieldName)) {
+                    $newForeignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $entity->get($idFieldName));
+                    if ($newForeignEntity) {
+                        $newForeignEntity->set($foreignKey, $entity->id);
+                        $this->getEntityManager()->saveEntity($newForeignEntity);
+                    } else {
+                        $entity->set($idFieldName, null);
                     }
                 }
             }

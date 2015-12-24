@@ -313,6 +313,22 @@ abstract class Entity implements IEntity
         return $this->relations;
     }
 
+    public function getFieldType($field)
+    {
+        if (isset($this->fields[$field]) && isset($this->fields[$field]['type'])) {
+            return $this->fields[$field]['type'];
+        }
+        return null;
+    }
+
+    public function getRelationType($relation)
+    {
+        if (isset($this->relations[$relation]) && isset($this->relations[$relation]['type'])) {
+            return $this->relations[$relation]['type'];
+        }
+        return null;
+    }
+
     public function isFetched()
     {
         return $this->isFetched;

@@ -221,6 +221,22 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function loadLinkFields(Entity $entity)
+    {
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', array());
+        foreach ($fieldDefs as $field => $defs) {
+            if (isset($defs['type']) && $defs['type'] === 'link') {
+                if (!empty($defs['noLoad'])) continue;
+                if (empty($linkDefs[$field])) continue;
+                if (empty($linkDefs[$field]['type'])) continue;
+                if ($linkDefs[$field]['type'] !== 'hasOne') continue;
+
+                $entity->loadLinkField($field);
+            }
+        }
+    }
+
     protected function loadParentNameFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
@@ -261,6 +277,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function loadAdditionalFields(Entity $entity)
     {
+        $this->loadLinkFields($entity);
         $this->loadLinkMultipleFields($entity);
         $this->loadParentNameFields($entity);
         $this->loadIsFollowed($entity);
