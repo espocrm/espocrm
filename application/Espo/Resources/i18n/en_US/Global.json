@@ -17,7 +17,8 @@
         "Import": "Import",
         "Template": "Template",
         "Job": "Job",
-        "EmailFilter": "Email Filter"
+        "EmailFilter": "Email Filter",
+        "Portal": "Portal"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -37,7 +38,8 @@
         "Import": "Import Results",
         "Template": "Templates",
         "Job": "Jobs",
-        "EmailFilter": "Email Filters"
+        "EmailFilter": "Email Filters",
+        "Portal": "Portals"
     },
     "labels": {
         "Misc": "Misc",

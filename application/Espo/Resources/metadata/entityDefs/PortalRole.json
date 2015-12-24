@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "name": {
+            "maxLength": 150,
+            "required": true,
+            "type": "varchar",
+            "trim": true
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "fieldData": {
+            "type": "jsonObject"
+        }
+    },
+    "links": {
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "portalRoles"
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
+            "foreign": "portalRoles"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

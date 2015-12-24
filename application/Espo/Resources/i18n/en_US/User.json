@@ -8,6 +8,8 @@
         "emailAddress": "Email",
         "phoneNumber": "Phone",
         "roles": "Roles",
+        "portals": "Portals",
+        "portalRoles": "Portal Roles",
         "teamRole": "Position",
         "password": "Password",
         "currentPassword": "Current Password",
@@ -15,12 +17,15 @@
         "newPassword": "New Password",
         "newPasswordConfirm": "Confirm New Password",
         "avatar": "Avatar",
-        "isActive": "Is Active"
+        "isActive": "Is Active",
+        "isPortalUser": "Is Portal User"
     },
     "links": {
         "teams": "Teams",
         "roles": "Roles",
-        "notes": "Notes"
+        "notes": "Notes",
+        "portals": "Portals",
+        "portalRoles": "Portal Roles"
     },
     "labels": {
         "Create User": "Create User",
@@ -41,7 +46,9 @@
         "isAdmin": "Admin user can access everything.",
         "isActive": "If unchecked then user won't be able to login.",
         "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
-        "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level only for this user."
+        "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
+        "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user",
+        "portals": "Portals which this user has access to."
     },
     "messages": {
         "passwordWillBeSent": "Password will be sent to user's email address.",

@@ -1,0 +1,19 @@
+{
+    "fields": {
+        "name": "Name",
+        "logo": "Logo",
+        "url": "URL",
+        "portalRoles": "Roles"
+    },
+    "links": {
+        "users": "Users",
+        "portalRoles": "Roles",
+        "notes": "Notes"
+    },
+    "tooltips": {
+        "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
+    },
+    "labels": {
+        "Create Portal": "Create Portal"
+    }
+}

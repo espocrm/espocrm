@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
+Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
-        sideView: 'User.Record.EditSide',
+        sideView: 'views/user/record/edit-side',
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -40,6 +40,12 @@ Espo.define('Views.User.Record.Edit', 'Views.Record.Edit', function (Dep) {
                     this.getUser().set(this.model.toJSON());
                 }.bind(this));
             }
+
+            Detail.prototype.setupFieldAppearance.call(this);
+        },
+
+        controlFieldAppearance: function () {
+            Detail.prototype.controlFieldAppearance.call(this);
         },
 
         getGridLayout: function (callback) {

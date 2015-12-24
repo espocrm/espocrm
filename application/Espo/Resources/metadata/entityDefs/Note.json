@@ -36,6 +36,10 @@
             "type": "linkMultiple",
             "noLoad": true
         },
+        "portals": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
         "users": {
             "type": "linkMultiple",
             "noLoad": true
@@ -95,6 +99,11 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
+            "foreign": "notes"
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
             "foreign": "notes"
         },
         "users": {

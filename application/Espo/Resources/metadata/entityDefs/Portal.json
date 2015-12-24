@@ -1,0 +1,65 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true
+        },
+        "logo": {
+            "type": "image"
+        },
+        "url": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "portalRoles": {
+            "type": "linkMultiple"
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "portals"
+        },
+        "portalRoles": {
+            "type": "hasMany",
+            "entity": "PortalRole",
+            "foreign": "portals"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "portals"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

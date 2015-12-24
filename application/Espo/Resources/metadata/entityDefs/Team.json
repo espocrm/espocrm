@@ -2,7 +2,8 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "trim": true
         },
         "roles": {
             "type": "linkMultiple",

@@ -41,6 +41,9 @@
             "tooltip": true,
             "default": true
         },
+        "isPortalUser": {
+            "type": "bool"
+        },
         "isSuperAdmin": {
             "type": "bool",
             "default": false,
@@ -91,6 +94,14 @@
             "type": "linkMultiple",
             "tooltip": true
         },
+        "portals": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
+        "portalRoles": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
         "avatar": {
             "type": "image",
             "view": "User.Fields.Avatar",
@@ -121,6 +132,18 @@
         "roles": {
             "type": "hasMany",
             "entity": "Role",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        },
+        "portalRoles": {
+            "type": "hasMany",
+            "entity": "PortalRole",
             "foreign": "users",
             "layoutRelationshipsDisabled": true
         },

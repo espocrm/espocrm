@@ -60,6 +60,48 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     this.getUser().set(this.model.toJSON());
                 }.bind(this));
             }
+
+            this.setupFieldAppearance();
+        },
+
+        setupFieldAppearance: function () {
+            this.controlFieldAppearance();
+            this.listenTo(this.model, 'change', function () {
+                this.controlFieldAppearance();
+            }, this);
+
+            var isAdminView = this.getFieldView('isAdmin');
+            if (isAdminView) {
+                this.listenTo(isAdminView, 'change', function () {
+                    if (this.model.get('isAdmin')) {
+                        this.model.set('isPortalUser', false, {silent: true});
+                    }
+                }, this);
+            }
+        },
+
+        controlFieldAppearance: function () {
+            if (this.model.get('isAdmin')) {
+                this.hideField('isPortalUser');
+            } else {
+                this.showField('isPortalUser');
+            }
+
+            if (this.model.get('isPortalUser')) {
+                this.hideField('isAdmin');
+                this.hideField('roles');
+                this.hideField('teams');
+                this.hideField('defaultTeam');
+                this.showField('portals');
+                this.showField('portalRoles');
+            } else {
+                this.showField('isAdmin');
+                this.showField('roles');
+                this.showField('teams');
+                this.showField('defaultTeam');
+                this.hideField('portals');
+                this.hideField('portalRoles');
+            }
         },
 
         actionChangePassword: function () {
