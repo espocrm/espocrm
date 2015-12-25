@@ -35,22 +35,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         template: 'admin/entity-manager/modals/edit-entity',
 
         setup: function () {
-
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        this.save();
-                    }.bind(this)
+                    style: 'danger'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -218,7 +211,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             }, this);
         },
 
-        save: function () {
+        actionSave: function () {
             var arr = [
                 'name',
                 'type',

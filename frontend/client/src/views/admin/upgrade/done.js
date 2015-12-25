@@ -50,7 +50,7 @@ Espo.define('Views.Admin.Upgrade.Done', 'Views.Modal', function (Dep) {
                 window.location.reload();
             });
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'close',
                     label: 'Close',

@@ -27,28 +27,22 @@
  ************************************************************************/
 
 
-Espo.define('Views.Admin.Layouts.Modals.EditAttributes', ['Views.Modal', 'Model'], function (Dep, Model) {
+Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         _template: '<div class="edit-container">{{{edit}}}</div>',
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     text: this.translate('Apply'),
-                    style: 'primary',
-                    onClick: function (dialog) {
-                        this.save();
-                    }.bind(this)
+                    style: 'primary'
                 },
                 {
                     name: 'cancel',
-                    text: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    text: 'Cancel'
                 }
             ];
 
@@ -72,7 +66,7 @@ Espo.define('Views.Admin.Layouts.Modals.EditAttributes', ['Views.Modal', 'Model'
             });
         },
 
-        save: function () {
+        actionSave: function () {
             var editView = this.getView('edit');
             var attrs = editView.fetch();
 

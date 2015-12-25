@@ -44,6 +44,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         buttonList: [],
 
+        // TODO remove it as depricated
         buttons: [],
 
         width: false,
@@ -76,8 +77,10 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.options = this.options || {};
             this.options.el = this.containerSelector;
 
-            this.buttonList = Espo.Utils.clone(this.buttonList);
-            this.buttons = Espo.Utils.clone(this.buttons);
+            this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
+
+            // TODO remove it as depricated
+            this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
             this.on('render', function () {
                 if (this.dialog) {
@@ -89,6 +92,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
                 var buttonListExt = [];
 
+                // TODO remove it as depricated
                 this.buttons.forEach(function (item) {
                     var o = Espo.Utils.clone(item);
                     if (!('text' in o) && ('label' in o)) {
@@ -159,6 +163,11 @@ Espo.define('views/modal', 'view', function (Dep) {
         },
 
         actionCancel: function () {
+            this.trigger('cancel');
+            this.dialog.close();
+        },
+
+        actionClose: function () {
             this.trigger('cancel');
             this.dialog.close();
         },

@@ -49,7 +49,7 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.buttons = [];
+            this.buttonList = [];
             this.header = '&nbsp;';
 
             this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);

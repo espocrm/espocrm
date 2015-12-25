@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', function (Dep) {
+Espo.define('views/inbound-email/modals/select-folder', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'select-folder-modal',
 
-        template: 'inbound-email.modals.select-folder',
+        template: 'inbound-email/modals/select-folder',
 
         data: function () {
             return {
@@ -48,14 +48,10 @@ Espo.define('Views.InboundEmail.Modals.SelectFolder', 'Views.Modal', function (D
         },
 
         setup: function () {
-
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
                     label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
                 }
             ];
 

@@ -49,13 +49,20 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
             },
         },
 
+        buttonList: [
+            {
+                name: 'cancel',
+                label: 'Cancel'
+            }
+        ],
+
         setup: function () {
-            this.buttonList = [
+            /*this.buttonList = [
                 {
                     name: 'cancel',
                     label: 'Cancel'
                 }
-            ];
+            ];*/
 
             this.header = this.translate('Add Dashlet');
 

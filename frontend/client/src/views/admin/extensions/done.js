@@ -52,13 +52,10 @@ Espo.define('views/admin/extensions/done', 'views/modal', function (Dep) {
                 window.location.reload();
             });
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'close',
-                    label: 'Close',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }.bind(this)
+                    label: 'Close'
                 }
             ];
 

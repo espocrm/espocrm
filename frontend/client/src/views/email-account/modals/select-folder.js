@@ -48,14 +48,10 @@ Espo.define('views/email-account/modals/select-folder', 'views/modal', function 
         },
 
         setup: function () {
-
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 

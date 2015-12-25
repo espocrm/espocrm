@@ -74,18 +74,15 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
             this.massRelateEnabled = this.options.massRelateEnabled;
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
             if (this.multiple) {
-                this.buttons.unshift({
+                this.buttonList.unshift({
                     name: 'select',
                     style: 'primary',
                     label: 'Select',

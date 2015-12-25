@@ -42,21 +42,15 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
-                    style: 'primary',
-                    onClick: function (dialog) {
-                        this.save();
-                    }.bind(this)
+                    style: 'primary'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -76,7 +70,7 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
             });
         },
 
-        save: function () {
+        actionSave: function () {
             var nameView = this.getView('name');
             nameView.fetchToModel();
             if (nameView.validate()) {

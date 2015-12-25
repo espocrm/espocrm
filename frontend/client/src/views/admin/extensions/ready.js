@@ -47,22 +47,15 @@ Espo.define('views/admin/extensions/ready', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'run',
                     text: this.translate('Install', 'labels', 'Admin'),
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        this.run();
-                    }.bind(this)
+                    style: 'danger'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -72,7 +65,7 @@ Espo.define('views/admin/extensions/ready', 'views/modal', function (Dep) {
 
         },
 
-        run: function () {
+        actionRun: function () {
             this.trigger('run');
             this.remove();
         }

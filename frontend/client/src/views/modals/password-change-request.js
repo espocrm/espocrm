@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/password-change-request', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'password-change-request',
 
-        template: 'modals.password-change-request',
+        template: 'modals/password-change-request',
 
         setup: function () {
-        
-            this.buttons = [
+
+            this.buttonList = [
                 {
                     name: 'submit',
                     label: 'Submit',
@@ -47,17 +47,14 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
                 },
                 {
                     name: 'cancel',
-                    label: 'Close',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Close'
                 }
             ];
-            
+
             this.header = this.translate('Password Change Request', 'labels', 'User');
         },
 
-        submit: function () {
+        actionSubmit: function () {
             var $userName = this.$el.find('input[name="userName"]');
             var $emailAddress = this.$el.find('input[name="emailAddress"]');
 
@@ -70,7 +67,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             var isValid = true;
             if (userName == '') {
                 isValid = false;
-                
+
                 var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
                 $userName.popover({
@@ -91,7 +88,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
             var isValid = true;
             if (emailAddress == '') {
                 isValid = false;
-                
+
                 var message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
 
                 $emailAddress.popover({
@@ -102,7 +99,7 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
 
                 var $cellEmailAddress = $emailAddress.closest('.form-group');
                 $cellEmailAddress.addClass('has-error');
-                
+
                 $emailAddress.one('mousedown click', function () {
                     $cellEmailAddress.removeClass('has-error');
                     $emailAddress.popover('destroy');
@@ -140,9 +137,9 @@ Espo.define('Views.Modals.PasswordChangeRequest', 'Views.Modal', function (Dep) 
 
                 this.$el.find('.cell-userName').addClass('hidden');
                 this.$el.find('.cell-emailAddress').addClass('hidden');
-                
+
                 $submit.addClass('hidden');
-                
+
                 this.$el.find('.msg-box').removeClass('hidden');
 
                 this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
+Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -47,13 +47,10 @@ Espo.define('Views.User.Modals.Access', 'Views.Modal', function (Dep) {
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 

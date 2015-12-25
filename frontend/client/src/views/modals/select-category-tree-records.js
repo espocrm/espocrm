@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.SelectCategoryTreeRecords', 'Views.Modals.SelectRecords', function (Dep) {
+Espo.define('views/modals/select-category-tree-records', 'views/modals/select-records', function (Dep) {
 
     return Dep.extend({
 
@@ -42,18 +42,15 @@ Espo.define('Views.Modals.SelectCategoryTreeRecords', 'Views.Modals.SelectRecord
             this.createButton = false;
             this.massRelateEnabled = this.options.massRelateEnabled;
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
             if (this.multiple) {
-                this.buttons.unshift({
+                this.buttonList.unshift({
                     name: 'select',
                     style: 'primary',
                     label: 'Select',
