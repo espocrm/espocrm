@@ -1,0 +1,12 @@
+{
+   "controller": "controllers/record",
+   "relationshipPanels": {
+      "users": {
+         "create": true,
+         "rowActionsView": "views/record/row-actions/relationship-unlink-only",
+         "layout": "listForTeam"
+      }
+   },
+   "recordViews": {
+   }
+}

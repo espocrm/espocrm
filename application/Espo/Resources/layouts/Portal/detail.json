@@ -1,0 +1,8 @@
+[
+    {
+        "rows": [
+            [{"name": "name"},{"name": "isActive"}],
+            [{"name": "url"},{"name": "isDefault"}]
+        ]
+    }
+]

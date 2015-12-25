@@ -27,9 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Controllers;
 
-class Role extends \Espo\Core\ORM\Entity
+class PortalRole extends \Espo\Core\Controllers\Record
 {
-
 }

@@ -4,7 +4,8 @@
         "logo": "Logo",
         "url": "URL",
         "portalRoles": "Roles",
-        "isActive": "Is Active"
+        "isActive": "Is Active",
+        "isDefault": "Is Default"
     },
     "links": {
         "users": "Users",

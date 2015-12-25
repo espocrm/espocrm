@@ -9,13 +9,18 @@
             "type": "image"
         },
         "url": {
-            "type": "varchar",
+            "type": "url",
             "notStorable": true,
             "readOnly": true
         },
         "isActive": {
             "type": "bool",
             "default": true
+        },
+        "isDefault": {
+            "type": "bool",
+            "default": false,
+            "notStorable": true
         },
         "portalRoles": {
             "type": "linkMultiple"

@@ -29,7 +29,7 @@
 
 namespace Espo\Entities;
 
-class Role extends \Espo\Core\ORM\Entity
+class Portal extends \Espo\Core\ORM\Entity
 {
 
 }

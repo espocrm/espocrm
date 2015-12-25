@@ -76,6 +76,16 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
             data.tableDataList = this.getTableDataList();
             data.fieldTableDataList = this.fieldTableDataList;
+
+            var hasFieldLevelData = false;
+            this.fieldTableDataList.forEach(function (d) {
+                if (d.list.length) {
+                    hasFieldLevelData = true;
+                    return;
+                }
+            }, this);
+            data.hasFieldLevelData = hasFieldLevelData;
+
             return data;
         },
 
@@ -203,10 +213,13 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                 if (!d.entity) return;
 
                 if (!(scope in this.acl.fieldData)) {
-                    this.fieldTableDataList.push({
-                        name: scope,
-                        list: []
-                    });
+                    if (this.mode === 'edit') {
+                        this.fieldTableDataList.push({
+                            name: scope,
+                            list: []
+                        });
+                        return;
+                    }
                     return;
                 };
                 var scopeData = this.acl.fieldData[scope];
@@ -227,6 +240,9 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                         })
                     }, this);
 
+                    if (this.mode === 'detail') {
+                        if (!list.length) return;
+                    }
                     fieldDataList.push({
                         name: field,
                         list: list

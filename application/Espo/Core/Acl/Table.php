@@ -186,7 +186,9 @@ class Table
             }
 
             $aclTable = $this->mergeTableList($aclTableList);
-            $fieldTable = $this->mergefieldTableList($fieldTableList);
+            $fieldTable = $this->mergeFieldTableList($fieldTableList);
+
+            $this->applyDefault($aclTable, $fieldTable);
 
             foreach ($this->getScopeList() as $scope) {
                 if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
@@ -195,7 +197,7 @@ class Table
                 }
             }
 
-            $this->applySolid($aclTable, $fieldTable);
+            $this->applyMandatory($aclTable, $fieldTable);
         } else {
             $aclTable = (object) [];
             foreach ($this->getScopeList() as $scope) {
@@ -227,8 +229,15 @@ class Table
         $this->fillFieldTableQuickAccess();
 
         if (!$this->user->isAdmin()) {
-            $this->data->assignmentPermission = $this->mergeValueList($assignmentPermissionList, $this->metadata->get('app.acl.valueDefaults.assignmentPermission', 'all'));
-            $this->data->userPermission = $this->mergeValueList($userPermissionList, $this->metadata->get('app.acl.valueDefaults.userPermission', 'no'));
+            $this->data->assignmentPermission = $this->mergeValueList($assignmentPermissionList, $this->metadata->get('app.acl.default.assignmentPermission', 'all'));
+            $this->data->userPermission = $this->mergeValueList($userPermissionList, $this->metadata->get('app.acl.default.userPermission', 'no'));
+
+            if ($this->metadata->get('app.acl.mandatory.assignmentPermission')) {
+                $this->data->assignmentPermission = $this->metadata->get('app.acl.mandatory.assignmentPermission');
+            }
+            if ($this->metadata->get('app.acl.mandatory.userPermission')) {
+                $this->data->userPermission = $this->metadata->get('app.acl.mandatory.userPermission');
+            }
         } else {
             $this->data->assignmentPermission = 'all';
             $this->data->userPermission = 'all';
@@ -348,7 +357,7 @@ class Table
         $this->data->fieldTableQuickAccess = $fieldTableQuickAccess;
     }
 
-    protected function applySolid(&$table, &$fieldTable)
+    protected function applyDefault(&$table, &$fieldTable)
     {
         if (!$this->metadata) {
             return;
@@ -358,7 +367,64 @@ class Table
             return;
         }
 
-        $data = $this->metadata->get('app.acl.solid', array());
+        $data = $this->metadata->get('app.acl.default.scopeLevel', array());
+
+        foreach ($data as $scope => $item) {
+            if (isset($table->$scope)) continue;
+            $value = $item;
+            if (is_array($item)) {
+                $value = (object) $item;
+            }
+            $table->$scope = $value;
+        }
+
+        $fieldData = $this->metadata->get('app.acl.default.fieldLevel', array());
+
+        foreach ($fieldData as $scope => $s) {
+            foreach ($s as $field => $f) {
+                if (!isset($fieldTable->$scope)) {
+                    $fieldTable->$scope = (object) [];
+                }
+                if (isset($fieldTable->$scope->$field)) continue;
+                $fieldTable->$scope->$field = (object) [];
+                foreach ($this->fieldActionList as $action) {
+                    $level = 'no';
+                    if (isset($f[$action])) {
+                        $level = $f[$action];
+                    }
+                    $fieldTable->$scope->$field->$action = $level;
+                }
+            }
+        }
+
+        foreach ($this->getScopeWithAclList() as $scope) {
+            if (!isset($table->$scope)) {
+                $aclType = $this->metadata->get('scopes.' . $scope . '.acl');
+                if ($aclType === true) {
+                    $aclType = 'recordAllTeamOwnNo';
+                }
+                if (!empty($aclType)) {
+                    $defaultValue = $this->metadata->get('app.acl.scopeLevelTypesDefaults.' . $aclType, true);
+                    if (is_array($defaultValue)) {
+                        $defaultValue = (object) $defaultValue;
+                    }
+                    $table->$scope = $defaultValue;
+                }
+            }
+        }
+    }
+
+    protected function applyMandatory(&$table, &$fieldTable)
+    {
+        if (!$this->metadata) {
+            return;
+        }
+
+        if ($this->user->isAdmin()) {
+            return;
+        }
+
+        $data = $this->metadata->get('app.acl.mandatory.scopeLevel', array());
 
         foreach ($data as $scope => $item) {
             $value = $item;
@@ -366,6 +432,24 @@ class Table
                 $value = (object) $item;
             }
             $table->$scope = $value;
+        }
+
+        $fieldData = $this->metadata->get('app.acl.mandatory.fieldLevel', array());
+
+        foreach ($fieldData as $scope => $s) {
+            if (!isset($fieldTable->$scope)) {
+                $fieldTable->$scope = (object) [];
+            }
+            foreach ($s as $field => $f) {
+                $fieldTable->$scope->$field = (object) [];
+                foreach ($this->fieldActionList as $action) {
+                    $level = 'no';
+                    if (isset($f[$action])) {
+                        $level = $f[$action];
+                    }
+                    $fieldTable->$scope->$field->$action = $level;
+                }
+            }
         }
     }
 
@@ -462,25 +546,10 @@ class Table
             }
         }
 
-        foreach ($scopeList as $scope) {
-        	if (!isset($data->$scope)) {
-        		$aclType = $this->metadata->get('scopes.' . $scope . '.acl');
-                if ($aclType === true) {
-                    $aclType = 'recordAllTeamOwnNo';
-                }
-        		if (!empty($aclType)) {
-                    $defaultValue = $this->metadata->get('app.acl.defaults.' . $aclType, true);
-                    if (is_array($defaultValue)) {
-                        $defaultValue = (object) $defaultValue;
-                    }
-	        		$data->$scope = $defaultValue;
-        		}
-        	}
-        }
         return $data;
     }
 
-    private function mergefieldTableList(array $tableList)
+    private function mergeFieldTableList(array $tableList)
     {
         $data = (object) [];
         $scopeList = $this->getScopeWithAclList();

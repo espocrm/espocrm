@@ -35,7 +35,7 @@
     </div>
 </div>
 
-{{#if fieldTableDataList.length}}
+{{#if hasFieldLevelData}}
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">{{translate 'Field Level' scope='Role'}}</h4>

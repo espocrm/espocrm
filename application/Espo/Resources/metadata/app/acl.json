@@ -1,48 +1,66 @@
 {
-    "solid": {
-        "User": {
-            "read": "all",
-            "edit": "no",
-            "delete": "no"
+    "mandatory": {
+        "scopeLevel": {
+            "User": {
+                "read": "all",
+                "edit": "no",
+                "delete": "no"
+            },
+            "Team": {
+                "read": "all",
+                "edit": "no",
+                "delete": "no"
+            },
+            "Note": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own"
+            },
+            "Portal": {
+                "read": "all",
+                "edit": "no",
+                "delete": "no"
+            },
+            "EmailAddress": {
+                "read": "no",
+                "edit": "no",
+                "delete": "no"
+            },
+            "Attachment": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own"
+            },
+            "PhoneNumber": {
+                "read": "no",
+                "edit": "no",
+                "delete": "no"
+            },
+            "EmailAccount": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own"
+            },
+            "EmailFilter": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own"
+            },
+            "Role": false,
+            "PortalRole": false
         },
-        "Team": {
-            "read": "all",
-            "edit": "no",
-            "delete": "no"
-        },
-        "Note": {
-            "read": "own",
-            "edit": "own",
-            "delete": "own"
-        },
-        "EmailAddress": {
-            "read": "no",
-            "edit": "no",
-            "delete": "no"
-        },
-        "Attachment": {
-            "read": "own",
-            "edit": "own",
-            "delete": "own"
-        },
-        "PhoneNumber": {
-            "read": "no",
-            "edit": "no",
-            "delete": "no"
-        },
-        "EmailAccount": {
-            "read": "own",
-            "edit": "own",
-            "delete": "own"
-        },
-        "EmailFilter": {
-            "read": "own",
-            "edit": "own",
-            "delete": "own"
-        },
-        "Role": false
+        "fieldLevel": {
+        }
     },
-    "defaults": {
+    "default": {
+        "scopeLevel": {
+        },
+        "fieldLevel": {
+        },
+        "assignmentPermission": "all",
+        "userPermission": "no"
+    },
+    "scopeLevelTypesDefaults": {
         "boolean": true,
         "recordAllTeamOwnNo": {
             "read": "all",
@@ -64,9 +82,5 @@
             "edit": "all",
             "delete": "no"
         }
-    },
-    "valueDefaults": {
-        "assignmentPermission": "all",
-        "userPermission": "no"
     }
 }
