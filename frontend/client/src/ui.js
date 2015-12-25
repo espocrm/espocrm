@@ -68,7 +68,7 @@ Espo.define('ui', [], function () {
             this.buttons.forEach(function (o) {
                 this.contents +=
                     '<button type="button" ' +
-                    'class="btn btn-' + (o.style || 'default') + (o.pullLeft ? ' pull-left' : '') + (o.disabled ? ' disabled' : '') + '" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.pullLeft ? ' pull-left' : '') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
             }.bind(this));

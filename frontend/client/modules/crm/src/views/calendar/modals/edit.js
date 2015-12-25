@@ -67,17 +67,19 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
 
         handleAccess: function (model) {
             if (!this.getAcl().checkModel(model, 'edit')) {
+                this.hideButton('save');
+                this.hideButton('fullForm');
                 this.$el.find('button[data-name="save"]').addClass('hidden');
                 this.$el.find('button[data-name="fullForm"]').addClass('hidden');
             } else {
-                this.$el.find('button[data-name="save"]').removeClass('hidden');
-                this.$el.find('button[data-name="fullForm"]').removeClass('hidden');
+                this.showButton('save');
+                this.showButton('fullForm');
             }
 
             if (!this.getAcl().checkModel(model, 'delete')) {
-                this.$el.find('button[data-name="remove"]').addClass('hidden');
+                this.hideButton('remove');
             } else {
-                this.$el.find('button[data-name="remove"]').removeClass('hidden');
+                this.showButton('remove');
             }
         },
 
@@ -89,11 +91,6 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     this.handleAccess(model);
                 }
             }
-
-        },
-
-        disableButtons: function () {
-
         },
 
         setup: function () {
@@ -129,24 +126,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                 this.buttonList.splice(1, 0, {
                     name: 'remove',
                     text: this.translate('Remove'),
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        var model = this.getView('edit').model;
-
-                        if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
-                            var $buttons = dialog.$el.find('.modal-footer button');
-                            $buttons.addClass('disabled');
-                            model.destroy({
-                                success: function () {
-                                    this.trigger('after:destroy', model);
-                                    dialog.close();
-                                }.bind(this),
-                                error: function () {
-                                    $buttons.removeClass('disabled');
-                                },
-                            });
-                        }
-                    }.bind(this)
+                    style: 'danger'
                 });
             }
 
@@ -164,6 +144,24 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                 parentView.removeModel.call(parentView, model);
             }, this);
         },
+
+        actionRemove: function () {
+            var model = this.getView('edit').model;
+
+            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+                var $buttons = this.dialog.$el.find('.modal-footer button');
+                $buttons.addClass('disabled');
+                model.destroy({
+                    success: function () {
+                        this.trigger('after:destroy', model);
+                        this.dialog.close();
+                    }.bind(this),
+                    error: function () {
+                        $buttons.removeClass('disabled');
+                    }
+                });
+            }
+        }
     });
 });
 

@@ -97,13 +97,16 @@ Espo.define('views/modal', 'view', function (Dep) {
                     buttonListExt.push(o);
                 }, this);
 
+
                 this.buttonList.forEach(function (item) {
                     var o = {};
 
-                    if (typeof item == 'string') {
+                    if (typeof item === 'string') {
                         o.name = item;
-                    } else {
+                    } else if (typeof item === 'object') {
                         o = item;
+                    } else {
+                        return;
                     }
 
                     var text = o.text;
@@ -165,14 +168,40 @@ Espo.define('views/modal', 'view', function (Dep) {
         },
 
         disableButton: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.disabled = true;
+            }, this);
             if (!this.isRendered()) return;
             this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled');
         },
 
         enableButton: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.disabled = false;
+            }, this);
             if (!this.isRendered()) return;
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled');
-        }
+        },
+
+        showButton: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = false;
+            }, this);
+            if (!this.isRendered()) return;
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
+        },
+
+        hideButton: function (name) {
+            this.buttonList.forEach(function (d) {
+                if (d.name !== name) return;
+                d.hidden = true;
+            }, this);
+            if (!this.isRendered()) return;
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+        },
     });
 });
 

@@ -60,6 +60,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
+            if (!this.editDisabled) {
+                this.addEditButton();
+            }
+
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
@@ -148,7 +152,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }
             }, this);
             if (~index) {
-                this.buttonList.unshift(index, 1);
+                this.buttonList.splice(index, 1);
             }
         },
 
@@ -163,10 +167,20 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.header = '<a href="#' + this.scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
 
-            if (!this.editDisabled && this.getAcl().check(model, 'edit')) {
-                this.addEditButton();
-            } else {
-                this.removeEditButton();
+            if (!this.editDisabled) {
+                var editAccess = this.getAcl().check(model, 'edit', true);
+                if (editAccess) {
+                    this.showButton('edit');
+                } else {
+                    this.hideButton('edit');
+                    if (editAccess === null) {
+                        this.listenToOnce(model, 'sync', function() {
+                            if (this.getAcl().check(model, 'edit')) {
+                                this.showButton('edit');
+                            }
+                        }, this);
+                    }
+                }
             }
 
             var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
