@@ -81,12 +81,12 @@ class Acl
 
     public function check($subject, $action = null)
     {
-        return $this->getAclManager()->check($this->getUser(), $subject, $action) ;
+        return $this->getAclManager()->check($this->getUser(), $subject, $action);
     }
 
     public function checkScope($scope, $action = null)
     {
-        return $this->getAclManager()->checkScope($this->getUser(), $scope, $action) ;
+        return $this->getAclManager()->checkScope($this->getUser(), $scope, $action);
     }
 
     public function checkEntity(Entity $entity, $action)

@@ -68,9 +68,13 @@ class Record extends \Espo\Core\Services\Base
 
     protected $readOnlyAttributeList = [];
 
+    protected $readOnlyLinkList = [];
+
     protected $linkSelectParams = [];
 
     protected $mergeLinkList = [];
+
+    protected $noEditAccessRequiredLinkList = [];
 
     protected $exportSkipAttributeList = [];
 
@@ -748,70 +752,111 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntity($id, $link, $foreignId)
     {
+        if (empty($id) || empty($link) || empty($foreignId)) {
+            throw new BadRequest;
+        }
+
+        if (in_array($link, $this->readOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get($id);
-
-        $foreignEntityName = $entity->relations[$link]['entity'];
-
+        if (!$entity) {
+            throw new NotFound();
+        }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
-        if (empty($foreignEntityName)) {
-            throw new Error();
+        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        if (!$foreignEntityType) {
+            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
+        if (!$foreignEntity) {
+            throw new NotFound();
+        }
 
-        if (!$this->getAcl()->check($foreignEntity, 'edit')) {
+        $accessActionRequired = 'edit';
+        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
+            $accessActionRequired = 'read';
+        }
+        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
             throw new Forbidden();
         }
 
-        if (!empty($foreignEntity)) {
-            $this->getRepository()->relate($entity, $link, $foreignEntity);
-            return true;
-        }
+        $this->getRepository()->relate($entity, $link, $foreignEntity);
+        return true;
     }
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if (empty($id) || empty($link) || empty($foreignId)) {
+            throw new BadRequest;
+        }
+
+        if (in_array($link, $this->readOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get($id);
-
-        $foreignEntityName = $entity->relations[$link]['entity'];
-
+        if (!$entity) {
+            throw new NotFound();
+        }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
-        if (empty($foreignEntityName)) {
-            throw new Error();
+        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        if (!$foreignEntityType) {
+            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityName, $foreignId);
+        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
+        if (!$foreignEntity) {
+            throw new NotFound();
+        }
 
-        if (!$this->getAcl()->check($foreignEntity, 'edit')) {
+        $accessActionRequired = 'edit';
+        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
+            $accessActionRequired = 'read';
+        }
+        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
             throw new Forbidden();
         }
 
-        if (!empty($foreignEntity)) {
-            $this->getRepository()->unrelate($entity, $link, $foreignEntity);
-            return true;
-        }
+        $this->getRepository()->unrelate($entity, $link, $foreignEntity);
+        return true;
     }
 
     public function linkEntityMass($id, $link, $where)
     {
+        if (empty($id) || empty($link)) {
+            throw new BadRequest;
+        }
+
         $entity = $this->getRepository()->get($id);
-
-        $entityType = $entity->getEntityType();
-        $foreignEntityType = $entity->relations[$link]['entity'];
-
+        if (!$entity) {
+            throw new NotFound();
+        }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
+
+        $entityType = $entity->getEntityType();
+        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+
         if (empty($foreignEntityType)) {
             throw new Error();
         }
-        if (!$this->getAcl()->check($foreignEntityType, 'edit')) {
+
+        $accessActionRequired = 'edit';
+        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
+            $accessActionRequired = 'read';
+        }
+
+        if (!$this->getAcl()->check($foreignEntityType, $accessActionRequired)) {
             throw new Forbidden();
         }
 
@@ -822,7 +867,22 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
 
-        return $this->getRepository()->massRelate($entity, $link, $selectParams);
+        if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
+            return $this->getRepository()->massRelate($entity, $link, $selectParams);
+        } else {
+            $foreignEntityList = $this->getEntityManager()->getRepository($foreignEntityType)->find($selectParams);
+            $countRelated = 0;
+            foreach ($foreignEntityList as $foreignEntity) {
+                if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+                    continue;
+                }
+                $this->getRepository()->relate($entity, $link, $foreignEntity);
+                $countRelated++;
+            }
+            if ($countRelated) {
+                return true;
+            }
+        }
     }
 
     public function massUpdate($attributes = array(), array $params)

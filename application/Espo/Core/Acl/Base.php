@@ -135,8 +135,8 @@ class Base implements Injectable
         }
 
         if (!is_null($action)) {
-            if (isset($data->action)) {
-                $value = $data->action;
+            if (isset($data->$action)) {
+                $value = $data->$action;
 
                 if ($value === 'all' || $value === true) {
                     return true;

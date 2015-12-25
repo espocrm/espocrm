@@ -38,7 +38,7 @@ class CaseObj extends \Espo\Services\Record
         'meetings',
         'calls',
         'emails'
-    ]
+    ];
 
     protected $readOnlyAttributeList = [
         'inboundEmailId'

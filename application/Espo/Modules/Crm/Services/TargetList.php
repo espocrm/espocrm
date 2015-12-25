@@ -35,6 +35,8 @@ use \Espo\Core\Exceptions\NotFound;
 
 class TargetList extends \Espo\Services\Record
 {
+    protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -60,11 +62,16 @@ class TargetList extends \Espo\Services\Record
     public function unlinkAll($id, $link)
     {
         $entity = $this->getRepository()->get($id);
-
-        $foreignEntityType = $entity->relations[$link]['entity'];
-
+        if (!$entity) {
+            throw new NotFound();
+        }
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
+        }
+
+        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        if (!$foreignEntityType) {
+            throw new Error();
         }
 
         if (empty($foreignEntityType)) {
