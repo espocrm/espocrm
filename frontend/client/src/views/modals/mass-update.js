@@ -59,21 +59,15 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'update',
                     label: 'Update',
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        this.update();
-                    }.bind(this),
+                    style: 'danger'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -133,7 +127,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             }.bind(this));
         },
 
-        update: function () {
+        actionUpdate: function () {
             var self = this;
 
             var attributes = {};

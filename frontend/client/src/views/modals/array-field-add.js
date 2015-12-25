@@ -55,10 +55,7 @@ Espo.define('views/modals/array-field-add', 'views/modal', function (Dep) {
             this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 

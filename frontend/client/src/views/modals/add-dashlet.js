@@ -27,13 +27,13 @@
  ************************************************************************/
 
 
-Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
+Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'add-dashlet',
 
-        template: 'modals.add-dashlet',
+        template: 'modals/add-dashlet',
 
         data: function () {
             return {
@@ -50,13 +50,10 @@ Espo.define('Views.Modals.AddDashlet', 'Views.Modal', function (Dep) {
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 

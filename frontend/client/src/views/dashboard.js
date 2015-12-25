@@ -42,12 +42,12 @@ Espo.define('views/dashboard', 'view', function (Dep) {
                 this.selectTab(tab);
             },
             'click button[data-action="addDashlet"]': function () {
-                this.createView('addDashlet', 'Modals.AddDashlet', {}, function (view) {
+                this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
                     view.render();
                 });
             },
             'click button[data-action="editTabs"]': function () {
-                this.createView('editTabs', 'Modals.EditDashboard', {
+                this.createView('editTabs', 'views/modals/edit-dashboard', {
                     dashboardLayout: this.dashboardLayout
                 }, function (view) {
                     view.render();

@@ -44,7 +44,7 @@ Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
@@ -56,10 +56,7 @@ Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
             this.scope = this.options.scope;

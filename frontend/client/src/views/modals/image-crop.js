@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Modals.ImageCrop', ['Views.Modal', 'lib!Cropper'], function (Dep, Cropper) {
+Espo.define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep, Cropper) {
 
     return Dep.extend({
 
         cssName: 'image-crop',
 
-        template: 'modals.image-crop',
+        template: 'modals/image-crop',
 
         events: {
             'click [data-action="zoomIn"]': function () {
@@ -42,32 +42,19 @@ Espo.define('Views.Modals.ImageCrop', ['Views.Modal', 'lib!Cropper'], function (
                 this.$img.cropper('zoom', -0.1);
             }
         },
-        
-
-        data: function () {
-            return {
-
-            };
-        },
 
         setup: function () {
             this.header = null;
 
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'crop',
                     label: 'Submit',
-                    style: 'primary',
-                    onClick: function (dialog) {
-                        this.crop();
-                    }.bind(this)
+                    style: 'primary'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        this.close();
-                    }.bind(this)
+                    label: 'Cancel'
                 }
             ];
 
@@ -95,7 +82,7 @@ Espo.define('Views.Modals.ImageCrop', ['Views.Modal', 'lib!Cropper'], function (
 
         },
 
-        crop: function () {
+        actionCrop: function () {
             var dataUrl = this.$img.cropper('getDataURL', 'image/jpeg');
             this.trigger('crop', dataUrl);
             this.close();

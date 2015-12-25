@@ -35,22 +35,15 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
         template: 'modals/change-password',
 
         setup: function () {
-
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'change',
                     label: 'Change',
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        this.changePassword();
-                    }.bind(this)
+                    style: 'danger'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -102,7 +95,7 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
         },
 
 
-        changePassword: function () {
+        actionChangePassword: function () {
             this.getView('currentPassword').fetchToModel();
             this.getView('password').fetchToModel();
             this.getView('passwordConfirm').fetchToModel();

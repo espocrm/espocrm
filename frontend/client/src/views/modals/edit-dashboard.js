@@ -50,23 +50,15 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
         },
 
         setup: function () {
-            this.buttons = [
+            this.buttonList = [
                 {
                     name: 'save',
                     label: 'Save',
-                    style: 'primary',
-                    onClick: function (dialog) {
-                        if (this.save()) {
-                            dialog.close();
-                        }
-                    }.bind(this)
+                    style: 'primary'
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    }
+                    label: 'Cancel'
                 }
             ];
 
@@ -101,7 +93,7 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
             this.dashboardLayout = this.options.dashboardLayout;
         },
 
-        save: function () {
+        actionSave: function () {
             var dashboardTabListView = this.getView('dashboardTabList');
             dashboardTabListView.fetchToModel();
             if (dashboardTabListView.validate()) {
@@ -112,7 +104,8 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
             attributes.dashboardTabList = dashboardTabListView.model.get('dashboardTabList');
 
             this.trigger('after:save', attributes);
-            return true;
+
+            this.dialog.close();
         },
     });
 });
