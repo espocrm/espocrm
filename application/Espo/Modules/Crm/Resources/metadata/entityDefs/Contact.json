@@ -146,7 +146,8 @@
         "portalUser": {
             "type": "link",
             "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "readOnly": true
         }
     },
     "links": {

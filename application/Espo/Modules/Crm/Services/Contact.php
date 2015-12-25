@@ -37,6 +37,11 @@ class Contact extends \Espo\Services\Record
         'targetLists'
     ];
 
+    protected $readOnlyAttributeList = [
+        'inboundEmailId',
+        'portalUserId'
+    ];
+
     protected function getDuplicateWhereClause(Entity $entity)
     {
         $data = array(

@@ -3,7 +3,8 @@
         "name": "Name",
         "logo": "Logo",
         "url": "URL",
-        "portalRoles": "Roles"
+        "portalRoles": "Roles",
+        "isActive": "Is Active"
     },
     "links": {
         "users": "Users",

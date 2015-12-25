@@ -33,12 +33,16 @@ use \Espo\ORM\Entity;
 
 class CaseObj extends \Espo\Services\Record
 {
-    protected $mergeLinkList = array(
+    protected $mergeLinkList = [
         'tasks',
         'meetings',
         'calls',
         'emails'
-    );
+    ]
+
+    protected $readOnlyAttributeList = [
+        'inboundEmailId'
+    ];
 
     public function afterCreate($entity, array $data)
     {
