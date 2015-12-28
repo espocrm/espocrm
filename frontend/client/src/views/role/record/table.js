@@ -50,9 +50,12 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             'record': ['all', 'team', 'own', 'no']
         },
 
+        levelList: ['all', 'team', 'own', 'no'],
+
         colors: {
             yes: '#6BC924',
             all: '#6BC924',
+            account: '#999900',
             team: '#999900',
             own: '#CC9900',
             no: '#F23333',
@@ -172,8 +175,24 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
             this.final = this.options.final || false;
 
-            this.aclTypeMap = {};
+            this.setupScopeList();
 
+            this.listenTo(this.model, 'sync', function () {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }, this);
+
+            this.setupFieldTableDataList();
+
+            this.template = 'role/table';
+            if (this.mode == 'edit') {
+                this.template = 'role/table-edit';
+            }
+        },
+
+        setupScopeList: function () {
+            this.aclTypeMap = {};
             this.scopeList = [];
 
             var scopeListAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
@@ -191,19 +210,6 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     }
                 }
             }, this);
-
-            this.listenTo(this.model, 'sync', function () {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
-            }, this);
-
-            this.setupFieldTableDataList();
-
-            this.template = 'role/table';
-            if (this.mode == 'edit') {
-                this.template = 'role/table-edit';
-            }
         },
 
         setupFieldTableDataList: function () {
@@ -339,14 +345,14 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             var $edit = this.$el.find('select[name="'+scope+'-edit"]');
 
             if (!dontChange) {
-                if (this.levelListMap.record.indexOf($edit.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($edit.val()) < this.levelList.indexOf(value)) {
                     $edit.val(value);
                 }
             }
 
             $edit.find('option').each(function (i, o) {
                 var $o = $(o);
-                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
                     $o.attr('disabled', 'disabled');
                 } else {
                     $o.removeAttr('disabled');
@@ -358,14 +364,14 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             var $stream = this.$el.find('select[name="'+scope+'-stream"]');
 
             if (!dontChange) {
-                if (this.levelListMap.record.indexOf($stream.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($stream.val()) < this.levelList.indexOf(value)) {
                     $stream.val(value);
                 }
             }
 
             $stream.find('option').each(function (i, o) {
                 var $o = $(o);
-                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
                     $o.attr('disabled', 'disabled');
                 } else {
                     $o.removeAttr('disabled');
@@ -377,14 +383,14 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             var $delete = this.$el.find('select[name="'+scope+'-delete"]');
 
             if (!dontChange) {
-                if (this.levelListMap.record.indexOf($delete.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($delete.val()) < this.levelList.indexOf(value)) {
                     $delete.val(value);
                 }
             }
 
             $delete.find('option').each(function (i, o) {
                 var $o = $(o);
-                if (this.levelListMap.record.indexOf($o.val()) < this.levelListMap.record.indexOf(value)) {
+                if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
                     $o.attr('disabled', 'disabled');
                 } else {
                     $o.removeAttr('disabled');

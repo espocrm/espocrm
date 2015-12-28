@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Role.Record.DetailSide', 'Views.Record.DetailSide', function (Dep) {
+Espo.define('views/role/record/detail-side', 'views/record/detail-side', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Views.Role.Record.DetailSide', 'Views.Record.DetailSide', function 
             {
                 name: 'default',
                 label: false,
-                view: 'Role.Record.Panels.Side'
+                view: 'views/role/record/panels/side'
             }
         ],
 

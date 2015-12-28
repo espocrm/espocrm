@@ -30,6 +30,8 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
+        tableView: 'views/role/record/table',
+
         sideView: 'views/role/record/detail-side',
 
         events: _.extend({
@@ -101,7 +103,7 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.createView('extra', 'views/role/record/table', {
+            this.createView('extra', this.tableView, {
                 mode: 'edit',
                 acl: {
                     data: this.model.get('data') || {},

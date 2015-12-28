@@ -28,6 +28,7 @@
         "levelList": {
             "all": "all",
             "team": "team",
+            "account": "account",
             "own": "own",
             "no": "no",
             "yes": "yes",

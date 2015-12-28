@@ -24,13 +24,13 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Role.Record.Panels.Side', 'Views.Record.Panels.Side', function (Dep) {
+Espo.define('views/role/record/panels/side', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
-        template: 'role.record.panels.side',
+        template: 'role/record/panels/side',
 
     });
 });

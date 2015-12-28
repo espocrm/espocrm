@@ -3,6 +3,7 @@
     "layouts": true,
     "tab": true,
     "acl": true,
+    "aclPortal": true,
     "customizable": true,
     "importable": true,
     "notifications": true

@@ -18,7 +18,8 @@
         "Template": "Template",
         "Job": "Job",
         "EmailFilter": "Email Filter",
-        "Portal": "Portal"
+        "Portal": "Portal",
+        "PortalRole": "Portal Role"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -39,7 +40,8 @@
         "Template": "Templates",
         "Job": "Jobs",
         "EmailFilter": "Email Filters",
-        "Portal": "Portals"
+        "Portal": "Portals",
+        "PortalRole": "Portal Roles"
     },
     "labels": {
         "Misc": "Misc",

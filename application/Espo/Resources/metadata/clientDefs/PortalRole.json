@@ -1,0 +1,17 @@
+{
+    "recordViews": {
+        "detail":"views/portal-role/record/detail",
+        "edit":"views/portal-role/record/edit",
+        "editQuick":"views/portal-role/record/edit",
+        "list":"views/portal-role/record/list"
+    },
+    "relationshipPanels": {
+        "users": {
+            "create":false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
+        }
+    },
+    "views": {
+        "list": "views/portal-role/list"
+    }
+}

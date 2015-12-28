@@ -2,13 +2,13 @@
     "mandatory": {
         "scopeLevel": {
             "User": {
-                "read": "all",
+                "read": "no",
                 "edit": "no",
                 "delete": "no",
                 "stream": "no"
             },
             "Team": {
-                "read": "all",
+                "read": "no",
                 "edit": "no",
                 "delete": "no"
             },
@@ -17,70 +17,64 @@
                 "edit": "own",
                 "delete": "own"
             },
-            "Portal": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no"
-            },
-            "EmailAddress": {
-                "read": "no",
-                "edit": "no",
-                "delete": "no"
-            },
+            "Portal": false,
+            "EmailAddress": false,
             "Attachment": {
                 "read": "own",
                 "edit": "own",
                 "delete": "own"
             },
-            "PhoneNumber": {
-                "read": "no",
-                "edit": "no",
-                "delete": "no"
-            },
+            "PhoneNumber": false,
             "EmailAccount": {
                 "read": "own",
                 "edit": "own",
                 "delete": "own"
             },
-            "EmailFilter": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own"
-            },
             "Role": false,
-            "PortalRole": false
-        },
-        "fieldLevel": {
+            "PortalRole": false,
+            "EmailFilter": false,
+            "EmailAccount": false,
+            "EmailTemplate": false
         }
     },
     "default": {
         "scopeLevel": {
         },
         "fieldLevel": {
-        },
-        "assignmentPermission": "all",
-        "userPermission": "no"
+            "assignedUser": {
+                "read": "yes",
+                "edit": "no"
+            },
+            "assignedUsers": {
+                "read": "yes",
+                "edit": "no"
+            },
+            "teams": {
+                "read": "yes",
+                "edit": "no"
+            }
+        }
     },
     "scopeLevelTypesDefaults": {
-        "boolean": true,
-        "recordAllTeamOwnNo": {
-            "read": "all",
-            "edit": "all",
+        "boolean": false,
+        "recordAllAccountOwnNo": {
+            "read": "no",
+            "edit": "no",
             "delete": "no"
         },
         "recordAllOwnNo": {
-            "read": "all",
-            "edit": "all",
+            "read": "no",
+            "edit": "no",
             "delete": "no"
         },
-        "recordAllTeamNo": {
-            "read": "all",
-            "edit": "all",
+        "recordAllAccountNo": {
+            "read": "no",
+            "edit": "no",
             "delete": "no"
         },
         "recordAllNo": {
-            "read": "all",
-            "edit": "all",
+            "read": "no",
+            "edit": "no",
             "delete": "no"
         }
     }

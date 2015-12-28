@@ -74,6 +74,21 @@
          }
       ]
    },
+   "portal": {
+      "label":"Portal",
+      "items":[
+         {
+            "url":"#Portal",
+            "label":"Portals",
+            "description":"portals"
+         },
+         {
+            "url":"#PortalRole",
+            "label":"Portal Roles",
+            "description":"portalRoles"
+         }
+      ]
+   },
    "email":{
       "label":"Email",
       "items":[

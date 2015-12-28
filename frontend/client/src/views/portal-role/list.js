@@ -26,27 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('views/portal-role/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        tableView: 'views/role/record/table',
+        searchPanel: false
 
-        sideView: 'views/role/record/detail-side',
-
-        editModeDisabled: true,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.createView('extra', this.tableView, {
-                acl: {
-                    data: this.model.get('data') || {},
-                    fieldData: this.model.get('fieldData') || {}
-                },
-                el: this.options.el + ' .extra'
-            });
-        },
     });
 });
-
-

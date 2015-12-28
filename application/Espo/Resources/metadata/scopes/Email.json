@@ -3,6 +3,7 @@
     "layouts": false,
     "tab": true,
     "acl": true,
+    "aclPortal": "recordAllAccountOwnNo",
     "notifications": true,
     "object": true,
     "customizable": true
