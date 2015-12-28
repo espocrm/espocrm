@@ -38,6 +38,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     protected function beforeSave(Entity $entity, array $options)
     {
         parent::beforeSave($entity, $options);
+
         if ($entity->isNew()) {
             $userName = $entity->get('userName');
             if (empty($userName)) {

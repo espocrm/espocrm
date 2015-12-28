@@ -267,11 +267,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleSpecifiedRelations(Entity $entity)
     {
+
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypeList)) {
                 $fieldName = $name . 'Ids';
                 $columnsFieldsName = $name . 'Columns';
+
 
                 if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
                     if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
@@ -359,7 +361,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
                 }
             } else if ($defs['type'] === $entity::HAS_ONE) {
-                if (empty($defs['entity']) || empty($defs['foreignKey'])) return;
+                if (empty($defs['entity']) || empty($defs['foreignKey'])) continue;
+
                 if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
                     continue;
                 }
@@ -369,7 +372,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $idFieldName = $name . 'Id';
                 $nameFieldName = $name . 'Name';
 
-                if (!$entity->has($idFieldName)) return;
+                if (!$entity->has($idFieldName)) continue;
 
                 $where = array();
                 $where[$foreignKey] = $entity->id;
