@@ -242,6 +242,27 @@ class RDB extends \Espo\ORM\Repository
         return $this->getMapper()->countRelated($entity, $relationName, $params);
     }
 
+    public function isRelated(Entity $entity, $relationName, $foreign)
+    {
+        if (!$entity->id) {
+            return;
+        }
+        if ($foreign instanceof Entity) {
+            $id = $foreign->id;
+        } else if (is_string($id)) {
+            $id = $foreign;
+        } else {
+            return;
+        }
+        if (!$id) return;
+
+        return !!$this->countRelated($entity, $relationName, array(
+            'whereClause' => array(
+                'id' => $id
+            )
+        ));
+    }
+
     public function relate(Entity $entity, $relationName, $foreign, $data = null)
     {
         if (!$entity->id) {

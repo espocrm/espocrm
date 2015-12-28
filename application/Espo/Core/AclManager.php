@@ -45,6 +45,8 @@ class AclManager
 
     private $tableHashMap = array();
 
+    protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -78,7 +80,7 @@ class AclManager
                 $acl = new $className($scope);
                 $dependencies = $acl->getDependencyList();
                 foreach ($dependencies as $name) {
-                    $acl->inject($name, $this->container->get($name));
+                    $acl->inject($name, $this->getContainer()->get($name));
                 }
                 $this->implementationHashMap[$scope] = $acl;
             } else {
@@ -99,7 +101,7 @@ class AclManager
             $metadata = $this->getContainer()->get('metadata');
             $fieldManager = $this->getContainer()->get('fieldManager');
 
-            $this->tableHashMap[$key] = new \Espo\Core\Acl\Table($user, $config, $fileManager, $metadata, $fieldManager);
+            $this->tableHashMap[$key] = new $this->tableClassName($user, $config, $fileManager, $metadata, $fieldManager);
         }
 
         return $this->tableHashMap[$key];

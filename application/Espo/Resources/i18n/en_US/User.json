@@ -20,7 +20,7 @@
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
         "contact": "Contact",
-        "account": "Account"
+        "accounts": "Accounts"
     },
     "links": {
         "teams": "Teams",
@@ -29,7 +29,7 @@
         "portals": "Portals",
         "portalRoles": "Portal Roles",
         "contact": "Contact",
-        "account": "Account"
+        "accounts": "Accounts"
     },
     "labels": {
         "Create User": "Create User",

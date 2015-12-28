@@ -176,11 +176,13 @@ class Base implements Injectable
 
     public function checkIsOwner(User $user, Entity $entity)
     {
-        if ($entity->has('assignedUserId')) {
-            if ($user->id === $entity->get('assignedUserId')) {
-                return true;
+        if ($entity->hasAttribute('assignedUserId')) {
+            if ($entity->has('assignedUserId')) {
+                if ($user->id === $entity->get('assignedUserId')) {
+                    return true;
+                }
             }
-        } else {
+        } else if ($entity->hasAttribute('createdById')) {
             if ($entity->has('createdById')) {
                 if ($user->id === $entity->get('createdById')) {
                     return true;

@@ -44,13 +44,18 @@ class Application
      */
     public function __construct()
     {
-        $this->container = new Container();
+        $this->initContainer();
 
         date_default_timezone_set('UTC');
 
         $GLOBALS['log'] = $this->container->get('log');
 
         $this->initAutoloads();
+    }
+
+    protected function initContainer()
+    {
+        $this->container = new Container();
     }
 
     public function getSlim()

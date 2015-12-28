@@ -101,12 +101,12 @@ class Acl
 
     public function checkIsOwner(Entity $entity)
     {
-        return $this->getAclManager()->checkUser($this->getUser(), $entity);
+        return $this->getAclManager()->checkIsOwner($this->getUser(), $entity);
     }
 
     public function checkInTeam(Entity $entity)
     {
-        return $this->getAclManager()->checkUser($this->getUser(), $entity);
+        return $this->getAclManager()->checkInTeam($this->getUser(), $entity);
     }
 
     public function getScopeForbiddenAttributeList($scope, $action = 'read', $thresholdLevel = 'no')

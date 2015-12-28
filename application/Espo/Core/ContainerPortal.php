@@ -27,58 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
-
-use \Espo\Core\Utils\Config;
-use \Espo\Core\Utils\Metadata;
-use \Espo\Core\Utils\FieldManager;
-use \Espo\Core\Utils\File\Manager as FileManager;
-
-class TablePortal extends Table
+class ContainerPortal extends Container
 {
-    protected $type = 'aclPortal';
-
-    protected $defaultAclType = 'recordAllOwnNo';
-
-    protected $valuePermissionList = [];
-
-    protected function getScopeWithAclList()
+    protected function getServiceClassName($name, $default)
     {
-        $scopeList = [];
-        $scopes = $this->metadata->get('scopes');
-        foreach ($scopes as $scope => $d) {
-            if (empty($d['acl'])) continue;
-            if (empty($d['aclPortal'])) continue;
-            $scopeList[] = $scope;
-        }
-        return $scopeList;
+        $metadata = $this->get('metadata');
+        $className = $metadata->get('app.serviceContainerPortal.classNames.' . $name, $default);
+        return $className;
     }
 
-    protected function applyDefault(&$table, &$fieldTable)
+    protected function loadAclManager()
     {
-        parent::applyDefault($table, $fieldTable);
-
-        foreach ($this->getScopeList() as $scope) {
-            if (!isset($table->$scope)) {
-                $table->$scope = false;
-            }
-        }
+        $className = $this->getServiceClassName('aclManager', '\\Espo\\Core\\AclPortalManager');
+        return new $className(
+            $this->get('container')
+        );
     }
 
-    protected function applyDisabled(&$table, &$fieldTable)
+    protected function loadAcl()
     {
-        foreach ($this->getScopeList() as $scope) {
-            $d = $this->getMetadata()->get('scopes.' . $scope);
-            if ($d['disabled'] || $d['portalDisabled']) {
-                $aclTable->$scope = false;
-                unset($fieldTable->$scope);
-            }
-        }
+        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclPortal');
+        return new $className(
+            $this->get('aclManager'),
+            $this->get('user')
+        );
     }
 }
 

@@ -106,8 +106,13 @@
             "type": "link",
             "view": "views/user/fields/contact"
         },
-        "account": {
-            "type": "link"
+        "accounts": {
+            "type": "linkMultiple"
+        },
+        "portalId": {
+            "type": "varchar",
+            "disabled": true,
+            "notStorable": true
         },
         "avatar": {
             "type": "image",
@@ -183,10 +188,11 @@
             "entity": "Contact",
             "foreign": "portalUser"
         },
-        "account": {
-            "type": "belongsTo",
+        "accounts": {
+            "type": "hasMany",
             "entity": "Account",
-            "foreign": "portalUsers"
+            "foreign": "portalUsers",
+            "relationName": "AccountPortalUser"
         }
     },
     "collection": {

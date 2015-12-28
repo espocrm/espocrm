@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,22 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/fields/contact', 'views/fields/link', function (Dep) {
+namespace Espo\Core\AclPortal;
 
-    return Dep.extend({
+class Table extends \Espo\Core\Acl\Table
+{
+    protected $type = 'aclPortal';
 
-        select: function (model) {
-            Dep.prototype.select.call(this, model);
-            if (model.has('accountId')) {
-                var names = {};
-                names[model.get('accountId')] = model.get('accountName');
-                this.model.set({
-                    accountsIds: [model.get('accountId')],
-                    accountsNames: names
-                });
+    protected $defaultAclType = 'recordAllOwnNo';
+
+    protected $valuePermissionList = [];
+
+    protected function getScopeWithAclList()
+    {
+        $scopeList = [];
+        $scopes = $this->metadata->get('scopes');
+        foreach ($scopes as $scope => $d) {
+            if (empty($d['acl'])) continue;
+            if (empty($d['aclPortal'])) continue;
+            $scopeList[] = $scope;
+        }
+        return $scopeList;
+    }
+
+    protected function applyDefault(&$table, &$fieldTable)
+    {
+        parent::applyDefault($table, $fieldTable);
+
+        foreach ($this->getScopeList() as $scope) {
+            if (!isset($table->$scope)) {
+                $table->$scope = false;
             }
         }
+    }
 
-    });
+    protected function applyDisabled(&$table, &$fieldTable)
+    {
+        foreach ($this->getScopeList() as $scope) {
+            $d = $this->getMetadata()->get('scopes.' . $scope);
+            if ($d['disabled'] || $d['portalDisabled']) {
+                $aclTable->$scope = false;
+                unset($fieldTable->$scope);
+            }
+        }
+    }
+}
 
-});

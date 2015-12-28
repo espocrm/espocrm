@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core;
+
 class Container
 {
 
@@ -115,45 +116,45 @@ class Container
         return $this;
     }
 
-    private function loadSlim()
+    protected function loadSlim()
     {
         return new \Espo\Core\Utils\Api\Slim();
     }
 
-    private function loadFileManager()
+    protected function loadFileManager()
     {
         return new \Espo\Core\Utils\File\Manager(
             $this->get('config')
         );
     }
 
-    private function loadPreferences()
+    protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
     }
 
-    private function loadConfig()
+    protected function loadConfig()
     {
         return new \Espo\Core\Utils\Config(
             new \Espo\Core\Utils\File\Manager()
         );
     }
 
-    private function loadHookManager()
+    protected function loadHookManager()
     {
         return new \Espo\Core\HookManager(
             $this
         );
     }
 
-    private function loadOutput()
+    protected function loadOutput()
     {
         return new \Espo\Core\Utils\Api\Output(
             $this->get('slim')
         );
     }
 
-    private function loadMailSender()
+    protected function loadMailSender()
     {
         $className = $this->getServiceClassName('mailSernder', '\\Espo\\Core\\Mail\\Sender');
         return new $className(
@@ -161,7 +162,7 @@ class Container
         );
     }
 
-    private function loadDateTime()
+    protected function loadDateTime()
     {
         return new \Espo\Core\Utils\DateTime(
             $this->get('config')->get('dateFormat'),
@@ -170,7 +171,7 @@ class Container
         );
     }
 
-    private function loadNumber()
+    protected function loadNumber()
     {
         return new \Espo\Core\Utils\Number(
             $this->get('config')->get('decimalMark'),
@@ -178,14 +179,14 @@ class Container
         );
     }
 
-    private function loadServiceFactory()
+    protected function loadServiceFactory()
     {
         return new \Espo\Core\ServiceFactory(
             $this
         );
     }
 
-    private function loadSelectManagerFactory()
+    protected function loadSelectManagerFactory()
     {
         return new \Espo\Core\SelectManagerFactory(
             $this->get('entityManager'),
@@ -195,7 +196,7 @@ class Container
         );
     }
 
-    private function loadMetadata()
+    protected function loadMetadata()
     {
         return new \Espo\Core\Utils\Metadata(
             $this->get('config'),
@@ -203,7 +204,7 @@ class Container
         );
     }
 
-    private function loadLayout()
+    protected function loadLayout()
     {
         return new \Espo\Core\Utils\Layout(
             $this->get('fileManager'),
@@ -211,7 +212,7 @@ class Container
         );
     }
 
-    private function loadAclManager()
+    protected function loadAclManager()
     {
         $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
         return new $className(
@@ -219,7 +220,7 @@ class Container
         );
     }
 
-    private function loadAcl()
+    protected function loadAcl()
     {
         $className = $this->getServiceClassName('acl', '\\Espo\\Core\\Acl');
         return new $className(
@@ -228,7 +229,7 @@ class Container
         );
     }
 
-    private function loadSchema()
+    protected function loadSchema()
     {
         return new \Espo\Core\Utils\Database\Schema\Schema(
             $this->get('config'),
@@ -239,7 +240,7 @@ class Container
         );
     }
 
-    private function loadClassParser()
+    protected function loadClassParser()
     {
         return new \Espo\Core\Utils\File\ClassParser(
             $this->get('fileManager'),
@@ -248,7 +249,7 @@ class Container
         );
     }
 
-    private function loadLanguage()
+    protected function loadLanguage()
     {
         return new \Espo\Core\Utils\Language(
             $this->get('fileManager'),
@@ -258,28 +259,28 @@ class Container
         );
     }
 
-    private function loadCrypt()
+    protected function loadCrypt()
     {
         return new \Espo\Core\Utils\Crypt(
             $this->get('config')
         );
     }
 
-    private function loadScheduledJob()
+    protected function loadScheduledJob()
     {
         return new \Espo\Core\Utils\ScheduledJob(
             $this
         );
     }
 
-    private function loadDataManager()
+    protected function loadDataManager()
     {
         return new \Espo\Core\DataManager(
             $this
         );
     }
 
-    private function loadFieldManager()
+    protected function loadFieldManager()
     {
         return new \Espo\Core\Utils\FieldManager(
             $this->get('metadata'),
@@ -287,7 +288,7 @@ class Container
         );
     }
 
-    private function loadThemeManager()
+    protected function loadThemeManager()
     {
         return new \Espo\Core\Utils\ThemeManager(
             $this->get('config'),
@@ -295,7 +296,7 @@ class Container
         );
     }
 
-    private function loadClientManager()
+    protected function loadClientManager()
     {
         return new \Espo\Core\Utils\ClientManager(
             $this->get('config'),
