@@ -31,14 +31,17 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
     return Dep.extend({
 
         levelListMap: {
+            'recordAllAccountContactOwnNo': ['all', 'account', 'contact', 'own', 'no'],
             'recordAllAccountOwnNo': ['all', 'account', 'own', 'no'],
+            'recordAllContactOwnNo': ['all', 'contact', 'own', 'no'],
             'recordAllAccountNo': ['all', 'account', 'no'],
+            'recordAllContactNo': ['all', 'contact', 'no'],
             'recordAllOwnNo': ['all', 'own', 'no'],
             'recordAllNo': ['all', 'no'],
             'record': ['all', 'own', 'no']
         },
 
-        levelList: ['all', 'account', 'own', 'no'],
+        levelList: ['all', 'account', 'contact', 'own', 'no'],
 
         setupScopeList: function () {
             this.aclTypeMap = {};

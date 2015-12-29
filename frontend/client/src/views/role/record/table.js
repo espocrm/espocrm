@@ -56,6 +56,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             yes: '#6BC924',
             all: '#6BC924',
             account: '#999900',
+            contact: '#999900',
             team: '#999900',
             own: '#CC9900',
             no: '#F23333',

@@ -1,5 +1,6 @@
 {
    "controller": "controllers/record",
+   "aclPortal": "crm:acl-portal/account",
    "views": {
       "detail":"crm:views/account/detail"
    },

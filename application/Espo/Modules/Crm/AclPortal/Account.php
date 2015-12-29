@@ -27,31 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Modules\Crm\AclPortal;
 
-use \Espo\ORM\Entity;
 use \Espo\Entities\User;
+use \Espo\ORM\Entity;
 
-class AclPortal extends Acl
+class Account extends \Espo\Core\AclPortal\Base
 {
-    public function checkReadOnlyAccount($scope)
+    public function checkInAccount(User $user, Entity $entity)
     {
-        return $this->getAclManager()->checkReadOnlyAccount($this->getUser(), $scope);
-    }
-
-    public function checkReadOnlyContact($scope)
-    {
-        return $this->getAclManager()->checkReadOnlyContact($this->getUser(), $scope);
-    }
-
-    public function checkInAccount(Entity $entity)
-    {
-        return $this->getAclManager()->checkInAccount($this->getUser(), $entity);
-    }
-
-    public function checkIsOwnContact(Entity $entity)
-    {
-        return $this->getAclManager()->checkIsOwnContact($this->getUser(), $entity);
+        $accountIdList = $user->getLinkMultipleIdList('accounts');
+        if (count($accountIdList)) {
+            if (in_array($entity->id, $accountIdList)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -34,12 +34,102 @@ use \Espo\ORM\Entity;
 
 class Base extends \Espo\Core\Acl\Base
 {
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (is_null($data)) {
+            return false;
+        }
+        if ($data === false) {
+            return false;
+        }
+        if ($data === true) {
+            return true;
+        }
+        if (is_string($data)) {
+            return true;
+        }
+
+        $isOwner = null;
+        if (isset($entityAccessData['isOwner'])) {
+            $isOwner = $entityAccessData['isOwner'];
+        }
+        $inAccount = null;
+        if (isset($entityAccessData['inAccount'])) {
+            $inAccount = $entityAccessData['inAccount'];
+        }
+        $isOwnContact = null;
+        if (isset($entityAccessData['isOwnContact'])) {
+            $isOwnContact = $entityAccessData['isOwnContact'];
+        }
+
+        if (!is_null($action)) {
+            if (isset($data->$action)) {
+                $value = $data->$action;
+
+                if ($value === 'all' || $value === true) {
+                    return true;
+                }
+
+                if (!$value || $value === 'no') {
+                    return false;
+                }
+
+                if (is_null($isOwner)) {
+                    if ($entity) {
+                        $isOwner = $this->checkIsOwner($user, $entity);
+                    } else {
+                        return true;
+                    }
+                }
+
+                if ($isOwner) {
+                    if ($value === 'own' || $value === 'account' || $value === 'contact') {
+                        return true;
+                    }
+                }
+
+                if ($value === 'account') {
+                    if (is_null($inAccount) && $entity) {
+                        $inAccount = $this->checkInAccount($user, $entity);
+                    }
+                    if ($inAccount) {
+                        return true;
+                    }
+                }
+
+                if ($value === 'contact') {
+                    if (is_null($isOwnContact) && $entity) {
+                        $isOwnContact = $this->checkIsOwnContact($user, $entity);
+                    }
+                    if ($isOwnContact) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+        return false;
+    }
+
     public function checkReadOnlyAccount(User $user, $data)
     {
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
         return $data->read === 'account';
+    }
+
+    public function checkReadOnlyContact(User $user, $data)
+    {
+        if (empty($data) || !is_object($data) || !isset($data->read)) {
+            return false;
+        }
+        return $data->read === 'contact';
     }
 
     public function checkIsOwner(User $user, Entity $entity)
@@ -59,10 +149,8 @@ class Base extends \Espo\Core\Acl\Base
         $accountIdList = $user->getLinkMultipleIdList('accounts');
         if (count($accountIdList)) {
             if ($entity->hasAttribute('accountId')) {
-                foreach ($accountIdList as $accountId) {
-                    if ($entity->get('accountId') === $accountId) {
-                        return true;
-                    }
+                if (in_array($entity->get('accountId'), $accountIdList)) {
+                    return true;
                 }
             }
 
@@ -70,6 +158,43 @@ class Base extends \Espo\Core\Acl\Base
                 $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
                 foreach ($accountIdList as $accountId) {
                     if ($repository->isRelated($entity, 'accounts', $accountId)) {
+                        return true;
+                    }
+                }
+            }
+
+            if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
+                if ($entity->get('parentType') === 'Account') {
+                    if (in_array($entity->get('parentId'), $accountIdList)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function checkIsOwnContact(User $user, Entity $entity)
+    {
+        $contactId = $user->get('contactId');
+        if ($contactId) {
+            if ($entity->hasAttribute('contactId')) {
+                if ($entity->get('contactId') === $contactId) {
+                    return true;
+                }
+            }
+
+            if ($entity->hasRelation('contacts')) {
+                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+                if ($repository->isRelated($entity, 'contacts', $contactId)) {
+                    return true;
+                }
+            }
+
+            if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
+                if ($entity->get('parentType') === 'Contact') {
+                    if ($entity->get('parentId') === $contactId) {
                         return true;
                     }
                 }

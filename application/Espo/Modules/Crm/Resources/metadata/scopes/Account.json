@@ -3,7 +3,7 @@
     "layouts": true,
     "tab": true,
     "acl": true,
-    "aclPortal": "recordAllOwnNo",
+    "aclPortal": "recordAllAccountOwnNo",
     "module": "Crm",
     "customizable": true,
     "stream": true,

@@ -35,6 +35,8 @@ class Table extends \Espo\Core\Acl\Table
 
     protected $defaultAclType = 'recordAllOwnNo';
 
+    protected $levelList = ['all', 'account', 'contact', 'own', 'no'];
+
     protected $valuePermissionList = [];
 
     protected function getScopeWithAclList()

@@ -1,7 +1,8 @@
 {
    "controller": "controllers/record",
+   "aclPortal": "crm:acl-portal/contact",
    "views":{
-      "detail":"Crm:Contact.Detail"
+      "detail":"crm:views/contact/detail"
    },
    "sidePanels":{
       "detail":[

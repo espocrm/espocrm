@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,31 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+Espo.define('crm:acl-portal/account', 'acl-portal', function (Dep) {
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
+    return Dep.extend({
 
-class AclPortal extends Acl
-{
-    public function checkReadOnlyAccount($scope)
-    {
-        return $this->getAclManager()->checkReadOnlyAccount($this->getUser(), $scope);
-    }
+        checkInAccount: function (model) {
+            var accountIdList = this.getUser().getLinkMultipleIdList('accounts');
 
-    public function checkReadOnlyContact($scope)
-    {
-        return $this->getAclManager()->checkReadOnlyContact($this->getUser(), $scope);
-    }
+            if (!accountIdList.length) {
+                return false;
+            }
 
-    public function checkInAccount(Entity $entity)
-    {
-        return $this->getAclManager()->checkInAccount($this->getUser(), $entity);
-    }
+            if (~accountIdList.indexOf(model.id)) {
+                return true;
+            }
+            return false;
+        }
 
-    public function checkIsOwnContact(Entity $entity)
-    {
-        return $this->getAclManager()->checkIsOwnContact($this->getUser(), $entity);
-    }
-}
+    });
+
+});
 

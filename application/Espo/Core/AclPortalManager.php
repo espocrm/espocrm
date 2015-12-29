@@ -76,9 +76,23 @@ class AclPortalManager extends AclManager
         return $this->getImplementation($scope)->checkReadOnlyAccount($user, $data);
     }
 
+    public function checkReadOnlyContact(User $user, $scope)
+    {
+        if ($user->isAdmin()) {
+            return false;
+        }
+        $data = $this->getTable($user)->getScopeData($scope);
+        return $this->getImplementation($scope)->checkReadOnlyContact($user, $data);
+    }
+
     public function checkInAccount(User $user, Entity $entity, $action)
     {
         return $this->getImplementation($entity->getEntityType())->checkInAccount($user, $entity);
+    }
+
+    public function checkIsOwnContact(User $user, Entity $entity, $action)
+    {
+        return $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
     }
 
 }

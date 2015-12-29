@@ -198,6 +198,10 @@ Espo.define('model', [], function () {
             return this.getFieldParam(field, 'required') || false;
         },
 
+        getLinkMultipleIdList: function (field) {
+            return this.get(field + 'Ids') || [];
+        },
+
         getTeamIdList: function () {
             return this.get('teamsIds') || [];
         },
@@ -212,6 +216,10 @@ Espo.define('model', [], function () {
 
         hasField: function (field) {
             return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
+        },
+
+        hasLink: function (link) {
+            return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
         },
 
         isEditable: function () {

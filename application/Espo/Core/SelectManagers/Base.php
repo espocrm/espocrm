@@ -327,11 +327,23 @@ class Base
 
     protected function access(&$result)
     {
-        if ($this->acl->checkReadOnlyOwn($this->entityType)) {
-            $this->accessOnlyOwn($result);
+        if (!$this->getUser()->get('portalId')) {
+            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
+                $this->accessOnlyOwn($result);
+            } else {
+                if (!$this->getUser()->isAdmin()) {
+                    if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
+                        $this->accessOnlyTeam($result);
+                    }
+                }
+            }
         } else {
-            if (!$this->user->isAdmin() && $this->acl->checkReadOnlyTeam($this->entityType)) {
-                $this->accessOnlyTeam($result);
+            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
+                $this->accessPortalOnlyOwn($result);
+            } else {
+                if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
+                    $this->accessPortalOnlyAccount($result);
+                }
             }
         }
     }
@@ -392,6 +404,94 @@ class Base
         $result['whereClause'][] = array(
             'OR' => $d
         );
+    }
+
+    protected function accessPortalOnlyOwn(&$result)
+    {
+        if ($this->getSeed()->hasAttribute('createdById')) {
+            $result['whereClause'][] = array(
+                'createdById' => $this->getUser()->id
+            );
+        } else {
+            $result['whereClause'][] = array(
+                'id' => null
+            );
+        }
+    }
+
+    protected function accessPortalOnlyContact(&$result)
+    {
+        $d = array();
+
+        $contactId = $this->getUser()->get('contactId');
+
+        if ($contactId) {
+            if ($this->getSeed()->hasAttribute('contactId')) {
+                $d['contactId'] = $contactId;
+            }
+            if ($this->getSeed()->hasRelation('contacts')) {
+                $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
+                $this->setDistinct(true, $result);
+                $d['contactsAccess.id'] = $contactId;
+            }
+        }
+
+        if ($this->getSeed()->hasAttribute('createdById')) {
+            $d['createdById'] = $this->getUser()->id;
+        }
+        if (!empty($d)) {
+            $result['whereClause'][] = array(
+                'OR' => $d
+            );
+        } else {
+            $result['whereClause'][] = array(
+                'id' => null
+            );
+        }
+    }
+
+    protected function accessPortalOnlyAccount(&$result)
+    {
+        $d = array();
+
+        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
+        $contactId = $this->getUser()->get('contactId');
+
+        if (count($accountIdList)) {
+            if ($this->getSeed()->hasAttribute('accountId')) {
+                $d['accountId'] = $accountIdList;
+            }
+            if ($this->getSeed()->hasRelation('accounts')) {
+                $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
+                $this->setDistinct(true, $result);
+                $d['accountsAccess.id'] = $accountIdList;
+            }
+        }
+
+        if ($contactId) {
+            if ($this->getSeed()->hasAttribute('contactId')) {
+                $d['contactId'] = $contactId;
+            }
+            if ($this->getSeed()->hasRelation('contacts')) {
+                $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
+                $this->setDistinct(true, $result);
+                $d['contactsAccess.id'] = $contactId;
+            }
+        }
+
+        if ($this->getSeed()->hasAttribute('createdById')) {
+            $d['createdById'] = $this->getUser()->id;
+        }
+
+        if (!empty($d)) {
+            $result['whereClause'][] = array(
+                'OR' => $d
+            );
+        } else {
+            $result['whereClause'][] = array(
+                'id' => null
+            );
+        }
     }
 
     protected function hasAssignedUsersField()

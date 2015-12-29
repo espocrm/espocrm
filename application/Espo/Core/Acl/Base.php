@@ -112,10 +112,10 @@ class Base implements Injectable
         if ($user->isAdmin()) {
             return true;
         }
-        return $this->checkScope($user, $data, $action, null, null, $entity);
+        return $this->checkScope($user, $data, $action, $entity);
     }
 
-    public function checkScope(User $user, $data, $action = null, $isOwner = null, $inTeam = null, Entity $entity = null)
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
         if ($user->isAdmin()) {
             return true;
@@ -132,6 +132,15 @@ class Base implements Injectable
         }
         if (is_string($data)) {
             return true;
+        }
+
+        $isOwner = null;
+        if (isset($entityAccessData['isOwner'])) {
+            $isOwner = $entityAccessData['isOwner'];
+        }
+        $inTeam = null;
+        if (isset($entityAccessData['inTeam'])) {
+            $inTeam = $entityAccessData['inTeam'];
         }
 
         if (!is_null($action)) {

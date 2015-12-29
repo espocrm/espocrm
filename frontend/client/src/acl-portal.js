@@ -26,14 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('acl', [], function () {
+Espo.define('acl-portal', ['acl'], function (Dep) {
 
-    var Acl = function (user, scope) {
-        this.user = user || null;
-        this.scope = scope;
-    }
-
-    _.extend(Acl.prototype, {
+    return Dep.extend({
 
         user: null,
 
@@ -44,7 +39,8 @@ Espo.define('acl', [], function () {
         checkScope: function (data, action, precise, entityAccessData) {
             entityAccessData = entityAccessData || {};
 
-            var inTeam = entityAccessData.inTeam;
+            var inAccount = entityAccessData.inAccount;
+            var isOwnContact = entityAccessData.isOwnContact;
             var isOwner = entityAccessData.isOwner;
 
             if (this.getUser().isAdmin()) {
@@ -87,22 +83,35 @@ Espo.define('acl', [], function () {
                     }
 
                     if (isOwner) {
-                        if (value === 'own' || value === 'team') {
+                        if (value === 'own' || value === 'account' || value === 'contact') {
                             return true;
                         }
                     }
 
                     var result = false;
 
-                    if (value === 'team') {
-                        result = inTeam;
-                        if (inTeam === null) {
+                    if (value === 'account') {
+                        result = inAccount;
+                        if (inAccount === null) {
                             if (precise) {
                                 result = null;
                             } else {
                                 return true;
                             }
-                        } else if (inTeam) {
+                        } else if (inAccount) {
+                            return true;
+                        }
+                    }
+
+                    if (value === 'contact') {
+                        result = isOwnContact;
+                        if (isOwnContact === null) {
+                            if (precise) {
+                                result = null;
+                            } else {
+                                return true;
+                            }
+                        } else if (isOwnContact) {
                             return true;
                         }
                     }
@@ -118,7 +127,7 @@ Espo.define('acl', [], function () {
                     return result;
                 }
             }
-            return true;
+            return false;
         },
 
         checkModel: function (model, data, action, precise) {
@@ -127,94 +136,110 @@ Espo.define('acl', [], function () {
             }
             var entityAccessData = {
                 isOwner: this.checkIsOwner(model),
-                inTeam: this.checkInTeam(model)
+                inAccount: this.checkInAccount(model),
+                isOwnContact: this.checkIsOwnContact(model),
             };
             return this.checkScope(data, action, precise, entityAccessData);
         },
 
-        checkModelDelete: function (model, data, precise) {
-            var result = this.checkModel(model, data, 'delete', precise);
-
-            if (result) {
-                return true;
+        checkIsOwner: function (model) {
+            if (model.hasField('createdBy')) {
+                if (this.getUser().id === model.get('createdById')) {
+                    return true;
+                }
             }
 
-            if (data === false) {
+            return false;
+        },
+
+        checkInAccount: function (model) {
+            var accountIdList = this.getUser().getLinkMultipleIdList('accounts');
+
+            if (!accountIdList.length) {
                 return false;
             }
 
-            var d = data || {};
-            if (d.read === 'no') {
-                return false;
-            }
-
-            if (model.has('createdById')) {
-                if (model.get('createdById') === this.getUser().id) {
-                    if (!model.has('assignedUserId')) {
+            if (model.hasField('account')) {
+                if (model.get('accountId')) {
+                    if (~accountIdList.indexOf(model.get('accountId')) {
                         return true;
-                    } else {
-                        if (!model.get('assignedUserId')) {
-                            return true;
-                        }
-                        if (model.get('assignedUserId') === this.getUser().id) {
-                            return true;
-                        }
                     }
+                }
+            }
+
+            var result = false;
+
+            if (model.hasField('accounts') && model.hasLink('accounts')) {
+                if (!model.has('accountsIds')) {
+                    result = null;
+                }
+                (model.getLinkMultipleIdList('accounts')).forEach(function (id) {
+                    if (~accountIdList.indexOf(id) {
+                        result = true;
+                    }
+                }, this);
+            }
+
+            if (model.hasField('parent') && model.hasLink('parent')) {
+                if (model.get('parentType') === 'Account') {
+                    if (!accountIdList.indexOf(model.get('parentId')) {
+                        return true;
+                    }
+                }
+            }
+
+            if (result === false) {
+                if (!model.hasField('accounts') && model.hasLink('accounts')) {
+                    return true;
                 }
             }
 
             return result;
         },
 
-        checkIsOwner: function (model) {
-            if (model.hasField('assignedUser')) {
-                if (this.getUser().id === model.get('assignedUserId')) {
-                    return true;
-                }
-            } else {
-                if (model.hasField('createdBy')) {
-                    if (this.getUser().id === model.get('createdById')) {
+        checkIsOwnContact: function (model) {
+            var contactId = this.getUser().get('contactId');
+            if (!contactId) {
+                return false;
+            }
+
+            if (model.hasField('contact')) {
+                if (model.get('contactId')) {
+                    if (contactId === model.get('contactId') {
                         return true;
                     }
                 }
             }
 
-            if (model.hasField('assignedUsers')) {
-                if (!model.has('assignedUsersIds')) {
-                    return null;
-                }
+            var result = false;
 
-                if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
+            if (model.hasField('contacts') && model.hasLink('contacts')) {
+                if (!model.has('contactsIds')) {
+                    result = null;
+                }
+                (model.getLinkMultipleIdList('contacts')).forEach(function (id) {
+                    if (contactId === id) {
+                        result = true;
+                    }
+                }, this);
+            }
+
+            if (model.hasField('parent') && model.hasLink('parent')) {
+                if (model.get('parentType') === 'Contact' && model.get('parentId') === contactId) {
                     return true;
                 }
             }
 
-            return false;
-        },
-
-        checkInTeam: function (model) {
-            var userTeamIdList = this.getUser().getTeamIdList();
-            if (model.name == 'Team') {
-                return (userTeamIdList.indexOf(model.id) != -1);
-            } else {
-                if (!model.has('teamsIds')) {
-                    return null;
+            if (result === false) {
+                if (!model.hasField('contacts') && model.hasLink('contacts')) {
+                    return true;
                 }
-                var teamIdList = model.getTeamIdList();
-                var inTeam = false;
-                userTeamIdList.forEach(function (id) {
-                    if (~teamIdList.indexOf(id)) {
-                        inTeam = true;
-                    }
-                });
-                return inTeam;
             }
-            return false;
+
+            return result;
         }
+
     });
 
-    Acl.extend = Backbone.Router.extend;
-
-    return Acl;
 });
 
