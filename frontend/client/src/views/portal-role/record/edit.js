@@ -34,5 +34,3 @@ Espo.define('views/portal-role/record/edit', 'views/role/record/edit', function 
 
     });
 });
-
-

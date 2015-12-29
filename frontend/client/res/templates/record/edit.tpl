@@ -19,16 +19,12 @@
 
 
     <div class="row">
-        {{#if isWide}}
-        <div class="col-md-12">
-        {{else}}
-        <div class="{{#unless isSmall}} col-md-8{{else}} col-md-7{{/unless}}">
-        {{/if}}
+        <div class="{{#if isWide}} col-md-12{{else}}{{#if isSmall}} col-md-7{{else}} col-md-8{{/if}}{{/if}}">
             <div class="middle">{{{middle}}}</div>
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>
         </div>
-        <div class="side{{#unless isSmall}} col-md-4{{else}} col-md-5{{/unless}}">
+        <div class="side {{#if isWide}} col-md-12{{else}}{{#if isSmall}} col-md-5{{else}} col-md-4{{/if}}{{/if}}">
         {{{side}}}
         </div>
     </div>

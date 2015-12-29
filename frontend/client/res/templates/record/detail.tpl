@@ -51,7 +51,7 @@
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>
         </div>
-        <div class="side {{#if isSmall}} col-md-5{{else}} col-md-4{{/if}}">
+        <div class="side {{#if isWide}} col-md-12{{else}}{{#if isSmall}} col-md-5{{else}} col-md-4{{/if}}{{/if}}">
         {{{side}}}
         </div>
     </div>
