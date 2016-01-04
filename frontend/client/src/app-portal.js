@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,28 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+Espo.define('app-portal', ['app'], function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class Espo extends Base
-{
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
-    {
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
-        }
+    });
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
-
-        return $user;
-    }
-}
+});
 

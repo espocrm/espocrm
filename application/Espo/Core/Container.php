@@ -40,7 +40,6 @@ class Container
      */
     public function __construct()
     {
-
     }
 
     public function get($name)
@@ -49,6 +48,11 @@ class Container
             $this->load($name);
         }
         return $this->data[$name];
+    }
+
+    protected function set($name, $obj)
+    {
+        $this->data[$name] = $obj;
     }
 
     private function load($name)
@@ -304,9 +308,9 @@ class Container
         );
     }
 
-    public function setUser($user)
+    public function setUser(\Espo\Entities\User $user)
     {
-        $this->data['user'] = $user;
+        $this->set('user', $user);
     }
 }
 

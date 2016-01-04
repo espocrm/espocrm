@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 class Route
 {
     protected $data = null;
@@ -66,7 +67,6 @@ class Route
         return $this->metadata;
     }
 
-
     public function get($key = '', $returns = null)
     {
         if (!isset($this->data)) {
@@ -91,12 +91,10 @@ class Route
         return $lastRoute;
     }
 
-
     public function getAll()
     {
         return $this->get();
     }
-
 
     protected function init()
     {
@@ -146,17 +144,14 @@ class Route
         return $currData;
     }
 
-
     protected function addToData($data, $newData)
     {
         if (!is_array($newData)) {
             return $data;
         }
 
-        foreach($newData as $route) {
-
+        foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
-
             $data[] = $route;
         }
 
@@ -174,11 +169,10 @@ class Route
     {
         $routePath = trim($routePath);
 
-        if ( substr($routePath,0,1) != '/') {
+        if (substr($routePath,0,1) != '/') {
             return '/'.$routePath;
         }
 
         return $routePath;
     }
-
 }

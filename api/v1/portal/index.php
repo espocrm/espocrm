@@ -27,28 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+require_once('../../../bootstrap.php');
 
-use \Espo\Core\Exceptions\Error;
+//print_r($_SERVER);
+//die;
 
-class Espo extends Base
-{
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
-    {
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
-        }
+$portalId = '567d4a0503c88c061';
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
-
-        return $user;
-    }
-}
-
+$app = new \Espo\Core\ApplicationPortal($portalId);
+$app->run();

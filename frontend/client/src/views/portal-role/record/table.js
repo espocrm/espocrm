@@ -36,6 +36,7 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
             'recordAllContactOwnNo': ['all', 'contact', 'own', 'no'],
             'recordAllAccountNo': ['all', 'account', 'no'],
             'recordAllContactNo': ['all', 'contact', 'no'],
+            'recordAllAccountContactNo': ['all', 'account', 'contact', 'no'],
             'recordAllOwnNo': ['all', 'own', 'no'],
             'recordAllNo': ['all', 'no'],
             'record': ['all', 'own', 'no']

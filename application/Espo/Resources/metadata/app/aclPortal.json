@@ -7,11 +7,7 @@
                 "delete": "no",
                 "stream": "no"
             },
-            "Team": {
-                "read": "no",
-                "edit": "no",
-                "delete": "no"
-            },
+            "Team": false,
             "Note": {
                 "read": "own",
                 "edit": "own",
@@ -25,11 +21,7 @@
                 "delete": "own"
             },
             "PhoneNumber": false,
-            "EmailAccount": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own"
-            },
+            "EmailAccount": false,
             "Role": false,
             "PortalRole": false,
             "EmailFilter": false,
@@ -57,23 +49,9 @@
     },
     "scopeLevelTypesDefaults": {
         "boolean": false,
-        "recordAllAccountOwnNo": {
+        "record": {
             "read": "no",
-            "edit": "no",
-            "delete": "no"
-        },
-        "recordAllOwnNo": {
-            "read": "no",
-            "edit": "no",
-            "delete": "no"
-        },
-        "recordAllAccountNo": {
-            "read": "no",
-            "edit": "no",
-            "delete": "no"
-        },
-        "recordAllNo": {
-            "read": "no",
+            "stream": "no",
             "edit": "no",
             "delete": "no"
         }

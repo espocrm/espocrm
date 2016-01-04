@@ -29,9 +29,22 @@
 
 namespace Espo\Core\AclPortal;
 
+use \Espo\Core\Exceptions\Error;
+
+use \Espo\ORM\Entity;
+use \Espo\Entities\User;
+use \Espo\Entities\Portal;
+
+use \Espo\Core\Utils\Config;
+use \Espo\Core\Utils\Metadata;
+use \Espo\Core\Utils\FieldManager;
+use \Espo\Core\Utils\File\Manager as FileManager;
+
 class Table extends \Espo\Core\Acl\Table
 {
     protected $type = 'aclPortal';
+
+    protected $portal;
 
     protected $defaultAclType = 'recordAllOwnNo';
 
@@ -39,10 +52,46 @@ class Table extends \Espo\Core\Acl\Table
 
     protected $valuePermissionList = [];
 
+    public function __construct(User $user, Portal $portal, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManager $fieldManager = null)
+    {
+        if (empty($portal)) {
+            throw new Error("No portal was passed to AclPortal\\Table constructor.");
+        }
+        $this->portal = $portal;
+        parent::__construct($user, $config, $fileManager, $metadata, $fieldManager);
+    }
+
+    protected function getPortal()
+    {
+        return $this->portal;
+    }
+
+    protected function initCacheFilePath()
+    {
+        $this->cacheFilePath = 'data/cache/application/acl-portal/'.$this->getPortal()->id.'/' . $this->getUser()->id . '.php';
+    }
+
+    protected function getRoleList()
+    {
+        $roleList = [];
+
+        $userRoleList = $this->getUser()->get('portalRoles');
+        foreach ($userRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        $portalRoleList = $this->getPortal()->get('portalRoles');
+        foreach ($portalRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        return $roleList;
+    }
+
     protected function getScopeWithAclList()
     {
         $scopeList = [];
-        $scopes = $this->metadata->get('scopes');
+        $scopes = $this->getMetadata()->get('scopes');
         foreach ($scopes as $scope => $d) {
             if (empty($d['acl'])) continue;
             if (empty($d['aclPortal'])) continue;

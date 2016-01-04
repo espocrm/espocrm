@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\ORM\Repositories;
+
 use \Espo\ORM\EntityManager;
 use \Espo\ORM\EntityFactory;
 use \Espo\ORM\EntityCollection;

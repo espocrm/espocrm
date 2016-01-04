@@ -114,6 +114,11 @@ class Table
         $this->cacheFilePath = 'data/cache/application/acl/' . $this->user->id . '.php';
     }
 
+    protected function getUser()
+    {
+        return $this->user;
+    }
+
     protected function getMetadata()
     {
         return $this->metadata;
@@ -171,34 +176,19 @@ class Table
 
     private function load()
     {
-        $aclTableList = [];
-        $fieldTableList = [];
-
         $valuePermissionLists = (object)[];
         foreach ($this->valuePermissionList as $permission) {
             $valuePermissionLists->$permission = [];
         }
 
         if (!$this->user->isAdmin()) {
-            $userRoles = $this->user->get('roles');
+            $roleList = $this->getRoleList();
 
-            foreach ($userRoles as $role) {
+            foreach ($roleList as $role) {
                 $aclTableList[] = $role->get('data');
                 $fieldTableList[] = $role->get('fieldData');
                 foreach ($this->valuePermissionList as $permission) {
                     $valuePermissionLists->{$permission}[] = $role->get($permission);
-                }
-            }
-
-            $teams = $this->user->get('teams');
-            foreach ($teams as $team) {
-                $teamRoles = $team->get('roles');
-                foreach ($teamRoles as $role) {
-                    $aclTableList[] = $role->get('data');
-                    $fieldTableList[] = $role->get('fieldData');
-                    foreach ($this->valuePermissionList as $permission) {
-                        $valuePermissionLists->{$permission}[] = $role->get($permission);
-                    }
                 }
             }
 
@@ -211,7 +201,7 @@ class Table
         } else {
             $aclTable = (object) [];
             foreach ($this->getScopeList() as $scope) {
-                if ($this->metadata->get("scopes.{$scope}.acl") === 'boolean') {
+                if ($this->metadata->get("scopes.{$scope}.{$this->type}") === 'boolean') {
                     $aclTable->$scope = true;
                 } else {
                     if ($this->metadata->get("scopes.{$scope}.entity")) {
@@ -240,9 +230,9 @@ class Table
 
         if (!$this->user->isAdmin()) {
             foreach ($this->valuePermissionList as $permission) {
-                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.acl.default.' . $permission, 'all'));
-                if ($this->metadata->get('app.acl.mandatory.' . $permission)) {
-                    $this->data->$permission = $this->metadata->get('app.acl.mandatory.' . $permission);
+                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.'.$this->type.'.default.' . $permission, 'all'));
+                if ($this->metadata->get('app.'.$this->type.'.mandatory.' . $permission)) {
+                    $this->data->$permission = $this->metadata->get('app.'.$this->type.'.mandatory.' . $permission);
                 }
             }
 
@@ -251,6 +241,26 @@ class Table
                 $this->data->$permission = 'all';
             }
         }
+    }
+
+    protected function getRoleList()
+    {
+        $roleList = [];
+
+        $userRoleList = $this->getUser()->get('roles');
+        foreach ($userRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        $teamList = $this->getUser()->get('teams');
+        foreach ($teamList as $team) {
+            $teamRoleList = $team->get('roles');
+            foreach ($teamRoleList as $role) {
+                $roleList[] = $role;
+            }
+        }
+
+        return $roleList;
     }
 
     public function getScopeForbiddenAttributeList($scope, $action = 'read', $thresholdLevel = 'no')
@@ -372,7 +382,7 @@ class Table
             return;
         }
 
-        $data = $this->metadata->get('app.acl.default.scopeLevel', array());
+        $data = $this->metadata->get('app.'.$this->type.'.default.scopeLevel', array());
 
         foreach ($data as $scope => $item) {
             if (isset($table->$scope)) continue;
@@ -383,11 +393,17 @@ class Table
             $table->$scope = $value;
         }
 
-        $fieldData = $this->metadata->get('app.acl.default.fieldLevel', array());
+        $defaultFieldData = $this->metadata->get('app.'.$this->type.'.default.fieldLevel', array());
 
-        foreach ($fieldData as $scope => $s) {
+        foreach ($this->getScopeList() as $scope) {
+            if (isset($table->$scope) && $table->$scope === false) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.entity')) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.acl')) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.aclPortal')) continue;
+
             $fieldList = array_keys($this->getMetadata()->get("entityDefs.{$scope}.fields", []));
-            foreach ($s as $field => $f) {
+
+            foreach ($defaultFieldData as $field => $f) {
                 if (!in_array($field, $fieldList)) continue;
                 if (!isset($fieldTable->$scope)) {
                     $fieldTable->$scope = (object) [];
@@ -411,7 +427,7 @@ class Table
                     $aclType = $this->defaultAclType;
                 }
                 if (!empty($aclType)) {
-                    $defaultValue = $this->metadata->get('app.acl.scopeLevelTypesDefaults.' . $aclType, true);
+                    $defaultValue = $this->metadata->get('app.'.$this->type.'.scopeLevelTypesDefaults.' . $aclType, $this->metadata->get('app.'.$this->type.'.scopeLevelTypesDefaults.record'));
                     if (is_array($defaultValue)) {
                         $defaultValue = (object) $defaultValue;
                     }
@@ -427,7 +443,7 @@ class Table
             return;
         }
 
-        $data = $this->metadata->get('app.acl.mandatory.scopeLevel', array());
+        $data = $this->metadata->get('app.'.$this->type.'.mandatory.scopeLevel', array());
 
         foreach ($data as $scope => $item) {
             $value = $item;
@@ -437,14 +453,17 @@ class Table
             $table->$scope = $value;
         }
 
-        $fieldData = $this->metadata->get('app.acl.mandatory.fieldLevel', array());
+        $mandatoryData = $this->metadata->get('app.'.$this->type.'.mandatory.fieldLevel', array());
 
-        foreach ($fieldData as $scope => $s) {
+        foreach ($this->getScopeList() as $scope) {
+            if (isset($table->$scope) && $table->$scope === false) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.entity')) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.acl')) continue;
+            if (!$this->getMetadata()->get('scopes.' . $scope . '.aclPortal')) continue;
+
             $fieldList = array_keys($this->getMetadata()->get("entityDefs.{$scope}.fields", []));
-            if (!isset($fieldTable->$scope)) {
-                $fieldTable->$scope = (object) [];
-            }
-            foreach ($s as $field => $f) {
+
+            foreach ($mandatoryData as $field => $f) {
                 if (!in_array($field, $fieldList)) continue;
                 $fieldTable->$scope->$field = (object) [];
                 foreach ($this->fieldActionList as $action) {

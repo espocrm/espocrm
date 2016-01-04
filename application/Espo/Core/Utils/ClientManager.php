@@ -45,10 +45,6 @@ class ClientManager
     {
         $this->config = $config;
         $this->themeManager = $themeManager;
-
-        if ($this->config->get('isDeveloperMode')) {
-            $this->mainHtmlFilePath = $this->htmlFilePathForDeveloperMode;
-        }
     }
 
     protected function getThemeManager()
@@ -61,16 +57,25 @@ class ClientManager
         return $this->config;
     }
 
-    public function display($runScript = null, $mainHtmlFilePath = null)
+    public function display($runScript = null, $htmlFilePath = null, $vars = array())
     {
         if (is_null($runScript)) {
             $runScript = $this->runScript;
         }
-        if (is_null($mainHtmlFilePath)) {
-            $mainHtmlFilePath = $this->mainHtmlFilePath;
+        if (is_null($htmlFilePath)) {
+            $htmlFilePath = $this->mainHtmlFilePath;
         }
 
-        $html = file_get_contents($mainHtmlFilePath);
+        if ($this->getConfig()->get('isDeveloperMode')) {
+            if (file_exists('frontend/' . $htmlFilePath)) {
+                $htmlFilePath = 'frontend/' . $htmlFilePath;
+            }
+        }
+
+        $html = file_get_contents($htmlFilePath);
+        foreach ($vars as $key => $value) {
+            $html = str_replace('{{'.$key.'}}', $value, $html);
+        }
         $html = str_replace('{{cacheTimestamp}}', $this->getConfig()->get('cacheTimestamp', 0), $html);
         $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false' , $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);

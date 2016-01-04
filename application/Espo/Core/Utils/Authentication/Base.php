@@ -73,6 +73,5 @@ abstract class Base
 
         return $this->passwordHash;
     }
-
 }
 

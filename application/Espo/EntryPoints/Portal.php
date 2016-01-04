@@ -27,28 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
-class Espo extends Base
+class Portal extends \Espo\Core\EntryPoints\Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+    public static $authRequired = false;
+
+    public function run()
     {
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
+        if (empty($_GET['id'])) {
+            throw new BadRequest();
         }
+        $id = $_GET['id'];
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
-
-        return $user;
+        $application = new \Espo\Core\ApplicationPortal($id);
+        $application->runClient();
     }
 }
 

@@ -29,6 +29,9 @@
 
 namespace Espo\Core;
 
+use \Espo\ORM\Entity;
+use \Espo\Entities\User;
+use \Espo\Core\Utils\Util;
 
 class AclPortalManager extends AclManager
 {
@@ -41,7 +44,7 @@ class AclPortalManager extends AclManager
 
             $className = '\\Espo\\Custom\\AclPortal\\' . $normalizedName;
             if (!class_exists($className)) {
-                $moduleName = $this->metadata->getScopeModuleName($scope);
+                $moduleName = $this->getMetadata()->getScopeModuleName($scope);
                 if ($moduleName) {
                     $className = '\\Espo\\Modules\\' . $moduleName . '\\AclPortal\\' . $normalizedName;
                 } else {
@@ -65,6 +68,23 @@ class AclPortalManager extends AclManager
         }
 
         return $this->implementationHashMap[$scope];
+    }
+
+    protected function getTable(User $user)
+    {
+        $key = spl_object_hash($user);
+
+        if (empty($this->tableHashMap[$key])) {
+            $config = $this->getContainer()->get('config');
+            $fileManager = $this->getContainer()->get('fileManager');
+            $metadata = $this->getContainer()->get('metadata');
+            $fieldManager = $this->getContainer()->get('fieldManager');
+            $portal = $this->getContainer()->get('portal');
+
+            $this->tableHashMap[$key] = new $this->tableClassName($user, $portal, $config, $fileManager, $metadata, $fieldManager);
+        }
+
+        return $this->tableHashMap[$key];
     }
 
     public function checkReadOnlyAccount(User $user, $scope)

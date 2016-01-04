@@ -33,22 +33,19 @@ class Application
 {
     private $metadata;
 
-    private $container;
+    protected $container;
 
     private $slim;
 
     private $auth;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
-        $this->initContainer();
-
         date_default_timezone_set('UTC');
 
-        $GLOBALS['log'] = $this->container->get('log');
+        $this->initContainer();
+
+        $GLOBALS['log'] = $this->getContainer()->get('log');
 
         $this->initAutoloads();
     }
@@ -160,6 +157,11 @@ class Application
         return false;
     }
 
+    protected function createApiAuth($auth)
+    {
+        return new \Espo\Core\Utils\Api\Auth($auth);
+    }
+
     protected function routeHooks()
     {
         $container = $this->getContainer();
@@ -171,9 +173,9 @@ class Application
             $container->get('output')->processError($e->getMessage(), $e->getCode());
         }
 
-        $apiAuth = new \Espo\Core\Utils\Api\Auth($auth);
-        $this->getSlim()->add($apiAuth);
+        $apiAuth = $this->createApiAuth($auth);
 
+        $this->getSlim()->add($apiAuth);
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
 
             $route = $slim->router()->getCurrentRoute();
@@ -233,13 +235,19 @@ class Application
         });
     }
 
-    protected function initRoutes()
+    protected function getRouteList()
     {
         $routes = new \Espo\Core\Utils\Route($this->getContainer()->get('config'), $this->getMetadata(), $this->getContainer()->get('fileManager'));
-        $crudList = array_keys( $this->getContainer()->get('config')->get('crud') );
 
-        foreach ($routes->getAll() as $route) {
 
+        return $routes->getAll();
+    }
+
+    protected function initRoutes()
+    {
+        $crudList = array_keys($this->getContainer()->get('config')->get('crud'));
+
+        foreach ($this->getRouteList() as $route) {
             $method = strtolower($route['method']);
             if (!in_array($method, $crudList)) {
                 $GLOBALS['log']->error('Route: Method ['.$method.'] does not exist. Please check your route ['.$route['route'].']');

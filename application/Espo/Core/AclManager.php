@@ -58,6 +58,11 @@ class AclManager
         return $this->container;
     }
 
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
+
     public function getImplementation($scope)
     {
         if (empty($this->implementationHashMap[$scope])) {

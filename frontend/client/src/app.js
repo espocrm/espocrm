@@ -543,6 +543,8 @@ Espo.define(
 
     }, Backbone.Events);
 
+    App.extend = Backbone.Router.extend;
+
     return App;
 });
 

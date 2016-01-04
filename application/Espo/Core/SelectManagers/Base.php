@@ -439,6 +439,17 @@ class Base
         if ($this->getSeed()->hasAttribute('createdById')) {
             $d['createdById'] = $this->getUser()->id;
         }
+
+        if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
+            $contactId = $this->getUser()->get('contactId');
+            if ($contactId) {
+                $d[] = array(
+                    'parentType' => 'Contact',
+                    'parentId' => $contactId
+                );
+            }
+        }
+
         if (!empty($d)) {
             $result['whereClause'][] = array(
                 'OR' => $d
@@ -465,6 +476,18 @@ class Base
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
                 $d['accountsAccess.id'] = $accountIdList;
+            }
+            if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
+                $d[] = array(
+                    'parentType' => 'Account',
+                    'parentId' => $accountIdList
+                );
+                if ($contactId) {
+                    $d[] = array(
+                        'parentType' => 'Contact',
+                        'parentId' => $contactId
+                    );
+                }
             }
         }
 

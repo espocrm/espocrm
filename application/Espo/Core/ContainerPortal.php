@@ -54,5 +54,10 @@ class ContainerPortal extends Container
             $this->get('user')
         );
     }
+
+    public function setPortal(\Espo\Entities\Portal $portal)
+    {
+        $this->set('portal', $portal);
+    }
 }
 

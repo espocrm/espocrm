@@ -17,6 +17,9 @@
         "user": {
             "type": "link"
         },
+        "portal": {
+            "type": "link"
+        },
         "ipAddress": {
             "type": "varchar",
             "maxLength": "36"
@@ -37,6 +40,10 @@
         "user": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "portal": {
+            "type": "belongsTo",
+            "entity": "Portal"
         }
     },
     "collection": {

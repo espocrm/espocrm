@@ -38,44 +38,51 @@ class Auth
 
     protected $authentication;
 
-    protected $config;
-
-    protected $entityManager;
-
     public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
 
-        $this->entityManager = $this->container->get('entityManager');
-        $this->config = $this->container->get('config');
-
-        $authenticationMethod = $this->config->get('authenticationMethod', 'Espo');
+        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Espo');
         $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
-        $this->authentication = new $authenticationClassName($this->config, $this->entityManager, $this);
+        $this->authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
 
-        $this->request = $this->container->get('slim')->request();
+        $this->request = $container->get('slim')->request();
+    }
+
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    protected function getConfig()
+    {
+        return $this->getContainer()->get('config');
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
     }
 
     public function useNoAuth($isAdmin = false)
     {
-        $entityManager = $this->container->get('entityManager');
+        $entityManager = $this->getContainer()->get('entityManager');
 
         $user = $entityManager->getRepository('User')->get('system');
         if (!$user) {
-            throw new Error('System user is not found');
+            throw new Error("System user is not found");
         }
 
         $user->set('isAdmin', $isAdmin);
 
         $entityManager->setUser($user);
-        $this->container->setUser($user);
+        $this->getContainer()->setUser($user);
     }
+
 
     public function login($username, $password)
     {
-        $entityManager = $this->entityManager;
-
-        $authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $password))->findOne();
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array('token' => $password))->findOne();
 
         $user = $this->authentication->login($username, $password, $authToken);
 
@@ -84,12 +91,16 @@ class Auth
                 $GLOBALS['log']->debug("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
                 return false;
             }
-            $entityManager->setUser($user);
-            $this->container->setUser($user);
+            if (!$user->isAdmin() && $user->get('isPortalUser')) {
+                $GLOBALS['log']->debug("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
+                return false;
+            }
+            $this->getEntityManager()->setUser($user);
+            $this->getContainer()->setUser($user);
 
             if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION')) {
 	            if (!$authToken) {
-	                $authToken = $entityManager->getEntity('AuthToken');
+	                $authToken = $this->getEntityManager()->getEntity('AuthToken');
 	                $token = $this->createToken($user);
 	                $authToken->set('token', $token);
 	                $authToken->set('hash', $user->get('password'));
@@ -98,7 +109,7 @@ class Auth
 	            }
             	$authToken->set('lastAccess', date('Y-m-d H:i:s'));
 
-            	$entityManager->saveEntity($authToken);
+            	$this->getEntityManager()->saveEntity($authToken);
             	$user->set('token', $authToken->get('token'));
             }
 
@@ -113,11 +124,9 @@ class Auth
 
     public function destroyAuthToken($token)
     {
-        $entityManager = $this->container->get('entityManager');
-
-        $authToken = $entityManager->getRepository('AuthToken')->where(array('token' => $token))->findOne();
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array('token' => $token))->findOne();
         if ($authToken) {
-            $entityManager->removeEntity($authToken);
+            $this->getEntityManager()->removeEntity($authToken);
             return true;
         }
     }

@@ -121,6 +121,11 @@ class Email extends \Espo\Core\SelectManagers\Base
         $this->boolFilterOnlyMy($result);
     }
 
+    protected function accessPortalOnlyOwn(&$result)
+    {
+        $this->boolFilterOnlyMy($result);
+    }
+
     protected function accessOnlyTeam(&$result)
     {
         $this->setDistinct(true, $result);
@@ -132,6 +137,55 @@ class Email extends \Espo\Core\SelectManagers\Base
                 'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
                 'usersAccess.id' => $this->getUser()->id
             )
+        );
+    }
+
+    protected function accessPortalOnlyAccount(&$result)
+    {
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['users', 'usersAccess'], $result);
+
+        $d = array(
+            'usersAccess.id' => $this->getUser()->id
+        );
+
+        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
+        if (count($accountIdList)) {
+            $d['accountId'] = $accountIdList;
+        }
+
+        $contactId = $this->getUser()->get('contactId');
+        if ($contactId) {
+            $d[] = array(
+                'parentId' => $contactId,
+                'parentType' => 'Contact'
+            );
+        }
+
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
+    }
+
+    protected function accessPortalOnlyContact(&$result)
+    {
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['users', 'usersAccess'], $result);
+
+        $d = array(
+            'usersAccess.id' => $this->getUser()->id
+        );
+
+        $contactId = $this->getUser()->get('contactId');
+        if ($contactId) {
+            $d[] = array(
+                'parentId' => $contactId,
+                'parentType' => 'Contact'
+            );
+        }
+
+        $result['whereClause'][] = array(
+            'OR' => $d
         );
     }
 

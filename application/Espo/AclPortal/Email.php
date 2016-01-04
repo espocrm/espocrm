@@ -27,28 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Authentication;
+namespace Espo\AclPortal;
 
-use \Espo\Core\Exceptions\Error;
+use \Espo\Entities\User;
+use \Espo\ORM\Entity;
 
-class Espo extends Base
+class Email extends \Espo\Core\Acl\Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null)
+
+    public function checkEntityRead(User $user, Entity $entity, $data)
     {
-        if ($authToken) {
-            $hash = $authToken->get('hash');
-        } else {
-            $hash = $this->getPasswordHash()->hash($password);
+        if ($this->checkEntity($user, $entity, $data, 'read')) {
+            return true;
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash
-            )
-        ));
+        if ($data === false) {
+            return false;
+        }
+        if (is_object($data)) {
+            if ($data->read === false || $data->read === 'no') {
+                return false;
+            }
+        }
 
-        return $user;
+        if (!$entity->has('usersIds')) {
+            $entity->loadLinkMultipleField('users');
+        }
+        $userIdList = $entity->get('usersIds');
+        if (is_array($userIdList) && in_array($user->id, $userIdList)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function checkIsOwner(User $user, Entity $entity)
+    {
+        if ($user->id === $entity->get('createdById')) {
+            return true;
+        }
+        return false;
     }
 }
 

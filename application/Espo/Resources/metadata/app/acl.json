@@ -63,23 +63,9 @@
     },
     "scopeLevelTypesDefaults": {
         "boolean": true,
-        "recordAllTeamOwnNo": {
+        "record": {
             "read": "all",
-            "edit": "all",
-            "delete": "no"
-        },
-        "recordAllOwnNo": {
-            "read": "all",
-            "edit": "all",
-            "delete": "no"
-        },
-        "recordAllTeamNo": {
-            "read": "all",
-            "edit": "all",
-            "delete": "no"
-        },
-        "recordAllNo": {
-            "read": "all",
+            "stream": "all",
             "edit": "all",
             "delete": "no"
         }
