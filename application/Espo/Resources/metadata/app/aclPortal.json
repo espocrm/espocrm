@@ -49,11 +49,6 @@
     },
     "scopeLevelTypesDefaults": {
         "boolean": false,
-        "record": {
-            "read": "no",
-            "stream": "no",
-            "edit": "no",
-            "delete": "no"
-        }
+        "record": false
     }
 }

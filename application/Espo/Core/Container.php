@@ -47,7 +47,10 @@ class Container
         if (empty($this->data[$name])) {
             $this->load($name);
         }
-        return $this->data[$name];
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+        return null;
     }
 
     protected function set($name, $obj)

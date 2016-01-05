@@ -62,14 +62,6 @@ class ApplicationPortal extends Application
         $this->initAutoloads();
     }
 
-    protected function getAuth()
-    {
-        if (empty($this->auth)) {
-            $this->auth = new \Espo\Core\Utils\AuthPortal($this->getContainer());
-        }
-        return $this->auth;
-    }
-
     protected function getPortal()
     {
         return $this->portal;

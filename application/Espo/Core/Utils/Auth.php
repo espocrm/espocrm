@@ -32,15 +32,29 @@ namespace Espo\Core\Utils;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
+use \Espo\Entities\Portal;
+
 class Auth
 {
     protected $container;
 
     protected $authentication;
 
-    public function __construct(\Espo\Core\Container $container)
+    protected $allowAnyAccess;
+
+    const ACCESS_CRM_ONLY = 0;
+
+    const ACCESS_PORTAL_ONLY = 1;
+
+    const ACCESS_ANY = 3;
+
+    private $portal;
+
+    public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
     {
         $this->container = $container;
+
+        $this->allowAnyAccess = $allowAnyAccess;
 
         $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Espo');
         $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
@@ -52,6 +66,27 @@ class Auth
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    protected function setPortal(Portal $portal)
+    {
+        $this->portal = $portal;
+    }
+
+    protected function isPortal()
+    {
+        if ($this->portal) {
+            return true;
+        }
+        return !!$this->getContainer()->get('portal');
+    }
+
+    protected function getPortal()
+    {
+        if ($this->portal) {
+            return $this->portal;
+        }
+        return $this->getContainer()->get('portal');
     }
 
     protected function getConfig()
@@ -79,10 +114,30 @@ class Auth
         $this->getContainer()->setUser($user);
     }
 
-
     public function login($username, $password)
     {
         $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array('token' => $password))->findOne();
+
+        if ($authToken) {
+            if (!$this->allowAnyAccess) {
+                if ($this->isPortal() && $authToken->get('portalId') !== $this->getPortal()->id) {
+                    $GLOBALS['log']->debug("AUTH: Trying to login to portal with a token not related to portal.");
+                    return false;
+                }
+                if (!$this->isPortal() && $authToken->get('portalId')) {
+                    $GLOBALS['log']->debug("AUTH: Trying to login to crm with a token related to portal.");
+                    return false;
+                }
+            }
+            if ($this->allowAnyAccess) {
+                if ($authToken->get('portalId') && !$this->isPortal()) {
+                    $portal = $this->getEntityManager()->getEntity('Portal', $authToken->get('portalId'));
+                    if ($portal) {
+                        $this->setPortal($portal);
+                    }
+                }
+            }
+        }
 
         $user = $this->authentication->login($username, $password, $authToken);
 
@@ -91,10 +146,21 @@ class Auth
                 $GLOBALS['log']->debug("AUTH: Trying to login as user '".$user->get('userName')."' which is not active.");
                 return false;
             }
-            if (!$user->isAdmin() && $user->get('isPortalUser')) {
+
+            if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
                 $GLOBALS['log']->debug("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
                 return false;
             }
+
+            if (!$user->isAdmin() && $this->isPortal() && !$user->get('isPortalUser')) {
+                $GLOBALS['log']->debug("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
+                return false;
+            }
+
+            if ($this->isPortal()) {
+                $user->set('portalId', $this->getPortal()->id);
+            }
+
             $this->getEntityManager()->setUser($user);
             $this->getContainer()->setUser($user);
 
@@ -106,6 +172,9 @@ class Auth
 	                $authToken->set('hash', $user->get('password'));
 	                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 	                $authToken->set('userId', $user->id);
+                    if ($this->isPortal()) {
+                        $authToken->set('portalId', $this->getPortal()->id);
+                    }
 	            }
             	$authToken->set('lastAccess', date('Y-m-d H:i:s'));
 

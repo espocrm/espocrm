@@ -39,6 +39,8 @@ abstract class Base
 
     public static $authRequired = true;
 
+    public static $allowPortal = true;
+
     protected function getContainer()
     {
         return $this->container;

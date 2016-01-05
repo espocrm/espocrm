@@ -71,12 +71,9 @@ class Application
         return $this->metadata;
     }
 
-    protected function getAuth()
+    protected function createAuth()
     {
-        if (empty($this->auth)) {
-            $this->auth = new \Espo\Core\Utils\Auth($this->container);
-        }
-        return $this->auth;
+        return new \Espo\Core\Utils\Auth($this->container);
     }
 
     public function getContainer()
@@ -111,7 +108,7 @@ class Application
         $entryPointManager = new \Espo\Core\EntryPointManager($container);
 
         try {
-            $auth = $this->getAuth();
+            $auth = new \Espo\Core\Utils\Auth($this->container, $entryPointManager->checkAllowPortal($entryPoint));
             $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
             $slim->add($apiAuth);
 
@@ -127,7 +124,7 @@ class Application
 
     public function runCron()
     {
-        $auth = $this->getAuth();
+        $auth = $this->createAuth();
         $auth->useNoAuth(true);
 
         $cronManager = new \Espo\Core\CronManager($this->container);
@@ -168,7 +165,7 @@ class Application
         $slim = $this->getSlim();
 
         try {
-            $auth = $this->getAuth();
+            $auth = $this->createAuth();
         } catch (\Exception $e) {
             $container->get('output')->processError($e->getMessage(), $e->getCode());
         }
