@@ -2,7 +2,7 @@
     "mandatory": {
         "scopeLevel": {
             "User": {
-                "read": "no",
+                "read": "own",
                 "edit": "no",
                 "delete": "no",
                 "stream": "no"

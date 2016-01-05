@@ -48,7 +48,16 @@ class User extends \Espo\Core\SelectManagers\Base
     protected function filterActive(&$result)
     {
         $result['whereClause'][] = array(
-            'isActive' => true
+            'isActive' => true,
+            'isPortalUser' => false
+        );
+    }
+
+    protected function filterActivePortalUsers(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isActive' => true,
+            'isPortalUser' => true
         );
     }
 

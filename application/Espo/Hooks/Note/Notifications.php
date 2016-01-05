@@ -119,7 +119,8 @@ class Notifications extends \Espo\Core\Hooks\Base
                 } else if ($targetType === 'all') {
                     $targetUserList = $this->getEntityManager()->getRepository('User')->find(array(
                         'whereClause' => array(
-                            'isActive' => true
+                            'isActive' => true,
+                            'isPortalUser' => false
                         )
                     ));
                     foreach ($targetUserList as $user) {

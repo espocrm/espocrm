@@ -93,6 +93,10 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
             var $list = this.$el.find(this.listContainerEl);
 
             var success = function () {
+                if (initialCount === 0) {
+                    this.reRender();
+                    return;
+                }
                 var rowCount = collection.length - initialCount;
                 var rowsReady = 0;
                 for (var i = rowCount - 1; i >= 0; i--) {

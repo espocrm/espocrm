@@ -388,20 +388,22 @@ class Stream extends \Espo\Core\Services\Base
             )
         ";
 
-        $sqlPartList[] = "
-            (
-                SELECT {$selectSqlPart}
-                FROM `note` AS `note`
-                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                WHERE note.deleted = 0 AND
+        if (!$user->get('isPortalUser') || $user->get('isAdmin')) {
+            $sqlPartList[] = "
                 (
-                    note.parent_id IS NULL AND
-                    note.is_global = 1
+                    SELECT {$selectSqlPart}
+                    FROM `note` AS `note`
+                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                    WHERE note.deleted = 0 AND
+                    (
+                        note.parent_id IS NULL AND
+                        note.is_global = 1
+                    )
+                    {where}
+                    ORDER BY number DESC
                 )
-                {where}
-                ORDER BY number DESC
-            )
-        ";
+            ";
+        }
 
         $teamIdList = $user->getTeamIdList();
         $teamIdQuotedList = [];

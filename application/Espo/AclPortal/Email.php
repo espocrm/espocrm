@@ -32,7 +32,7 @@ namespace Espo\AclPortal;
 use \Espo\Entities\User;
 use \Espo\ORM\Entity;
 
-class Email extends \Espo\Core\Acl\Base
+class Email extends \Espo\Core\AclPortal\Base
 {
 
     public function checkEntityRead(User $user, Entity $entity, $data)

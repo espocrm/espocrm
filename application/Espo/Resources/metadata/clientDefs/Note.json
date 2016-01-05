@@ -1,10 +1,13 @@
 {
   "collection": "collections/note",
   "recordViews":{
-    "edit":"Note.Record.Edit",
-    "editQuick":"Note.Record.Edit"
+    "edit":"views/note/record/edit",
+    "editQuick":"views/note/record/edit"
+  },
+  "modalViews": {
+    "edit": "views/note/modals/edit"
   },
   "itemViews": {
-    "Post": "Stream.Notes.Post"
+    "Post": "views/stream/notes/post"
   }
 }

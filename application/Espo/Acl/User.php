@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,15 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/note/record/edit', 'views/record/edit', function (Dep) {
+namespace Espo\Acl;
 
-    return Dep.extend({
+use \Espo\ORM\Entity;
 
-        sideView: null,
-
-        isWide: true,
-
-    });
-});
-
+class User extends \Espo\Core\Acl\Base
+{
+    public function checkIsOwner(\Espo\Entities\User $user, Entity $entity)
+    {
+        return $user->id === $entity->id;
+    }
+}
 
