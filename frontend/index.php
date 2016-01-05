@@ -27,15 +27,5 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../bootstrap.php";
-
-$app = new \Espo\Core\Application();
-
-if (!empty($_GET['entryPoint'])) {
-    $app->runEntryPoint($_GET['entryPoint']);
-    exit;
-}
-
-$clientManager = $app->getContainer()->get('clientManager');
-$clientManager->display();
+include "../index.php";
 

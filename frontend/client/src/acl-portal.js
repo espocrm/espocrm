@@ -127,7 +127,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
                     return result;
                 }
             }
-            return false;
+            return true;
         },
 
         checkModel: function (model, data, action, precise) {
@@ -161,7 +161,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
 
             if (model.hasField('account')) {
                 if (model.get('accountId')) {
-                    if (~accountIdList.indexOf(model.get('accountId')) {
+                    if (~accountIdList.indexOf(model.get('accountId'))) {
                         return true;
                     }
                 }
@@ -174,7 +174,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
                     result = null;
                 }
                 (model.getLinkMultipleIdList('accounts')).forEach(function (id) {
-                    if (~accountIdList.indexOf(id) {
+                    if (~accountIdList.indexOf(id)) {
                         result = true;
                     }
                 }, this);
@@ -182,7 +182,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
 
             if (model.hasField('parent') && model.hasLink('parent')) {
                 if (model.get('parentType') === 'Account') {
-                    if (!accountIdList.indexOf(model.get('parentId')) {
+                    if (!accountIdList.indexOf(model.get('parentId'))) {
                         return true;
                     }
                 }
@@ -205,7 +205,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
 
             if (model.hasField('contact')) {
                 if (model.get('contactId')) {
-                    if (contactId === model.get('contactId') {
+                    if (contactId === model.get('contactId')) {
                         return true;
                     }
                 }

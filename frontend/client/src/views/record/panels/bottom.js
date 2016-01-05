@@ -205,19 +205,19 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 o.inlineEditDisabled = true;
             }
 
-            if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
+            if (this.recordHelper.getFieldStateParam(field, 'hidden')) {
                 o.disabled = true;
             }
-            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+            if (this.recordHelper.getFieldStateParam(field, 'hiddenLocked')) {
                 o.disabledLocked = true;
             }
-            if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
+            if (this.recordHelper.getFieldStateParam(field, 'readOnly')) {
                 o.readOnly = true;
             }
-            if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
-                o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
+            if (this.recordHelper.getFieldStateParam(field, 'required') !== null) {
+                o.defs.params.required = this.recordHelper.getFieldStateParam(field, 'required');
             }
-            if (!readOnlyLocked && this.recordHelper.getFieldStateParam(name, 'readOnlyLocked')) {
+            if (!readOnlyLocked && this.recordHelper.getFieldStateParam(field, 'readOnlyLocked')) {
                 readOnlyLocked = true;
             }
 

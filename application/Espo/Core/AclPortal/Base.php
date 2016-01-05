@@ -113,7 +113,7 @@ class Base extends \Espo\Core\Acl\Base
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     public function checkReadOnlyAccount(User $user, $data)

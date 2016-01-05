@@ -526,7 +526,7 @@ class Stream extends \Espo\Core\Services\Base
             throw new NotFound();
         }
 
-        if (!$this->getAcl($entity, 'stream')) {
+        if (!$this->getAcl()->checkEntity($entity, 'stream')) {
             throw new Forbidden();
         }
 
@@ -586,6 +586,7 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC'
         ));
+
 
         foreach ($collection as $e) {
             if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {

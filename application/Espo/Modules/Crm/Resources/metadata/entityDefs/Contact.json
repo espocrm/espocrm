@@ -20,7 +20,9 @@
         },
         "accountId": {
             "where": {
-                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})"
+                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})",
+                "IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
+                "NOT IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id NOT IN {value})"
             },
             "disabled": true
         },

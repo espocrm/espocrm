@@ -79,11 +79,8 @@ class Image extends \Espo\Core\EntryPoints\Base
             throw new NotFound();
         }
 
-        if ($attachment->get('parentId') && $attachment->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));
-            if ($parent && !$this->getAcl()->check($parent)) {
-                throw new Forbidden();
-            }
+        if (!$this->getAcl()->checkEntity($attachment)) {
+            throw new Forbidden();
         }
 
         $filePath = "data/upload/{$attachment->id}";

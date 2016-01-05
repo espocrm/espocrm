@@ -89,7 +89,7 @@ class Acl
         return $this->getAclManager()->checkScope($this->getUser(), $scope, $action);
     }
 
-    public function checkEntity(Entity $entity, $action)
+    public function checkEntity(Entity $entity, $action = 'read')
     {
         return $this->getAclManager()->checkEntity($this->getUser(), $entity, $action);
     }

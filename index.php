@@ -30,13 +30,15 @@
 include "bootstrap.php";
 
 $app = new \Espo\Core\Application();
-
 if (!$app->isInstalled()) {
     header("Location: install/");
     exit;
 }
 
 if (!empty($_GET['entryPoint'])) {
+    if (!empty($_GET['portalId'])) {
+        $app = new \Espo\Core\ApplicationPortal($_GET['portalId']);
+    }
     $app->runEntryPoint($_GET['entryPoint']);
     exit;
 }

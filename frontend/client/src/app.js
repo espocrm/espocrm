@@ -76,7 +76,7 @@ Espo.define(
             this.user = new User();
             this.preferences = new Preferences();
             this.preferences.settings = this.settings;
-            this.acl = new AclManager(this.user);
+            this.acl = this.createAclManager();
 
             this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
 
@@ -170,7 +170,7 @@ Espo.define(
                 var clientDefs = this.metadata.get('clientDefs') || {};
                 Object.keys(clientDefs).forEach(function (scope) {
                     var o = clientDefs[scope];
-                    var implClassName = (o || {}).acl;
+                    var implClassName = (o || {})[this.aclName || 'acl'];
                     if (implClassName) {
                         promiseList.push(new Promise(function (resolve) {
                             this.loader.load(implClassName, function (implClass) {
@@ -285,8 +285,11 @@ Espo.define(
             this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
         },
 
-        initView: function () {
+        createAclManager: function () {
+            return new AclManager(this.user);
+        },
 
+        initView: function () {
             var helper = this.viewHelper = new ViewHelper();
 
             helper.layoutManager = new LayoutManager({cache: this.cache});

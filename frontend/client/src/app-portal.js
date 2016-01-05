@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('app-portal', ['app'], function (Dep) {
+Espo.define('app-portal', ['app', 'acl-portal-manager'], function (Dep, AclPortalManager) {
 
     return Dep.extend({
+
+        aclName: 'aclPortal',
+
+        createAclManager: function () {
+            return new AclPortalManager(this.user);
+        }
 
     });
 

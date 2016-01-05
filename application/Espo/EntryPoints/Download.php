@@ -61,15 +61,11 @@ class Download extends \Espo\Core\EntryPoints\Base
             throw new NotFound();
         }
 
-        if ($attachment->get('parentId') && $attachment->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));
-            if (!$this->getAcl()->check($parent)) {
-                throw new Forbidden();
-            }
+        if (!$this->getAcl()->checkEntity($attachment)) {
+            throw new Forbidden();
         }
 
         $fileName = "data/upload/{$attachment->id}";
-
 
         if (!file_exists($fileName)) {
             throw new NotFound();

@@ -153,9 +153,6 @@ class AclManager
 
     public function check(User $user, $subject, $action = null)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
         if (is_string($subject)) {
             return $this->checkScope($user, $subject, $action);
         } else {
@@ -166,7 +163,7 @@ class AclManager
         }
     }
 
-    public function checkEntity(User $user, Entity $entity, $action)
+    public function checkEntity(User $user, Entity $entity, $action = 'read')
     {
         $scope = $entity->getEntityType();
 

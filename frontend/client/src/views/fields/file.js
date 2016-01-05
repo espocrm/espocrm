@@ -32,11 +32,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         type: 'file',
 
-        listTemplate: 'fields.file.detail',
+        listTemplate: 'fields/file/detail',
 
-        detailTemplate: 'fields.file.detail',
+        detailTemplate: 'fields/file/detail',
 
-        editTemplate: 'fields.file.edit',
+        editTemplate: 'fields/file/edit',
 
         showPreview: false,
 
@@ -68,7 +68,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             },
             'click a[data-action="showImagePreview"]': function (e) {
                 var id = $(e.currentTarget).data('id');
-                this.createView('preview', 'Modals.ImagePreview', {
+                this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
                     name: this.nameHash[id]
@@ -80,7 +80,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 e.preventDefault();
 
                 var id = this.model.get(this.idName);
-                this.createView('preview', 'Modals.ImagePreview', {
+                this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
                     name: this.model.get(this.nameName)
@@ -147,7 +147,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
             }
             return preview;
         },
@@ -159,7 +159,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<img src="?entryPoint=image&size=small&id=' + id + '" title="' + name + '">'; 
+                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
             }
 
             return preview;
@@ -180,10 +180,29 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
                     string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
                 } else {
-                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a>';
+                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'">' + name + '</a>';
                 }
                 return string;
             }
+        },
+
+        getImageUrl: function (id, size) {
+            var url = '?entryPoint=image&id=' + id;
+            if (size) {
+                size += '&size=' + size;
+            }
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
+        },
+
+        getDownloadUrl: function (id) {
+            var url = '?entryPoint=download&id=' + id;
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
         },
 
         deleteAttachment: function () {
@@ -236,11 +255,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                             contentType: 'multipart/encrypted',
                             timeout: 0,
                         }).done(function (data) {
-
                             attachment.id = data.attachmentId;
-                            console.log(attachment.id);
                             attachment.set('name', fileParams.name);
-                            console.log(attachment.id);
                             attachment.set('type', fileParams.type || 'text/plain');
                             attachment.set('size', fileParams.size);
                             attachment.set('role', 'Attachment');
@@ -304,7 +320,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         fetch: function () {
             return {};
-        },
+        }
 
     });
 });

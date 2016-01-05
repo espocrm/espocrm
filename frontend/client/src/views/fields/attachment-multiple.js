@@ -169,6 +169,25 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
         },
 
+        getImageUrl: function (id, size) {
+            var url = '?entryPoint=image&id=' + id;
+            if (size) {
+                size += '&size=' + size;
+            }
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
+        },
+
+        getDownloadUrl: function (id) {
+            var url = '?entryPoint=download&id=' + id;
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
+        },
+
         removeId: function (id) {
             var arr = _.clone(this.model.get(this.idsName));
             var i = arr.indexOf(id);
@@ -212,7 +231,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<img src="?entryPoint=image&size=small&id=' + id + '" title="' + name + '">'; 
+                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">'; 
             }
 
             return preview;
@@ -345,7 +364,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var preview = name;
 
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="?entryPoint=image&id=' + id + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="?entryPoint=image&size=medium&id=' + id + '"></a>'; 
             }
             return preview;
         },
@@ -364,7 +383,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
-                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="?entryPoint=download&id=' + id + '">' + name + '</a></div>';
+                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '">' + name + '</a></div>';
                     names.push(line);
                 }
                 var string = previews.join('') + names.join('');

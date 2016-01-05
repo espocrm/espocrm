@@ -591,6 +591,7 @@ abstract class Base
                 $field = 'AND';
             }
 
+
             if (!in_array($field, self::$sqlOperators)) {
                 $isComplex = false;
 
@@ -622,8 +623,17 @@ abstract class Base
 
                     $fieldDefs = $entity->fields[$field];
 
-                    if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operator])) {
-                        $whereParts[] = str_replace('{value}', $this->pdo->quote($value), $fieldDefs['where'][$operator]);
+                    $operatorModified = $operator;
+                    if (is_array($value)) {
+                        if ($operator == '=') {
+                            $operatorModified = 'IN';
+                        } else if ($operator == '<>') {
+                            $operatorModified = 'NOT IN';
+                        }
+                    }
+
+                    if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
+                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $fieldDefs['where'][$operatorModified]);
                     } else {
                         if ($fieldDefs['type'] == IEntity::FOREIGN) {
                             $leftPart = '';
@@ -669,7 +679,6 @@ abstract class Base
                         } else {
                             $whereParts[] = " 0";
                         }
-
                     }
                 }
             } else {
@@ -677,6 +686,20 @@ abstract class Base
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);
+    }
+
+    public function stringifyValue($value)
+    {
+        if (is_array($value)) {
+            $arr = [];
+            foreach ($value as $v) {
+                $arr[] = $this->pdo->quote($v);
+            }
+            $stringValue = implode(', ', $arr);
+        } else {
+            $stringValue = $this->pdo->quote($value);
+        }
+        return $stringValue;
     }
 
     public function sanitize($string)

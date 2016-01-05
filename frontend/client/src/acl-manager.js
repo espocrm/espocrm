@@ -227,6 +227,8 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
 
     });
 
+    AclManager.extend = Backbone.Router.extend;
+
     return AclManager;
 });
 
