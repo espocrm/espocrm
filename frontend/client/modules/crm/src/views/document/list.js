@@ -38,9 +38,22 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
 
         currentFolderName: '',
 
+        data: function () {
+            var data = {};
+            data.foldersDisabled = this.foldersDisabled;
+            return data;
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.foldersDisabled = this.foldersDisabled ||
+                                   this.getMetadata().get('scopes.DocumentFolder.disabled') ||
+                                   !this.getAcl().checkScope('DocumentFolder');
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (!this.hasView('folders')) {
+            if (!this.foldersDisabled && !this.hasView('folders')) {
                 this.loadFolders();
             }
         },
@@ -55,7 +68,6 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
                     callback.call(this, collection);
                 }, this);
                 collection.fetch();
-
             }, this);
         },
 

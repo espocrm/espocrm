@@ -2,7 +2,9 @@
 <div class="search-container">{{{search}}}</div>
 
 <div class="row">
-    <div class="folders-container col-md-3 col-sm-4">{{{folders}}}</div>
-    <div class="list-container col-md-9 col-sm-8">{{{list}}}</div>
+    {{#unless foldersDisabled}}
+    <div class="folders-container{{#unless foldersDisabled}} col-md-3 col-sm-4{{else}} col-md-12{{/unless}}">{{{folders}}}</div>
+    {{/unless}}
+    <div class="list-container{{#unless foldersDisabled}} col-md-9 col-sm-8{{else}} col-md-12{{/unless}}">{{{list}}}</div>
 </div>
 

@@ -108,7 +108,7 @@ class Application
         $entryPointManager = new \Espo\Core\EntryPointManager($container);
 
         try {
-            $auth = new \Espo\Core\Utils\Auth($this->container, $entryPointManager->checkAllowPortal($entryPoint));
+            $auth = new \Espo\Core\Utils\Auth($this->container, $entryPointManager->checkNotStrictAuth($entryPoint));
             $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
             $slim->add($apiAuth);
 

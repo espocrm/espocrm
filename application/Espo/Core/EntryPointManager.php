@@ -81,13 +81,13 @@ class EntryPointManager
         return $className::$authRequired;
     }
 
-    public function checkAllowPortal($name)
+    public function checkNotStrictAuth($name)
     {
         $className = $this->getClassName($name);
         if (!$className) {
             throw new NotFound();
         }
-        return $className::$allowPortal;
+        return $className::$notStrictAuth;
     }
 
     public function run($name)

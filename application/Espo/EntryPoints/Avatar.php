@@ -38,6 +38,8 @@ class Avatar extends Image
 {
     public static $authRequired = true;
 
+    public static $notStrictAuth = true;
+
     private $colorList = [
         [111,168,214],
         [237,197,85],

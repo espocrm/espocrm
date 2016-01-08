@@ -82,7 +82,7 @@ class ApplicationPortal extends Application
                 }
                 $route['route'] = '/:portalId' . $route['route'];
             }
-            $routeList[$i] = $route; 
+            $routeList[$i] = $route;
         }
         return $routeList;
     }

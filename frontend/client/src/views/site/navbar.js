@@ -55,14 +55,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
             },
-            'click .navbar-header a.navbar-brand': function (e) {
-                //this.$el.find('.navbar-collapse.in').collapse('hide');
-            },
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
                 this.notify('Loading...');
-                this.createView('quickCreate', 'Modals.Edit', {scope: scope}, function (view) {
+                this.createView('quickCreate', 'views/modals/edit', {scope: scope}, function (view) {
                     view.once('after:render', function () {
                         this.notify(false);
                     });
@@ -89,6 +86,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             return '?entryPoint=LogoImage&t=' + companyLogoId;
         },
 
+        getTabList: function () {
+            var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
+            return tabList || [];
+        },
+
+        getQuickCreateList: function () {
+            return this.getConfig().get('quickCreateList') || [];
+        },
+
         setup: function () {
             this.getRouter().on('routed', function (e) {
                 if (e.controller) {
@@ -98,9 +104,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             }.bind(this));
 
-            var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
-
-            tabList = tabList || [];
+            var tabList = this.getTabList();
 
             var scopes = this.getMetadata().get('scopes') || {};
 
@@ -112,7 +116,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 return true;
             }, this);
 
-            this.quickCreateList = (this.getConfig().get('quickCreateList') || []).filter(function (scope) {
+            this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
                 if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope, 'edit');
@@ -120,15 +124,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 return true;
             }, this);
 
-            this.createView('notificationsBadge', 'Notifications.Badge', {
+            this.createView('notificationsBadge', 'views/notifications/badge', {
                 el: this.options.el + ' .notifications-badge-container'
             });
 
-            this.createView('globalSearch', 'GlobalSearch.GlobalSearch', {
+            this.createView('globalSearch', 'views/global-search/global-search', {
                 el: this.options.el + ' .global-search-container'
             });
 
-            this.tabListDefs = this.getTabListDefs();
+           this.setupTabListDefs();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -314,13 +318,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
-        getTabList: function () {
-            return this.tabList;
-        },
-
-        getTabListDefs: function () {
+        setupTabListDefs: function () {
             var tabListDefs = [];
-            this.getTabList().forEach(function (tab, i) {
+            this.tabList.forEach(function (tab, i) {
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
                 var o = {
                     link: '#' + tab,
@@ -330,7 +330,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 };
                 tabListDefs.push(o);
             }, this);
-            return tabListDefs;
+            this.tabListDefs = tabListDefs;
         },
 
         getMenuDefs: function () {

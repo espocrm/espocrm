@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,35 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+namespace Espo\Core\Utils;
 
-    return Dep.extend({
+use \Espo\Entities\Portal;
 
-        type: 'bool',
+class ThemePortalManager
+{
+    protected $config;
 
-        listTemplate: 'fields/bool/detail',
+    protected $metadata;
 
-        detailTemplate: 'fields/bool/detail',
+    protected $portal;
 
-        editTemplate: 'fields/bool/edit',
+    private $defaultName = 'Espo';
 
-        searchTemplate: 'fields/bool/search',
+    private $defaultStylesheet = 'Espo';
 
-        validations: [],
+    public function __construct(Config $config, Metadata $metadata, Portal $portal)
+    {
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->portal = $portal;
+    }
 
-        fetch: function () {
-            var value = this.$element.get(0).checked;
-            var data = {};
-            data[this.name] = value;
-            return data;
-        },
+    public function getName()
+    {
+        $theme = $this->portal->get('theme');
+        if (!$theme) {
+            $theme = $this->defaultName;
+        }
+        return $theme;
+    }
 
-        fetchSearch: function () {
-            var data = {
-                type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
-            };
-            return data;
-        },
-    });
-});
+    public function getStylesheet()
+    {
+        return $this->metadata->get('themes.' . $this->getName() . '.stylesheet', 'client/css/espo.css');
+    }
+}
+
 

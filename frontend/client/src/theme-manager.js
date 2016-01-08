@@ -66,6 +66,7 @@ Espo.define('theme-manager', [], function () {
                     }
                 }
             }
+            return false;
         }
 
     });

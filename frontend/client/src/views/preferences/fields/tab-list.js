@@ -25,36 +25,20 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+Espo.define('views/preferences/fields/tab-list', 'views/settings/fields/tab-list', function (Dep) {
 
     return Dep.extend({
 
-        type: 'bool',
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        listTemplate: 'fields/bool/detail',
-
-        detailTemplate: 'fields/bool/detail',
-
-        editTemplate: 'fields/bool/edit',
-
-        searchTemplate: 'fields/bool/search',
-
-        validations: [],
-
-        fetch: function () {
-            var value = this.$element.get(0).checked;
-            var data = {};
-            data[this.name] = value;
-            return data;
+            this.params.options = this.params.options.filter(function (d) {
+                if (this.getAcl().checkScope(d)) {
+                    return true;
+                }
+            }, this);
         },
 
-        fetchSearch: function () {
-            var data = {
-                type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
-            };
-            return data;
-        },
     });
-});
 
+});

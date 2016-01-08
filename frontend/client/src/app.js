@@ -135,6 +135,8 @@ Espo.define(
 
         viewHelper: null,
 
+        masterView: 'views/site/master',
+
         start: function () {
             this.initAuth();
 
@@ -263,6 +265,7 @@ Espo.define(
                     Espo.require(className, function (controllerClass) {
                         this.controllers[name] = new controllerClass(this.baseController.params, this.getControllerInjection());
                         this.controllers[name].name = name;
+                        this.controllers[name].masterView = this.masterView;
                         callback(this.controllers[name]);
                     }, this, function () {
                         this.baseController.error404();
@@ -411,17 +414,26 @@ Espo.define(
         initUserData: function (options, callback) {
             options = options || {};
 
-            var userIsLoaded = false;
-            var langIsLoaded = false;
+            if (this.auth === null) return;
 
-            if (options.user) {
-                userIsLoaded = true;
-            }
+            Promise.all([
+                new Promise(function (resolve) {
+                    if (options.user) {
+                        resolve();
+                        return;
+                    };
+                    this.requestUserData(function (data) {
+                        options = data;
+                        resolve();
+                    });
 
-            var process = function () {
-                if (!userIsLoaded) {
-                    return;
-                }
+                }.bind(this)),
+                new Promise(function (resolve) {
+                    this.language.load(function () {
+                        resolve();
+                    }.bind(this), true);
+                }.bind(this))
+            ]).then(function () {
                 this.dateTime.setLanguage(this.language);
 
                 var userData = options.user || null;
@@ -444,31 +456,15 @@ Espo.define(
                 if (callback) {
                     callback();
                 }
-            }.bind(this);
+            }.bind(this));
+        },
 
-            var handleProcess = function () {
-                if (langIsLoaded && userIsLoaded) {
-                    process();
-                }
-            };
-
-            if (this.auth !== null) {
-                this.language.load(function () {
-                    langIsLoaded = true;
-                    handleProcess();
-                }.bind(this), true);
-
-
-                if (!userIsLoaded) {
-                    $.ajax({
-                        url: 'App/user',
-                    }).done(function (data) {
-                        userIsLoaded = true;
-                        options = data;
-                        handleProcess();
-                    });
-                }
-            }
+        requestUserData: function (callback) {
+            $.ajax({
+                url: 'App/user',
+            }).done(function (data) {
+                callback(data);
+            });
         },
 
         setupAjax: function () {

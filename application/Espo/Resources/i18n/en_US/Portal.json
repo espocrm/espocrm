@@ -5,7 +5,11 @@
         "url": "URL",
         "portalRoles": "Roles",
         "isActive": "Is Active",
-        "isDefault": "Is Default"
+        "isDefault": "Is Default",
+        "tabList": "Tab List",
+        "quickCreateList": "Quick Create List",
+        "companyLogo": "Logo",
+        "theme": "Theme"
     },
     "links": {
         "users": "Users",
@@ -16,6 +20,8 @@
         "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
     },
     "labels": {
-        "Create Portal": "Create Portal"
+        "Create Portal": "Create Portal",
+        "User Interface": "User Interface",
+        "General": "General"
     }
 }

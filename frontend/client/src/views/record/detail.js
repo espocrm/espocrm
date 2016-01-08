@@ -75,12 +75,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: 'save',
                 label: 'Save',
                 style: 'primary',
-                edit: true,
+                edit: true
             },
             {
                 name: 'cancelEdit',
                 label: 'Cancel',
-                edit: true,
+                edit: true
             }
         ],
 

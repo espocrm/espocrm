@@ -116,7 +116,7 @@
         "tabList": {
             "type": "array",
             "translation": "Global.scopeNamesPlural",
-            "view": "Settings.Fields.TabList"
+            "view": "views/settings/fields/tab-list"
         },
         "quickCreateList": {
             "type": "array",
@@ -131,7 +131,7 @@
         "globalSearchEntityList": {
             "type": "multiEnum",
             "translation": "Global.scopeNames",
-            "view": "Settings.Fields.GlobalSearchEntityList"
+            "view": "views/settings/fields/global-search-entity-list"
         },
         "exportDelimiter": {
             "type": "varchar",
@@ -214,12 +214,12 @@
         "assignmentEmailNotificationsEntityList": {
             "type": "multiEnum",
             "translation": "Global.scopeNamesPlural",
-            "view": "Settings.Fields.AssignmentEmailNotificationsEntityList"
+            "view": "views/settings/fields/assignment-email-notifications-entity-list"
         },
         "assignmentNotificationsEntityList": {
             "type": "multiEnum",
             "translation": "Global.scopeNamesPlural",
-            "view": "Settings.Fields.AssignmentNotificationsEntityList"
+            "view": "views/settings/fields/assignment-notifications-entity-list"
         },
         "b2cMode": {
             "type": "bool",
@@ -245,7 +245,7 @@
         },
         "theme": {
             "type": "enum",
-            "view": "Settings.Fields.Theme",
+            "view": "views/settings/fields/theme",
             "translation": "Global.themes"
         },
         "emailMessageMaxSize": {

@@ -32,4 +32,11 @@ namespace Espo\Entities;
 class Portal extends \Espo\Core\ORM\Entity
 {
 
+    protected $settingsAttributeList = ['companyLogoId', 'tabList', 'quickCreateList', 'theme'];
+
+    public function getSettingsAttributeList()
+    {
+        return $this->settingsAttributeList;
+    }
+
 }

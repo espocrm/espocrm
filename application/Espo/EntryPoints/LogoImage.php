@@ -42,7 +42,11 @@ class LogoImage extends Image
     {
         $this->imageSizes['small-logo'] = array(181, 44);
 
-        $id = $this->getConfig()->get('companyLogoId');
+        if (!empty($_GET['id'])) {
+            $id = $_GET['id'];
+        } else {
+            $id = $this->getConfig()->get('companyLogoId');
+        }
 
         if (empty($id)) {
             throw new NotFound();

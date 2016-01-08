@@ -23,7 +23,7 @@
             "type": "varchar",
             "default": ",",
             "maxLength": 1,
-            "view": "Settings.Fields.ThousandSeparator"
+            "view": "views/settings/fields/thousand-separator"
         },
         "decimalMark": {
             "type": "varchar",
@@ -48,7 +48,7 @@
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
-            "view": "Preferences.Fields.SmtpEmailAddress"
+            "view": "views/preferences/fields/smtp-email-address"
         },
         "smtpServer": {
             "type": "varchar"
@@ -90,7 +90,7 @@
         },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
-            "view": "Preferences.Fields.AutoFollowEntityTypeList",
+            "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
             "notStorable": true,
             "tooltip": true
@@ -101,11 +101,11 @@
         },
         "defaultReminders": {
             "type": "jsonArray",
-            "view": "Crm:Meeting.Fields.Reminders"
+            "view": "crm:views/meeting/fields/reminders"
         },
         "theme": {
             "type": "enum",
-            "view": "Preferences.Fields.Theme",
+            "view": "views/preferences/fields/theme",
             "translation": "Global.themes"
         },
         "useCustomTabList": {
@@ -115,7 +115,7 @@
         "tabList": {
             "type": "array",
             "translation": "Global.scopeNamesPlural",
-            "view": "views/settings/fields/tab-list"
+            "view": "views/preferences/fields/tab-list"
         }
     }
 }

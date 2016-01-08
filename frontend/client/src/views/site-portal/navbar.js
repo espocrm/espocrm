@@ -26,35 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+Espo.define('views/site-portal/navbar', 'views/site/navbar', function (Dep) {
 
     return Dep.extend({
 
-        type: 'bool',
-
-        listTemplate: 'fields/bool/detail',
-
-        detailTemplate: 'fields/bool/detail',
-
-        editTemplate: 'fields/bool/edit',
-
-        searchTemplate: 'fields/bool/search',
-
-        validations: [],
-
-        fetch: function () {
-            var value = this.$element.get(0).checked;
-            var data = {};
-            data[this.name] = value;
-            return data;
+        getLogoSrc: function () {
+            var companyLogoId = this.getConfig().get('companyLogoId');
+            if (!companyLogoId) {
+                return this.getThemeManager().getParam('logo') || 'client/img/logo.png';
+            }
+            return '?entryPoint=LogoImage&id='+companyLogoId+'&t=' + companyLogoId;
         },
 
-        fetchSearch: function () {
-            var data = {
-                type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
-            };
-            return data;
+        getTabList: function () {
+            return this.getConfig().get('tabList') || []
         },
+
+        getQuickCreateList: function () {
+            return this.getConfig().get('quickCreateList') || []
+        }
+
     });
+
 });
+
 

@@ -695,7 +695,7 @@ abstract class Base
             foreach ($value as $v) {
                 $arr[] = $this->pdo->quote($v);
             }
-            $stringValue = implode(', ', $arr);
+            $stringValue = '(' . implode(', ', $arr) . ')';
         } else {
             $stringValue = $this->pdo->quote($value);
         }

@@ -39,7 +39,7 @@ abstract class Base
 
     public static $authRequired = true;
 
-    public static $allowPortal = true;
+    public static $notStrictAuth = false;
 
     protected function getContainer()
     {

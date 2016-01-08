@@ -25,6 +25,25 @@
         "portalRoles": {
             "type": "linkMultiple"
         },
+        "tabList": {
+            "type": "array",
+            "translation": "Global.scopeNamesPlural",
+            "view": "views/settings/fields/tab-list"
+        },
+        "quickCreateList": {
+            "type": "array",
+            "translation": "Global.scopeNames",
+            "view": "views/settings/fields/quick-create-list"
+        },
+        "companyLogo": {
+            "type": "image"
+        },
+        "theme": {
+            "type": "enum",
+            "view": "views/settings/fields/theme",
+            "translation": "Global.themes",
+            "default": "Espo"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true

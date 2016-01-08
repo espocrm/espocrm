@@ -55,6 +55,14 @@ class ContainerPortal extends Container
         );
     }
 
+    protected function loadThemeManager()
+    {
+        return new \Espo\Core\Utils\ThemePortalManager(
+            $this->get('config'),
+            $this->get('metadata'),
+            $this->get('portal')
+        );
+    }
     public function setPortal(\Espo\Entities\Portal $portal)
     {
         $this->set('portal', $portal);

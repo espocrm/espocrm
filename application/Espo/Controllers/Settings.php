@@ -45,6 +45,12 @@ class Settings extends \Espo\Core\Controllers\Base
                 unset($data[$field]);
             }
         }
+
+        if ($this->getContainer()->get('portal')) {
+            foreach ($this->getContainer()->get('portal')->getSettingsAttributeList() as $attribute) {
+                $data[$attribute] = $this->getContainer()->get('portal')->get($attribute);
+            }
+        }
         return $data;
     }
 

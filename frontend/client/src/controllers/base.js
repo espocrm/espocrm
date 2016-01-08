@@ -30,7 +30,7 @@ Espo.define('controllers/base', 'controller', function (Dep) {
     return Dep.extend({
 
         login: function () {
-            this.entire('Login', {}, function (login) {
+            this.entire('views/login', {}, function (login) {
                 login.render();
                 login.on('login', function (data) {
                     this.trigger('login', data);
@@ -55,13 +55,13 @@ Espo.define('controllers/base', 'controller', function (Dep) {
         },
 
         error404: function () {
-            this.entire('Base', {template: 'errors.404'}, function (view) {
+            this.entire('views/base', {template: 'errors/404'}, function (view) {
                 view.render();
             });
         },
 
         error403: function () {
-            this.entire('Base', {template: 'errors.403'}, function (view) {
+            this.entire('views/base', {template: 'errors/403'}, function (view) {
                 view.render();
             });
         },

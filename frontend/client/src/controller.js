@@ -215,7 +215,8 @@ Espo.define('controller', [], function () {
             }
             var master = this.get('master');
             if (!master) {
-                this.viewFactory.create('Site.Master', null, function (master) {
+                var masterView = this.masterView || 'views/site/master';
+                this.viewFactory.create(masterView, null, function (master) {
                     this.set('master', master);
                     if (!this.get('masterRendered')) {
                         master.render(function () {
@@ -238,7 +239,7 @@ Espo.define('controller', [], function () {
          * @return {view}
          */
         main: function (view, options, callback, useStored, storedKey) {
-            var view = view || 'Base';
+            var view = view || 'views/base';
             var master = this.master(function (master) {
                 master.showLoadingNotification();
                 options = options || {};

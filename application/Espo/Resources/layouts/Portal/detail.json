@@ -1,8 +1,16 @@
 [
     {
+        "label": "General",
         "rows": [
-            [{"name": "name"},{"name": "isActive"}],
-            [{"name": "url"},{"name": "isDefault"}]
+            [{"name": "name"}, {"name": "isActive"}],
+            [{"name": "url"}, {"name": "isDefault"}]
+        ]
+    },
+    {
+        "label": "User Interface",
+        "rows": [
+            [{"name": "companyLogo"}, {"name": "theme"}],
+            [{"name": "tabList"}, {"name": "quickCreateList"}]
         ]
     }
 ]

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail', 'Model'], function (Dep, Detail, Model) {
+Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail', 'model', 'view-record-helper'], function (Dep, Detail, Model, ViewRecordHelper) {
 
     var self;
 
@@ -34,7 +34,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
 
         name: null,
 
-        template: 'dashlets.options.base',
+        template: 'dashlets/options/base',
 
         cssName: 'options-modal',
 
@@ -46,21 +46,15 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
             };
         },
 
-        buttons: [
+        buttonList: [
             {
                 name: 'save',
                 label: 'Save',
-                style: 'primary',
-                onClick: function (dialog) {
-                    self.save(dialog);
-                },
+                style: 'primary'
             },
             {
                 name: 'cancel',
-                label: 'Cancel',
-                onClick: function (dialog) {
-                    dialog.close();
-                }
+                label: 'Cancel'
             }
         ],
 
@@ -90,7 +84,9 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
         setup: function (dialog) {
             this.id = 'dashlet-options';
 
-            self = this;
+            this.recordHelper = new ViewRecordHelper();
+
+            var self = this;
             var model = this.model = new Model();
             model.name = 'DashletOptions';
             model.defs = {
@@ -98,13 +94,14 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
             };
             model.set(this.optionsData);
 
-            this.createView('record', 'Base', {
+            this.createView('middle', 'views/record/detail-middle', {
                 model: model,
+                recordHelper: this.recordHelper,
                 _layout: {
                     type: 'record',
                     layout: Detail.prototype.convertDetailLayout.call(this, this.getDetailLayout())
                 },
-                el: this.id + ' .record',
+                el: this.options.el + ' .middle',
                 layoutData: {
                     model: model,
                     columnCount: 2,
@@ -117,7 +114,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
         fetchAttributes: function () {
             var attributes = {};
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('record').getView(field);
+                var fieldView = this.getView('middle').getView(field);
                 _.extend(attributes, fieldView.fetch());
             }, this);
 
@@ -125,7 +122,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
 
             var valid = true;
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('record').getView(field);
+                var fieldView = this.getView('middle').getView(field);
                 valid = !fieldView.validate() && valid;
             }, this);
 
@@ -136,7 +133,7 @@ Espo.define('Views.Dashlets.Options.Base', ['Views.Modal', 'Views.Record.Detail'
             return attributes;
         },
 
-        save: function (dialog) {
+        actionSave: function (dialog) {
             var attributes = this.fetchAttributes();
             if (attributes == null) {
                 return;

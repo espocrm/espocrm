@@ -24,22 +24,16 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-    
-Espo.define('Views.Site.Footer', 'View', function (Dep) {
-    
+ ************************************************************************/
+
+Espo.define('views/site/footer', 'view', function (Dep) {
+
     return Dep.extend({
-    
-        template: 'site.footer',
-    
-        data: {
-        },
-        
-        setup: function () {
-        },
-        
+
+        template: 'site/footer'
+
     });
-    
+
 });
 
 

@@ -89,7 +89,6 @@ class Preferences extends \Espo\Core\ORM\Repository
             $entity->id = $id;
             if (empty($this->data[$id])) {
                 $fileName = $this->getFilePath($id);
-
                 if (file_exists($fileName)) {
                     $d = Json::decode($this->getFileManager()->getContents($fileName));
                     $this->data[$id] = get_object_vars($d);
@@ -106,10 +105,8 @@ class Preferences extends \Espo\Core\ORM\Repository
                     foreach ($this->defaultAttributesFromSettings as $attr) {
                         $defaults[$attr] = $this->getConfig()->get($attr);
                     }
-
                     $this->data[$id] = $defaults;
                 }
-
             }
 
             $entity->set($this->data[$id]);
