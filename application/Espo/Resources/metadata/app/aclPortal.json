@@ -14,13 +14,11 @@
                 "delete": "own"
             },
             "Portal": false,
-            "EmailAddress": false,
             "Attachment": {
                 "read": "own",
                 "edit": "own",
                 "delete": "own"
             },
-            "PhoneNumber": false,
             "EmailAccount": false,
             "Role": false,
             "PortalRole": false,

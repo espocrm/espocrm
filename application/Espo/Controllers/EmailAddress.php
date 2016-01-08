@@ -25,14 +25,19 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
+
+use \Espo\Core\Exceptions\Forbidden;
 
 class EmailAddress extends \Espo\Core\Controllers\Record
 {
     public function actionSearchInAddressBook($params, $data, $request)
     {
+        if (!$this->getAcl()->checkScope('Email')) {
+            throw new Forbidden();
+        }
         $q = $request->get('q');
         $limit = intval($request->get('limit'));
         if (empty($limit) || $limit > 30) {
