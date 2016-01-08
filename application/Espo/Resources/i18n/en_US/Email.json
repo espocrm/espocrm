@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Subject",
+        "name": "Name",
         "parent": "Parent",
         "status": "Status",
         "dateSent": "Date Sent",

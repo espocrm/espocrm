@@ -5,7 +5,7 @@
             [
                 {
                     "name":"from",
-                    "view": "Email.Fields.ComposeFromAddress"
+                    "view": "views/email/fields/compose-from-address"
                 },
                 {"name":"cc"}
             ],
@@ -19,10 +19,10 @@
                 },
                 {
                     "name":"selectTemplate",
-                    "view":"Email.Fields.SelectTemplate"
+                    "view":"views/email/fields/select-template"
                 }
             ],
-            [{"name":"name","fullWidth":true}],
+            [{"name":"subject","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
             [{"name":"attachments"},{"name":"isHtml"}]
         ]
