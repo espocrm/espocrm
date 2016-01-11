@@ -28,12 +28,12 @@
         "tabList": {
             "type": "array",
             "translation": "Global.scopeNamesPlural",
-            "view": "views/settings/fields/tab-list"
+            "view": "views/portal/fields/tab-list"
         },
         "quickCreateList": {
             "type": "array",
             "translation": "Global.scopeNames",
-            "view": "views/settings/fields/quick-create-list"
+            "view": "views/portal/fields/quick-create-list"
         },
         "companyLogo": {
             "type": "image"

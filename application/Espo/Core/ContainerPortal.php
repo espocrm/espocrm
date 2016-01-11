@@ -63,6 +63,16 @@ class ContainerPortal extends Container
             $this->get('portal')
         );
     }
+
+    protected function loadLayout()
+    {
+        return new \Espo\Core\Utils\LayoutPortal(
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('user')
+        );
+    }
+
     public function setPortal(\Espo\Entities\Portal $portal)
     {
         $this->set('portal', $portal);

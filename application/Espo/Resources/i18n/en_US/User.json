@@ -74,6 +74,7 @@
         "onlyMyTeam": "Only My Team"
     },
     "presetFilters": {
-        "active": "Active"
+        "active": "Active",
+        "activePortal": "Portal"
     }
 }

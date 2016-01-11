@@ -351,16 +351,16 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             $.ajax({
                 url: 'Email/action/getCopiedAttachments',
-                type: 'GET',
-                data: {
+                type: 'POST',
+                data: JSON.stringify({
                     id: this.model.id
-                }
+                })
             }).done(function (data) {
                 attributes['attachmentsIds'] = data.ids;
                 attributes['attachmentsNames'] = data.names;
 
                 this.notify('Loading...');
-                this.createView('quickCreate', 'Modals.ComposeEmail', {
+                this.createView('quickCreate', 'views/modals/compose-email', {
                     attributes: attributes,
                 }, function (view) {
                     view.render(function () {

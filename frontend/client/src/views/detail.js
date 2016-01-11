@@ -187,6 +187,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         selectBoolFilterLists: [],
 
         actionCreateRelated: function (data) {
+            data = data || {};
+
             var link = data.link;
             var scope = this.model.defs['links'][link].entity;
             var foreignLink = this.model.defs['links'][link].foreign;
@@ -252,12 +254,12 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 }
             }
 
-            var primaryFilterName = this.selectPrimaryFilterNames[link] || null;
+            var primaryFilterName = data.primaryFilterName || this.selectPrimaryFilterNames[link] || null;
             if (typeof primaryFilterName == 'function') {
                 primaryFilterName = primaryFilterName.call(this);
             }
 
-            var boolFilterList = Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+            var boolFilterList = data.boolFilterList || Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
             if (typeof boolFilterList == 'function') {
                 boolFilterList = boolFilterList.call(this);
             }

@@ -27,28 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Repositories;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
 
-class Portal extends \Espo\Core\EntryPoints\Base
+use \Espo\Core\Exceptions\Error;
+
+class Portal extends \Espo\Core\ORM\Repositories\RDB
 {
-    public static $authRequired = false;
-
-    public function run()
+    protected function init()
     {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else {
-            $id = $this->getConfig()->get('defaultPortalId');
-            if (!$id) {
-                throw new NotFound();
-            }
-        }
+        $this->addDependency('config');
+    }
 
-        $application = new \Espo\Core\ApplicationPortal($id);
-        $application->runClient();
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
+    }
+
+    protected function afterSave(Entity $entity, array $options)
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->has('isDefault')) {
+            if ($entity->get('isDefault')) {
+                $this->getConfig()->set('defaultPortalId', $entity->id);
+            } else {
+                $this->getConfig()->set('defaultPortalId', null);
+            }
+            $this->getConfig()->save();
+        }
     }
 }
+

@@ -36,6 +36,7 @@
             $(function () {
                 Espo.require('app-portal', function (App) {
                     var app = new App({
+                        id: '{{portalId}}',
                         useCache: false,
                         url: '../api/v1/portal/{{portalId}}',
                     }, function (app) {

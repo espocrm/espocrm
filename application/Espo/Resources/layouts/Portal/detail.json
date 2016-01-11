@@ -3,7 +3,8 @@
         "label": "General",
         "rows": [
             [{"name": "name"}, {"name": "isActive"}],
-            [{"name": "url"}, {"name": "isDefault"}]
+            [{"name": "url"}, {"name": "isDefault"}],
+            [{"name": "portalRoles"}, false]
         ]
     },
     {

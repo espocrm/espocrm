@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,28 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+Espo.define('views/portal/fields/tab-list', 'views/settings/fields/tab-list', function (Dep) {
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class Portal extends \Espo\Core\EntryPoints\Base
-{
-    public static $authRequired = false;
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-    public function run()
-    {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else {
-            $id = $this->getConfig()->get('defaultPortalId');
-            if (!$id) {
-                throw new NotFound();
-            }
-        }
+            this.params.options = this.params.options.filter(function (tab) {
+                if (!!this.getMetadata().get('scopes.' + tab + '.aclPortal')) {
+                    return true;
+                }
+            }, this);
+        },
 
-        $application = new \Espo\Core\ApplicationPortal($id);
-        $application->runClient();
-    }
-}
+    });
+
+});

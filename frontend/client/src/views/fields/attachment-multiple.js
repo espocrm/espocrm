@@ -172,7 +172,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         getImageUrl: function (id, size) {
             var url = '?entryPoint=image&id=' + id;
             if (size) {
-                size += '&size=' + size;
+                url += '&size=' + size;
             }
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');

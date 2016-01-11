@@ -29,10 +29,7 @@
 
 require_once('../../../bootstrap.php');
 
-//print_r($_SERVER);
-//die;
-
-$portalId = '567d4a0503c88c061';
+$portalId = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 
 $app = new \Espo\Core\ApplicationPortal($portalId);
 $app->run();

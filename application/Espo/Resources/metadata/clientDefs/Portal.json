@@ -2,9 +2,10 @@
    "controller": "controllers/record",
    "relationshipPanels": {
       "users": {
-         "create": true,
+         "create": false,
          "rowActionsView": "views/record/row-actions/relationship-unlink-only",
-         "layout": "listForTeam"
+         "layout": "listSmall",
+         "selectPrimaryFilterName": "activePortal"
       }
    },
    "recordViews": {

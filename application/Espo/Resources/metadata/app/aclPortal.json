@@ -20,6 +20,7 @@
                 "delete": "own"
             },
             "EmailAccount": false,
+            "ExternalAccount": false,
             "Role": false,
             "PortalRole": false,
             "EmailFilter": false,

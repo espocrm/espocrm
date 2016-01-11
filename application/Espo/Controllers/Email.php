@@ -35,9 +35,12 @@ use \Espo\Core\Exceptions\Error;
 
 class Email extends \Espo\Core\Controllers\Record
 {
-    public function actionGetCopiedAttachments($params, $data, $request)
+    public function postActionGetCopiedAttachments($params, $data, $request)
     {
-        $id = $request->get('id');
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        $id = $data['id'];
 
         return $this->getRecordService()->getCopiedAttachments($id);
     }

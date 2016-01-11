@@ -34,6 +34,9 @@ use \Espo\Entities;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\BadRequest;
+
 
 class Email extends Record
 {
@@ -548,36 +551,41 @@ class Email extends Record
         $ids = array();
         $names = new \stdClass();
 
-        if (!empty($id)) {
-            $email = $this->getEntityManager()->getEntity('Email', $id);
-            if ($email && $this->getAcl()->check($email, 'read')) {
-                $email->loadLinkMultipleField('attachments');
-                $attachmentsIds = $email->get('attachmentsIds');
+        if (empty($id)) {
+            throw new BadRequest();
+        }
+        $email = $this->getEntityManager()->getEntity('Email', $id);
+        if (!$email) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->checkEntity($email, 'read')) {
+            throw new Forbidden();
+        }
+        $email->loadLinkMultipleField('attachments');
+        $attachmentsIds = $email->get('attachmentsIds');
 
-                foreach ($attachmentsIds as $attachmentId) {
-                    $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
-                    if ($source) {
-                        $attachment = $this->getEntityManager()->getEntity('Attachment');
-                        $attachment->set('role', 'Attachment');
-                        $attachment->set('type', $source->get('type'));
-                        $attachment->set('size', $source->get('size'));
-                        $attachment->set('global', $source->get('global'));
-                        $attachment->set('name', $source->get('name'));
+        foreach ($attachmentsIds as $attachmentId) {
+            $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+            if ($source) {
+                $attachment = $this->getEntityManager()->getEntity('Attachment');
+                $attachment->set('role', 'Attachment');
+                $attachment->set('type', $source->get('type'));
+                $attachment->set('size', $source->get('size'));
+                $attachment->set('global', $source->get('global'));
+                $attachment->set('name', $source->get('name'));
 
-                        if (!empty($parentType) && !empty($parentId)) {
-                            $attachment->set('parentType', $parentType);
-                            $attachment->set('parentId', $parentId);
-                        }
+                if (!empty($parentType) && !empty($parentId)) {
+                    $attachment->set('parentType', $parentType);
+                    $attachment->set('parentId', $parentId);
+                }
 
-                        $this->getEntityManager()->saveEntity($attachment);
+                $this->getEntityManager()->saveEntity($attachment);
 
-                        $contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
-                        if (!empty($contents)) {
-                            $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
-                            $ids[] = $attachment->id;
-                            $names->{$attachment->id} = $attachment->get('name');
-                        }
-                    }
+                $contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
+                if (!empty($contents)) {
+                    $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+                    $ids[] = $attachment->id;
+                    $names->{$attachment->id} = $attachment->get('name');
                 }
             }
         }

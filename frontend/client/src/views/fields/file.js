@@ -189,7 +189,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         getImageUrl: function (id, size) {
             var url = '?entryPoint=image&id=' + id;
             if (size) {
-                size += '&size=' + size;
+                url += '&size=' + size;
             }
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');

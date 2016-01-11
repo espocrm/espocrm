@@ -27,28 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Services;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use \Espo\ORM\Entity;
 
-class Portal extends \Espo\Core\EntryPoints\Base
+class Portal extends Record
 {
-    public static $authRequired = false;
-
-    public function run()
+    public function loadAdditionalFields(Entity $entity)
     {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
+        parent::loadAdditionalFields($entity);
+        $siteUrl = $this->getConfig()->get('siteUrl');
+        $url = $siteUrl . '?entryPoint=portal';
+        if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
+            $entity->set('isDefault', true);
         } else {
-            $id = $this->getConfig()->get('defaultPortalId');
-            if (!$id) {
-                throw new NotFound();
-            }
+            $url .= '&id=' . $entity->id;
         }
-
-        $application = new \Espo\Core\ApplicationPortal($id);
-        $application->runClient();
+        $entity->set('url', $url);
     }
 }
+

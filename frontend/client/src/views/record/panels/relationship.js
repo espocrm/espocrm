@@ -89,12 +89,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             if (this.defs.select) {
+                var data = {link: this.link};
+                if (this.defs.selectPrimaryFilterName) {
+                    data.primaryFilterName = this.defs.selectPrimaryFilterName;
+                }
+                if (this.defs.selectBoolFilterList) {
+                    data.boolFilterList = this.defs.selectBoolFilterList;
+                }
                 this.actionList.unshift({
                     label: 'Select',
                     action: this.defs.selectAction || 'selectRelated',
-                    data: {
-                        link: this.link,
-                    }
+                    data: data
                 });
             }
 

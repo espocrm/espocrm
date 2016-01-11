@@ -47,6 +47,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     private $restoreData = null;
 
+    protected function addDependency($name)
+    {
+        $this->dependencies[] = $name;
+    }
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;

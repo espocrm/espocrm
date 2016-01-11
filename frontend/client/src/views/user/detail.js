@@ -50,7 +50,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                     });
                 }
 
-                if (this.model.id == this.getUser().id) {
+                if (this.model.id == this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
                     this.menu.buttons.push({
                         name: 'externalAccounts',
                         label: 'External Accounts',
@@ -60,26 +60,27 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
             }
 
-            var showActivities = this.getAcl().checkUserPermission(this.model);
-            if (!showActivities) {
-                if (this.getAcl().get('userPermission') === 'team') {
-                    if (!this.model.has('teamsIds')) {
-                        this.listenToOnce(this.model, 'sync', function () {
-                            if (this.getAcl().checkUserPermission(this.model)) {
-                                this.showHeaderActionItem('calendar');
-                            }
-                        }, this);
+            if (this.getAcl().checkScope('Calendar')) {
+                var showActivities = this.getAcl().checkUserPermission(this.model);
+                if (!showActivities) {
+                    if (this.getAcl().get('userPermission') === 'team') {
+                        if (!this.model.has('teamsIds')) {
+                            this.listenToOnce(this.model, 'sync', function () {
+                                if (this.getAcl().checkUserPermission(this.model)) {
+                                    this.showHeaderActionItem('calendar');
+                                }
+                            }, this);
+                        }
                     }
                 }
+                this.menu.buttons.push({
+                    name: 'calendar',
+                    html: this.translate('Calendar', 'scopeNames'),
+                    style: 'default',
+                    link: '#Calendar/show/userId=' + this.model.id + '&userName=' + this.model.get('name'),
+                    hidden: !showActivities
+                });
             }
-
-            this.menu.buttons.push({
-                name: 'calendar',
-                html: this.translate('Calendar', 'scopeNames'),
-                style: 'default',
-                link: '#Calendar/show/userId=' + this.model.id + '&userName=' + this.model.get('name'),
-                hidden: !showActivities
-            });
         },
 
         actionPreferences: function () {

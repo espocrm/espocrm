@@ -37,6 +37,13 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
 {
     public static $defaultAction = 'list';
 
+    protected function checkControllerAccess()
+    {
+        if (!$this->getAcl()->checkScope('ExternalAccount')) {
+            throw new Forbidden();
+        }
+    }
+
     public function actionList($params, $data, $request)
     {
         $integrations = $this->getEntityManager()->getRepository('Integration')->find();

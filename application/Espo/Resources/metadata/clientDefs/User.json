@@ -9,6 +9,6 @@
       "editQuick":"User.Record.Edit",
       "list":"User.Record.List"
    },
-   "filterList": ["active"],
+   "filterList": ["active","activePortal"],
    "boolFilterList": ["onlyMyTeam"]
 }

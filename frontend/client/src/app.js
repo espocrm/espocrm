@@ -35,6 +35,8 @@ Espo.define(
     var App = function (options, callback) {
         var options = options || {};
 
+        this.id = options.id || 'espocrm-application-id';
+
         this.useCache = options.useCache || this.useCache;
         this.url = options.url || this.url;
 
@@ -159,6 +161,7 @@ Espo.define(
                 this.settings.defs = this.metadata.get('entityDefs.Settings');
                 this.user.defs = this.metadata.get('entityDefs.User');
                 this.preferences.defs = this.metadata.get('entityDefs.Preferences');
+                this.viewHelper.layoutManager.userId = this.user.id;
 
                 if (this.themeManager.isUserTheme()) {
                     $('#main-stylesheet').attr('href', this.themeManager.getStylesheet());
@@ -295,7 +298,7 @@ Espo.define(
         initView: function () {
             var helper = this.viewHelper = new ViewHelper();
 
-            helper.layoutManager = new LayoutManager({cache: this.cache});
+            helper.layoutManager = new LayoutManager({cache: this.cache, applicationId: this.id});
             helper.settings = this.settings;
             helper.user = this.user;
             helper.preferences = this.preferences;

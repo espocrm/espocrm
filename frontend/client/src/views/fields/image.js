@@ -46,7 +46,7 @@ Espo.define('views/fields/image', 'views/fields/file', function (Dep) {
             if ('previewSize' in this.params && this.params.previewSize) {
                 this.previewSize = this.params.previewSize;
             }
-        },
+        }
 
     });
 });

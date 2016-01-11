@@ -5,7 +5,7 @@
         <div class="pull-right btn-group">
             {{#if buttonList}}
                 {{#each buttonList}}
-                <button type="button" class="btn btn-default btn-sm action{{#if hidden}} hidden{{/if}}" data-action="{{action}}" data-panel="{{../../name}}" {{#each data}} data-{{@key}}="{{./this}}"{{/each}} title="{{translate title scope=../scope}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</button>
+                <button type="button" class="btn btn-default btn-sm action{{#if hidden}} hidden{{/if}}" data-action="{{action}}" data-panel="{{../../name}}" {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}} title="{{translate title scope=../scope}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</button>
                 {{/each}}
             {{/if}}
             {{#if actionList}}
@@ -14,7 +14,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     {{#each actionList}}
-                    <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action{{#if hidden}} hidden{{/if}}" {{#if action}} data-panel="{{../../name}}" data-action="{{action}}"{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+                    <li><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action{{#if hidden}} hidden{{/if}}" {{#if action}} data-panel="{{../../name}}" data-action="{{action}}"{{/if}}{{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
                     {{/each}}
                 </ul>
             {{/if}}

@@ -215,7 +215,8 @@ class Container
     {
         return new \Espo\Core\Utils\Layout(
             $this->get('fileManager'),
-            $this->get('metadata')
+            $this->get('metadata'),
+            $this->get('user')
         );
     }
 
