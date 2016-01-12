@@ -48,4 +48,15 @@ class User extends \Espo\Core\Entities\Person
         }
         return $this->get('teamsIds');
     }
+
+    public function loadAccountField()
+    {
+        if ($this->get('contactId')) {
+            $contact = $this->getEntityManager()->getEntity('Contact', $this->get('contactId'));
+            if ($contact && $contact->get('accountId')) {
+                $this->set('accountId', $contact->get('accountId'));
+                $this->set('accountName', $contact->get('accountName'));
+            }
+        }
+    }
 }

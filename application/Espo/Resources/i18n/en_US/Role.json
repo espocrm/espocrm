@@ -40,7 +40,8 @@
         "read": "Read",
         "edit": "Edit",
         "delete": "Delete",
-        "stream": "Stream"
+        "stream": "Stream",
+        "create": "Create"
     },
     "messages": {
         "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."

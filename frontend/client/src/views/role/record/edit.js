@@ -32,7 +32,9 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
         tableView: 'views/role/record/table',
 
-        sideView: 'views/role/record/detail-side',
+        sideView: false,
+
+        isWide: true,
 
         events: _.extend({
             'change select[data-type="access"]': function (e) {

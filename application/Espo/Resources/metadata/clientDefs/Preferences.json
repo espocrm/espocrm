@@ -1,8 +1,10 @@
 {
    "recordViews":{
-      "edit": "Preferences.Record.Edit"
+      "edit": "views/preferences/record/edit"
    },
    "views":{
-      "edit": "Preferences.Edit"
-   }
+      "edit": "views/preferences/edit"
+   },
+   "acl": "acl/preferences",
+   "aclPortal": "acl-portal/preferences"
 }

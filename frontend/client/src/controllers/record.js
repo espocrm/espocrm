@@ -116,7 +116,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         },
 
         beforeCreate: function () {
-            this.handleCheckAccess('edit');
+            this.handleCheckAccess('create');
         },
 
         create: function (options) {
@@ -137,7 +137,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     model.set(options.attributes);
                 }
 
-                model.on('sync', function () {
+                model.on('before:save', function () {
                     var key = this.name + 'List';
                     this.clearStoredMainView(key);
                 }, this);

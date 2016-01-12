@@ -592,6 +592,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.setupActionItems();
 
+            this.setupFinal();
+
+            this.on('after:render', function () {
+                this.$detailButtonContainer = this.$el.find('.detail-button-container');
+                this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
+            }, this);
+        },
+
+        setupFinal: function () {
             this.manageAccess();
 
             this.attributes = this.model.getClonedAttributes();
@@ -616,11 +625,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.setupFieldLevelSecurity();
 
             this.build();
-
-            this.on('after:render', function () {
-                this.$detailButtonContainer = this.$el.find('.detail-button-container');
-                this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
-            }, this);
         },
 
         setIsChanged: function () {

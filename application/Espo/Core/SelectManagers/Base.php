@@ -343,6 +343,10 @@ class Base
             } else {
                 if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
                     $this->accessPortalOnlyAccount($result);
+                } else {
+                    if ($this->getAcl()->checkReadOnlyContact($this->getEntityType())) {
+                        $this->accessPortalOnlyContact($result);
+                    }
                 }
             }
         }

@@ -397,5 +397,10 @@ abstract class Entity implements IEntity
             }
         }
     }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
 }
 

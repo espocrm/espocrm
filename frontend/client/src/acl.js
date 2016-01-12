@@ -66,59 +66,61 @@ Espo.define('acl', [], function () {
 
             action = action || null;
 
-            if (action !== null) {
-                if (action in data) {
-                    var value = data[action];
+            if (action === null) {
+                return true
+            }
+            if (!(action in data)) {
+                return true;
+            }
 
-                    if (value === 'all') {
-                        return true;
-                    }
+            var value = data[action];
 
-                    if (value === 'no') {
-                        return false;
-                    }
+            if (value === 'all') {
+                return true;
+            }
 
-                    if (typeof isOwner === 'undefined') {
-                        return true;
-                    }
+            if (value === 'yes') {
+                return true;
+            }
 
-                    if (value === 'no') {
-                        return false;
-                    }
+            if (value === 'no') {
+                return false;
+            }
 
-                    if (isOwner) {
-                        if (value === 'own' || value === 'team') {
-                            return true;
-                        }
-                    }
+            if (typeof isOwner === 'undefined') {
+                return true;
+            }
 
-                    var result = false;
-
-                    if (value === 'team') {
-                        result = inTeam;
-                        if (inTeam === null) {
-                            if (precise) {
-                                result = null;
-                            } else {
-                                return true;
-                            }
-                        } else if (inTeam) {
-                            return true;
-                        }
-                    }
-
-                    if (isOwner === null) {
-                        if (precise) {
-                            result = null;
-                        } else {
-                            return true;
-                        }
-                    }
-
-                    return result;
+            if (isOwner) {
+                if (value === 'own' || value === 'team') {
+                    return true;
                 }
             }
-            return true;
+
+            var result = false;
+
+            if (value === 'team') {
+                result = inTeam;
+                if (inTeam === null) {
+                    if (precise) {
+                        result = null;
+                    } else {
+                        return true;
+                    }
+                } else if (inTeam) {
+                    return true;
+                }
+            }
+
+            if (isOwner === null) {
+                if (precise) {
+                    result = null;
+                } else {
+                    return true;
+                }
+            }
+
+            return result;
         },
 
         checkModel: function (model, data, action, precise) {

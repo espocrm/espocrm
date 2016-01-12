@@ -66,54 +66,58 @@ class Base extends \Espo\Core\Acl\Base
             $isOwnContact = $entityAccessData['isOwnContact'];
         }
 
-        if (!is_null($action)) {
-            if (isset($data->$action)) {
-                $value = $data->$action;
+        if (is_null($action)) {
+            return true;
+        }
 
-                if ($value === 'all' || $value === true) {
-                    return true;
-                }
+        if (!isset($data->$action)) {
+            return true;
+        }
 
-                if (!$value || $value === 'no') {
-                    return false;
-                }
+        $value = $data->$action;
 
-                if (is_null($isOwner)) {
-                    if ($entity) {
-                        $isOwner = $this->checkIsOwner($user, $entity);
-                    } else {
-                        return true;
-                    }
-                }
+        if ($value === 'all' || $value === 'yes' || $value === true) {
+            return true;
+        }
 
-                if ($isOwner) {
-                    if ($value === 'own' || $value === 'account' || $value === 'contact') {
-                        return true;
-                    }
-                }
+        if (!$value || $value === 'no') {
+            return false;
+        }
 
-                if ($value === 'account') {
-                    if (is_null($inAccount) && $entity) {
-                        $inAccount = $this->checkInAccount($user, $entity);
-                    }
-                    if ($inAccount) {
-                        return true;
-                    }
-                }
-
-                if ($value === 'contact') {
-                    if (is_null($isOwnContact) && $entity) {
-                        $isOwnContact = $this->checkIsOwnContact($user, $entity);
-                    }
-                    if ($isOwnContact) {
-                        return true;
-                    }
-                }
-
-                return false;
+        if (is_null($isOwner)) {
+            if ($entity) {
+                $isOwner = $this->checkIsOwner($user, $entity);
+            } else {
+                return true;
             }
         }
-        return true;
+
+        if ($isOwner) {
+            if ($value === 'own' || $value === 'account' || $value === 'contact') {
+                return true;
+            }
+        }
+
+        if ($value === 'account') {
+            if (is_null($inAccount) && $entity) {
+                $inAccount = $this->checkInAccount($user, $entity);
+            }
+            if ($inAccount) {
+                return true;
+            }
+        }
+
+        if ($value === 'contact') {
+            if (is_null($isOwnContact) && $entity) {
+                $isOwnContact = $this->checkIsOwnContact($user, $entity);
+            }
+            if ($isOwnContact) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     public function checkReadOnlyAccount(User $user, $data)

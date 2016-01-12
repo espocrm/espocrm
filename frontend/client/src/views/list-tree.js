@@ -37,7 +37,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         name: 'listTree',
 
         getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listTree') || 'Record.ListTree';
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listTree') || 'views/record/list-tree';
         }
 
     });

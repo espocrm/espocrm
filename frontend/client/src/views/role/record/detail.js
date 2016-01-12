@@ -32,7 +32,9 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
 
         tableView: 'views/role/record/table',
 
-        sideView: 'views/role/record/detail-side',
+        sideView: false,
+
+        isWide: true,
 
         editModeDisabled: true,
 

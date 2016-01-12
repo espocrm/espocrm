@@ -20,7 +20,8 @@
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
         "contact": "Contact",
-        "accounts": "Accounts"
+        "accounts": "Accounts",
+        "account": "Account"
     },
     "links": {
         "teams": "Teams",

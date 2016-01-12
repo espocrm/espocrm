@@ -250,6 +250,16 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 this.isNew = true;
             }
 
+            this.setupFinal();
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.mode == 'edit') {
+                    this.setIsChanged();
+                }
+            }, this);
+        },
+
+        setupFinal: function () {
             this.attributes = this.model.getClonedAttributes();
 
             if (this.options.attributes) {
@@ -257,12 +267,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             }
 
             this.initDependancy();
-
-            this.listenTo(this.model, 'change', function () {
-                if (this.mode == 'edit') {
-                    this.setIsChanged();
-                }
-            }, this);
         },
 
         applyDependancy: function () {
@@ -455,16 +459,66 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var defaultHash = {};
 
-            if (this.model.hasField('assignedUser') && !this.getUser().get('portalId')) {
-                defaultHash['assignedUserId'] = this.getUser().id;
-                defaultHash['assignedUserName'] = this.getUser().get('name');
+            if (!this.getUser().get('portalId')) {
+                if (this.model.hasField('assignedUser')) {
+                    defaultHash['assignedUserId'] = this.getUser().id;
+                    defaultHash['assignedUserName'] = this.getUser().get('name');
+                }
+                var defaultTeamId = this.getUser().get('defaultTeamId');
+                if (defaultTeamId) {
+                    if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
+                        defaultHash['teamsIds'] = [defaultTeamId];
+                        defaultHash['teamsNames'] = {};
+                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
+                    }
+                }
             }
-            var defaultTeamId = this.getUser().get('defaultTeamId');
-            if (defaultTeamId && !this.getUser().get('portalId')) {
-                if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
-                    defaultHash['teamsIds'] = [defaultTeamId];
-                    defaultHash['teamsNames'] = {};
-                    defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
+
+            if (this.getUser().get('portalId')) {
+                if (this.model.hasField('account') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))) {
+                    if (this.getUser().get('accountId')) {
+                        defaultHash['accountId'] =  this.getUser().get('accountId');
+                        defaultHash['accountName'] = this.getUser().get('accountName');
+                    }
+                }
+                if (this.model.hasField('contact') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))) {
+                    if (this.getUser().get('contactId')) {
+                        defaultHash['contactId'] = this.getUser().get('contactId');
+                        defaultHash['contactName'] = this.getUser().get('contactName');
+                    }
+                }
+                if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
+                    if (!this.getConfig().get('b2cMode')) {
+                        if (this.getUser().get('accountId')) {
+                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Account')) {
+                                defaultHash['parentId'] = this.getUser().get('accountId');
+                                defaultHash['parentName'] = this.getUser().get('accountName');
+                                defaultHash['parentType'] = 'Account';
+                            }
+                        }
+                    } else {
+                        if (this.getUser().get('contactId')) {
+                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Contact')) {
+                                defaultHash['contactId'] = this.getUser().get('contactId');
+                                defaultHash['parentName'] = this.getUser().get('contactName');
+                                defaultHash['parentType'] = 'Contact';
+                            }
+                        }
+                    }
+                }
+                if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
+                    if (this.getUser().get('accountsIds')) {
+                        defaultHash['accountsIds'] = this.getUser().get('accountsIds');
+                        defaultHash['accountsNames'] = this.getUser().get('accountsNames');
+                    }
+                }
+                if (this.model.hasField('contacts') && this.model.getLinkType('contacts') === 'hasMany') {
+                    if (this.getUser().get('contactId')) {
+                        defaultHash['contactsIds'] = [this.getUser().get('contactId')];
+                        var names = {};
+                        names[this.getUser().get('contactId')] = this.getUser().get('contactName');
+                        defaultHash['contactsNames'] = names;
+                    }
                 }
             }
 

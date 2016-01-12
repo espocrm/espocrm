@@ -87,7 +87,7 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (!$this->getAcl()->check($this->name, 'edit')) {
+        if (!$this->getAcl()->check($this->name, 'create')) {
             throw new Forbidden();
         }
 

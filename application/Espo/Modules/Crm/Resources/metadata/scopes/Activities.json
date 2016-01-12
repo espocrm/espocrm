@@ -3,6 +3,7 @@
     "layouts": false,
     "tab": false,
     "acl": "boolean",
+    "aclPortal": "boolean",
     "module": "Crm",
     "customizable": false
 }

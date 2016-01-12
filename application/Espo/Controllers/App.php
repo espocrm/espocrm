@@ -35,16 +35,20 @@ class App extends \Espo\Core\Controllers\Base
 {
     public function actionUser()
     {
-        $preferences = $this->getPreferences()->toArray();
+        $preferences = $this->getPreferences()->getValues();
         unset($preferences['smtpPassword']);
 
         $user = $this->getUser();
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
         }
+        if ($user->get('isPortalUser')) {
+            $user->loadAccountField();
+            $user->loadLinkMultipleField('accounts');
+        }
 
         return array(
-            'user' => $user->toArray(),
+            'user' => $user->getValues(),
             'acl' => $this->getAcl()->getMap(),
             'preferences' => $preferences,
             'token' => $this->getUser()->get('token')

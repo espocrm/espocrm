@@ -143,44 +143,47 @@ class Base implements Injectable
             $inTeam = $entityAccessData['inTeam'];
         }
 
-        if (!is_null($action)) {
-            if (isset($data->$action)) {
-                $value = $data->$action;
+        if (is_null($action)) {
+            return true;
+        }
 
-                if ($value === 'all' || $value === true) {
-                    return true;
-                }
+        if (!isset($data->$action)) {
+            return true;
+        }
 
-                if (!$value || $value === 'no') {
-                    return false;
-                }
+        $value = $data->$action;
 
-                if (is_null($isOwner)) {
-                    if ($entity) {
-                        $isOwner = $this->checkIsOwner($user, $entity);
-                    } else {
-                        return true;
-                    }
-                }
+        if ($value === 'all' || $value === 'yes' || $value === true) {
+            return true;
+        }
 
-                if ($isOwner) {
-                    if ($value === 'own' || $value === 'team') {
-                        return true;
-                    }
-                }
-                if (is_null($inTeam) && $entity) {
-                    $inTeam = $this->checkInTeam($user, $entity);
-                }
+        if (!$value || $value === 'no') {
+            return false;
+        }
 
-                if ($inTeam) {
-                    if ($value === 'team') {
-                        return true;
-                    }
-                }
-                return false;
+        if (is_null($isOwner)) {
+            if ($entity) {
+                $isOwner = $this->checkIsOwner($user, $entity);
+            } else {
+                return true;
             }
         }
-        return true;
+
+        if ($isOwner) {
+            if ($value === 'own' || $value === 'team') {
+                return true;
+            }
+        }
+        if (is_null($inTeam) && $entity) {
+            $inTeam = $this->checkInTeam($user, $entity);
+        }
+
+        if ($inTeam) {
+            if ($value === 'team') {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function checkIsOwner(User $user, Entity $entity)

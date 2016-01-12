@@ -74,12 +74,12 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
             this.exit('cancel');
         },
 
-        setup: function () {
+        setupFinal: function () {
             if (this.model.isNew()) {
                 this.populateDefaults();
             }
-            Dep.prototype.setup.call(this);
-        },
+            Dep.prototype.setupFinal.call(this);
+        }
 
     });
 });

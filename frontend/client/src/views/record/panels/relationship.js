@@ -73,12 +73,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             if (this.defs.create) {
-                if (this.getAcl().check(this.scope, 'edit') && !~['User', 'Team'].indexOf()) {
+                if (this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
                     this.buttonList.push({
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
                         link: this.link,
-                        acl: 'edit',
+                        acl: 'create',
                         aclScope: this.scope,
                         html: '<span class="glyphicon glyphicon-plus"></span>',
                         data: {

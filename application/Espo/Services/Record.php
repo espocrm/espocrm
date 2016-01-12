@@ -506,6 +506,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function createEntity($data)
     {
+        if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get();
 
         $this->filterInput($data);

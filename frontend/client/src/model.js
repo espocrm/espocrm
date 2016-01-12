@@ -181,6 +181,13 @@ Espo.define('model', [], function () {
             return null;
         },
 
+        getLinkType: function (link) {
+            if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
+                return this.defs.links[link].type || null;
+            }
+            return null;
+        },
+
         getLinkParam: function (link, param) {
             if (('defs' in this) && ('links' in this.defs) && (link in this.defs.links)) {
                 if (param in this.defs.links[link]) {

@@ -109,6 +109,11 @@
         "accounts": {
             "type": "linkMultiple"
         },
+        "account": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true
+        },
         "portalId": {
             "type": "varchar",
             "disabled": true,

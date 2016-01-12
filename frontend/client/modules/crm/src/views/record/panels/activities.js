@@ -52,7 +52,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     link: 'meetings',
                     status: 'Planned',
                 },
-                acl: 'edit',
+                acl: 'create',
                 aclScope: 'Meeting',
             },
             {
@@ -62,13 +62,13 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     link: 'calls',
                     status: 'Planned',
                 },
-                acl: 'edit',
+                acl: 'create',
                 aclScope: 'Call',
             },
             {
                 action: 'composeEmail',
                 label: 'Compose Email',
-                acl: 'edit',
+                acl: 'create',
                 aclScope: 'Email',
             }
         ],

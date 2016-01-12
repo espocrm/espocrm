@@ -46,7 +46,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         data: function () {
             return {
-                createButton: this.createButton && this.getAcl().check(this.scope, 'edit')
+                createButton: this.createButton && this.getAcl().check(this.scope, 'create')
             };
         },
 

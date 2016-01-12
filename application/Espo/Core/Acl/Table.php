@@ -49,9 +49,11 @@ class Table
 
     protected $cacheFilePath;
 
-    protected $actionList = ['read', 'stream', 'edit', 'delete'];
+    protected $actionList = ['read', 'stream', 'edit', 'delete', 'create'];
 
-    protected $levelList = ['all', 'team', 'own', 'no'];
+    protected $booleanActionList = ['create'];
+
+    protected $levelList = ['yes', 'all', 'team', 'own', 'no'];
 
     protected $fieldActionList = ['read', 'edit'];
 
@@ -208,6 +210,9 @@ class Table
                         $aclTable->$scope = (object) [];
                         foreach ($this->actionList as $action) {
                             $aclTable->$scope->$action = 'all';
+                            if (in_array($action, $this->booleanActionList)) {
+                                $aclTable->$scope->$action = 'yes';
+                            }
                         }
                     }
                 }
@@ -398,12 +403,12 @@ class Table
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) continue;
             if (!$this->getMetadata()->get('scopes.' . $scope . '.entity')) continue;
-            if (!$this->getMetadata()->get('scopes.' . $scope . '.acl')) continue;
-            if (!$this->getMetadata()->get('scopes.' . $scope . '.aclPortal')) continue;
 
             $fieldList = array_keys($this->getMetadata()->get("entityDefs.{$scope}.fields", []));
 
-            foreach ($defaultFieldData as $field => $f) {
+            $defaultScopeFieldData = $this->metadata->get('app.'.$this->type.'.default.scopeFieldLevel.' . $scope, array());
+
+            foreach (array_merge($defaultFieldData, $defaultScopeFieldData) as $field => $f) {
                 if (!in_array($field, $fieldList)) continue;
                 if (!isset($fieldTable->$scope)) {
                     $fieldTable->$scope = (object) [];
@@ -412,8 +417,12 @@ class Table
                 $fieldTable->$scope->$field = (object) [];
                 foreach ($this->fieldActionList as $action) {
                     $level = 'no';
-                    if (isset($f[$action])) {
-                        $level = $f[$action];
+                    if ($f === true) {
+                        $level = 'yes';
+                    } else {
+                        if (is_array($f) && isset($f[$action])) {
+                            $level = $f[$action];
+                        }
                     }
                     $fieldTable->$scope->$field->$action = $level;
                 }
@@ -453,23 +462,27 @@ class Table
             $table->$scope = $value;
         }
 
-        $mandatoryData = $this->metadata->get('app.'.$this->type.'.mandatory.fieldLevel', array());
+        $mandatoryFieldData = $this->metadata->get('app.'.$this->type.'.mandatory.fieldLevel', array());
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) continue;
             if (!$this->getMetadata()->get('scopes.' . $scope . '.entity')) continue;
-            if (!$this->getMetadata()->get('scopes.' . $scope . '.acl')) continue;
-            if (!$this->getMetadata()->get('scopes.' . $scope . '.aclPortal')) continue;
 
             $fieldList = array_keys($this->getMetadata()->get("entityDefs.{$scope}.fields", []));
 
-            foreach ($mandatoryData as $field => $f) {
+            $mandatoryScopeFieldData = $this->metadata->get('app.'.$this->type.'.mandatory.scopeFieldLevel.' . $scope, array());
+
+            foreach (array_merge($mandatoryFieldData, $mandatoryScopeFieldData) as $field => $f) {
                 if (!in_array($field, $fieldList)) continue;
                 $fieldTable->$scope->$field = (object) [];
                 foreach ($this->fieldActionList as $action) {
                     $level = 'no';
-                    if (isset($f[$action])) {
-                        $level = $f[$action];
+                    if ($f === true) {
+                        $level = 'yes';
+                    } else {
+                        if (is_array($f) && isset($f[$action])) {
+                            $level = $f[$action];
+                        }
                     }
                     $fieldTable->$scope->$field->$action = $level;
                 }
@@ -573,8 +586,12 @@ class Table
                             if ($i > 0) {
                                 // TODO remove it
                                 $previousAction = $this->actionList[$i - 1];
-                                if (isset($data->$scope->$previousAction)) {
-                                    $data->$scope->$action = $data->$scope->$previousAction;
+                                if (in_array($action, $this->booleanActionList)) {
+                                    $data->$scope->$action = 'yes';
+                                } else {
+                                    if (isset($data->$scope->$previousAction)) {
+                                        $data->$scope->$action = $data->$scope->$previousAction;
+                                    }
                                 }
                             }
                         }

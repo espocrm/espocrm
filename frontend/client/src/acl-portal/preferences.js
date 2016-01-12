@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,32 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+Espo.define('acl-portal/preferences', 'acl-portal', function (Dep) {
 
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class PortalRole extends Record
-{
-    protected function init()
-    {
-        $this->dependencies[] = 'fileManager';
-    }
+        checkIsOwner: function (model) {
+            if (this.getUser().id === model.id) {
+                return true;
+            }
 
-    public function afterCreate(Entity $entity, array $data)
-    {
-        parent::afterCreate($entity, $data);
-        $this->clearRolesCache();
-    }
+            return false;
+        }
 
-    public function afterUpdate(Entity $entity, array $data)
-    {
-        parent::afterUpdate($entity, $data);
-        $this->clearRolesCache();
-    }
+    });
 
-    protected function clearRolesCache()
-    {
-        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
-    }
-}
+});
 

@@ -5,42 +5,57 @@
                 "read": "all",
                 "edit": "no",
                 "delete": "no",
-                "stream": "no"
+                "stream": "no",
+                "create": "no"
             },
             "Team": {
                 "read": "all",
                 "edit": "no",
-                "delete": "no"
+                "delete": "no",
+                "create": "no"
             },
             "Note": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
             },
             "Portal": {
                 "read": "all",
                 "edit": "no",
-                "delete": "no"
+                "delete": "no",
+                "create": "no"
             },
             "Attachment": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
             },
             "EmailAccount": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
             },
             "EmailFilter": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
+            },
+            "Preferences": {
+                "read": "own",
+                "edit": "own",
+                "delete": "no",
+                "create": "no"
             },
             "Role": false,
             "PortalRole": false
         },
         "fieldLevel": {
+        },
+        "scopeFieldLevel": {
         }
     },
     "default": {
@@ -57,7 +72,8 @@
             "read": "all",
             "stream": "all",
             "edit": "all",
-            "delete": "no"
+            "delete": "no",
+            "create": "yes"
         }
     }
 }

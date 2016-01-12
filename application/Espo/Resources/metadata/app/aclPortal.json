@@ -5,19 +5,22 @@
                 "read": "own",
                 "edit": "no",
                 "delete": "no",
-                "stream": "no"
+                "stream": "no",
+                "create": "no"
             },
             "Team": false,
             "Note": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
             },
             "Portal": false,
             "Attachment": {
                 "read": "own",
                 "edit": "own",
-                "delete": "own"
+                "delete": "own",
+                "create": "yes"
             },
             "EmailAccount": false,
             "ExternalAccount": false,
@@ -25,7 +28,30 @@
             "PortalRole": false,
             "EmailFilter": false,
             "EmailAccount": false,
-            "EmailTemplate": false
+            "EmailTemplate": false,
+            "Preferences": {
+                "read": "own",
+                "edit": "own",
+                "delete": "no",
+                "create": "no"
+            }
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "Preferences": {
+                "smtpServer": false,
+                "smtpPort": false,
+                "smtpSecurity": false,
+                "smtpUsername": false,
+                "smtpPassword": false,
+                "smtpAuth": false,
+                "receiveAssignmentEmailNotifications": false,
+                "defaultReminders": false
+            },
+            "Call": {
+                "reminders": false
+            }
         }
     },
     "default": {
@@ -43,6 +69,15 @@
             "teams": {
                 "read": "yes",
                 "edit": "no"
+            }
+        },
+        "scopeFieldLevel": {
+            "Call": {
+                "users": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "leads": false
             }
         }
     },

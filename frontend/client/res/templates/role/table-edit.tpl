@@ -8,9 +8,9 @@
             <table class="table table-bordered no-margin">
                 <tr>
                     <th></th>
-                    <th width="18%">{{translate 'Access' scope='Role'}}</th>
+                    <th width="20%">{{translate 'Access' scope='Role'}}</th>
                     {{#each actionList}}
-                        <th width="14%">{{translate this scope='Role' category='actions'}}</th>
+                        <th width="11%">{{translate this scope='Role' category='actions'}}</th>
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
@@ -25,7 +25,7 @@
                         {{#each ../list}}
                             <td>
                                 <select name="{{name}}" class="form-control" data-scope="{{../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}}>
-                                {{options ../levelList level field='levelList' scope='Role'}}
+                                {{options levelList level field='levelList' scope='Role'}}
                                 </select>
                             </td>
                         {{/each}}
@@ -47,11 +47,11 @@
             <table class="table table-bordered no-margin">
                 <tr>
                     <th></th>
-                    <th width="18%"></th>
+                    <th width="20%"></th>
                     {{#each fieldActionList}}
-                        <th width="14%">{{translate this scope='Role' category='actions'}}</th>
+                        <th width="11%">{{translate this scope='Role' category='actions'}}</th>
                     {{/each}}
-                    <th width="28%"></th>
+                    <th width="33%"></th>
                 </tr>
                 {{#each fieldTableDataList}}
                     <tr>

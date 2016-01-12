@@ -75,7 +75,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             if (this.searchPanel) {
                 this.setupSearchPanel();
-
             }
 
             if (this.createButton) {
@@ -96,7 +95,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     action: 'quickCreate',
                     label: 'Create ' + this.scope,
                     style: 'primary',
-                    acl: 'edit'
+                    acl: 'create'
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -104,7 +103,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     action: 'create',
                     label: 'Create ' +  this.scope,
                     style: 'primary',
-                    acl: 'edit'
+                    acl: 'create'
                 });
             }
         },

@@ -88,6 +88,14 @@ class Preferences extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
+        if ($this->getAcl()->getLevel('Preferences', 'read') === 'no') {
+            throw new Forbidden();
+        }
+
+        foreach ($this->getAcl()->getScopeForbiddenAttributeList('Preferences', 'edit') as $attribute) {
+            unset($data[$attribute]);
+        }
+
         if (array_key_exists('smtpPassword', $data)) {
             $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
         }
@@ -126,6 +134,10 @@ class Preferences extends \Espo\Core\Controllers\Base
         $entity->set('name', $user->get('name'));
 
         $entity->clear('smtpPassword');
+
+        foreach ($this->getAcl()->getScopeForbiddenAttributeList('Preferences', 'read') as $attribute) {
+            $entity->clear($attribute);
+        }
 
         return $entity->toArray();
     }

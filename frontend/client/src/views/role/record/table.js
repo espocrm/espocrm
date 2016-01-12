@@ -34,7 +34,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
         scopeList: null,
 
-        actionList: ['read', 'stream', 'edit', 'delete'],
+        actionList: ['read', 'stream', 'edit', 'delete', 'create'],
 
         accessList: ['not-set', 'enabled', 'disabled'],
 
@@ -50,7 +50,11 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             'record': ['all', 'team', 'own', 'no']
         },
 
-        levelList: ['all', 'team', 'own', 'no'],
+        levelList: ['yes', 'all', 'team', 'own', 'no'],
+
+        booleanLevelList: ['yes', 'no'],
+
+        booleanActionList: ['create'],
 
         colors: {
             yes: '#6BC924',
@@ -126,9 +130,14 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     }
                 }
                 var list = [];
+                var type = this.aclTypeMap[scope];
+
                 if (this.aclTypeMap[scope] != 'boolean') {
                     this.actionList.forEach(function (action, j) {
                         var level = 'all';
+                        if (~this.booleanActionList.indexOf(action)) {
+                            level = 'yes';
+                        }
                         if (scope in aclData) {
                             if (access == 'enabled') {
                                 if (aclData[scope] !== true) {
@@ -136,8 +145,12 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                         level = aclData[scope][action];
                                     } else {
                                         // TODO remove it
-                                        if (j > 0) {
-                                            level = (list[j - 1] || {}).level;
+                                        if (~this.booleanActionList.indexOf(action)) {
+                                            level = 'yes';
+                                        } else {
+                                            if (j > 0) {
+                                                level = (list[j - 1] || {}).level;
+                                            }
                                         }
                                     }
                                 }
@@ -145,21 +158,24 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 level = 'no';
                             }
                         }
+                        var levelList = this.levelListMap[type] || [];
+                        if (~this.booleanActionList.indexOf(action)) {
+                            levelList = this.booleanLevelList;
+                        }
                         list.push({
                             level: level,
                             name: scope + '-' + action,
-                            action: action
+                            action: action,
+                            levelList: levelList
                         });
                     }, this);
                 }
-                var type = this.aclTypeMap[scope];
 
                 aclDataList.push({
                     list: list,
                     access: access,
                     name: scope,
-                    type: type,
-                    levelList: this.levelListMap[type] || []
+                    type: type
                 });
             }, this);
 

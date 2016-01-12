@@ -10,7 +10,7 @@
                     <th></th>
                     <th width="20%">{{translate 'Access' scope='Role'}}</th>
                     {{#each actionList}}
-                        <th width="13%">{{translate this scope='Role' category='actions'}}</th>
+                        <th width="11%">{{translate this scope='Role' category='actions'}}</th>
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
@@ -50,9 +50,9 @@
                     <th></th>
                     <th width="20%"></th>
                     {{#each fieldActionList}}
-                        <th width="13%">{{translate this scope='Role' category='actions'}}</th>
+                        <th width="11%">{{translate this scope='Role' category='actions'}}</th>
                     {{/each}}
-                    <th width="26%"></th>
+                    <th width="33%" ></th>
                 </tr>
                 {{#each fieldTableDataList}}
                     {{#if list.length}}
@@ -71,7 +71,7 @@
                             <span style="color: {{prop ../../../colors value}};">{{translateOption value scope='Role' field='accessList'}}</span>
                         </td>
                         {{/each}}
-                        <td colspan="2"></td>
+                        <td colspan="3"></td>
                     </tr>
                     {{/each}}
                 {{/each}}
