@@ -29,6 +29,7 @@
 Espo.define('controllers/record', 'controller', function (Dep) {
 
     return Dep.extend({
+
         viewMap: null,
 
         defaultAction: 'list',

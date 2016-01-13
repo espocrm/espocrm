@@ -241,7 +241,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 this.$el.find('a.link[data-action="selectRoot"]').addClass('text-bold');
                 this.setSelected(null);
             }
-        },
+        }
 
     });
 });

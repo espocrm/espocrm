@@ -154,6 +154,9 @@ Espo.define('controller', [], function () {
 
         storeMainView: function (key, view) {
             this.set('storedMainView-' + key, view);
+            view.once('remove', function () {
+                this.clearStoredMainView(key);
+            }, this);
         },
 
         checkAccess: function (action) {

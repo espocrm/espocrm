@@ -166,10 +166,18 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
                             this.afterIsEnd();
                         }
                     }, this);
-                    collection.fetch()
+                    collection.fetch();
                 }, this);
             }
+        },
 
+        afterRender: function () {
+            if (this.isUnfolded) {
+                this.afterUnfold();
+            }
+            if (this.isEnd) {
+                this.afterIsEnd();
+            }
         },
 
         fold: function () {
@@ -193,7 +201,8 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
             this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
             this.$el.find('span[data-name="white-space"][data-id="'+this.model.id+'"]').removeClass('hidden');
-        },
+            this.$el.find(' > .children').addClass('hidden');
+        }
 
     });
 });
