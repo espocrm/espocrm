@@ -178,9 +178,6 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            if (this.model.id == '55671017adf783be0') {
-                console.log(this.isUnfolded);
-            }
             if (this.isUnfolded) {
                 this.afterUnfold();
             } else {
