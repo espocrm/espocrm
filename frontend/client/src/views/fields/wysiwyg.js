@@ -86,7 +86,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             if (this.mode == 'edit' && value) {
                 value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
             }
-            return value;
+            return value || '';
         },
 
         afterRender: function () {
@@ -128,7 +128,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
 
                     doc.open('text/html', 'replace');
-                    var body = this.model.get(this.name);
+                    var body = this.model.get(this.name) || '';
                     body += link;
 
                     doc.write(body);

@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'text',
 
-        listTemplate: 'fields.text.detail',
+        listTemplate: 'fields/text/detail',
 
-        detailTemplate: 'fields.text.detail',
+        detailTemplate: 'fields/text/detail',
 
-        editTemplate: 'fields.text.edit',
+        editTemplate: 'fields/text/edit',
 
         detailMaxLength: 400,
 
@@ -82,7 +82,7 @@ Espo.define('Views.Fields.Text', 'Views.Fields.Base', function (Dep) {
                     text += ' ...\n[#see-more-text]';
                 }
             }
-            return text;
+            return text || '';
         },
 
         afterRender: function () {
