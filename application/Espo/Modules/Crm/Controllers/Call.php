@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\NotFound;
 class Call extends \Espo\Core\Controllers\Record
 {
 
-    public function actionSendInvitations($params, $data)
+    public function postActionSendInvitations($params, $data)
     {
         if (empty($data['id'])) {
             throw new BadRequest();
@@ -52,10 +52,14 @@ class Call extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
+        if (!$this->getAcl()->checkScope('Email', 'create')) {
+            throw new Forbidden();
+        }
+
         return $this->getRecordService()->sendInvitations($entity);
     }
 
-    public function actionMassSetHeld($params, $data)
+    public function postActionMassSetHeld($params, $data)
     {
         if (empty($data['ids']) && !is_array($data['ids'])) {
             throw new BadRequest();
@@ -64,7 +68,7 @@ class Call extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->massSetHeld($data['ids']);
     }
 
-    public function actionMassSetNotHeld($params, $data)
+    public function postActionMassSetNotHeld($params, $data)
     {
         if (empty($data['ids']) && !is_array($data['ids'])) {
             throw new BadRequest();

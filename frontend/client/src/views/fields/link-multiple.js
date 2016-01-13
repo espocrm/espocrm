@@ -69,9 +69,13 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getSelectFilters: function () {},
 
-        getSelectBoolFilterList: function () {},
+        getSelectBoolFilterList: function () {
+            return this.selectBoolFilterList;
+        },
 
-        getSelectPrimaryFilterName: function () {},
+        getSelectPrimaryFilterName: function () {
+            return this.selectPrimaryFilterName;
+        },
 
         getCreateAttributes: function () {},
 

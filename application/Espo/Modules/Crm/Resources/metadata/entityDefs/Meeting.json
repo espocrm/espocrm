@@ -9,7 +9,7 @@
             "type": "enum",
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
-            "view": "Fields.EnumStyled",
+            "view": "views/fields/enum-styled",
             "style": {
                 "Held": "success"
             },
@@ -57,7 +57,7 @@
         },
         "users": {
             "type": "linkMultiple",
-            "view": "Crm:Meeting.Fields.Attendees",
+            "view": "crm:views/meeting/fields/users",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "columns": {
@@ -68,14 +68,14 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "Crm:Meeting.Fields.Contacts",
+            "view": "crm:views/meeting/fields/contacts",
             "columns": {
                 "status": "acceptanceStatus"
             }
         },
         "leads": {
             "type": "linkMultiple",
-            "view": "Crm:Meeting.Fields.Attendees",
+            "view": "crm:views/meeting/fields/attendees",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "columns": {

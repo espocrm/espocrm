@@ -25,13 +25,13 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('Views.User.Fields.Name', 'Views.Fields.PersonName', function (Dep) {
+Espo.define('views/user/fields/name', 'views/fields/person-name', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'user.fields.name.list-link',
+        listTemplate: 'user/fields/name/list-link',
 
-        listLinkTemplate: 'user.fields.name.list-link',
+        listLinkTemplate: 'user/fields/name/list-link',
 
         data: function () {
             return _.extend({

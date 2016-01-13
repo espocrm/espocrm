@@ -221,7 +221,7 @@ class User extends Record
 
         $user = parent::createEntity($data);
 
-        if (!is_null($newPassword)) {
+        if (!is_null($newPassword) && !empty($data['sendAccessInfo'])) {
             if ($user->isActive()) {
                 $this->sendPassword($user, $newPassword);
             }
@@ -243,17 +243,17 @@ class User extends Record
 
         if ($id == $this->getUser()->id) {
             unset($data['isActive']);
+            unset($data['isPortalUser']);
         }
         if (!$this->getUser()->get('isSuperAdmin')) {
             unset($data['isSuperAdmin']);
         }
 
-
         $user = parent::updateEntity($id, $data);
 
         if (!is_null($newPassword)) {
             try {
-                if ($user->isActive()) {
+                if ($user->isActive() && !empty($data['sendAccessInfo'])) {
                     $this->sendPassword($user, $newPassword);
                 }
             } catch (\Exception $e) {}
@@ -308,13 +308,33 @@ class User extends Record
             return;
         }
 
-
         $subject = $this->getLanguage()->translate('accountInfoEmailSubject', 'messages', 'User');
         $body = $this->getLanguage()->translate('accountInfoEmailBody', 'messages', 'User');
 
         $body = str_replace('{userName}', $user->get('userName'), $body);
         $body = str_replace('{password}', $password, $body);
-        $body = str_replace('{siteUrl}', $this->getConfig()->get('siteUrl'), $body);
+
+        $siteUrl = $this->getConfig()->get('siteUrl');
+
+        if ($user->get('isPortalUser')) {
+            $urlList = [];
+            $portalList = $this->getEntityManager()->getRepository('Portal')->distinct()->join('users')->where(array(
+                'isActive' => true,
+                'users.id' => $user->id
+            ))->find();
+            foreach ($portalList as $portal) {
+                $url = $siteUrl . '?entryPoint=portal';
+                if (!$this->getConfig()->get('defaultPortalId') === $portal->id) {
+                    $url .= '&id=' . $portal->id;
+                }
+                $urlList[] = $url;
+            }
+            if (!count($urlList)) {
+                return;
+            }
+            $siteUrl = implode("\n", $urlList);
+        }
+        $body = str_replace('{siteUrl}', $siteUrl, $body);
 
         $email->set(array(
             'subject' => $subject,

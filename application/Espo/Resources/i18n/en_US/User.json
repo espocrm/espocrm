@@ -21,7 +21,8 @@
         "isPortalUser": "Is Portal User",
         "contact": "Contact",
         "accounts": "Accounts",
-        "account": "Account"
+        "account": "Account",
+        "sendAccessInfo": "Send Email with Access Info to User"
     },
     "links": {
         "teams": "Teams",

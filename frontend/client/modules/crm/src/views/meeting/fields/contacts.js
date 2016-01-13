@@ -24,12 +24,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Meeting.Fields.Contacts', 'Crm:Views.Meeting.Fields.Attendees', function (Dep) {
+Espo.define('crm:views/meeting/fields/contacts', 'crm:views/meeting/fields/attendees', function (Dep) {
 
     return Dep.extend({
-    
+
         getSelectFilters: function () {
             if (this.model.get('parentType') == 'Account' && this.model.get('parentId')) {
                 return {
@@ -39,7 +39,7 @@ Espo.define('Crm:Views.Meeting.Fields.Contacts', 'Crm:Views.Meeting.Fields.Atten
                         value: this.model.get('parentId'),
                         valueName: this.model.get('parentName'),
                     }
-                };                
+                };
             }
         },
     });

@@ -38,8 +38,32 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             if (this.model.id == this.getUser().id) {
                 this.listenTo(this.model, 'after:save', function () {
                     this.getUser().set(this.model.toJSON());
-                }.bind(this));
+                }, this);
             }
+
+            this.hideField('sendAccessInfo');
+
+            var passwordChanged = false;
+
+            this.listenToOnce(this.model, 'change:password', function (model) {
+                passwordChanged = true;
+                if (model.get('emailAddress')) {
+                    this.showField('sendAccessInfo');
+                    this.model.set('sendAccessInfo', true);
+                }
+            }, this);
+
+            this.listenTo(this.model, 'change:emailAddress', function (model) {
+                if (passwordChanged) {
+                    if (model.get('emailAddress')) {
+                        this.showField('sendAccessInfo');
+                        this.model.set('sendAccessInfo', true);
+                    } else {
+                        this.hideField('sendAccessInfo');
+                        this.model.set('sendAccessInfo', false);
+                    }
+                }
+            }, this);
 
             Detail.prototype.setupFieldAppearance.call(this);
         },
@@ -60,31 +84,43 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     layout.push({
                         label: 'Password',
                         rows: [
-                            [{
-                                name: 'password',
-                                type: 'password',
-                                params: {
-                                    required: self.isNew,
-                                    readyToChange: true
+                            [
+                                {
+                                    name: 'password',
+                                    type: 'password',
+                                    params: {
+                                        required: self.isNew,
+                                        readyToChange: true
+                                    }
+                                },
+                                {
+                                    name: 'generatePassword',
+                                    view: 'views/user/fields/generate-password',
+                                    customLabel: ''
                                 }
-                            },{
-                                name: 'generatePassword',
-                                view: 'User.Fields.GeneratePassword',
-                                customLabel: ''
-                            }],
-                            [{
-                                name: 'passwordConfirm',
-                                type: 'password',
-                                params: {
-                                    required: self.isNew,
-                                    readyToChange: true
+                            ],
+                            [
+                                {
+                                    name: 'passwordConfirm',
+                                    type: 'password',
+                                    params: {
+                                        required: self.isNew,
+                                        readyToChange: true
+                                    }
+                                },
+                                {
+                                    name: 'passwordInfo',
+                                    customLabel: '',
+                                    customCode: '{{translate "passwordWillBeSent" scope="User" category="messages"}}'
                                 }
-                            },{
-                                name: 'passwordInfo',
-                                customLabel: '',
-                                customCode: '{{translate "passwordWillBeSent" scope="User" category="messages"}}'
-                            }]
-                        ],
+                            ],
+                            [
+                                {
+                                    name: 'sendAccessInfo'
+                                },
+                                false
+                            ]
+                        ]
                     });
                 }
 

@@ -24,25 +24,28 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-Espo.define('Views.User.Fields.GeneratePassword', 'Views.Fields.Base', function (Dep) {
+ ************************************************************************/
+Espo.define('views/user/fields/generate-password', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
-    
+
         _template: '<button type="button" class="btn" data-action="generatePassword">{{translate \'Generate\' scope=\'User\'}}</button>',
-    
+
         events: {
             'click [data-action="generatePassword"]': function () {
-                var password = Math.random().toString(36).slice(-8);                
-                $('input[name="password"]').val(password);
-                $('input[name="passwordConfirm"]').val(password);
+                var password = Math.random().toString(36).slice(-8);
+
+                this.model.set({
+                    password: password,
+                    passwordConfirm: password
+                });
             }
         },
-        
+
         fetch: function () {
             return {};
-        },
-        
+        }
+
     });
-    
+
 });

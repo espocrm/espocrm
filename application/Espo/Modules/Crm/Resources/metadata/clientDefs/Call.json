@@ -1,11 +1,11 @@
 {
     "controller": "controllers/record",
     "views":{
-        "detail":"Crm:Call.Detail"
+        "detail":"crm:views/call/detail"
     },
     "recordViews":{
-        "list":"Crm:Call.Record.List",
-        "detail":"Crm:Meeting.Record.Detail"
+        "list":"crm:views/call/record/list",
+        "detail":"crm:views/call/record/detail"
     },
     "sidePanels":{
         "detail":[

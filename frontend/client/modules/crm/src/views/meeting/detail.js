@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Meeting.Detail', 'Views.Detail', function (Dep) {
+Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
             if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
-                if (this.getAcl().checkModel(this.model, 'edit')) {
+                if (this.getAcl().checkModel(this.model, 'edit') && this.getAcl().checkScope('Email', 'create')) {
                     this.menu.buttons.push({
                         'label': 'Send Invitations',
                         'action': 'sendInvitations',

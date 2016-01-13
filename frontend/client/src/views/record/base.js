@@ -269,6 +269,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this.initDependancy();
         },
 
+        checkAttributeIsChanged: function (name) {
+            return !_.isEqual(this.attributes[name], this.model.get(name));
+        },
+
         applyDependancy: function () {
             this._handleDependencyAttributes();
         },

@@ -23,14 +23,14 @@
                "label": "Compose",
                "action": "composeEmail",
                "style": "danger",
-               "acl": "edit"
+               "acl": "create"
             }
          ],
          "dropdown": [
              {
                "label": "Archive Email",
                "link": "#Email/create",
-               "acl": "edit"
+               "acl": "create"
              },
              {
                "label": "Email Templates",

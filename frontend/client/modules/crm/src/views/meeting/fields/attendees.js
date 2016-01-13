@@ -24,16 +24,16 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Meeting.Fields.Attendees', 'Views.Fields.LinkMultipleWithRole', function (Dep) {
+Espo.define('crm:views/meeting/fields/attendees', 'views/fields/link-multiple-with-role', function (Dep) {
 
     return Dep.extend({
-    
+
         columnName: 'status',
-        
+
         roleFieldIsForeign: false,
-    
+
     });
 
 });

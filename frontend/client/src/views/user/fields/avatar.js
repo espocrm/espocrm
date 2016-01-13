@@ -25,13 +25,14 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
+
+Espo.define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
 
     return Dep.extend({
-    
+
         handleFileUpload: function (file, contents, callback) {
-            
-            this.createView('crop', 'Modals.ImageCrop', {
+
+            this.createView('crop', 'views/modals/image-crop', {
                 contents: contents
             }, function (view) {
                 view.render();
@@ -88,5 +89,5 @@ Espo.define('Views.User.Fields.Avatar', 'Views.Fields.Image', function (Dep) {
         },
 
     });
-    
+
 });

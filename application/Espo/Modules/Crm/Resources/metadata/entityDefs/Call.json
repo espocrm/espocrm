@@ -64,7 +64,7 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "Crm:Meeting.Fields.Attendees",
+            "view": "crm:views/meeting/fields/users",
             "columns": {
                 "status": "acceptanceStatus"
             }
@@ -73,7 +73,7 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "Crm:Meeting.Fields.Contacts",
+            "view": "crm:views/meeting/fields/contacts",
             "columns": {
                 "status": "acceptanceStatus"
             }
@@ -82,7 +82,7 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "view": "Crm:Meeting.Fields.Attendees",
+            "view": "crm:views/meeting/fields/attendees",
             "columns": {
                 "status": "acceptanceStatus"
             }

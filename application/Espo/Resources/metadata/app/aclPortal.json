@@ -51,6 +51,9 @@
             },
             "Call": {
                 "reminders": false
+            },
+            "Meeting": {
+                "reminders": false
             }
         }
     },
@@ -73,6 +76,13 @@
         },
         "scopeFieldLevel": {
             "Call": {
+                "users": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "leads": false
+            },
+            "Meeting": {
                 "users": {
                     "read": "yes",
                     "edit": "no"

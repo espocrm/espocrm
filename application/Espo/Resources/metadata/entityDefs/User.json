@@ -8,18 +8,25 @@
             "type": "varchar",
             "maxLength": 50,
             "required": true,
-            "view": "User.Fields.UserName",
+            "view": "views/user/fields/user-name",
             "tooltip": true
         },
         "name": {
             "type": "personName",
-            "view": "User.Fields.Name"
+            "view": "views/user/fields/name"
         },
         "password": {
             "type": "password",
             "maxLength": 150,
             "internal": true,
             "disabled": true
+        },
+        "passwordConfirm": {
+            "type": "password",
+            "maxLength": 150,
+            "internal": true,
+            "disabled": true,
+            "notStorable": true
         },
         "salutationName": {
             "type": "enum",
@@ -123,6 +130,11 @@
             "type": "image",
             "view": "views/user/fields/avatar",
             "previewSize": "small"
+        },
+        "sendAccessInfo": {
+            "type": "bool",
+            "notStorable": true,
+            "disabled": true
         },
         "createdAt": {
             "type": "datetime",
