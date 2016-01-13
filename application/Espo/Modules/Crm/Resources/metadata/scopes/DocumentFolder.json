@@ -3,6 +3,7 @@
     "layouts": false,
     "tab": false,
     "acl": "recordAllTeamNo",
+    "aclPortal": "recordAllNo",
     "module": "Crm",
     "customizable": false,
     "importable": false,

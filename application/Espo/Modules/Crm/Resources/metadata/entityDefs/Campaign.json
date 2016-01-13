@@ -41,8 +41,7 @@
             "readOnly": true
         },
         "assignedUser": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "teams": {
             "type": "linkMultiple"
