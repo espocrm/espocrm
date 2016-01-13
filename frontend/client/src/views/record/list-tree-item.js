@@ -171,18 +171,24 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
             }
         },
 
+        fold: function () {
+            this.clearView('children');
+            this.isUnfolded = false;
+            this.afterFold();
+        },
+
         afterRender: function () {
+            if (this.model.id == '55671017adf783be0') {
+                console.log(this.isUnfolded);
+            }
             if (this.isUnfolded) {
                 this.afterUnfold();
+            } else {
+                this.afterFold();
             }
             if (this.isEnd) {
                 this.afterIsEnd();
             }
-        },
-
-        fold: function () {
-            this.clearView('children');
-            this.afterFold();
         },
 
         afterFold: function () {
