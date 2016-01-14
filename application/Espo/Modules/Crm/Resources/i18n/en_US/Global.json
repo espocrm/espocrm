@@ -17,7 +17,9 @@
         "MassEmail": "Mass Email",
         "EmailQueueItem": "Email Queue Item",
         "CampaignTrackingUrl": "Tracking URL",
-        "Activities": "Activities"
+        "Activities": "Activities",
+        "KnowledgeBaseArticle": "Knowledge Base Article",
+        "KnowledgeBaseCategory": "Knowledge Base Category"
     },
     "scopeNamesPlural": {
         "Account": "Accounts",
@@ -37,7 +39,9 @@
         "MassEmail": "Mass Emails",
         "EmailQueueItem": "Email Queue Items",
         "CampaignTrackingUrl": "Tracking URLs",
-        "Activities": "Activities"
+        "Activities": "Activities",
+        "KnowledgeBaseArticle": "Knowledge Base",
+        "KnowledgeBaseCategory": "Knowledge Base Categories"
     },
     "dashlets": {
         "Leads": "My Leads",

@@ -136,6 +136,11 @@
             "entity": "Email",
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
+        },
+        "articles": {
+            "type": "hasMany",
+            "entity": "KnowledgeBaseArticle",
+            "foreign": "cases"
         }
     },
     "collection": {

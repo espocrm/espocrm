@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], function (Dep) {
+Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
         type: 'enum',
 
-        listTemplate: 'fields.enum.detail',
+        listTemplate: 'fields/enum/detail',
 
-        detailTemplate: 'fields.enum.detail',
+        detailTemplate: 'fields/enum/detail',
 
-        editTemplate: 'fields.enum.edit',
+        editTemplate: 'fields/enum/edit',
 
-        searchTemplate: 'fields.enum.search',
+        searchTemplate: 'fields/enum/search',
 
         translatedOptions: null,
 
@@ -55,6 +55,8 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], functio
                     this.params.options = this.model[methodName].call(this.model);
                 }
             }
+
+            this.setupOptions();
 
             if ('translatedOptions' in this.options) {
                 this.translatedOptions = this.options.translatedOptions;
@@ -102,6 +104,9 @@ Espo.define('Views.Fields.Enum', ['Views.Fields.Base', 'lib!Selectize'], functio
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
                 }.bind(this));
             }
+        },
+
+        setupOptions: function () {
         },
 
         afterRender: function () {

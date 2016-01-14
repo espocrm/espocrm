@@ -19,7 +19,8 @@
         "meetings": "Meetings",
         "calls": "Calls",
         "tasks": "Tasks",
-        "emails": "Emails"
+        "emails": "Emails",
+        "articles": "Knlowledge Base Articles"
     },
     "options": {
         "status": {

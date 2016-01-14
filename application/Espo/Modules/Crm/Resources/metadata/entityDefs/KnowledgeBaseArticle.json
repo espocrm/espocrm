@@ -2,31 +2,22 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true,
-            "view": "crm:views/document/fields/name"
-        },
-        "file": {
-            "type": "file",
-            "required": true,
-            "view": "crm:views/document/fields/file"
+            "required": true
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Draft", "Expired", "Canceled"],
+            "options": ["Draft", "In Review", "Published", "Archived"],
             "view": "views/fields/enum-styled",
-            "style": {
-                "Canceled": "danger",
-                "Expired": "danger"
-            }
+            "default": "Draft"
         },
-        "source": {
+        "language": {
             "type": "enum",
-            "options": ["Espo"],
-            "default": "Espo"
+            "view": "crm:views/knowledge-base-article/fields/language",
+            "default": ""
         },
         "type": {
             "type": "enum",
-            "options": ["", "Contract", "NDA", "EULA", "License Agreement"]
+            "options": ["Article"]
         },
         "publishDate": {
             "type": "date",
@@ -62,29 +53,22 @@
         "teams": {
             "type": "linkMultiple"
         },
-        "accounts": {
+        "categories": {
             "type": "linkMultiple",
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "importDisabled": true,
-            "noLoad": true
+            "view": "views/fields/link-multiple-category-tree"
         },
-        "folder": {
-            "type": "link",
-            "view": "views/fields/link-category-tree"
+        "attachments": {
+            "type": "attachmentMultiple"
+        },
+        "body": {
+            "type": "wysiwyg"
         }
     },
     "links": {
-        "accounts": {
+        "cases": {
             "type": "hasMany",
-            "entity": "Account",
-            "foreign": "documents"
-        },
-        "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
-            "foreign": "documents"
+            "entity": "Case",
+            "foreign": "articles"
         },
         "createdBy": {
             "type": "belongsTo",
@@ -104,10 +88,10 @@
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
         },
-        "folder": {
-            "type": "belongsTo",
-            "foreign": "documents",
-            "entity": "DocumentFolder"
+        "categories": {
+            "type": "hasMany",
+            "foreign": "articles",
+            "entity": "KnowledgeBaseCategory"
         }
     },
     "collection": {

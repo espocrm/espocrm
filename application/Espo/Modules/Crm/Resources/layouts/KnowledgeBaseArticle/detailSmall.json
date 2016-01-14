@@ -1,0 +1,12 @@
+[
+    {
+        "label": "",
+        "rows":[
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"status"}, {"name":"type"}],
+            [{"name":"categories"}, {"name":"language"}],
+            [{"name":"body", "fullWidth": true}],
+            [{"name":"attachments", "fullWidth": true}]
+        ]
+    }
+]

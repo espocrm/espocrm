@@ -1,0 +1,37 @@
+{
+    "labels": {
+        "Create KnowledgeBaseArticle": "Create Article",
+        "Global": "Global"
+    },
+    "fields": {
+        "name": "Name",
+        "status": "Status",
+        "type": "Type",
+        "attachments": "Attachments",
+        "publishDate": "Publish Date",
+        "expirationDate": "Expiration Date",
+        "description": "Description",
+        "body": "Body",
+        "categories": "Categories",
+        "language": "Language"
+    },
+    "links": {
+        "cases": "Cases",
+        "opportunities": "Opportunities",
+        "categories": "Categories"
+    },
+    "options": {
+        "status": {
+            "In Review": "In Review",
+            "Draft": "Draft",
+            "Archived": "Archived",
+            "Published": "Published"
+        },
+        "type": {
+            "Article": "Article"
+        }
+    },
+    "presetFilters": {
+        "published": "Published"
+    }
+}

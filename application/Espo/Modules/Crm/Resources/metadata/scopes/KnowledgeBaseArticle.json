@@ -1,0 +1,12 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": "recordAllTeamNo",
+    "aclPortal": "recordAllNo",
+    "module": "Crm",
+    "customizable": true,
+    "importable": true,
+    "notifications": false,
+    "object": true
+}

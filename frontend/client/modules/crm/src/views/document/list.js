@@ -34,32 +34,38 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
 
         quickCreate: true,
 
-        currentFolderId: null,
+        currentCategoryId: null,
 
-        currentFolderName: '',
+        currentCategoryName: '',
+
+        categoryScope: 'DocumentFolder',
+
+        categoryField: 'folder',
+
+        categoryFilterType: 'inCategory',
 
         data: function () {
             var data = {};
-            data.foldersDisabled = this.foldersDisabled;
+            data.categoriesDisabled = this.categoriesDisabled;
             return data;
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.foldersDisabled = this.foldersDisabled ||
-                                   this.getMetadata().get('scopes.DocumentFolder.disabled') ||
-                                   !this.getAcl().checkScope('DocumentFolder');
+            this.categoriesDisabled = this.categoriesDisabled ||
+                                   this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
+                                   !this.getAcl().checkScope(this.categoryScope);
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (!this.foldersDisabled && !this.hasView('folders')) {
-                this.loadFolders();
+            if (!this.categoriesDisabled && !this.hasView('categories')) {
+                this.loadCategories();
             }
         },
 
         getTreeCollection: function (callback) {
-            this.getCollectionFactory().create('DocumentFolder', function (collection) {
+            this.getCollectionFactory().create(this.categoryScope, function (collection) {
                 collection.url = collection.name + '/action/listTree';
 
                 this.collection.treeCollection = collection;
@@ -71,36 +77,36 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
             }, this);
         },
 
-        loadFolders: function () {
+        loadCategories: function () {
             this.getTreeCollection(function (collection) {
-                this.createView('folders', 'views/record/list-tree', {
+                this.createView('categories', 'views/record/list-tree', {
                     collection: collection,
-                    el: this.options.el + ' .folders-container',
+                    el: this.options.el + ' .categories-container',
                     selectable: true,
                     createDisabled: true,
                     showRoot: true,
-                    rootName: this.translate('Document', 'scopeNamesPlural'),
+                    rootName: this.translate(this.scope, 'scopeNamesPlural'),
                     buttonsDisabled: true,
                     checkboxes: false,
-                    showEditLink: this.getAcl().check('DocumentFolder', 'edit')
+                    showEditLink: this.getAcl().check(this.categoryScope, 'edit')
                 }, function (view) {
                     view.render();
 
                     this.listenTo(view, 'select', function (model) {
-                        this.currentFolderId = null;
-                        this.currentFolderName = '';
+                        this.currentCategoryId = null;
+                        this.currentCategoryName = '';
 
                         if (model && model.id) {
-                            this.currentFolderId = model.id;
-                            this.currentFolderName = model.get('name');
+                            this.currentCategoryId = model.id;
+                            this.currentCategoryName = model.get('name');
                         }
                         this.collection.whereAdditional = null;
 
-                        if (this.currentFolderId) {
+                        if (this.currentCategoryId) {
                             this.collection.whereAdditional = [
                                 {
-                                    field: 'folder',
-                                    type: 'inCategory',
+                                    field: this.categoryField,
+                                    type: this.categoryFilterType,
                                     value: model.id
                                 }
                             ];
@@ -120,10 +126,10 @@ Espo.define('crm:views/document/list', 'views/list', function (Dep) {
 
         getCreateAttributes: function () {
             return {
-                folderId: this.currentFolderId,
-                folderName: this.currentFolderName
+                folderId: this.currentCategoryId,
+                folderName: this.currentCategoryName
             };
-        },
+        }
 
     });
 

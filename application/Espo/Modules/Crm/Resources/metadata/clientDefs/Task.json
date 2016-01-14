@@ -1,12 +1,12 @@
 {
    "controller": "controllers/record",
    "recordViews":{
-      "list": "Crm:Task.Record.List",
-      "detail": "Crm:Task.Record.Detail"
+      "list": "crm:views/task/record/list",
+      "detail": "crm:views/task/record/detail"
    },
    "views": {
-      "list": "Crm:Task.List",
-      "detail": "Crm:Task.Detail"
+      "list": "crm:views/task/list",
+      "detail": "crm:views/task/detail"
    },
    "formDependency": {
       "status": {

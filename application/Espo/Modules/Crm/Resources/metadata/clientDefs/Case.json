@@ -38,6 +38,12 @@
          "style": "success"
       }
    ],
+   "relationshipPanels": {
+      "articles": {
+         "create": false,
+         "rowActionsView": "views/record/row-actions/relationship-view-and-unlink"
+      }
+   },
    "boolFilterList": ["onlyMy"],
    "selectDefaultFilters": {
       "filter": "open"

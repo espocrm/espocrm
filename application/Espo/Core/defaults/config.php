@@ -91,7 +91,7 @@ return array (
         'Lead',
         'Opportunity',
     ),
-    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email", "Document", "Campaign"],
+    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email", "Document", "Campaign", "KnowledgeBaseArticle"],
     "quickCreateList" => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case"],
     'calendarDefaultEntity' => 'Meeting',
     'exportDisabled' => false,
