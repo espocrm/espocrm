@@ -95,7 +95,7 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false
+        "sortBy": "name",
+        "asc": true
     }
 }

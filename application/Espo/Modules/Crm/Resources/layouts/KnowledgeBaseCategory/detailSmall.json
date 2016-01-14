@@ -9,6 +9,11 @@
             ],
             [
                 {
+                    "name": "order"
+                }
+            ],
+            [
+                {
                     "name": "parent"
                 }
             ]

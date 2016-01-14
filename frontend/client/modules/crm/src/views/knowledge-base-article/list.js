@@ -34,7 +34,7 @@ Espo.define('crm:views/knowledge-base-article/list', 'crm:views/document/list', 
 
         categoryField: 'categories',
 
-        categoryFilterType: 'inCategories',
+        categoryFilterType: 'inCategory',
 
         getCreateAttributes: function () {
             if (this.currentCategoryId) {

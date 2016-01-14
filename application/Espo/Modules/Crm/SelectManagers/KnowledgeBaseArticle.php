@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,16 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/modals/select-records', 'crm:views/document/modals/select-records', function (Dep) {
+namespace Espo\Modules\Crm\SelectManagers;
 
-    return Dep.extend({
+class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
+{
+    protected function filterPublished(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Published'
+        );
+    }
 
-        categoryScope: 'KnowledgeBaseCategory',
+    protected function access(&$result)
+    {
+        parent::access($result);
 
-        categoryField: 'categories',
+        if ($this->getUser()->get('portalId')) {
+            $this->filterPublished($result);
+        }
+    }
 
-        categoryFilterType: 'inCategory'
+ }
 
-    });
-
-});

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,16 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/modals/select-records', 'crm:views/document/modals/select-records', function (Dep) {
+namespace Espo\Modules\Crm\Services;
 
-    return Dep.extend({
+use \Espo\ORM\Entity;
 
-        categoryScope: 'KnowledgeBaseCategory',
+class KnowledgeBaseCategory extends \Espo\Services\RecordTree
+{
+    protected function checkFilterItems()
+    {
+        if (!$this->getAcl()->checkScope('KnowledgeBaseArticle', 'create')) {
+            return true;
+        }
+    }
 
-        categoryField: 'categories',
+    protected function checkItemIsEmpty(Entity $entity)
+    {
+        $selectManager = $this->getSelectManager('KnowledgeBaseArticle');
 
-        categoryFilterType: 'inCategory'
+        $selectParams = $selectManager->getEmptySelectParams();
+        $selectManager->applyInCategory('categories', $entity->id, $selectParams);
+        $selectManager->applyAccess($selectParams);
 
-    });
+        if ($this->getEntityManager()->getRepository('KnowledgeBaseArticle')->findOne($selectParams)) {
+            return false;
+        }
+        return true;
+    }
+}
 
-});

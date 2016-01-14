@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,16 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/knowledge-base-article/modals/select-records', 'crm:views/document/modals/select-records', function (Dep) {
+namespace Espo\Modules\Crm\Repositories;
 
-    return Dep.extend({
-
-        categoryScope: 'KnowledgeBaseCategory',
-
-        categoryField: 'categories',
-
-        categoryFilterType: 'inCategory'
-
-    });
-
-});
+class KnowledgeBaseCategory extends \Espo\Core\Repositories\CategoryTree
+{
+}

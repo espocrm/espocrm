@@ -8,7 +8,15 @@
                 },
                 {
                     "name": "parent"
+                }
+            ],
+            [
+                {
+                    "name": "order"
                 },
+                false
+            ],
+            [
                 {
                     "name": "description",
                     "fullWidth": true

@@ -23,6 +23,10 @@
             "type": "link",
             "readOnly": true
         },
+        "order": {
+            "type": "int",
+            "required": true
+        },
         "teams": {
             "type": "linkMultiple"
         },
