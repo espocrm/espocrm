@@ -27,37 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Controllers;
+namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Utils\Util;
+use \Espo\ORM\Entity;
 
-class RecordTree extends Record
+class DocumentFolder extends \Espo\Services\RecordTree
 {
-    public static $defaultAction = 'list';
 
-    protected $defaultRecordServiceName = 'RecordTree';
-
-    public function actionListTree($params, $data, $request)
+    protected function checkFilterItems()
     {
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
+        if (!$this->getAcl()->checkScope('Document', 'create')) {
+            return true;
         }
+    }
 
-        $where = $request->get('where');
-        $parentId = $request->get('parentId');
-        $maxDepth = $request->get('maxDepth');
+    protected function checkItemIsEmpty(Entity $entity)
+    {
+        $selectManager = $this->getSelectManager('Document');
 
-        $collection = $this->getRecordService()->getTree($parentId, array(
-            'where' => $where
-        ), 0, $maxDepth);
-        return array(
-            'list' => $collection->toArray(),
-            'path' => $this->getRecordService()->getTreeItemPath($parentId)
-        );
+        $selectParams = $selectManager->getEmptySelectParams();
+        $selectManager->applyInCategory('folder', $entity->id, $selectParams);
+        $selectManager->applyAccess($selectParams);
+
+        if ($this->getEntityManager()->getRepository('Document')->findOne($selectParams)) {
+            return false;
+        }
+        return true;
     }
 }
 

@@ -68,12 +68,35 @@ class RecordTree extends Record
             ];
         }
 
+        $filterItems = false;
+        if ($this->checkFilterItems()) {
+            $filterItems = true;
+        }
+
         $collection = $this->getRepository()->find($selectParams);
+        if ($filterItems) {
+            foreach ($collection as $i => $entity) {
+                if ($this->checkItemIsEmpty($entity)) {
+                    unset($collection[$i]);
+                }
+            }
+        }
         foreach ($collection as $entity) {
-            $childList = $this->getTree($entity->id, $params, $level + 1);
+            $childList = $this->getTree($entity->id, $params, $level + 1, $maxDepth);
             $entity->set('childList', $childList);
         }
+
         return $collection;
+    }
+
+    protected function checkFilterItems()
+    {
+
+    }
+
+    protected function checkItemIsEmpty(Entity $entity)
+    {
+
     }
 
     public function getTreeItemPath($parentId = null)

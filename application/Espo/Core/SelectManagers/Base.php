@@ -226,59 +226,52 @@ class Base
 
     protected function handleInCategory($inCategory, &$result)
     {
-        $joins = [];
+        foreach ($inCategory as $link => $value) {
+            $this->applyInCategory($link, $value, $result);
+        }
+    }
 
-        $part = array();
+    public function applyInCategory($link, $value, &$result)
+    {
+        $relDefs = $this->getSeed()->getRelations();
 
         $query = $this->getEntityManager()->getQuery();
 
         $tableName = $query->toDb($this->getSeed()->getEntityType());
 
-        foreach ($inCategory as $link => $val) {
+        if (!empty($relDefs[$link])) {
+            $defs = $relDefs[$link];
 
-            $relDefs = $this->getSeed()->getRelations();
+            $foreignEntity = $defs['entity'];
+            if (empty($foreignEntity)) {
+                continue;
+            }
 
-            if (!empty($relDefs[$link])) {
-                $defs = $relDefs[$link];
+            $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
 
-                $foreignEntity = $defs['entity'];
-                if (empty($foreignEntity)) {
-                    continue;
+            if ($defs['type'] == 'manyMany') {
+                if (!empty($defs['midKeys'])) {
+                    $result['distinct'] = true;
+                    $result['joins'][] = $link;
+                    $key = $defs['midKeys'][1];
+
+                    $middleName = $link . 'Middle';
+
+                    $result['customJoin'] .= "
+                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
+                    ";
+                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
                 }
-
-                $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
-
-                if ($defs['type'] == 'manyMany') {
-
-                    if (!empty($defs['midKeys'])) {
-                        $result['distinct'] = true;
-                        $result['joins'][] = $link;
-                        $key = $defs['midKeys'][1];
-
-                        $middleName = $link . 'Middle';
-
-                        $result['customJoin'] .= "
-                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
-                        ";
-                        $part[$pathName . '.ascendorId'] = $val;
-                    }
-                } else if ($defs['type'] == 'belongsTo') {
-                    if (!empty($defs['key'])) {
-                        $key = $defs['key'];
-                        $result['customJoin'] .= "
-                            JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
-                        ";
-                        $part[$pathName . '.ascendorId'] = $val;
-                    }
+            } else if ($defs['type'] == 'belongsTo') {
+                if (!empty($defs['key'])) {
+                    $key = $defs['key'];
+                    $result['customJoin'] .= "
+                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
+                    ";
+                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
                 }
             }
         }
-
-
-        if (!empty($part)) {
-            $result['whereClause'][] = $part;
-        }
-
     }
 
     protected function q($params, &$result)
@@ -298,6 +291,14 @@ class Base
     {
         $this->prepareResult($result);
         $this->q(array('q' => $textFilter), $result);
+    }
+
+    public function getEmptySelectParams()
+    {
+        $result = array();
+        $this->prepareResult($result);
+
+        return $result;
     }
 
     protected function prepareResult(&$result)

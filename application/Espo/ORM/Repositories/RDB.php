@@ -248,13 +248,15 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return;
         }
+
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
-        } else if (is_string($id)) {
+        } else if (is_string($foreign)) {
             $id = $foreign;
         } else {
             return;
         }
+
         if (!$id) return;
 
         return !!$this->countRelated($entity, $relationName, array(
