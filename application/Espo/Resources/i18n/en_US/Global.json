@@ -279,14 +279,10 @@
         "entityRemoved": "{user} removed {entityType} {entity}"
     },
     "streamMessages": {
-        "create": "{user} created {entityType} {entity}",
-        "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
-        "assign": "{user} assigned {entityType} {entity} to {assignee}",
         "post": "{user} posted on {entityType} {entity}",
         "attach": "{user} attached on {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
-        "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
         "postTargetTeam": "{user} posted to team {target}",
         "postTargetTeams": "{user} posted to teams {target}",
         "postTarget": "{user} posted to {target}",
@@ -304,14 +300,24 @@
         "mentionYouInPostTargetAll": "{user} mentioned you in post to all",
         "mentionYouInPostTargetNoTarget": "{user} mentioned you in post",
 
+        "create": "{user} created {entityType} {entity}",
         "createThis": "{user} created this {entityType}",
+
         "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
+        "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
+
+        "assign": "{user} assigned {entityType} {entity} to {assignee}",
         "assignThis": "{user} assigned this {entityType} to {assignee}",
+
         "postThis": "{user} posted",
         "attachThis": "{user} attached",
         "statusThis": "{user} updated {field}",
         "updateThis": "{user} updated this {entityType}",
         "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} related to this {entityType}",
+        "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
+
+        "relate": "{user} linked {relatedEntityType} {relatedEntity} with {entityType} {entity}",
+        "relateThis": "{user} linked {relatedEntityType} {relatedEntity} with this {entityType}",
 
         "emailReceivedFromThis": "Email received from {from}",
         "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",

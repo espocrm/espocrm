@@ -324,12 +324,12 @@ abstract class Mapper implements IMapper
 
     public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
     {
-        $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
+        return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
     public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo)
     {
-        $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
+        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
     }
 
     public function updateRelation(IEntity $entity, $relationName, $id = null, array $columnData)

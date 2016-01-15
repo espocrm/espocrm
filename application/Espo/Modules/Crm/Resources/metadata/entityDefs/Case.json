@@ -13,7 +13,7 @@
             "type": "enum",
             "options": ["New", "Assigned", "Pending", "Closed", "Rejected", "Duplicate"],
             "default": "New",
-            "view": "Fields.EnumStyled",
+            "view": "views/fields/enum-styled",
             "style": {
                 "Closed": "success",
                 "Duplicate": "danger",
@@ -40,7 +40,7 @@
         },
         "contact": {
             "type": "link",
-            "view": "Crm:Case.Fields.Contact"
+            "view": "crm:views/case/fields/contact"
         },
         "contacts": {
             "type": "linkMultiple",
@@ -67,8 +67,7 @@
             "readOnly": true
         },
         "assignedUser": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "teams": {
             "type": "linkMultiple"

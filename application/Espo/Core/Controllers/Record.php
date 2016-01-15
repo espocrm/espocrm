@@ -321,18 +321,18 @@ class Record extends Base
             $where = json_decode(json_encode($data['where']), true);
             return $this->getRecordService()->linkEntityMass($id, $link, $where);
         } else {
-            $foreignIds = array();
+            $foreignIdList = array();
             if (isset($data['id'])) {
-                $foreignIds[] = $data['id'];
+                $foreignIdList[] = $data['id'];
             }
             if (isset($data['ids']) && is_array($data['ids'])) {
                 foreach ($data['ids'] as $foreignId) {
-                    $foreignIds[] = $foreignId;
+                    $foreignIdList[] = $foreignId;
                 }
             }
 
             $result = false;
-            foreach ($foreignIds as $foreignId) {
+            foreach ($foreignIdList as $foreignId) {
                 if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
                     $result = true;
                 }
