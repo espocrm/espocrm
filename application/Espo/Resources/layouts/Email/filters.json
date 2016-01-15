@@ -2,7 +2,7 @@
     "account",
     "dateSent",
     "emailAddress",
-    "isRead",
+    "isNotRead",
     "isImportant",
     "name",
     "status",

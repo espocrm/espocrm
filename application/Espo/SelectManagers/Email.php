@@ -268,6 +268,20 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     }
 
+    protected function getWherePartIsNotReadIsTrue()
+    {
+        return array(
+            'usersMiddle.isRead' => false
+        );
+    }
+
+    protected function getWherePartIsNotReadIsFalse()
+    {
+        return array(
+            'usersMiddle.isRead' => true
+        );
+    }
+
     protected function getWherePartIsReadIsTrue()
     {
         return array(

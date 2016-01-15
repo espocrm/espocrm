@@ -57,6 +57,13 @@
             "notStorable": true,
             "default": true
         },
+        "isNotRead": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true
+        },
         "isImportant": {
             "type": "bool",
             "notStorable": true,
