@@ -1,7 +1,7 @@
 {
     "labels": {
         "Create KnowledgeBaseArticle": "Create Article",
-        "Global": "Global"
+        "Any": "Any"
     },
     "fields": {
         "name": "Name",

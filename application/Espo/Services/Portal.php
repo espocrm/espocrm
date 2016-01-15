@@ -36,6 +36,17 @@ class Portal extends Record
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
+        $this->loadUrlField($entity);
+    }
+
+    public function loadAdditionalFieldsForList(Entity $entity)
+    {
+        parent::loadAdditionalFieldsForList($entity);
+        $this->loadUrlField($entity);
+    }
+
+    protected function loadUrlField(Entity $entity)
+    {
         $siteUrl = $this->getConfig()->get('siteUrl');
         $url = $siteUrl . '?entryPoint=portal';
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {

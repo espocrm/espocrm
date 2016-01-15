@@ -31,10 +31,10 @@ Espo.define('crm:views/knowledge-base-article/fields/language', 'views/fields/en
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = this.getConfig().get('languageList') || [];
+            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList') || []);
             this.params.options.unshift('');
             this.translatedOptions = this.getLanguage().translate('language', 'options') || {};
-            this.translatedOptions[''] = this.translate('Global', 'labels', 'KnowledgeBaseArticle')
+            this.translatedOptions[''] = this.translate('Any', 'labels', 'KnowledgeBaseArticle')
         }
 
     });

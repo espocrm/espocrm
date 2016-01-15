@@ -161,7 +161,7 @@ Espo.define('view', [], function () {
         },
 
         updatePageTitle: function () {
-            var title = this.getConfig().get('applicationTitle') || 'EspoCRM';
+            var title = this.getConfig().get('applicationName') || 'EspoCRM';
             this.setPageTitle(title);
         },
 
