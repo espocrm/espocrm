@@ -7,7 +7,7 @@
         "status": {
             "type": "enum",
             "options": ["Draft", "In Review", "Published", "Archived"],
-            "view": "views/fields/enum-styled",
+            "view": "crm:views/knowledge-base-article/fields/status",
             "default": "Draft"
         },
         "language": {
@@ -20,9 +20,7 @@
             "options": ["Article"]
         },
         "publishDate": {
-            "type": "date",
-            "required": true,
-            "default": "javascript: return this.dateTime.getToday();"
+            "type": "date"
         },
         "expirationDate": {
             "type": "date",

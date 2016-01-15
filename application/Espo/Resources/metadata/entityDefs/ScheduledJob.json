@@ -64,7 +64,6 @@
         "CheckEmailAccounts": "*/5 * * * *",
         "SendEmailReminders": "/2 * * * *",
         "Cleanup": "1 1 * * 0",
-        "ProcessMassEmail": "15 * * * *",
         "AuthTokenControl": "*/6 * * * *"
     }
 }

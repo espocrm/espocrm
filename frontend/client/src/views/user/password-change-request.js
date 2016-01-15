@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.User.PasswordChangeRequest', 'View', function (Dep) {
+Espo.define('views./user/password-change-request', 'view', function (Dep) {
 
     return Dep.extend({
-        
-        template: 'user.password-change-request',
+
+        template: 'user/password-change-request',
 
         data: function () {
             return {
@@ -52,7 +52,7 @@ Espo.define('Views.User.PasswordChangeRequest', 'View', function (Dep) {
             var passwordConfirm = $passwordConfirm.val();
 
             var translatedPasswordLabel = this.translate('password', 'fields', 'User');
-            
+
             if (password == '') {
                 var message = this.getLanguage().translate('fieldIsRequired', 'messages').replace('{field}', translatedPasswordLabel);
 
@@ -110,10 +110,8 @@ Espo.define('Views.User.PasswordChangeRequest', 'View', function (Dep) {
 
                 this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
             }.bind(this));
-            
 
-        },
-        
+        }
 
     });
 });
