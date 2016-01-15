@@ -40,9 +40,14 @@
         },
         "theme": {
             "type": "enum",
-            "view": "views/settings/fields/theme",
+            "view": "views/preferences/fields/theme",
             "translation": "Global.themes",
-            "default": "Espo"
+            "default": ""
+        },
+        "language": {
+            "type": "enum",
+            "view": "views/portal/fields/language",
+            "default": ""
         },
         "modifiedAt": {
             "type": "datetime",

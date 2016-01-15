@@ -27,55 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Portal\Utils;
 
-class ContainerPortal extends Container
+use \Espo\Entities\Portal;
+
+use \Espo\Core\Utils\Config;
+use \Espo\Core\Utils\Metadata;
+
+class ThemeManager extends \Espo\Core\Utils\ThemeManager
 {
-    protected function getServiceClassName($name, $default)
+    public function __construct(Config $config, Metadata $metadata, Portal $portal)
     {
-        $metadata = $this->get('metadata');
-        $className = $metadata->get('app.serviceContainerPortal.classNames.' . $name, $default);
-        return $className;
+        $this->config = $config;
+        $this->metadata = $metadata;
+        $this->portal = $portal;
     }
 
-    protected function loadAclManager()
+    public function getName()
     {
-        $className = $this->getServiceClassName('aclManager', '\\Espo\\Core\\AclPortalManager');
-        return new $className(
-            $this->get('container')
-        );
-    }
-
-    protected function loadAcl()
-    {
-        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclPortal');
-        return new $className(
-            $this->get('aclManager'),
-            $this->get('user')
-        );
-    }
-
-    protected function loadThemeManager()
-    {
-        return new \Espo\Core\Utils\ThemePortalManager(
-            $this->get('config'),
-            $this->get('metadata'),
-            $this->get('portal')
-        );
-    }
-
-    protected function loadLayout()
-    {
-        return new \Espo\Core\Utils\LayoutPortal(
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('user')
-        );
-    }
-
-    public function setPortal(\Espo\Entities\Portal $portal)
-    {
-        $this->set('portal', $portal);
+        $theme = $this->portal->get('theme');
+        if (!$theme) {
+            $theme = $this->defaultName;
+        }
+        return $theme;
     }
 }
+
 

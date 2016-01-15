@@ -76,7 +76,8 @@
         },
         "language": {
             "type": "enum",
-            "default": "en_US"
+            "default": "",
+            "view": "views/preferences/fields/language"
         },
         "exportDelimiter": {
             "type": "varchar",

@@ -27,42 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Portal\Utils;
 
 use \Espo\Entities\Portal;
 
-class ThemePortalManager
+class Language extends \Espo\Core\Utils\Language
 {
-    protected $config;
 
-    protected $metadata;
-
-    protected $portal;
-
-    private $defaultName = 'Espo';
-
-    private $defaultStylesheet = 'Espo';
-
-    public function __construct(Config $config, Metadata $metadata, Portal $portal)
+    public function setPortal($portal)
     {
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->portal = $portal;
-    }
-
-    public function getName()
-    {
-        $theme = $this->portal->get('theme');
-        if (!$theme) {
-            $theme = $this->defaultName;
+        if ($portal->get('language') !== '' && $portal->get('language')) {
+            if (!$this->getPreferences()->get('language')) {
+                $this->setLanguage($portal->get('language'));
+            }
         }
-        return $theme;
     }
 
-    public function getStylesheet()
-    {
-        return $this->metadata->get('themes.' . $this->getName() . '.stylesheet', 'client/css/espo.css');
-    }
 }
-
-

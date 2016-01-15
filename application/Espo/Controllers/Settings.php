@@ -50,6 +50,12 @@ class Settings extends \Espo\Core\Controllers\Base
             foreach ($this->getContainer()->get('portal')->getSettingsAttributeList() as $attribute) {
                 $data[$attribute] = $this->getContainer()->get('portal')->get($attribute);
             }
+            if (empty($data['language'])) {
+                $data['language'] = $this->getConfig()->get('language');
+            }
+            if (empty($data['theme'])) {
+                $data['theme'] = $this->getConfig()->get('theme');
+            }
         }
         return $data;
     }

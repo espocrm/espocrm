@@ -9,7 +9,8 @@
         "tabList": "Tab List",
         "quickCreateList": "Quick Create List",
         "companyLogo": "Logo",
-        "theme": "Theme"
+        "theme": "Theme",
+        "language": "Language"
     },
     "links": {
         "users": "Users",

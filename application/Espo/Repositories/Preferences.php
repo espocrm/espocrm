@@ -49,7 +49,6 @@ class Preferences extends \Espo\Core\ORM\Repository
         'thousandSeparator',
         'weekStart',
         'timeZone',
-        'language',
         'exportDelimiter'
     );
 

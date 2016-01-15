@@ -35,9 +35,13 @@ use \Espo\Core\Utils\Util,
 class Language
 {
     private $fileManager;
+
     private $config;
+
     private $metadata;
+
     private $preferences;
+
     private $unifier;
 
     /**

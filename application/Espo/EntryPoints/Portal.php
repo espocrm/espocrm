@@ -48,7 +48,7 @@ class Portal extends \Espo\Core\EntryPoints\Base
             }
         }
 
-        $application = new \Espo\Core\ApplicationPortal($id);
+        $application = new \Espo\Core\Portal\Application($id);
         $application->runClient();
     }
 }

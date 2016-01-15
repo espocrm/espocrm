@@ -27,11 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Portal\Utils;
 
-class LayoutPortal extends Layout
+use \Espo\Core\Utils\Util;
+use \Espo\Core\Utils\Json;
+
+class Layout extends \Espo\Core\Utils\Layout
 {
-
     public function get($scope, $name)
     {
         $scope = $this->sanitizeInput($scope);

@@ -27,11 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Portal;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\Forbidden;
 
-class ApplicationPortal extends Application
+class Application extends \Espo\Core\Application
 {
     public function __construct($portalId)
     {
@@ -56,7 +58,6 @@ class ApplicationPortal extends Application
 
         $this->getContainer()->setPortal($portal);
 
-
         $GLOBALS['log'] = $this->getContainer()->get('log');
 
         $this->initAutoloads();
@@ -69,7 +70,7 @@ class ApplicationPortal extends Application
 
     protected function initContainer()
     {
-        $this->container = new ContainerPortal();
+        $this->container = new Container();
     }
 
     protected function getRouteList()

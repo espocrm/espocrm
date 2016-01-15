@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,32 +25,20 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+Espo.define('views/preferences/fields/language', 'views/fields/enum', function (Dep) {
 
-namespace Espo\Core;
+    return Dep.extend({
 
-use \Espo\ORM\Entity;
-use \Espo\Entities\User;
+        setupOptions: function () {
+            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList'));
 
-class AclPortal extends Acl
-{
-    public function checkReadOnlyAccount($scope)
-    {
-        return $this->getAclManager()->checkReadOnlyAccount($this->getUser(), $scope);
-    }
+            this.params.options.unshift('');
 
-    public function checkReadOnlyContact($scope)
-    {
-        return $this->getAclManager()->checkReadOnlyContact($this->getUser(), $scope);
-    }
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
 
-    public function checkInAccount(Entity $entity)
-    {
-        return $this->getAclManager()->checkInAccount($this->getUser(), $entity);
-    }
+            this.translatedOptions[''] = this.translate('Default');
+        },
 
-    public function checkIsOwnContact(Entity $entity)
-    {
-        return $this->getAclManager()->checkIsOwnContact($this->getUser(), $entity);
-    }
-}
+    });
 
+});

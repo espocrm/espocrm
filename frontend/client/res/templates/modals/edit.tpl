@@ -1,1 +1,1 @@
-<div class="edit-container">{{{edit}}}</div>
+<div class="edit-container record">{{{edit}}}</div>

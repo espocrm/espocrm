@@ -2,9 +2,11 @@
     {
         "label": "General",
         "rows": [
-            [{"name": "name"}, {"name": "isActive"}],
-            [{"name": "url"}, {"name": "isDefault"}],
-            [{"name": "portalRoles"}, {"name": "language"}]
+            [{"name": "name", "fullWidth": true}],
+            [{"name": "url", "fullWidth": true}],
+            [{"name": "isDefault"}, {"name": "isActive"}],
+            [{"name": "portalRoles", "fullWidth": true}],
+            [{"name": "language"}, false]
         ]
     },
     {
