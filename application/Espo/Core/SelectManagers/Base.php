@@ -792,6 +792,18 @@ class Base
     {
         $part = array();
 
+        if (!empty($item['field']) && !empty($item['type'])) {
+            $methodName = 'getWherePart' . ucfirst($item['field']) . ucfirst($item['type']);
+            if (method_exists($this, $methodName)) {
+                $value = null;
+                if (!empty($item['value'])) {
+                    $value = $item['value'];
+                }
+                return $this->$methodName($value);
+            }
+        }
+
+
         if (!empty($item['dateTime'])) {
             return $this->convertDateTimeWhere($item);
         }
