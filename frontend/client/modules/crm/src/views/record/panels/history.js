@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activities', function (Dep) {
+Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activities', function (Dep) {
 
     return Dep.extend({
 
@@ -161,17 +161,20 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
             this.notify('Loading...');
 
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
             this.getArchiveEmailAttributes(data, function (attributes) {
-                this.createView('quickCreate', 'Modals.Edit', {
+                this.createView('quickCreate', viewName, {
                     scope: scope,
                     relate: relate,
                     attributes: attributes
                 }, function (view) {
                     view.render();
                     view.notify(false);
-                    view.once('after:save', function () {
-                        self.collection.fetch();
-                    });
+                    this.listenToOnce(view, 'after:save', function () {
+                        this.collection.fetch();
+                        this.model.trigger('after:relate');
+                    }, this);
                 });
             });
         },
@@ -200,6 +203,7 @@ Espo.define('Crm:Views.Record.Panels.History', 'Crm:Views.Record.Panels.Activiti
 
                             this.listenToOnce(view, 'after:save', function () {
                                 this.collection.fetch();
+                                this.model.trigger('after:relate');
                             }, this);
 
                             view.notify(false);

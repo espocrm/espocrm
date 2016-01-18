@@ -187,7 +187,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
 
             this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', 'Record.ListExpanded', {
+                this.createView('list', 'views/record/list-expanded', {
                     el: this.$el.selector + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
@@ -257,8 +257,10 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             this.notify('Loading...');
 
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
             this.getCreateActivityAttributes(data, function (attributes) {
-                this.createView('quickCreate', 'Modals.Edit', {
+                this.createView('quickCreate', viewName, {
                     scope: scope,
                     relate: {
                         model: this.model,
@@ -268,7 +270,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 }, function (view) {
                     view.render();
                     view.notify(false);
-                    view.once('after:save', function () {
+                    this.listenToOnce(view, 'after:save', function () {
+                        this.model.trigger('after:relate');
                         this.collection.fetch();
                         this.fetchHistory();
                     }, this);
@@ -324,14 +327,15 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
                 }
 
-                this.createView('quickCreate', 'Modals.ComposeEmail', {
+                this.createView('quickCreate', 'views/modals/compose-email', {
                     relate: relate,
                     attributes: attributes
                 }, function (view) {
                     view.render();
                     view.notify(false);
-                    view.once('after:save', function () {
+                    this.listenToOnce(view, 'after:save', function () {
                         this.collection.fetch();
+                        this.model.trigger('after:relate');
                         this.fetchHistory();
                     }, this);
                 }, this);

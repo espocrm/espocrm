@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship', function (Dep) {
+Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship', function (Dep) {
 
     return Dep.extend({
 
         name: 'tasks',
 
-        template: 'crm:record.panels.tasks',
+        template: 'crm:record/panels/tasks',
 
         tabList: ['actual', 'completed'],
 
@@ -147,7 +147,7 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
                 var rowActionsView = 'crm:views/record/row-actions/tasks';
 
                 this.listenToOnce(this.collection, 'sync', function () {
-                    this.createView('list', 'Record.ListExpanded', {
+                    this.createView('list', 'views/record/list-expanded', {
                         el: this.$el.selector + ' > .list-container',
                         pagination: false,
                         type: 'listRelationship',
@@ -171,7 +171,9 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
 
             this.notify('Loading...');
 
-            this.createView('quickCreate', 'Modals.Edit', {
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+            this.createView('quickCreate', viewName, {
                 scope: scope,
                 relate: {
                     model: this.model,
@@ -180,9 +182,10 @@ Espo.define('Crm:Views.Record.Panels.Tasks', 'Views.Record.Panels.Relationship',
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:save', function () {
-                    self.collection.fetch();
-                });
+                this.listenToOnce(view, 'after:save', function () {
+                    this.collection.fetch();
+                    this.model.trigger('after:relate');
+                }, this);
             });
 
         },

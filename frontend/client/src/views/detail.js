@@ -218,6 +218,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
                     this.updateRelationshipPanel(link);
+                    this.model.trigger('after:relate');
                 }, this);
             }.bind(this));
         },
@@ -299,12 +300,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                         type: 'POST',
                         data: JSON.stringify(data),
                         success: function () {
-                            self.notify('Linked', 'success');
-                            self.updateRelationshipPanel(link);
-                        },
+                            this.notify('Linked', 'success');
+                            this.updateRelationshipPanel(link);
+                            this.model.trigger('after:relate');
+                        }.bind(this),
                         error: function () {
-                            self.notify('Error occurred', 'error');
-                        },
+                            this.notify('Error occurred', 'error');
+                        }.bind(this)
                     });
                 }.bind(this));
             }.bind(this));
