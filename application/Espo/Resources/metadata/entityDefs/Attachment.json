@@ -6,7 +6,7 @@
         },
         "type": {
             "type": "varchar",
-            "maxLength": 36
+            "maxLength": 100
         },
         "size": {
             "type": "int",
