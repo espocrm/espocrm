@@ -682,7 +682,10 @@ abstract class Base
                     }
                 }
             } else {
-                $whereParts[] = "(" . $this->getWhere($entity, $value, $field) . ")";
+                $internalPart = $this->getWhere($entity, $value, $field);
+                if ($internalPart) {
+                    $whereParts[] = "(" . $internalPart . ")";
+                }
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);

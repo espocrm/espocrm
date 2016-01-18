@@ -293,29 +293,17 @@ class Stream extends \Espo\Core\Services\Base
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $selectSqlPart = "
-            note.id AS 'id',
-            note.number AS 'number',
-            note.type AS 'type',
-            note.post AS 'post',
-            note.data AS 'data',
-            note.parent_type AS 'parentType',
-            note.parent_id AS 'parentId',
-            note.related_type AS 'relatedType',
-            note.related_id AS 'relatedId',
-            note.target_type AS 'targetType',
-            note.created_at AS 'createdAt',
-            note.created_by_id AS 'createdById',
-            TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`,
-            note.is_global AS 'isGlobal'
-        ";
+        $select = [
+            'id', 'number', 'type', 'post', 'data', 'parentType', 'parentId', 'relatedType', 'relatedId',
+            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal'
+        ];
 
-        $sqlPartList = [];
+        $selectParamsList = [];
 
-        $sqlPartList[] = "
-            (
-                SELECT {$selectSqlPart}
-                FROM `note` AS `note`
+        $selectParamsList[] = array(
+            'select' => $select,
+            'leftJoins' => ['createdBy'],
+            'customJoin' => "
                 JOIN subscription AS `subscription` ON
                     (
                         (
@@ -323,111 +311,98 @@ class Stream extends \Espo\Core\Services\Base
                             note.parent_id = subscription.entity_id
                         )
                     ) AND
-                    subscription.user_id = ".$pdo->quote($user->id)."
-                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                WHERE note.deleted = 0 {where}
-                ORDER BY number DESC
-            )
-        ";
+                    subscription.user_id = ".$pdo->quote($user->id) . "
+            ",
+            'whereClause' => array(),
+            'orderBy' => 'number',
+            'order' => 'DESC'
+        );
 
-        $sqlPartList[] = "
-                (
-                    SELECT {$selectSqlPart}
-                    FROM `note` AS `note`
-                    JOIN subscription AS `subscription` ON
-                        (
-                            (
-                                note.super_parent_type = subscription.entity_type AND
-                                note.super_parent_id = subscription.entity_id
-                            )
-                        ) AND
-                        subscription.user_id = ".$pdo->quote($user->id)."
-                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                    WHERE note.deleted = 0 AND
+        $selectParamsList[] = array(
+            'select' => $select,
+            'leftJoins' => ['createdBy'],
+            'customJoin' => "
+                JOIN subscription AS `subscription` ON
                     (
-                        note.parent_id <> note.super_parent_id
-                        OR
-                        note.parent_type <> note.super_parent_type
-                    )
-                    {where}
-                    ORDER BY number DESC
+                        (
+                            note.super_parent_type = subscription.entity_type AND
+                            note.super_parent_id = subscription.entity_id
+                        )
+                    ) AND
+                    subscription.user_id = ".$pdo->quote($user->id)."
+            ",
+            'customWhere' => ' AND (
+                    note.parent_id <> note.super_parent_id
+                    OR
+                    note.parent_type <> note.super_parent_type
                 )
-        ";
+            ',
+            'whereClause' => array(),
+            'orderBy' => 'number',
+            'order' => 'DESC'
+        );
 
-        $sqlPartList[] = "
-            (
-                SELECT {$selectSqlPart}
-                FROM `note` AS `note`
-                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                WHERE note.deleted = 0 AND
-                (
-                    note.created_by_id = ".$pdo->quote($user->id)." AND
-                    note.parent_id IS NULL AND
-                    note.type = 'Post' AND
-                    note.is_global = 0
-                )
-                {where}
-                ORDER BY number DESC
-            )
-        ";
+        $selectParamsList[] = array(
+            'select' => $select,
+            'leftJoins' => ['createdBy'],
+            'whereClause' => array(
+                'createdById' => $user->id,
+                'parentId' => null,
+                'type' => 'Post',
+                'isGlobal' => false
+            ),
+            'orderBy' => 'number',
+            'order' => 'DESC'
+        );
 
-        $sqlPartList[] = "
-            (
-                SELECT {$selectSqlPart}
-                FROM `note` AS `note`
-                LEFT JOIN `note_user` AS usersMiddle ON usersMiddle.note_id = note.id AND usersMiddle.deleted = 0
-                LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                WHERE note.deleted = 0 AND
-                (
-                    note.created_by_id <> ".$pdo->quote($user->id)." AND
-                    usersMiddle.user_id = ".$pdo->quote($user->id)." AND
-                    note.parent_id IS NULL AND
-                    note.is_global = 0
-                )
-                {where}
-                ORDER BY number DESC
-            )
-        ";
+        $selectParamsList[] = array(
+            'select' => $select,
+            'leftJoins' => ['users', 'createdBy'],
+            'whereClause' => array(
+                'createdById!=' => $user->id,
+                'usersMiddle.userId' => $user->id,
+                'parentId' => null,
+                'type' => 'Post',
+                'isGlobal' => false
+            ),
+            'orderBy' => 'number',
+            'order' => 'DESC'
+        );
 
         if (!$user->get('isPortalUser') || $user->get('isAdmin')) {
-            $sqlPartList[] = "
-                (
-                    SELECT {$selectSqlPart}
-                    FROM `note` AS `note`
-                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                    WHERE note.deleted = 0 AND
-                    (
-                        note.parent_id IS NULL AND
-                        note.is_global = 1
-                    )
-                    {where}
-                    ORDER BY number DESC
-                )
-            ";
+            $selectParamsList[] = array(
+                'select' => $select,
+                'leftJoins' => ['createdBy'],
+                'whereClause' => array(
+                    'parentId' => null,
+                    'type' => 'Post',
+                    'isGlobal' => true
+                ),
+                'orderBy' => 'number',
+                'order' => 'DESC'
+            );
         }
 
-        $portalIdList = $user->getLinkMultipleIdList('portals');
-        $portalIdQuotedList = [];
-        foreach ($portalIdList as $portalId) {
-            $portalIdQuotedList[] = $pdo->quote($portalId);
-        }
-        if (!empty($portalIdQuotedList)) {
-            $sqlPartList[] = "
-                (
-                    SELECT {$selectSqlPart}
-                    FROM `note` AS `note`
-                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                    LEFT JOIN `note_portal` AS portalsMiddle ON portalsMiddle.note_id = note.id AND portalsMiddle.deleted = 0
-                    WHERE note.deleted = 0 AND
-                    (
-                        note.parent_id IS NULL AND
-                        portalsMiddle.portal_id IN (".implode(',', $portalIdQuotedList).") AND
-                        note.is_global = 0
-                    )
-                    {where}
-                    ORDER BY number DESC
-                )
-            ";
+        if ($user->get('isPortalUser')) {
+            $portalIdList = $user->getLinkMultipleIdList('portals');
+            $portalIdQuotedList = [];
+            foreach ($portalIdList as $portalId) {
+                $portalIdQuotedList[] = $pdo->quote($portalId);
+            }
+            if (!empty($portalIdQuotedList)) {
+                $selectParamsList[] = array(
+                    'select' => $select,
+                    'leftJoins' => ['portals', 'createdBy'],
+                    'whereClause' => array(
+                        'parentId' => null,
+                        'portalsMiddle.portalId' => $portalIdList,
+                        'type' => 'Post',
+                        'isGlobal' => false
+                    ),
+                    'orderBy' => 'number',
+                    'order' => 'DESC'
+                );
+            }
         }
 
         $teamIdList = $user->getTeamIdList();
@@ -436,42 +411,32 @@ class Stream extends \Espo\Core\Services\Base
             $teamIdQuotedList[] = $pdo->quote($teamId);
         }
         if (!empty($teamIdList)) {
-            $sqlPartList[] = "
-               (
-                    SELECT DISTINCT {$selectSqlPart}
-                    FROM `note` AS `note`
-                    LEFT JOIN `note_team` AS teamsMiddle ON teamsMiddle.note_id = note.id AND teamsMiddle.deleted = 0
-                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
-                    WHERE note.deleted = 0 AND
-                    (
-                        note.created_by_id <> ".$pdo->quote($user->id)." AND
-                        teamsMiddle.team_id IN (".implode(',', $teamIdQuotedList).") AND
-                        note.parent_id IS NULL AND
-                        note.is_global = 0
-                    )
-                    {where}
-                    ORDER BY number DESC
-                )
-            ";
+            $selectParamsList[] = array(
+                'select' => $select,
+                'leftJoins' => ['teams', 'createdBy'],
+                'whereClause' => array(
+                    'parentId' => null,
+                    'teamsMiddle.teamId' => $teamIdList,
+                    'type' => 'Post',
+                    'isGlobal' => false
+                ),
+                'orderBy' => 'number',
+                'order' => 'DESC'
+            );
         }
 
-
-        $sql = implode(' UNION ', $sqlPartList) . "
-            ORDER BY number DESC
-        ";
-
-
-        $where = '';
+        $whereClause = array();
         if (!empty($params['after'])) {
-            $where .= " AND note.created_at > ".$pdo->quote($params['after']);
+            $whereClause[]['createdAt>'] = $params['after'];
         }
+
         if (!empty($params['filter'])) {
             switch ($params['filter']) {
                 case 'posts':
-                    $where .= " AND note.type = 'Post'";
+                    $whereClause[]['type'] = 'Post';
                     break;
                   case 'updates':
-                    $where .= " AND note.type IN ('Update', 'Status')";
+                    $whereClause[]['type'] = ['Update', 'Status'];
                     break;
             }
         }
@@ -479,20 +444,39 @@ class Stream extends \Espo\Core\Services\Base
         $ignoreScopeList = $this->getIgnoreScopeList();
 
         if (!empty($ignoreScopeList)) {
-            $ignoreScopeListQuoted = [];
-            foreach ($ignoreScopeList as $scope) {
-                $ignoreScopeListQuoted[] = $pdo->quote($scope);
-            }
-            $where .= " AND (note.related_type IS NULL OR note.related_type NOT IN (".implode(', ', $ignoreScopeListQuoted)."))";
-            $where .= " AND (note.parent_type IS NULL OR note.parent_type NOT IN (".implode(', ', $ignoreScopeListQuoted)."))";
+            $whereClause[] = array(
+                'OR' => array(
+                    'relatedType' => null,
+                    'relatedType!=' => $ignoreScopeList
+                )
+            );
+            $whereClause[] = array(
+                'OR' => array(
+                    'parentType' => null,
+                    'parentType!=' => $ignoreScopeList
+                )
+            );
             if (in_array('Email', $ignoreScopeList)) {
-                $where .= " AND note.type NOT IN ('EmailReceived', 'EmailSent')";
+                $whereClause[] = array(
+                    'type!=' => ['EmailReceived', 'EmailSent']
+                );
             }
         }
 
-        $sql = str_replace('{where}', $where, $sql);
-        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
+        $sqlPartList = [];
+        foreach ($selectParamsList as $i => $selectParams) {
+            if (empty($selectParams['whereClause'])) {
+                $selectParams['whereClause'] = array();
+            }
+            $selectParams['whereClause'][] = $whereClause;
+            $sqlPartList[] = "(\n" . $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
+        }
 
+        $sql = implode("\n UNION \n", $sqlPartList) . "
+            ORDER BY number DESC
+        ";
+
+        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
 
         $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
 
