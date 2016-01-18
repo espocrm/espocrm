@@ -24,9 +24,11 @@
                     {{#ifNotEqual type 'boolean'}}
                         {{#each ../list}}
                             <td>
+                                {{#if levelList}}
                                 <select name="{{name}}" class="form-control" data-scope="{{../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}}>
                                 {{options levelList level field='levelList' scope='Role'}}
                                 </select>
+                                {{/if}}
                             </td>
                         {{/each}}
                     {{/ifNotEqual}}

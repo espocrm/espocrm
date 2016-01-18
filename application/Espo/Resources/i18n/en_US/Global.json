@@ -285,6 +285,8 @@
         "update": "{user} updated {entityType} {entity}",
         "postTargetTeam": "{user} posted to team {target}",
         "postTargetTeams": "{user} posted to teams {target}",
+        "postTargetPortal": "{user} posted to portal {target}",
+        "postTargetPortals": "{user} posted to portals {target}",
         "postTarget": "{user} posted to {target}",
 
         "postTargetYou": "{user} posted to you",

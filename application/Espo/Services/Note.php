@@ -76,19 +76,27 @@ class Note extends Record
             case 'all':
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
+                $entity->clear('portalsIds');
                 $entity->set('isGlobal', true);
                 break;
             case 'self':
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
+                $entity->clear('portalsIds');
                 $entity->set('usersIds', [$this->getUser()->id]);
                 $entity->set('isForSelf', true);
                 break;
             case 'users':
                 $entity->clear('teamsIds');
+                $entity->clear('portalsIds');
                 break;
             case 'teams':
                 $entity->clear('usersIds');
+                $entity->clear('portalsIds');
+                break;
+            case 'portals':
+                $entity->clear('usersIds');
+                $entity->clear('teamsIds');
                 break;
         }
     }
@@ -99,6 +107,7 @@ class Note extends Record
         $entity->clear('targetType');
         $entity->clear('usersIds');
         $entity->clear('teamsIds');
+        $entity->clear('portalsIds');
         $entity->clear('isGlobal');
     }
 
@@ -126,6 +135,15 @@ class Note extends Record
                     $userIdList = $entity->get('usersIds');
                     if (empty($userIdList) || !is_array($userIdList)) {
                         throw new BadRequest();
+                    }
+                }
+                if ($targetType === 'portals') {
+                    $portalIdList = $entity->get('portalsIds');
+                    if (empty($portalIdList) || !is_array($portalIdList)) {
+                        throw new BadRequest();
+                    }
+                    if ($this->getAcl()->get('portalPermission') !== 'yes') {
+                        throw new Forbidden('Not permitted to post to portal users.');
                     }
                 }
 

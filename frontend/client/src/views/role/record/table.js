@@ -34,7 +34,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
         scopeList: null,
 
-        actionList: ['read', 'stream', 'edit', 'delete', 'create'],
+        actionList: ['read', 'edit', 'create', 'delete', 'stream'],
 
         accessList: ['not-set', 'enabled', 'disabled'],
 
@@ -134,6 +134,17 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
                 if (this.aclTypeMap[scope] != 'boolean') {
                     this.actionList.forEach(function (action, j) {
+
+                        if (action === 'stream') {
+                            if (!this.getMetadata().get('scopes.' + scope + '.stream')) {
+                                list.push({
+                                    action: 'stream',
+                                    levelList: false,
+                                    level: null
+                                });
+                                return;
+                            }
+                        }
                         var level = 'all';
                         if (~this.booleanActionList.indexOf(action)) {
                             level = 'yes';
@@ -289,7 +300,9 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     var field = fieldData.name;
                     var fieldObj = {};
                     this.fieldActionList.forEach(function (action) {
-                        fieldObj[action] = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="'+action+'"]').val();
+                        var $select = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="'+action+'"]');
+                        if (!$select.size()) return;
+                        fieldObj[action] = $select.val();
                     }, this);
                     scopeObj[field] = fieldObj;
                 }, this);

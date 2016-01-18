@@ -186,9 +186,16 @@ class Notification extends \Espo\Core\Services\Base
                             }
                         } else {
                             if (!$note->get('isGlobal')) {
-                                $note->loadLinkMultipleField('users');
-                                if (count($note->get('usersIds')) == 0) {
-                                    $note->loadLinkMultipleField('teams');
+                                $targetType = $note->get('targetType');
+                                if (!$targetType || $targetType === 'users') {
+                                    $note->loadLinkMultipleField('users');
+                                }
+                                if ($targetType !== 'users') {
+                                    if (!$targetType || $targetType === 'teams') {
+                                        $note->loadLinkMultipleField('teams');
+                                    } else if ($targetType === 'portals') {
+                                        $note->loadLinkMultipleField('portals');
+                                    }
                                 }
                             }
                         }

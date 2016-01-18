@@ -59,7 +59,7 @@ class Table
 
     protected $fieldLevelList = ['yes', 'no'];
 
-    protected $valuePermissionList = ['assignmentPermission', 'userPermission'];
+    protected $valuePermissionList = ['assignmentPermission', 'userPermission', 'portalPermission'];
 
     private $fileManager;
 
@@ -235,7 +235,7 @@ class Table
 
         if (!$this->user->isAdmin()) {
             foreach ($this->valuePermissionList as $permission) {
-                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.'.$this->type.'.default.' . $permission, 'all'));
+                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.'.$this->type.'.default.' . $permission, 'yes'));
                 if ($this->metadata->get('app.'.$this->type.'.mandatory.' . $permission)) {
                     $this->data->$permission = $this->metadata->get('app.'.$this->type.'.mandatory.' . $permission);
                 }

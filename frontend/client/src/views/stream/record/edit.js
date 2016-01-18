@@ -40,7 +40,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'users': [
                         {
                             action: 'hide',
-                            fields: ['teams']
+                            fields: ['teams', 'portals']
                         },
                         {
                             action: 'show',
@@ -48,7 +48,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['teams']
+                            fields: ['teams', 'portals']
                         },
                         {
                             action: 'setRequired',
@@ -58,7 +58,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'teams': [
                         {
                             action: 'hide',
-                            fields: ['users']
+                            fields: ['users', 'portals']
                         },
                         {
                             action: 'show',
@@ -70,18 +70,36 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['users']
+                            fields: ['users', 'portals']
+                        }
+                    ],
+                    'portals': [
+                        {
+                            action: 'hide',
+                            fields: ['users', 'teams']
+                        },
+                        {
+                            action: 'show',
+                            fields: ['portals']
+                        },
+                        {
+                            action: 'setRequired',
+                            fields: ['portals']
+                        },
+                        {
+                            action: 'setNotRequired',
+                            fields: ['users', 'teams']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['teams', 'users']
+                        fields: ['teams', 'users', 'portals']
                     },
                     {
                         action: 'setNotRequired',
-                        fields: ['teams', 'users']
+                        fields: ['teams', 'users', 'portals']
                     }
                 ]
             }
@@ -123,13 +141,17 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.model.set('targetType', 'self');
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
+            var portalPermission = this.getAcl().get('portalPermission');
 
-            if (assignmentPermission === true || assignmentPermission === 'team' || assignmentPermission === 'all') {
+            if (assignmentPermission === 'team' || assignmentPermission === 'all') {
                 optionList.push('users');
                 optionList.push('teams');
             }
-            if (assignmentPermission === true || assignmentPermission === 'all') {
+            if (assignmentPermission === 'all') {
                 optionList.push('all');
+            }
+            if (portalPermission === 'yes') {
+                optionList.push('portals');
             }
 
             this.createField('targetType', 'views/fields/enum', {
@@ -138,6 +160,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
+            this.createField('portals', 'views/fields/link-multiple', {});
             this.createField('post', 'views/note/fields/post', {required: true});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 

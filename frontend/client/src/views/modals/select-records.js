@@ -44,6 +44,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         scope: null,
 
+        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+
         data: function () {
             return {
                 createButton: this.createButton && this.getAcl().check(this.scope, 'create')
@@ -108,7 +110,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
             this.scope = this.options.scope || this.scope;
 
-            if (['User', 'Team', 'Acl'].indexOf(this.scope) !== -1) {
+            if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
                 this.createButton = false;
             }
 

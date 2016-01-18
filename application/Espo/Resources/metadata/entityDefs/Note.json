@@ -12,8 +12,7 @@
             "readOnly": true
         },
         "targetType": {
-            "type": "varchar",
-            "notStorable": true
+            "type": "varchar"
         },
         "parent": {
             "type": "linkParent",

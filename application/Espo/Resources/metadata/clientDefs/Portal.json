@@ -8,6 +8,5 @@
          "selectPrimaryFilterName": "activePortal"
       }
    },
-   "recordViews": {
-   }
+   "searchPanelDisabled": true
 }

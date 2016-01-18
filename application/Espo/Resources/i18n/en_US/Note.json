@@ -4,7 +4,8 @@
         "attachments": "Attachments",
         "targetType": "Target",
         "teams": "Teams",
-        "users": "Users"
+        "users": "Users",
+        "portals": "Portals"
     },
     "filters": {
         "all": "All",
@@ -16,7 +17,8 @@
             "self": "To self",
             "users": "To particular user(s)",
             "teams": "To particular team(s)",
-            "all": "To all users"
+            "all": "To all internal users",
+            "portals": "To portal users"
         }
     },
     "messages": {

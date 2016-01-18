@@ -8,6 +8,10 @@
             [
                 false,
                 {"name": "userPermission"}
+            ],
+            [
+                false,
+                {"name": "portalPermission"}
             ]
         ]
     }

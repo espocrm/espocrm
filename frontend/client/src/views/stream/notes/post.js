@@ -75,6 +75,24 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                         }, this);
 
                         this.messageData['target'] = teamHtmlList.join(', ');
+                    } else if (this.model.has('portalsIds') && this.model.get('portalsIds').length) {
+                        var portalIdList = this.model.get('portalsIds');
+                        var portalNameHash = this.model.get('portalsNames') || {};
+                        this.messageName = 'postTargetPortal';
+                        if (portalIdList.length > 1) {
+                            this.messageName = 'postTargetPortals';
+                        }
+
+                        var targetHtml = '';
+                        var portalHtmlList = [];
+                        portalIdList.forEach(function (portalId) {
+                            var portalName = portalNameHash[portalId];
+                            if (portalName) {
+                                portalHtmlList.push('<a href="#Portal/view/' + portalId + '">' + portalName + '</a>');
+                            }
+                        }, this);
+
+                        this.messageData['target'] = portalHtmlList.join(', ');
                     } else if (this.model.has('usersIds') && this.model.get('usersIds').length) {
                         var userIdList = this.model.get('usersIds');
                         var userNameHash = this.model.get('usersNames') || {};

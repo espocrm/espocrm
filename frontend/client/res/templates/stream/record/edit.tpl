@@ -24,5 +24,8 @@
         <div class="cell form-group" data-name="teams">
             <div class="field" data-name="teams">{{{teams}}}</div>
         </div>
+        <div class="cell form-group" data-name="portals">
+            <div class="field" data-name="portals">{{{portals}}}</div>
+        </div>
     </div>
 </div>

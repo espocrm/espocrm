@@ -97,23 +97,47 @@ class Notifications extends \Espo\Core\Hooks\Base
                 $targetType = $entity->get('targetType');
                 if ($targetType === 'users') {
                     $targetUserIdList = $entity->get('usersIds');
-                    foreach ($targetUserIdList as $userId) {
-                        if ($userId === $this->getUser()->id) continue;
-                        $userIdList[] = $userId;
+                    if (is_array($targetUserIdList)) {
+                        foreach ($targetUserIdList as $userId) {
+                            if ($userId === $this->getUser()->id) continue;
+                            if (in_array($user->id, $userIdList)) continue;
+                            $userIdList[] = $userId;
+                        }
                     }
                 } else if ($targetType === 'teams') {
                     $targetTeamIdList = $entity->get('teamsIds');
-                    foreach ($targetTeamIdList as $teamId) {
-                        $team = $this->getEntityManager()->getEntity('Team', $teamId);
-                        if (!$team) continue;
-                        $targetUserList = $this->getEntityManager()->getRepository('Team')->findRelated($team, 'users', array(
-                            'whereClause' => array(
-                                'isActive' => true
-                            )
-                        ));
-                        foreach ($targetUserList as $user) {
-                            if ($user->id === $this->getUser()->id) continue;
-                            $userIdList[] = $user->id;
+                    if (is_array($targetTeamIdList)) {
+                        foreach ($targetTeamIdList as $teamId) {
+                            $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                            if (!$team) continue;
+                            $targetUserList = $this->getEntityManager()->getRepository('Team')->findRelated($team, 'users', array(
+                                'whereClause' => array(
+                                    'isActive' => true
+                                )
+                            ));
+                            foreach ($targetUserList as $user) {
+                                if ($user->id === $this->getUser()->id) continue;
+                                if (in_array($user->id, $userIdList)) continue;
+                                $userIdList[] = $user->id;
+                            }
+                        }
+                    }
+                } else if ($targetType === 'portals') {
+                    $targetPortalIdList = $entity->get('portalsIds');
+                    if (is_array($targetPortalIdList)) {
+                        foreach ($targetPortalIdList as $portalId) {
+                            $portal = $this->getEntityManager()->getEntity('Portal', $portalId);
+                            if (!$portal) continue;
+                            $targetUserList = $this->getEntityManager()->getRepository('Portal')->findRelated($portal, 'users', array(
+                                'whereClause' => array(
+                                    'isActive' => true
+                                )
+                            ));
+                            foreach ($targetUserList as $user) {
+                                if ($user->id === $this->getUser()->id) continue;
+                                if (in_array($user->id, $userIdList)) continue;
+                                $userIdList[] = $user->id;
+                            }
                         }
                     }
                 } else if ($targetType === 'all') {

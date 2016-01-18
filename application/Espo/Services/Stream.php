@@ -303,6 +303,7 @@ class Stream extends \Espo\Core\Services\Base
             note.parent_id AS 'parentId',
             note.related_type AS 'relatedType',
             note.related_id AS 'relatedId',
+            note.target_type AS 'targetType',
             note.created_at AS 'createdAt',
             note.created_by_id AS 'createdById',
             TRIM(CONCAT(createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`,
@@ -405,12 +406,35 @@ class Stream extends \Espo\Core\Services\Base
             ";
         }
 
+        $portalIdList = $user->getLinkMultipleIdList('portals');
+        $portalIdQuotedList = [];
+        foreach ($portalIdList as $portalId) {
+            $portalIdQuotedList[] = $pdo->quote($portalId);
+        }
+        if (!empty($portalIdQuotedList)) {
+            $sqlPartList[] = "
+                (
+                    SELECT {$selectSqlPart}
+                    FROM `note` AS `note`
+                    LEFT JOIN `user` AS `createdBy` ON note.created_by_id = createdBy.id
+                    LEFT JOIN `note_portal` AS portalsMiddle ON portalsMiddle.note_id = note.id AND portalsMiddle.deleted = 0
+                    WHERE note.deleted = 0 AND
+                    (
+                        note.parent_id IS NULL AND
+                        portalsMiddle.portal_id IN (".implode(',', $portalIdQuotedList).") AND
+                        note.is_global = 0
+                    )
+                    {where}
+                    ORDER BY number DESC
+                )
+            ";
+        }
+
         $teamIdList = $user->getTeamIdList();
         $teamIdQuotedList = [];
         foreach ($teamIdList as $teamId) {
             $teamIdQuotedList[] = $pdo->quote($teamId);
         }
-
         if (!empty($teamIdList)) {
             $sqlPartList[] = "
                (
@@ -492,9 +516,16 @@ class Stream extends \Espo\Core\Services\Base
                 }
             }
             if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
-                $e->loadLinkMultipleField('users');
-                if (count($e->get('usersIds')) == 0) {
-                    $e->loadLinkMultipleField('teams');
+                $targetType = $e->get('targetType');
+                if (!$targetType || $targetType === 'users') {
+                    $e->loadLinkMultipleField('users');
+                }
+                if ($targetType !== 'users') {
+                    if (!$targetType || $targetType === 'teams') {
+                        $e->loadLinkMultipleField('teams');
+                    } else if ($targetType === 'portals') {
+                        $e->loadLinkMultipleField('portals');
+                    }
                 }
             }
         }
