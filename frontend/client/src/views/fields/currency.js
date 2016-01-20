@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
+Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
 
     return Dep.extend({
 
         type: 'currency',
 
-        editTemplate: 'fields.currency.edit',
+        editTemplate: 'fields/currency/edit',
 
-        detailTemplate: 'fields.currency.detail',
+        detailTemplate: 'fields/currency/detail',
 
-        listTemplate: 'fields.currency.detail',
+        listTemplate: 'fields/currency/detail',
 
         data: function () {
             return _.extend({
@@ -52,13 +52,15 @@ Espo.define('Views.Fields.Currency', 'Views.Fields.Float', function (Dep) {
             this.currencyFieldName = this.name + 'Currency';
             this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
-
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
                 this.$currency = this.$el.find('[name="' + this.currencyFieldName + '"]');
+                this.$currency.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 
