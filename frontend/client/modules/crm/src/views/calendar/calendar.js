@@ -132,15 +132,6 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.$container = this.options.$container;
 
-            if (this.options.containerSelector) {
-                this.once('after:render', function () {
-                    this.$container = $(this.options.containerSelector);
-                    setTimeout(function () {
-                        this.adjustSize();
-                    }.bind(this), 100);
-                }, this);
-            }
-
             this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
@@ -374,6 +365,10 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         afterRender: function () {
+            if (this.options.containerSelector) {
+                this.$container = $(this.options.containerSelector);
+            }
+
             var $calendar = this.$calendar = this.$el.find('div.calendar');
 
             var slotDuration = '00:' + this.slotDuration + ':00';

@@ -51,7 +51,9 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             }, function (view) {
                 view.render();
                 this.on('resize', function () {
-                    view.adjustSize();
+                    setTimeout(function() {
+                        view.adjustSize();
+                    }, 50);
                 });
             }, this);
         }
