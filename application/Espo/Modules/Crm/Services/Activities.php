@@ -295,7 +295,7 @@ class Activities extends \Espo\Core\Services\Base
     {
         $methodName = 'get' .$scope . 'CallQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $notIn);
+            return $this->$methodName($id, $op, $statusList);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
