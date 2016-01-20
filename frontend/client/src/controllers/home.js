@@ -30,7 +30,7 @@ Espo.define('controllers/home', 'controller', function (Dep) {
     return Dep.extend({
 
         index: function () {
-            this.main('Home', null);
+            this.main('views/home', null);
         },
 
         search: function (text) {

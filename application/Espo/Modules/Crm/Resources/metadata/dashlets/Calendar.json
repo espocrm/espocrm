@@ -1,4 +1,45 @@
 {
-    "view":"Crm:Dashlets.Calendar",
-    "aclScope": "Calendar"
+    "view":"crm:views/dashlets/calendar",
+    "aclScope": "Calendar",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "enabledScopeList": {
+                "type": "multiEnum",
+                "options": ["Meeting", "Call", "Task"],
+                "translation": "Global.scopeNamesPlural",
+                "required": true
+            },
+            "mode": {
+                "type": "enum",
+                "options": ["basicWeek", "agendaWeek", "month"]
+            }
+        },
+        "defaults": {
+            "autorefreshInterval": 0.5,
+            "mode": "basicWeek",
+            "enabledScopeList": ["Meeting", "Call", "Task"]
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "mode"},
+                        {"name": "enabledScopeList"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

@@ -24,26 +24,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.Abstract.Chart', function (Dep) {
+Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashlets/abstract/chart', function (Dep) {
 
     return Dep.extend({
 
-        name: 'OpportunitiesByLeadSource',    
-        
-        
+        name: 'OpportunitiesByLeadSource',
+
         optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
             'dateFrom': {
                 type: 'date',
-                required: true,                    
+                required: true,
             },
             'dateTo': {
                 type: 'date',
-                required: true,                    
+                required: true,
             }
         }),
-        
+
         defaultOptions: {
             dateFrom: function () {
                 return moment().format('YYYY') + '-01-01'
@@ -52,13 +51,13 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
                 return moment().format('YYYY') + '-12-31'
             },
         },
-        
+
         url: function () {
             return 'Opportunity/action/reportByLeadSource?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
         },
-            
+
         prepareData: function (response) {
-            var data = [];            
+            var data = [];
             for (var label in response) {
                 var value = response[label];
                 data.push({
@@ -66,21 +65,21 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
                     data: [[0, value]]
                 });
             }
-            return data;    
+            return data;
         },
-                
+
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
             this.currencySymbol = '';
-        },    
-        
+        },
+
         drow: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 colors: this.colors,
                 shadowSize: false,
                 pie: {
-                    show: true, 
+                    show: true,
                     explode: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
@@ -92,7 +91,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
                     outline: 's'
                 },
                 yaxis: {
-                    showLabels: false,                        
+                    showLabels: false,
                 },
                 xaxis: {
                     showLabels: false,
@@ -104,7 +103,7 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByLeadSource', 'Crm:Views.Dashlets.
                     track: true,
                     relative: true,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.y) + ' ' + self.currency;                            
+                        return self.formatNumber(obj.y) + ' ' + self.currency;
                     },
                 },
                 legend: {

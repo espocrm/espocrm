@@ -12,5 +12,5 @@
           <span data-action="refresh" class="action" title="{{translate 'Refresh'}}" style="cursor: pointer;">{{title}}</span>
         </h4>
     </div>
-    <div class="dashlet-body panel-body">{{{body}}}</div>
+    <div class="dashlet-body panel-body{{#if noPadding}} no-padding{{/if}}">{{{body}}}</div>
 </div>

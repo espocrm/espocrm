@@ -36,7 +36,8 @@ Espo.define('theme-manager', [], function () {
     _.extend(ThemeManager.prototype, {
 
         defaultParams: {
-            screenWidthXs: 768
+            screenWidthXs: 768,
+            dashboardCellHeight: 155
         },
 
         getName: function () {

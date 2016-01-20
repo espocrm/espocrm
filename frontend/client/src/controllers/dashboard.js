@@ -32,7 +32,7 @@ Espo.define('controllers/dashboard', 'controller', function (Dep) {
         defaultAction: 'index',
 
         index: function () {
-            this.main('Dashboard', {
+            this.main('views/dashboard', {
                 displayTitle: true,
             }, function (view) {
                 view.render();

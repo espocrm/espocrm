@@ -34,12 +34,11 @@ Espo.define('views/home', 'view', function (Dep) {
 
         el: '#main',
 
-        views: {
-            dashboard: {
-                view: 'Dashboard',
-                selector: '> .home-content',
-            }
-        },
+        setup: function () {
+            this.createView('dashboard', 'views/dashboard', {
+                el: this.options.el + ' > .home-content'
+            });
+        }
     });
 });
 

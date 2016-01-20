@@ -547,14 +547,46 @@ table.no-margin {
     cursor: default;
 }
 
+.panel.dashlet {
+    height: inherit;
+}
+.dashlet-container {
+    overflow-y: hidden;
+}
+
 .panel.dashlet > .panel-body {
-    height: 295px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.panel.dashlet.double-height > .panel-body {
-    height: 642px;
+.dashlets.grid-stack {
+    .panel.dashlet {
+        margin-bottom: 0;
+    }
+
+    .grid-stack-item {
+        .dashlet {
+            height: 100%;
+            .dashlet-body {
+                height: ~"calc(100% - 29px)";
+            }
+        }
+    }
+
+    .ui-resizable-handle:before {
+        content: '' !important;
+    }
+}
+
+.grid-stack.grid-stack-4 {
+    .grid-stack-item[data-gs-width="4"]  { width: 100% }
+    .grid-stack-item[data-gs-width="3"]  { width: 75% }
+    .grid-stack-item[data-gs-width="2"]  { width: 50% }
+    .grid-stack-item[data-gs-width="1"]  { width: 25% }
+
+    .grid-stack-item[data-gs-x="3"]  { left: 75% }
+    .grid-stack-item[data-gs-x="2"]  { left: 50% }
+    .grid-stack-item[data-gs-x="1"]  { left: 25% }
 }
 
 .panel-heading > .btn-group {
@@ -595,6 +627,13 @@ td.cell-buttons > .btn-group {
 .note-editor .panel-heading > .btn-group {
     right: 0;
     top: 0;
+}
+
+.panel-body.no-padding {
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .panel {

@@ -1,3 +1,4 @@
 {
-    "stylesheet": "client/css/sakura.css"
+    "stylesheet": "client/css/sakura.css",
+    "dashboardCellHeight": 155
 }

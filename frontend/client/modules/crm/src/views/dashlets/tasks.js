@@ -26,47 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.Tasks', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
+Espo.define('crm:views/dashlets/tasks', 'views/dashlets/abstract/record-list', function (Dep) {
 
     return Dep.extend({
 
-        name: 'Tasks',
+        listViewName: 'crm:views/task/record/list-expanded',
 
-        scope: 'Task',
-
-        listViewName: 'Crm:Task.Record.ListExpanded',
-
-        rowActionsView: 'Crm:Task.Record.RowActions.Dashlet',
-
-        defaultOptions: {
-            sortBy: 'dateEnd',
-            asc: true,
-            displayRecords: 5,
-            expandedLayout: {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true,
-                        }
-                    ],
-                    [
-                        {
-                            name: 'status'
-                        },
-                        {
-                            name: 'dateEnd'
-                        }
-                    ]
-                ]
-            },
-            searchData: {
-                bool: {
-                    onlyMy: true
-                },
-                primary: 'actualNotDeferred'
-            },
-        },
+        rowActionsView: 'crm:views/task/record/row-actions/dashlet'
 
     });
 });

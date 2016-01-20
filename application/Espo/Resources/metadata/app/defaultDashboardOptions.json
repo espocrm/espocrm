@@ -1,7 +1,6 @@
 {
 	"Standard": {
 	    "defaultStream": {
-	    	"isDoubleHeight": true,
 	    	"displayRecords": 10
 	    }
 	}

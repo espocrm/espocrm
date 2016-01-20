@@ -38,22 +38,6 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
         scopeList: ['Meeting', 'Call'],
 
-        defaultOptions: {
-            displayRecords: 5,
-            autorefreshInterval: 0.5,
-            isDoubleHeight: false
-        },
-
-        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-            'displayRecords': {
-                type: 'enumInt',
-                options: [3,4,5,10,15]
-            },
-            'isDoubleHeight': {
-                type: 'bool',
-            },
-        }),
-
         listLayout: {
             'Meeting': {
                 rows: [

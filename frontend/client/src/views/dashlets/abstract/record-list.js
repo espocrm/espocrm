@@ -30,8 +30,6 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
 
     return Dep.extend({
 
-        name: 'Leads',
-
         scope: null,
 
         listViewColumn: 'views/record/list',
@@ -48,13 +46,14 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             'displayRecords': {
                 type: 'enumInt',
                 options: [3,4,5,10,15],
-            },
-            'isDoubleHeight': {
-                type: 'bool',
             }
         }),
 
         rowActionsView: 'views/record/row-actions/view-and-edit',
+
+        setup: function () {
+            this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
+        },
 
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {

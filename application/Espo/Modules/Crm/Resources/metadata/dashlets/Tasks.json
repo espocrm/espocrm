@@ -1,4 +1,63 @@
 {
-    "view":"Crm:Dashlets.Tasks",
-    "aclScope": "Task"
+    "view":"crm:views/dashlets/tasks",
+    "aclScope": "Task",
+    "entityType": "Task",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15]
+            }
+        },
+        "defaults": {
+            "sortBy": "dateEnd",
+            "asc": true,
+            "displayRecords": 5,
+            "expandedLayout": {
+                "rows": [
+                    [
+                        {
+                            "name": "name",
+                            "link": true
+                        }
+                    ],
+                    [
+                        {
+                            "name": "status"
+                        },
+                        {
+                            "name": "dateEnd"
+                        }
+                    ]
+                ]
+            },
+            "searchData": {
+                "bool": {
+                    "onlyMy": true
+                },
+                "primary": "actualNotDeferred"
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

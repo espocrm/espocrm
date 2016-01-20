@@ -1,4 +1,4 @@
 {
-    "view":"Crm:Dashlets.OpportunitiesByLeadSource",
+    "view":"crm:views/dashlets/opportunities-by-lead-source",
     "aclScope": "Opportunity"
 }

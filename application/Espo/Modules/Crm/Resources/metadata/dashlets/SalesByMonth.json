@@ -1,4 +1,4 @@
 {
-    "view":"Crm:Dashlets.SalesByMonth",
+    "view":"crm:views/dashlets/sales-by-month",
     "aclScope": "Opportunity"
 }

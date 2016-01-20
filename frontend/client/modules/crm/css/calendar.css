@@ -29,11 +29,8 @@
 	background-color: none !important;
 }
 
-.dashlet-body div.calendar {
-	margin-left: -15px;
-	margin-right: -15px;
-	margin-bottom: -15px;
-	margin-top: -15px;
+.dashlet-body div.calendar-container {
+	height: 100%;
 }
 
 .fc-event {

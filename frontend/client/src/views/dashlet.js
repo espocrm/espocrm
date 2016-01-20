@@ -42,9 +42,9 @@ Espo.define('views/dashlet', 'view', function (Dep) {
             return {
                 name: this.name,
                 id: this.id,
-                title: this.getOption('title'),
-                isDoubleHeight: this.getOption('isDoubleHeight'),
-                actionList: (this.getView('body') || {}).actionList || []
+                title: this.getOption('title') || this.name,
+                actionList: (this.getView('body') || {}).actionList || [],
+                noPadding: (this.getView('body') || {}).noPadding
             };
         },
 
@@ -73,10 +73,19 @@ Espo.define('views/dashlet', 'view', function (Dep) {
             this.name = this.options.name;
             this.id = this.options.id;
 
-            var bodySelector = '#dashlet-' + this.id + ' .dashlet-body';
-            var view = this.getMetadata().get('dashlets.' + this.name + '.view') || 'Dashlets.' + this.name;
+            this.on('resize', function () {
+                var bodyView = this.getView('body');
+                if (!bodyView) return;
+                bodyView.trigger('resize');
+            }, this);
 
-            this.createView('body', view, {el: bodySelector, id: this.id});
+            var viewName = this.getMetadata().get('dashlets.' + this.name + '.view') || 'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
+
+            this.createView('body', viewName, {
+                el: this.options.el + ' .dashlet-body',
+                id: this.id,
+                name: this.name
+            });
         },
 
         refresh: function () {
@@ -107,11 +116,11 @@ Espo.define('views/dashlet', 'view', function (Dep) {
         },
 
         actionRemove: function () {
-            var dashboard = this.getParentView().getParentView();
-            dashboard.removeDashlet(this.options.id);
+            this.trigger('remove-dashlet');
             this.$el.remove();
             this.remove();
-        },
+        }
+
     });
 });
 

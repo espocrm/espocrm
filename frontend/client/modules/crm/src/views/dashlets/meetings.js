@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList', function (Dep) {
+Espo.define('crm:views/dashlets/meetings', 'views/dashlets/abstract/record-list', function (Dep) {
 
     return Dep.extend({
 
@@ -34,53 +34,9 @@ Espo.define('Crm:Views.Dashlets.Meetings', 'Views.Dashlets.Abstract.RecordList',
 
         scope: 'Meeting',
 
-        listViewName: 'Crm:Meeting.Record.ListExpanded',
+        listViewName: 'crm:views/meeting/record/list-expanded',
 
-        rowActionsView: 'Crm:Meeting.Record.RowActions.Dashlet',
-
-        defaultOptions: {
-            sortBy: 'dateStart',
-            asc: true,
-            displayRecords: 5,
-            expandedLayout: {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true,
-                        }
-                    ],
-                    [
-                        {
-                            name: 'dateStart'
-                        }
-                    ]
-                ]
-            },
-            searchData: {
-                bool: {
-                    onlyMy: true,
-                },
-                primary: 'Planned',
-                advanced: {
-                    '1': {
-                        type: 'or',
-                        value: {
-                            '1': {
-                                type: 'today',
-                                field: 'dateStart',
-                                dateTime: true
-                            },
-                            '2': {
-                                type: 'future',
-                                field: 'dateEnd',
-                                dateTime: true
-                            }
-                        }
-                    }
-                }
-            },
-        },
+        rowActionsView: 'crm:views/meeting/record/row-actions/dashlet'
 
     });
 });

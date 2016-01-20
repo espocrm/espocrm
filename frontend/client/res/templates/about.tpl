@@ -59,6 +59,7 @@
             <li>JQuery Autocomplete by Tomas Kirda</li>
             <li>JQuery Textcomplete by Yuku Takahashi</li>
             <li>JQuery Timepicker by Jon Thornton</li>
+            <li>gridstack.js by Pavel Reznikov</li>
         </ul>
         </section>
         <section style="margin-top: 30px;">

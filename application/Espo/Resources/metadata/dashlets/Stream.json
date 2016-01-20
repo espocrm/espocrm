@@ -1,1 +1,35 @@
-{"module": false}
+{
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15,20,30]
+            }
+        },
+        "defaults": {
+            "displayRecords": 10,
+            "autorefreshInterval": 0.5
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

@@ -3,5 +3,6 @@
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,
-    "recordTopButtonsBlockHeight": 21
+    "recordTopButtonsBlockHeight": 21,
+    "dashboardCellHeight": 155
 }

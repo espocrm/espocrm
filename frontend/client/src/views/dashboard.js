@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashboard', 'view', function (Dep) {
+Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
     return Dep.extend({
 
@@ -62,7 +62,7 @@ Espo.define('views/dashboard', 'view', function (Dep) {
 
                         (data.dashboardTabList).forEach(function (name) {
                             var isExisting = false;
-                            var layout = [[],[]];
+                            var layout = [];
                             this.dashboardLayout.forEach(function (d) {
                                 if (d.name == name) {
                                     isExisting = true;
@@ -76,14 +76,13 @@ Espo.define('views/dashboard', 'view', function (Dep) {
                         }, this);
 
                         this.dashboardLayout = dashboardLayout;
-                        this.updateDashletsLayout();
+                        this.saveLayout();
 
                         this.storeCurrentTab(0);
                         this.currentTab = 0;
+                        this.setupCurrentTabLayout();
+                        this.reRender();
 
-                        this.setupDashlets(function () {
-                            this.reRender();
-                        }.bind(this));
                     }, this);
                 }.bind(this));
             },
@@ -98,12 +97,12 @@ Espo.define('views/dashboard', 'view', function (Dep) {
             };
         },
 
-        getDashletsLayout: function (callback, context) {
+        setupCurrentTabLayout: function () {
             if (!this.dashboardLayout) {
                 var defaultLayout = [
                     {
                         "name": "My Espo",
-                        "layout": [[],[]]
+                        "layout": []
                     }
                 ];
                 this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
@@ -112,6 +111,7 @@ Espo.define('views/dashboard', 'view', function (Dep) {
                     this.dashboardLayout = defaultLayout;
                 }
             }
+
             var dashboardLayout = this.dashboardLayout || [];
 
             if (dashboardLayout.length <= this.currentTab) {
@@ -120,35 +120,9 @@ Espo.define('views/dashboard', 'view', function (Dep) {
 
             var tabLayout = dashboardLayout[this.currentTab].layout || [];
 
-            var layout = this.convertLayout(tabLayout);
+            tabLayout = GridStackUI.Utils.sort(tabLayout);
 
-            callback.call(context, layout);
-        },
-
-        convertLayout: function (tabLayout) {
-            var layout = {
-                type: 'columns-2',
-                layout: [],
-            };
-            tabLayout.forEach(function (col) {
-                var c = [];
-                col.forEach(function (defs) {
-                    if (defs && defs.name && defs.id) {
-                        var o = {
-                            name: 'dashlet-' + defs.id,
-                            id: 'dashlet-container-' + defs.id,
-                            view: 'Dashlet',
-                            options: {
-                                name: defs.name,
-                                id: defs.id,
-                            }
-                        };
-                        c.push(o);
-                    }
-                });
-                layout.layout.push(c);
-            });
-            return layout;
+            this.currentTabLayout = tabLayout;
         },
 
         storeCurrentTab: function (tab) {
@@ -161,75 +135,94 @@ Espo.define('views/dashboard', 'view', function (Dep) {
 
             this.currentTab = tab;
             this.storeCurrentTab(tab);
-            this.setupDashlets(function (view) {
-                view.render();
-                this.makeSortable();
-            }.bind(this));
-        },
 
-        setupDashlets: function (callback1, callback2) {
-            this.clearView('dashlets');
-            this.getDashletsLayout(function (layout) {
-                this.createView('dashlets', 'Base', {
-                    _layout: layout,
-                    el: '#dashlets',
-                    noCache: true,
-                }, callback1);
-                if (callback2) {
-                    callback2();
-                }
-            }, this);
+            this.setupCurrentTabLayout();
+
+            this.reRender();
         },
 
         setup: function () {
-            this.wait(true);
-
             this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
-
-            this.setupDashlets(null, function () {
-                this.wait(false);
-            }.bind(this));
+            this.setupCurrentTabLayout();
         },
 
         afterRender: function () {
-            this.makeSortable();
-        },
+            var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
 
-        makeSortable: function () {
-            $('#dashlets > div').css('min-height', '100px');
-            $('#dashlets > div').sortable({
-                handle: '.dashlet .panel-heading',
-                connectWith: '#dashlets > div',
-                forcePlaceholderSize: true,
-                placeholder: 'dashlet-placeholder',
-                start: function (e, ui) {
-                    $(ui.placeholder).css('height', $(ui.item).height());
+            $gridstack.gridstack({
+                min_width: 4,
+                cell_height: this.getThemeManager().getParam('dashboardCellHeight'),
+                vertical_margin: 19,
+                width: 4,
+                min_width: this.getThemeManager().getParam('screenWidthXs'),
+                handle: '.dashlet-container .panel-heading',
+                draggable: {
+                    handle: '.dashlet-container .panel-heading',
                 },
-                stop: function (e, ui) {
-                    this.updateDom();
-                    this.updateDashletsLayout();
-                }.bind(this)
+                resizable: {
+                    handles: 'se',
+                    helper: false
+                }
             });
+
+            var grid = $gridstack.data('gridstack');
+            grid.remove_all();
+
+            $gridstack.on('change', function (e, itemList) {
+                this.fetchLayout();
+                this.saveLayout();
+            }.bind(this));
+
+            $gridstack.on('resizestop', function (e, ui) {
+                var id = $(e.target).data('id');
+                var view = this.getView('dashlet-' + id);
+                if (!view) return;
+                view.trigger('resize');
+            }.bind(this));
+
+            this.currentTabLayout.forEach(function (o) {
+                var $item = this.prepareGridstackItem(o.id, o.name);
+                grid.add_widget($item, o.x, o.y, o.width, o.height);
+            }, this);
+
+            $gridstack.find(' .grid-stack-item').css('position', 'absolute');
+
+            this.currentTabLayout.forEach(function (o) {
+                if (!o.id || !o.name) return;
+                this.createDashletView(o.id, o.name);
+            }, this);
         },
 
-        updateDom: function () {
-            var layout = [];
-            $('#dashlets > div').each(function (i, col) {
-                var c = [];
-                $(col).children().each(function (i, cell) {
-                    var name = $(cell).find('.dashlet').data('name');
-                    var id = $(cell).find('.dashlet').data('id');
-                    c.push({
-                        name: name,
-                        id: id,
-                    });
-                });
-                layout.push(c);
-            });
+        fetchLayout: function () {
+            var layout = _.map(this.$gridstack.find('.grid-stack-item'), function (el) {
+                var $el = $(el);
+                var node = $el.data('_gridstack_node') || {};
+                return {
+                    id: $el.data('id'),
+                    name: $el.data('name'),
+                    x: node.x,
+                    y: node.y,
+                    width: node.width,
+                    height: node.height
+                };
+            }.bind(this));
+
             this.dashboardLayout[this.currentTab].layout = layout;
         },
 
-        updateDashletsLayout: function () {
+        prepareGridstackItem: function (id, name) {
+            var $item = $('<div></div>');
+            var $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
+            $container.attr('data-id', id);
+            $container.attr('data-name', name);
+            $item.attr('data-id', id);
+            $item.attr('data-name', name);
+            $item.append($container);
+
+            return $item;
+        },
+
+        saveLayout: function () {
             this.getPreferences().save({
                 dashboardLayout: this.dashboardLayout
             }, {patch: true});
@@ -237,13 +230,16 @@ Espo.define('views/dashboard', 'view', function (Dep) {
         },
 
         removeDashlet: function (id) {
-            this.dashboardLayout[this.currentTab].layout.forEach(function (col, i) {
-                col.forEach(function (o, j) {
-                    if (o.id == id) {
-                        col.splice(j, 1);
-                        return;
-                    }
-                });
+            var grid = this.$gridstack.data('gridstack');
+            var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
+            grid.remove_widget($item, true);
+
+            var layout = this.dashboardLayout[this.currentTab].layout;
+            layout.forEach(function (o, i) {
+                if (o.id == id) {
+                    layout.splice(i, 1);
+                    return;
+                }
             });
 
             var o = {};
@@ -259,24 +255,44 @@ Espo.define('views/dashboard', 'view', function (Dep) {
         addDashlet: function (name) {
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
-            this.dashboardLayout[this.currentTab].layout[0].unshift({
-                name: name,
-                id: id
-            });
+            var $item = this.prepareGridstackItem(id, name);
 
-            this.updateDashletsLayout();
+            var grid = this.$gridstack.data('gridstack');
+            grid.add_widget($item, 0, 0, 2, 2);
 
-            $('#dashlets').children().first().prepend('<div id="dashlet-container-' + id + '"></div>');
+            this.createDashletView(id, name, name, function () {
+                this.fetchLayout();
+                this.saveLayout();
+            }, this);
+        },
 
-            this.getView('dashlets').createView('dashlet-' + id, 'Dashlet', {
+        createDashletView: function (id, name, label, callback, context) {
+            var context = context || this;
+
+            var o = {
+                id: id,
+                name: name
+            }
+            if (label) {
+                o.label = label;
+            }
+            this.createView('dashlet-' + id, 'views/dashlet', {
                 label: name,
                 name: name,
                 id: id,
-                el: '#dashlet-container-' + id
+                el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]'
             }, function (view) {
                 view.render();
-            });
-        },
+
+                this.listenToOnce(view, 'remove-dashlet', function () {
+                    this.removeDashlet(id);
+                }, this);
+
+                if (callback) {
+                    callback.call(this, view);
+                }
+            }, this);
+        }
     });
 });
 

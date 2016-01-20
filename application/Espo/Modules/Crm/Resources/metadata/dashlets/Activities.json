@@ -1,3 +1,36 @@
 {
-    "view":"crm:views/dashlets/activities"
+    "view":"crm:views/dashlets/activities",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15,20,30]
+            }
+        },
+        "defaults": {
+            "displayRecords": 5,
+            "autorefreshInterval": 0.5
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

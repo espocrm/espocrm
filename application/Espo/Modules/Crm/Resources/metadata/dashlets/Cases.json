@@ -1,4 +1,69 @@
 {
-    "view":"Crm:Dashlets.Cases",
-    "aclScope": "Case"
+    "view":"views/dashlets/abstract/record-list",
+    "aclScope": "Case",
+    "entityType": "Case",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15]
+            }
+        },
+        "defaults": {
+            "sortBy": "createdAt",
+            "asc": false,
+            "displayRecords": 5,
+            "expandedLayout": {
+                "rows": [
+                    [
+                        {
+                            "name": "number"
+                        },
+                        {
+                            "name": "name",
+                            "link": true
+                        },
+                        {
+                            "name": "type"
+                        }
+                    ],
+                    [
+                        {
+                            "name": "status"
+                        },
+                        {
+                            "name": "priority"
+                        }
+                    ]
+                ]
+            },
+            "searchData": {
+                "bool": {
+                    "onlyMy": true
+                },
+                "primary": "open"
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

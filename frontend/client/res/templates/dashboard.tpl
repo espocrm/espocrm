@@ -1,3 +1,5 @@
+<link href="client/css/gridstack.min.css" rel="stylesheet">
+
 <div class="page-header dashboard-header">
     <div class="row">
         <div class="col-sm-5">
@@ -20,5 +22,5 @@
         </div>
     </div>
 </div>
-<div id="dashlets" class="row">{{{dashlets}}}</div>
+<div class="dashlets grid-stack grid-stack-4 row">{{{dashlets}}}</div>
 

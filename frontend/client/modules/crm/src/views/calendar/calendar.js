@@ -130,6 +130,17 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.header = ('header' in this.options) ? this.options.header : this.header;
             this.slotDuration = this.options.slotDuration || this.slotDuration;
 
+            this.$container = this.options.$container;
+
+            if (this.options.containerSelector) {
+                this.once('after:render', function () {
+                    this.$container = $(this.options.containerSelector);
+                    setTimeout(function () {
+                        this.adjustSize();
+                    }.bind(this), 100);
+                }, this);
+            }
+
             this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
@@ -345,6 +356,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         getCalculatedHeight: function () {
+            if (this.$container && this.$container.size()) {
+                return this.$container.height();
+            }
             var height = $(window).height();
             var width = $(window).width();
             var spaceHeight = 150;
@@ -352,6 +366,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 spaceHeight = 164;
             }
             return $(window).height() - spaceHeight;
+        },
+
+        adjustSize: function () {
+            var height = this.getCalculatedHeight();
+            this.$calendar.fullCalendar('option', 'contentHeight', height);
         },
 
         afterRender: function () {
@@ -375,10 +394,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 windowResize: function () {
-                    var height = this.getCalculatedHeight();
-                    $calendar.fullCalendar('option', 'contentHeight', height);
-
-
+                    this.adjustSize();
                 }.bind(this),
                 select: function (start, end, allDay) {
                     var dateStart = this.convertTime(start);
@@ -392,7 +408,6 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                         attributes.assignedUserId = this.options.userId;
                         attributes.assignedUserName = this.options.userName || this.options.userId;
                     }
-
 
                     this.notify('Loading...');
                     this.createView('quickEdit', 'crm:views/calendar/modals/edit', {

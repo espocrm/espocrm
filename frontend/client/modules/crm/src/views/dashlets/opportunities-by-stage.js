@@ -24,25 +24,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstract.Chart', function (Dep) {
+Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract/chart', function (Dep) {
 
     return Dep.extend({
 
         name: 'OpportunitiesByStage',
-        
+
         optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
             'dateFrom': {
                 type: 'date',
-                required: true,                    
+                required: true,
             },
             'dateTo': {
                 type: 'date',
-                required: true,                    
+                required: true,
             }
         }),
-        
+
         defaultOptions: {
             dateFrom: function () {
                 return moment().format('YYYY') + '-01-01'
@@ -50,14 +50,14 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
             dateTo: function () {
                 return moment().format('YYYY') + '-12-31'
             },
-        },    
-        
+        },
+
         url: function () {
             return 'Opportunity/action/reportByStage?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
         },
-            
+
         prepareData: function (response) {
-            var d = [];            
+            var d = [];
             for (var label in response) {
                 var value = response[label];
                 d.push({
@@ -65,9 +65,9 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
                     value: value
                 });
             }
-            
+
             this.stageList = [];
-            
+
             var data = [];
             var i = 0;
             d.forEach(function (item) {
@@ -82,15 +82,15 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
                 this.stageList.push(this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'));
                 i++;
             }, this);
-            
-            return data;    
-        },            
-                    
+
+            return data;
+        },
+
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
             this.currencySymbol = '';
         },
-        
+
         drow: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
@@ -110,11 +110,11 @@ Espo.define('Crm:Views.Dashlets.OpportunitiesByStage', 'Crm:Views.Dashlets.Abstr
                 },
                 yaxis: {
                     min: 0,
-                    showLabels: false,                        
+                    showLabels: false,
                 },
                 xaxis: {
                     min: 0,
-                    tickFormatter: function (value) {                        
+                    tickFormatter: function (value) {
                         if (value != 0) {
                             return self.formatNumber(value) + ' ' + self.currency;
                         }

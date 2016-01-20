@@ -1,4 +1,66 @@
 {
-    "view":"Crm:Dashlets.Leads",
-    "aclScope": "Lead"
+    "view":"views/dashlets/abstract/record-list",
+    "aclScope": "Lead",
+    "entityType": "Lead",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15]
+            }
+        },
+        "defaults": {
+            "sortBy": "createdAt",
+            "asc": false,
+            "displayRecords": 5,
+            "expandedLayout": {
+                "rows": [
+                    [
+                        {
+                            "name": "name",
+                            "link": true
+                        },
+                        {
+                            "name": "addressCity"
+                        }
+                    ],
+                    [
+                        {
+                            "name": "status"
+                        },
+                        {
+                            "name": "source"
+                        }
+                    ]
+                ]
+            },
+            "searchData": {
+                "bool": {
+                    "onlyMy": true
+                },
+                "primary": "actual"
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

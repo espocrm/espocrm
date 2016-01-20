@@ -26,13 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
+Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
     return Dep.extend({
 
-        optionsView: 'Dashlets.Options.Base',
-
-        defaultOptions: null,
+        optionsView: 'views/dashlets/options/base',
 
         optionsData: null,
 
@@ -43,20 +41,26 @@ Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
         actionOptions: function () {},
 
         optionsFields: {
-            'title': {
-                type: 'varchar',
-                required: true,
+            "title": {
+                "type": "varchar",
+                "required": true
             },
-            'autorefreshInterval': {
-                type: 'enumFloat',
-                options: [0, 0.5, 1, 2, 5, 10],
-            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            }
         },
 
         init: function () {
+            this.name = this.options.name || this.name;
+
+            this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) || this.defaultOptions || {};
+
             this.defaultOptions = _.extend({
                 title: this.getLanguage().translate(this.name, 'dashlets'),
-            }, this.defaultOptions || {});
+            }, this.defaultOptions);
+
+            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) || this.optionsFields || {};
 
             this.optionsFields = Espo.Utils.clone(this.optionsFields);
 
@@ -120,7 +124,8 @@ Espo.define('Views.Dashlets.Abstract.Base', 'View', function (Dep) {
 
         getOption: function (key) {
             return this.optionsData[key];
-        },
+        }
+
     });
 });
 

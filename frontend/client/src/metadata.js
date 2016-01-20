@@ -72,9 +72,14 @@ Espo.define('metadata', [], function () {
 
         get: function (path, defaultValue) {
             defaultValue = defaultValue || null;
+            var arr;
+            if (Array && Array.isArray && Array.isArray(path)) {
+                arr = path;
+            } else {
+                arr = path.split('.');
+            }
 
             var pointer = this.data;
-            var arr = path.split('.');
             var result = defaultValue;
             arr.forEach(function (key, i) {
                 if (!(key in pointer)) {

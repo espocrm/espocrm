@@ -24,25 +24,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Chart', function (Dep) {
+Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart', function (Dep) {
 
     return Dep.extend({
 
         name: 'SalesByMonth',
-        
+
         optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
             'dateFrom': {
                 type: 'date',
-                required: true,                
+                required: true,
             },
             'dateTo': {
                 type: 'date',
-                required: true,                    
+                required: true,
             }
         }),
-        
+
         defaultOptions: {
             dateFrom: function () {
                 return moment().format('YYYY') + '-01-01'
@@ -51,46 +51,46 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
                 return moment().format('YYYY') + '-12-31'
             },
         },
-        
+
         url: function () {
             return 'Opportunity/action/reportSalesByMonth?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
-        },    
-        
-        prepareData: function (response) {                
-            var months = this.months = Object.keys(response).sort();            
-                    
+        },
+
+        prepareData: function (response) {
+            var months = this.months = Object.keys(response).sort();
+
             var values = [];
-            
+
             for (var month in response) {
                 values.push(response[month]);
             }
-        
+
             this.chartData = [];
-            
+
             var mid = 0;
             if (values.length) {
                 mid = values.reduce(function(a, b) {return a + b}) / values.length;
             }
-            
+
             var data = [];
-                            
+
             values.forEach(function (value, i) {
                 data.push({
                     data: [[i, value]],
                     color: (value >= mid) ? this.successColor : this.colorBad
                 });
             }, this);
-            
-            return data;        
-        },    
-                    
+
+            return data;
+        },
+
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';            
-        
-            this.colorBad = this.successColor;        
-        },            
-        
+            this.currencySymbol = '';
+
+            this.colorBad = this.successColor;
+        },
+
         drow: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
@@ -116,19 +116,19 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
                             return '';
                         }
                         return self.formatNumber(value) + ' ' + self.currency;
-                    },                    
+                    },
                 },
                 xaxis: {
                     min: 0,
                     tickFormatter: function (value) {
                         if (value % 1 == 0) {
                             var i = parseInt(value);
-                            if (i in self.months) {                                
+                            if (i in self.months) {
                                 return moment(self.months[i] + '-01').format('MMM YYYY');
                             }
                         }
-                        return '';                        
-                    },
+                        return '';
+                    }
                 },
                 mouse: {
                     track: true,
@@ -136,7 +136,7 @@ Espo.define('Crm:Views.Dashlets.SalesByMonth', 'Crm:Views.Dashlets.Abstract.Char
                     trackFormatter: function (obj) {
                         return self.formatNumber(obj.y) + ' ' + self.currency;
                     },
-                },
+                }
             });
         },
     });

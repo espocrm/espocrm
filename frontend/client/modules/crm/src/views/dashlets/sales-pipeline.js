@@ -24,25 +24,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Chart', function (Dep) {
+Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/chart', function (Dep) {
 
     return Dep.extend({
 
         name: 'SalesPipeline',
-        
+
         optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
             'dateFrom': {
                 type: 'date',
-                required: true,                    
+                required: true,
             },
             'dateTo': {
                 type: 'date',
-                required: true,                    
+                required: true,
             }
         }),
-        
+
         defaultOptions: {
             dateFrom: function () {
                 return moment().format('YYYY') + '-01-01'
@@ -51,13 +51,13 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                 return moment().format('YYYY') + '-12-31'
             },
         },
-        
+
         url: function () {
             return 'Opportunity/action/reportSalesPipeline?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
         },
-                        
+
         prepareData: function (response) {
-            var d = [];            
+            var d = [];
             for (var label in response) {
                 var value = response[label];
                 d.push({
@@ -65,7 +65,7 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                     value: value
                 });
             }
-            
+
             var data = [];
             for (var i = 0; i < d.length; i++) {
                 var item = d[i];
@@ -76,25 +76,25 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                     label: item.stage
                 });
             }
-            
+
             this.maxY = 1000;
-            if (d.length) {    
+            if (d.length) {
                 for (var i = 0; i < d.length; i++) {
                     var y = d[i].value + (d[i].value / 20);
                     if (y > this.maxY) {
                         this.maxY = y;
                     }
-                }            
-                
+                }
+
             }
-            
-            return data;    
+
+            return data;
         },
-                        
+
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
             this.currencySymbol = '';
-            
+
             var data = [
                 {
                     value: 12000,
@@ -125,9 +125,9 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                     stage: 'Closed Won'
                 },
             ];
-            
+
             this.chartData = [];
-            
+
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
                 var value = item.value;
@@ -135,22 +135,22 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                 var o = {
                     data: [[i, value], [i + 1, nextValue]],
                     label: item.stage
-                };                
+                };
 
                 this.chartData.push(o);
             }
-            
+
             this.maxY = 1000;
-            if (data.length) {                
+            if (data.length) {
                 this.maxY = data[0].value + (data[0].value / 20);
             }
-        },            
-        
+        },
+
         drow: function () {
             var self = this;
-            
+
             var colors = Espo.Utils.clone(this.colors);
-            
+
             this.chartData.forEach(function (item, i) {
                 if (i + 1 > colors.length) {
                     colors.push('#164');
@@ -159,8 +159,8 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                     colors[i] = this.successColor;
                 }
             }, this);
-            
-            
+
+
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 colors: colors,
                 shadowSize: false,
@@ -179,7 +179,7 @@ Espo.define('Crm:Views.Dashlets.SalesPipeline', 'Crm:Views.Dashlets.Abstract.Cha
                 yaxis: {
                     min: 0,
                     max: this.maxY,
-                    showLabels: false,                        
+                    showLabels: false,
                 },
                 xaxis: {
                     min: 0,

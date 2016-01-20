@@ -32,47 +32,29 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
 
         name: 'Calendar',
 
-        _template: '<div class="calendar-container">{{{calendar}}}</div>',
+        noPadding: true,
 
-        defaultOptions: {
-            mode: 'basicWeek',
-            isDoubleHeight: false,
-            enabledScopeList: ['Meeting', 'Call', 'Task']
-        },
+        _template: '<div class="calendar-container">{{{calendar}}} </div>',
 
-        setup: function () {
-            this.optionsFields['mode'] = {
-                type: 'enum',
-                options: ['basicWeek', 'agendaWeek', 'month'],
-            };
-            this.optionsFields['enabledScopeList'] = {
-                type: 'multiEnum',
-                options: this.getMetadata().get('clientDefs.Calendar.scopeList') || ['Meeting', 'Call', 'Task'],
-                translation: 'Global.scopeNamesPlural',
-                required: true
-            };
-            this.optionsFields['isDoubleHeight'] = {
-                type: 'bool',
-            };
+        init: function () {
+            Dep.prototype.init.call(this);
+            this.optionsFields['enabledScopeList'].options = this.getMetadata().get('clientDefs.Calendar.scopeList') || this.optionsFields['enabledScopeList'].options;
         },
 
         afterRender: function () {
-            var height = 296;
-            if (this.getOption('isDoubleHeight')) {
-                height = 643;
-            }
-
             this.createView('calendar', 'crm:views/calendar/calendar', {
                 mode: this.getOption('mode'),
-                el: this.$el.selector + ' > .calendar-container',
+                el: this.options.el + ' > .calendar-container',
                 header: false,
-                height: height,
-                enabledScopeList: this.getOption('enabledScopeList')
+                enabledScopeList: this.getOption('enabledScopeList'),
+                containerSelector: this.options.el
             }, function (view) {
                 view.render();
-            });
+                this.on('resize', function () {
+                    view.adjustSize();
+                });
+            }, this);
         }
-
     });
 });
 

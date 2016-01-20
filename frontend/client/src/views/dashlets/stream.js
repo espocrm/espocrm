@@ -32,23 +32,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
 
         name: 'Stream',
 
-        defaultOptions: {
-            displayRecords: 5,
-            autorefreshInterval: 0.5,
-            isDoubleHeight: false
-        },
-
         _template: '<div class="list-container">{{{list}}}</div>',
-
-        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-            'displayRecords': {
-                type: 'enumInt',
-                options: [3,4,5,10,15]
-            },
-            'isDoubleHeight': {
-                type: 'bool',
-            },
-        }),
 
         actionRefresh: function () {
             this.getView('list').showNewRecords();

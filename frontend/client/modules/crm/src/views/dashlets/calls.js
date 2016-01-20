@@ -34,53 +34,9 @@ Espo.define('crm:views/dashlets/calls', 'views/dashlets/abstract/record-list', f
 
         scope: 'Call',
 
-        listViewName: 'Crm:Call.Record.ListExpanded',
+        listViewName: 'crm:views/call/record/list-expanded',
 
-        rowActionsView: 'Crm:Call.Record.RowActions.Dashlet',
-
-        defaultOptions: {
-            sortBy: 'dateStart',
-            asc: true,
-            displayRecords: 5,
-            expandedLayout: {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true,
-                        }
-                    ],
-                    [
-                        {
-                            name: 'dateStart'
-                        }
-                    ]
-                ]
-            },
-            searchData: {
-                bool: {
-                    onlyMy: true,
-                },
-                primary: 'planned',
-                advanced: {
-                    '1': {
-                        type: 'or',
-                        value: {
-                            '1': {
-                                type: 'today',
-                                field: 'dateStart',
-                                dateTime: true
-                            },
-                            '2': {
-                                type: 'future',
-                                field: 'dateEnd',
-                                dateTime: true
-                            }
-                        }
-                    }
-                }
-            },
-        },
+        rowActionsView: 'crm:views/call/record/row-actions/dashlet'
 
     });
 });
