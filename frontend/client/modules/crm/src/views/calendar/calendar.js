@@ -534,6 +534,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             setTimeout(function () {
                 $calendar.fullCalendar(options);
                 this.updateDate();
+                if (this.$container.size()) {
+                    this.adjustSize();
+                }
             }.bind(this), 150);
         },
 
