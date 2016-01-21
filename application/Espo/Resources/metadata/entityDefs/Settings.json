@@ -277,6 +277,14 @@
             "min": 0,
             "default": 0,
             "tooltip": true
+        },
+        "dashboardLayout": {
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
+        },
+        "dashletOptions": {
+            "type": "jsonObject",
+            "disabled": true
         }
     }
 }

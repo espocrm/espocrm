@@ -1,4 +1,33 @@
 {
     "view":"crm:views/dashlets/sales-pipeline",
-    "aclScope": "Opportunity"
+    "aclScope": "Opportunity",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "dateFrom": {
+                "type": "date",
+                "required": true
+            },
+            "dateTo": {
+                "type": "date",
+                "required": true
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "dateFrom"},
+                        {"name": "dateTo"}
+                    ]
+                ]
+            }
+        ]
+    }
 }

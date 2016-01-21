@@ -97,14 +97,33 @@ Espo.define('views/dashlet', 'view', function (Dep) {
         },
 
         actionOptions: function () {
-            var optionsView = this.getView('body').optionsView;
+            var optionsView = this.getMetadata().get(['dashlets', this.name, 'optionsView']) || 'views/dashlets/options/base';
             this.createView('options', optionsView, {
                 name: this.name,
                 optionsData: this.getOptionsData(),
                 fields: this.getView('body').optionsFields,
             }, function (view) {
                 view.render();
-            });
+
+                this.listenToOnce(view, 'save', function (attributes) {
+                    var id = this.id;
+                    this.notify('Saving...');
+                    this.getPreferences().once('sync', function () {
+                        this.getPreferences().trigger('update');
+                        this.notify(false);
+                        view.close();
+
+                        this.trigger('change');
+                    }, this);
+
+                    var o = this.getPreferences().get('dashletOptions') || {};
+                    o[id] = attributes;
+
+                    this.getPreferences().save({
+                        dashletOptions: o
+                    }, {patch: true});
+                }, this);
+            }, this);
         },
 
         getOptionsData: function () {

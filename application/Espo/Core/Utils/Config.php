@@ -170,7 +170,7 @@ class Config
             }
         }
 
-        $result = $this->getFileManager()->putPhpContents($this->configPath, $data);
+        $result = $this->getFileManager()->putPhpContents($this->configPath, $data, true);
 
         if ($result) {
             $this->changedData = array();

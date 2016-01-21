@@ -1,4 +1,5 @@
 {
     "stylesheet": "client/css/espo.css",
-    "dashboardCellHeight": 155
+    "dashboardCellHeight": 155,
+    "dashboardCellMargin": 19
 }

@@ -10,7 +10,8 @@
         "quickCreateList": "Quick Create List",
         "companyLogo": "Logo",
         "theme": "Theme",
-        "language": "Language"
+        "language": "Language",
+        "dashboardLayout": "Dashboard Layout"
     },
     "links": {
         "users": "Users",

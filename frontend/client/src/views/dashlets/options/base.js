@@ -143,30 +143,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 return;
             }
 
-            var id = this.getParentView().id;
-
-            this.notify('Saving...');
-
-            this.getPreferences().once('sync', function () {
-                this.getPreferences().trigger('update');
-
-                this.notify(false);
-                var dashlet = this.getParentView();
-
-                this.close();
-
-                dashlet.setup();
-                dashlet.render();
-
-            }, this);
-
-            var o = this.getPreferences().get('dashletOptions') || {};
-            o[id] = attributes;
-
-            this.getPreferences().save({
-                dashletOptions: o
-            }, {patch: true});
-
+            this.trigger('save', attributes);
         },
     });
 });

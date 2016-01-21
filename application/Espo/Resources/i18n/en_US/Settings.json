@@ -61,7 +61,8 @@
         "inboundEmailMaxPortionSize": "Max email portion size for a group account fetching",
         "maxEmailAccountCount": "Max count of personal email accounts per user",
         "authTokenLifetime": "Auth Token Lifetime (hours)",
-        "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)"
+        "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
+        "dashboardLayout": "Dashboard Layout (default)"
     },
     "options": {
         "weekStart": {

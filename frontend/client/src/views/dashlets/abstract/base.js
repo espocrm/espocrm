@@ -30,8 +30,6 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
     return Dep.extend({
 
-        optionsView: 'views/dashlets/options/base',
-
         optionsData: null,
 
         actionRefresh: function () {
@@ -60,11 +58,14 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
                 title: this.getLanguage().translate(this.name, 'dashlets'),
             }, this.defaultOptions);
 
-            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) || this.optionsFields || {};
+            this.defaultOptions = Espo.Utils.clone(this.defaultOptions);
 
+            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) || this.optionsFields || {};
             this.optionsFields = Espo.Utils.clone(this.optionsFields);
 
-            var options = Espo.Utils.clone(this.defaultOptions);
+            this.setupDefaultOptions();
+
+            var options = Espo.Utils.cloneDeep(this.defaultOptions);
 
             for (var key in options) {
                 if (typeof options[key] == 'function') {
@@ -117,10 +118,10 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             }
         ],
 
+        setupDefaultOptions: function () {},
 
-        setupActionList: function () {
 
-        },
+        setupActionList: function () {},
 
         getOption: function (key) {
             return this.optionsData[key];

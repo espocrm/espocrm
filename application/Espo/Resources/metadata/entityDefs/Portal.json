@@ -49,6 +49,14 @@
             "view": "views/portal/fields/language",
             "default": ""
         },
+        "dashboardLayout": {
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
+        },
+        "dashletOptions": {
+            "type": "jsonObject",
+            "disabled": true
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true

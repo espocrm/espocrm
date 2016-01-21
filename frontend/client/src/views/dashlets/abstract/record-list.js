@@ -36,7 +36,7 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
 
         listViewExpanded: 'views/record/list-expanded',
 
-        listViewName: null,
+        listView: null,
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
@@ -70,7 +70,7 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 collection.maxSize = this.getOption('displayRecords');
                 collection.where = searchManager.getWhere();
 
-                var viewName = this.listViewName || ((this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn);
+                var viewName = this.listView || ((this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn);
 
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', viewName, {

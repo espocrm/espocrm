@@ -32,24 +32,9 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
 
         name: 'OpportunitiesByStage',
 
-        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-            'dateFrom': {
-                type: 'date',
-                required: true,
-            },
-            'dateTo': {
-                type: 'date',
-                required: true,
-            }
-        }),
-
-        defaultOptions: {
-            dateFrom: function () {
-                return moment().format('YYYY') + '-01-01'
-            },
-            dateTo: function () {
-                return moment().format('YYYY') + '-12-31'
-            },
+        setupDefaultOptions: function () {
+            this.defaultOptions['dateFrom'] = this.defaultOptions['dateFrom'] || moment().format('YYYY') + '-01-01';
+            this.defaultOptions['dateTo'] = this.defaultOptions['dateTo'] || moment().format('YYYY') + '-12-31';
         },
 
         url: function () {

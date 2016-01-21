@@ -44,7 +44,7 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         events: {
             'click button.add': function (e) {
                 var name = $(e.currentTarget).data('name');
-                this.getParentView().addDashlet(name);
+                this.trigger('add', name);
                 this.close();
             },
         },

@@ -230,9 +230,10 @@ class Manager
      *
      * @return bool
      */
-    public function putPhpContents($path, $data)
+    public function putPhpContents($path, $data, $withObjects = false)
     {
-        return $this->putContents($path, $this->getPHPFormat($data), LOCK_EX);
+
+        return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX);
     }
 
     /**
@@ -793,17 +794,45 @@ class Manager
      *
      * @return string | false
      */
-    public function getPHPFormat($content)
+    public function wrapForDataExport($content, $withObjects = false)
     {
         if (!isset($content)) {
             return false;
         }
 
-        return '<?php
+        if (!$withObjects) {
+            return "<?php\n".
+            "return " . var_export($content, true) . ";\n".
+            "?>";
+        } else {
+            return "<?php\n".
+            "return " . $this->varExport($content) . ";\n".
+            "?>";
+        }
+    }
 
-return '.var_export($content, true).';
+    public function varExport($variable, $level = 0)
+    {
+        $tab = '';
+        $tabElement = '    ';
+        for ($i = 0; $i <= $level; $i++) {
+            $tab .= $tabElement;
+        }
+        $prevTab = substr($tab, 0, strlen($tab) - strlen($tabElement));
 
-?>';
+        if ($variable instanceof \StdClass) {
+            $result = "(object) " . $this->varExport(get_object_vars($variable), $level);
+        } else if (is_array($variable)) {
+            $array = array();
+            foreach ($variable as $key => $value) {
+                $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
+            }
+            $result = "[\n" . $tab . implode(",\n" . $tab, $array) . "\n" . $prevTab . "]";
+        } else {
+            $result = var_export($variable, true);
+        }
+
+        return $result;
     }
 
     /**

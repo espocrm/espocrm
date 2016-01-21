@@ -94,8 +94,21 @@ class Preferences extends \Espo\Core\ORM\Repository
                 } else {
                     $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
                     $defaults = array();
-                    $defaults['dashboardLayout'] = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
-                    $defaults['dashletOptions'] = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
+
+                    $dashboardLayout = $this->getConfig()->get('dashboardLayout');
+                    $dashletOptions = null;
+                    if (!$dashboardLayout) {
+                         $dashboardLayout = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
+                         $dashletOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
+                    }
+
+                    if ($dashletOptions === null) {
+                        $dashletOptions = $this->getConfig()->get('dashletOptions', (object) []);
+                    }
+
+                    $defaults['dashboardLayout'] = $dashboardLayout;
+                    $defaults['dashletOptions'] = $dashletOptions;
+
                     foreach ($fields as $field => $d) {
                         if (array_key_exists('default', $d)) {
                             $defaults[$field] = $d['default'];

@@ -80,8 +80,8 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
                 defs: {
                     name: 'dashboardTabList',
                     params: {
-                        required: true,
-                        noEmptyString: true,
+                        required: this.options.tabListIsNotRequired ? false : true,
+                        noEmptyString: true
                     }
                 },
                 mode: 'edit',

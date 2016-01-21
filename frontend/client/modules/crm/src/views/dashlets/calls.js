@@ -34,7 +34,7 @@ Espo.define('crm:views/dashlets/calls', 'views/dashlets/abstract/record-list', f
 
         scope: 'Call',
 
-        listViewName: 'crm:views/call/record/list-expanded',
+        listView: 'crm:views/call/record/list-expanded',
 
         rowActionsView: 'crm:views/call/record/row-actions/dashlet'
 

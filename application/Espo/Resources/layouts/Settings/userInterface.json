@@ -5,7 +5,8 @@
             [{"name": "theme"}, {"name": "userThemesDisabled"}],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"},{"name": "avatarsDisabled"}],
-            [{"name": "tabList"},{"name": "quickCreateList"}]
+            [{"name": "tabList"},{"name": "quickCreateList"}],
+            [{"name": "dashboardLayout", "fullWidth": true}]
         ]
     }
 ]

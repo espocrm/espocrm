@@ -32,26 +32,6 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
 
         name: 'OpportunitiesByLeadSource',
 
-        optionsFields: _.extend(_.clone(Dep.prototype.optionsFields), {
-            'dateFrom': {
-                type: 'date',
-                required: true,
-            },
-            'dateTo': {
-                type: 'date',
-                required: true,
-            }
-        }),
-
-        defaultOptions: {
-            dateFrom: function () {
-                return moment().format('YYYY') + '-01-01'
-            },
-            dateTo: function () {
-                return moment().format('YYYY') + '-12-31'
-            },
-        },
-
         url: function () {
             return 'Opportunity/action/reportByLeadSource?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
         },
@@ -66,6 +46,11 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 });
             }
             return data;
+        },
+
+        setupDefaultOptions: function () {
+            this.defaultOptions['dateFrom'] = this.defaultOptions['dateFrom'] || moment().format('YYYY') + '-01-01';
+            this.defaultOptions['dateTo'] = this.defaultOptions['dateTo'] || moment().format('YYYY') + '-12-31';
         },
 
         setup: function () {

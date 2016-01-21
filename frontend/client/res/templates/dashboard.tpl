@@ -7,11 +7,13 @@
             <h3>{{translate 'Dashboard' category='scopeNames'}}</h3>
             {{/if}}
         </div>
-        <div class="col-sm-7">
+        <div class="col-sm-7 clearfix">
+            {{#unless layoutReadOnly}}
             <div class="btn-group pull-right dashboard-buttons">
                 <button class="btn btn-default" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="glyphicon glyphicon-pencil"></span></button>
                 <button class="btn btn-default" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
+            {{/unless}}
             {{#ifNotEqual dashboardLayout.length 1}}
             <div class="btn-group pull-right dashboard-tabs">
                 {{#each dashboardLayout}}

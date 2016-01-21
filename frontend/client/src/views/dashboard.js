@@ -44,7 +44,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             'click button[data-action="addDashlet"]': function () {
                 this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
                     view.render();
-                });
+                    this.listenToOnce(view, 'add', function (name) {
+                        this.addDashlet(name);
+                    }, this);
+                }, this);
             },
             'click button[data-action="editTabs"]': function () {
                 this.createView('editTabs', 'views/modals/edit-dashboard', {
@@ -93,7 +96,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 displayTitle: this.options.displayTitle,
                 currentTab: this.currentTab,
                 tabCount: this.dashboardLayout.length,
-                dashboardLayout: this.dashboardLayout
+                dashboardLayout: this.dashboardLayout,
+                layoutReadOnly: this.layoutReadOnly
             };
         },
 
@@ -105,7 +109,11 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
+                if (this.getUser().get('portalId')) {
+                    this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
+                } else {
+                    this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
+                }
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;
@@ -144,6 +152,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
         setup: function () {
             this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
             this.setupCurrentTabLayout();
+
+            if (this.getUser().get('portalId')) {
+                this.layoutReadOnly = true;
+            }
         },
 
         afterRender: function () {
@@ -152,7 +164,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             $gridstack.gridstack({
                 min_width: 4,
                 cell_height: this.getThemeManager().getParam('dashboardCellHeight'),
-                vertical_margin: 19,
+                vertical_margin: this.getThemeManager().getParam('dashboardCellMargin'),
                 width: 4,
                 min_width: this.getThemeManager().getParam('screenWidthXs'),
                 handle: '.dashlet-container .panel-heading',
@@ -223,6 +235,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
         },
 
         saveLayout: function () {
+            if (this.layoutReadOnly) return;
+
             this.getPreferences().save({
                 dashboardLayout: this.dashboardLayout
             }, {patch: true});
@@ -248,6 +262,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
             o.dashboardLayout = this.dashboardLayout;
 
+            if (this.layoutReadOnly) return;
             this.getPreferences().save(o, {patch: true});
             this.getPreferences().trigger('update');
         },
@@ -283,6 +298,12 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]'
             }, function (view) {
                 view.render();
+
+                this.listenToOnce(view, 'change', function () {
+                    this.createDashletView(id, name, label, function (view) {
+                        view.render();
+                    }, this);
+                }, this);
 
                 this.listenToOnce(view, 'remove-dashlet', function () {
                     this.removeDashlet(id);
