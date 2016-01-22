@@ -52,8 +52,8 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         rowActionsView: 'views/record/row-actions/view-and-edit',
 
         init: function () {
-            Dep.prototype.init.call(this);
             this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
+            Dep.prototype.init.call(this);
         },
 
         afterRender: function () {
