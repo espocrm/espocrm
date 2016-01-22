@@ -31,10 +31,10 @@ Espo.define('crm:views/task/record/row-actions/dashlet', 'views/record/row-actio
     return Dep.extend({
 
         getActionList: function () {
-            var actions = Dep.prototype.getActionList.call(this);
+            var actionList = Dep.prototype.getActionList.call(this);
 
             if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                actions.push({
+                actionList.push({
                     action: 'setCompleted',
                     label: 'Complete',
                     data: {
@@ -42,8 +42,18 @@ Espo.define('crm:views/task/record/row-actions/dashlet', 'views/record/row-actio
                     }
                 });
             }
+            if (this.options.acl.edit) {
+                actionList.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id,
+                        scope: this.model.name
+                    }
+                });
+            }
 
-            return actions;
+            return actionList;
         }
     });
 

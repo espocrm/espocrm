@@ -94,11 +94,13 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         },
 
         setupActionList: function () {
-            this.actionList.unshift({
-                name: 'create',
-                html: this.translate('Create ' + this.scope, 'labels', this.scope),
-                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
-            });
+            if (this.getAcl().checkScope(this.scope, 'create')) {
+                this.actionList.unshift({
+                    name: 'create',
+                    html: this.translate('Create ' + this.scope, 'labels', this.scope),
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                });
+            }
         },
 
         actionRefresh: function () {

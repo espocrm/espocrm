@@ -777,7 +777,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
-                this.createView(key, 'Base', {
+                this.createView(key, 'views/base', {
                     model: model,
                     acl: {
                         edit: this.getAcl().checkModel(model, 'edit')

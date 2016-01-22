@@ -82,16 +82,20 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
         },
 
         setupActionList: function () {
-            this.actionList.unshift({
-                name: 'createCall',
-                html: this.translate('Create Call', 'labels', 'Call'),
-                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
-            });
-            this.actionList.unshift({
-                name: 'createMeeting',
-                html: this.translate('Create Meeting', 'labels', 'Meeting'),
-                iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
-            });
+            if (this.getAcl().checkScope('Call', 'create')) {
+                this.actionList.unshift({
+                    name: 'createCall',
+                    html: this.translate('Create Call', 'labels', 'Call'),
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                });
+            }
+            if (this.getAcl().checkScope('Meeting', 'create')) {
+                this.actionList.unshift({
+                    name: 'createMeeting',
+                    html: this.translate('Create Meeting', 'labels', 'Meeting'),
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                });
+            }
         },
 
         setup: function () {

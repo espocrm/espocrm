@@ -56,6 +56,16 @@ Espo.define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-a
                     }
                 });
             }
+            if (this.options.acl.edit) {
+                actionList.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id,
+                        scope: this.model.name
+                    }
+                });
+            }
 
             return actionList;
         }
