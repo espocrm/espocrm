@@ -9,7 +9,8 @@
             "minValue": 1,
             "maxValue": 1000,
             "default": 20,
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "recordsPerPageSmall": {
             "type": "int",
@@ -241,7 +242,8 @@
             "type": "bool"
         },
         "userThemesDisabled": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "theme": {
             "type": "enum",
@@ -285,6 +287,9 @@
         "dashletsOptions": {
             "type": "jsonObject",
             "disabled": true
+        },
+        "siteUrl": {
+            "type": "varchar"
         }
     }
 }

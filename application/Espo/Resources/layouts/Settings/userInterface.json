@@ -2,9 +2,10 @@
     {
         "label": "Configuration",
         "rows": [
-            [{"name": "theme"}, {"name": "userThemesDisabled"}],
-            [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
-            [{"name": "recordsPerPageSmall"},{"name": "avatarsDisabled"}],
+            [{"name": "companyLogo"}, {"name": "theme"}],
+            [{"name": "recordsPerPage"}, {"name": "userThemesDisabled"}],
+            [{"name": "recordsPerPageSmall"},{"name": "displayListViewRecordCount"}],
+            [false, {"name": "avatarsDisabled"}],
             [{"name": "tabList"},{"name": "quickCreateList"}],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]

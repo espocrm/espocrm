@@ -74,18 +74,28 @@
          }
       ]
    },
-   "portal": {
-      "label":"Portal",
+   "customization":{
+      "label":"Customization",
       "items":[
          {
-            "url":"#Portal",
-            "label":"Portals",
-            "description":"portals"
+            "url":"#Admin/layouts",
+            "label":"Layout Manager",
+            "description":"layoutManager"
          },
          {
-            "url":"#PortalRole",
-            "label":"Portal Roles",
-            "description":"portalRoles"
+            "url":"#Admin/entityManager",
+            "label":"Entity Manager",
+            "description":"entityManager"
+         },
+         {
+            "url":"#Admin/userInterface",
+            "label":"User Interface",
+            "description":"userInterface"
+         },
+         {
+            "url":"#Admin/extensions",
+            "label":"Extensions",
+            "description":"extensions"
          }
       ]
    },
@@ -124,6 +134,21 @@
          }
       ]
    },
+   "portal": {
+      "label":"Portal",
+      "items":[
+         {
+            "url":"#Portal",
+            "label":"Portals",
+            "description":"portals"
+         },
+         {
+            "url":"#PortalRole",
+            "label":"Portal Roles",
+            "description":"portalRoles"
+         }
+      ]
+   },
    "data":{
       "label":"Data",
       "items":[
@@ -131,31 +156,6 @@
             "url":"#Import",
             "label":"Import",
             "description":"import"
-         }
-      ]
-   },
-   "customization":{
-      "label":"Customization",
-      "items":[
-         {
-            "url":"#Admin/layouts",
-            "label":"Layout Manager",
-            "description":"layoutManager"
-         },
-         {
-            "url":"#Admin/entityManager",
-            "label":"Entity Manager",
-            "description":"entityManager"
-         },
-         {
-            "url":"#Admin/userInterface",
-            "label":"User Interface",
-            "description":"userInterface"
-         },
-         {
-            "url":"#Admin/extensions",
-            "label":"Extensions",
-            "description":"extensions"
          }
       ]
    }

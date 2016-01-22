@@ -62,7 +62,8 @@
         "maxEmailAccountCount": "Max count of personal email accounts per user",
         "authTokenLifetime": "Auth Token Lifetime (hours)",
         "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
-        "dashboardLayout": "Dashboard Layout (default)"
+        "dashboardLayout": "Dashboard Layout (default)",
+        "siteUrl": "Site URL"
     },
     "options": {
         "weekStart": {
@@ -71,12 +72,14 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Count of records in relatinship panels.",
+        "recordsPerPage": "Number of records initially displayed in list views.",
+        "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
         "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
         "followCreatedEntities": "Users will automatically follow records they created.",
         "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped.",
         "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
-        "authTokenMaxIdleTime": "Defines how long since a last access tokens can exist.\n0 - means no expiration."
+        "authTokenMaxIdleTime": "Defines how long since a last access tokens can exist.\n0 - means no expiration.",
+        "userThemesDisabled": "If checked then users won't be able to select another theme."
     },
     "labels": {
         "System": "System",

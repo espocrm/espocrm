@@ -38,6 +38,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         editTemplate: 'fields/text/edit',
 
+        searchTemplate: 'fields/text/search',
+
         detailMaxLength: 400,
 
         detailMaxNewLineCount: 10,
@@ -49,13 +51,31 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
-                this.render();
+                this.reRender();
             }
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
             this.params.rows = this.params.rows || this.rowsDefault;
+        },
+
+        setupSearch: function () {
+            this.searchParams.typeOptions = ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'];
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+                this.$el.find('input.main-element').addClass('hidden');
+            } else {
+                this.$el.find('input.main-element').removeClass('hidden');
+            }
         },
 
         getValueForDisplay: function () {
@@ -93,9 +113,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                     this.$element.val(text);
                 }
             }
+            if (this.mode == 'search') {
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
+            }
         },
 
-        fetchSearch: function () {
+        /*fetchSearch: function () {
             var value = this.$element.val();
             if (value) {
                 var data = {
@@ -106,7 +130,68 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 return data;
             }
             return false;
-        },
+        },*/
+
+        fetchSearch: function () {
+
+            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+
+            var data;
+
+            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+                if (type == 'isEmpty') {
+                    data = {
+                        typeFront: type,
+                        where: {
+                            type: 'or',
+                            value: [
+                                {
+                                    type: 'isNull',
+                                    field: this.name,
+                                },
+                                {
+                                    type: 'equals',
+                                    field: this.name,
+                                    value: ''
+                                }
+                            ]
+                        }
+                    }
+                } else {
+                    data = {
+                        typeFront: type,
+                        where: {
+                            type: 'and',
+                            value: [
+                                {
+                                    type: 'notEquals',
+                                    field: this.name,
+                                    value: ''
+                                },
+                                {
+                                    type: 'isNotNull',
+                                    field: this.name,
+                                    value: null
+                                }
+                            ]
+                        }
+                    }
+                }
+                return data;
+            } else {
+                var value = this.$element.val();
+                value = value.trim();
+                if (value) {
+                    data = {
+                        value: value,
+                        type: type,
+                        typeFront: type
+                    }
+                    return data;
+                }
+            }
+            return false;
+        }
 
     });
 });

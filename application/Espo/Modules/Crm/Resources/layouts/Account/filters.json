@@ -6,5 +6,6 @@
 	"industry",
     "phoneNumber",
     "targetLists",
-	"type"
+	"type",
+    "description"
 ]
