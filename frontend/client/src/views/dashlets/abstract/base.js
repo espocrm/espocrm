@@ -49,8 +49,11 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             }
         },
 
+        disabledForReadOnlyActionList: ['options', 'remove'],
+
         init: function () {
             this.name = this.options.name || this.name;
+            this.id = this.options.id;
 
             this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) || this.defaultOptions || {};
 
@@ -73,7 +76,11 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
                 }
             }
 
-            var storedOptions = this.getPreferences().getDashletOptions(this.options.id) || {};
+            if (!this.options.readOnly) {
+                var storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
+            } else {
+                var storedOptions = (this.getConfig().get('dashletsOptions') || {})[this.id] || {};
+            }
 
             this.optionsData = _.extend(options, storedOptions);
 
@@ -97,6 +104,16 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
 
             this.actionList = Espo.Utils.clone(this.actionList);
+
+            if (this.options.readOnly) {
+                this.actionList = this.actionList.filter(function(item) {
+                    if (~this.disabledForReadOnlyActionList.indexOf(item.name)) {
+                        return false;
+                    }
+                    return true;
+                }, this)
+            }
+
             this.setupActionList();
         },
 

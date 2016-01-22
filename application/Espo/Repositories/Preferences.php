@@ -41,7 +41,7 @@ class Preferences extends \Espo\Core\ORM\Repository
         'entityManager'
     );
 
-    protected $defaultAttributesFromSettings = array(
+    protected $defaultAttributeListFromSettings = array(
         'defaultCurrency',
         'dateFormat',
         'timeFormat',
@@ -96,25 +96,25 @@ class Preferences extends \Espo\Core\ORM\Repository
                     $defaults = array();
 
                     $dashboardLayout = $this->getConfig()->get('dashboardLayout');
-                    $dashletOptions = null;
+                    $dashletsOptions = null;
                     if (!$dashboardLayout) {
                          $dashboardLayout = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
-                         $dashletOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
+                         $dashletsOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
                     }
 
-                    if ($dashletOptions === null) {
-                        $dashletOptions = $this->getConfig()->get('dashletOptions', (object) []);
+                    if ($dashletsOptions === null) {
+                        $dashletsOptions = $this->getConfig()->get('dashletsOptions', (object) []);
                     }
 
                     $defaults['dashboardLayout'] = $dashboardLayout;
-                    $defaults['dashletOptions'] = $dashletOptions;
+                    $defaults['dashletsOptions'] = $dashletsOptions;
 
                     foreach ($fields as $field => $d) {
                         if (array_key_exists('default', $d)) {
                             $defaults[$field] = $d['default'];
                         }
                     }
-                    foreach ($this->defaultAttributesFromSettings as $attr) {
+                    foreach ($this->defaultAttributeListFromSettings as $attr) {
                         $defaults[$attr] = $this->getConfig()->get($attr);
                     }
                     $this->data[$id] = $defaults;

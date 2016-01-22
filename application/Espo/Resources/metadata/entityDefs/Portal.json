@@ -53,7 +53,7 @@
             "type": "jsonArray",
             "view": "views/settings/fields/dashboard-layout"
         },
-        "dashletOptions": {
+        "dashletsOptions": {
             "type": "jsonObject",
             "disabled": true
         },

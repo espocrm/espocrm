@@ -52,7 +52,7 @@ Espo.define('models/preferences', 'model', function (Dep) {
         },
 
         getDashletOptions: function (id) {
-            var value = this.get('dashletOptions') || {};
+            var value = this.get('dashletsOptions') || {};
             return value[id] || false;
         },
 

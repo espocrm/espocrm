@@ -84,7 +84,8 @@ Espo.define('views/dashlet', 'view', function (Dep) {
             this.createView('body', viewName, {
                 el: this.options.el + ' .dashlet-body',
                 id: this.id,
-                name: this.name
+                name: this.name,
+                readOnly: this.options.readOnly
             });
         },
 
@@ -116,11 +117,11 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                         this.trigger('change');
                     }, this);
 
-                    var o = this.getPreferences().get('dashletOptions') || {};
+                    var o = this.getPreferences().get('dashletsOptions') || {};
                     o[id] = attributes;
 
                     this.getPreferences().save({
-                        dashletOptions: o
+                        dashletsOptions: o
                     }, {patch: true});
                 }, this);
             }, this);

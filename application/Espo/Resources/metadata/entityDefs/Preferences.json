@@ -38,7 +38,7 @@
         "dashboardLayout": {
             "type": "text"
         },
-        "dashletOptions": {
+        "dashletsOptions": {
             "type": "text"
         },
         "presetFilters": {

@@ -77,9 +77,9 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                 }
             }, this);
 
-            this.dashletOptions = Espo.Utils.cloneDeep(this.model.get('dashletOptions') || {});
-            this.listenTo(this.model, 'change:dashletOptions', function () {
-                this.dashletOptions = Espo.Utils.cloneDeep(this.model.get('dashletOptions') || {});
+            this.dashletsOptions = Espo.Utils.cloneDeep(this.model.get('dashletsOptions') || {});
+            this.listenTo(this.model, 'change:dashletsOptions', function () {
+                this.dashletsOptions = Espo.Utils.cloneDeep(this.model.get('dashletsOptions') || {});
             }, this);
 
             this.currentTab = -1;
@@ -150,7 +150,7 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                     return;
                 }
             });
-            delete this.dashletOptions[id];
+            delete this.dashletsOptions[id];
 
             this.setupCurrentTabLayout();
         },
@@ -189,12 +189,12 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
 
                     this.selectTab(0);
 
-                    this.deleteNotExistingDashletOptions();
+                    this.deleteNotExistingDashletsOptions();
                 }, this);
             }.bind(this));
         },
 
-        deleteNotExistingDashletOptions: function () {
+        deleteNotExistingDashletsOptions: function () {
             var idListMet = [];
             (this.dashboardLayout || []).forEach(function (itemTab) {
                 (itemTab.layout || []).forEach(function (item) {
@@ -202,15 +202,15 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                 }, this);
             }, this);
 
-            Object.keys(this.dashletOptions).forEach(function (id) {
+            Object.keys(this.dashletsOptions).forEach(function (id) {
                 if (!~idListMet.indexOf(id)) {
-                    delete this.dashletOptions[id];
+                    delete this.dashletsOptions[id];
                 }
             }, this);
         },
 
         editDashlet: function (id, name) {
-            var options = this.dashletOptions[id] || {};
+            var options = this.dashletsOptions[id] || {};
             options = Espo.Utils.cloneDeep(options);
 
             var defaultOptions = this.getMetadata().get(['dashlets', name , 'options', 'defaults']) || {};
@@ -232,8 +232,11 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             }, function (view) {
                 view.render();
                 this.listenToOnce(view, 'save', function (attributes) {
-                    this.dashletOptions[id] = attributes;
+                    this.dashletsOptions[id] = attributes;
                     view.close();
+                    if ('title' in attributes) {
+                        this.$el.find('[data-id="'+id+'"] .panel-title').text(attributes.title);
+                    }
                 }, this);
             }, this);
         },
@@ -320,7 +323,7 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
         },
 
         getOption: function (id, optionName) {
-            var options = (this.model.get('dashletOptions') || {})[id] || {};
+            var options = (this.model.get('dashletsOptions') || {})[id] || {};
             return options[optionName];
         },
 
@@ -332,7 +335,7 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                 data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
             }
 
-            data['dashletOptions'] = Espo.Utils.cloneDeep(this.dashletOptions);
+            data['dashletsOptions'] = Espo.Utils.cloneDeep(this.dashletsOptions);
 
             return data;
         }

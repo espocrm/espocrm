@@ -111,6 +111,37 @@ return array (
     'inboundEmailMaxPortionSize' => 20,
     'authTokenLifetime' => 0,
     'authTokenMaxIdleTime' => 120,
+    'dashboardLayout' => [
+        (object) [
+            'name' => 'My Espo',
+            'layout' => [
+                (object) [
+                    'id' => 'default-activities',
+                    'name' => 'Activities',
+                    'x' => 2,
+                    'y' => 2,
+                    'width' => 2,
+                    'height' => 2
+                ],
+                (object) [
+                    'id' => 'default-stream',
+                    'name' => 'Stream',
+                    'x' => 0,
+                    'y' => 0,
+                    'width' => 2,
+                    'height' => 4
+                ],
+                (object) [
+                    'id' => 'default-tasks',
+                    'name' => 'Tasks',
+                    'x' => 2,
+                    'y' => 0,
+                    'width' => 2,
+                    'height' => 2
+                ]
+            ]
+        ]
+    ],
     'isInstalled' => false
 );
 

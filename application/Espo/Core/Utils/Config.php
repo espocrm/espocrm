@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 class Config
 {
     /**
@@ -95,8 +96,12 @@ class Config
 
         $lastBranch = $this->loadConfig();
         foreach ($keys as $keyName) {
-            if (isset($lastBranch[$keyName]) && is_array($lastBranch)) {
-                $lastBranch = $lastBranch[$keyName];
+            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
+                if (is_array($lastBranch)) {
+                    $lastBranch = $lastBranch[$keyName];
+                } else {
+                    $lastBranch = $lastBranch->$keyName;
+                }
             } else {
                 return $default;
             }
@@ -119,11 +124,6 @@ class Config
         }
 
         foreach ($name as $key => $value) {
-
-            if (is_object($value)) {
-                $value = (array) $value;
-            }
-
             $this->data[$key] = $value;
             $this->changedData[$key] = $value;
         }

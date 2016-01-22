@@ -155,6 +155,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
             if (this.getUser().get('portalId')) {
                 this.layoutReadOnly = true;
+                this.dashletsReadOnly = true;
             }
         },
 
@@ -257,8 +258,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             });
 
             var o = {};
-            o.dashletOptions = this.getPreferences().get('dashletOptions') || {};
-            delete o.dashletOptions[id];
+            o.dashletsOptions = this.getPreferences().get('dashletsOptions') || {};
+            delete o.dashletsOptions[id];
 
             o.dashboardLayout = this.dashboardLayout;
 
@@ -295,7 +296,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 label: name,
                 name: name,
                 id: id,
-                el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]'
+                el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]',
+                readOnly: this.dashletsReadOnly
             }, function (view) {
                 view.render();
 
