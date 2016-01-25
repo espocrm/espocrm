@@ -34,7 +34,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
         scopeList: null,
 
-        actionList: ['read', 'edit', 'create', 'delete', 'stream'],
+        actionList: ['create', 'read', 'edit', 'delete', 'stream'],
 
         accessList: ['not-set', 'enabled', 'disabled'],
 
