@@ -88,7 +88,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "required": true
+            "required": false
         },
         "teams": {
             "type": "linkMultiple"
