@@ -119,7 +119,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
                 if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope, 'edit');
+                    return this.getAcl().check(scope, 'create');
                 }
                 return true;
             }, this);
