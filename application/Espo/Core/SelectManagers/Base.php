@@ -326,9 +326,14 @@ class Base
         }
     }
 
+    protected function checkIsPortal()
+    {
+        return !!$this->getUser()->get('portalId');
+    }
+
     protected function access(&$result)
     {
-        if (!$this->getUser()->get('portalId')) {
+        if (!$this->checkIsPortal()) {
             if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
                 $this->accessOnlyOwn($result);
             } else {
@@ -603,6 +608,8 @@ class Base
         if ($withAcl) {
             $this->access($result);
         }
+
+        $this->applyAdditional($result);
 
         return $result;
     }
@@ -1016,6 +1023,11 @@ class Base
         $this->textFilter($textFilter, $result);
     }
 
+    public function applyAdditional(&$result)
+    {
+
+    }
+
     public function hasJoin($join, &$result)
     {
         return in_array($join, $result['joins']);
@@ -1145,9 +1157,21 @@ class Base
 
     protected function boolFilterOnlyMy(&$result)
     {
-        $result['whereClause'][] = array(
-            'assignedUserId' => $this->getUser()->id
-        );
+        if (!$this->checkIsPortal()) {
+            if ($this->hasAssignedUserField()) {
+                $result['whereClause'][] = array(
+                    'assignedUserId' => $this->getUser()->id
+                );
+            } else {
+                $result['whereClause'][] = array(
+                    'createdById' => $this->getUser()->id
+                );
+            }
+        } else {
+            $result['whereClause'][] = array(
+                'createdById' => $this->getUser()->id
+            );
+        }
     }
 
     protected function filterFollowed(&$result)

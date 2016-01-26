@@ -42,10 +42,16 @@ class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
     {
         parent::access($result);
 
-        if ($this->getUser()->get('portalId')) {
+        if ($this->checkIsPortal()) {
             $this->filterPublished($result);
         }
     }
 
+    public function applyAdditional(&$result)
+    {
+        if ($this->checkIsPortal()) {
+
+        }
+    }
  }
 
