@@ -36,7 +36,9 @@ Espo.define('views/preferences/fields/language', 'views/fields/enum', function (
 
             this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
 
-            this.translatedOptions[''] = this.translate('Default');
+            var defaultTranslated =  this.translatedOptions[this.getConfig().get('language')] || this.getConfig().get('language');
+
+            this.translatedOptions[''] = this.translate('Default') + ' (' + defaultTranslated + ')';
         },
 
     });

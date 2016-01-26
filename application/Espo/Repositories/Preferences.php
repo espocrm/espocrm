@@ -42,13 +42,8 @@ class Preferences extends \Espo\Core\ORM\Repository
     );
 
     protected $defaultAttributeListFromSettings = array(
-        'defaultCurrency',
-        'dateFormat',
-        'timeFormat',
         'decimalMark',
         'thousandSeparator',
-        'weekStart',
-        'timeZone',
         'exportDelimiter'
     );
 

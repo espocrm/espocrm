@@ -11,7 +11,12 @@
         "companyLogo": "Logo",
         "theme": "Theme",
         "language": "Language",
-        "dashboardLayout": "Dashboard Layout"
+        "dashboardLayout": "Dashboard Layout",
+        "dateFormat": "Date Format",
+        "timeFormat": "Time Format",
+        "timeZone": "Time Zone",
+        "weekStart": "First Day of Week",
+        "defaultCurrency": "Default Currency"
     },
     "links": {
         "users": "Users",
@@ -24,6 +29,7 @@
     "labels": {
         "Create Portal": "Create Portal",
         "User Interface": "User Interface",
-        "General": "General"
+        "General": "General",
+        "Settings": "Settings"
     }
 }

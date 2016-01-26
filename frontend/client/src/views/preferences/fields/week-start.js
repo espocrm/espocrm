@@ -25,18 +25,17 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('models/preferences', 'model', function (Dep) {
+Espo.define('views/preferences/fields/week-start', 'views/fields/enum-int', function (Dep) {
 
     return Dep.extend({
 
-        name: "Preferences",
+        setupOptions: function () {
+            Dep.prototype.setupOptions.call(this);
+            this.params.options.unshift(-1);
 
-        settings: null,
-
-        getDashletOptions: function (id) {
-            var value = this.get('dashletsOptions') || {};
-            return value[id] || false;
-        }
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('weekStart', 'options', 'Settings') || {});
+            this.translatedOptions[-1] = this.translate('Default') + ' (' + this.getLanguage().translateOption(this.getConfig().get('weekStart'), 'weekStart', 'Settings') +')';
+        },
 
     });
 

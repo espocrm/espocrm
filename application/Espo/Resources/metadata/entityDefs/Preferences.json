@@ -2,22 +2,31 @@
     "fields": {
         "timeZone": {
             "type": "enum",
-            "detault": "UTC"
+            "detault": "",
+            "view": "views/preferences/fields/time-zone"
         },
         "dateFormat": {
             "type": "enum",
             "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
-            "default": "MM/DD/YYYY"
+            "default": "",
+            "view": "views/preferences/fields/date-format"
         },
         "timeFormat": {
             "type": "enum",
             "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
-            "default": "HH:mm"
+            "default": "",
+            "view": "views/preferences/fields/time-format"
         },
         "weekStart": {
             "type": "enumInt",
             "options": [0, 1],
-            "default": 0
+            "default": -1,
+            "view": "views/preferences/fields/week-start"
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "default": "",
+            "view": "views/preferences/fields/default-currency"
         },
         "thousandSeparator": {
             "type": "varchar",
@@ -30,10 +39,6 @@
             "default": ".",
             "required": true,
             "maxLength": 1
-        },
-        "defaultCurrency": {
-            "type": "enum",
-            "default": "USD"
         },
         "dashboardLayout": {
             "type": "jsonArray"

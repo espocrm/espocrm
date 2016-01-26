@@ -2,10 +2,10 @@
     {
         "label": "Locale",
         "rows": [
-            [{"name": "dateFormat"}, {"name": "timeFormat"}],
-            [{"name": "timeZone"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}, false],
-            [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
+            [{"name": "dateFormat"}, {"name": "timeZone"}],
+            [{"name": "timeFormat"}, {"name": "weekStart"}],
+            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
+            [false, {"name": "decimalMark"}],
             [{"name": "language"}, false]
         ]
     },

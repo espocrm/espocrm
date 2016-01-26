@@ -25,18 +25,17 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('models/preferences', 'model', function (Dep) {
+Espo.define('views/preferences/fields/default-currency', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
-        name: "Preferences",
+        setupOptions: function () {
+            this.params.options = Espo.Utils.clone(this.getConfig().get('currencyList') || []);
+            this.params.options.unshift('');
 
-        settings: null,
-
-        getDashletOptions: function (id) {
-            var value = this.get('dashletsOptions') || {};
-            return value[id] || false;
-        }
+            this.translatedOptions = this.translatedOptions || {};
+            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('defaultCurrency') +')';
+        },
 
     });
 

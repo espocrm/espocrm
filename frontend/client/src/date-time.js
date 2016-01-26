@@ -152,7 +152,6 @@ Espo.define('date-time', [], function () {
         },
 
         setSettingsAndPreferences: function (settings, preferences) {
-
             if (settings.has('dateFormat')) {
                 this.dateFormat = settings.get('dateFormat');
             }
@@ -170,10 +169,18 @@ Espo.define('date-time', [], function () {
             }
 
             preferences.on('change', function (model) {
-                this.dateFormat = model.get('dateFormat');
-                this.timeFormat = model.get('timeFormat');
-                this.timeZone = model.get('timeZone');
-                this.weekStart = model.get('weekStart');
+                if (model.has('dateFormat') && model.get('dateFormat') !== '') {
+                    this.dateFormat = model.get('dateFormat');
+                }
+                if (model.has('timeFormat') && model.get('timeFormat') !== '') {
+                    this.timeFormat = model.get('timeFormat');
+                }
+                if (model.has('timeZone') && model.get('timeZone') !== '') {
+                    this.timeZone = model.get('timeZone');
+                }
+                if (model.has('weekStart') && model.get('weekStart') !== -1) {
+                    this.weekStart = model.get('weekStart');
+                }
                 if (this.timeZone == 'UTC') {
                     this.timeZone = null;
                 }

@@ -12,8 +12,8 @@
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "thousandSeparator"}, {"name": "decimalMark"}],
-            [{"name": "language"}, false]
+            [false, {"name": "thousandSeparator"}],
+            [{"name": "language"}, {"name": "decimalMark"}]
         ]
     }
 ]

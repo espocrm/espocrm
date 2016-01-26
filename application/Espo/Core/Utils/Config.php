@@ -117,7 +117,7 @@ class Config
      * @param string $value
      * @return bool
      */
-    public function set($name, $value = '')
+    public function set($name, $value = null, $dontMarkDirty = false)
     {
         if (!is_array($name)) {
             $name = array($name => $value);
@@ -125,7 +125,9 @@ class Config
 
         foreach ($name as $key => $value) {
             $this->data[$key] = $value;
-            $this->changedData[$key] = $value;
+            if (!$dontMarkDirty) {
+                $this->changedData[$key] = $value;
+            }
         }
     }
 

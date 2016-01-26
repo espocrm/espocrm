@@ -44,7 +44,7 @@
             "type": "varchar",
             "default": ",",
             "maxLength": 1,
-            "view": "Settings.Fields.ThousandSeparator"
+            "view": "views/settings/fields/thousand-separator"
         },
         "decimalMark": {
             "type": "varchar",
@@ -61,16 +61,18 @@
         "defaultCurrency": {
             "type": "enum",
             "default": "USD",
-            "required": true
+            "required": true,
+            "view": "views/settings/fields/default-currency"
         },
         "baseCurrency": {
             "type": "enum",
             "default": "USD",
-            "required": true
+            "required": true,
+            "view": "views/settings/fields/default-currency"
         },
         "currencyRates": {
             "type": "base",
-            "view": "Settings.Fields.CurrencyRates"
+            "view": "views/settings/fields/currency-rates"
         },
         "outboundEmailIsShared": {
             "type": "bool",

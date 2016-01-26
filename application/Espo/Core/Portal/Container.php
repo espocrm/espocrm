@@ -88,6 +88,39 @@ class Container extends \Espo\Core\Container
     public function setPortal(\Espo\Entities\Portal $portal)
     {
         $this->set('portal', $portal);
+
+        $data = array();
+        foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
+            $data[$attribute] = $this->get('portal')->get($attribute);
+        }
+        if (empty($data['language'])) {
+            unset($data['language']);
+        }
+        if (empty($data['theme'])) {
+            unset($data['theme']);
+        }
+        if (empty($data['timeZone'])) {
+            unset($data['timeZone']);
+        }
+        if (empty($data['dateFormat'])) {
+            unset($data['dateFormat']);
+        }
+        if (empty($data['timeFormat'])) {
+            unset($data['timeFormat']);
+        }
+        if (isset($data['weekStart']) && $data['weekStart'] === -1) {
+            unset($data['weekStart']);
+        }
+        if (is_null($data['weekStart'])) {
+            unset($data['weekStart']);
+        }
+        if (empty($data['defaultCurrency'])) {
+            unset($data['defaultCurrency']);
+        }
+
+        foreach ($data as $attribute => $value) {
+            $this->get('config')->set($attribute, $value, true);
+        }
     }
 }
 

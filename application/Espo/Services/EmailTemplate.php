@@ -179,9 +179,9 @@ class EmailTemplate extends Record
                 $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
             } else {
                 if ($entity->fields[$field]['type'] == 'date') {
-                    $value = $this->getDateTime()->convertSystemDateToGlobal($value);
+                    $value = $this->getDateTime()->convertSystemDate($value);
                 } else if ($entity->fields[$field]['type'] == 'datetime') {
-                    $value = $this->getDateTime()->convertSystemDateTimeToGlobal($value);
+                    $value = $this->getDateTime()->convertSystemDateTime($value);
                 }
             }
             $text = str_replace('{' . $type . '.' . $field . '}', $value, $text);

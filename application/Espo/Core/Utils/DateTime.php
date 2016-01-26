@@ -85,25 +85,21 @@ class DateTime
 
     public function convertSystemDateToGlobal($string)
     {
+        return $this->convertSystemDate($string);
+    }
+
+    public function convertSystemDateTimeToGlobal($string)
+    {
+        return $this->convertSystemDateTime($string);
+    }
+
+    public function convertSystemDate($string)
+    {
         $dateTime = \DateTime::createFromFormat('Y-m-d', $string);
         if ($dateTime) {
             return $dateTime->format($this->getPhpDateFormat());
         }
         return null;
-    }
-
-    public function convertSystemDateTimeToGlobal($string)
-    {
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
-        if ($dateTime) {
-            return $dateTime->setTimezone($this->timezone)->format($this->getPhpDateTimeFormat());
-        }
-        return null;
-    }
-
-    public function convertSystemDate($string)
-    {
-        return $this->convertSystemDateToGlobal($string);
     }
 
     public function convertSystemDateTime($string, $timezone = null)

@@ -43,7 +43,7 @@ return array (
     'version' => '@@version',
     'timeZone' => 'UTC',
     'dateFormat' => 'MM/DD/YYYY',
-    'timeFormat' => 'HH:mm',
+    'timeFormat' => 'hh:mm a',
     'weekStart' => 0,
     'thousandSeparator' => ',',
     'decimalMark' => '.',

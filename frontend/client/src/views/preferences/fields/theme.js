@@ -39,7 +39,10 @@ Espo.define('views/preferences/fields/theme', 'views/fields/enum', function (Dep
             Dep.prototype.setup.call(this);
 
             this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default');
+
+            var defaultTranslated = this.translatedOptions[this.getConfig().get('theme')] || this.getConfig().get('theme');
+
+            this.translatedOptions[''] = this.translate('Default') + ' (' + defaultTranslated + ')';
         },
 
     });

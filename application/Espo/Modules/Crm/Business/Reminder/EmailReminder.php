@@ -74,7 +74,7 @@ class EmailReminder
                     $contents = str_replace($key, $this->dateTime->convertSystemDateTime($entity->get($field), $timezone), $contents);
                     break;
                 case 'date':
-                    $contents = str_replace($key, $this->dateTime->convertSystemDateToGlobal($entity->get($field)), $contents);
+                    $contents = str_replace($key, $this->dateTime->convertSystemDate($entity->get($field)), $contents);
                     break;
                 default:
                     $contents = str_replace($key, $entity->get($field), $contents);
