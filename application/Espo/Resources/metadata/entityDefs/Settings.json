@@ -27,7 +27,7 @@
         },
         "dateFormat": {
             "type": "enum",
-            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY"],
+            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
             "default": "MM/DD/YYYY"
         },
         "timeFormat": {

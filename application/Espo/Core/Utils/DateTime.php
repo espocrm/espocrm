@@ -45,6 +45,7 @@ class DateTime
         'MM/DD/YYYY' => 'm/d/Y',
         'YYYY-MM-DD' => 'Y-m-d',
         'DD.MM.YYYY' => 'd.m.Y',
+        'DD/MM/YYYY' => 'd/m/Y',
     );
 
     protected $timeFormats = array(
