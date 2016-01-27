@@ -102,7 +102,7 @@ class Campaign extends \Espo\Services\Record
         $params = array(
             'select' => array('SUM:amountConverted'),
             'whereClause' => array(
-                'status' => 'Closed Won',
+                'stage' => 'Closed Won',
                 'campaignId' => $entity->id
             ),
             'groupBy' => array('opportunity.campaignId')
