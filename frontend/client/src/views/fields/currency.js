@@ -50,7 +50,7 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.currencyFieldName = this.name + 'Currency';
-            this.currencyList = this.getConfig().get('currencyList') || ['USD', 'EUR'];
+            this.currencyList = this.getConfig().get('currencyList') || ['USD'];
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
         },
 
@@ -59,7 +59,7 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             if (this.mode == 'edit') {
                 this.$currency = this.$el.find('[name="' + this.currencyFieldName + '"]');
                 this.$currency.on('change', function () {
-                    this.trigger('change');
+                    this.model.set(this.currencyFieldName, this.$currency.val());
                 }.bind(this));
             }
         },

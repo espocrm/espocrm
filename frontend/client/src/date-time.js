@@ -99,6 +99,14 @@ Espo.define('date-time', [], function () {
             return m.format(this.internalDateTimeFormat) + ':00';
         },
 
+        fromDisplayDateTime: function (string) {
+            return this.fromDisplay(string);
+        },
+
+        toDisplayDateTime: function (string) {
+            return this.toDisplay(string);
+        },
+
         toDisplay: function (string) {
             if (!string) {
                 return '';

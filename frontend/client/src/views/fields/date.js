@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'date',
 
-        editTemplate: 'fields.date.edit',
+        editTemplate: 'fields/date/edit',
 
-        searchTemplate: 'fields.date.search',
+        searchTemplate: 'fields/date/search',
 
         validations: ['required', 'date', 'after', 'before'],
 
@@ -66,6 +66,10 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
             }
 
             if (this.mode == 'list' || this.mode == 'detail') {
+                if (this.getConfig().get('readableDateFormatDisabled')) {
+                    return this.getDateTime().toDisplayDate(value);
+                }
+
                 var d = moment.utc(value, this.getDateTime().internalDateFormat);
 
 
@@ -86,10 +90,12 @@ Espo.define('Views.Fields.Date', 'Views.Fields.Base', function (Dep) {
                     return this.translate('Yesterday');
                 }
 
+                var readableFormat = 'MMM DD';
+
                 if (d.format('YYYY') == today.format('YYYY')) {
-                    return d.format('MMM DD');
+                    return d.format(readableFormat);
                 } else {
-                    return d.format('MMM DD, YYYY');
+                    return d.format(readableFormat + ', YYYY');
                 }
             }
 

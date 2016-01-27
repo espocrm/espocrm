@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
+Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
     return Dep.extend({
 
         type: 'datetime',
 
-        editTemplate: 'fields.datetime.edit',
+        editTemplate: 'fields/datetime/edit',
 
         validations: ['required', 'datetime', 'after', 'before'],
 
@@ -66,6 +66,10 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
             }
 
             if (this.mode == 'list' || this.mode == 'detail') {
+                if (this.getConfig().get('readableDateFormatDisabled')) {
+                    return this.getDateTime().toDisplayDateTime(value);
+                }
+
                 var d = this.getDateTime().toMoment(value);
                 var now = moment().tz(this.getDateTime().timeZone || 'UTC');
                 var dt = now.clone().startOf('day');
@@ -84,10 +88,12 @@ Espo.define('Views.Fields.Datetime', 'Views.Fields.Date', function (Dep) {
                     return this.translate('Yesterday') + ' ' + d.format(this.getDateTime().timeFormat);
                 }
 
+                var readableFormat = 'MMM DD';
+
                 if (d.format('YYYY') == now.format('YYYY')) {
-                    return d.format('MMM DD') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return d.format(readableFormat) + ' ' + d.format(this.getDateTime().timeFormat);
                 } else {
-                    return d.format('MMM DD, YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
+                    return d.format(readableFormat + ', YYYY') + ' ' + d.format(this.getDateTime().timeFormat);
                 }
             }
 

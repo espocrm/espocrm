@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.DatetimeOptional', 'Views.Fields.Datetime', function (Dep) {
+Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep) {
 
     return Dep.extend({
 

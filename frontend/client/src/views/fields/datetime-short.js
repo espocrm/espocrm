@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep) {
+Espo.define('views/fields/datetime-short', 'views/fields/datetime', function (Dep) {
 
     return Dep.extend({
 
         getValueForDisplay: function () {
-
             if (this.mode == 'list' || this.mode == 'detail') {
                 var value = this.model.get(this.name)
                 if (value) {
@@ -46,10 +45,12 @@ Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep
                         return string;
                     }
 
+                     var readableFormat = 'MMM D';
+
                     if (d.format('YYYY') == now.format('YYYY')) {
-                        string = d.format('MMM D');
+                        string = d.format(readableFormat);
                     } else {
-                        string = d.format('MMM D, YY');
+                        string = d.format(readableFormat + ', YY');
                     }
 
                     return string;
@@ -57,9 +58,7 @@ Espo.define('Views.Fields.DatetimeShort', 'Views.Fields.Datetime', function (Dep
             }
 
             return Dep.prototype.getValueForDisplay.call(this);
-        },
-
-
+        }
 
     });
 });
