@@ -65,7 +65,9 @@ class Download extends \Espo\Core\EntryPoints\Base
             throw new Forbidden();
         }
 
-        $fileName = "data/upload/{$attachment->id}";
+        $sourceId = $attachment->getSourceId();
+
+        $fileName = "data/upload/{$sourceId}";
 
         if (!file_exists($fileName)) {
             throw new NotFound();

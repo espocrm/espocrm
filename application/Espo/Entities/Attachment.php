@@ -25,11 +25,19 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
 class Attachment extends \Espo\Core\ORM\Entity
 {
+    public function getSourceId()
+    {
+        $sourceId = $this->get('sourceId');
+        if (!$sourceId) {
+            $sourceId = $this->id;
+        }
+        return $sourceId;
+    }
 
 }

@@ -573,16 +573,16 @@ class Email extends Record
                 $attachment->set('size', $source->get('size'));
                 $attachment->set('global', $source->get('global'));
                 $attachment->set('name', $source->get('name'));
+                $attachment->set('sourceId', $source->getSourceId());
 
                 if (!empty($parentType) && !empty($parentId)) {
                     $attachment->set('parentType', $parentType);
                     $attachment->set('parentId', $parentId);
                 }
 
-                $this->getEntityManager()->saveEntity($attachment);
+                if ($this->getFileManager()->isFile('data/upload/' . $source->getSourceId())) {
+                    $this->getEntityManager()->saveEntity($attachment);
 
-                $contents = $this->getFileManager()->getContents('data/upload/' . $source->id);
-                if (!empty($contents)) {
                     $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');

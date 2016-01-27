@@ -131,13 +131,12 @@ class EmailTemplate extends Record
                     unset($data['parentId']);
                     unset($data['id']);
                     $clone->set($data);
-                    $this->getEntityManager()->saveEntity($clone);
+                    $clone->set('sourceId', $attachment->getSourceId());
 
-                    $contents = $this->getFileManager()->getContents('data/upload/' . $attachment->id);
-                    if (empty($contents)) {
+                    if (!$this->getFileManager()->isFile('data/upload/' . $attachment->getSourceId())) {
                         continue;
                     }
-                    $this->getFileManager()->putContents('data/upload/' . $clone->id, $contents);
+                    $this->getEntityManager()->saveEntity($clone);
 
                     $attachmentsIds[] = $id = $clone->id;
                     $attachmentsNames->$id = $clone->get('name');

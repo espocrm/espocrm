@@ -15,6 +15,12 @@
         "parent": {
             "type": "linkParent"
         },
+        "sourceId": {
+            "type": "varchar",
+            "maxLength": 36,
+            "readOnly": true,
+            "disabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

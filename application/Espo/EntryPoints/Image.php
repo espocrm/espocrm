@@ -83,7 +83,9 @@ class Image extends \Espo\Core\EntryPoints\Base
             throw new Forbidden();
         }
 
-        $filePath = "data/upload/{$attachment->id}";
+        $sourceId = $attachment->getSourceId();
+
+        $filePath = "data/upload/" . $sourceId . "";
 
         $fileType = $attachment->get('type');
 
@@ -97,7 +99,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 
         if (!empty($size)) {
             if (!empty($this->imageSizes[$size])) {
-                $thumbFilePath = "data/upload/thumbs/{$attachment->id}_{$size}";
+                $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
 
                 if (!file_exists($thumbFilePath)) {
                     $targetImage = $this->getThumbImage($filePath, $fileType, $size);
@@ -127,7 +129,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         }
 
         if (!empty($size)) {
-            $fileName = $attachment->id . '_' . $size . '.jpg';
+            $fileName = $sourceId . '_' . $size . '.jpg';
         } else {
             $fileName = $attachment->get('name');
         }

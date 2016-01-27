@@ -235,7 +235,7 @@ class Sender
 
         if (!empty($attachmentCollection)) {
             foreach ($attachmentCollection as $a) {
-                $fileName = 'data/upload/' . $a->id;
+                $fileName = 'data/upload/' . $a->getSourceId();
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
                 $attachment->encoding = Mime::ENCODING_BASE64;
@@ -249,7 +249,7 @@ class Sender
 
         if (!empty($attachmentInlineCollection)) {
             foreach ($attachmentInlineCollection as $a) {
-                $fileName = 'data/upload/' . $a->id;
+                $fileName = 'data/upload/' . $a->getSourceId();
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_INLINE;
                 $attachment->encoding = Mime::ENCODING_BASE64;
