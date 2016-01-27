@@ -301,7 +301,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
         },
 
-        actionReply: function (data, cc) {
+        actionReply: function (data, e, cc) {
             var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
 
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
@@ -322,8 +322,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }, this);
         },
 
-        actionReplyToAll: function () {
-            this.actionReply(null, true);
+        actionReplyToAll: function (data, e) {
+            this.actionReply(data, e, true);
         },
 
         actionForward: function (data, cc) {
