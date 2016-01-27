@@ -126,7 +126,9 @@
         "trim": "Trim",
         "height": "Height (px)",
         "provider": "Provider",
-        "typeList": "Type List"
+        "typeList": "Type List",
+        "rows": "Number of rows of textarea",
+        "lengthOfCut": "Length of cut"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

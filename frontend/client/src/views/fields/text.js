@@ -58,6 +58,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.params.rows = this.params.rows || this.rowsDefault;
+            this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
         },
 
         setupSearch: function () {
