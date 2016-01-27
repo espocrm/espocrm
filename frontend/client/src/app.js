@@ -75,6 +75,8 @@ Espo.define(
                 });
             }.bind(this))
         ]).then(function () {
+            this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
+
             this.user = new User();
             this.preferences = new Preferences();
             this.preferences.settings = this.settings;
@@ -166,8 +168,6 @@ Espo.define(
                 if (this.themeManager.isUserTheme()) {
                     $('#main-stylesheet').attr('href', this.themeManager.getStylesheet());
                 }
-
-                this.loader.addLibsConfig(this.metadata.get('app.jsLibs') || {});
 
                 var promiseList = [];
                 var aclImplementationClassMap = {};
