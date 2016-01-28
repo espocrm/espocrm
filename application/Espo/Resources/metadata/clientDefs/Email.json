@@ -46,14 +46,6 @@
          ]
       },
       "detail": {
-         "buttons": [
-            {
-               "label": "Reply",
-               "action": "replyToAll",
-               "style": "danger",
-               "acl": "read"
-            }
-         ],
          "dropdown": [
              {
                "label": "Reply",

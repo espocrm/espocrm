@@ -25,7 +25,8 @@
         "defaultReminders": "Default Reminders",
         "theme": "Theme",
         "useCustomTabList": "Custom Tab List",
-        "tabList": "Tab List"
+        "tabList": "Tab List",
+        "replyEmailToAllByDefault": "Reply Email to All by Default"
     },
     "links": {
     },

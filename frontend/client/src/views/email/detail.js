@@ -48,6 +48,14 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     'actions': []
                 };
             } else {
+                this.addMenuItem('buttons', {
+                    name: 'reply',
+                    label: 'Reply',
+                    action: this.getPreferences().get('replyEmailToAllByDefault') ? 'replyToAll' : 'reply',
+                    style: 'danger'
+                }, true);
+
+
                 if (status == 'Archived' || status == 'Recieved') {
                     if (!this.model.get('parentId')) {
                         this.menu.dropdown.push({

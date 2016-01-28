@@ -43,6 +43,12 @@
                 {
                     "name": "defaultReminders"
                 }
+            ],
+            [
+                {
+                    "name": "replyEmailToAllByDefault"
+                },
+                false
             ]
         ]
     },
