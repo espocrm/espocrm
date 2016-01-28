@@ -262,16 +262,38 @@ class User extends Record
         return $user;
     }
 
+    protected function getInternalUserCount()
+    {
+        return $this->getEntityManager()->getRepository('User')->where(array(
+            'isActive' => true,
+            'isSuperAdmin' => false,
+            'isPortalUser' => false,
+            'id!=' => 'system'
+        ))->count();
+    }
+
+    protected function getPortalUserCount()
+    {
+        return $this->getEntityManager()->getRepository('User')->where(array(
+            'isActive' => true,
+            'isSuperAdmin' => false,
+            'isPortalUser' => true,
+            'id!=' => 'system'
+        ))->count();
+    }
+
     protected function beforeCreate(Entity $entity, array $data = array())
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
-            $userCount = $this->getEntityManager()->getRepository('User')->where(array(
-                'isActive' => true,
-                'isSuperAdmin' => false,
-                'id!=' => 'system'
-            ))->count();
+            $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
+            }
+        }
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
+            $portalUserCount = $this->getPortalUserCount();
+            if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
+                throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
             }
         }
     }
@@ -279,16 +301,26 @@ class User extends Record
     protected function beforeUpdate(Entity $user, array $data = array())
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
-            if (!$user->isActive()) {
-                if (array_key_exists('isActive', $data) && $data['isActive']) {
-                    $userCount = $this->getEntityManager()->getRepository('User')->where(array(
-                        'isActive' => true,
-                        'isSuperAdmin' => false,
-                        'id!=' => 'system'
-                    ))->count();
-                    if ($userCount >= $this->getConfig()->get('userLimit')) {
-                        throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
-                    }
+            if (
+                ($user->get('isActive') && $user->isFieldChanged('isActive') && !$user->get('isPortalUser'))
+                ||
+                (!$user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+            ) {
+                $userCount = $this->getInternalUserCount();
+                if ($userCount >= $this->getConfig()->get('userLimit')) {
+                    throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
+                }
+            }
+        }
+        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
+            if (
+                ($user->get('isActive') && $user->isFieldChanged('isActive') && $user->get('isPortalUser'))
+                ||
+                ($user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+            ) {
+                $portalUserCount = $this->getPortalUserCount();
+                if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
+                    throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
                 }
             }
         }

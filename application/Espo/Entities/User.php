@@ -41,6 +41,11 @@ class User extends \Espo\Core\Entities\Person
         return $this->get('isActive');
     }
 
+    public function isPortalUser()
+    {
+        return $this->get('isPortalUser');
+    }
+
     public function getTeamIdList()
     {
         if (!$this->has('teamsIds')) {
