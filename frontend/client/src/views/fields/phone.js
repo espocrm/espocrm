@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/fields/phone', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'phone',
 
-        editTemplate: 'fields.phone.edit',
+        editTemplate: 'fields/phone/edit',
 
-        detailTemplate: 'fields.phone.detail',
+        detailTemplate: 'fields/phone/detail',
 
-        listTemplate: 'fields.phone.list',
+        listTemplate: 'fields/phone/list',
 
-        searchTemplate: 'fields.phone.search',
+        searchTemplate: 'fields/phone/search',
 
         validations: ['required'],
 
@@ -58,20 +58,27 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
                 phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 
                 if (this.model.isNew() || !this.model.get(this.name)) {
-                    if (!this.defaultType) {
-                        this.defaultType = this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
-                    }
                     if (!phoneNumberData || !phoneNumberData.length) {
                          phoneNumberData = [{
                             phoneNumber: this.model.get(this.name) || '',
                             primary: true,
-                            type: this.defaultType,
+                            type: this.defaultType
                         }];
                     }
                 }
             } else {
                 phoneNumberData = this.model.get(this.dataFieldName) || false;
             }
+
+            if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
+                 phoneNumberData = [{
+                    phoneNumber: this.model.get(this.name),
+                    primary: true,
+                    primary: true,
+                    type: this.defaultType
+                }];
+            }
+
             return _.extend({
                 phoneNumberData: phoneNumberData
             }, Dep.prototype.data.call(this));
@@ -205,6 +212,7 @@ Espo.define('Views.Fields.Phone', 'Views.Fields.Base', function (Dep) {
 
         setup: function () {
             this.dataFieldName = this.name + 'Data';
+            this.defaultType = this.defaultType || this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
         },
 
         fetchPhoneNumberData: function () {

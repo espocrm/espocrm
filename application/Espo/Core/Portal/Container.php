@@ -111,7 +111,7 @@ class Container extends \Espo\Core\Container
         if (isset($data['weekStart']) && $data['weekStart'] === -1) {
             unset($data['weekStart']);
         }
-        if (is_null($data['weekStart'])) {
+        if (array_key_exists('weekStart', $data) && is_null($data['weekStart'])) {
             unset($data['weekStart']);
         }
         if (empty($data['defaultCurrency'])) {

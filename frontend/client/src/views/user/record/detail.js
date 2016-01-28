@@ -99,6 +99,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.showField('contact');
                 this.showField('accounts');
                 this.showPanel('portal');
+                this.hideField('title');
             } else {
                 this.showField('isAdmin');
                 this.showField('roles');
@@ -109,6 +110,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.hideField('contact');
                 this.hideField('accounts');
                 this.hidePanel('portal');
+                this.showField('title');
             }
         },
 

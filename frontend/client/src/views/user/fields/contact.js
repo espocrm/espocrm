@@ -35,10 +35,26 @@ Espo.define('views/user/fields/contact', 'views/fields/link', function (Dep) {
             if (model.has('accountId')) {
                 var names = {};
                 names[model.get('accountId')] = model.get('accountName');
-                this.model.set({
+
+                var attributes = {
                     accountsIds: [model.get('accountId')],
                     accountsNames: names
-                });
+                };
+                attributes.firstName = model.get('firstName');
+                attributes.lastName = model.get('lastName');
+                attributes.salutationName = model.get('salutationName');
+
+                attributes.emailAddress = model.get('emailAddress');
+                attributes.emailAddressData = model.get('emailAddressData');
+
+                attributes.phoneNumber = model.get('phoneNumber');
+                attributes.phoneNumberData = model.get('phoneNumberData');
+
+                if (attributes.emailAddress) {
+                    attributes.userName = attributes.emailAddress;
+                }
+
+                this.model.set(attributes);
             }
         }
 

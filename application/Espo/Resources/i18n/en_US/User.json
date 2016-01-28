@@ -49,7 +49,7 @@
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
-        "userName": "Letters a-z, numbers 0-9 and underscores are allowed.",
+        "userName": "Letters a-z, numbers 0-9, dots, hyphens, @-signs and underscores are allowed.",
         "isAdmin": "Admin user can access everything.",
         "isActive": "If unchecked then user won't be able to login.",
         "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",

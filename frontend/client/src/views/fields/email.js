@@ -87,9 +87,20 @@ Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
                         }];
                     }
                 }
+
             } else {
                 emailAddressData = this.model.get(this.dataFieldName) || false;
             }
+
+            if ((!emailAddressData || emailAddressData.length === 0) && this.model.get(this.name)) {
+                 emailAddressData = [{
+                    emailAddress: this.model.get(this.name),
+                    primary: true,
+                    optOut: false,
+                    invalid: false
+                }];
+            }
+
             return _.extend({
                 emailAddressData: emailAddressData
             }, Dep.prototype.data.call(this));
@@ -172,9 +183,7 @@ Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
 
                 this.model.set(this.dataFieldName, data, {silent: true});
                 this.render();
-
             },
-
         },
 
         removeEmailAddressBlock: function ($block) {

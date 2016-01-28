@@ -111,6 +111,7 @@ return array (
     'inboundEmailMaxPortionSize' => 20,
     'authTokenLifetime' => 0,
     'authTokenMaxIdleTime' => 120,
+    'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',
     'dashboardLayout' => [
         (object) [
             'name' => 'My Espo',
