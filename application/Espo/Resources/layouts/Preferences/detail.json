@@ -46,7 +46,7 @@
             ],
             [
                 {
-                    "name": "replyEmailToAllByDefault"
+                    "name": "emailReplyToAllByDefault"
                 },
                 false
             ]

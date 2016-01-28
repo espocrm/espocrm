@@ -51,7 +51,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 this.addMenuItem('buttons', {
                     name: 'reply',
                     label: 'Reply',
-                    action: this.getPreferences().get('replyEmailToAllByDefault') ? 'replyToAll' : 'reply',
+                    action: this.getPreferences().get('emailReplyToAllByDefault') ? 'replyToAll' : 'reply',
                     style: 'danger'
                 }, true);
 

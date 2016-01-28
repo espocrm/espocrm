@@ -193,7 +193,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                 this.getModelFactory().create('Email', function (model) {
                     model.id = id;
                     this.listenToOnce(model, 'sync', function () {
-                        var attributes = emailHelper.getReplyAttributes(model, data, this.getPreferences().get('replyEmailToAllByDefault'));
+                        var attributes = emailHelper.getReplyAttributes(model, data, this.getPreferences().get('emailReplyToAllByDefault'));
                         this.createView('quickCreate', 'views/modals/compose-email', {
                             attributes: attributes,
                         }, function (view) {
