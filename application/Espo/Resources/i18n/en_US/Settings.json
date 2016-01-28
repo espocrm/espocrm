@@ -78,7 +78,7 @@
         "followCreatedEntities": "Users will automatically follow records they created.",
         "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped.",
         "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
-        "authTokenMaxIdleTime": "Defines how long since a last access tokens can exist.\n0 - means no expiration.",
+        "authTokenMaxIdleTime": "Defines how long since the last access tokens can exist.\n0 - means no expiration.",
         "userThemesDisabled": "If checked then users won't be able to select another theme."
     },
     "labels": {
