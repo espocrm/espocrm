@@ -501,10 +501,10 @@ class Stream extends \Espo\Core\Services\Base
             }
             if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
                 $targetType = $e->get('targetType');
-                if (!$targetType || $targetType === 'users') {
+                if (!$targetType || $targetType === 'users' || $targetType === 'self') {
                     $e->loadLinkMultipleField('users');
                 }
-                if ($targetType !== 'users') {
+                if ($targetType !== 'users' && $targetType === 'self') {
                     if (!$targetType || $targetType === 'teams') {
                         $e->loadLinkMultipleField('teams');
                     } else if ($targetType === 'portals') {

@@ -1,4 +1,4 @@
-<li data-id="{{model.id}}" class="list-group-item list-row">
+
 <% if (layout.right) { %>
 <div class="pull-right right cell-buttons">
     {{{<%= layout.right.name %>}}}
@@ -27,4 +27,4 @@
     <% }); %>
     </div>
 <% }); %>
-</li>
+

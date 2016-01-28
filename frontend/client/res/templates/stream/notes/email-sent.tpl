@@ -1,6 +1,3 @@
-{{#unless onlyContent}}
-<li data-id="{{model.id}}" class="list-group-item list-row">
-{{/unless}}
 
     {{#unless noEdit}}
     <div class="pull-right right-container">
@@ -39,6 +36,3 @@
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
 
-{{#unless onlyContent}}
-</li>
-{{/unless}}

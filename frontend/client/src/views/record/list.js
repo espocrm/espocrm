@@ -770,7 +770,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         buildRow: function (i, model, callback) {
-            var key = 'row-' + model.id;
+            var key = model.id;
 
             this.rowList.push(key);
             this.getInternalLayout(function (internalLayout) {
@@ -877,7 +877,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     var model = collection.at(i);
                     this.buildRow(i, model, function (view) {
                         view.getHtml(function (html) {
-                            $list.append(html);
+                            var $row = $(this.getRowContainerHtml(model.id));
+                            $row.append(html);
+                            $list.append($row);
                             rowsReady++;
                             if (rowsReady == rowCount) {
                                 final();
@@ -895,8 +897,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             collection.fetch({
                 success: success,
                 remove: false,
-                more: true,
+                more: true
             });
+        },
+
+        getRowContainerHtml: function (id) {
+            return '<tr data-id="'+id+'" class="list-row"></tr>';
         },
 
         actionQuickView: function (data) {

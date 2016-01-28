@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
+Espo.define('views/notifications/notification', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -45,7 +45,7 @@ Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
         },
 
         init: function () {
-            this.createField('createdAt', null, null, 'Fields.DatetimeShort');
+            this.createField('createdAt', null, null, 'views/fields/datetime-short');
 
             this.messageData = {};
         },
@@ -68,7 +68,7 @@ Espo.define('Views.Notifications.Notification', 'View', function (Dep) {
                 this.messageTemplate = this.translate(this.messageName, 'notificationMessages') || '';
             }
 
-            this.createView('message', 'Stream.Message', {
+            this.createView('message', 'views/stream/message', {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
                 model: this.model,

@@ -38,7 +38,7 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
         },
 
         buildRow: function (i, model, callback) {
-            var key = 'row-' + model.id;
+            var key = model.id;
             this.rowList.push(key);
 
             var type = model.get('type');
@@ -104,7 +104,9 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
 
                     this.buildRow(i, model, function (view) {
                         view.getHtml(function (html) {
-                            $list.prepend(html);
+                            var $row = $(this.getRowContainerHtml(model.id));
+                            $row.append(html);
+                            $list.prepend($row);
                             rowsReady++;
                             view._afterRender();
                             if (view.options.el) {

@@ -134,6 +134,10 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
             return this.options.el + ' li[data-id="' + model.id + '"] .cell-' + item.name;
         },
 
+        getRowContainerHtml: function (id) {
+            return '<li data-id="'+id+'" class="list-group-item list-row"></li>';
+        },
+
         prepareInternalLayout: function (internalLayout, model) {
             var rows = internalLayout.rows || [];
             rows.forEach(function (row) {

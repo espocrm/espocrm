@@ -30,7 +30,7 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.post',
+        template: 'stream/notes/post',
 
         messageName: 'post',
 
@@ -38,20 +38,30 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
         isRemovable: true,
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
+            return data;
+        },
+
         setup: function () {
             if (this.model.get('post')) {
                 this.createField('post', null, null, 'views/stream/fields/post');
             }
-            if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
 
-                if (!this.model.get('post') && this.model.get('parentId')) {
-                    this.messageName = 'attach';
-                    if (this.isThis) {
-                        this.messageName += 'This';
-                    }
+            if (!this.model.get('post') && this.model.get('parentId')) {
+                this.messageName = 'attach';
+                if (this.isThis) {
+                    this.messageName += 'This';
                 }
             }
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.model.hasChanged('post') || this.model.hasChanged('attachmentsIds')) {
+                    this.reRender();
+                }
+            }, this);
 
             if (!this.model.get('parentId')) {
                 if (this.model.get('isGlobal')) {

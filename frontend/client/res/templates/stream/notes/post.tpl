@@ -1,6 +1,4 @@
-{{#unless onlyContent}}
-<li data-id="{{model.id}}" class="list-group-item list-row">
-{{/unless}}
+
 
     {{#unless noEdit}}
     <div class="pull-right right-container">
@@ -23,7 +21,7 @@
     </div>
     {{/if}}
 
-    {{#if attachments}}
+    {{#if showAttachments}}
     <div class="stream-attachments-container">
         <span class="cell cell-attachments">{{{attachments}}}</span>
     </div>
@@ -33,6 +31,4 @@
         <span class="text-muted small">{{{createdAt}}}</span>
     </div>
 
-{{#unless onlyContent}}
-</li>
-{{/unless}}
+

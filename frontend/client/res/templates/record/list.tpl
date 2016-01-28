@@ -81,7 +81,9 @@
         {{/if}}
         <tbody>
         {{#each rowList}}
+            <tr data-id="{{./this}}" class="list-row">
             {{{var this ../this}}}
+            </tr>
         {{/each}}
         </tbody>
     </table>

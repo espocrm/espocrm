@@ -61,6 +61,12 @@ class Table
 
     protected $valuePermissionList = ['assignmentPermission', 'userPermission', 'portalPermission'];
 
+    protected $valuePrtmissionHighestLevels = array(
+        'assignmentPermission' => 'all',
+        'userPermission' => 'all',
+        'portalPermission' => 'yes'
+    );
+
     private $fileManager;
 
     private $metadata;
@@ -243,6 +249,10 @@ class Table
 
         } else {
             foreach ($this->valuePermissionList as $permission) {
+                if (isset($this->valuePrtmissionHighestLevels[$permission])) {
+                    $this->data->$permission = $this->valuePrtmissionHighestLevels[$permission];
+                    continue;
+                }
                 $this->data->$permission = 'all';
             }
         }

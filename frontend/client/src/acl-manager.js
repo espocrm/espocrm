@@ -88,9 +88,6 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         },
 
         get: function (name) {
-            if (this.user.isAdmin()) {
-                return true;
-            }
             return this.data[name] || null;
         },
 
