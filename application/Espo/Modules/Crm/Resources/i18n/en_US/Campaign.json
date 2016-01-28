@@ -54,7 +54,8 @@
         "Statistics": "Statistics",
         "hard": "hard",
         "soft": "soft",
-        "Unsubscribe": "Unsubscribe"
+        "Unsubscribe": "Unsubscribe",
+        "Mass Emails": "Mass Emails"
     },
     "presetFilters": {
         "active": "Active"

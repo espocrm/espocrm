@@ -10,11 +10,19 @@
                     "style": "default",
                     "aclScope": "TargetList"
                 }
+            ],
+            "dropdown": [
+                {
+                    "label": "Mass Emails",
+                    "link": "#MassEmail",
+                    "acl": "read",
+                    "aclScope": "MassEmail"
+                }
             ]
         }
     },
     "recordViews": {
-      "detail": "Crm:Campaign.Record.Detail"
+      "detail": "crm:views/campaign/record/detail"
     },
     "views": {
       "detail": "crm:views/campaign/detail"
