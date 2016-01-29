@@ -1143,6 +1143,18 @@ class Base
         $result['distinct'] = (bool) $distinct;
     }
 
+    public function addAndWhere($whereClause, &$result)
+    {
+        $result['whereClause'][] = $whereClause;
+    }
+
+    public function addOrWhere($whereClause, &$result)
+    {
+        $result['whereClause'][] = array(
+            'OR' => $whereClause
+        );
+    }
+
     protected function textFilter($textFilter, &$result)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
