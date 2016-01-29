@@ -50,7 +50,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
                         el: this.options.el + ' > .list-container',
                         collection: collection,
                         isUserStream: true,
-                        noEdit: true,
+                        noEdit: false,
                     }, function (view) {
                         view.render();
                     });
