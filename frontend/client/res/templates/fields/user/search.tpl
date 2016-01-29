@@ -24,4 +24,13 @@
     </div>
 </div>
 
-
+<div class="teams-container hidden">
+    <div class="link-teams-container link-container list-group">
+    </div>
+    <div class="input-group add-team">
+        <input class="form-control input-sm element-teams" type="text" name="" value="" autocomplete="off" placeholder="{{translate 'Select'}}">
+        <span class="input-group-btn">
+            <button data-action="selectLinkTeams" class="btn btn-default btn-sm" type="button" tabindex="-1" title="{{translate 'Select'}}"><span class="glyphicon glyphicon-arrow-up"></span></button>
+        </span>
+    </div>
+</div>

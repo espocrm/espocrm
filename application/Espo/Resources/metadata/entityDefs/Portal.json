@@ -91,7 +91,8 @@
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "createdAt": {
             "type": "datetime",
@@ -99,7 +100,8 @@
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {

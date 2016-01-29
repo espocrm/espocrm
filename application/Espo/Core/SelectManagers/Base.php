@@ -52,6 +52,8 @@ class Base
 
     private $userTimeZone = null;
 
+    protected $additionalFilterTypeList = ['linkedWith', 'inCategory', 'isUserFromTeams'];
+
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
@@ -158,77 +160,108 @@ class Base
             }
         }
 
-        $linkedWith = array();
-        $inCategory = array();
 
-        $ignoreList = ['linkedWith', 'inCategory', 'bool', 'primary'];
+        $ignoreTypeList = array_merge(['bool', 'primary'], $this->additionalFilterTypeList);
+
+        $additionalFilters = array();
         foreach ($where as $item) {
-            if (!in_array($item['type'], $ignoreList)) {
+            $type = $item['type'];
+            if (!in_array($type, $ignoreTypeList)) {
                 $part = $this->getWherePart($item);
                 if (!empty($part)) {
                     $whereClause[] = $part;
                 }
             } else {
-                if ($item['type'] == 'linkedWith' && !empty($item['value'])) {
-                    $linkedWith[$item['field']] = $item['value'];
-                } else if ($item['type'] == 'inCategory' && !empty($item['value'])) {
-                    $inCategory[$item['field']] = $item['value'];
+                if (in_array($type, $this->additionalFilterTypeList)) {
+                    if (!empty($item['value'])) {
+                        $methodName = 'apply' . ucfirst($type);
+
+                        if (method_exists($this, $methodName)) {;
+                            $this->$methodName($item['field'], $item['value'], $result);
+                        }
+                    }
                 }
             }
         }
 
         $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
-
-        if (!empty($linkedWith)) {
-            $this->handleLinkedWith($linkedWith, $result);
-        }
-        if (!empty($inCategory)) {
-            $this->handleInCategory($inCategory, $result);
-        }
     }
 
-    protected function handleLinkedWith($linkedWith, &$result)
+    protected function applyLinkedWith($link, $idsValue, &$result)
     {
-        $joins = [];
-
         $part = array();
-        foreach ($linkedWith as $link => $idsValue) {
-            if (is_array($idsValue) && count($idsValue) == 1) {
-                $idsValue = $idsValue[0];
-            }
 
-            $relDefs = $this->getSeed()->getRelations();
+        if (is_array($idsValue) && count($idsValue) == 1) {
+            $idsValue = $idsValue[0];
+        }
 
-            if (!empty($relDefs[$link])) {
-                $defs = $relDefs[$link];
-                if ($defs['type'] == 'manyMany') {
-                    $joins[] = $link;
-                    if (!empty($defs['midKeys'])) {
-                        $key = $defs['midKeys'][1];
-                        $part[$link . 'Middle.' . $key] = $idsValue;
-                    }
-                } else if ($defs['type'] == 'belongsTo') {
-                    if (!empty($defs['key'])) {
-                        $key = $defs['key'];
-                        $part[$key] = $idsValue;
-                    }
-                }
+        $seed = $this->getSeed();
+
+        if (!$seed->hasRelation($link)) return;
+
+        $relDefs = $this->getSeed()->getRelations();
+
+        $relationType = $seed->getRelationType($link);
+
+        $defs = $relDefs[$link];
+        if ($relationType == 'manyMany') {
+            $this->addJoin($link, $result);
+            $midKeys = $seed->getRelationParam($link, 'midKeys');
+
+            if (!empty($midKeys)) {
+                $key = $midKeys[1];
+                $part[$link . 'Middle.' . $key] = $idsValue;
             }
+        } else if ($relationType== 'belongsTo') {
+            $key = $seed->getRelationParam($link, 'key');
+            if (!empty($key)) {
+                $part[$key] = $idsValue;
+            }
+        } else {
+            return;
         }
 
         if (!empty($part)) {
             $result['whereClause'][] = $part;
         }
-        $result['joins'] = array_merge($result['joins'], $joins);
-        $result['joins'] = array_unique($result['joins']);
-        $result['distinct'] = true;
+
+        $this->setDistinct(true, $result);
     }
 
-    protected function handleInCategory($inCategory, &$result)
+    protected function applyIsUserFromTeams($link, $idsValue, &$result)
     {
-        foreach ($inCategory as $link => $value) {
-            $this->applyInCategory($link, $value, $result);
+        if (is_array($idsValue) && count($idsValue) == 1) {
+            $idsValue = $idsValue[0];
         }
+
+        $query = $this->getEntityManager()->getQuery();
+
+        $seed = $this->getSeed();
+
+        $relDefs = $seed->getRelations();
+
+        if (!$seed->hasRelation($link)) return;
+
+        $relationType = $seed->getRelationType($link);
+
+        if ($relationType == 'belongsTo') {
+            $key = $seed->getRelationParam($link, 'key');
+
+            $aliasName = 'usersTeams' . ucfirst($link);
+
+            $result['customJoin'] .= "
+                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = ".$query->toDb($seed->getEntityType()).".".$query->toDb($key)." AND {$aliasName}Middle.deleted = 0
+                JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
+            ";
+
+            $result['whereClause'][] = array(
+                $aliasName . 'Middle.teamId' => $idsValue
+            );
+        } else {
+            return;
+        }
+
+        $this->setDistinct(true, $result);
     }
 
     public function applyInCategory($link, $value, &$result)

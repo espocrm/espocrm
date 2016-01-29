@@ -60,14 +60,17 @@
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "assignedUser": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/user"
         },
         "teams": {
             "type": "linkMultiple"

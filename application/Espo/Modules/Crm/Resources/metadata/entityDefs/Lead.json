@@ -94,17 +94,20 @@
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "accountName": {
             "type": "varchar"
         },
         "assignedUser": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/user"
         },
         "acceptanceStatus": {
             "type": "varchar",

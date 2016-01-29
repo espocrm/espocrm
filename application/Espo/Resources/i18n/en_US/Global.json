@@ -447,7 +447,8 @@
             "is": "Is",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty",
-            "isOneOf": "Is One Of"
+            "isOneOf": "Is One Of",
+            "isFromTeams": "Is From Team"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

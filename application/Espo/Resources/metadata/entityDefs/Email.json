@@ -171,15 +171,18 @@
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "assignedUser": {
             "type": "link",
-            "required": false
+            "required": false,
+            "view": "views/fields/user"
         },
         "replied": {
             "type": "link",

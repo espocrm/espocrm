@@ -37,11 +37,13 @@
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
