@@ -50,7 +50,7 @@ Espo.define('views/user/fields/contact', 'views/fields/link', function (Dep) {
                 attributes.phoneNumber = model.get('phoneNumber');
                 attributes.phoneNumberData = model.get('phoneNumberData');
 
-                if (attributes.emailAddress) {
+                if (this.model.isNew() && !this.model.get('userName') && attributes.emailAddress) {
                     attributes.userName = attributes.emailAddress;
                 }
 
