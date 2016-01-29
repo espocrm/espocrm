@@ -158,6 +158,10 @@ class Auth
             }
 
             if ($this->isPortal()) {
+                if (!$user->isAdmin() && !$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
+                    $GLOBALS['log']->debug("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is portal user but does not belongs to portal.");
+                    return false;
+                }
                 $user->set('portalId', $this->getPortal()->id);
             }
 
