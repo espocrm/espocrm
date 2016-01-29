@@ -88,7 +88,13 @@ class Email extends \Espo\Core\SelectManagers\Base
             $idList[] = $ea->id;
         }
         $result['whereClause'][] = array(
-            'fromEmailAddressId=' => $idList,
+            'OR' => array(
+                'fromEmailAddressId=' => $idList,
+                array(
+                    'status' => 'Sent',
+                    'createdBy' => $this->getUser()->id
+                )
+            ),
             'usersMiddle.inTrash=' => false
         );
     }
