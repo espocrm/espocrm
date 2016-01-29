@@ -6,5 +6,6 @@
 	"emailAddress",
     "phoneNumber",
 	"title",
+    "teams",
 	"targetLists"
 ]

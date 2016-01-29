@@ -8,6 +8,7 @@
 	"modifiedAt",
 	"status",
 	"parent",
+	"teams",
 	"users",
 	"contacts",
 	"leads"

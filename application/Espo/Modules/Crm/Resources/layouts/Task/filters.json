@@ -8,5 +8,6 @@
 	"dateEnd",
 	"modifiedAt",
 	"status",
-	"priority"
+	"priority",
+    "teams"
 ]
