@@ -48,9 +48,9 @@ Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/de
 
         },
 
-        actionReply: function () {
-            Detail.prototype.actionReply.call(this, null, true);
-        },
+        actionReply: function (data, e) {
+            Detail.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
+        }
 
     });
 });

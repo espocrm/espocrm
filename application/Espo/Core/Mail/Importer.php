@@ -144,7 +144,7 @@ class Importer
                         $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
                     }
                 }
-                return false;
+                return $duplicate;
             }
 
             if (isset($message->date)) {

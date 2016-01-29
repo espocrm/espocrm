@@ -309,7 +309,9 @@ class InboundEmail extends \Espo\Services\Record
 
                 if (!empty($email)) {
                     if (!$emailAccount->get('createCase')) {
-                        $this->noteAboutEmail($email);
+                        if (!$email->isFetched()) {
+                            $this->noteAboutEmail($email);
+                        }
                     }
 
                     if ($emailAccount->get('createCase')) {
@@ -367,7 +369,9 @@ class InboundEmail extends \Espo\Services\Record
         if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
             $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
             if ($case) {
-                $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                if (!$email->isFetched()) {
+                    $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                }
             }
             return;
         }
@@ -381,7 +385,9 @@ class InboundEmail extends \Espo\Services\Record
                 $email->set('parentType', 'Case');
                 $email->set('parentId', $case->id);
                 $this->getEntityManager()->saveEntity($email);
-                $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                if (!$email->isFetched()) {
+                    $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                }
             }
         } else {
             $params = array(

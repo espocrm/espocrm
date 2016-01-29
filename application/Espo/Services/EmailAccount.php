@@ -300,7 +300,9 @@ class EmailAccount extends Record
                 }
 
                 if (!empty($email)) {
-                    $this->noteAboutEmail($email);
+                    if (!$email->isFetched()) {
+                        $this->noteAboutEmail($email);
+                    }
                 }
 
                 if ($k == count($ids) - 1) {

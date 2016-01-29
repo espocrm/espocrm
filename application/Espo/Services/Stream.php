@@ -651,11 +651,23 @@ class Stream extends \Espo\Core\Services\Base
     {
         $entityType = $entity->getEntityType();
 
+        if ($this->getEntityManager()->getRepository('Note')->where(array(
+            'type' => 'EmailReceived',
+            'parentId' => $entity->id,
+            'parentType' => $entityType,
+            'relatedId' => $email->id,
+            'relatedType' => 'Email'
+        ))->findOne()) {
+            return;
+        }
+
         $note = $this->getEntityManager()->getEntity('Note');
 
         $note->set('type', 'EmailReceived');
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityType);
+        $note->set('relatedId', $email->id);
+        $note->set('relatedType', 'Email');
 
         if ($email->get('accountId')) {
             $note->set('superParentId', $email->get('accountId'));
@@ -703,6 +715,8 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('type', 'EmailSent');
         $note->set('parentId', $entity->id);
         $note->set('parentType', $entityType);
+        $note->set('relatedId', $email->id);
+        $note->set('relatedType', 'Email');
 
         if ($email->get('accountId')) {
             $note->set('superParentId', $email->get('accountId'));
@@ -741,7 +755,6 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $note->set('data', $data);
-
 
         $this->getEntityManager()->saveEntity($note);
     }
