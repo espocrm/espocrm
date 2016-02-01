@@ -50,7 +50,7 @@ class Stream extends \Espo\Core\Services\Base
         'container',
     );
 
-    protected $emailsWithContentEntityList = array('Case');
+    protected $emailsWithContentEntityList = ['Case'];
 
     protected $auditedFieldsCache = array();
 

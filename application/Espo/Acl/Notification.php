@@ -27,9 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Acl;
 
-class Note extends \Espo\Core\Controllers\Record
+use \Espo\Entities\User;
+use \Espo\ORM\Entity;
+
+class Notification extends \Espo\Core\Acl\Base
 {
-
+    public function checkIsOwner(User $user, Entity $entity)
+    {
+        if ($user->id === $entity->get('userId')) {
+            return true;
+        }
+        return false;
+    }
 }
+

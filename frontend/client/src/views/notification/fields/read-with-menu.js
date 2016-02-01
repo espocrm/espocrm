@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,9 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/notification/fields/read-with-menu', 'views/fields/base', function (Dep) {
 
-class Note extends \Espo\Core\Controllers\Record
-{
+    return Dep.extend({
 
-}
+        type: 'read',
+
+        listTemplate: 'notification/fields/read-with-menu',
+
+        detailTemplate: 'notification/fields/read-with-menu',
+
+        data: function () {
+            return {
+                isRead: this.model.get('read')
+            };
+        },
+
+    });
+});
+

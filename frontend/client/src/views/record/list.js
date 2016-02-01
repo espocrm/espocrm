@@ -1024,7 +1024,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!id) return;
 
             var model = this.collection.get(id);
-            if (!this.getAcl().checkModel(model, 'delete')) {
+            if (!this.getAcl().checkScope(this.scope, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
             }

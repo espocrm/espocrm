@@ -31,7 +31,7 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 
-class Notification extends \Espo\Core\Controllers\Base
+class Notification extends \Espo\Core\Controllers\Record
 {
     public static $defaultAction = 'list';
 
@@ -70,6 +70,31 @@ class Notification extends \Espo\Core\Controllers\Base
     {
         $userId = $this->getUser()->id;
         return $this->getService('Notification')->markAllRead($userId);
+    }
+
+    public function actionExport($params, $data, $request)
+    {
+        throw new Error();
+    }
+
+    public function actionMassUpdate($params, $data, $request)
+    {
+        throw new Error();
+    }
+
+    public function actionCreateLink($params, $data, $request)
+    {
+        throw new Error();
+    }
+
+    public function actionRemoveLink($params, $data, $request)
+    {
+        throw new Error();
+    }
+
+    public function actionMerge($params, $data, $request)
+    {
+        throw new Error();
     }
 }
 

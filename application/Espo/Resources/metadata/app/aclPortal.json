@@ -15,6 +15,12 @@
                 "delete": "own",
                 "create": "yes"
             },
+            "Notification": {
+                "read": "own",
+                "edit": "no",
+                "delete": "own",
+                "create": "no"
+            },
             "Portal": false,
             "Attachment": {
                 "read": "own",

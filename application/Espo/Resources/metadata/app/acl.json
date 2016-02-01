@@ -50,6 +50,12 @@
                 "delete": "no",
                 "create": "no"
             },
+            "Notification": {
+                "read": "own",
+                "edit": "no",
+                "delete": "own",
+                "create": "no"
+            },
             "Role": false,
             "PortalRole": false
         },

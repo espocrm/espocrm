@@ -36,15 +36,8 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Json;
 
-class Notification extends \Espo\Core\Services\Base
+class Notification extends \Espo\Services\Record
 {
-    protected $dependencies = array(
-        'entityManager',
-        'user',
-        'metadata',
-        'aclManager'
-    );
-
     protected function getEntityManager()
     {
         return $this->injections['entityManager'];

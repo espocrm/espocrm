@@ -76,7 +76,7 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                         ],
                         right: {
                             name: 'read',
-                            view: 'views/notification/fields/read',
+                            view: 'views/notification/fields/read-with-menu',
                             width: '10px'
                         }
                     }
