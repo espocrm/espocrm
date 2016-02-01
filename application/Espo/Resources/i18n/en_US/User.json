@@ -22,7 +22,8 @@
         "contact": "Contact",
         "accounts": "Accounts",
         "account": "Account",
-        "sendAccessInfo": "Send Email with Access Info to User"
+        "sendAccessInfo": "Send Email with Access Info to User",
+        "portal": "Portal"
     },
     "links": {
         "teams": "Teams",

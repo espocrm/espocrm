@@ -30,6 +30,8 @@
 namespace Espo\Services;
 
 use \Espo\ORM\Entity;
+use \Espo\Entities\Team;
+use \Espo\Entities\Email;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
@@ -406,19 +408,33 @@ class InboundEmail extends \Espo\Services\Record
         }
     }
 
-    protected function assignRoundRobin($case, $team, $targetUserPosition)
+    protected function assignRoundRobin(Entity $case, Team $team, $targetUserPosition)
     {
-        $roundRobin = new \Espo\Modules\Crm\Business\CaseDistribution\RoundRobin($this->getEntityManager());
-        $user = $roundRobin->getUser($team, $targetUserPosition);
+        $className = '\\Espo\\Custom\\Business\\Distribution\\CaseObj\\RoundRobin';
+        if (!class_exists($className)) {
+            $className = '\\Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
+        }
+
+        $distribution = new $className($this->getEntityManager());
+
+        $user = $distribution->getUser($team, $targetUserPosition);
+
         if ($user) {
             $case->set('assignedUserId', $user->id);
         }
     }
 
-    protected function assignLeastBusy($case, $team, $targetUserPosition)
+    protected function assignLeastBusy(Entity $case, Team $team, $targetUserPosition)
     {
-        $leastBusy = new \Espo\Modules\Crm\Business\CaseDistribution\LeastBusy($this->getEntityManager());
-        $user = $leastBusy->getUser($team, $targetUserPosition);
+        $className = '\\Espo\\Custom\\Business\\Distribution\\CaseObj\\LeastBusy';
+        if (!class_exists($className)) {
+            $className = '\\Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
+        }
+
+        $distribution = new $className($this->getEntityManager());
+
+        $user = $distribution->getUser($team, $targetUserPosition);
+
         if ($user) {
             $case->set('assignedUserId', $user->id);
         }

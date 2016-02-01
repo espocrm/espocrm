@@ -121,10 +121,10 @@
             "notStorable": true,
             "readOnly": true
         },
-        "portalId": {
-            "type": "varchar",
-            "disabled": true,
-            "notStorable": true
+        "portal": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true
         },
         "avatar": {
             "type": "image",

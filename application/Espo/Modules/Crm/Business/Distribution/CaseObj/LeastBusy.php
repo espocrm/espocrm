@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\CaseDistribution;
+namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
 
 class LeastBusy
 {
@@ -63,7 +63,7 @@ class LeastBusy
         foreach ($userList as $user) {
             $count = $this->getEntityManager()->getRepository('Case')->where(array(
                 'assignedUserId' => $user->id,
-                'status<>' => array('Closed', 'Rejected', 'Duplicated')
+                'status<>' => ['Closed', 'Rejected', 'Duplicated']
             ))->count();
             $countHash[$user->id] = $count;
         }
