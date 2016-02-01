@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    {{#if post}}
+    {{#if showPost}}
     <div class="stream-post-container">
         <span class="cell cell-post">{{{post}}}</span>
     </div>

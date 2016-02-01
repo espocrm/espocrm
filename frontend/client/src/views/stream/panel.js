@@ -215,7 +215,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 });
             });
 
-            this.createView('attachments', 'Stream.Fields.AttachmentMultiple', {
+            this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,
                 mode: 'edit',
                 el: this.options.el + ' div.attachments-container',

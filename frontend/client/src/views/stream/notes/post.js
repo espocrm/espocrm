@@ -41,13 +41,13 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
+            data.showPost = !!this.model.get('post');
             return data;
         },
 
         setup: function () {
-            if (this.model.get('post')) {
-                this.createField('post', null, null, 'views/stream/fields/post');
-            }
+
+            this.createField('post', null, null, 'views/stream/fields/post');
             this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
 
             if (!this.model.get('post') && this.model.get('parentId')) {
