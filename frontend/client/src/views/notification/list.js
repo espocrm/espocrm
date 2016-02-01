@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
+Espo.define('views/notification/list', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'notifications.panel',
+        template: 'notification/list',
 
         events: {
             'click [data-action="markAllNotificationsRead"]': function () {
@@ -41,20 +41,24 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                     this.trigger('all-read');
                 }.bind(this));
             },
+            'click [data-action="refresh"]': function () {
+                this.getView('list').showNewRecords();
+            },
         },
 
         setup: function () {
             this.wait(true);
             this.getCollectionFactory().create('Notification', function (collection) {
                 this.collection = collection;
-                collection.maxSize = 5;
+                collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
                 this.wait(false);
             }, this);
         },
 
         afterRender: function () {
             this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', 'Notifications.List', {
+                var viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) || 'views/notification/record/list';
+                this.createView('list', viewName, {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
                     showCount: false,
@@ -63,7 +67,7 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                             [
                                 {
                                     name: 'data',
-                                    view: 'Notifications.Field',
+                                    view: 'views/notification/fields/container',
                                     params: {
                                         containerEl: this.options.el
                                     },
@@ -72,14 +76,14 @@ Espo.define('Views.Notifications.Panel', 'View', function (Dep) {
                         ],
                         right: {
                             name: 'read',
-                            view: 'Notifications.Read',
+                            view: 'views/notification/fields/read',
                             width: '10px'
                         }
                     }
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));
+            }, this);
             this.collection.fetch();
         }
 

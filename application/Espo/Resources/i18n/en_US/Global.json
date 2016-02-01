@@ -217,7 +217,9 @@
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
         "writeMessageToSelf": "Write a message to self",
-        "typeAndPressEnter": "Type & press enter"
+        "typeAndPressEnter": "Type & press enter",
+        "checkForNewNotifications": "Check for new notifications",
+        "checkForNewNotes": "Check for new Stream entries"
     },
     "boolFilters": {
         "onlyMy": "Only My",

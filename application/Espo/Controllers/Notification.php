@@ -44,10 +44,12 @@ class Notification extends \Espo\Core\Controllers\Base
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
+        $after = $request->get('after');
 
         $params = array(
             'offset' => $offset,
             'maxSize' => $maxSize,
+            'after' => $after
         );
 
         $result = $this->getService('Notification')->getList($userId, $params);

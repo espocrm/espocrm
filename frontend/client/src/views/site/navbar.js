@@ -124,7 +124,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 return true;
             }, this);
 
-            this.createView('notificationsBadge', 'views/notifications/badge', {
+            this.createView('notificationsBadge', 'views/notification/badge', {
                 el: this.options.el + ' .notifications-badge-container'
             });
 

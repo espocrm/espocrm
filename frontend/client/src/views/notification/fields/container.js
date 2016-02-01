@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notifications/field', 'views/fields/base', function (Dep) {
+Espo.define('views/notification/fields/container', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         type: 'notification',
 
-        listTemplate: 'notifications/field',
+        listTemplate: 'notification/fields/container',
 
-        detailTemplate: 'notifications/field',
+        detailTemplate: 'notification/fields/container',
 
         setup: function () {
             switch (this.model.get('type')) {
@@ -54,7 +54,7 @@ Espo.define('views/notifications/field', 'views/fields/base', function (Dep) {
             if (!type) return;
             type = type.replace(/ /g, '');
 
-            var viewName = this.getMetadata().get('clientDefs.Notification.itemViews.' + type) || 'views/notifications/items/' + Espo.Utils.camelCaseToHyphen(type);
+            var viewName = this.getMetadata().get('clientDefs.Notification.itemViews.' + type) || 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
             this.createView('notification', viewName, {
                 model: this.model,
                 el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
@@ -81,7 +81,7 @@ Espo.define('views/notifications/field', 'views/fields/base', function (Dep) {
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 model.set(data);
-                var viewName = 'Stream.Notes.MentionInPost';
+                var viewName = 'views/stream/notes/mention-in-post';
                 this.createView('notification', viewName, {
                     model: model,
                     userId: this.model.get('userId'),

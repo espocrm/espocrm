@@ -26,37 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notifications/items/email-received', 'views/notifications/notification', function (Dep) {
+Espo.define('views/notification/items/system', 'views/notification/items/base', function (Dep) {
 
     return Dep.extend({
 
-        messageName: 'emailReceived',
-
-        template: 'notifications/items/email-received',
+        template: 'notification/items/system',
 
         data: function () {
-            return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName
-            }, Dep.prototype.data.call(this));
+            var data = Dep.prototype.data.call(this);
+            data['message'] = this.model.get('message');
+            return data;
         },
 
         setup: function () {
             var data = this.model.get('data') || {};
-
             this.userId = data.userId;
-
-            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            if (data.personEntityId) {
-                this.messageData['from'] = '<a href="#' + data.personEntityType + '/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
-            } else {
-                this.messageData['from'] = data.fromString || this.translate('empty address');
-            }
-
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
-
-            this.createMessage();
         }
 
     });

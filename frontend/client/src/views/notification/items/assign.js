@@ -24,24 +24,27 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Notifications.Read', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/notification/items/assign', 'views/notification/items/base', function (Dep) {
 
     return Dep.extend({
 
-        type: 'read',            
-        
-        listTemplate: 'notifications.read',
-        
-        detailTemplate: 'notifications.read',
-        
-        data: function () {
-            return {
-                isRead: this.model.get('read')
-            };
-        },        
-        
+        messageName: 'assign',
+
+        template: 'notification/items/assign',
+
+        setup: function () {
+            var data = this.model.get('data') || {};
+
+            this.userId = data.userId;
+
+            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
+
+            this.createMessage();
+        },
+
     });
 });
 

@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notifications/items/entity-removed', 'views/notifications/notification', function (Dep) {
+Espo.define('views/notification/items/entity-removed', 'views/notification/items/base', function (Dep) {
 
     return Dep.extend({
 
         messageName: 'entityRemoved',
 
-        template: 'notifications/items/entity-removed',
+        template: 'notification/items/entity-removed',
 
         setup: function () {
             var data = this.model.get('data') || {};

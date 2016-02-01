@@ -152,9 +152,16 @@ class Notification extends \Espo\Core\Services\Base
     public function getList($userId, array $params = array())
     {
         $searchParams = array();
-        $searchParams['whereClause'] = array(
+
+        $whereClause = array(
             'userId' => $userId
         );
+        if (!empty($params['after'])) {
+            $whereClause['createdAt>'] = $params['after'];
+        }
+
+        $searchParams['whereClause'] = $whereClause;
+
         if (array_key_exists('offset', $params)) {
             $searchParams['offset'] = $params['offset'];
         }

@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notifications/badge', 'view', function (Dep) {
+Espo.define('views/notification/badge', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'notifications/badge',
+        template: 'notification/badge',
 
         notificationsCheckInterval: 10,
 
@@ -237,7 +237,7 @@ Espo.define('views/notifications/badge', 'view', function (Dep) {
 
             $container.appendTo(this.$el.find('.notifications-panel-container'));
 
-            this.createView('panel', 'Notifications.Panel', {
+            this.createView('panel', 'views/notification/panel', {
                 el: '#notifications-panel',
             }, function (view) {
                 view.render();
