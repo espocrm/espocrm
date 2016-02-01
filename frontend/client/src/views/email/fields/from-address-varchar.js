@@ -165,7 +165,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 attributes.lastName = lastName;
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             this.createView('create', viewName, {
                 scope: scope,
@@ -185,12 +185,14 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                     this.nameHash = nameHash;
                     this.typeHash = typeHash;
 
+                    var attributes = {
+                        nameHash: nameHash,
+                        idHash: idHash,
+                        typeHash: typeHash
+                    };
+
                     setTimeout(function () {
-                        this.model.set({
-                            nameHash: nameHash,
-                            idHash: idHash,
-                            typeHash: typeHash
-                        });
+                        this.model.set(attributes);
                     }.bind(this), 50);
                 }, this);
             }.bind(this));
