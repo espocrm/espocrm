@@ -47,6 +47,7 @@ class Record extends \Espo\Core\Services\Base
         'user',
         'metadata',
         'acl',
+        'aclManager',
         'config',
         'serviceFactory',
         'fileManager',
