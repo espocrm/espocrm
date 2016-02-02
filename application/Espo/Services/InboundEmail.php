@@ -446,11 +446,10 @@ class InboundEmail extends \Espo\Services\Record
         $case->populateDefaults();
         $case->set('name', $email->get('name'));
 
-        $userId = $this->getUser()->id;
+        $userId = null;
         if (!empty($params['userId'])) {
             $userId = $params['userId'];
         }
-        $case->set('assignedUserId', $userId);
 
         if (!empty($params['inboundEmailId'])) {
             $case->set('inboundEmailId', $params['inboundEmailId']);
@@ -464,10 +463,12 @@ class InboundEmail extends \Espo\Services\Record
             $case->set('teamsIds', array($teamId));
         }
 
-        $caseDistribution = 'Direct-Assignment';
+        $caseDistribution = '';
         if (!empty($params['caseDistribution'])) {
             $caseDistribution = $params['caseDistribution'];
         }
+
+
 
         $targetUserPosition = null;
         if (!empty($params['targetUserPosition'])) {
@@ -477,6 +478,11 @@ class InboundEmail extends \Espo\Services\Record
         $case->set('status', 'Assigned');
 
         switch ($caseDistribution) {
+            case 'Direct-Assignment':
+                if ($userId) {
+                    $case->set('assignedUserId', $userId);
+                }
+                break;
             case 'Round-Robin':
                 if ($teamId) {
                     $team = $this->getEntityManager()->getEntity('Team', $teamId);
@@ -495,7 +501,9 @@ class InboundEmail extends \Espo\Services\Record
                 break;
         }
 
-        $email->set('assignedUserId', $case->get('assignedUserId'));
+        if ($case->get('assignedUserId')) {
+            $email->set('assignedUserId', $case->get('assignedUserId'));
+        }
 
         if ($email->get('accountId')) {
             $case->set('accountId', $email->get('accountId'));

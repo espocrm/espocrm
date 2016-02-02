@@ -62,7 +62,9 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
 
             this.listenTo(this.model, 'change:createCase', function (model) {
                 if (!model.get('createCase')) {
-                    this.model.set('caseDistribution', 'Direct-Assignment');
+                    if (this.model.get('caseDistribution') !== '') {
+                        this.model.set('caseDistribution', 'Direct-Assignment');
+                    }
                 }
             }, this);
 

@@ -42,6 +42,7 @@
             "Inactive": "Inactive"
         },
         "caseDistribution": {
+            "": "None",
             "Direct-Assignment": "Direct-Assignment",
             "Round-Robin": "Round-Robin",
             "Least-Busy": "Least-Busy"

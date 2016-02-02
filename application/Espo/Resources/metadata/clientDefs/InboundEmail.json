@@ -1,8 +1,8 @@
 {
     "recordViews":{
-        "detail":"InboundEmail.Record.Detail",
-        "edit":"InboundEmail.Record.Edit",
-        "list":"InboundEmail.Record.List"
+        "detail":"views/inbound-email/record/detail",
+        "edit":"views/inbound-email/record/edit",
+        "list":"views/inbound-email/record/list"
     },
     "formDependency": {
         "createCase": {

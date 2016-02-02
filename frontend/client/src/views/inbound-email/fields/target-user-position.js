@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.InboundEmail.Fields.TargetUserPosition', 'Views.Fields.Enum', function (Dep) {
+Espo.define('views/inbound-email/fields/target-user-position', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 

@@ -69,7 +69,7 @@
         },
         "caseDistribution": {
             "type": "enum",
-            "options": ["Direct-Assignment", "Round-Robin", "Least-Busy"],
+            "options": ["", "Direct-Assignment", "Round-Robin", "Least-Busy"],
             "default": "Direct-Assignment",
             "tooltip": true
         },

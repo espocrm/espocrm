@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.InboundEmail.Fields.Folders', 'Views.InboundEmail.Fields.Folder', function (Dep) {
+Espo.define('views/inbound-email/fields/folders', 'views/inbound-email/fields/folder', function (Dep) {
 
     return Dep.extend({
 
