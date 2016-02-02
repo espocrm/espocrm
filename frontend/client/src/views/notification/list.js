@@ -39,6 +39,7 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                     type: 'POST'
                 }).done(function (count) {
                     this.trigger('all-read');
+                    this.$el.find('.badge-circle-warning').remove();
                 }.bind(this));
             },
             'click [data-action="refresh"]': function () {
