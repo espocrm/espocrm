@@ -41,6 +41,10 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
                     this.trigger('all-read');
                 }.bind(this));
             },
+            'click [data-action="openNotifications"]': function (e) {
+                this.getRouter().navigate('#Notification', {trigger: true});
+                this.remove();
+            }
         },
 
         setup: function () {

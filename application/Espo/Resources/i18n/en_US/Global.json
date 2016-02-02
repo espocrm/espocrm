@@ -177,7 +177,8 @@
         "To": "To",
         "Create Post": "Create Post",
         "Previous Entry": "Previous Entry",
-        "Next Entry": "Next Entry"
+        "Next Entry": "Next Entry",
+        "View List": "View List"
     },
     "messages": {
         "pleaseWait": "Please wait...",
