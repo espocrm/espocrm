@@ -2,11 +2,13 @@
     {
         "label":"",
         "rows": [
-            [{"name":"name"}],
-            [{"name":"userName"}],
-            [{"name":"teams"}, {"name":"isAdmin"}],
-            [{"name":"emailAddress"}],
-            [{"name":"phoneNumber"}]
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"userName", "fullWidth": true}],
+            [{"name":"emailAddress", "fullWidth": true}],
+            [{"name":"phoneNumber", "fullWidth": true}],
+            [{"name":"teams", "fullWidth": true}],
+            [{"name":"isAdmin"}, {"name":"isActive"}],
+            [{"name":"isPortalUser"}, false]
         ]
     }
 ]
