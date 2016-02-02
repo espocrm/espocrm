@@ -64,12 +64,14 @@ class Notification extends \Espo\Services\Record
         $notification->set(array(
             'type' => 'MentionInPost',
             'data' => array('noteId' => $noteId),
-            'userId' => $userId
+            'userId' => $userId,
+            'relatedId' => $noteId,
+            'relatedType' => 'Note'
         ));
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    public function notifyAboutNote(array $userIds, \Espo\Entities\Note $note)
+    public function notifyAboutNote(array $userIdList, \Espo\Entities\Note $note)
     {
         $data = array('noteId' => $note->id);
         $encodedData = Json::encode($data);
@@ -77,9 +79,9 @@ class Notification extends \Espo\Services\Record
         $now = date('Y-m-d H:i:s');
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`) VALUES ";
+        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`) VALUES ";
         $arr = [];
-        foreach ($userIds as $userId) {
+        foreach ($userIdList as $userId) {
             if (empty($userId)) continue;
 
             $user = $this->getEntityManager()->getEntity('User');
@@ -89,7 +91,7 @@ class Notification extends \Espo\Services\Record
                 continue;
             }
             $id = uniqid();
-            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).")";
+            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote('Note').", ".$pdo->quote($note->id).")";
         }
 
         if (empty($arr)) {

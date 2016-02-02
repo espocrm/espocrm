@@ -146,6 +146,16 @@ class Notifications extends \Espo\Core\Hooks\Base
         }
     }
 
+    public function afterRemove(Entity $entity)
+    {
+        $query = $this->getEntityManager()->getQuery();
+        $sql = "
+            DELETE FROM `notification`
+            WHERE related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) ."
+        ";
+        $this->getEntityManager()->getPDO()->query($sql);
+    }
+
     protected function getStreamService()
     {
         if (empty($this->streamService)) {

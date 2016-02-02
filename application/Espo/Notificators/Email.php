@@ -147,7 +147,9 @@ class Email extends \Espo\Core\Notificators\Base
             $notification->set(array(
                 'type' => 'EmailReceived',
                 'userId' => $userId,
-                'data' => $data
+                'data' => $data,
+                'relatedId' => $entity->id,
+                'relatedType' => 'Email'
             ));
             $this->getEntityManager()->saveEntity($notification);
         }

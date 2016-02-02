@@ -26,12 +26,19 @@
         },
         "message": {
             "type": "text"
+        },
+        "related": {
+            "type": "linkParent",
+            "readOnly": true
         }
     },
     "links": {
         "user": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "related": {
+            "type": "belongsToParent"
         }
     },
     "collection": {
