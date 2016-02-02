@@ -28,14 +28,14 @@
                 "<>": "(opportunity.amount * amount_currency_alias.rate * opportunity.probability / 100) <> {value}"
             },
             "orderBy": "amountWeightedConverted {direction}",
-            "view": "Fields.CurrencyConverted"
+            "view": "views/fields/currency-converted"
         },
         "account": {
             "type": "link"
         },
         "contacts": {
             "type": "linkMultiple",
-            "view": "Crm:Opportunity.Fields.Contacts",
+            "view": "crm:views/opportunity/fields/contacts",
             "columns": {
                 "role": "opportunityRole"
             }
@@ -43,7 +43,7 @@
         "stage": {
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Needs Analysis", "Value Proposition", "Id. Decision Makers", "Perception Analysis", "Proposal/Price Quote", "Negotiation/Review", "Closed Won", "Closed Lost"],
-            "view": "Crm:Opportunity.Fields.Stage",
+            "view": "crm:views/opportunity/fields/stage",
             "default": "Prospecting",
             "audited": true
         },
@@ -55,7 +55,7 @@
         },
         "leadSource": {
             "type": "enum",
-            "view": "Crm:Opportunity.Fields.LeadSource",
+            "view": "crm:views/opportunity/fields/lead-source",
             "customizationOptionsDisabled": true,
             "default": ""
         },

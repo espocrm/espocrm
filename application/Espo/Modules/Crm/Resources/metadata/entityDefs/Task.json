@@ -8,7 +8,7 @@
         "status": {
             "type": "enum",
             "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
-            "view": "Fields.EnumStyled",
+            "view": "views/fields/enum-styled",
             "style": {
                 "Completed": "success"
             },
@@ -28,7 +28,7 @@
         "dateEnd": {
             "type": "datetimeOptional",
             "after": "dateStart",
-            "view": "Crm:Task.Fields.DateEnd",
+            "view": "crm:views/task/fields/date-end",
             "audited": true
         },
         "dateStartDate": {

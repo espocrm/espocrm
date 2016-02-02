@@ -90,7 +90,7 @@
         },
         "shippingAddress": {
             "type": "address",
-            "view": "Crm:Account.Fields.ShippingAddress"
+            "view": "crm:views/account/fields/shipping-address"
         },
         "shippingAddressStreet": {
             "type": "text",

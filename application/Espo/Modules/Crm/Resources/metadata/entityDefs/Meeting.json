@@ -36,7 +36,7 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
-            "view": "Crm:Meeting.Fields.Reminders"
+            "view": "crm:views/meeting/fields/reminders"
         },
         "description": {
             "type": "text"

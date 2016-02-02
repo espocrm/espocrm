@@ -9,7 +9,7 @@
             "type": "varchar",
             "required": true,
             "maxLength": 100,
-            "view": "EmailAccount.Fields.EmailAddress",
+            "view": "views/email-account/fields/email-address",
             "trim": true
         },
         "status": {
@@ -41,7 +41,7 @@
             "type": "varchar",
             "required": true,
             "default": "INBOX",
-            "view": "InboundEmail.Fields.Folders"
+            "view": "views/inbound-email/fields/folders"
         },
         "fetchSince": {
             "type": "date",
@@ -75,7 +75,7 @@
         },
         "targetUserPosition": {
             "type": "enum",
-            "view": "InboundEmail.Fields.TargetUserPosition",
+            "view": "views/inbound-email/fields/target-user-position",
             "tooltip": true
         },
         "reply": {
