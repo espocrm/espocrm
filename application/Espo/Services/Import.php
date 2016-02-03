@@ -383,14 +383,12 @@ class Import extends \Espo\Services\Record
                     if (array_key_exists('id', $whereClause)) {
                         $entity->set('id', $whereClause['id']);
                     }
-                    $entity->set('assignedUserId', $this->getUser()->id);
                 } else {
                     return;
                 }
             }
         } else {
             $entity = $this->getEntityManager()->getEntity($scope);
-            $entity->set('assignedUserId', $this->getUser()->id);
         }
 
         $isNew = $entity->isNew();
