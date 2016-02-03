@@ -115,7 +115,7 @@
         },
         "fromEmailAddress": {
             "type": "link",
-            "view": "Email.Fields.FromEmailAddress"
+            "view": "views/fields/from-email-address"
         },
         "toEmailAddresses": {
             "type": "linkMultiple"
@@ -145,7 +145,7 @@
         },
         "attachments": {
             "type": "linkMultiple",
-            "view": "Fields.AttachmentMultiple"
+            "view": "views/fields/attachment-multiple"
         },
         "hasAttachment": {
             "type": "bool",
