@@ -13,6 +13,8 @@
 /frontend/client/css/espo-vertical.css
 /frontend/client/css/sakura.css
 /frontend/client/css/sakura-vertical.css
+/frontend/client/css/violet.css
+/frontend/client/css/violet-vertical.css
 /tests/testData/cache/*
 composer.phar
 vendor/
