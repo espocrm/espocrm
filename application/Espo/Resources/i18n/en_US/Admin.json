@@ -125,6 +125,7 @@
         "audited": "Audited",
         "trim": "Trim",
         "height": "Height (px)",
+        "minHeight": "Min Height (px)",
         "provider": "Provider",
         "typeList": "Type List",
         "rows": "Number of rows of textarea",

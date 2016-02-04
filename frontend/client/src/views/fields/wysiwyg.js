@@ -43,7 +43,14 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.height = this.params.height || this.height;
+            if ('height' in this.params) {
+                this.height = this.params.height;
+            }
+
+            if ('minHeight' in this.params) {
+                this.minHeight = this.params.minHeight;
+            }
+
             this.toolbar = this.params.toolbar || [
                 ['style', ['style']],
                 ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -169,8 +176,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$summernote.find('style').remove();
             this.$summernote.find('link[ref="stylesheet"]').remove();
 
-            this.$summernote.summernote({
-                height: this.height,
+            var options = {
                 lang: this.getConfig().get('language'),
                 callbacks: {
                     onImageUpload: function (files) {
@@ -208,7 +214,17 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     }.bind(this),
                 },
                 toolbar: this.toolbar
-            });
+            };
+
+            if (this.height) {
+                options.height = this.height;
+            }
+
+            if (this.minHeight) {
+                options.minHeight = this.minHeight;
+            }
+
+            this.$summernote.summernote(options);
         },
 
         plainToHtml: function (html) {

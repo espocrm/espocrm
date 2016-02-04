@@ -20,6 +20,10 @@
       {
          "name": "height",
          "type": "int"
+      },
+      {
+         "name": "minHeight",
+         "type": "int"
       }
    ],
    "filter": true,
