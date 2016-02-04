@@ -440,7 +440,7 @@ class Importer
 
                 $this->getEntityManager()->saveEntity($attachment);
 
-                $path = 'data/upload/' . $attachment->getSourceId();
+                $path = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
                 $this->getFileManager()->putContents($path, $content);
 
                 if ($disposition == 'attachment') {

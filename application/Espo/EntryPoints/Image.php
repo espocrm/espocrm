@@ -85,7 +85,7 @@ class Image extends \Espo\Core\EntryPoints\Base
 
         $sourceId = $attachment->getSourceId();
 
-        $filePath = "data/upload/" . $sourceId . "";
+        $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 
         $fileType = $attachment->get('type');
 

@@ -88,7 +88,8 @@
             "type": "linkMultiple"
         },
         "attachments": {
-            "type": "attachmentMultiple"
+            "type": "attachmentMultiple",
+            "sourceList": ["Document"]
         }
     },
     "links": {

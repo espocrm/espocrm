@@ -54,7 +54,7 @@ class Attachment extends \Espo\Core\EntryPoints\Base
             throw new Forbidden();
         }
 
-        $fileName = "data/upload/" . $attachment->getSourceId();
+        $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 
         if (!file_exists($fileName)) {
             throw new NotFound();

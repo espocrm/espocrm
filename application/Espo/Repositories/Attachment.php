@@ -51,7 +51,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $this->getFileManager()->putContents('data/upload/' . $entity->id, $contents);
+                $this->getFileManager()->putContents($this->getFilePath($entity), $contents);
             }
         }
 
@@ -82,6 +82,18 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $this->save($attachment);
 
         return $attachment;
+    }
+
+    public function getContents(Entity $entity)
+    {
+        return $this->getFileManager()->getContents($this->getFilePath($entity));
+    }
+
+    public function getFilePath(Entity $entity)
+    {
+        $sourceId = $entity->getSourceId();
+
+        return 'data/upload/' . $sourceId;
     }
 
 }

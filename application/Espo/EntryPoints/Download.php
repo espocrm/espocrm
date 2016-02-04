@@ -67,7 +67,7 @@ class Download extends \Espo\Core\EntryPoints\Base
 
         $sourceId = $attachment->getSourceId();
 
-        $fileName = "data/upload/{$sourceId}";
+        $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 
         if (!file_exists($fileName)) {
             throw new NotFound();
