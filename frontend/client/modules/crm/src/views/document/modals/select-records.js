@@ -60,6 +60,8 @@ Espo.define('crm:views/document/modals/select-records', 'views/modals/select-rec
             this.getCollectionFactory().create(this.categoryScope, function (collection) {
                 collection.url = collection.name + '/action/listTree';
 
+                collection.data.onlyNotEmpty = true;
+
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('categories', 'views/record/list-tree', {
                         collection: collection,

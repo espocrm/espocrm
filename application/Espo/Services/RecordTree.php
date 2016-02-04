@@ -69,12 +69,12 @@ class RecordTree extends Record
         }
 
         $filterItems = false;
-        if ($this->checkFilterItems()) {
+        if ($this->checkFilterOnlyNotEmpty()) {
             $filterItems = true;
         }
 
         $collection = $this->getRepository()->find($selectParams);
-        if ($filterItems) {
+        if (!empty($params['onlyNotEmpty']) || $filterItems) {
             foreach ($collection as $i => $entity) {
                 if ($this->checkItemIsEmpty($entity)) {
                     unset($collection[$i]);
@@ -89,7 +89,7 @@ class RecordTree extends Record
         return $collection;
     }
 
-    protected function checkFilterItems()
+    protected function checkFilterOnlyNotEmpty()
     {
 
     }

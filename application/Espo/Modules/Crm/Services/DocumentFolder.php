@@ -34,7 +34,7 @@ use \Espo\ORM\Entity;
 class DocumentFolder extends \Espo\Services\RecordTree
 {
 
-    protected function checkFilterItems()
+    protected function checkFilterOnlyNotEmpty()
     {
         if (!$this->getAcl()->checkScope('Document', 'create')) {
             return true;

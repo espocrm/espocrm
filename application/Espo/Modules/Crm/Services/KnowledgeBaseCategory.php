@@ -33,7 +33,7 @@ use \Espo\ORM\Entity;
 
 class KnowledgeBaseCategory extends \Espo\Services\RecordTree
 {
-    protected function checkFilterItems()
+    protected function checkFilterOnlyNotEmpty()
     {
         if (!$this->getAcl()->checkScope('KnowledgeBaseArticle', 'create')) {
             return true;

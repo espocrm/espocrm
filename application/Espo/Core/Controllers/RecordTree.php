@@ -50,9 +50,11 @@ class RecordTree extends Record
         $where = $request->get('where');
         $parentId = $request->get('parentId');
         $maxDepth = $request->get('maxDepth');
+        $onlyNotEmpty = $request->get('onlyNotEmpty');
 
         $collection = $this->getRecordService()->getTree($parentId, array(
-            'where' => $where
+            'where' => $where,
+            'onlyNotEmpty' => $onlyNotEmpty
         ), 0, $maxDepth);
         return array(
             'list' => $collection->toArray(),

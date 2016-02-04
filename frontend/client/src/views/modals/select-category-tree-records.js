@@ -80,7 +80,7 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
 
             this.waitForView('list');
 
-            Espo.require('SearchManager', function (SearchManager) {
+            Espo.require('search-manager', function (SearchManager) {
                 this.getCollectionFactory().create(this.scope, function (collection) {
 
                     collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
@@ -103,7 +103,7 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
                     collection.url = collection.name + '/action/listTree';
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
-                                   'Record.ListTree';
+                                   'views/record/list-tree';
 
                     this.listenToOnce(collection, 'sync', function () {
                         this.createView('list', viewName, {
@@ -121,12 +121,12 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
                                 this.trigger('select', model);
                                 this.close();
                             }.bind(this));
-                        }.bind(this));
-                    }.bind(this));
+                        }, this);
+                    }, this);
 
                     collection.fetch();
 
-                }.bind(this));
+                }, this);
             }.bind(this));
         },
 
