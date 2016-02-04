@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\EntryPoints;
 
@@ -36,43 +36,40 @@ use \Espo\Core\Exceptions\BadRequest;
 class Attachment extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = true;
-    
+
     public function run()
-    {    
+    {
         $id = $_GET['id'];
         if (empty($id)) {
             throw new BadRequest();
         }
-        
+
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-        
+
         if (!$attachment) {
             throw new NotFound();
-        }        
-        
-        if ($attachment->get('parentId') && $attachment->get('parentType')) {
-            $parent = $this->getEntityManager()->getEntity($attachment->get('parentType'), $attachment->get('parentId'));            
-            if (!$this->getAcl()->check($parent)) {
-                throw new Forbidden();
-            }
         }
-        
-        $fileName = "data/upload/{$attachment->id}";
-        
+
+        if (!$this->getAcl()->checkEntity($attachment)) {
+            throw new Forbidden();
+        }
+
+        $fileName = "data/upload/" . $attachment->getSourceId();
+
         if (!file_exists($fileName)) {
             throw new NotFound();
         }
-        
+
         if ($attachment->get('type')) {
             header('Content-Type: ' . $attachment->get('type'));
         }
-        
+
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
         ob_clean();
         flush();
         readfile($fileName);
-        exit;        
-    }    
+        exit;
+    }
 }
 
