@@ -67,6 +67,11 @@ class Pdf extends \Espo\Core\Services\Base
         return $this->getInjection('serviceFactory');
     }
 
+    protected function getFileManager()
+    {
+        return $this->getInjection('fileManager');
+    }
+
     public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false)
     {
         $entityType = $entity->getEntityType();
