@@ -117,10 +117,10 @@ class Pdf extends \Espo\Core\Services\Base
 
         if ($displayInline) {
             $name = $entity->get('name');
-            $name = \Espo\Core\Utils::sanitizeFileName($name);
+            $name = \Espo\Core\Utils\Util::sanitizeFileName($name);
             $fileName = $name . '.pdf';
 
-            $pdf->output($fileName, 'F');
+            $pdf->output($fileName, 'I');
             return;
         }
 
