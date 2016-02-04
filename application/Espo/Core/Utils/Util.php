@@ -527,7 +527,10 @@ class Util
         return uniqid() . substr(md5(rand()), 0, 4);
     }
 
+    public static function sanitizeFileName($fileName)
+    {
+        return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
+    }
+
 }
 
-
-?>
