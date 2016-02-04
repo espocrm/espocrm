@@ -10,5 +10,8 @@
         "active",
         "draft"
     ],
-    "boolFilterList": ["onlyMy"]
+    "boolFilterList": ["onlyMy"],
+    "selectDefaultFilters": {
+        "filter": "active"
+    }
 }

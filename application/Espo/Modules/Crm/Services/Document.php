@@ -27,28 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace Espo\Modules\Crm\Services;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use \Espo\ORM\Entity;
+use \Espo\Core\Exceptions\NotFound;
 
-class Document extends \Espo\Core\Controllers\Record
+class Document extends \Espo\Services\Record
 {
-
-    public function postActionGetAttachmentList($params, $data)
+    public function getAttachmentList($id)
     {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+        $entity = $this->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound();
         }
 
-        $id = $data['id'];
-
-        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
-            throw new Forbidden();
+        $fileId = $entity->get('fileId');
+        if (!$fileId) {
+            throw new NotFound();
         }
 
-        return $this->getRecordService()->getAttachmentList($id)->toArray();
+        $file = $this->getEntityManager()->getEntity('Attachment', $fileId);
+        if (!$file) {
+            throw new NotFound();
+        }
+
+        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($file, 'Attachment');
+
+        $attachmentList = $this->getEntityManager()->createCollection('Attachment');
+        $attachmentList[] = $attachment;
+
+        return $attachmentList;
     }
-
 }
+

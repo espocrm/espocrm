@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.LinkCategoryTree', 'Views.Fields.Link', function (Dep) {
+Espo.define('views/fields/link-category-tree', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        selectRecordsViewName: 'Modals.SelectCategoryTreeRecords',
+        selectRecordsView: 'views/modals/select-category-tree-records',
 
         autocompleteDisabled: false,
 

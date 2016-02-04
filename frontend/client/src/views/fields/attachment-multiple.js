@@ -70,6 +70,10 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
                 $file.replaceWith($file.clone(true));
             },
+            'click a.action[data-action="insertFromSource"]': function (e) {
+                var name = $(e.currentTarget).data('name');
+                this.insertFromSource(name);
+            },
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
 
@@ -123,12 +127,19 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         data: function () {
             var ids = this.model.get(this.idsName);
 
-            return _.extend({
+            var data = _.extend({
                 idValues: this.model.get(this.idsName),
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: this.model.get(this.nameHashName),
-                foreignScope: this.foreignScope,
+                foreignScope: this.foreignScope
             }, Dep.prototype.data.call(this));
+
+            if (this.mode == 'edit') {
+                data.fileSystem = ~this.sourceList.indexOf('FileSystem');
+                data.sourceList = this.sourceList;
+            }
+
+            return data;
         },
 
         setup: function () {
@@ -144,6 +155,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             if ('showPreviews' in this.params) {
                 this.showPreviews = this.params.showPreviews;
             }
+
+            this.sourceList = Espo.Utils.clone(this.model.getFieldParam(this.name, 'sourceList') || []);
 
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -209,7 +222,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.model.set(this.typeHashName, {})
         },
 
-        pushAttachment: function (attachment) {
+        pushAttachment: function (attachment, link) {
             var arr = _.clone(this.model.get(this.idsName));
 
             arr.push(attachment.id);
@@ -237,15 +250,18 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             return preview;
         },
 
-        addAttachmentBox: function (name, type, id) {
-            $attachments = this.$attachments;
-            var self = this;
+        addAttachmentBox: function (name, type, id, link) {
+            var $attachments = this.$attachments;
 
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="glyphicon glyphicon-remove"></span></a>';
 
             var preview = name;
             if (this.showPreviews && id) {
                 preview = this.getEditPreview(name, type, id);
+            }
+
+            if (link && preview === name) {
+                preview = '<a href="?entryPoint=download&id='+id+'" target="_BLANK">' + preview + '</a>';
             }
 
             var $att = $('<div>').css('display', 'inline-block')
@@ -261,8 +277,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');
                 $container.append($loading);
                 $att.on('ready', function () {
-                    $loading.html(self.translate('Ready'));
-                });
+                    $loading.html(this.translate('Ready'));
+                }.bind(this));
             } else {
                 $att.attr('data-id', id);
             }
@@ -283,7 +299,6 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 }
 
                 fileList.forEach(function (file) {
-
                     var $att = this.addAttachmentBox(file.name, file.type);
 
                     $att.find('.remove-attachment').on('click.uploading', function () {
@@ -389,6 +404,76 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var string = previews.join('') + names.join('');
 
                 return string;
+            }
+        },
+
+        insertFromSource: function (source) {
+            var viewName =
+                this.getMetadata().get(['Attachment', 'sources', source, 'insertModalView']) ||
+                this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
+                'views/modals/select-records';
+
+            if (viewName) {
+                this.notify('Loading...');
+
+                var filters = null;
+                if (('getSelectFilters' + source) in this) {
+                    filters = this['getSelectFilters' + source]();
+
+                    if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
+                        if (this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link') {
+                            filters = {
+                                account: {
+                                    type: 'equals',
+                                    field: 'accountId',
+                                    value: this.model.get('parentId'),
+                                    valueName: this.model.get('parentName')
+                                }
+                            };
+                        }
+                    }
+                }
+                var boolFilterList = this.getMetadata().get(['Attachment', 'sources', source, 'boolFilterList']);
+                if (('getSelectBoolFilterList' + source) in this) {
+                    boolFilterList = this['getSelectBoolFilterList' + source]();
+                }
+                var primaryFilterName = this.getMetadata().get(['Attachment', 'sources', source, 'primaryFilter']);
+                if (('getSelectPrimaryFilterName' + source) in this) {
+                    primaryFilterName = this['getSelectPrimaryFilterName' + source]();
+                }
+                this.createView('insertFromSource', viewName, {
+                    scope: source,
+                    createButton: false,
+                    filters: filters,
+                    boolFilterList: boolFilterList,
+                    primaryFilterName: primaryFilterName,
+                    multiple: true
+                }, function (view) {
+                    view.render();
+                    this.notify(false);
+                    this.listenToOnce(view, 'select', function (modelList) {
+                        if (Object.prototype.toString.call(modelList) !== '[object Array]') {
+                            modelList = [modelList];
+                        }
+                        modelList.forEach(function (model) {
+                            if (model.name === 'Attachment') {
+                                this.pushAttachment(model);
+                            } else {
+                                this.ajaxPostRequest(source + '/action/getAttachmentList', {
+                                    id: model.id
+                                }).done(function (attachmentList) {
+                                    attachmentList.forEach(function (item) {
+                                        this.getModelFactory().create('Attachment', function (attachment) {
+                                            attachment.set(item);
+                                            this.pushAttachment(attachment, true);
+                                        }, this);
+                                    }, this);
+                                }.bind(this));
+                            }
+                        }, this);
+                    });
+                }, this);
+                return;
             }
         },
 

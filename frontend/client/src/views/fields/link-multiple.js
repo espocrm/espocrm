@@ -52,7 +52,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         autocompleteDisabled: false,
 
-        selectRecordsViewName: 'views/modals/select-records',
+        selectRecordsView: 'views/modals/select-records',
 
         createDisabled: false,
 
@@ -109,7 +109,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsViewName;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,

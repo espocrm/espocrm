@@ -145,7 +145,8 @@
         },
         "attachments": {
             "type": "linkMultiple",
-            "view": "views/fields/attachment-multiple"
+            "view": "views/fields/attachment-multiple",
+            "sourceList": ["Document"]
         },
         "hasAttachment": {
             "type": "bool",

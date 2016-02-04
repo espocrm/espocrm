@@ -64,5 +64,25 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $this->getFileManager()->removeFile('data/upload/' . $entity->id);
     }
 
+    public function getCopiedAttachment(Entity $entity, $role = null)
+    {
+        $attachment = $this->get();
+
+        $attachment->set(array(
+            'sourceId' => $entity->getSourceId(),
+            'name' => $entity->get('name'),
+            'type' => $entity->get('type'),
+            'size' => $entity->get('size')
+        ));
+
+        if ($role) {
+            $attachment->set('role', $role);
+        }
+
+        $this->save($attachment);
+
+        return $attachment;
+    }
+
 }
 

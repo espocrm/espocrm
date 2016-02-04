@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.LinkMultipleWithRole', 'Views.Fields.LinkMultiple', function (Dep) {
+Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
