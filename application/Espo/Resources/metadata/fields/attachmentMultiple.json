@@ -1,9 +1,14 @@
 {
    "params":[
       {
-         "name":"required",
-         "type":"bool",
-         "default":false
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "sourceList",
+         "type": "multiEnum",
+         "view": "views/admin/field-manager/fields/source-list"
       }
    ],
    "actualFields":[

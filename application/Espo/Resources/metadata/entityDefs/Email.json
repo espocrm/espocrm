@@ -143,8 +143,7 @@
             "default": "Archived"
         },
         "attachments": {
-            "type": "linkMultiple",
-            "view": "views/fields/attachment-multiple",
+            "type": "attachmentMultiple",
             "sourceList": ["Document"]
         },
         "hasAttachment": {

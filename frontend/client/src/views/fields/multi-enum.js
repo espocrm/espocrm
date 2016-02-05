@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.MultiEnum', ['Views.Fields.Array', 'lib!Selectize'], function (Dep, Selectize) {
+Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], function (Dep, Selectize) {
 
     return Dep.extend({
 
         type: 'multiEnum',
 
-        listTemplate: 'fields.array.detail',
+        listTemplate: 'fields//array/detail',
 
-        detailTemplate: 'fields.array.detail',
+        detailTemplate: 'fields/array/detail',
 
-        editTemplate: 'fields.multi-enum.edit',
+        editTemplate: 'fields/multi-enum/edit',
 
         events: {
         },

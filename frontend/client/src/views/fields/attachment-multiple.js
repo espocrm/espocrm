@@ -156,7 +156,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.showPreviews = this.params.showPreviews;
             }
 
-            this.sourceList = Espo.Utils.clone(this.model.getFieldParam(this.name, 'sourceList') || []);
+            this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
 
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};

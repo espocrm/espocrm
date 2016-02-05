@@ -85,6 +85,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             this.noEmptyString = this.params.noEmptyString;
 
+            this.setupOptions();
 
             if ('translatedOptions' in this.options) {
                 this.translatedOptions = this.options.translatedOptions;
