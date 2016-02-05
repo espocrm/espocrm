@@ -357,7 +357,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 router.dispatch(this.scope, 'view', {
                     attributes: attributes,
                     returnUrl: Backbone.history.fragment,
-                    model: this.sourceModel,
+                    model: this.sourceModel || this.model,
                     id: this.id
                 });
                 router.navigate(url, {trigger: false});
