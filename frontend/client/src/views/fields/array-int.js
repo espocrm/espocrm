@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.ArrayInt', 'Views.Fields.Array', function (Dep) {
+Espo.define('views/fields/array-int', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
 

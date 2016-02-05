@@ -130,6 +130,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
         },
 
+        setupOptions: function () {
+
+        },
+
         afterRender: function () {
             if (this.mode == 'edit') {
                 this.$list = this.$el.find('.list-group');
