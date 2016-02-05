@@ -165,7 +165,8 @@ class Container
     {
         $className = $this->getServiceClassName('mailSernder', '\\Espo\\Core\\Mail\\Sender');
         return new $className(
-            $this->get('config')
+            $this->get('config'),
+            $this->get('entityManager')
         );
     }
 

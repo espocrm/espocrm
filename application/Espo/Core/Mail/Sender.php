@@ -45,16 +45,29 @@ class Sender
 {
     protected $config;
 
+    protected $entityManager;
+
     protected $transport;
 
     protected $isGlobal = false;
 
     protected $params = array();
 
-    public function __construct($config)
+    public function __construct($config, $entityManager)
     {
         $this->config = $config;
+        $this->entityManager = $entityManager;
         $this->useGlobal();
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 
     public function resetParams()
