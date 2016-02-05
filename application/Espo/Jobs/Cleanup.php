@@ -94,7 +94,15 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24);
 
         $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
-            'role' => ['Export File'],
+            'OR' => array(
+                array(
+                    'role' => ['Export File']
+                ),
+                array(
+                    'role' => ['Attachment'],
+                    'parentId' => null
+                )
+            ),
             'createdAt<' => $dateBefore
         ))->limit(0, 100)->find();
 
