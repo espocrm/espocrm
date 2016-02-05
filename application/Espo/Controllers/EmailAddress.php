@@ -38,6 +38,9 @@ class EmailAddress extends \Espo\Core\Controllers\Record
         if (!$this->getAcl()->checkScope('Email')) {
             throw new Forbidden();
         }
+        if (!$this->getAcl()->checkScope('Email', 'create')) {
+            throw new Forbidden();
+        }
         $q = $request->get('q');
         $limit = intval($request->get('limit'));
         if (empty($limit) || $limit > 30) {

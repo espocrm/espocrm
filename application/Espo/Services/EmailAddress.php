@@ -58,7 +58,9 @@ class EmailAddress extends Record
             'limit' => $limit
         );
 
-        $this->getSelectManagerFactory()->create($entityType)->manageAccess($searchParams);
+        $selectManager = $this->getSelectManagerFactory()->create($entityType);
+
+        $selectManager->applyAccess($searchParams);
 
         $collection = $this->getEntityManager()->getRepository($entityType)->find($searchParams);
 
@@ -91,13 +93,15 @@ class EmailAddress extends Record
     protected function findInInboundEmail($query, $limit, &$result)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        $qu = $this->getEntityManager()->getQuery()->createSelectQuery('InboundEmail', [
+
+        $selectParams = [
             'select' => ['id', 'name', 'emailAddress'],
             'whereClause' => [
                 'emailAddress*' => $query . '%'
             ],
             'orderBy' => 'name',
-        ]);
+        ];
+        $qu = $this->getEntityManager()->getQuery()->createSelectQuery('InboundEmail', $selectParams);
 
         $sth = $pdo->prepare($qu);
         $sth->execute();
