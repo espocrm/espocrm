@@ -1,0 +1,7 @@
+[
+    {"name":"name", "link":true, "width": 25},
+    {"name": "file", "width": 10},
+    {"name": "parent", "width": 25},
+    {"name": "createdBy"},
+    {"name": "createdAt", "width": 15}
+]

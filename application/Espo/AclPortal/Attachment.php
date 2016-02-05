@@ -46,7 +46,7 @@ class Attachment extends \Espo\Core\AclPortal\Base
                 if ($parent->getEntityType() === 'Note') {
                     if ($parent->get('parentId') && $parent->get('parentType')) {
                         $parentOfParent = $this->getEntityManager()->getEntity($parent->get('parentType'), $parent->get('parentId'));
-                        if ($this->getAclManager()->checkEntity($user, $parentOfParent)) {
+                        if ($parentOfParent && $this->getAclManager()->checkEntity($user, $parentOfParent)) {
                             return true;
                         }
                     } else {

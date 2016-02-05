@@ -19,7 +19,8 @@
         "Job": "Job",
         "EmailFilter": "Email Filter",
         "Portal": "Portal",
-        "PortalRole": "Portal Role"
+        "PortalRole": "Portal Role",
+        "Attachment": "Attachment"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -41,7 +42,8 @@
         "Job": "Jobs",
         "EmailFilter": "Email Filters",
         "Portal": "Portals",
-        "PortalRole": "Portal Roles"
+        "PortalRole": "Portal Roles",
+        "Attachment": "Attachments"
     },
     "labels": {
         "Misc": "Misc",
