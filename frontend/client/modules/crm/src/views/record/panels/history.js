@@ -194,7 +194,8 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                     model.id = id;
                     this.listenToOnce(model, 'sync', function () {
                         var attributes = emailHelper.getReplyAttributes(model, data, this.getPreferences().get('emailReplyToAllByDefault'));
-                        this.createView('quickCreate', 'views/modals/compose-email', {
+                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                        this.createView('quickCreate', viewName, {
                             attributes: attributes,
                         }, function (view) {
                             view.render(function () {

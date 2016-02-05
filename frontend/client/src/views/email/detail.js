@@ -315,7 +315,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
             this.notify('Loading...');
-            this.createView('quickCreate', 'views/modals/compose-email', {
+            var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+            this.createView('quickCreate', viewName, {
                 attributes: attributes,
             }, function (view) {
                 view.render(function () {
@@ -368,7 +369,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 attributes['attachmentsNames'] = data.names;
 
                 this.notify('Loading...');
-                this.createView('quickCreate', 'views/modals/compose-email', {
+                var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                this.createView('quickCreate', viewName, {
                     attributes: attributes,
                 }, function (view) {
                     view.render(function () {

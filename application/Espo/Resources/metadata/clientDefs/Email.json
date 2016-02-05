@@ -14,7 +14,8 @@
       "detailQuick":"views/email/record/detail-quick"
    },
    "modalViews": {
-      "detail": "views/email/modals/detail"
+      "detail": "views/email/modals/detail",
+      "compose": "views/modals/compose-email"
    },
    "menu": {
       "list": {

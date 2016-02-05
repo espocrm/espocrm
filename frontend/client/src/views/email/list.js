@@ -45,7 +45,8 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         actionComposeEmail: function () {
             this.notify('Loading...');
-            this.createView('quickCreate', 'views/modals/compose-email', {
+            var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+            this.createView('quickCreate', viewName, {
                 attributes: {
                     status: 'Draft'
                 }
