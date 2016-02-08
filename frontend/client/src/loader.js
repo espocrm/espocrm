@@ -32,13 +32,15 @@ var Espo = Espo || {classMap:{}};
 
     var root = this;
 
-    Espo.Loader = function (cache) {
+    Espo.Loader = function (cache, cacheTimestamp) {
         this.cache = cache || null;
         this._loadCallbacks = {};
 
         this.pathsBeingLoaded = {};
 
         this.libsConfig = {};
+
+        this.cacheTimestamp = cacheTimestamp || null;
     }
 
     _.extend(Espo.Loader.prototype, {
@@ -282,9 +284,16 @@ var Espo = Espo || {classMap:{}};
             }
             this.pathsBeingLoaded[path] = true;
 
+            var useCache = false;
+            if (this.cacheTimestamp) {
+                useCache = true;
+                var sep = (path.indexOf('?') > -1) ? '&' : '?';
+                path += sep + 'r=' + this.cacheTimestamp;
+            }
+
             $.ajax({
                 type: 'GET',
-                cache: false,
+                cache: useCache,
                 dataType: 'text',
                 local: true,
                 url: path,

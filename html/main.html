@@ -13,6 +13,7 @@
         <link rel="shortcut icon" href="client/img/favicon.ico" type="image/x-icon">
         <script type="text/javascript">
             $(function () {
+                Espo.loader.cacheTimestamp = {{cacheTimestamp}};
                 Espo.require('app', function (App) {
                     var app = new App({
                         useCache: {{useCache}},

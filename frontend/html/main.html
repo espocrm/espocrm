@@ -37,7 +37,8 @@
                 Espo.require('app', function (App) {
                     var app = new App({
                         useCache: false,
-                        url: '../api/v1',
+                        cacheTimestamp: {{cacheTimestamp}},
+                        url: '../api/v1'
                     }, function (app) {
                         {{runScript}}
                     });
