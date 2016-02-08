@@ -266,6 +266,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             if (this.layoutReadOnly) return;
             this.getPreferences().save(o, {patch: true});
             this.getPreferences().trigger('update');
+
+            this.clearView('dashlet-' + id);
         },
 
         addDashlet: function (name) {
