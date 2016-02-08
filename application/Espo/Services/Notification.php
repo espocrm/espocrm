@@ -91,7 +91,7 @@ class Notification extends \Espo\Services\Record
                 continue;
             }
             $id = uniqid();
-            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote('Note').", ".$pdo->quote($note->id).")";
+            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote($note->id).", ".$pdo->quote('Note').")";
         }
 
         if (empty($arr)) {
