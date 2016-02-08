@@ -43,6 +43,7 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
 
             var type = model.get('type');
             var viewName = this.itemViews[type] || 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(type);
+
             this.createView(key, viewName, {
                 model: model,
                 parentModel: this.model,

@@ -876,6 +876,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 for (var i = initialCount; i < collection.length; i++) {
                     var model = collection.at(i);
                     this.buildRow(i, model, function (view) {
+                        var model = view.model;
                         view.getHtml(function (html) {
                             var $row = $(this.getRowContainerHtml(model.id));
                             $row.append(html);
