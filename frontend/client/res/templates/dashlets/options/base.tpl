@@ -1,3 +1,3 @@
 <form id="dashlet-options">
-    <div class="middle">{{{middle}}}</div>
+    <div class="middle record">{{{record}}}</div>
 </form>

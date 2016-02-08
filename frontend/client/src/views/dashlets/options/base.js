@@ -98,14 +98,14 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             };
             model.set(this.optionsData);
 
-            this.createView('middle', 'views/record/detail-middle', {
+            this.createView('record', 'views/record/detail-middle', {
                 model: model,
                 recordHelper: this.recordHelper,
                 _layout: {
                     type: 'record',
                     layout: Detail.prototype.convertDetailLayout.call(this, this.getDetailLayout())
                 },
-                el: this.options.el + ' .middle',
+                el: this.options.el + ' .record',
                 layoutData: {
                     model: model,
                     columnCount: 2,
@@ -118,7 +118,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
         fetchAttributes: function () {
             var attributes = {};
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('middle').getView(field);
+                var fieldView = this.getView('record').getView(field);
                 _.extend(attributes, fieldView.fetch());
             }, this);
 
@@ -126,7 +126,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
             var valid = true;
             this.fieldList.forEach(function (field) {
-                var fieldView = this.getView('middle').getView(field);
+                var fieldView = this.getView('record').getView(field);
                 valid = !fieldView.validate() && valid;
             }, this);
 
@@ -139,6 +139,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
         actionSave: function (dialog) {
             var attributes = this.fetchAttributes();
+
             if (attributes == null) {
                 return;
             }

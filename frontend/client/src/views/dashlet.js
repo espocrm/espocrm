@@ -98,7 +98,11 @@ Espo.define('views/dashlet', 'view', function (Dep) {
         },
 
         actionOptions: function () {
-            var optionsView = this.getMetadata().get(['dashlets', this.name, 'optionsView']) || 'views/dashlets/options/base';
+            var optionsView =
+                this.getMetadata().get(['dashlets', this.name, 'options', 'view']) ||
+                this.optionsView ||
+                'views/dashlets/options/base';
+
             this.createView('options', optionsView, {
                 name: this.name,
                 optionsData: this.getOptionsData(),

@@ -78,7 +78,7 @@ Espo.define('pre-loader', [], function () {
 
                 var d = [];
                 data.classes.forEach(function (item) {
-                    if (item != 'Views.Fields.Enum') {
+                    if (item != 'views/fields/enum') {
                         d.push(item); // TODO remove this huck
                     }
                 }, this);
