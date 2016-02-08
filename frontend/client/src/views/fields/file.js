@@ -260,8 +260,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                             attachment.set('type', fileParams.type || 'text/plain');
                             attachment.set('size', fileParams.size);
                             attachment.set('role', 'Attachment');
-                            attachment.set('parentType', this.model.name);
-                            attachment.set('parentId', this.model.id);
 
                             attachment.once('sync', function () {
                                 if (!isCanceled) {

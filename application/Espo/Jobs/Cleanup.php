@@ -97,10 +97,6 @@ class Cleanup extends \Espo\Core\Jobs\Base
             'OR' => array(
                 array(
                     'role' => ['Export File']
-                ),
-                array(
-                    'role' => ['Attachment'],
-                    'parentId' => null
                 )
             ),
             'createdAt<' => $dateBefore

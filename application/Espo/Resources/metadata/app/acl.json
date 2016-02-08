@@ -62,6 +62,9 @@
         "fieldLevel": {
         },
         "scopeFieldLevel": {
+            "Attachment": {
+                "parent": false
+            }
         }
     },
     "default": {

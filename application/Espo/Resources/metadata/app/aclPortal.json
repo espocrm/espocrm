@@ -60,6 +60,9 @@
             },
             "Meeting": {
                 "reminders": false
+            },
+            "Attachment": {
+                "parent": false
             }
         }
     },
