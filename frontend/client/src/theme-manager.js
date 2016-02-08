@@ -53,7 +53,9 @@ Espo.define('theme-manager', [], function () {
 
         getStylesheet: function () {
             var link = this.metadata.get('themes.' + this.getName() + '.stylesheet') || 'client/css/espo.css';
-            link += '?r=' + this.config.get('cacheTimestamp').toString();
+            if (this.config.get('cacheTimestamp')) {
+                link += '?r=' + this.config.get('cacheTimestamp').toString();
+            }
             return link
         },
 
