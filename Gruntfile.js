@@ -232,6 +232,10 @@ module.exports = function (grunt) {
                     {
                         src: 'build/tmp/html/main.html',
                         dest: 'build/tmp/html/main.html'
+                    },
+                    {
+                        src: 'build/tmp/html/portal.html',
+                        dest: 'build/tmp/html/portal.html'
                     }
                 ]
             },
