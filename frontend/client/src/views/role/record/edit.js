@@ -38,10 +38,10 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
         events: _.extend({
             'change select[data-type="access"]': function (e) {
-                var scope = $(e.target).attr('name');
+                var scope = $(e.currentTarget).attr('name');
                 var $dropdowns = this.$el.find('select[data-scope="' + scope + '"]');
 
-                if ($(e.target).val() == 'enabled') {
+                if ($(e.currentTarget).val() == 'enabled') {
                     $dropdowns.removeAttr('disabled');
                 } else {
                     $dropdowns.attr('disabled', 'disabled');
@@ -78,7 +78,7 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
                 }
             }
 
-            data['data'] = data['data'];
+            data['data'] = this.getView('extra').fetchScopeData();
             data['fieldData'] = this.getView('extra').fetchFieldData();
 
             return data;
@@ -107,12 +107,14 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
 
             this.createView('extra', this.tableView, {
                 mode: 'edit',
-                acl: {
-                    data: this.model.get('data') || {},
-                    fieldData: this.model.get('fieldData') || {}
-                },
-                el: this.options.el + ' .extra'
-            });
+                el: this.options.el + ' .extra',
+                model: this.model
+            }, function (view) {
+                this.listenTo(view, 'change', function () {
+                    var data = this.fetch();
+                    this.model.set(data);
+                }, this);
+            }, this);
         }
 
     });

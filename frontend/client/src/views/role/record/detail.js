@@ -41,11 +41,8 @@ Espo.define('views/role/record/detail', 'views/record/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
             this.createView('extra', this.tableView, {
-                acl: {
-                    data: this.model.get('data') || {},
-                    fieldData: this.model.get('fieldData') || {}
-                },
-                el: this.options.el + ' .extra'
+                el: this.options.el + ' .extra',
+                model: this.model
             });
         },
     });

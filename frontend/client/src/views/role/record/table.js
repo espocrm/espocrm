@@ -196,27 +196,43 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         setup: function () {
             this.mode = this.options.mode || 'detail';
 
-            this.acl = this.options.acl || {};
-
-            this.acl.data = this.acl.data || {};
-            this.acl.fieldData = this.acl.fieldData || {};
-
             this.final = this.options.final || false;
 
-            this.setupScopeList();
+            this.setupData();
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.model.hasChanged('data') || this.model.hasChanged('fieldData')) {
+                    this.setupData();
+                }
+            }, this);
 
             this.listenTo(this.model, 'sync', function () {
+                this.setupData();
                 if (this.isRendered()) {
                     this.reRender();
                 }
             }, this);
 
-            this.setupFieldTableDataList();
-
             this.template = 'role/table';
             if (this.mode == 'edit') {
                 this.template = 'role/table-edit';
             }
+        },
+
+        setupData: function () {
+            this.acl = {};
+            if (this.options.acl) {
+                this.acl.data = this.options.acl.data;
+            } else {
+                this.acl.data = Espo.Utils.cloneDeep(this.model.get('data') || {});
+            }
+            if (this.options.acl) {
+                this.acl.fieldData = this.options.acl.fieldData;
+            } else {
+                this.acl.fieldData = Espo.Utils.cloneDeep(this.model.get('fieldData') || {});
+            }
+            this.setupScopeList();
+            this.setupFieldTableDataList();
         },
 
         setupScopeList: function () {
@@ -289,6 +305,35 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     list: fieldDataList
                 });
             }, this);
+        },
+
+        fetchScopeData: function () {
+            var data = {};
+
+            var scopeList = this.scopeList;
+            var actionList = this.actionList;
+            var aclTypeMap = this.aclTypeMap;
+
+            for (var i in scopeList) {
+                var scope = scopeList[i];
+                if (this.$el.find('select[name="' + scope + '"]').val() == 'not-set') {
+                    continue;
+                }
+                if (this.$el.find('select[name="' + scope + '"]').val() == 'disabled') {
+                    data[scope] = false;
+                } else {
+                    var o = true;
+                    if (aclTypeMap[scope] != 'boolean') {
+                        o = {};
+                        for (var j in actionList) {
+                            var action = actionList[j];
+                            o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
+                        }
+                    }
+                    data[scope] = o;
+                }
+            }
+            return data;
         },
 
         fetchFieldData: function () {
@@ -429,6 +474,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         showAddFieldModal: function (scope) {
+            this.trigger('change');
+
             var ignoreFieldList = Object.keys(this.acl.fieldData[scope] || {});
 
             this.createView('addField', 'views/role/modals/add-field', {
@@ -470,6 +517,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         removeField: function (scope, field) {
+            this.trigger('change');
+
             this.fieldTableDataList.forEach(function (scopeData) {
                 if (scopeData.name !== scope) return;
                 var index = -1;
