@@ -56,11 +56,15 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             Dep.prototype.init.call(this);
         },
 
+        checkAccess: function () {
+            return this.getAcl().check(this.scope, 'read');
+        },
+
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
                 var searchManager = this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
 
-                if (!this.getAcl().check(this.scope, 'read')) {
+                if (!this.checkAccess()) {
                     this.$el.find('.list-container').html(this.translate('No Access'));
                     return;
                 }
