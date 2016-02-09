@@ -65,6 +65,10 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                     return;
                 }
 
+                if (this.collectionUrl) {
+                    collection.url = this.collectionUrl;
+                }
+
                 this.collection = collection;
                 collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
                 collection.asc = this.getOption('asc') || this.collection.asc;
