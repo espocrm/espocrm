@@ -53,7 +53,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 $this->setUsersIdsByEmailAddressId($entity, $id, $addAssignedUser);
             }
         }
-        $entity->setLinkMulitpleIdList($type . 'EmailAddresses', $idList);
+        $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
     }
 
     protected function setUsersIdsByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)

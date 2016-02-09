@@ -111,7 +111,7 @@ class Entity extends \Espo\ORM\Entity
 
     }
 
-    public function setLinkMulitpleIdList($field, array $idList)
+    public function setLinkMultipleIdList($field, array $idList)
     {
         $idsField = $field . 'Ids';
         $this->set($idsField, $idList);
