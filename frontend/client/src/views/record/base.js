@@ -447,7 +447,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
         fetch: function () {
             var data = {};
-            var fields = this.getFields();
+            var fields = this.getFieldViews();
             for (var i in fields) {
                 if (fields[i].mode == 'edit') {
                     if (!fields[i].disabled && !fields[i].readOnly) {
@@ -574,19 +574,19 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             switch (action) {
                 case 'hide':
-                    fieldList.forEach(function (item) {
-                        this.hideField(item);
-                    }, this);
                     panelList.forEach(function (item) {
                         this.hidePanel(item);
                     }, this);
+                    fieldList.forEach(function (item) {
+                        this.hideField(item);
+                    }, this);
                     break;
                 case 'show':
-                    fieldList.forEach(function (item) {
-                        this.showField(item);
-                    }, this);
                     panelList.forEach(function (item) {
                         this.showPanel(item);
+                    }, this);
+                    fieldList.forEach(function (item) {
+                        this.showField(item);
                     }, this);
                     break;
                 case 'setRequired':

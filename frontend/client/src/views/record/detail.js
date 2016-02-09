@@ -352,7 +352,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
-            var fields = this.getFieldViews();
+            var fields = this.getFieldViews(true);
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
@@ -371,7 +371,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
 
-            var fields = this.getFieldViews();
+            var fields = this.getFieldViews(true);
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (fieldView.mode != 'detail') {
@@ -410,17 +410,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        getFieldViews: function () {
+        getFieldViews: function (withHidden) {
             var fields = {};
 
             if (this.hasView('middle')) {
-                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews()));
+                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
             }
             if (this.hasView('side')) {
-                _.extend(fields, this.getView('side').getFieldViews());
+                _.extend(fields, this.getView('side').getFieldViews(withHidden));
             }
             if (this.hasView('bottom')) {
-                _.extend(fields, this.getView('bottom').getFieldViews());
+                _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
             }
             return fields;
         },
@@ -428,13 +428,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = (this.getView('middle').getFieldViews() || {})[name];
+                view = (this.getView('middle').getFieldViews(true) || {})[name];
             }
             if (!view && this.hasView('side')) {
-                view = (this.getView('side').getFieldViews() || {})[name];
+                view = (this.getView('side').getFieldViews(true) || {})[name];
             }
             if (!view && this.hasView('bottom')) {
-                view = (this.getView('bottom').getFieldViews() || {})[name];
+                view = (this.getView('bottom').getFieldViews(true) || {})[name];
             }
             return view || null;
         },

@@ -165,11 +165,11 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             }, this);
         },
 
-        getFieldViews: function () {
+        getFieldViews: function (withHidden) {
             var fields = {};
             this.panelList.forEach(function (p) {
                 var panelView = this.getView(p.name);
-                if (!panelView.disabled && 'getFieldViews' in panelView) {
+                if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
                     fields = _.extend(fields, panelView.getFieldViews());
                 }
             }, this);
