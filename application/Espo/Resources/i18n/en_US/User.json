@@ -46,7 +46,8 @@
         "Email Address": "Email Address",
         "External Accounts": "External Accounts",
         "Email Accounts": "Email Accounts",
-        "Portal": "Portal"
+        "Portal": "Portal",
+        "Create Portal User": "Create Portal User"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

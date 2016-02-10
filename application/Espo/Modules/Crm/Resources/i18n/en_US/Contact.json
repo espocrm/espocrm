@@ -38,5 +38,9 @@
             "Evaluator": "Evaluator",
             "Influencer": "Influencer"
         }
+    },
+    "presetFilters": {
+        "portalUsers": "Portal Users",
+        "notPortalUsers": "Not Portal Users"
     }
 }

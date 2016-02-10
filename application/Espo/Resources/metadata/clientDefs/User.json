@@ -1,14 +1,18 @@
 {
    "views": {
-      "detail": "User.Detail"
+      "detail": "views/user/detail",
+      "list": "views/user/list"
    },
    "recordViews":{
-      "detail":"User.Record.Detail",
-      "detailQuick":"User.Record.DetailQuick",
-      "edit":"User.Record.Edit",
-      "editQuick":"User.Record.Edit",
-      "list":"User.Record.List"
+      "detail":"views/user/record/detail",
+      "detailQuick":"views/user/record/detail-quick",
+      "edit":"views/user/record/edit",
+      "editQuick":"views/user/record/edit",
+      "list":"views/user/record/list"
    },
-   "filterList": ["active","activePortal"],
+   "filterList": [
+      "active",
+      "activePortal"
+   ],
    "boolFilterList": ["onlyMyTeam"]
 }

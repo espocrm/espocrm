@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,40 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/fields/contact', 'views/fields/link', function (Dep) {
+namespace Espo\Modules\Crm\SelectManagers;
 
-    return Dep.extend({
+class Contact extends \Espo\Core\SelectManagers\Base
+{
+    protected function filterPortalUsers(&$result)
+    {
+        $result['customJoin'] .= " JOIN user AS portalUser ON portalUser.contact_id = contact.id AND portalUser.deleted = 0 ";
+    }
 
-        select: function (model) {
-            Dep.prototype.select.call(this, model);
+    protected function filterNotPortalUsers(&$result)
+    {
+        $result['customJoin'] .= " LEFT JOIN user AS portalUser ON portalUser.contact_id = contact.id AND portalUser.deleted = 0 ";
+        $this->addAndWhere(array(
+            'portalUser.id' => null
+        ), $result);
+    }
 
-            if (model.has('accountId')) {
-                var names = {};
-                names[model.get('accountId')] = model.get('accountName');
+ }
 
-                var attributes = {
-                    accountsIds: [model.get('accountId')],
-                    accountsNames: names
-                };
-            }
-
-            attributes.firstName = model.get('firstName');
-            attributes.lastName = model.get('lastName');
-            attributes.salutationName = model.get('salutationName');
-
-            attributes.emailAddress = model.get('emailAddress');
-            attributes.emailAddressData = model.get('emailAddressData');
-
-            attributes.phoneNumber = model.get('phoneNumber');
-            attributes.phoneNumberData = model.get('phoneNumberData');
-
-            if (this.model.isNew() && !this.model.get('userName') && attributes.emailAddress) {
-                attributes.userName = attributes.emailAddress;
-            }
-
-            this.model.set(attributes);
-        }
-
-    });
-
-});
