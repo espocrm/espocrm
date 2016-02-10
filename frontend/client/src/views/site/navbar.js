@@ -128,16 +128,32 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 el: this.options.el + ' .notifications-badge-container'
             });
 
-            this.createView('globalSearch', 'views/global-search/global-search', {
-                el: this.options.el + ' .global-search-container'
-            });
 
-           this.setupTabListDefs();
+            this.setupGlobalSearch();
+
+
+            this.setupTabListDefs();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
             });
+        },
+
+        setupGlobalSearch: function () {
+            this.globalSearchAvailable = false;
+            (this.getConfig().get('globalSearchEntityList') || []).forEach(function (scope) {
+                if (this.globalSearchAvailable) return;
+                if (this.getAcl().checkScope(scope)) {
+                    this.globalSearchAvailable = true;
+                }
+            }, this);
+
+            if (this.globalSearchAvailable) {
+                this.createView('globalSearch', 'views/global-search/global-search', {
+                    el: this.options.el + ' .global-search-container'
+                });
+            }
         },
 
         adjust: function () {
