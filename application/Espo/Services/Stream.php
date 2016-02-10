@@ -504,7 +504,7 @@ class Stream extends \Espo\Core\Services\Base
                 if (!$targetType || $targetType === 'users' || $targetType === 'self') {
                     $e->loadLinkMultipleField('users');
                 }
-                if ($targetType !== 'users' && $targetType === 'self') {
+                if ($targetType !== 'users' && $targetType !== 'self') {
                     if (!$targetType || $targetType === 'teams') {
                         $e->loadLinkMultipleField('teams');
                     } else if ($targetType === 'portals') {

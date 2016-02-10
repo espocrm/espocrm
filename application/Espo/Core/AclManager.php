@@ -127,9 +127,6 @@ class AclManager
 
     public function get(User $user, $permission)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
         return $this->getTable($user)->get($permission);
     }
 
