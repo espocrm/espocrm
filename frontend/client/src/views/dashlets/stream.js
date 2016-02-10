@@ -62,6 +62,11 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
 
         setupActionList: function () {
             this.actionList.unshift({
+                name: 'viewList',
+                html: this.translate('View List'),
+                iconHtml: '<span class="glyphicon glyphicon glyphicon-th-list"></span>'
+            });
+            this.actionList.unshift({
                 name: 'create',
                 html: this.translate('Create Post', 'labels'),
                 iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
@@ -76,6 +81,10 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
                     this.actionRefresh();
                 }, this);
             }, this)
+        },
+
+        actionViewList: function () {
+            this.getRouter().navigate('#Stream', {trigger: true});
         }
 
     });
