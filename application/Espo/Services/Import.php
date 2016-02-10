@@ -605,7 +605,13 @@ class Import extends \Espo\Services\Record
     protected function getRecordService($scope)
     {
         if (empty($this->services[$scope])) {
-            $this->services[$scope] = $this->getServiceFactory()->create($scope);
+            if ($this->getServiceFactory()->checkExists($scope)) {
+                $service = $this->getServiceFactory()->create($scope);
+            } else {
+                $service = $this->getServiceFactory()->create('Record');
+                $service->setEntityType($scope);
+            }
+            $this->services[$scope] = $service;
         }
         return $this->services[$scope];
     }
