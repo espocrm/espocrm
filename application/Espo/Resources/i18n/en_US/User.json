@@ -78,6 +78,6 @@
     },
     "presetFilters": {
         "active": "Active",
-        "activePortal": "Portal"
+        "activePortal": "Portal Active"
     }
 }
