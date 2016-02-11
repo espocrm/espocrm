@@ -199,6 +199,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->handleEmailAddressSave($entity);
         $this->handlePhoneNumberSave($entity);
         $this->handleSpecifiedRelations($entity);
+        $this->handleFileFields($entity);
 
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity, $options);
     }
@@ -254,6 +255,27 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $result = parent::save($entity, $options);
 
         return $result;
+    }
+
+    protected function handleFileFields(Entity $entity)
+    {
+        foreach ($entity->getRelations() as $name => $defs) {
+            if (!isset($defs['type']) || !isset($defs['entity'])) continue;
+            if (!($defs['type'] === $entity::BELONGS_TO && $defs['entity'] === 'Attachment')) continue;
+
+            $attribute = $name . 'Id';
+            if (!$entity->hasAttribute($attribute)) continue;
+            if (!$entity->get($attribute)) continue;
+            if (!$entity->isAttributeChanged($attribute)) continue;
+
+            $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
+            if (!$attachment) continue;
+            $attachment->set(array(
+                'relatedId' => $entity->id,
+                'relatedType' => $entity->getEntityType()
+            ));
+            $this->getEntityManager()->saveEntity($attachment);
+        }
     }
 
     protected function handleEmailAddressSave(Entity $entity)

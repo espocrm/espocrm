@@ -15,6 +15,10 @@
         "parent": {
             "type": "linkParent"
         },
+        "related": {
+            "type": "linkParent",
+            "noLoad": true
+        },
         "sourceId": {
             "type": "varchar",
             "maxLength": 36,
@@ -50,6 +54,9 @@
         "parent": {
             "type": "belongsToParent",
             "foreign": "attachments"
+        },
+        "related": {
+            "type": "belongsToParent"
         }
     },
     "collection": {
