@@ -10,7 +10,7 @@
         },
         "body": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "views/fields/wysiwyg"
         },
         "isHtml": {
             "type": "bool",
@@ -23,7 +23,7 @@
         },
         "attachments": {
             "type": "linkMultiple",
-            "view": "Fields.AttachmentMultiple"
+            "view": "views/fields/attachment-multiple"
         },
         "assignedUser": {
             "type": "link"
@@ -37,8 +37,7 @@
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true,
-            "view": "views/fields/user"
+            "readOnly": true
         },
         "createdBy": {
             "type": "link",
@@ -47,7 +46,8 @@
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
