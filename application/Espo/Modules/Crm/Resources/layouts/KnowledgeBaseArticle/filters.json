@@ -2,7 +2,9 @@
     "createdAt",
     "createdBy",
     "expirationDate",
+    "language",
     "type",
     "status",
+    "portals",
     "publishDate"
 ]

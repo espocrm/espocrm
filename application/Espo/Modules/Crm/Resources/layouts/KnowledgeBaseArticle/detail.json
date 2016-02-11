@@ -4,8 +4,8 @@
         "rows":[
             [{"name":"name", "fullWidth": true}],
             [{"name":"status"}, {"name":"publishDate"}],
-            [{"name":"type"}, {"name":"expirationDate"}],
-            [{"name":"categories"}, {"name":"language"}],
+            [{"name":"categories"}, {"name":"expirationDate"}],
+            [{"name":"portals"}, {"name":"language"}],
             [{"name":"body", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]
         ]

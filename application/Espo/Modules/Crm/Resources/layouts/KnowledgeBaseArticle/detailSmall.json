@@ -3,8 +3,8 @@
         "label": "",
         "rows":[
             [{"name":"name", "fullWidth": true}],
-            [{"name":"status"}, {"name":"type"}],
-            [{"name":"categories"}, {"name":"language"}],
+            [{"name":"status"}, {"name":"language"}],
+            [{"name":"categories"}, {"name":"portals"}],
             [{"name":"body", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]
         ]

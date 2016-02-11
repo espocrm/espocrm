@@ -44,6 +44,12 @@ class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
 
         if ($this->checkIsPortal()) {
             $this->filterPublished($result);
+
+            $this->setDistinct(true, $result);
+            $this->addJoin('portals', $result);
+            $this->addAndWhere(array(
+                'portals.id' => $this->getUser()->get('portalId')
+            ), $result);
         }
     }
 

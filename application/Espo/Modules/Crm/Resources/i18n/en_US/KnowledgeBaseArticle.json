@@ -13,12 +13,14 @@
         "description": "Description",
         "body": "Body",
         "categories": "Categories",
-        "language": "Language"
+        "language": "Language",
+        "portals": "Portals"
     },
     "links": {
         "cases": "Cases",
         "opportunities": "Opportunities",
-        "categories": "Categories"
+        "categories": "Categories",
+        "portals": "Portals"
     },
     "options": {
         "status": {

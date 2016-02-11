@@ -1,0 +1,9 @@
+{
+    "links": {
+        "articles": {
+            "type": "hasMany",
+            "entity": "KnowledgeBaseArticle",
+            "foreign": "portals"
+        }
+    }
+}
