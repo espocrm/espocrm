@@ -46,9 +46,14 @@ class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
             $this->filterPublished($result);
 
             $this->setDistinct(true, $result);
-            $this->addJoin('portals', $result);
-            $this->addAndWhere(array(
-                'portals.id' => $this->getUser()->get('portalId')
+            $this->addLeftJoin('portals', $result);
+            $this->addOrWhere(array(
+                array(
+                    'portals.id' => $this->getUser()->get('portalId')
+                ),
+                array(
+                    'portals.id' => null
+                )
             ), $result);
         }
     }

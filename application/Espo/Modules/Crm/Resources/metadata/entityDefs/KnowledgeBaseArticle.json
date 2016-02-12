@@ -20,7 +20,8 @@
             "options": ["Article"]
         },
         "portals": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "publishDate": {
             "type": "date"

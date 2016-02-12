@@ -33,6 +33,9 @@
             "Article": "Article"
         }
     },
+    "tooltips": {
+        "portals": "If not empty then this article will be available only in specified portals. If empty then it will available in all portals."
+    },
     "presetFilters": {
         "published": "Published"
     }
