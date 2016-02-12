@@ -108,7 +108,7 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
 
         if ($campaign && $target) {
             $campaignService = $this->getServiceFactory()->create('Campaign');
-            $campaignService->logOptedOut($campaignId, $queueItemId, $target, $queueItem->get('emailAddress'));
+            $campaignService->logOptedOut($campaignId, $queueItemId, $target, $queueItem->get('emailAddress'), null, $queueItem->get('isTest'));
         }
 
     }

@@ -12,7 +12,7 @@
         },
         "data": {
             "type": "jsonObject",
-            "view": "Crm:CampaignLogRecord.Fields.Data"
+            "view": "crm:views/campaign-log-record/fields/data"
         },
         "stringData": {
             "type": "varchar",
@@ -47,6 +47,10 @@
         },
         "queueItem": {
             "type": "link"
+        },
+        "isTest": {
+            "type": "bool",
+            "default": false
         }
     },
     "links": {

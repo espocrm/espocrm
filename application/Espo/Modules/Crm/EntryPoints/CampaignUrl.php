@@ -72,7 +72,7 @@ class CampaignUrl extends \Espo\Core\EntryPoints\Base
 
         if ($campaign && $target) {
             $campaignService = $this->getServiceFactory()->create('Campaign');
-            $campaignService->logClicked($campaignId, $queueItemId, $target, $trackingUrl);
+            $campaignService->logClicked($campaignId, $queueItemId, $target, $trackingUrl, null, $queueItem->get('isTest'));
         }
 
         ob_clean();

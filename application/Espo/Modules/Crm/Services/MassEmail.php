@@ -457,7 +457,7 @@ class MassEmail extends \Espo\Services\Record
             $this->getEntityManager()->saveEntity($queueItem);
 
             if ($campaign) {
-                $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'));
+                $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'), null, $queueItem->get('isTest'));
             }
 
         } catch (\Exception $e) {

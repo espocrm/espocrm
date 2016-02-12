@@ -80,7 +80,7 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
             return;
         }
         $campaignService = $this->getServiceFactory()->create('Campaign');
-        $campaignService->logOpened($campaignId, $queueItemId, $target);
+        $campaignService->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
     }
 }
 

@@ -660,7 +660,7 @@ class InboundEmail extends \Espo\Services\Record
             }
 
             if ($campaignId && $target && $target->id) {
-                $this->getCampaignService()->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard);
+                $this->getCampaignService()->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
             }
         }
     }

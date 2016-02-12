@@ -37,16 +37,17 @@ class Campaign extends \Espo\Services\Record
     {
         parent::loadAdditionalFields($entity);
 
-
         $sentCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Sent'
+            'action' => 'Sent',
+            'isTest' => false
         ))->count();
         $entity->set('sentCount', $sentCount);
 
         $openedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Opened'
+            'action' => 'Opened',
+            'isTest' => false
         ))->count();
         $entity->set('openedCount', $openedCount);
 
@@ -58,7 +59,8 @@ class Campaign extends \Espo\Services\Record
 
         $clickedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Clicked'
+            'action' => 'Clicked',
+            'isTest' => false
         ))->count();
         $entity->set('clickedCount', $clickedCount);
 
@@ -70,7 +72,8 @@ class Campaign extends \Espo\Services\Record
 
         $optedOutCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Opted Out'
+            'action' => 'Opted Out',
+            'isTest' => false
         ))->count();
         $entity->set('optedOutCount', $optedOutCount);
 
@@ -82,7 +85,8 @@ class Campaign extends \Espo\Services\Record
 
         $bouncedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
-            'action' => 'Bounced'
+            'action' => 'Bounced',
+            'isTest' => false
         ))->count();
         $entity->set('bouncedCount', $bouncedCount);
 
@@ -126,7 +130,7 @@ class Campaign extends \Espo\Services\Record
         }
     }
 
-    public function logSent($campaignId, $queueItemId = null, Entity $target, Entity $emailOrEmailTemplate = null, $emailAddress, $actionDate = null)
+    public function logSent($campaignId, $queueItemId = null, Entity $target, Entity $emailOrEmailTemplate = null, $emailAddress, $actionDate = null, $isTest = false)
     {
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
@@ -139,7 +143,8 @@ class Campaign extends \Espo\Services\Record
             'parentType' => $target->getEntityType(),
             'action' => 'Sent',
             'stringData' => $emailAddress,
-            'queueItemId' => $queueItemId
+            'queueItemId' => $queueItemId,
+            'isTest' => $isTest
         ));
 
         if ($emailOrEmailTemplate) {
@@ -151,11 +156,12 @@ class Campaign extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-    public function logBounced($campaignId, $queueItemId = null, Entity $target, $emailAddress, $isHard = false, $actionDate = null)
+    public function logBounced($campaignId, $queueItemId = null, Entity $target, $emailAddress, $isHard = false, $actionDate = null, $isTest = false)
     {
         if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
-            'action' => 'Bounced'
+            'action' => 'Bounced',
+            'isTest' => $isTest
         ))->findOne()) {
             return;
         }
@@ -170,7 +176,8 @@ class Campaign extends \Espo\Services\Record
             'parentType' => $target->getEntityType(),
             'action' => 'Bounced',
             'stringData' => $emailAddress,
-            'queueItemId' => $queueItemId
+            'queueItemId' => $queueItemId,
+            'isTest' => $isTest
         ));
         if ($isHard) {
             $logRecord->set('stringAdditionalData', 'Hard');
@@ -180,11 +187,12 @@ class Campaign extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-    public function logOptedOut($campaignId, $queueItemId = null, Entity $target, $emailAddress = null, $actionDate = null)
+    public function logOptedOut($campaignId, $queueItemId = null, Entity $target, $emailAddress = null, $actionDate = null, $isTest = false)
     {
         if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
-            'action' => 'Opted Out'
+            'action' => 'Opted Out',
+            'isTest' => $isTest
         ))->findOne()) {
             return;
         }
@@ -199,12 +207,13 @@ class Campaign extends \Espo\Services\Record
             'parentType' => $target->getEntityType(),
             'action' => 'Opted Out',
             'stringData' => $emailAddress,
-            'queueItemId' => $queueItemId
+            'queueItemId' => $queueItemId,
+            'isTest' => $isTest
         ));
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-    public function logOpened($campaignId, $queueItemId = null, Entity $target, $actionDate = null)
+    public function logOpened($campaignId, $queueItemId = null, Entity $target, $actionDate = null, $isTest = false)
     {
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
@@ -213,6 +222,7 @@ class Campaign extends \Espo\Services\Record
         if ($queueItemId && $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'queueItemId' => $queueItemId,
             'action' => 'Opened',
+            'isTest' => $isTest
         ))->findOne()) {
             return;
         }
@@ -229,14 +239,15 @@ class Campaign extends \Espo\Services\Record
                     'action' => 'Opened',
                     'objectId' => $massEmail->get('emailTemplateId'),
                     'objectType' => 'EmailTemplate',
-                    'queueItemId' => $queueItemId
+                    'queueItemId' => $queueItemId,
+                    'isTest' => $isTest
                 ));
                 $this->getEntityManager()->saveEntity($logRecord);
             }
         }
     }
 
-    public function logClicked($campaignId, $queueItemId = null, Entity $target, Entity $trackingUrl, $actionDate = null)
+    public function logClicked($campaignId, $queueItemId = null, Entity $target, Entity $trackingUrl, $actionDate = null, $isTest = false)
     {
         $this->logOpened($campaignId, $queueItemId, $target);
 
@@ -244,7 +255,8 @@ class Campaign extends \Espo\Services\Record
             'queueItemId' => $queueItemId,
             'action' => 'Clicked',
             'objectId' => $trackingUrl->id,
-            'objectType' => $trackingUrl->getEntityType()
+            'objectType' => $trackingUrl->getEntityType(),
+            'isTest' => $isTest
         ))->findOne()) {
             return;
         }
@@ -261,7 +273,8 @@ class Campaign extends \Espo\Services\Record
             'action' => 'Clicked',
             'objectId' => $trackingUrl->id,
             'objectType' => $trackingUrl->getEntityType(),
-            'queueItemId' => $queueItemId
+            'queueItemId' => $queueItemId,
+            'isTest' => $isTest
         ));
         $this->getEntityManager()->saveEntity($logRecord);
     }
