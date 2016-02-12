@@ -127,7 +127,7 @@ class User extends Record
         return true;
     }
 
-    public function passwordChangeRequest($userName, $emailAddress)
+    public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
         $user = $this->getEntityManager()->getRepository('User')->where(array(
             'userName' => $userName,
@@ -156,7 +156,8 @@ class User extends Record
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set(array(
             'userId' => $userId,
-            'requestId' => $requestId
+            'requestId' => $requestId,
+            'url' => $url
         ));
 
         $this->sendChangePasswordLink($requestId, $emailAddress);

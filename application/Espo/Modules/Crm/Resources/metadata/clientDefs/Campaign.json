@@ -17,6 +17,12 @@
                     "link": "#MassEmail",
                     "acl": "read",
                     "aclScope": "MassEmail"
+                },
+                {
+                    "label": "Email Templates",
+                    "link": "#EmailTemplate",
+                    "acl": "read",
+                    "aclScope": "EmailTemplate"
                 }
             ]
         }

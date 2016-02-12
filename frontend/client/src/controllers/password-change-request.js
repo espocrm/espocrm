@@ -35,7 +35,7 @@ Espo.define('controllers/password-change-request', 'controller', function (Dep) 
                 throw new Error();
             }
 
-            this.entire('User.PasswordChangeRequest', {
+            this.entire('views/user/password-change-request', {
                 requestId: id
             }, function (view) {
                 view.render();

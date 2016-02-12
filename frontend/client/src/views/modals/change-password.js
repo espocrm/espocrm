@@ -95,7 +95,7 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
         },
 
 
-        actionChangePassword: function () {
+        actionChange: function () {
             this.getView('currentPassword').fetchToModel();
             this.getView('password').fetchToModel();
             this.getView('passwordConfirm').fetchToModel();

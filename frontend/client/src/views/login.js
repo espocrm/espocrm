@@ -35,7 +35,7 @@ Espo.define('views/login', 'view', function (Dep) {
         views: {
             footer: {
                 el: 'body > footer',
-                view: 'Site.Footer'
+                view: 'views/site/footer'
             },
         },
 
@@ -131,7 +131,8 @@ Espo.define('views/login', 'view', function (Dep) {
 
         showPasswordChangeRequest: function () {
             this.notify('Please wait...');
-            this.createView('passwordChangeRequest', 'Modals.PasswordChangeRequest', {
+            this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
+                url: window.location.href
             }, function (view) {
                 view.render();
                 view.notify(false);

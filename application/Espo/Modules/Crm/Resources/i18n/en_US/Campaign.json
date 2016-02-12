@@ -55,7 +55,8 @@
         "hard": "hard",
         "soft": "soft",
         "Unsubscribe": "Unsubscribe",
-        "Mass Emails": "Mass Emails"
+        "Mass Emails": "Mass Emails",
+        "Email Templates": "Email Templates"
     },
     "presetFilters": {
         "active": "Active"

@@ -40,10 +40,7 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
                 {
                     name: 'submit',
                     label: 'Submit',
-                    style: 'danger',
-                    onClick: function (dialog) {
-                        this.submit();
-                    }.bind(this)
+                    style: 'danger'
                 },
                 {
                     name: 'cancel',
@@ -117,7 +114,8 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
                 type: 'POST',
                 data: JSON.stringify({
                     userName: userName,
-                    emailAddress: emailAddress
+                    emailAddress: emailAddress,
+                    url: this.options.url
                 }),
                 error: function (xhr) {
                     if (xhr.status == 404) {

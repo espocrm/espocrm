@@ -71,7 +71,7 @@
         "emailAddressCantBeEmpty": "Email Address can not be empty",
         "userNameEmailAddressNotFound": "Username/Email Address not found",
         "forbidden": "Forbidden, please try later",
-        "uniqueLinkHasBeenSent": "The unique link has been sent to the specified email address.",
+        "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed."
     },
     "boolFilters": {

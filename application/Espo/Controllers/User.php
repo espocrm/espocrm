@@ -55,22 +55,16 @@ class User extends \Espo\Core\Controllers\Record
         return $this->getAclManager()->getMap($user);
     }
 
-    public function actionChangeOwnPassword($params, $data, $request)
+    public function postActionChangeOwnPassword($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
         if (!array_key_exists('password', $data) || !array_key_exists('currentPassword', $data)) {
             throw new BadRequest();
         }
         return $this->getService('User')->changePassword($this->getUser()->id, $data['password'], true, $data['currentPassword']);
     }
 
-    public function actionChangePasswordByRequest($params, $data, $request)
+    public function postActionChangePasswordByRequest($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
         if (empty($data['requestId']) || empty($data['password'])) {
             throw new BadRequest();
         }
@@ -89,23 +83,27 @@ class User extends \Espo\Core\Controllers\Record
 
         $this->getEntityManager()->removeEntity($p);
 
-        return $this->getService('User')->changePassword($userId, $data['password']);
+        if ($this->getService('User')->changePassword($userId, $data['password'])) {
+            return array(
+                'url' => $p->get('url')
+            );
+        }
     }
 
-    public function actionPasswordChangeRequest($params, $data, $request)
+    public function postActionPasswordChangeRequest($params, $data, $request)
     {
-        if (!$request->isPost()) {
-            throw new Forbidden();
-        }
-
         if (empty($data['userName']) || empty($data['emailAddress'])) {
             throw new BadRequest();
         }
 
         $userName = $data['userName'];
         $emailAddress = $data['emailAddress'];
+        $url = null;
+        if (!empty($data['url'])) {
+            $url = $data['url'];
+        }
 
-        return $this->getService('User')->passwordChangeRequest($userName, $emailAddress);
+        return $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);
     }
 }
 
