@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Controllers;
+
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;

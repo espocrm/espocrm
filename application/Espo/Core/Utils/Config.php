@@ -53,6 +53,13 @@ class Config
      */
     protected $adminItems = array();
 
+    protected $associativeArrayAttributeList = [
+        'currencyRates',
+        'database',
+        'logger',
+        'defaultPermissions',
+    ];
+
 
     /**
      * Contains content of config
@@ -124,6 +131,9 @@ class Config
         }
 
         foreach ($name as $key => $value) {
+            if (in_array($key, $this->associativeArrayAttributeList) && is_object($value)) {
+                $value = (array) $value;
+            }
             $this->data[$key] = $value;
             if (!$dontMarkDirty) {
                 $this->changedData[$key] = $value;
@@ -244,7 +254,7 @@ class Config
         $values = array();
         foreach ($data as $key => $item) {
             if (!in_array($key, $restrictItems)) {
-                $values[$key]= $item;
+                $values[$key] = $item;
             }
         }
 
