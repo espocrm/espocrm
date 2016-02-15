@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.Float', 'Views.Fields.Int', function (Dep) {
+Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
     return Dep.extend({
 
         type: 'float',
 
-        editTemplate: 'fields.float.edit',
+        editTemplate: 'fields/float/edit',
 
         decimalMark: '.',
 
