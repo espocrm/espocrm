@@ -82,7 +82,7 @@ class Activities extends \Espo\Core\Services\Base
         return in_array($scope, ['Contact', 'Lead', 'User']);
     }
 
-    protected function getUserMeetingQuery($id, $op = 'IN', $statusList = null)
+    protected function getUserMeetingQuery($entity, $op = 'IN', $statusList = null)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
@@ -102,7 +102,7 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersLeftMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $entity->id
             )
         );
 
@@ -121,7 +121,7 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getUserCallQuery($id, $op = 'IN', $statusList = null)
+    protected function getUserCallQuery($entity, $op = 'IN', $statusList = null)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
@@ -141,7 +141,7 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersLeftMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $entity->id
             )
         );
 
@@ -160,7 +160,7 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getUserEmailQuery($id, $op = 'IN', $statusList = null)
+    protected function getUserEmailQuery($entity, $op = 'IN', $statusList = null)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Email');
 
@@ -180,7 +180,7 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersLeftMiddle.userId' => $id
+                'usersLeftMiddle.userId' => $entity->id
             )
         );
 
@@ -199,11 +199,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getMeetingQuery($scope, $id, $op = 'IN', $statusList = null)
+    protected function getMeetingQuery($entity, $op = 'IN', $statusList = null)
     {
+        $scope = $entity->getEntityType();
+        $id = $entity->id;
+
         $methodName = 'get' .$scope . 'MeetingQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $statusList);
+            return $this->$methodName($entity, $op, $statusList);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
@@ -244,6 +247,18 @@ class Activities extends \Espo\Core\Services\Base
                     ),
                     array(
                         'accountId' => $id
+                    )
+                )
+            );
+        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Lead'
+                    ),
+                    array(
+                        'accountId' => $entity->get('createdAccountId')
                     )
                 )
             );
@@ -291,11 +306,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getCallQuery($scope, $id, $op = 'IN', $statusList = null)
+    protected function getCallQuery($entity, $op = 'IN', $statusList = null)
     {
+        $scope = $entity->getEntityType();
+        $id = $entity->id;
+
         $methodName = 'get' .$scope . 'CallQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $statusList);
+            return $this->$methodName($entity, $op, $statusList);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
@@ -336,6 +354,18 @@ class Activities extends \Espo\Core\Services\Base
                     ),
                     array(
                         'accountId' => $id
+                    )
+                )
+            );
+        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Lead'
+                    ),
+                    array(
+                        'accountId' => $entity->get('createdAccountId')
                     )
                 )
             );
@@ -383,11 +413,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getEmailQuery($scope, $id, $op = 'IN', $statusList = null)
+    protected function getEmailQuery($entity, $op = 'IN', $statusList = null)
     {
+        $scope = $entity->getEntityType();
+        $id = $entity->id;
+
         $methodName = 'get' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $op, $statusList);
+            return $this->$methodName($entity, $op, $statusList);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
@@ -428,6 +461,18 @@ class Activities extends \Espo\Core\Services\Base
                     ),
                     array(
                         'accountId' => $id
+                    )
+                )
+            );
+        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'parentId' => $id,
+                        'parentType' => 'Lead'
+                    ),
+                    array(
+                        'accountId' => $entity->get('createdAccountId')
                     )
                 )
             );
@@ -580,10 +625,10 @@ class Activities extends \Espo\Core\Services\Base
 
         $parts = array();
         if ($this->getAcl()->checkScope('Meeting')) {
-            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [];
+            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
         }
         if ($this->getAcl()->checkScope('Call')) {
-            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'NOT IN', ['Held', 'Not Held']) : [];
+            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
         }
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
     }
@@ -598,13 +643,13 @@ class Activities extends \Espo\Core\Services\Base
 
         $parts = array();
         if ($this->getAcl()->checkScope('Meeting')) {
-            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [];
+            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($entity, 'IN', ['Held', 'Not Held']) : [];
         }
         if ($this->getAcl()->checkScope('Call')) {
-            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($scope, $id, 'IN', ['Held', 'Not Held']) : [];
+            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($entity, 'IN', ['Held', 'Not Held']) : [];
         }
         if ($this->getAcl()->checkScope('Email')) {
-            $parts['Email'] = ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($scope, $id, 'IN', ['Archived', 'Sent']) : [];
+            $parts['Email'] = ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($entity, 'IN', ['Archived', 'Sent']) : [];
         }
         $result = $this->getResultFromQueryParts($parts, $scope, $id, $params);
 
