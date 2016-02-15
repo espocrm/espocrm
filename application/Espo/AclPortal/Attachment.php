@@ -40,6 +40,10 @@ class Attachment extends \Espo\Core\AclPortal\Base
             return true;
         }
 
+        if ($entity->get('parentType') === 'Settings') {
+            return true;
+        }
+
         $parent = null;
         $hasParent = false;
         if ($entity->get('parentId') && $entity->get('parentType')) {
