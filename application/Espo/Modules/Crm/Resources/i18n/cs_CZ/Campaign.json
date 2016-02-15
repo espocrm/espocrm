@@ -1,0 +1,55 @@
+{
+    "fields": {
+        "name": "Název",
+        "description": "Popis",
+        "status": "Status",
+        "type": "Typ",
+        "startDate": "Datum zahájení",
+        "endDate": "Datum ukončení",
+        "targetLists": "Cílové seznamy",
+        "sentCount": "Poslané",
+        "openedCount": "Otevřené",
+        "clickedCount": "Kliknuté",
+        "optedOutCount": "Odhlášené",
+        "bouncedCount": "Odmítnuté",
+        "hardBouncedCount": "Tvrdě odmítnuté",
+        "softBouncedCount": "Měkce odmítnuté",
+        "leadCreatedCount": "Vytvořených stop",
+        "revenue": "Příjem",
+        "revenueConverted": "příjem (konvertováno)"
+    },
+    "links": {
+        "targetLists": "Cílové seznamy",
+        "accounts": "Organizace",
+        "contacts": "Kontakty",
+        "leads": "Stopy",
+        "opportunities": "Případy",
+        "campaignLogRecords": "Log"
+    },
+    "options": {
+        "type": {
+            "Email": "Email",
+            "Web": "Web",
+            "Television": "TV",
+            "Radio": "Rádio",
+            "Newsletter": "Newsletter",
+            "Mail": "Email"
+        },
+        "status": {
+            "Planning": "Plánované",
+            "Active": "Aktivní",
+            "Inactive": "Neaktivní",
+            "Complete": "Kompletní"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Vytvořit kampaň",
+        "Target Lists": "Cílové seznamy",
+        "Statistics": "Statistiky",
+        "hard": "těžký",
+        "soft": "měkký"
+    },
+    "presetFilters": {
+        "active": "Aktivní"
+    }
+}

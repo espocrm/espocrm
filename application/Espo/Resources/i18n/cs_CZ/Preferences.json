@@ -1,0 +1,41 @@
+{
+    "fields": {
+        "dateFormat": "Formát data",
+        "timeFormat": "Formát času",
+        "timeZone": "Časové pásmo",
+        "weekStart": "Začátek týdne",
+        "thousandSeparator": "Oddělovač tisíců",
+        "decimalMark": "Desetinný oddělovač",
+        "defaultCurrency": "Výchozí měna",
+        "currencyList": "Seznam měn",
+        "language": "Jazyk",
+        "smtpServer": "Server",
+        "smtpPort": "Port",
+        "smtpAuth": "Auth",
+        "smtpSecurity": "Zabezpečení",
+        "smtpUsername": "Username",
+        "emailAddress": "Email",
+        "smtpPassword": "Heslo",
+        "smtpEmailAddress": "Emailová adresa",
+        "exportDelimiter": "Export Delimiter",
+        "receiveAssignmentEmailNotifications": "Dostávat emailová upozornění dle přiřazení",
+        "autoFollowEntityTypeList": "Auto-Follow",
+        "signature": "Emailový podpis",
+        "dashboardTabList": "Seznam záložek",
+        "defaultReminders": "Výchozí upozornění"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Neděle",
+            "1": "Pondělí"
+        }
+    },
+    "labels": {
+        "Notifications": "Upozornění"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "Uživatel bude automaticky sledovat všechny nové záznamy vybraných entit, uvidí informace ve streamu a bude dostávat upozornění."
+    }
+}

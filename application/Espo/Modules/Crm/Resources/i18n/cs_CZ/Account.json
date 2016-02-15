@@ -1,0 +1,73 @@
+{
+    "fields": {
+        "name": "Název",
+        "emailAddress": "Email",
+        "website": "Web",
+        "phoneNumber": "Telefon",
+        "billingAddress": "Fakturační adresa",
+        "shippingAddress": "Doručovací adresa",
+        "description": "Popis",
+        "sicCode": "IČ",
+        "industry": "Průmysl",
+        "type": "Typ",
+        "contactRole": "Pozice",
+        "campaign": "Kampaň"
+    },
+    "links": {
+        "contacts": "Kontakty",
+        "opportunities": "Případy",
+        "cases": "Události",
+        "documents": "Dokumenty",
+        "meetingsPrimary": "Schůzky (rozšířené)",
+        "callsPrimary": "Volání (rozšířené)",
+        "tasksPrimary": "Úkoly (rozšířené)",
+        "emailsPrimary": "Emaily (rozšířené)",
+        "targetLists": "Cílové seznamy",
+        "campaignLogRecords": "Log kampaně",
+        "campaign": "Kampaň"
+    },
+    "options": {
+        "type": {
+            "Customer": "Zákazník",
+            "Investor": "Investor",
+            "Partner": "Partner",
+            "Reseller": "Prodejce"
+        },
+        "industry": {
+            "Agriculture": "Zeměděltví",
+            "Advertising": "Reklama",
+            "Apparel & Accessories": "Oblečení a doplňky",
+            "Automotive": "Automotive",
+            "Banking": "Bankovnictví",
+            "Biotechnology": "Biotechnologie",
+            "Chemical": "Chemie",
+            "Computer": "Počítače",
+            "Education": "Vzdělání",
+            "Electronics": "Elektronika",
+            "Entertainment & Leisure": "Zábava a volný čas",
+            "Finance": "Finance",
+            "Food & Beverage": "Stravování a nápoje",
+            "Grocery": "Potraviny",
+            "Insurance": "Pojištění",
+            "Legal": "Právo",
+            "Publishing": "Vydavatelství",
+            "Real Estate": "Nemovitosti",
+            "Service": "Služby",
+            "Sports": "Sport",
+            "Software": "Software",
+            "Technology": "Technologie",
+            "Telecommunications": "Telekomunikace",
+            "Television": "TV",
+            "Transportation": "Doprava",
+            "Venture Capital": "Rizikový kapitál"
+        }
+    },
+    "labels": {
+        "Create Account": "Vytvořit organizaci",
+        "Copy Billing": "Zkopírovat fakturační údaje"
+    },
+    "presetFilters": {
+        "customers": "Zákazníci",
+        "partners": "Partneři"
+    }
+}

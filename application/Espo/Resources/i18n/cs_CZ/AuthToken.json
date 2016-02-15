@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "user": "Uživatel",
+        "ipAddress": "IP adresa",
+        "lastAccess": "Datum posledního přístupu",
+        "createdAt": "Datum přihlášení"
+
+    }
+}

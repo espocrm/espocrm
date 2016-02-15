@@ -1,0 +1,66 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "parent": "Rodič",
+        "status": "Status",
+        "dateSent": "Datum odeslání",
+        "from": "Od",
+        "to": "Komu",
+        "cc": "Kopie",
+        "bcc": "Skrytá kopie",
+        "isHtml": "Je HTML",
+        "body": "Tělo",
+        "subject": "Předmět",
+        "attachments": "Přílohy",
+        "selectTemplate": "Vybrat šablonu",
+        "fromEmailAddress": "Adresa od",
+        "toEmailAddresses": "Adresa komu",
+        "emailAddress": "Emailová adresa",
+        "deliveryDate": "Datum doručení",
+        "account": "Účet",
+        "users": "Uživatelé"
+    },
+    "links": {
+    },
+    "options": {
+        "Draft": "Draft",
+        "Sending": "Posílání",
+        "Sent": "Posláno",
+        "Archived": "Archivováno",
+        "Received": "Obdrženo"
+    },
+    "labels": {
+        "Create Email": "Vytvořit email",
+        "Archive Email": "Archivovat email",
+        "Compose": "Složit",
+        "Reply": "Odpovědět",
+        "Reply to All": "Odpovědět všem",
+        "Forward": "Přeposlat",
+        "Original message": "Původní zpráva",
+        "Forwarded message": "Přeposlaná zpráva",
+        "Email Accounts": "Emailové účty",
+        "Send Test Email": "Poslat testovací email",
+        "Send": "Poslat",
+        "Email Address": "Emailová adresa",
+        "Mark Read": "Označit jako přečtěné",
+        "Sending...": "Posílání...",
+        "Save Draft": "Uložit draft",
+        "Mark all as read": "Označit vše jako přečtené",
+        "Show Plain Text": "Zobrazit Plain Text"
+    },
+    "messages": {
+        "noSmtpSetup": "Chybí SMTP nastavení. {link}.",
+        "testEmailSent": "Testovací email byl poslán",
+        "emailSent": "Email byl odeslán",
+        "savedAsDraft": "Uloženo jako draft"
+    },
+    "presetFilters": {
+        "sent": "Odesláné",
+        "archived": "Archivované",
+        "inbox": "Doručené",
+        "drafts": "Drafty"
+    },
+    "massActions": {
+        "markAsRead": "Označit jako přečtené"
+    }
+}

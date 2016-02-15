@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "team": "Tým",
+        "status": "Status",
+        "assignToUser": "Přiřadit k uživateli",
+        "host": "Server",
+        "username": "Uživatelské jméno",
+        "password": "Heslo",
+        "port": "Port",
+        "monitoredFolders": "Synchronizované složky",
+        "trashFolder": "Koš",
+        "ssl": "SSL",
+        "createCase": "Vytvořit událost",
+        "reply": "Auto-odpověď",
+        "caseDistribution": "Distribuce událostí",
+        "replyEmailTemplate": "Odpověď: Šablona",
+        "replyFromAddress": "Odpověď: Od",
+        "replyToAddress": "Odpověď: Komu",
+        "replyFromName": "Odpověď: Jméno",
+        "targetUserPosition": "Pozice cílového uživatele"
+    },
+    "tooltips": {
+        "reply": "Upozornit odesílatele emailů, že jejich emaily byly přijaty.\n\n Pro potlačení zacyklení, pouze jeden email za časové období bude poslán každému příjemci.",
+        "createCase": "Automaticky vytvořit událost z příchozích emailů.",
+        "replyToAddress": "Specifikovat emailovou adresu této schánky, aby sem chodily odpovědi.",
+        "caseDistribution": "Nastavení, jak budou události přiřazovány - přímo uživateli nebo dle týmů.",
+        "assignToUser": "Emaily/události přiřadit uživateli.",
+        "team": "Emaily/události přiřadit týmu.",
+        "targetUserPosition": "Definice pozice uživatelů, kterým budou redistribuovány události."
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Aktivní",
+            "Inactive": "Neaktivní"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Přímé přiřazení",
+            "Round-Robin": "Round-Robin",
+            "Least-Busy": "Poslední zaneprázdněný"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Vytvořit emailový účet",
+        "IMAP": "IMAP",
+        "Actions": "Akce",
+        "Main": "Hlavní"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Nelze se připojit k IMAP serveru"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Název",
+        "description": "Popis",
+        "entryCount": "Počet vstupů",
+        "campaigns": "Kampaně",
+        "endDate": "Datum ukončení",
+        "targetLists": "Cílové seznamy"
+    },
+    "links": {
+        "accounts": "Organizace",
+        "contacts": "Kontakty",
+        "leads": "Stopy",
+        "campaigns": "Kampaně"
+    },
+    "options": {
+        "type": {
+            "Email": "Email",
+            "Web": "Web",
+            "Television": "TV",
+            "Radio": "Radio",
+            "Newsletter": "Newsletter"
+        }
+    },
+    "labels": {
+        "Create TargetList": "Vytvořit cílový seznam",
+        "Opted Out": "Odhlášené"
+    }
+}

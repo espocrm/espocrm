@@ -1,0 +1,35 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "status": "Status",
+        "host": "Server",
+        "username": "Uživatelské jméno",
+        "password": "Heslo",
+        "port": "Port",
+        "monitoredFolders": "Synchronizované složky",
+        "ssl": "SSL",
+        "fetchSince": "Nastaveno od",
+        "emailAddress": "Emailová adresa"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Aktivní",
+            "Inactive": "Neaktivní"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Vytvořit emailový účet",
+        "IMAP": "IMAP",
+        "Main": "Hlavní",
+        "Test Connection": "Test spojení"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Nemohu se připojit k IMAP serveru",
+        "connectionIsOk": "Spojení je OK"
+    },
+    "tooltips": {
+        "monitoredFolders": "Můžete přidat složku 'Odeslané' k synchronizaci externím emailovým klientem."
+    }
+}

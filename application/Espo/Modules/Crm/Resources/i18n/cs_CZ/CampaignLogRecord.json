@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "action": "Akce",
+        "actionDate": "Datum",
+        "data": "Data",
+        "campaign": "Kampaň",
+        "parent": "Cíl",
+        "object": "Objekt",
+        "application": "Aplikace"
+    },
+    "options": {
+    	"action": {
+            "Sent": "Poslané",
+            "Opened": "Otevřené",
+            "Opted Out": "Odhlášené",
+            "Bounced": "Odmítnuté",
+            "Clicked": "Kliknuté",
+            "Lead Created": "Vytvořeno stop"
+    	}
+    },
+    "labels": {
+        "All": "Vše"
+    }
+}

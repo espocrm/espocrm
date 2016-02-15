@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "status": "Status",
+        "job": "Činnost",
+        "scheduling": "Plánování (crontab notace)"
+    },
+    "links": {
+        "log": "Log"
+    },
+    "labels": {
+        "Create ScheduledJob": "Vytvořit naplánovanou činnost"
+    },
+    "options": {
+        "job": {
+            "Cleanup": "Vyčistit"
+        },
+        "cronSetup": {
+            "linux": "Poznámka: přidejte tento řádek do crontab souboru pro spuštění ESPO naplánovaných činností:",
+            "mac": "Poznámka: přidejte tento řádek do crontab souboru pro spuštění ESPO naplánovaných činností:",
+            "windows": "Poznánmka: Vytvořte batch soubor s následujícími příkazy pro spuštění ESPO naplánovaných činností pomocí Windows Scheduled Tasks:",
+            "default": "Poznámka: přidejte tento příkaz do Cron Job (Scheduled Task):"
+        },
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}

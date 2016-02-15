@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "version": "Verze",
+        "description": "Popis",
+        "isInstalled": "Instalováno"
+    },
+    "labels": {
+        "Uninstall": "Odebrat",
+        "Install": "Nainstalovat"
+    },
+    "messages": {
+        "uninstalled": "Rozšíření {name} bylo odebráno"
+    }
+}

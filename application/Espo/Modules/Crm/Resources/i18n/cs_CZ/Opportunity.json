@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Název",
+        "account": "Organizace",
+        "stage": "Stav",
+        "amount": "Částka",
+        "probability": "Pravděpodobnost, %",
+        "leadSource": "Zdrojová stopa",
+        "doNotCall": "Nevolat",
+        "closeDate": "Deadline",
+        "contacts": "Kontakty",
+        "description": "Popis",
+        "amountConverted": "Částka (konvertováno)",
+        "amountWeightedConverted": "Vážená částka",
+        "campaign": "Kampaň"
+    },
+    "links": {
+        "contacts": "Kontakty",
+        "documents": "Dokumenty",
+        "campaign": "Kampaň"
+    },
+    "options": {
+        "stage": {
+            "Request": "Poptávka",
+            "Quote": "Nabídka",
+            "Order": "Objednávka",
+            "ToProduction": "Čeká na výrobu",
+            "InProduction": "Vyrábí se...",
+            "Dispatch": "Expedice",
+			"Delivered": "Dodáno",
+            "Closed Won": "VYFAKTUROVÁNO",
+            "Closed Lost": "ODMÍTNUTO"
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Vytvořit případ"
+    },
+    "presetFilters": {
+        "open": "Otevřený",
+        "won": "Vyhraný"
+    }
+}

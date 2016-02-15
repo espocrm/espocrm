@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Revert Import": "Reverzní import",
+        "Return to Import": "Návrat do importu",
+        "Run Import": "Spustit import",
+        "Back": "Zpět",
+        "Field Mapping": "Mapování polí",
+        "Default Values": "Výchozí hodnoty",
+        "Add Field": "Přidat pole",
+        "Created": "Vytvořeno",
+        "Updated": "Aktualizováno",
+        "Result": "Výsledek",
+        "Show records": "Zobrazit záznamy",
+        "Remove Duplicates": "Odebrat duplicity",
+        "importedCount": "Naimportováno (počet)",
+        "duplicateCount": "Duplicity (počet)",
+        "updatedCount": "Aktualizováno (počet)"
+    },
+    "messages": {
+        "utf8": "Mělo by být v UTF-8 kódování",
+        "duplicatesRemoved": "Duplicity odstraněny"
+    },
+    "fields": {
+        "file": "Soubor",
+        "entityType": "Typ entity",
+        "imported": "Naimportované záznamy",
+        "duplicates": "Duplicitní záznamy",
+        "updated": "Aktualizované záznamy"
+    }
+}

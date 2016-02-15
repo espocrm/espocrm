@@ -1,0 +1,19 @@
+{
+    "fields": {
+        "name": "Název",
+        "emailAddress": "Email",
+        "title": "Pozice",
+        "website": "Web",
+        "accountName": "Jméno organizace",
+        "phoneNumber": "Telefon",
+        "doNotCall": "Nevolat",
+        "address": "Adresa",
+        "description": "Popis"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Target": "Vytvořit cíl",
+        "Convert to Lead": "Konvertovat na stopu"
+    }
+}

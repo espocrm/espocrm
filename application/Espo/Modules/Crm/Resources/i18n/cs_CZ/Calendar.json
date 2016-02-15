@@ -1,0 +1,13 @@
+{
+    "modes": {
+        "month": "Měsíc",
+        "week": "Týden",
+        "day": "Den",
+        "agendaWeek": "Týden",
+        "agendaDay": "Den"
+    },
+    "labels": {
+        "Today": "Dnes",
+        "Create": "Vytvořit"
+    }
+}

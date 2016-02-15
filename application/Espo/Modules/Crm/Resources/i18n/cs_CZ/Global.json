@@ -1,0 +1,100 @@
+{
+    "scopeNames": {
+        "Account": "Organizace",
+        "Contact": "Kontakt",
+        "Lead": "Stopa",
+        "Target": "Cíl",
+        "Opportunity": "Případ",
+        "Meeting": "Schůzka",
+        "Calendar": "Kalendář",
+        "Call": "Volání",
+        "Task": "Úkol",
+        "Case": "Událost",
+        "Document": "Dokument",
+        "DocumentFolder": "Složka dokumentů",
+        "Campaign": "Kampaň",
+        "TargetList": "Cílový seznam"
+    },
+    "scopeNamesPlural": {
+        "Account": "Organizace",
+        "Contact": "Kontakty",
+        "Lead": "Stopy",
+        "Target": "Cíle",
+        "Opportunity": "Případy",
+        "Meeting": "Schůzky",
+        "Calendar": "Kalendáře",
+        "Call": "Volání",
+        "Task": "Úkoly",
+        "Case": "Události",
+        "Document": "Dokumenty",
+        "DocumentFolder": "Složky dokumentů",
+        "Campaign": "Kampaně",
+        "TargetList": "Cílové seznamy"
+    },
+    "dashlets": {
+        "Leads": "Moje stopy",
+        "Opportunities": "Moje případy",
+        "Tasks": "Moje úkoly",
+        "Cases": "Moje události",
+        "Calendar": "Kalendář",
+        "Calls": "Moje volání",
+        "Meetings": "Moje schůzky",
+        "OpportunitiesByStage": "Případy podle stavu",
+        "OpportunitiesByLeadSource": "Případy podle zdroje",
+        "SalesByMonth": "Prodeje za měsíc",
+        "SalesPipeline": "Prodejní pipeline"
+    },
+    "labels": {
+        "Create InboundEmail": "Vytvořit příchodí email",
+        "Activities": "Aktivity",
+        "History": "Historie",
+        "Attendees": "Účastníci",
+        "Schedule Meeting": "Plánovaná schůzka",
+        "Schedule Call": "Plánované volání",
+        "Compose Email": "Sestavit email",
+        "Log Meeting": "Zapsat schůzku",
+        "Log Call": "Zapsat volání",
+        "Archive Email": "Archivovat email",
+        "Create Task": "Vytvořit úkol",
+        "Tasks": "Úkoly"        
+    },
+    "fields": {
+        "billingAddressCity": "Město",
+        "billingAddressCountry": "Země",
+        "billingAddressPostalCode": "PSČ",
+        "billingAddressState": "Kraj",
+        "billingAddressStreet": "Ulice",
+        "addressCity": "Město",
+        "addressStreet": "Ulice",
+        "addressCountry": "Země",
+        "addressState": "Kraj",
+        "addressPostalCode": "PSČ",        
+        "shippingAddressCity": "Město (doručovací)",
+        "shippingAddressStreet": "Ulice (doručovací)",
+        "shippingAddressCountry": "Země (doručovací)",
+        "shippingAddressState": "Kraj (doručovací)",
+        "shippingAddressPostalCode": "PSČ (doručovací)"
+    },
+    "links": {
+        "contacts": "Kontakty",
+        "opportunities": "Případy",
+        "leads": "Stopy",        
+        "meetings": "Schůzky",
+        "calls": "Volání",
+        "tasks": "Úkoly",
+        "emails": "Emaily",
+        "accounts": "Organizace",
+        "cases": "Události",
+        "documents": "Dokumenty",
+        "account": "Organizace",
+        "opportunity": "Případ",        
+        "contact": "Kontakt",
+        "parent": "Rodič"
+    },
+    "options": {
+        "reminderTypes": {
+            "Popup": "Vyskakovací",
+            "Email": "Email"
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "labels": {
+        "Converted To": "Konvertováno do",
+        "Create Lead": "Vytvořit stopu",
+        "Convert": "Konvertovat"
+    },
+    "fields": {
+        "name": "Název",
+        "emailAddress": "Email",
+        "title": "Pozice",
+        "website": "Web",
+        "phoneNumber": "Telefon",
+        "accountName": "Název organizace",
+        "doNotCall": "Nevolat",
+        "address": "Adresa",
+        "status": "Status",
+        "source": "Zdroj",
+        "opportunityAmount": "Částka případu",
+        "opportunityAmountConverted": "Částka případu (konvertováno)",
+        "description": "Popis",
+        "createdAccount": "Organizace",
+        "createdContact": "Kontakt",
+        "createdOpportunity": "Případ",
+        "campaign": "Kampaň",
+        "targetLists": "Cílové seznamy",
+        "targetList": "Cílový seznam"
+    },
+    "links": {
+        "targetLists": "Cílové seznamy",
+        "campaignLogRecords": "Log kampaně",
+        "campaign": "Kampaň"
+    },
+    "options": {
+        "status": {
+            "New": "Nový",
+            "Assigned": "Přiřazený",
+            "In Process": "V procesu",
+            "Converted": "Konvertovaný",
+            "Recycled": "Recyklovaný",
+            "Dead": "Mrtvý"
+        },
+        "source": {
+            "": "-",
+            "Call": "Volání",
+            "Email": "Email",
+            "Existing Customer": "Existující zákazník",
+            "Partner": "Partner",
+            "Public Relations": "Veřejné vztahy",
+            "Web Site": "Web",
+            "Campaign": "Kampaň",
+            "Other": "Ostatní"
+        }
+    },
+    "presetFilters": {
+        "active": "Aktivní",
+        "converted": "Konvertovaný"
+    }
+}

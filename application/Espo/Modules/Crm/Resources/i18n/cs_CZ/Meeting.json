@@ -1,0 +1,48 @@
+{
+    "fields": {
+        "name": "Název",
+        "parent": "Rodič",
+        "status": "Status",
+        "dateStart": "Datum zahájení",
+        "dateEnd": "Datum ukončení",
+        "duration": "Trvání",
+        "description": "Popis",
+        "users": "Uživatelé",
+        "contacts": "Kontakty",
+        "leads": "Stopy",
+        "reminders": "Připomenutí",
+        "account": "Organizace"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Planovaný",
+            "Held": "Uskutečněný",
+            "Not Held": "Neuskutečněný"
+        },
+        "acceptanceStatus": {
+            "None": "-",
+            "Accepted": "Přijatý",
+            "Declined": "Odmítnutý",
+            "Tentative": "Předběžný"
+        }
+    },
+    "massActions": {
+        "setHeld": "Nastavit jako uskutečněný",
+        "setNotHeld": "Nastavit jako neuskutečněný"
+    },
+    "labels": {
+        "Create Meeting": "Vytvořit schůzku",
+        "Set Held": "Nastavit jako uskutečněný",
+        "Set Not Held": "Nastavit jako neuskutečněný",
+        "Send Invitations": "Odeslat pozvánky",
+        "on time": "na čas",
+        "before": "před"
+    },
+    "presetFilters": {
+        "planned": "Plánovaný",
+        "held": "Uskutečněný",
+        "todays": "Dnešní"
+    }
+}

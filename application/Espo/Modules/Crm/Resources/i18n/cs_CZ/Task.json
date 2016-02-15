@@ -1,0 +1,45 @@
+{
+    "fields": {
+        "name": "Název",
+        "parent": "Rodič",
+        "status": "Status",
+        "dateStart": "Datum zahájení",
+        "dateEnd": "Datum dokončení",
+        "dateStartDate": "Datum zahájení (celý den)",
+        "dateEndDate": "Datum ukončení (celý den)",
+        "priority": "Priorita",
+        "description": "Popis",
+        "isOverdue": "Je zpozděné",
+        "account": "Organizace",
+        "dateCompleted": "Datum dokončení",
+        "attachments": "Přílohy"
+    },
+    "links": {
+        "attachments": "Přílohy"
+    },
+    "options": {
+        "status": {
+            "Not Started": "Nezahájeno",
+            "Started": "Zahájeno",
+            "Completed": "Dokončeno",
+            "Canceled": "Zrušeno",
+            "Deferred": "Odloženo"
+        },
+        "priority" : {
+            "Low": "Malá",
+            "Normal": "Normální",
+            "High": "Vysoká",
+            "Urgent": "Urgentní"
+        }
+    },
+    "labels": {
+        "Create Task": "Vytvořit úkol",
+        "Complete": "Dokončit"
+    },
+    "presetFilters": {
+        "actual": "Aktuální",
+        "completed": "Dokončené",
+        "todays": "Dnešní",
+        "overdue": "Zpožděné"
+    }
+}

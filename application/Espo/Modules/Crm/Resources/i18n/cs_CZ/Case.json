@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Název",
+        "number": "Číslo",
+        "status": "Status",
+        "account": "Organizace",
+        "contact": "Kontakt",
+        "priority": "Priorita",
+        "type": "Typ",
+        "description": "Popis"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "New": "Nový",
+            "Assigned": "Přiřazený",
+            "Pending": "Čekající",
+            "Closed": "Uzavřený",
+            "Rejected": "Odmítnutý",
+            "Duplicate": "Duplikovaný"
+        },
+        "priority" : {
+            "Low": "Malá",
+            "Normal": "Normální",
+            "High": "Vysoká",
+            "Urgent": "Urgentní"
+        },
+        "type": {
+            "Question": "Otázka",
+            "Incident": "Incident",
+            "Problem": "Problém"
+        }
+    },
+    "labels": {
+        "Create Case": "Vytvořit událost"
+    },
+    "presetFilters": {
+        "open": "Otevřený",
+        "closed": "Zavřený"
+    }
+}

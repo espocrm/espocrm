@@ -1,0 +1,44 @@
+{
+    "labels": {
+        "Fields": "Pole",
+        "Relationships": "Vztahy"
+    },
+    "fields": {
+        "name": "Jméno",
+        "type": "Typ",
+        "labelSingular": "Popisek jednotného čísla",
+        "labelPlural": "Popisek množného čísla",
+        "stream": "Stream",
+        "label": "Popisek",
+        "linkType": "Typ linku",
+        "entityForeign": "Cizí entita",
+        "linkForeign": "Cizí link",
+        "link": "Link",
+        "labelForeign": "Cizí popisek",
+        "sortBy": "Výchozí řazení (pole)",
+        "sortDirection": "Výchozí řazení (směr)"
+    },
+    "options": {
+        "type": {
+            "": "",
+            "Base": "Báze",
+            "Person": "Osoba",
+            "CategoryTree": "Strom kategorií"
+        },
+        "linkType": {
+            "manyToMany": "N-N",
+            "oneToMany": "1-N",
+            "manyToOne": "N-1",
+            "parentToChildren": "Rodič-Potomek",
+            "childrenToParent": "Potomek-Rodič"
+        },
+        "sortDirection": {
+            "asc": "Vzestupně",
+            "desc": "Sestupně"
+        }
+    },
+    "messages": {
+        "entityCreated": "Entita byla vytvořena",
+        "linkAlreadyExists": "Konflikt: link již existuje."
+    }
+}

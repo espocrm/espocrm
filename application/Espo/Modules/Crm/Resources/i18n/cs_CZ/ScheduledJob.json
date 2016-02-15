@@ -1,0 +1,10 @@
+{
+
+    "options": {
+        "job": {
+            "CheckInboundEmails": "Zkontrolovat příchozí emaily",
+            "CheckEmailAccounts": "Zkontrolovat emaily",
+            "SendEmailReminders": "Připomenutí emaiů k poslání"
+        }
+    }
+}

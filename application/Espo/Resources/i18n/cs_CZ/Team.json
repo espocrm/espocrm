@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "name": "Jméno",
+        "roles": "Role",
+        "positionList": "Seznam pozic"
+    },
+    "links": {
+        "users": "Uživatelé"
+    },
+    "tooltips": {
+        "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
+        "positionList": "Available positions in this team. E.g. Salesperson, Manager."
+    },
+    "labels": {
+        "Create Team": "Vytvořit tým"
+    }
+}

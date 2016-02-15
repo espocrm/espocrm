@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "title": "Titulek",
+        "dateFrom": "Datum od",
+        "dateTo": "Datum do",
+        "autorefreshInterval": "Interval automatického obnovení",
+        "displayRecords": "Zobrazit záznamů",
+        "isDoubleHeight": "Výška 2x",
+        "mode": "Mód"
+    },
+    "options": {
+    	"mode": {
+    		"agendaWeek": "Týden (agenda)",
+    		"basicWeek": "Týden",
+    		"month": "Měsíc"
+    	}
+    }
+}

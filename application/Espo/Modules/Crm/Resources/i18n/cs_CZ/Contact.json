@@ -1,0 +1,37 @@
+{
+    "fields": {
+        "name": "Název",
+        "emailAddress": "Email",
+        "title": "Pozice",
+        "account": "Organizace",
+        "accounts": "Organizace",
+        "phoneNumber": "Telefon",
+        "accountType": "Typ organizace",
+        "doNotCall": "Nevolat",
+        "address": "Adresa",
+        "opportunityRole": "Pozice vzhledem k případu",
+        "accountRole": "Pozice",
+        "description": "Popis",
+        "campaign": "Kampaň",
+        "targetLists": "Cílové seznamy",
+        "targetList": "Cílový seznam"
+    },
+    "links": {
+        "opportunities": "Případy",
+        "cases": "Události",
+        "targetLists": "Cílové seznamy",
+        "campaignLogRecords": "Log kampaně",
+        "campaign": "Kampaň"
+    },
+    "labels": {
+        "Create Contact": "Vytvořit kontakt"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--",
+            "Decision Maker": "Rozhoduje",
+            "Evaluator": "Hodnotí",
+            "Influencer": "Má vliv"
+        }
+    }
+}
