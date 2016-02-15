@@ -206,6 +206,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
         fetchSearch: function () {
             var value = this.$el.find('[name="'+this.name+'"]').val();
             if (value) {
+                value += '%';
                 var data = {
                     type: 'or',
                     value: [
