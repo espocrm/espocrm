@@ -2,11 +2,12 @@
 	"assignedUser",
 	"billingAddress",
 	"createdAt",
+    "description",
 	"emailAddress",
 	"industry",
     "phoneNumber",
     "targetLists",
 	"type",
-    "description",
-    "teams"
+    "teams",
+    "shippingAddress"
 ]
