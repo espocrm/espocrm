@@ -54,6 +54,25 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.getConfig().get('defaultCurrency');
         },
 
+        formatNumber: function (value) {
+            if (value !== null) {
+                var parts = value.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+                if (parts.length > 1) {
+                    if (parts[1].length == 1) {
+                        parts[1] += '0';
+                    } else if (parts[1].length > 2) {
+                        if (this.mode != 'edit') {
+                            var fixed = value.toFixed(2);
+                            parts[1] = fixed.split(".")[1];
+                        }
+                    }
+                }
+                return parts.join(this.decimalMark);
+            }
+            return '';
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
