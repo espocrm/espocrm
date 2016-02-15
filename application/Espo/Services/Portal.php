@@ -33,6 +33,8 @@ use \Espo\ORM\Entity;
 
 class Portal extends Record
 {
+    protected $getEntityBeforeUpdate = true;
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -51,8 +53,10 @@ class Portal extends Record
         $url = $siteUrl . '?entryPoint=portal';
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
             $entity->set('isDefault', true);
+            $entity->setFetched('isDefault', true);
         } else {
             $url .= '&id=' . $entity->id;
+            $entity->setFetched('isDefault', false);
         }
         $entity->set('url', $url);
     }

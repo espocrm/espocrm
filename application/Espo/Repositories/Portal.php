@@ -52,10 +52,13 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
         if ($entity->has('isDefault')) {
             if ($entity->get('isDefault')) {
                 $this->getConfig()->set('defaultPortalId', $entity->id);
+                $this->getConfig()->save();
             } else {
-                $this->getConfig()->set('defaultPortalId', null);
+                if ($entity->isAttributeChanged('isDefault')) {
+                    $this->getConfig()->set('defaultPortalId', null);
+                    $this->getConfig()->save();
+                }
             }
-            $this->getConfig()->save();
         }
     }
 }
