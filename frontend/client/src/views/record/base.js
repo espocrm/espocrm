@@ -393,6 +393,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             this.beforeSave();
 
             this.trigger('before:save');
+            model.trigger('before:save');
 
             model.save(attrs, {
                 success: function () {

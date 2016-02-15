@@ -98,7 +98,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 var model = options.model;
                 createView(model);
 
-                model.once('sync', function () {
+                this.listenToOnce(model, 'sync', function () {
                     this.hideLoadingNotification();
                 }, this);
                 this.showLoadingNotification();
@@ -108,7 +108,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     model.id = id;
 
                     this.showLoadingNotification();
-                    model.once('sync', function () {
+                    this.listenToOnce(model, 'sync', function () {
                         createView(model);
                     }, this);
                     model.fetch({main: true});
@@ -138,7 +138,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     model.set(options.attributes);
                 }
 
-                model.on('before:save', function () {
+                this.listenToOnce(model, 'before:save', function () {
                     var key = this.name + 'List';
                     this.clearStoredMainView(key);
                 }, this);
@@ -159,9 +159,13 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 if (options.model) {
                     model = options.model;
                 }
+                this.listenToOnce(model, 'before:save', function () {
+                    var key = this.name + 'List';
+                    this.clearStoredMainView(key);
+                }, this);
 
                 this.showLoadingNotification();
-                model.once('sync', function () {
+                this.listenToOnce(model, 'sync', function () {
                     var o = {
                         scope: this.name,
                         model: model,
@@ -201,7 +205,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     var current = model.clone();
                     current.id = id;
                     models.push(current);
-                    current.once('sync', function () {
+                    this.listenToOnce(current, 'sync', function () {
                         i++;
                         if (i == ids.length) {
                             proceed();
