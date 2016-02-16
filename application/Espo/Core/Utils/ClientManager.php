@@ -66,6 +66,8 @@ class ClientManager
             $htmlFilePath = $this->mainHtmlFilePath;
         }
 
+        $basePath = '';
+
         if ($this->getConfig()->get('isDeveloperMode')) {
             if (file_exists('frontend/' . $htmlFilePath)) {
                 $htmlFilePath = 'frontend/' . $htmlFilePath;
@@ -80,6 +82,7 @@ class ClientManager
         $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false' , $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
+        $html = str_replace('{{basePath}}', $basePath , $html);
 
         echo $html;
         exit;

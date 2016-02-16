@@ -65,7 +65,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/espo.css': 'frontend/less/espo/main.less',
+                    'client/css/espo.css': 'frontend/less/espo/main.less',
                 }
             },
             espoVertical: {
@@ -73,7 +73,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
+                    'client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
                 }
             },
             sakura: {
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/sakura.css': 'frontend/less/sakura/main.less',
+                    'client/css/sakura.css': 'frontend/less/sakura/main.less',
                 }
             },
             sakuraVertical: {
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/sakura-vertical.css': 'frontend/less/sakura-vertical/main.less',
+                    'client/css/sakura-vertical.css': 'frontend/less/sakura-vertical/main.less',
                 }
             },
             violet: {
@@ -97,7 +97,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/violet.css': 'frontend/less/violet/main.less',
+                    'client/css/violet.css': 'frontend/less/violet/main.less',
                 }
             },
             violetVertical: {
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
                     yuicompress: true,
                 },
                 files: {
-                    'frontend/client/css/violet-vertical.css': 'frontend/less/violet-vertical/main.less',
+                    'client/css/violet-vertical.css': 'frontend/less/violet-vertical/main.less',
                 }
             }
         },
@@ -113,7 +113,7 @@ module.exports = function (grunt) {
             minify: {
                 files: {
                     'build/tmp/client/css/espo.css': [
-                        'frontend/client/css/espo.css',
+                        'client/css/espo.css',
                     ]
                 }
             },
@@ -124,13 +124,13 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
             'build/tmp/client/espo.min.js': jsFilesToMinify.map(function (item) {
-                return 'frontend/' + item;
+                return '' + item;
             })
         },
         copy: {
             frontendFolders: {
                 expand: true,
-                cwd: 'frontend/client',
+                cwd: 'client',
                 src: [
                     'src/**',
                     'res/**',
@@ -151,7 +151,7 @@ module.exports = function (grunt) {
             frontendLib: {
                 expand: true,
                 dot: true,
-                cwd: 'frontend/client/lib',
+                cwd: 'client/lib',
                 src: '**',
                 dest: 'build/tmp/client/lib/',
             },

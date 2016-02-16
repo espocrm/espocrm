@@ -71,7 +71,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
         if (file == '') {
             return;
         }
-        fileList.push(file.replace('frontend/', ''));
+        fileList.push(file);
     });
 
     fileList.push('client/espo.min.js');
@@ -92,55 +92,55 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
             if (file == '') {
                 return;
             }
-            deletedFileList.push(file.replace('frontend/', ''));
+            deletedFileList.push(file);
         });
 
 
         execute('xargs -a ' + diffFilePath + ' cp --parents -t ' + upgradePath + '/files ' , function (stdout) {
+            var d = new Date();
 
-        });
+            var monthN = ((d.getMonth() + 1).toString());
+            monthN = monthN.length == 1 ? '0' + monthN : monthN;
 
-        var d = new Date();
+            var dateN = d.getDate().toString();
+            dateN = dateN.length == 1 ? '0' + dateN : dateN;
 
-        var monthN = ((d.getMonth() + 1).toString());
-        monthN = monthN.length == 1 ? '0' + monthN : monthN;
+            var date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
 
-        var dateN = d.getDate().toString();
-        dateN = dateN.length == 1 ? '0' + dateN : dateN;
+            execute('git tag', function (stdout) {
+                var versionList = [];
+                var occured = false;
+                tagList = stdout.split('\n').forEach(function (tag) {
+                    if (tag == versionFrom) {
+                        occured = true;
+                    }
+                    if (!tag || tag == version) {
+                        return;
+                    }
+                    if (occured) {
+                        versionList.push(tag);
+                    }
+                });
 
-        var date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
-
-        execute('git tag', function (stdout) {
-            var versionList = [];
-            var occured = false;
-            tagList = stdout.split('\n').forEach(function (tag) {
-                if (tag == versionFrom) {
-                    occured = true;
+                var manifest = {
+                    "name": "EspoCRM Upgrade "+acceptedVersionName+" to "+version,
+                    "type": "upgrade",
+                    "version": version,
+                    "acceptableVersions": versionList,
+                    "releaseDate": date,
+                    "author": "EspoCRM",
+                    "description": "",
+                    "delete": deletedFileList
                 }
-                if (!tag || tag == version) {
-                    return;
-                }
-                if (occured) {
-                    versionList.push(tag);
-                }
+
+                fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
+
             });
 
-            var manifest = {
-                "name": "EspoCRM Upgrade "+acceptedVersionName+" to "+version,
-                "type": "upgrade",
-                "version": version,
-                "acceptableVersions": versionList,
-                "releaseDate": date,
-                "author": "EspoCRM",
-                "description": "",
-                "delete": deletedFileList
-            }
-
-            fs.writeFileSync(upgradePath + '/manifest.json', JSON.stringify(manifest, null, '  '));
-
+            fs.unlinkSync(diffFilePath);
         });
 
-        fs.unlinkSync(diffFilePath)
+
 
     });
 

@@ -7,30 +7,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="description" content="EspoCRM is Open Source CRM application. Increase profitability through customer loyalty!">
 
-        <script type="text/javascript" src="client/lib/jquery-2.1.4.min.js"></script>
-        <script type="text/javascript" src="client/lib/underscore-min.js"></script>
-        <script type="text/javascript" src="client/lib/es6-promise.min.js"></script>
-        <script type="text/javascript" src="client/lib/backbone-min.js"></script>
-        <script type="text/javascript" src="client/lib/handlebars.js"></script>
-        <script type="text/javascript" src="client/lib/base64.js"></script>
-        <script type="text/javascript" src="client/lib/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="client/lib/moment.min.js"></script>
-        <script type="text/javascript" src="client/lib/moment-timezone-with-data.min.js"></script>
-        <script type="text/javascript" src="client/lib/jquery.timepicker.min.js"></script>
-        <script type="text/javascript" src="client/lib/jquery.autocomplete.js"></script>
-        <script type="text/javascript" src="client/lib/bootstrap.min.js"></script>
-        <script type="text/javascript" src="client/lib/bootstrap-datepicker.js"></script>
-        <script type="text/javascript" src="client/lib/bull.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/underscore-min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/es6-promise.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/backbone-min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/handlebars.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/base64.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/moment.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/moment-timezone-with-data.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/jquery.timepicker.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/jquery.autocomplete.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="{{path}}client/lib/bull.min.js"></script>
 
-        <script type="text/javascript" src="client/src/loader.js"></script>
-        <script type="text/javascript" src="client/src/utils.js"></script>
-        <script type="text/javascript" src="client/src/exceptions.js"></script>
-
+        <script type="text/javascript" src="{{path}}client/src/loader.js"></script>
+        <script type="text/javascript" src="{{path}}client/src/utils.js"></script>
+        <script type="text/javascript" src="{{path}}client/src/exceptions.js"></script>
 
         <link href="{{stylesheet}}" rel="stylesheet" id='main-stylesheet'>
-
-        <link rel="icon" href="client/img/favicon.ico" type="image/x-icon">
-        <link rel="shortcut icon" href="client/img/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="{{path}}client/img/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="{{path}}client/img/favicon.ico" type="image/x-icon">
 
         <script type="text/javascript">
             $(function () {
@@ -39,7 +37,8 @@
                         id: '{{portalId}}',
                         useCache: false,
                         cacheTimestamp: {{cacheTimestamp}},
-                        url: '../api/v1/portal/{{portalId}}'
+                        url: 'api/v1/portal/{{portalId}}',
+                        basePath: '{{basePath}}'
                     }, function (app) {
                         {{runScript}}
                     });
