@@ -122,6 +122,11 @@ Espo.define('date-time', [], function () {
             return m;
         },
 
+        toMomentDate: function (string) {
+            var m = moment.utc(string, this.internalDateFormat);
+            return m;
+        },
+
         toMoment: function (string) {
             var m = moment.utc(string, this.internalDateTimeFormat);
             if (this.timeZone) {

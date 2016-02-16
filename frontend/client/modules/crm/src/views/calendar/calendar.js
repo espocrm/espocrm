@@ -244,7 +244,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 if (!o.dateEndDate) {
                     event.end = this.getDateTime().toMoment(o.dateEnd);
                 } else {
-                    event.end = this.getDateTime().toMoment(o.dateEndDate);
+                    event.end = this.getDateTime().toMomentDate(o.dateEndDate);
                 }
             }
             if (event.end && event.start) {
@@ -463,12 +463,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                         attributes.dateEnd = event.dateEnd;
                     }
                     if (event.dateStartDate) {
-                        var d = this.getDateTime().toMoment(event.dateStartDate).add(delta);
+                        var d = this.getDateTime().toMomentDate(event.dateStartDate).add(delta);
                         event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateStartDate = event.dateStartDate;
                     }
                     if (event.dateEndDate) {
-                        var d = this.getDateTime().toMoment(event.dateEndDate).add(delta);
+                        var d = this.getDateTime().toMomentDate(event.dateEndDate).add(delta);
                         event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateEndDate = event.dateEndDate;
                     }
