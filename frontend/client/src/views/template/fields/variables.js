@@ -81,8 +81,10 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
 
             attributeList.unshift('');
 
-            this.translatedOptions = (this.getLanguage().data[entityType] || {}).fields || {};
-
+            this.translatedOptions = {};
+            attributeList.forEach(function (item) {
+                this.translatedOptions[item] = this.translate(item, 'fields', entityType);
+            }, this);
         },
 
         afterRender: function () {
