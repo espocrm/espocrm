@@ -92,12 +92,13 @@ class Pdf extends \Espo\Core\Services\Base
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 
-        $pdf->setFont($this->fontFace, '', $this->fontSize, '', true);
+        $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
+
+        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
         $pdf->setPrintHeader(false);
 
         $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
-
 
         if ($template->get('printFooter')) {
             $htmlFooter = $htmlizer->render($entity, $template->get('footer'));
