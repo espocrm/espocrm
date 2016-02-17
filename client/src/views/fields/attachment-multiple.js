@@ -379,7 +379,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var preview = name;
 
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size=medium&id=' + id + '"></a>'; 
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, 'medium')+'"></a>'; 
             }
             return preview;
         },

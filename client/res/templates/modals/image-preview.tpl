@@ -1,7 +1,7 @@
 <div style="text-align: center;" class="image-container">
-    <img src="{{basePath}}?entryPoint=image&size={{size}}&id={{id}}">
+    <img src="{{url}}">
 </div>
 
 <div class="margin">
-{{translate 'Original'}}: <a href="{{basePath}}?entryPoint=image&id={{id}}">{{name}}</a>
+{{translate 'Original'}}: <a href="{{originalUrl}}">{{name}}</a>
 </div>

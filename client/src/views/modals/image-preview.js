@@ -42,9 +42,9 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         data: function () {
             return {
-                id: this.options.id,
                 name: this.options.name,
-                size: this.size
+                url: this.getImageUrl(),
+                originalUrl: this.getOriginalImageUrl()
             };
         },
 
@@ -55,6 +55,23 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
             this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
 
             this.imageList = this.options.imageList || [];
+        },
+
+        getImageUrl: function () {
+            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+            url += '&size=' + this.size;
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
+        },
+
+        getOriginalImageUrl: function () {
+            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
+            return url;
         },
 
         afterRender: function () {
