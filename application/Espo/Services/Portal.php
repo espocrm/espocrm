@@ -50,12 +50,13 @@ class Portal extends Record
     protected function loadUrlField(Entity $entity)
     {
         $siteUrl = $this->getConfig()->get('siteUrl');
-        $url = $siteUrl . '?entryPoint=portal';
+        $siteUrl = rtrim($siteUrl , '/') . '/';
+        $url = $siteUrl . 'portal';
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
         } else {
-            $url .= '&id=' . $entity->id;
+            $url .= '?id=' . $entity->id;
             $entity->setFetched('isDefault', false);
         }
         $entity->set('url', $url);
