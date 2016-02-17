@@ -28,9 +28,10 @@
 
 Espo.define('pre-loader', [], function () {
 
-    var PreLoader = function (cache, viewFactory) {
+    var PreLoader = function (cache, viewFactory, basePath) {
         this.cache = cache;
         this.viewFactory = viewFactory;
+        this.basePath = basePath || '';
     }
 
     _.extend(PreLoader.prototype, {
@@ -120,7 +121,7 @@ Espo.define('pre-loader', [], function () {
             };
 
             $.ajax({
-                url: this.configUrl,
+                url: this.basePath + this.configUrl,
                 dataType: 'json',
                 local: true,
                 success: function (data) {

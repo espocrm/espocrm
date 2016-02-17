@@ -41,6 +41,8 @@ class ClientManager
 
     protected $runScript = "app.start();";
 
+    protected $basePath = '';
+
     public function __construct(Config $config, ThemeManager $themeManager)
     {
         $this->config = $config;
@@ -57,6 +59,16 @@ class ClientManager
         return $this->config;
     }
 
+    public function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
+    public function getBasePath()
+    {
+        return $this->basePath;
+    }
+
     public function display($runScript = null, $htmlFilePath = null, $vars = array())
     {
         if (is_null($runScript)) {
@@ -65,8 +77,6 @@ class ClientManager
         if (is_null($htmlFilePath)) {
             $htmlFilePath = $this->mainHtmlFilePath;
         }
-
-        $basePath = '';
 
         if ($this->getConfig()->get('isDeveloperMode')) {
             if (file_exists('frontend/' . $htmlFilePath)) {
@@ -82,7 +92,7 @@ class ClientManager
         $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false' , $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
-        $html = str_replace('{{basePath}}', $basePath , $html);
+        $html = str_replace('{{basePath}}', $this->basePath , $html);
 
         echo $html;
         exit;

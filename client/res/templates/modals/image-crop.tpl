@@ -1,4 +1,4 @@
-<link href="client/css/cropper.css" rel="stylesheet">
+<link href="{{basePath}}client/css/cropper.css" rel="stylesheet">
 <div class="row">
     <div class="col-sm-6">
         <div style="text-align: center;" class="image-container"></div>

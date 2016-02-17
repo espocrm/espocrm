@@ -33,6 +33,8 @@ var Espo = Espo || {classMap:{}};
     var root = this;
 
     Espo.Loader = function (cache, cacheTimestamp) {
+        this.basePath = document.currentScript.dataset.basePath || '';
+
         this.cache = cache || null;
         this._loadCallbacks = {};
 
@@ -296,7 +298,7 @@ var Espo = Espo || {classMap:{}};
                 cache: useCache,
                 dataType: 'text',
                 local: true,
-                url: path,
+                url: this.basePath + path,
                 success: function (response) {
                     if (this.cache) {
                         this.cache.set(type, name, response);
@@ -347,7 +349,7 @@ var Espo = Espo || {classMap:{}};
             }
 
             $.ajax({
-                url: url,
+                url: this.basePath + url,
                 type: 'GET',
                 dataType: 'script',
                 local: true,
@@ -365,7 +367,7 @@ var Espo = Espo || {classMap:{}};
 
         loadLibsConfig: function (callback) {
             $.ajax({
-                url: this.libsConfigUrl,
+                url: this.basePath + this.libsConfigUrl,
                 dataType: 'json',
                 local: true,
                 success: function (data) {

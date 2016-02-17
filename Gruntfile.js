@@ -164,6 +164,7 @@ module.exports = function (grunt) {
                     'custom/**',
                     'data/.data',
                     'install/**',
+                    'portal/**',
                     'vendor/**',
                     'html/**',
                     'bootstrap.php',

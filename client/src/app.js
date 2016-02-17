@@ -41,6 +41,9 @@ Espo.define(
         this.url = options.url || this.url;
         this.basePath = options.basePath || '';
 
+        this.loader = Espo.loader;
+        this.loader.basePath = this.basePath;
+
         this.controllers = {};
 
         if (this.useCache) {
@@ -54,7 +57,6 @@ Espo.define(
 
         this.storage = new Storage();
 
-        this.loader = Espo.loader;
         this.loader.cache = this.cache;
 
         this.setupAjax();
@@ -92,7 +94,7 @@ Espo.define(
             this.initView();
             this.initBaseController();
 
-            this.preLoader = new PreLoader(this.cache, this.viewFactory, this.themeManager);
+            this.preLoader = new PreLoader(this.cache, this.viewFactory, this.basePath);
 
             this.preLoad(function () {
                 callback.call(this, this);
@@ -168,6 +170,7 @@ Espo.define(
 
                 if (this.themeManager.isUserTheme()) {
                     var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+                    console.log(stylesheetPath);
                     $('#main-stylesheet').attr('href', stylesheetPath);
                 }
 
@@ -336,9 +339,6 @@ Espo.define(
                         path = 'res/layouts/' + name + '.json';
                         break;
                 }
-
-                path = this.basePath + path;
-
                 return path;
             }.bind(this);
 
@@ -356,9 +356,6 @@ Espo.define(
                 } else {
                     path = 'client/' + getResourceInnerPath(type, name);
                 }
-
-                path = this.basePath + path;
-
                 return path;
             }.bind(this);
 
@@ -467,7 +464,7 @@ Espo.define(
 
                 var arr = Base64.decode(this.auth).split(':');
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', this.url + '/', false, arr[0], arr[1]);
+                xhr.open('GET', this.basePath + this.url + '/', false, arr[0], arr[1]);
                 xhr.send('');
 
                 if (callback) {
@@ -490,6 +487,10 @@ Espo.define(
                 beforeSend: function (xhr, options) {
                     if (!options.local && self.url) {
                         options.url = Espo.Utils.trimSlash(self.url) + '/' + options.url;
+                    }
+
+                    if (!options.local && self.basePath !== '') {
+                        options.url = self.basePath + options.url;
                     }
                     if (self.auth !== null) {
                         xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);

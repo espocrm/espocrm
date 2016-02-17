@@ -289,5 +289,10 @@ class Application
 
         $classLoader->register(true);
     }
+
+    public function setBasePath($basePath)
+    {
+        $this->getContainer()->get('clientManager')->setBasePath($basePath);
+    }
 }
 

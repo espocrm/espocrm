@@ -27,29 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+include "../bootstrap.php";
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-
-class Portal extends \Espo\Core\EntryPoints\Base
-{
-    public static $authRequired = false;
-
-    public function run()
-    {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else {
-            $id = $this->getConfig()->get('defaultPortalId');
-            if (!$id) {
-                throw new NotFound();
-            }
-        }
-
-        $application = new \Espo\Core\Portal\Application($id);
-        $application->setBasePath($this->getContainer()->get('clientManager')->getBasePath());
-        $application->runClient();
-    }
+$app = new \Espo\Core\Application();
+if (!$app->isInstalled()) {
+    exit;
 }
+
+if (!empty($_GET['entryPoint'])) {
+    if (!empty($_GET['portalId'])) {
+        $app = new \Espo\Core\Portal\Application($_GET['portalId']);
+    }
+    $app->setBasePath('../');
+    $app->runEntryPoint($_GET['entryPoint']);
+    exit;
+}
+
+$app->setBasePath('../');
+$app->runEntryPoint('portal');

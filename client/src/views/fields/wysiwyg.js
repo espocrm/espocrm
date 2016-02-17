@@ -32,9 +32,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         type: 'wysiwyg',
 
-        detailTemplate: 'fields.wysiwyg.detail',
+        detailTemplate: 'fields/wysiwyg/detail',
 
-        editTemplate: 'fields.wysiwyg.edit',
+        editTemplate: 'fields/wysiwyg/edit',
 
         height: 250,
 
@@ -132,7 +132,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
                     var doc = iframe.contentWindow.document;
 
-                    var link = '<link href="client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
+                    var link = '<link href="'+this.getBasePath()+'client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
 
                     doc.open('text/html', 'replace');
                     var body = this.model.get(this.name) || '';

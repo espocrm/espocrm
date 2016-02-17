@@ -1,6 +1,6 @@
-<link href="client/modules/crm/css/fullcalendar.css" rel="stylesheet">
-<link href="client/modules/crm/css/fullcalendar.print.css" rel="stylesheet" media="print">
-<link href="client/modules/crm/css/calendar.css" rel="stylesheet">
+<link href="{{basePath}}client/modules/crm/css/fullcalendar.css" rel="stylesheet">
+<link href="{{basePath}}client/modules/crm/css/fullcalendar.print.css" rel="stylesheet" media="print">
+<link href="{{basePath}}client/modules/crm/css/calendar.css" rel="stylesheet">
 
 {{#if header}}
 <div class="row button-container">
