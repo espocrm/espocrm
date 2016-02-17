@@ -37,10 +37,12 @@ class Portal extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
-    public function run()
+    public function run($data = array())
     {
         if (!empty($_GET['id'])) {
             $id = $_GET['id'];
+        } else if (!empty($data['id'])) {
+            $id = $data['id'];
         } else {
             $id = $this->getConfig()->get('defaultPortalId');
             if (!$id) {

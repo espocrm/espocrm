@@ -93,7 +93,7 @@ class Application
         $this->getContainer()->get('clientManager')->display();
     }
 
-    public function runEntryPoint($entryPoint)
+    public function runEntryPoint($entryPoint, $data = array())
     {
         if (empty($entryPoint)) {
             throw new \Error();
@@ -112,8 +112,8 @@ class Application
             $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
             $slim->add($apiAuth);
 
-            $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container) {
-                $entryPointManager->run($entryPoint);
+            $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
+                $entryPointManager->run($entryPoint, $data);
             });
 
             $slim->run();

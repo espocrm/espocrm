@@ -90,7 +90,7 @@ class EntryPointManager
         return $className::$notStrictAuth;
     }
 
-    public function run($name)
+    public function run($name, $data = array())
     {
         $className = $this->getClassName($name);
         if (!$className) {
@@ -98,7 +98,7 @@ class EntryPointManager
         }
         $entryPoint = new $className($this->container);
 
-        $entryPoint->run();
+        $entryPoint->run($data);
     }
 
     protected function getClassName($name)

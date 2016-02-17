@@ -106,7 +106,5 @@ abstract class Base
         $this->container = $container;
     }
 
-    abstract public function run();
-
 }
 
