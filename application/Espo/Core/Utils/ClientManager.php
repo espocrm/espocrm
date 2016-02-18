@@ -69,6 +69,14 @@ class ClientManager
         return $this->basePath;
     }
 
+    protected function getCacheTimestamp()
+    {
+        if (!$this->getConfig()->get('useCache')) {
+            return (string) time();
+        }
+        return $this->getConfig()->get('cacheTimestamp', 0);
+    }
+
     public function display($runScript = null, $htmlFilePath = null, $vars = array())
     {
         if (is_null($runScript)) {
@@ -88,7 +96,7 @@ class ClientManager
         foreach ($vars as $key => $value) {
             $html = str_replace('{{'.$key.'}}', $value, $html);
         }
-        $html = str_replace('{{cacheTimestamp}}', $this->getConfig()->get('cacheTimestamp', 0), $html);
+        $html = str_replace('{{cacheTimestamp}}', $this->getCacheTimestamp(), $html);
         $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false' , $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
