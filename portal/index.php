@@ -35,9 +35,6 @@ if (!$app->isInstalled()) {
 }
 
 if (!empty($_GET['entryPoint'])) {
-    if (!empty($_GET['portalId'])) {
-        $app = new \Espo\Core\Portal\Application($_GET['portalId']);
-    }
     $app->setBasePath('../');
     $app->runEntryPoint($_GET['entryPoint']);
     exit;

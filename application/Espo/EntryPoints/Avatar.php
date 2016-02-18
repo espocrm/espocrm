@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Avatar extends Image
 {
-    public static $authRequired = true;
+    public static $authRequired = false;
 
     public static $notStrictAuth = true;
 

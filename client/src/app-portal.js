@@ -36,7 +36,7 @@ Espo.define('app-portal', ['app', 'acl-portal-manager'], function (Dep, AclPorta
 
         createAclManager: function () {
             return new AclPortalManager(this.user);
-        }
+        },
 
     });
 

@@ -93,7 +93,7 @@ class Application
         $this->getContainer()->get('clientManager')->display();
     }
 
-    public function runEntryPoint($entryPoint, $data = array())
+    public function runEntryPoint($entryPoint, $data = array(), $final = false)
     {
         if (empty($entryPoint)) {
             throw new \Error();
@@ -107,8 +107,18 @@ class Application
         $entryPointManager = new \Espo\Core\EntryPointManager($container);
 
         try {
-            $auth = new \Espo\Core\Utils\Auth($this->container, $entryPointManager->checkNotStrictAuth($entryPoint));
-            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $entryPointManager->checkAuthRequired($entryPoint), true);
+            $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
+            $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
+            if ($authRequired && !$authNotStrict) {
+                if (!$final && $portalId = $this->detectedPortalId()) {
+                    $app = new \Espo\Core\Portal\Application($portalId);
+                    $app->setBasePath($this->getBasePath());
+                    $app->runEntryPoint($entryPoint, $data, true);
+                    exit;
+                }
+            }
+            $auth = new \Espo\Core\Utils\Auth($this->container, $authNotStrict);
+            $apiAuth = new \Espo\Core\Utils\Api\Auth($auth, $authRequired, true);
             $slim->add($apiAuth);
 
             $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
@@ -292,6 +302,26 @@ class Application
     public function setBasePath($basePath)
     {
         $this->getContainer()->get('clientManager')->setBasePath($basePath);
+    }
+
+    public function getBasePath()
+    {
+        return $this->getContainer()->get('clientManager')->getBasePath();
+    }
+
+    public function detectedPortalId()
+    {
+        if (!empty($_GET['portalId'])) {
+            return $_GET['portalId'];
+        }
+        if (!empty($_COOKIE['auth-token'])) {
+            $token = $this->getContainer()->get('entityManager')->getRepository('AuthToken')->where(array('token'=>$_COOKIE['auth-token']))->findOne();
+
+            if ($token && $token->get('portalId')) {
+                return $token->get('portalId');
+            }
+        }
+        return null;
     }
 }
 

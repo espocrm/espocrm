@@ -386,6 +386,8 @@ Espo.define(
                 this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
                 this.storage.set('user', 'auth', this.auth);
 
+                this.setCookieAuthToken(data.auth.token);
+
                 this.initUserData(data, function () {
                     this.trigger('auth');
                 }.bind(this));
@@ -419,10 +421,23 @@ Espo.define(
             this.doAction({action: 'login'});
             this.language.clearCache();
 
+            this.unsetCookieAuthToken();
+
             xhr = new XMLHttpRequest;
             xhr.open('GET', this.url + '/', !1, 'logout', 'logout');
             xhr.send('');
             xhr.abort();
+        },
+
+        setCookieAuthToken: function (token) {
+            var date = new Date();
+            date.setTime(date.getTime() + (1000 * 24*60*60*1000));
+            console.log(token);
+            document.cookie = 'auth-token='+token+'; expires='+date.toGMTString()+'; path=/';
+        },
+
+        unsetCookieAuthToken: function () {
+            document.cookie = 'auth-token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
         },
 
         initUserData: function (options, callback) {
@@ -478,7 +493,7 @@ Espo.define(
                 url: 'App/user',
             }).done(function (data) {
                 callback(data);
-            });
+            }.bind(this));
         },
 
         setupAjax: function () {
