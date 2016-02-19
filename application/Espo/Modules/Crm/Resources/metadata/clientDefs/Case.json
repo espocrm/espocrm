@@ -1,51 +1,51 @@
 {
-   "controller": "controllers/record",
-   "recordViews": {
-      "detail": "crm:views/case/record/detail"
-   },
-   "bottomPanels":{
-      "detail":[
-      ]
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ]
-   },
-   "filterList": [
-      {
-         "name":"open"
-      },
-      {
-         "name":"closed",
-         "style": "success"
-      }
-   ],
-   "relationshipPanels": {
-      "articles": {
-         "create": false,
-         "rowActionsView": "views/record/row-actions/relationship-view-and-unlink"
-      }
-   },
-   "boolFilterList": ["onlyMy"],
-   "selectDefaultFilters": {
-      "filter": "open"
-   }
+    "controller": "controllers/record",
+    "recordViews": {
+        "detail": "crm:views/case/record/detail"
+    },
+    "bottomPanels":{
+        "detail":[
+        ]
+    },
+    "sidePanels":{
+        "detail":[
+             {
+                "name":"activities",
+                "label":"Activities",
+                "view":"crm:views/record/panels/activities",
+                "aclScope": "Activities"
+             },
+             {
+                "name":"history",
+                "label":"History",
+                "view":"crm:views/record/panels/history",
+                "aclScope": "Activities"
+             },
+             {
+                "name":"tasks",
+                "label":"Tasks",
+                "view":"crm:views/record/panels/tasks",
+                "aclScope": "Task"
+             }
+        ]
+    },
+    "filterList": [
+        {
+            "name":"open"
+        },
+        {
+            "name":"closed",
+            "style": "success"
+        }
+    ],
+    "relationshipPanels": {
+        "articles": {
+            "create": false,
+            "rowActionsView": "views/record/row-actions/relationship-view-and-unlink"
+        }
+    },
+    "boolFilterList": ["onlyMy"],
+    "selectDefaultFilters": {
+        "filter": "open"
+    }
 }
