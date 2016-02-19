@@ -161,7 +161,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
                 this.presetName = this.primary;
 
-                this.createFilter(name, {}, function () {
+                this.createFilter(name, {}, function (view) {
+                    view.populateDefaults();
                     this.fetch();
                     this.updateSearch();
                 }.bind(this));
@@ -599,7 +600,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }, function (view) {
                 if (typeof callback === 'function') {
                     view.once('after:render', function () {
-                        callback();
+                        callback(view);
                     });
                 }
                 if (rendered && !noRender) {

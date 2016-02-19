@@ -58,6 +58,13 @@ Espo.define('views/search/filter', 'view', function (Dep) {
                 });
             }
         },
+
+        populateDefaults: function () {
+            var view = this.getView('field');
+            if (!view) return;
+            if (!('populateSearchDefaults' in view)) return;
+            view.populateSearchDefaults();
+        }
     });
 });
 

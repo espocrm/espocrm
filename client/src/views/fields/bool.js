@@ -55,6 +55,10 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             };
             return data;
         },
+
+        populateSearchDefaults: function () {
+            this.$element.get(0).checked = true;
+        }
     });
 });
 
