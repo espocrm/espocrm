@@ -46,6 +46,16 @@ Espo.define('date-time', [], function () {
 
         weekStart: 1,
 
+        readableDateFormatMap: {
+            'DD.MM.YYYY': 'DD MMM',
+            'DD/MM/YYYY': 'DD MMM',
+        },
+
+        readableShortDateFormatMap: {
+            'DD.MM.YYYY': 'D MMM',
+            'DD/MM/YYYY': 'D MMM',
+        },
+
         hasMeridian: function () {
             return (new RegExp('A', 'i')).test(this.timeFormat);
         },
@@ -59,11 +69,11 @@ Espo.define('date-time', [], function () {
         },
 
         getReadableDateFormat: function () {
-            return 'MMM DD';
+            return this.readableDateFormatMap[this.getDateFormat()] || 'MMM DD';
         },
 
         getReadableShortDateFormat: function () {
-            return 'MMM D';
+            return this.readableShortDateFormatMap[this.getDateFormat()] || 'MMM D';
         },
 
         fromDisplayDate: function (string) {
