@@ -106,6 +106,23 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                 var scope = $(e.currentTarget).data().scope;
                 var field = $(e.currentTarget).data().field;
                 this.removeField(scope, field);
+            },
+            'change select[data-type="access"]': function (e) {
+                var scope = $(e.currentTarget).attr('name');
+                var $dropdowns = this.$el.find('select[data-scope="' + scope + '"]');
+
+                if ($(e.currentTarget).val() == 'enabled') {
+                    $dropdowns.removeAttr('disabled');
+                    $dropdowns.removeClass('hidden');
+                    $dropdowns.each(function (i, select) {
+                        $select = $(select);
+                        $select.find('option').last().prop('selected', true);
+                        $select.trigger('change');
+                    });
+                } else {
+                    $dropdowns.attr('disabled', 'disabled');
+                    $dropdowns.addClass('hidden');
+                }
             }
         },
 

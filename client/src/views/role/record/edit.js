@@ -37,16 +37,7 @@ Espo.define('views/role/record/edit', 'views/record/edit', function (Dep) {
         isWide: true,
 
         events: _.extend({
-            'change select[data-type="access"]': function (e) {
-                var scope = $(e.currentTarget).attr('name');
-                var $dropdowns = this.$el.find('select[data-scope="' + scope + '"]');
 
-                if ($(e.currentTarget).val() == 'enabled') {
-                    $dropdowns.removeAttr('disabled');
-                } else {
-                    $dropdowns.attr('disabled', 'disabled');
-                }
-            }
         }, Dep.prototype.events),
 
         fetch: function () {
