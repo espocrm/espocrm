@@ -146,12 +146,19 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
             this.setupCurrentTabLayout();
 
+            this.dashletIdList.forEach(function (id) {
+                this.clearView('dashlet-'+id);
+            }, this);
+            this.dashletIdList = [];
+
             this.reRender();
         },
 
         setup: function () {
             this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
             this.setupCurrentTabLayout();
+
+            this.dashletIdList = [];
 
             if (this.getUser().get('portalId')) {
                 this.layoutReadOnly = true;
@@ -267,6 +274,11 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             this.getPreferences().save(o, {patch: true});
             this.getPreferences().trigger('update');
 
+            var index = this.dashletIdList.indexOf(id);
+            if (~index) {
+                this.dashletIdList.splice(index, index);
+            }
+
             this.clearView('dashlet-' + id);
         },
 
@@ -301,6 +313,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]',
                 readOnly: this.dashletsReadOnly
             }, function (view) {
+                this.dashletIdList.push(id);
+
                 view.render();
 
                 this.listenToOnce(view, 'change', function () {
