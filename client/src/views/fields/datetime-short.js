@@ -45,7 +45,7 @@ Espo.define('views/fields/datetime-short', 'views/fields/datetime', function (De
                         return string;
                     }
 
-                     var readableFormat = 'MMM D';
+                    var readableFormat = this.getDateTime().getReadableShortDateFormat();
 
                     if (d.format('YYYY') == now.format('YYYY')) {
                         string = d.format(readableFormat);

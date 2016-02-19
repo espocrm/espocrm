@@ -90,7 +90,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     return this.translate('Yesterday');
                 }
 
-                var readableFormat = 'MMM DD';
+                var readableFormat = this.getDateTime().getReadableDateFormat();
 
                 if (d.format('YYYY') == today.format('YYYY')) {
                     return d.format(readableFormat);

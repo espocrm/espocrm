@@ -88,7 +88,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     return this.translate('Yesterday') + ' ' + d.format(this.getDateTime().timeFormat);
                 }
 
-                var readableFormat = 'MMM DD';
+                var readableFormat = this.getDateTime().getReadableDateFormat();
 
                 if (d.format('YYYY') == now.format('YYYY')) {
                     return d.format(readableFormat) + ' ' + d.format(this.getDateTime().timeFormat);
