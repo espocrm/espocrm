@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.PersonName', 'Views.Fields.Varchar', function (Dep) {
+Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
         type: 'personName',
 
-        detailTemplate: 'fields.person-name.detail',
+        detailTemplate: 'fields/person-name/detail',
 
-        editTemplate: 'fields.person-name.edit',
+        editTemplate: 'fields/person-name/edit',
 
         data: function () {
             var data = Dep.prototype.data.call(this);

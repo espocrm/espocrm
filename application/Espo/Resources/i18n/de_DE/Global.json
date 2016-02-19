@@ -331,11 +331,10 @@
 	},
     "options": {
         "salutationName": {
-            "Hr.": "Hr.",
-            "Fr.": "Fr.",
-            "Dr.": "Dr.",
-			"Prof.": "Prof."
-
+            "Mr.": "Hr.",
+            "Ms.": "Fr.",
+            "Mrs.": "Frl.",
+            "Dr.": "Dr."
         },
         "language":     {
             "af_ZA":"Afrikaans",
