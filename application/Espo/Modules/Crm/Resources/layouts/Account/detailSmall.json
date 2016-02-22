@@ -3,7 +3,7 @@
         "label":"",
         "rows":[
                 [{"name":"name"}],
-                [{"name":"website"}],
+                [{"name":"website"}, {"name": "billingAddressCountry"}],
                 [{"name":"emailAddress"}],
                 [{"name":"phoneNumber"}],
                 [{"name":"type"}, {"name":"industry"}]

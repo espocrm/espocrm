@@ -1,6 +1,6 @@
 [
-    {"name":"name","width":30,"link":true},
-    {"name":"website", "notSortable": true, "width": 20},
-    {"name":"phoneNumber", "notSortable": true, "width": 18},
-    {"name":"billingAddressCity", "width": 15}
+    {"name":"name","link":true},
+    {"name":"website", "notSortable": true, "width": 25},
+    {"name":"type", "notSortable": true, "width": 16},
+    {"name":"billingAddressCountry", "width": 18}
 ]
