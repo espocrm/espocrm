@@ -32,6 +32,8 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
         type: 'address',
 
+        listTemplate: 'fields/address/detail',
+
         detailTemplate: 'fields/address/detail',
 
         editTemplate: 'fields/address/edit',
