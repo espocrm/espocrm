@@ -12,7 +12,7 @@
                 {"name":"phoneNumber", "fullWidth": true}
             ],
             [
-                {"name":"accountName", "fullWidth": true}
+                {"name":"accountName"}, {"name":"addressCountry"}
             ],
             [
                 {"name":"title"}, {"name":"website"}
