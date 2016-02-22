@@ -260,36 +260,35 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         },
 
         actionSend: function () {
-            var record = this.getView('body');
+            var recordView = this.getView('record');
 
             var $send = this.$el.find('.header-buttons [data-action="send"]');
             $send.addClass('disabled');
 
-
-            this.listenToOnce(record, 'after:send', function () {
+            this.listenToOnce(recordView, 'after:send', function () {
                 this.model.set('status', 'Sent');
                 $send.remove();
                 this.menu = this.backedMenu;
 
-                if (record.mode !== 'detail') {
-                    record.setDetailMode();
-                    record.setFieldReadOnly('dateSent');
-                    record.setFieldReadOnly('name');
-                    record.setFieldReadOnly('attachments');
-                    record.setFieldReadOnly('isHtml');
-                    record.setFieldReadOnly('from');
-                    record.setFieldReadOnly('to');
-                    record.setFieldReadOnly('cc');
-                    record.setFieldReadOnly('bcc');
+                if (recordView.mode !== 'detail') {
+                    recordView.setDetailMode();
+                    recordView.setFieldReadOnly('dateSent');
+                    recordView.setFieldReadOnly('name');
+                    recordView.setFieldReadOnly('attachments');
+                    recordView.setFieldReadOnly('isHtml');
+                    recordView.setFieldReadOnly('from');
+                    recordView.setFieldReadOnly('to');
+                    recordView.setFieldReadOnly('cc');
+                    recordView.setFieldReadOnly('bcc');
                 }
 
             }, this);
 
-            this.listenToOnce(record, 'cancel:save', function () {
+            this.listenToOnce(recordView, 'cancel:save', function () {
                 $send.removeClass('disabled');
             }, this);
 
-            record.send();
+            recordView.send();
         },
 
 
