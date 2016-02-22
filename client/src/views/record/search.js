@@ -623,6 +623,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 var method = 'fetch';
                 var view = this.getView('filter-' + field).getView('field');
                 this.advanced[field] = view.fetchSearch();
+                view.searchParams = this.advanced[field];
             }
         },
 
