@@ -35,10 +35,10 @@
             "Mail": "Пошта"
         },
         "status": {
-            "Planning": "Планування",
+            "Planning": "Запланований",
             "Active": "Активний",
             "Inactive": "Неактивний",
-            "Complete": "Повне"
+            "Complete": "Завершений"
         }
     },
     "labels": {
