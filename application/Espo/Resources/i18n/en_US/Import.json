@@ -42,12 +42,7 @@
         "Time Format": "Time Format",
         "Currency": "Currency",
         "Preview": "Preview",
-        "Next": "Next",
-        "Back": "Back",
-        "": "",
-        "": "",
-        "": "",
-        "": ""
+        "Next": "Next"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",
