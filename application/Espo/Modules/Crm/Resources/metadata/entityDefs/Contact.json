@@ -77,7 +77,7 @@
         },
         "accounts": {
             "type": "linkMultiple",
-            "view": "Crm:Contact.Fields.Accounts",
+            "view": "crm:views/contact/fields/accounts",
             "columns": {
                 "role": "contactRole"
             }
