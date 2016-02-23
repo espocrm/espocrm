@@ -266,7 +266,7 @@ Espo.define('views/fields/phone', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var value = this.$element.val() || null;
+            var value = this.$element.val().trim() || null;
             if (value) {
                 var data = {
                     type: 'like',

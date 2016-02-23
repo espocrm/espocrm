@@ -507,7 +507,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         fetchSearch: function () {
-            var value = this.$element.val();
+            var value = this.$element.val().toString().trim();
             if (value) {
                 var data = {
                     type: 'equals',

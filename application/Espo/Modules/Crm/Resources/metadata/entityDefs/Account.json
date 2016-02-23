@@ -61,7 +61,8 @@
         },
         "sicCode": {
             "type": "varchar",
-            "maxLength": 40
+            "maxLength": 40,
+            "trim": true
         },
         "contactRole": {
             "type": "varchar",

@@ -2,14 +2,16 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "subject": {
             "type": "varchar",
             "required": true,
             "notStorable": true,
             "view": "views/email/fields/subject",
-            "disabled": true
+            "disabled": true,
+            "trim": true
         },
         "fromName": {
             "type": "varchar"

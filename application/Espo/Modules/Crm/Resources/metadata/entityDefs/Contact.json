@@ -35,7 +35,8 @@
             "where": {
                 "LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
                 "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
-            }
+            },
+            "trim": true
         },
         "description": {
             "type": "text"

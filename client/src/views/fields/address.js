@@ -197,16 +197,16 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.postalCodeField] = this.$postalCode.val();
-            data[this.streetField] = this.$street.val();
-            data[this.stateField] = this.$state.val();
-            data[this.cityField] = this.$city.val();
-            data[this.countryField] = this.$country.val();
+            data[this.postalCodeField] = this.$postalCode.val().toString().trim();
+            data[this.streetField] = this.$street.val().toString().trim();
+            data[this.stateField] = this.$state.val().toString().trim();
+            data[this.cityField] = this.$city.val().toString().trim();
+            data[this.countryField] = this.$country.val().toString().trim();
             return data;
         },
 
         fetchSearch: function () {
-            var value = this.$el.find('[name="'+this.name+'"]').val();
+            var value = this.$el.find('[name="'+this.name+'"]').val().toString().trim();
             if (value) {
                 value += '%';
                 var data = {

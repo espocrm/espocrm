@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "view": "crm:views/document/fields/name"
+            "view": "crm:views/document/fields/name",
+            "trim": true
         },
         "file": {
             "type": "file",

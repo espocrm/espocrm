@@ -58,7 +58,8 @@
         },
         "title": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "trim": true
         },
         "emailAddress": {
             "type": "email",

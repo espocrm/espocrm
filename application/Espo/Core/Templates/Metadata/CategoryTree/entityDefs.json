@@ -2,7 +2,8 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "order": {
             "type": "int",

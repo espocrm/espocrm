@@ -174,7 +174,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
             if (this.mode == 'edit') {
                 var fetch = function ($target) {
-                    var value = $target.val();
+                    var value = $target.val().toString().trim();
                     var id = $target.data('id');
                     this.columns[id] = this.columns[id] || {};
                     this.columns[id][this.columnName] = value;
