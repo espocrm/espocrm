@@ -46,7 +46,7 @@ Espo.define('views/import/index', 'view', function (Dep) {
         },
 
         changeStep: function (num, result) {
-            this.createView('step', 'Import.Step' + num.toString(), {
+            this.createView('step', 'views/import/step' + num.toString(), {
                 el: this.options.el + ' > .import-container',
                 entityType: this.entityType,
                 formData: this.formData,

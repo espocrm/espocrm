@@ -123,6 +123,6 @@
     </div>
 
     <div style="padding-bottom: 10px;" class="clearfix">
-        <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next'}}</button>
+        <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next' scope='Import'}}</button>
     </div>
 
