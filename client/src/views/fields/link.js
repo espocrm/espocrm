@@ -60,7 +60,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 nameName: this.nameName,
                 idValue: this.model.get(this.idName),
                 nameValue: this.model.get(this.nameName),
-                foreignScope: this.foreignScope,
+                foreignScope: this.foreignScope
             }, Dep.prototype.data.call(this));
         },
 
@@ -161,9 +161,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'];
-            this.searchParams.oneOfIdList = this.searchParams.oneOfIdList || [];
-            this.searchParams.oneOfNameHash = this.searchParams.oneOfNameHash || {};
+            this.searchData.typeOptions = ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'];
+            this.searchData.oneOfIdList = this.searchParams.oneOfIdList || [];
+            this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -327,8 +327,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
 
                 if (type == 'isOneOf') {
-                    this.searchParams.oneOfIdList.forEach(function (id) {
-                        this.addLinkOneOfHtml(id, this.searchParams.oneOfNameHash[id]);
+                    this.searchData.oneOfIdList.forEach(function (id) {
+                        this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     }, this);
                 }
             }
@@ -351,7 +351,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         deleteLinkOneOf: function (id) {
             this.deleteLinkOneOfHtml(id);
 
-            var index = this.searchParams.oneOfIdList.indexOf(id);
+            var index = this.searchData.oneOfIdList.indexOf(id);
             if (index > -1) {
                 this.searchParams.oneOfIdList.splice(index, 1);
             }
@@ -359,9 +359,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         addLinkOneOf: function (id, name) {
-            if (!~this.searchParams.oneOfIdList.indexOf(id)) {
-                this.searchParams.oneOfIdList.push(id);
-                this.searchParams.oneOfNameHash[id] = name;
+            if (!~this.searchData.oneOfIdList.indexOf(id)) {
+                this.searchData.oneOfIdList.push(id);
+                this.searchData.oneOfNameHash[id] = name;
                 this.addLinkOneOfHtml(id, name);
             }
         },
@@ -411,9 +411,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     type: 'in',
                     typeFront: type,
                     field: this.idName,
-                    value: this.searchParams.oneOfIdList,
-                    oneOfIdList: this.searchParams.oneOfIdList,
-                    oneOfNameHash: this.searchParams.oneOfNameHash
+                    value: this.searchData.oneOfIdList,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash
                 };
                 return data;
 

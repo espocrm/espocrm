@@ -138,8 +138,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
-            this.searchParams.typeFront = this.searchParams.typeFront || 'is';
+            this.searchData.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
 
             this.events = _.extend({
                 'change select.search-type': function (e) {

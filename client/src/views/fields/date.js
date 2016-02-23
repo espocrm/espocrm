@@ -44,17 +44,22 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             Dep.prototype.setup.call(this);
         },
 
+        data: function () {
+            if (this.mode === 'search') {
+                this.searchData.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
+                this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
+            }
+            return Dep.prototype.data.call(this);
+        },
+
         setupSearch: function () {
-            this.searchParams.typeOptions = this.searchTypeOptions;
+            this.searchData.typeOptions = this.searchTypeOptions;
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
                     this.handleSearchType(type);
                 },
             }, this.events || {});
-
-            this.searchParams.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
-            this.searchParams.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
         },
 
         stringifyDateValue: function (value) {

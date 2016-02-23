@@ -61,7 +61,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
+            this.searchData.typeOptions = ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var additional = this.$el.find('input.additional');

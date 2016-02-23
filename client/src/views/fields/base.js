@@ -147,14 +147,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         data: function () {
-            return {
+            var data = {
                 scope: this.model.name,
                 name: this.name,
                 defs: this.defs,
                 params: this.params,
-                value: this.getValueForDisplay(),
-                searchParams: this.searchParams,
+                value: this.getValueForDisplay()
             };
+            if (this.mode === 'search') {
+                data.searchParams = this.searchParams;
+                data.searchData = this.searchData;
+            }
+            return data;
         },
 
         getValueForDisplay: function () {
@@ -208,6 +212,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.mode == 'search') {
                 this.searchParams = _.clone(this.options.searchParams || {});
+                this.searchData = {};
                 this.setupSearch();
             }
 

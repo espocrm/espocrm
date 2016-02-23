@@ -35,9 +35,9 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         setupSearch: function () {
             Dep.prototype.setupSearch.call(this);
 
-            this.searchParams.typeOptions.push('isFromTeams');
-            this.searchParams.teamIdList = this.searchParams.teamIdList || [];
-            this.searchParams.teamNameHash = this.searchParams.teamNameHash || {};
+            this.searchData.typeOptions.push('isFromTeams');
+            this.searchData.teamIdList = this.searchParams.teamIdList || [];
+            this.searchData.teamNameHash = this.searchParams.teamNameHash || {};
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
                 var id = $(e.currentTarget).data('id').toString();
@@ -130,8 +130,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 var type = this.$el.find('select.search-type').val();
 
                 if (type == 'isFromTeams') {
-                    this.searchParams.teamIdList.forEach(function (id) {
-                        this.addLinkTeamsHtml(id, this.searchParams.teamNameHash[id]);
+                    this.searchData.teamIdList.forEach(function (id) {
+                        this.addLinkTeamsHtml(id, this.searchData.teamNameHash[id]);
                     }, this);
                 }
             }
@@ -140,17 +140,19 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         deleteLinkTeams: function (id) {
             this.deleteLinkTeamsHtml(id);
 
-            var index = this.searchParams.teamIdList.indexOf(id);
+            var index = this.searchData.teamIdList.indexOf(id);
             if (index > -1) {
-                this.searchParams.teamIdList.splice(index, 1);
+                this.searchData.teamIdList.splice(index, 1);
             }
-            delete this.searchParams.teamNameHash[id];
+            delete this.searchData.teamNameHash[id];
         },
 
         addLinkTeams: function (id, name) {
-            if (!~this.searchParams.teamIdList.indexOf(id)) {
-                this.searchParams.teamIdList.push(id);
-                this.searchParams.teamNameHash[id] = name;
+            this.searchData.teamIdList = this.searchData.teamIdList || [];
+
+            if (!~this.searchData.teamIdList.indexOf(id)) {
+                this.searchData.teamIdList.push(id);
+                this.searchData.teamNameHash[id] = name;
                 this.addLinkTeamsHtml(id, name);
             }
         },
@@ -177,9 +179,9 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     type: 'isUserFromTeams',
                     typeFront: type,
                     field: this.name,
-                    value: this.searchParams.teamIdList,
-                    teamIdList: this.searchParams.teamIdList,
-                    teamNameHash: this.searchParams.teamNameHash
+                    value: this.searchData.teamIdList,
+                    teamIdList: this.searchData.teamIdList,
+                    teamNameHash: this.searchData.teamNameHash
                 };
                 return data;
             }
