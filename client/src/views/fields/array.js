@@ -85,6 +85,15 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             this.noEmptyString = this.params.noEmptyString;
 
+            this.listenTo(this.model, 'change:' + this.name, function () {
+                this.selected = Espo.Utils.clone(this.model.get(this.name));
+            }, this);
+
+            this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
+            if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
+                this.selected = [];
+            }
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
@@ -118,15 +127,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     }.bind(this));
                     this.translatedOptions = translatedOptions;
                 }
-            }
-
-            this.listenTo(this.model, 'change:' + this.name, function () {
-                this.selected = Espo.Utils.clone(this.model.get(this.name));
-            }, this);
-
-            this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
-            if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
-                this.selected = [];
             }
         },
 
