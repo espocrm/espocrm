@@ -24,5 +24,8 @@
       "layoutRelationshipsDisabled": true,
       "relationName": "attachments"
    },
-   "filter": false
+   "filter": false,
+   "fieldDefs": {
+      "layoutListDisabled": true
+   }
 }

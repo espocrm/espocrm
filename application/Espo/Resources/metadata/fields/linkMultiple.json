@@ -13,5 +13,8 @@
       "names"
    ],
    "notCreatable": true,
-   "filter": true
+   "filter": true,
+   "fieldDefs": {
+      "layoutListDisabled": true
+   }
 }

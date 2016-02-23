@@ -47,7 +47,7 @@
             "type": "bool",
             "readOnly": true,
             "notStorable": true,
-            "view": "Crm:Task.Fields.IsOverdue",
+            "view": "crm:views/task/fields/is-overdue",
             "disabled": true
         },
         "description": {
@@ -89,7 +89,8 @@
         },
         "attachments": {
             "type": "attachmentMultiple",
-            "sourceList": ["Document"]
+            "sourceList": ["Document"],
+            "layoutListDisabled": true
         }
     },
     "links": {
