@@ -73,7 +73,8 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 grid: {
                     horizontalLines: false,
                     verticalLines: false,
-                    outline: 's'
+                    outline: '',
+                    color: this.outlineColor
                 },
                 yaxis: {
                     showLabels: false,

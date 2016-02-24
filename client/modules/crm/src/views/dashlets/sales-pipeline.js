@@ -159,7 +159,8 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 },
                 grid: {
                     horizontalLines: false,
-                    outline: 'sw'
+                    outline: 'sw',
+                    color: this.outlineColor
                 },
                 yaxis: {
                     min: 0,

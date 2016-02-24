@@ -91,7 +91,8 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                 grid: {
                     horizontalLines: true,
                     verticalLines: false,
-                    outline: 'sw'
+                    outline: 'sw',
+                    color: this.outlineColor
                 },
                 yaxis: {
                     min: 0,

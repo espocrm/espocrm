@@ -91,7 +91,8 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 },
                 grid: {
                     horizontalLines: false,
-                    outline: 'sw'
+                    outline: 'sw',
+                    color: this.outlineColor
                 },
                 yaxis: {
                     min: 0,

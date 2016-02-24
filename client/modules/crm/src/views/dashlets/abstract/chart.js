@@ -40,6 +40,8 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         successColor: '#5ABD37',
 
+        outlineColor: '#333',
+
         init: function () {
             Dep.prototype.init.call(this);
 
