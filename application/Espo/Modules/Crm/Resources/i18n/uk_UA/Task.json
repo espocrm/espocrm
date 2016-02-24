@@ -34,7 +34,7 @@
     },
     "labels": {
         "Create Task": "Створити завдання",
-        "Complete": "Повне"
+        "Complete": "Завершити"
     },
     "presetFilters": {
         "actual": "Актуально",
