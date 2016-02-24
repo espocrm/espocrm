@@ -1023,12 +1023,12 @@ class Record extends \Espo\Core\Services\Base
         return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 
-    protected function getDuplicateWhereClause(Entity $entity, $data)
+    protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity, $data)
+    public function checkEntityForDuplicate(Entity $entity, $data = array())
     {
         $where = $this->getDuplicateWhereClause($entity, $data);
 
