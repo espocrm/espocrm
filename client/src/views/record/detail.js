@@ -266,9 +266,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var $middle = this.getView('middle').$el;
             var $window = $(window);
 
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
-                if ($(window.document).width() < 758) {
+                if ($(window.document).width() < screenWidthXs) {
                     $container.removeClass('stick-sub');
                     $block.hide();
                     $container.show();
