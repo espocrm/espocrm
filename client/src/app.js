@@ -170,7 +170,6 @@ Espo.define(
 
                 if (this.themeManager.isUserTheme()) {
                     var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
-                    console.log(stylesheetPath);
                     $('#main-stylesheet').attr('href', stylesheetPath);
                 }
 
@@ -432,7 +431,6 @@ Espo.define(
         setCookieAuthToken: function (token) {
             var date = new Date();
             date.setTime(date.getTime() + (1000 * 24*60*60*1000));
-            console.log(token);
             document.cookie = 'auth-token='+token+'; expires='+date.toGMTString()+'; path=/';
         },
 
