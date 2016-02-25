@@ -42,7 +42,14 @@
         "Time Format": "Time Format",
         "Currency": "Currency",
         "Preview": "Preview",
-        "Next": "Next"
+        "Next": "Next",
+        "Step 1": "Step 1",
+        "Step 2": "Step 2",
+        "Double Quote": "Double Quote",
+        "Single Quote": "Single Quote",
+        "Imported": "Imported",
+        "Duplicates": "Duplicates",
+        "Updated": "Updated"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

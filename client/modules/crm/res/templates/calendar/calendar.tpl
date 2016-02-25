@@ -25,7 +25,7 @@
                     {{#each scopeFilterDataList}}
                         <li>
                             <a href="javascript:" data-action="toggleScopeFilter" data-name="{{scope}}">
-                                <span class="glyphicon glyphicon-ok filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamePlural'}}
+                                <span class="glyphicon glyphicon-ok filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{translate scope category='scopeNamesPlural'}}
                             </a>
                         </li>
                     {{/each}}

@@ -87,8 +87,8 @@
                     <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'Text Qualifier' scope='Import'}}</label>
                         <select class="form-control" id="import-text-qualifier">
-                            <option value="&quot;">Double Quote</option>
-                            <option value="'">Single Quote</option>
+                            <option value="&quot;">{{translate 'Double Quote' scope='Import'}}</option>
+                            <option value="'">{{translate 'Single Quote' scope='Import'}}</option>
                         </select>
                     </div>
                     <div class="col-sm-4 form-group">
