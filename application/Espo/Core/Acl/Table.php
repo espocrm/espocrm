@@ -189,6 +189,9 @@ class Table
             $valuePermissionLists->$permission = [];
         }
 
+        $aclTableList = [];
+        $fieldTableList = [];
+
         if (!$this->user->isAdmin()) {
             $roleList = $this->getRoleList();
 
@@ -484,6 +487,9 @@ class Table
 
             foreach (array_merge($mandatoryFieldData, $mandatoryScopeFieldData) as $field => $f) {
                 if (!in_array($field, $fieldList)) continue;
+                if (!isset($fieldTable->$scope)) {
+                    $fieldTable->$scope = (object) [];
+                }
                 $fieldTable->$scope->$field = (object) [];
                 foreach ($this->fieldActionList as $action) {
                     $level = 'no';
@@ -508,7 +514,7 @@ class Table
 
         foreach ($this->getScopeList() as $scope) {
             if ($this->getMetadata()->get('scopes.' . $scope . '.disabled')) {
-                $aclTable->$scope = false;
+                $table->$scope = false;
                 unset($fieldTable->$scope);
             }
         }

@@ -95,9 +95,6 @@ class Entity extends \Espo\ORM\Entity
         $columnsField = $field . 'Columns';
 
         if (!$this->has($columnsField)) {
-            $this->loadLinkMultipleField($field, true);
-        }
-        if (!$this->has($columnsField)) {
             return;
         }
         $columns = $this->get($columnsField);
@@ -125,7 +122,7 @@ class Entity extends \Espo\ORM\Entity
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {
-                $this->loadLinkMultipleField($field, true);
+                $this->loadLinkMultipleField($field);
             } else {
                 $this->set($idsField, []);
             }
@@ -148,7 +145,7 @@ class Entity extends \Espo\ORM\Entity
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {
-                $this->loadLinkMultipleField($field, true);
+                $this->loadLinkMultipleField($field);
             }
         }
         $valueList = $this->get($idsField);
@@ -166,7 +163,7 @@ class Entity extends \Espo\ORM\Entity
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {
-                $this->loadLinkMultipleField($field, true);
+                $this->loadLinkMultipleField($field);
             }
         }
 

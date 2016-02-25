@@ -116,7 +116,7 @@ class Table extends \Espo\Core\Acl\Table
         foreach ($this->getScopeList() as $scope) {
             $d = $this->getMetadata()->get('scopes.' . $scope);
             if ($d['disabled'] || $d['portalDisabled']) {
-                $aclTable->$scope = false;
+                $table->$scope = false;
                 unset($fieldTable->$scope);
             }
         }
