@@ -906,6 +906,7 @@ class Base
                     $part[$item['field'] . '='] = null;
                     break;
                 case 'isNotNull':
+                case 'ever':
                     $part[$item['field'] . '!='] = null;
                     break;
                 case 'isTrue':

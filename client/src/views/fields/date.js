@@ -38,7 +38,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'date', 'after', 'before'],
 
-        searchTypeOptions: ['lastSevenDays', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeOptions: ['lastSevenDays', 'ever', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
