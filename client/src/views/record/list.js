@@ -313,7 +313,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if ('id' in data) {
                         window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                     }
-                },
+                }.bind(this),
             });
         },
 
