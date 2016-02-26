@@ -81,16 +81,19 @@ Espo.define('metadata', [], function () {
 
             var pointer = this.data;
             var result = defaultValue;
-            arr.forEach(function (key, i) {
+
+            for (var i = 0; i < arr.length; i++) {
+                var key = arr[i];
+
                 if (!(key in pointer)) {
                     result = defaultValue;
-                    return;
+                    break;
                 }
                 if (arr.length - 1 == i) {
                     result = pointer[key];
                 }
                 pointer = pointer[key];
-            });
+            }
             return result;
         },
 
