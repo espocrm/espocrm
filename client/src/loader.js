@@ -33,7 +33,7 @@ var Espo = Espo || {classMap:{}};
     var root = this;
 
     Espo.Loader = function (cache, cacheTimestamp) {
-        this.basePath = document.currentScript.dataset.basePath || '';
+        this.basePath = $('script[data-base-path]').data('basePath') || '';
 
         this.cache = cache || null;
         this._loadCallbacks = {};
