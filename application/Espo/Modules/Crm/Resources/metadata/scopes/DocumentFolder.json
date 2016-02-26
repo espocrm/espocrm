@@ -5,7 +5,7 @@
     "acl": "recordAllTeamNo",
     "aclPortal": "recordAllNo",
     "module": "Crm",
-    "customizable": false,
+    "customizable": true,
     "importable": false,
     "type": "CategoryTree",
     "stream": false,
