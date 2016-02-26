@@ -61,8 +61,8 @@ Espo.define('views/import/index', 'view', function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Import'));
-        },
+            this.setPageTitle(this.getLanguage().translate('Import', 'labels', 'Admin'));
+        }
 
     });
 });
