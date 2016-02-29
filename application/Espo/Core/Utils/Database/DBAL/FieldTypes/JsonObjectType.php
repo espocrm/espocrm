@@ -29,20 +29,18 @@
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-use Doctrine\DBAL\Types\StringType;
-
-class Password extends StringType
+class JsonObjectType extends \Doctrine\DBAL\Types\ObjectType
 {
-    const PASSWORD = 'password';
+    const JSON_OBJECT = 'jsonObject';
 
     public function getName()
     {
-        return self::PASSWORD;
+        return self::JSON_OBJECT;
     }
 
     public static function getDbTypeName()
     {
-        return 'VARCHAR';
+        return 'TEXT';
     }
-}
 
+}

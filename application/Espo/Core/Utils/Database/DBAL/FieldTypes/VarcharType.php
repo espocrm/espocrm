@@ -31,7 +31,7 @@ namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
 use Doctrine\DBAL\Types\StringType;
 
-class Varchar extends StringType
+class VarcharType extends StringType
 {
     const VARCHAR = 'varchar';
 

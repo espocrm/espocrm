@@ -29,14 +29,19 @@
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Types\BooleanType;
 
-class Int extends IntegerType
+class BoolType extends BooleanType
 {
-    const INTtype = 'int';
+    const BOOL = 'bool';
 
     public function getName()
     {
-        return self::INTtype;
+        return self::BOOL;
+    }
+
+    public static function getDbTypeName()
+    {
+        return 'TINYINT';
     }
 }

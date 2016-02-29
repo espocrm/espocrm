@@ -161,11 +161,11 @@ class Schema
 
             $typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
             if ($typeList !== false) {
-                foreach($typeList as $name) {
-                    $typeName = preg_replace('/\.php$/i', '', $name);
+                foreach ($typeList as $name) {
+                    $typeName = preg_replace('/Type\.php$/i', '', $name);
                     $dbalTypeName = strtolower($typeName);
 
-                    $filePath = Util::concatPath($path, $typeName);
+                    $filePath = Util::concatPath($path, $typeName . 'Type');
                     $class = Util::getClassName($filePath);
 
                     if( ! Type::hasType($dbalTypeName) ) {
