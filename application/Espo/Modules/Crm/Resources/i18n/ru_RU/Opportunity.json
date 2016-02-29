@@ -1,41 +1,44 @@
 {
-    "fields": {
-        "name": "Name",
-        "account": "Контрагент",
-        "stage": "Стадия",
-        "amount": "Сумма",
-        "probability": "Вероятность успеха, %",
-        "leadSource": "Источник потенциального клиента",
-        "doNotCall": "Не звонить",
-        "closeDate": "Дата закрытия",
-        "contacts": "Контакты",
-        "description": "Описание",
-        "amountConverted": "Сумма (сконвертирована)",
-        "amountWeightedConverted": "Amount Weighted"
-    },
-    "links": {
-        "contacts": "Контакты",
-        "documents": "Documents"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Привлечение клиента",
-            "Qualification": "Оценка возможности",
-            "Needs Analysis": "Требует анализа",
-            "Value Proposition": "Выбор предложения/оферты",
-            "Id. Decision Makers": "Определение ответственного лица",
-            "Perception Analysis": "Проведение анализа",
-            "Proposal/Price Quote": "Отправлено предложение/оферта",
-            "Negotiation/Review": "Согласование/рассмотрение",
-            "Closed Won": "Закрыто - Успех",
-            "Closed Lost": "Закрыто - Провал" 
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Создать сделку"
-    },
-    "presetFilters": {
-        "open": "Открыть",
-        "won": "Успешные"
+  "fields": {
+    "name": "Название",
+    "account": "Контрагент",
+    "stage": "Стадия",
+    "amount": "Сумма",
+    "probability": "Вероятность успеха, %",
+    "leadSource": "Источник кандидата",
+    "doNotCall": "Не звонить",
+    "closeDate": "Дата закрытия",
+    "contacts": "Контакты",
+    "description": "Описание",
+    "amountConverted": "Сумма (сконвертированная)",
+    "amountWeightedConverted": "Сумма (средневзвешенная)",
+    "campaign": "Кампания"
+  },
+  "links": {
+    "contacts": "Контакты",
+    "documents": "Документы",
+    "campaign": "Кампания"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Привлечение клиента",
+      "Qualification": "Оценка возможности",
+      "Needs Analysis": "Требует анализа",
+      "Value Proposition": "Выбор предложения/оферты",
+      "Id. Decision Makers": "Определение ответственного лица",
+      "Perception Analysis": "Проведение анализа",
+      "Proposal/Price Quote": "Отправлено предложение/оферта",
+      "Negotiation/Review": "Согласование/рассмотрение",
+      "Closed Won": "Закрыто - Успех",
+      "Closed Lost": "Закрыто - Провал"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Создать сделку"
+  },
+  "presetFilters": {
+    "open": "Открыть",
+    "won": "Успешные",
+    "lost": "Провальные"
+  }
 }

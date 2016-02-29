@@ -1,42 +1,57 @@
 {
-    "fields": {
-        "name": "Name",
-        "number": "Номер",
-        "status": "статус",
-        "account": "Контрагент",
-        "contact": "Контакт",
-        "priority": "Приоритет",
-        "type": "Type",
-        "description": "Описание"
+  "fields": {
+    "name": "Название",
+    "number": "Номер",
+    "status": "Статус",
+    "account": "Контрагент",
+    "contact": "Контакт",
+    "contacts": "Контакты",
+    "priority": "Приоритет",
+    "type": "Тип",
+    "description": "Описание",
+    "inboundEmail": "Входящая эл. почта"
+  },
+  "links": {
+    "inboundEmail": "Входящая эл. почта",
+    "account": "Контрагент",
+    "contact": "Контакт (основной)",
+    "Contacts": "Контакты",
+    "meetings": "Встречи",
+    "calls": "Звонки",
+    "tasks": "Задачи",
+    "emails": "Эл. письма",
+    "articles": "Статьи базы знаний"
+  },
+  "options": {
+    "status": {
+      "New": "Новое",
+      "Assigned": "Назначено",
+      "Pending": "В ожидании",
+      "Closed": "Закрыто",
+      "Rejected": "Отклонено",
+      "Duplicate": "Дубликат"
     },
-    "links": {
+    "priority": {
+      "Low": "Низкий",
+      "Normal": "Обычный",
+      "High": "Высокий",
+      "Urgent": "Срочно"
     },
-    "options": {
-        "status": {
-            "New": "Новый",
-            "Assigned": "На рассмотрении",
-            "Pending": "Текущее",
-            "Closed": "Закрыто",
-            "Rejected": "Отказано",
-            "Duplicate": "Копия"
-        },
-        "priority" : {
-            "Low": "Низкий",
-            "Normal": "Нормальный",
-            "High": "Высокий",
-            "Urgent": "Срочно"
-        },
-        "type": {
-            "Question": "Вопрос",
-            "Incident": "Происшествие",
-            "Problem": "Проблема"
-        }
-    },
-    "labels": {
-        "Create Case": "Создать обращение"
-    },
-    "presetFilters": {
-        "open": "Открытые",
-        "closed": "Закрытые"
+    "type": {
+      "Question": "Вопрос",
+      "Incident": "Происшествие",
+      "Problem": "Проблема"
     }
+  },
+  "labels": {
+    "Create Case": "Создать обращение",
+    "Close": "Закрыть",
+    "Reject": "Отклонить",
+    "Closed": "Закрыто",
+    "Rejected": "Отклонено"
+  },
+  "presetFilters": {
+    "open": "Открытые",
+    "closed": "Закрытые"
+  }
 }

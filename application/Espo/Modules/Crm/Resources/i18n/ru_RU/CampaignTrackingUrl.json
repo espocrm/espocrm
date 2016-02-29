@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "Целевой URL-адрес",
+    "urlToUse": "Код для подстановки вместо целевого URL-адреса",
+    "campaign": "Кампания"
+  },
+  "links": {
+    "campaign": "Кампания"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Создать целевой URL-адрес"
+  }
+}

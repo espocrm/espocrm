@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Название",
+    "body": "Тело",
+    "entityType": "Тип объекта",
+    "header": "Шапка",
+    "footer": "Подвал",
+    "leftMargin": "Левый отступ",
+    "topMargin": "Верхний отступ",
+    "rightMargin": "Правый отступ",
+    "bottomMargin": "Нижний отступ",
+    "printFooter": "Отображать подвал",
+    "footerPosition": "Положение подвала"
+  },
+  "labels": {
+    "Create Template": "Создать шаблон"
+  },
+  "tooltips": {
+    "footer": "Используйте {pageNumber} для отображения номера страницы."
+  }
+}

@@ -1,37 +1,47 @@
 {
-    "fields": {
-        "dateFormat": "Формат даты",
-        "timeFormat": "Формат времени",
-        "timeZone": "Часовой пояс",
-        "weekStart": "Первый день недели",
-        "thousandSeparator": "Разделитель разрядов(тысячные)",
-        "decimalMark": "Десятичный знак",
-        "defaultCurrency": "Валюта по умолчанию",
-        "currencyList": "Список валют",
-        "language": "Язык",
-        
-        "smtpServer": "Сервер",
-        "smtpPort": "Порт",
-        "smtpAuth": "Авторизация",
-        "smtpSecurity": "Безопасность",
-        "smtpUsername": "Username",
-        "emailAddress": "Email",
-        "smtpPassword": "Пароль",
-        "smtpEmailAddress": "E-mail адрес",
-        
-        "exportDelimiter": "Разделитель (Перемещение)",
-        
-        "receiveAssignmentEmailNotifications": "Получать уведомления при назначении"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Воскресенье",
-            "1": "Понедельник"
-        }
-    },
-    "labels": {
-        "Notifications": "Оповещения"
+  "fields": {
+    "dateFormat": "Формат даты",
+    "timeFormat": "Формат времени",
+    "timeZone": "Часовой пояс",
+    "weekStart": "Первый день недели",
+    "thousandSeparator": "Разделитель групп разрядов",
+    "decimalMark": "Десятичный разделитель",
+    "defaultCurrency": "Валюта по умолчанию",
+    "currencyList": "Список валют",
+    "language": "Язык",
+    "smtpServer": "Сервер",
+    "smtpPort": "Порт",
+    "smtpAuth": "Аутентификация",
+    "smtpSecurity": "Безопасность",
+    "smtpUsername": "Имя пользователя",
+    "emailAddress": "Адрес эл. почты",
+    "smtpPassword": "Пароль",
+    "smtpEmailAddress": "Адрес эл. почты",
+    "exportDelimiter": "Разделитель полей при экспортировании",
+    "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
+    "autoFollowEntityTypeList": "Автоподписка",
+    "signature": "Подпись к эл. письмам",
+    "dashboardTabList": "Список вкладок",
+    "tabList": "Список вкладок",
+    "defaultReminders": "Напоминания по умолчанию.",
+    "theme": "Тема",
+    "useCustomTabList": "Настраиваемый список вкладок",
+    "emailReplyToAllByDefault": "Email Reply to All by Default"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Воскресенье",
+      "1": "Понедельник"
     }
+  },
+  "labels": {
+    "Notifications": "Оповещения",
+    "User Interface": "Интерфейс пльзователя",
+    "SMTP": "SMTP",
+    "Misc": "Разное",
+    "Locale": "Локаль"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Пользователь будет автоматически подисан на все новые записи о выбранных типах объектов, будет видеть эту информацию в ленте и получать оповещения."
+  }
 }

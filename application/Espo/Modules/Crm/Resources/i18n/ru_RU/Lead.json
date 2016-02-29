@@ -1,51 +1,62 @@
 {
-    "labels": {
-        "Converted To": "Преобразован в",
-        "Create Lead": "Создать потенциального клиента",
-        "Convert": "Преобразовать"
+  "labels": {
+    "Converted To": "Преобразован в",
+    "Create Lead": "Создать кандидата",
+    "Convert": "Преобразовать"
+  },
+  "fields": {
+    "name": "Имя",
+    "emailAddress": "Адрес эл. почты",
+    "title": "Должность",
+    "website": "Сайт",
+    "phoneNumber": "Телефон",
+    "accountName": "Контрагент",
+    "doNotCall": "Не звонить",
+    "address": "Адрес",
+    "status": "Статус",
+    "source": "Источник",
+    "opportunityAmount": "Сумма сделки",
+    "opportunityAmountConverted": "Сумма сделки (сконвертированная)",
+    "description": "Описание",
+    "createdAccount": "Контрагент",
+    "createdContact": "Контакт",
+    "createdOpportunity": "Cделка",
+    "campaign": "Кампания",
+    "targetLists": "Списки целей",
+    "targetList": "Список целей"
+  },
+  "links": {
+    "targetLists": "Списки целей",
+    "campaignLogRecords": "Журнал кампании",
+    "campaign": "Кампания",
+    "createdAccount": "Контрагент",
+    "createdContact": "Контакт",
+    "createdOpportunity": "Cделка"
+  },
+  "options": {
+    "status": {
+      "New": "Новый",
+      "Assigned": "Назначен",
+      "In Process": "В процессе",
+      "Converted": "Преобразован",
+      "Recycled": "Удален",
+      "Dead": "Мертв"
     },
-    "fields": {
-        "name": "Name",
-        "emailAddress": "Email",
-        "title": "Название",
-        "website": "Интернет сайт",
-        "phoneNumber": "Phone",
-        "accountName": "Имя контрагента",
-        "doNotCall": "Не звонить",
-        "address": "Address",
-        "status": "статус",
-        "source": "Source",
-        "opportunityAmount": "Сумма сделки",
-        "opportunityAmountConverted": "Сумма сделки (конвертирован)",
-        "description": "Описание",
-        "createdAccount": "Контрагент",
-        "createdContact": "Контакт",
-        "createdOpportunity": "Cделка"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Новый",
-            "Assigned": "На рассмотрении",
-            "In Process": "В процессе",
-            "Converted": "Преобразовано",
-            "Recycled": "Восстановленный",
-            "Dead": "Мертв"
-        },
-        "source": {
-            "Call": "Вызов",
-            "Email": "Email",
-            "Existing Customer": "Existing Customer",
-            "Partner": "Партнер",
-            "Public Relations": "Public Relations",
-            "Web Site": "Web Site",
-            "Campaign": "Campaign",
-            "Other": "Дополнительно"
-        }
-    },
-    "presetFilters": {
-        "actual": "Актуальные",
-        "active": "Активные"
+    "source": {
+      "": "Нет",
+      "Call": "Звонок",
+      "Email": "Эл. письмо",
+      "Existing Customer": "Существующий клиент",
+      "Partner": "Партнер",
+      "Public Relations": "Связи с общественностью",
+      "Web Site": "Сайт",
+      "Campaign": "Кампания",
+      "Other": "Другое"
     }
+  },
+  "presetFilters": {
+    "active": "Активный",
+    "actual": "Актуальный",
+    "converted": "Преобразованный"
+  }
 }

@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "Fields": "Поля",
+    "Relationships": "Отношения"
+  },
+  "fields": {
+    "name": "Название",
+    "type": "Тип",
+    "labelSingular": "Метка (единственное число)",
+    "labelPlural": "Метка (множественное число)",
+    "stream": "Лента",
+    "label": "Метка",
+    "linkType": "Link Type",
+    "entityForeign": "Foreign Entity",
+    "linkForeign": "Foreign Link",
+    "link": "Link",
+    "labelForeign": "Foreign Label",
+    "sortBy": "Сортировка (поле)",
+    "sortDirection": "Сортировка (направление)",
+    "relationName": "Middle Table Name",
+    "linkMultipleField": "Link Multiple Field",
+    "linkMultipleFieldForeign": "Foreign Link Multiple Field",
+    "disabled": "Disabled"
+  },
+  "options": {
+    "type": {
+      "": "Нет",
+      "Base": "Base",
+      "Person": "Person",
+      "CategoryTree": "Category Tree"
+    },
+    "linkType": {
+      "manyToMany": "Many-to-Many",
+      "oneToMany": "One-to-Many",
+      "manyToOne": "Many-to-One",
+      "parentToChildren": "Parent-to-Children",
+      "childrenToParent": "Children-to-Parent"
+    },
+    "sortDirection": {
+      "asc": "По возрастанию",
+      "desc": "По убыванию"
+    }
+  },
+  "messages": {
+    "entityCreated": "Объект был создан",
+    "linkAlreadyExists": "Конфликт названий связей (link).",
+    "linkConflict": "Связь (link) с таким названием уже существует."
+  }
+}

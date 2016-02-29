@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "name": "Название",
+    "description": "Описание",
+    "status": "Статус",
+    "type": "Тип",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "targetLists": "Списки целей",
+    "excludingTargetLists": "Исключая списки целей",
+    "sentCount": "Отправлено",
+    "openedCount": "Открыто",
+    "clickedCount": "Проследовало по ссылке",
+    "optedOutCount": "Отписалось",
+    "bouncedCount": "Возвратов писем",
+    "hardBouncedCount": "Жестких возвратов",
+    "softBouncedCount": "Мягких возвратов",
+    "leadCreatedCount": "Кандидатов создано",
+    "revenue": "Доход",
+    "revenueConverted": "Доход (сконвертированный)",
+    "budget": "Бюджет",
+    "budgetConverted": "Бюджет (сконвертированный)"
+  },
+  "links": {
+    "targetLists": "Списки целей",
+    "excludingTargetLists": "Исключая списки целей",
+    "accounts": "Контрагенты",
+    "contacts": "Контакты",
+    "leads": "Кандидаты",
+    "opportunities": "Сделки",
+    "campaignLogRecords": "Журнал",
+    "massEmails": "Массовые рассылки эл. писем",
+    "trackingUrls": "Целевые URL-адреса"
+  },
+  "options": {
+    "type": {
+      "Email": "Эл. письмо",
+      "Web": "Интернет",
+      "Television": "Телевидение",
+      "Radio": "Радио",
+      "Newsletter": "Информационный бюллетень",
+      "Mail": "Письмо"
+    },
+    "status": {
+      "Planning": "Запланирована",
+      "Active": "Активна",
+      "Inactive": "Не активна",
+      "Complete": "Завершена"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Создать кампанию",
+    "Target Lists": "Списки целей",
+    "Statistics": "Статистика",
+    "hard": "жесткий",
+    "soft": "мягкий",
+    "Unsubscribe": "Отписаться",
+    "Mass Emails": "Массовые рассылки эл. писем",
+    "Email Templates": "Шаблоны эл. писем"
+  },
+  "presetFilters": {
+    "active": "Активна"
+  },
+  "messages": {
+    "unsubscribed": "Вы были удалены из нашего списка рассылки."
+  },
+  "tooltips": {
+    "targetLists": "Цели которые должны получить сообщения.",
+    "excludingTargetLists": "Цели которые не должны получить сообщения."
+  }
+}

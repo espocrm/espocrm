@@ -1,38 +1,45 @@
 {
-    "fields": {
-        "name": "Имя",
-        "parent": "Источник",
-        "status": "Статус",
-        "dateStart": "Дата начала",
-        "dateEnd": "Date Due",
-        "priority": "Приоритет",
-        "description": "Описание",
-        "isOverdue": "Просрочена"
+  "fields": {
+    "name": "Название",
+    "parent": "Источник",
+    "status": "Статус",
+    "dateStart": "Дата начала",
+    "dateEnd": "Дата окончания",
+    "dateStartDate": "Дата начала (весь день)",
+    "dateEndDate": "Дата окончания (весь день)",
+    "priority": "Приоритет",
+    "description": "Описание",
+    "isOverdue": "Просрочена",
+    "account": "Контрагент",
+    "dateCompleted": "Дата завершения",
+    "attachments": "Вложения"
+  },
+  "links": {
+    "attachments": "Вложения"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Не началась",
+      "Started": "Началась",
+      "Completed": "Завершена",
+      "Canceled": "Отменена",
+      "Deferred": "Отложена"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "Не началась",
-            "Started": "Началась",
-            "Completed": "Завершена",
-            "Canceled": "Отменена"
-        },
-        "priority" : {
-            "Low": "Низкий",
-            "Normal": "Нормальный",
-            "High": "Высокий",
-            "Urgent": "Срочно"
-        }
-    },
-    "labels": {
-        "Create Task": "Создать задачу",
-        "Complete": "Завершить"
-    },
-    "presetFilters": {
-        "actual": "Актуальные",
-        "completed": "Завершенные",
-        "todays": "На сегодня",
-        "overdue": "Просроченные"
+    "priority": {
+      "Low": "Низкий",
+      "Normal": "Обычный",
+      "High": "Высокий",
+      "Urgent": "Срочно"
     }
+  },
+  "labels": {
+    "Create Task": "Создать задачу",
+    "Complete": "Завершить"
+  },
+  "presetFilters": {
+    "actual": "Актуальные",
+    "completed": "Завершенные",
+    "todays": "На сегодня",
+    "overdue": "Просроченные"
+  }
 }

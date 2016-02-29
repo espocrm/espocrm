@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Отправка массовых рассылок эл. писем",
+      "ControlKnowledgeBaseArticleStatus": "Контроль статуса статей базы знаний"
+    }
+  }
+}

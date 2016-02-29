@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Действие",
+    "actionDate": "Дата",
+    "data": "Данные",
+    "campaign": "Кампания",
+    "parent": "Цель",
+    "object": "Объект",
+    "application": "Приложение",
+    "queueItem": "Queue Item",
+    "stringData": "Строка данных",
+    "stringAdditionalData": "Строка дополнительных данных"
+  },
+  "links": {
+    "queueItem": "Queue Item",
+    "parent": "Источник",
+    "object": "Объект"
+  },
+  "options": {
+    "action": {
+      "Sent": "Отправлено",
+      "Opened": "Открыто",
+      "Opted Out": "Отписалось",
+      "Bounced": "Возвратов писем",
+      "Clicked": "Проследовало по ссылке",
+      "Lead Created": "Кандидатов создано"
+    }
+  },
+  "labels": {
+    "All": "Все"
+  },
+  "presetFilters": {
+    "sent": "Отправлено",
+    "opened": "Открыто",
+    "optedOut": "Отписалось",
+    "bounced": "Возвратов писем",
+    "clicked": "Проследовало по ссылке",
+    "leadCreated": "Кандидатов создано"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Создать статью",
+    "Any": "Любой"
+  },
+  "fields": {
+    "name": "Название",
+    "status": "Статус",
+    "type": "Тип",
+    "attachments": "Вложения",
+    "publishDate": "Опубликована",
+    "expirationDate": "Актуальна до",
+    "description": "Описание",
+    "body": "Тело",
+    "categories": "Категории",
+    "language": "Язык",
+    "portals": "Порталы"
+  },
+  "links": {
+    "cases": "Обращения",
+    "opportunities": "Сделки",
+    "categories": "Категории",
+    "portals": "Порталы"
+  },
+  "options": {
+    "status": {
+      "In Review": "На рассмотрении",
+      "Draft": "Черновик",
+      "Archived": "В архиве",
+      "Published": "Опубликована"
+    },
+    "type": {
+      "Article": "Статья"
+    }
+  },
+  "tooltips": {
+    "portals": "Если не пусто, то эта статья будет доступна только в указанных порталах. Если пусто, то будет доступна во всех порталах."
+  },
+  "presetFilters": {
+    "published": "Опубликована"
+  }
+}

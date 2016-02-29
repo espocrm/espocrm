@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Название",
+    "logo": "Логотип",
+    "companyLogo": "Логотип",
+    "url": "URL",
+    "portalRoles": "Роли",
+    "isActive": "Активный",
+    "isDefault": "Портал по умолчанию",
+    "tabList": "Список вкладок",
+    "quickCreateList": "Список для быстрого создания",
+    "theme": "Тема",
+    "language": "Язык",
+    "dashboardLayout": "Планировка панели виджетов",
+    "dateFormat": "Формат даты",
+    "timeFormat": "Формат времени",
+    "timeZone": "Часовой пояс",
+    "weekStart": "Первый день недели",
+    "defaultCurrency": "Валюта по умолчанию"
+  },
+  "links": {
+    "users": "Пользователи",
+    "portalRoles": "Роли",
+    "notes": "Заметки"
+  },
+  "tooltips": {
+    "portalRoles": "Указанные роли портала будут применены ко всем пользователям портала."
+  },
+  "labels": {
+    "Create Portal": "Создать портал",
+    "User Interface": "Интерфейс пльзователя",
+    "General": "Основное",
+    "Settings": "Настройки"
+  }
+}

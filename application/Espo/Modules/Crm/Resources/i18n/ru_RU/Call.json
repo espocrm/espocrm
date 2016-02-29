@@ -1,45 +1,49 @@
 {
-    "fields": {
-        "name": "Имя",
-        "parent": "Источник",
-        "status": "Статус",
-        "dateStart": "Дата начала",
-        "dateEnd": "Дата окончания",
-        "direction": "Категория",
-        "duration": "Длительность",
-        "description": "Описание",
-        "users": "Пользователи",
-        "contacts": "Контакты",
-        "leads": "Потенциальные клиенты",
-        "reminders": "Напоминания"
+  "fields": {
+    "name": "Название",
+    "parent": "Источник",
+    "status": "Статус",
+    "dateStart": "Дата начала",
+    "dateEnd": "Дата окончания",
+    "direction": "Категория",
+    "duration": "Длительность",
+    "description": "Описание",
+    "users": "Пользователи",
+    "contacts": "Контакты",
+    "leads": "Кандидаты",
+    "reminders": "Напоминания",
+    "account": "Контрагент"
+  },
+  "options": {
+    "status": {
+      "Planned": "Запланирован",
+      "Held": "Состоялся",
+      "Not Held": "Не состоялся"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Исходящий",
+      "Inbound": "Входящий"
     },
-    "options": {
-        "status": {
-            "Planned": "Запланированный",
-            "Held": "Выполнен",
-            "Not Held": "Не состоялся"
-        },
-        "direction": {
-            "Outbound": "Исходящий",
-            "Inbound": "Входящий"
-        },
-        "acceptanceStatus": {
-            "None": "Нет",
-            "Accepted": "Принятый",
-            "Declined": "Отклоненный"
-        }
-    },
-    "labels": {
-        "Create Call": "Новый звонок",
-        "Set Held": "Был выполнен",
-        "Set Not Held": "Set Not Held",
-        "Send Invitations": "Отправить приглашения"
-    },
-    "presetFilters": {
-        "planned": "Запланированные",
-        "held": "Завершенные",
-        "todays": "На сегодня"
+    "acceptanceStatus": {
+      "None": "Нет",
+      "Accepted": "Согласен",
+      "Declined": "Не согласен",
+      "Tentative": "Есть сомнения"
     }
+  },
+  "massActions": {
+    "setHeld": "Состоялось",
+    "setNotHeld": "Не состоялось"
+  },
+  "labels": {
+    "Create Call": "Создать звонок",
+    "Set Held": "Состоялось",
+    "Set Not Held": "Не состоялось",
+    "Send Invitations": "Отправить приглашения"
+  },
+  "presetFilters": {
+    "planned": "Запланированные",
+    "held": "Завершенные",
+    "todays": "На сегодня"
+  }
 }

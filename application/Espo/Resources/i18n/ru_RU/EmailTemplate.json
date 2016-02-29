@@ -1,16 +1,25 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "статус",
-        "isHtml": "Html",
-        "body": "Тело",
-        "subject": "Тема",
-        "attachments": "Вложения",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Создать шаблон письма"
-    }
+  "fields": {
+    "name": "Название",
+    "status": "Статус",
+    "isHtml": "HTML",
+    "body": "Тело",
+    "subject": "Тема",
+    "attachments": "Вложения",
+    "insertField": "Вставить поле",
+    "oneOff": "Одноразовый"
+  },
+  "labels": {
+    "Create EmailTemplate": "Создать шаблон эл. письма",
+    "Info": "Информация"
+  },
+  "messages": {
+    "infoText": "Доступные переменные:\n\n{optOutUrl} &#8211; URL ссылки отписки;\n\n{optOutLink} &#8211; ссылка отписки."
+  },
+  "tooltips": {
+    "oneOff": "Отметьте если собираетесь использовать этот шаблон только один раз. К примеру для массовой рассылки эл. писем."
+  },
+  "presetFilters": {
+    "actual": "Актуальный"
+  }
 }

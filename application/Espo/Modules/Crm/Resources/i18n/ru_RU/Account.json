@@ -1,42 +1,80 @@
 {
-    "fields": {
-        "name": "Name",
-        "emailAddress": "Email",
-        "website": "Интернет сайт",
-        "phoneNumber": "Phone",
-        "billingAddress": "Платежный адрес",
-        "shippingAddress": "Почтовый адрес",
-        "description": "Описание",
-        "sicCode": "SicCode",
-        "industry": "Промышленность",
-        "type": "Type",
-        "contactRole": "Роль"
+  "fields": {
+    "name": "Имя",
+    "emailAddress": "Адрес эл. почты",
+    "website": "Сайт",
+    "phoneNumber": "Телефон",
+    "billingAddress": "Платежный адрес",
+    "shippingAddress": "Почтовый адрес",
+    "description": "Описание",
+    "sicCode": "SIC код",
+    "industry": "Вид деятельности",
+    "type": "Тип",
+    "contactRole": "Должность",
+    "campaign": "Кампания",
+    "targetLists": "Списки целей",
+    "targetList": "Список целей"
+  },
+  "links": {
+    "contacts": "Контакты",
+    "opportunities": "Сделки",
+    "cases": "Обращения",
+    "documents": "Документы",
+    "meetingsPrimary": "Встречи (развернуто)",
+    "callsPrimary": "Звонки (развернуто)",
+    "tasksPrimary": "Задачи (развернуто)",
+    "emailsPrimary": "Письма (развернуто)",
+    "targetLists": "Списки целей",
+    "campaignLogRecords": "Журнал кампании",
+    "campaign": "Кампания",
+    "portalUsers": "Пользователи портала"
+  },
+  "options": {
+    "type": {
+      "Customer": "Заказчик",
+      "Investor": "Вкладчик",
+      "Partner": "Партнер",
+      "Reseller": "Посредник"
     },
-    "links": {
-        "contacts": "Контакты",
-        "opportunities": "Сделки",
-        "cases": "Обращения",
-        "documents": "Documents"
-    },
-    "options": {
-        "type": {
-            "Customer": "Заказчик",
-            "Investor": "Вкладчик",
-            "Partner": "Партнер",
-            "Reseller": "Посредник"
-        },
-        "industry": {
-            "Apparel": "Одежда",
-            "Banking": "Банковское дело",
-            "Computer Software": "Программное обеспечение",
-            "Education": "Образование",
-            "Electronics": "Электроника",
-            "Finance": "Финансы",
-            "Insurance": "Страхование"
-        }
-    },
-    "labels": {
-        "Create Account": "Создать контрагента",
-        "Copy Billing": "Copy Billing"
+    "industry": {
+      "Agriculture": "Agriculture",
+      "Advertising": "Advertising",
+      "Apparel & Accessories": "Apparel & Accessories",
+      "Automotive": "Automotive",
+      "Banking": "Banking",
+      "Biotechnology": "Biotechnology",
+      "Building Materials & Equipment": "Building Materials & Equipment",
+      "Chemical": "Chemical",
+      "Computer": "Computer",
+      "Education": "Education",
+      "Electronics": "Electronics",
+      "Energy": "Energy",
+      "Entertainment & Leisure": "Entertainment & Leisure",
+      "Finance": "Finance",
+      "Food & Beverage": "Food & Beverage",
+      "Grocery": "Grocery",
+      "Healthcare": "Healthcare",
+      "Insurance": "Insurance",
+      "Legal": "Legal",
+      "Manufacturing": "Manufacturing",
+      "Publishing": "Publishing",
+      "Real Estate": "Real Estate",
+      "Service": "Service",
+      "Sports": "Sports",
+      "Software": "Software",
+      "Technology": "Technology",
+      "Telecommunications": "Telecommunications",
+      "Television": "Television",
+      "Transportation": "Transportation",
+      "Venture Capital": "Venture Capital"
     }
+  },
+  "labels": {
+    "Create Account": "Создать контрагента",
+    "Copy Billing": "Копировать адрес"
+  },
+  "presetFilters": {
+    "customers": "Заказчики",
+    "partners": "Партнеры"
+  }
 }

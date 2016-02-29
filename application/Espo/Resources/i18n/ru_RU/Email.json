@@ -1,51 +1,91 @@
 {
-    "fields": {
-        "name": "Тема",
-        "parent": "Источник",
-        "status": "статус",
-        "dateSent": "Дата отправки",
-        "from": "От",
-        "to": "К",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Html",
-        "body": "Тело",
-        "subject": "Тема",
-        "attachments": "Вложения",
-        "selectTemplate": "Выбрать шаблон",
-        "fromEmailAddress": "С адреса",
-        "toEmailAddresses": "На андрес",
-        "emailAddress": "E-mail адрес",
-        "deliveryDate": "Дата доставки"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Черновик",
-        "Sending": "Отправляется",
-        "Sent": "Отправлено",
-        "Archived": "В архиве"
-    },
-    "labels": {
-        "Create Email": "Отправить письмо в архив",
-        "Archive Email": "Отправить письмо в архив",
-        "Compose": "Новое сообщение",
-        "Reply": "Ответить",
-        "Reply to All": "Ответить всем",
-        "Forward": "Переслать",
-        "Original message": "Оригинал сообщение",
-        "Forwarded message": "Forwarded message",
-        "Email Accounts": "Email Accounts",
-        "Send Test Email": "Отправить тестовое сообщение",
-        "Send": "Отправить",
-        "Email Address": "E-mail адрес"
-    },
-    "messages": {
-        "noSmtpSetup": "No SMTP setup. {link}.",
-        "testEmailSent": "Test email has been sent"
-    },
-    "presetFilters": {
-        "sent": "Отправлено",
-        "archived": "В архиве"
+  "fields": {
+    "name": "Тема",
+    "parent": "Источник",
+    "status": "Статус",
+    "dateSent": "Дата отправки",
+    "from": "От",
+    "to": "Кому",
+    "cc": "Копия (Cc)",
+    "bcc": "Слепая копия (Bcc)",
+    "replyTo": "Ответить",
+    "replyToString": "Reply To (String)",
+    "isHtml": "HTML",
+    "body": "Тело",
+    "subject": "Тема",
+    "attachments": "Вложения",
+    "selectTemplate": "Выбрать шаблон",
+    "fromEmailAddress": "Адрес отправителя",
+    "toEmailAddresses": "Адрес получателя",
+    "emailAddress": "Адрес эл. почты",
+    "deliveryDate": "Дата доставки",
+    "account": "Контрагент",
+    "users": "Пользователи",
+    "replied": "Replied",
+    "replies": "Replies",
+    "isRead": "Is Read",
+    "isNotRead": "Is Not Read",
+    "isImportant": "Is Important",
+    "isUsers": "Is User's",
+    "inTrash": "In Trash"
+  },
+  "links": {
+    "replied": "Replied",
+    "replies": "Replies"
+  },
+  "options": {
+    "status": {
+      "Draft": "Черновик",
+      "Sending": "Отправляется",
+      "Sent": "Отправлено",
+      "Archived": "В архиве",
+      "Received": "Получено",
+      "Failed": "Сбой"
     }
+  },
+  "labels": {
+    "Create Email": "Отправить эл. письмо в архив",
+    "Archive Email": "Отправить эл. письмо в архив",
+    "Compose": "Новое сообщение",
+    "Reply": "Ответить",
+    "Reply to All": "Ответить всем",
+    "Forward": "Переслать",
+    "Original message": "Оригинальное сообщение",
+    "Forwarded message": "Пересылаемое сообщение",
+    "Email Accounts": "Учетные записи эл. почты пользователей",
+    "Inbound Emails": "Учетные записи эл. почты групп",
+    "Email Templates": "Шаблоны эл. писем",
+    "Send Test Email": "Отправить тестовое эл. письмо",
+    "Send": "Отправить",
+    "Email Address": "Адрес эл. почты",
+    "Mark Read": "Пометить как прочитанное",
+    "Sending...": "Отправляется...",
+    "Save Draft": "Сохранить черновик",
+    "Mark all as read": "Пометить все как прочитанные",
+    "Show Plain Text": "Show Plain Text",
+    "Mark as Important": "Пометить как важное",
+    "Unmark Importance": "Снять пометку важности",
+    "Move to Trash": "Переместить в корзину",
+    "Retrieve from Trash": "Восстановить из корзины"
+  },
+  "messages": {
+    "noSmtpSetup": "Не настроен SMTP. {link}.",
+    "testEmailSent": "Тестовое эл. письмо было отправлено",
+    "emailSent": "Эл. письмо было отправлено",
+    "savedAsDraft": "Сохранено как черновик"
+  },
+  "presetFilters": {
+    "sent": "Отправленные",
+    "archived": "В архиве",
+    "inbox": "Входящие",
+    "drafts": "Черновики",
+    "trash": "Корзина"
+  },
+  "massActions": {
+    "markAsRead": "Пометить как прочитанное",
+    "markAsNotRead": "Пометить как не прочитанное",
+    "markAsImportant": "Пометить как важное",
+    "markAsNotImportant": "Снять пометку важности",
+    "moveToTrash": "Переместить в корзину"
+  }
 }

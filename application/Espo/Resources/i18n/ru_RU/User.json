@@ -1,37 +1,84 @@
 {
-    "fields": {
-        "name": "Имя",
-        "userName": "Имя пользователя",
-        "title": "Должность",
-        "isAdmin": "Права администратора",
-        "defaultTeam": "Группа по умолчанию",
-        "emailAddress": "Email",
-        "phoneNumber": "Номер телефона",
-        "roles": "Роли",
-        "password": "Пароль",
-        "passwordConfirm": "Подтвердите пароль",
-        "newPassword": "Новый пароль",
-        "teamRole": "Должность"
-    },
-    "links": {
-        "teams": "Группы",
-        "roles": "Роли"
-    },
-    "labels": {
-        "Create User": "Создать пользователя",
-        "Generate": "Сгенерировать",
-        "Access": "Доступ",
-        "Preferences": "Настройки",
-        "Change Password": "Изменить пароль"
-    },
-    "tooltips": {
-        "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой команде.",
-        "userName": "Letters a-z, numbers 0-9 and underscores are allowed."
-    },
-    "messages": {
-        "passwordWillBeSent": "Пароль будет выслан на почтовый адрес пользователя",
-        "accountInfoEmailSubject": "Информация об учетной записи",
-        "accountInfoEmailBody": "Информация о Вашей учетной записи:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChanged": "Пароль изменен"
-    }
+  "fields": {
+    "name": "Имя",
+    "userName": "Имя пользователя",
+    "title": "Должность",
+    "isAdmin": "Права администратора",
+    "defaultTeam": "Группа по умолчанию",
+    "emailAddress": "Эл. почта",
+    "phoneNumber": "Телефон",
+    "roles": "Роли",
+    "portals": "Порталы",
+    "portalRoles": "Роли порталов",
+    "teamRole": "Должность (положение в группе)",
+    "password": "Пароль",
+    "currentPassword": "Текущий пароль",
+    "passwordConfirm": "Подтвердить пароль",
+    "newPassword": "Новый пароль",
+    "newPasswordConfirm": "Подтвердить новый пароль",
+    "avatar": "Аватар",
+    "isActive": "Признак активности",
+    "isPortalUser": "Пользователь портала",
+    "contact": "Контакты",
+    "accounts": "Контрагенты",
+    "account": "Контрагент",
+    "sendAccessInfo": "Отправить пользователю эл. письмо с реквизитами доступа",
+    "portal": "Портал"
+  },
+  "links": {
+    "teams": "Группы",
+    "roles": "Роли",
+    "notes": "Заметки",
+    "portals": "Порталы",
+    "portalRoles": "Роли порталов",
+    "contact": "Контакт",
+    "accounts": "Контрагенты"
+  },
+  "labels": {
+    "Create User": "Создать пользователя",
+    "Generate": "Сгенерировать",
+    "Access": "Доступ",
+    "Preferences": "Настройки",
+    "Change Password": "Изменить пароль",
+    "Teams and Access Control": "Группы и уровень доступа",
+    "Forgot Password?": "Забыли пароль?",
+    "Password Change Request": "Запрос смены пароля",
+    "Email Address": "Адрес эл. почты",
+    "External Accounts": "Внешние учетные записи",
+    "Email Accounts": "Учетные записи эл. почты",
+    "Portal": "Портал",
+    "Create Portal User": "Создать пользователя портала"
+  },
+  "tooltips": {
+    "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой группе.",
+    "userName": "Допускаются латинские буквы a-z, цифры 0-9, точки, дефисы, символы @ и подчеркивания.",
+    "isAdmin": "Пользователь с правами администратора может получить доступ ко всему.",
+    "isActive": "Если флажок не установлен, то пользователь не сможет войти в систему.",
+    "teams": "Группы к которым принадлежит данный пользователь. Уровень доступа наследуется от ролей группы.",
+    "roles": "Дополнительные роли доступа. Используйте это если пользователь не принадлежит ни к одной группе или вам необходимо расширить уровень доступа только для этого пользователя.",
+    "portalRoles": "Дополнительные роли портала. Используйте это если необходимо расширить уровень доступа только для этого пользователя.",
+    "portals": "Порталы к которым имеет доступ этот пользователь."
+  },
+  "messages": {
+    "passwordWillBeSent": "Пароль будет выслан на адрес эл. почты пользователя.",
+    "accountInfoEmailSubject": "Информация об учетной записи EspoCRM",
+    "accountInfoEmailBody": "Информация о Вашей учетной записи:\n\nИмя пользователя: {userName}\nПароль: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Запрос смены пароля",
+    "passwordChangeLinkEmailBody": "Вы можете изменить пароль использовав эту уникальную ссылку {link}. Срок действия ссылки скоро истечет.",
+    "passwordChanged": "Пароль был изменен",
+    "userCantBeEmpty": "Имя пользователя не может быть пустым",
+    "wrongUsernamePasword": "Неверное имя пользователя/пароль",
+    "emailAddressCantBeEmpty": "Адрес эл. почты не может быть пустым",
+    "userNameEmailAddressNotFound": "Имя пользователя/Адрес эл. почты не найдены",
+    "forbidden": "Запрещено, повторите попытку позже",
+    "uniqueLinkHasBeenSent": "Уникальная ссылка была отправлена на указанный адрес эл. почты.",
+    "passwordChangedByRequest": "Пароль был изменен."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Только моя группа"
+  },
+  "presetFilters": {
+    "active": "Активные",
+    "activePortal": "Portal Active"
+  }
 }

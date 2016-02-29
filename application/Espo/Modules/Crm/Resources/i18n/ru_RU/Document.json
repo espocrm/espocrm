@@ -1,32 +1,42 @@
 {
-    "labels": {
-        "Create Document": "Create Document",
-        "Details": "Описание"
+  "labels": {
+    "Create Document": "Создать документ",
+    "Details": "Описание"
+  },
+  "fields": {
+    "name": "Название",
+    "status": "Статус",
+    "file": "Файл",
+    "type": "Тип",
+    "source": "Источник",
+    "publishDate": "Опубликован",
+    "expirationDate": "Актуален до",
+    "description": "Описание",
+    "accounts": "Контрагенты",
+    "folder": "Папка"
+  },
+  "links": {
+    "accounts": "Контрагенты",
+    "opportunities": "Сделки",
+    "folder": "Папка"
+  },
+  "options": {
+    "status": {
+      "Active": "Действующий",
+      "Draft": "Черновик",
+      "Expired": "Просрочен",
+      "Canceled": "Отменен"
     },
-    "fields": {
-        "name": "Name",
-        "status": "статус",
-        "file": "File",
-        "type": "Type",
-        "source": "Source",
-        "publishDate": "Publish Date",
-        "expirationDate": "Expiration Date",
-        "description": "Описание"
-    },
-    "links": {
-        "accounts": "Контрагенты",
-        "opportunities": "Сделки"
-    },
-    "options": {
-        "status": {
-            "Active": "Активный",
-            "Draft": "Черновик",
-            "Expired": "Expired",
-            "Canceled": "Отменена"
-        }
-    },
-    "presetFilters": {
-        "active": "Активный",
-        "draft": "Черновик"
+    "type": {
+      "": "Нет",
+      "Contract": "Contract",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "License Agreement"
     }
+  },
+  "presetFilters": {
+    "active": "Действующий",
+    "draft": "Черновик"
+  }
 }

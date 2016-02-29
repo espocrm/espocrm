@@ -1,10 +1,19 @@
 {
-    "fields": {
-        "title": "Название",
-        "dateFrom": "Дата от",
-        "dateTo": "Дата к",
-        "autorefreshInterval": "Интервал авто-обновления",
-        "displayRecords": "Отобразить записи",
-        "isDoubleHeight": "Высота 2x"
+  "fields": {
+    "title": "Название",
+    "dateFrom": "Дата от",
+    "dateTo": "Дата по",
+    "autorefreshInterval": "Интервал автообновления",
+    "displayRecords": "Отображать записей",
+    "isDoubleHeight": "Высота 2x",
+    "mode": "Режим",
+    "enabledScopeList": "Что отображать"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Неделя (расписание)",
+      "basicWeek": "Неделя",
+      "month": "Месяц"
     }
+  }
 }

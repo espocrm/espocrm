@@ -1,13 +1,13 @@
 {
-    "modes": {
-        "month": "месяц",
-        "week": "неделя",
-        "day": "день",
-        "agendaWeek": "неделя",
-        "agendaDay": "день"
-    },
-    "labels": {
-        "Today": "Сегодня",
-        "Create": "Создать"
-    }
+  "modes": {
+    "month": "Месяц",
+    "week": "Неделя",
+    "agendaWeek": "Неделя",
+    "day": "День",
+    "agendaDay": "День"
+  },
+  "labels": {
+    "Today": "Сегодня",
+    "Create": "Создать"
+  }
 }

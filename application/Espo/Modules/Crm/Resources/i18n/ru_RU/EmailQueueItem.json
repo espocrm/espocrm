@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Название",
+    "status": "Статус",
+    "target": "Цель",
+    "sentAt": "Дата отправки",
+    "attemptCount": "Попыток",
+    "emailAddress": "Адрес эл. почты",
+    "massEmail": "Массовая рассылка эл. писем",
+    "isTest": "Тест"
+  },
+  "links": {
+    "target": "Цель",
+    "massEmail": "Массовая рассылка эл. писем"
+  },
+  "options": {
+    "status": {
+      "Pending": "В ожидании",
+      "Sent": "Отправлено",
+      "Failed": "Сбой"
+    }
+  },
+  "presetFilters": {
+    "pending": "В ожидании",
+    "sent": "Отправлено",
+    "failed": "Сбой"
+  }
+}

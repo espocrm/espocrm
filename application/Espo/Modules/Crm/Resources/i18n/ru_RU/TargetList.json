@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Название",
+    "description": "Описание",
+    "entryCount": "Количество",
+    "campaigns": "Кампании",
+    "endDate": "Дата окончания",
+    "targetLists": "Списки целей"
+  },
+  "links": {
+    "accounts": "Контрагенты",
+    "contacts": "Контакты",
+    "leads": "Кандидаты",
+    "campaigns": "Кампании",
+    "massEmails": "Массовые рассылки эл. писем"
+  },
+  "options": {
+    "type": {
+      "Email": "Эл. письмо",
+      "Web": "Интернет",
+      "Television": "Телевидение",
+      "Radio": "Радио",
+      "Newsletter": "Информационный бюллетень"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Создать список целей",
+    "Opted Out": "Отписавшиеся",
+    "Cancel Opt-Out": "Отменить отписку",
+    "Opt-Out": "Отписать"
+  }
+}

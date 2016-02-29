@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Название",
+    "status": "Статус",
+    "storeSentEmails": "Сохранять отправленные эл. письма",
+    "startAt": "Дата начала",
+    "fromAddress": "Адрес отправителя",
+    "fromName": "Имя отправителя",
+    "replyToAddress": "Обратный адрес",
+    "replyToName": "Имя для обратного адреса",
+    "campaign": "Кампания",
+    "emailTemplate": "Шаблон эл. письма",
+    "inboundEmail": "Учетная запись эл. почты",
+    "targetLists": "Списки целей",
+    "excludingTargetLists": "Исключая списки целей",
+    "optOutEntirely": "Отписать навсегда"
+  },
+  "links": {
+    "targetLists": "Списки целей",
+    "excludingTargetLists": "Исключая списки целей",
+    "queueItems": "Queue Items",
+    "campaign": "Кампания",
+    "emailTemplate": "Шаблон эл. письма",
+    "inboundEmail": "Учетная запись эл. почты"
+  },
+  "options": {
+    "status": {
+      "Draft": "Черновик",
+      "Pending": "В ожидании",
+      "In Process": "В процессе",
+      "Complete": "Завершена",
+      "Canceled": "Отменена",
+      "Failed": "Сбой"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Создать массовую рассылку эл. писем",
+    "Send Test": "Отправить тестовое эл. письмо"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Выберите хотя бы одну цель",
+    "testSent": "Должно отправиться тестовое эл. письмо"
+  },
+  "tooltips": {
+    "optOutEntirely": "Адреса эл. почты получателей, которые отписались будут помечены как отписавшиеся и больше не будут получать массовые рассылки эл. писем.",
+    "targetLists": "Цели которые должны получить сообщения.",
+    "excludingTargetLists": "Цели которые не должны получить сообщения."
+  }
+}

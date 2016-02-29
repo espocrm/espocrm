@@ -1,14 +1,15 @@
 {
-    "fields": {
-        "enabled": "Enabled",
-        "clientId": "Client ID",
-        "clientSecret": "Client Secret",
-        "redirectUri": "Redirect URI"
-    },
-    "messages": {
-        "selectIntegration": "Select an integration in menu."
-    },
-    "help": {
-        "Google": "<p><b>Obtain OAuth 2.0 credentials from the Google Developers Console.</b></p><p>Visit <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> to obtain OAuth 2.0 credentials such as a Client ID and Client Secret that are known to both Google and EspoCRM application.</p>"
-    }
+  "fields": {
+    "enabled": "Включено",
+    "clientId": "Идентификатор клиента (Client ID)",
+    "clientSecret": "Секретный ключ (Client Secret)",
+    "redirectUri": "URI перенаправления (Redirect URI)"
+  },
+  "messages": {
+    "selectIntegration": "Выберите интерацию из меню.",
+    "noIntegrations": "Нет доступных интергаций."
+  },
+  "help": {
+    "Google": "<p><b>Получите учетные данные OAuth 2.0 из консоли разработчика Google.</b></p><p>Посетите <a href=\"https://console.developers.google.com/project\">консоль разработчика Google</a> для получения учетных данных OAuth 2.0 таких как Client ID и Client Secret.</p></p>"
+  }
 }
