@@ -45,7 +45,7 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
         return $this->getInjection('config');
     }
 
-    protected function afterSave(Entity $entity, array $options)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 

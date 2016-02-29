@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class Meeting extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function beforeSave(Entity $entity, array $options)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
 

@@ -33,14 +33,14 @@ use Espo\ORM\Entity;
 
 class CaseObj extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function afterSave(Entity $entity, array $options)
+    public function afterSave(Entity $entity, array $options = array())
     {
         $result = parent::afterSave($entity, $options);
         $this->handleAfterSaveContacts($entity, $options);
         return $result;
     }
 
-    protected function handleAfterSaveContacts(Entity $entity, array $options)
+    protected function handleAfterSaveContacts(Entity $entity, array $options = array())
     {
         $contactIdChanged = $entity->has('contactId') && $entity->get('contactId') != $entity->getFetched('contactId');
 

@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class Opportunity extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function beforeSave(Entity $entity, array $options)
+    public function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
 

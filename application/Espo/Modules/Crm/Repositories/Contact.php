@@ -47,7 +47,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
         ";
     }
 
-    public function afterSave(Entity $entity, array $options)
+    public function afterSave(Entity $entity, array $options = array())
     {
         $result = parent::afterSave($entity, $options);
         $this->handleAfterSaveAccounts($entity, $options);
@@ -59,7 +59,7 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
         return $result;
     }
 
-    protected function handleAfterSaveAccounts(Entity $entity, array $options)
+    protected function handleAfterSaveAccounts(Entity $entity, array $options = array())
     {
         $accountIdChanged = $entity->has('accountId') && $entity->get('accountId') != $entity->getFetched('accountId');
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');

@@ -35,7 +35,7 @@ use \Espo\Core\Exceptions\Error;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function beforeSave(Entity $entity, array $options)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
 

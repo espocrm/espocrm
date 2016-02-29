@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class Account extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function afterSave(Entity $entity, array $options)
+    public function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 
