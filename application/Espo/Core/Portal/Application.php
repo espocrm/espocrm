@@ -45,6 +45,8 @@ class Application extends \Espo\Core\Application
             throw new Error("Portal id was not passed to ApplicationPortal.");
         }
 
+        $GLOBALS['log'] = $this->getContainer()->get('log');
+
         $portal = $this->getContainer()->get('entityManager')->getEntity('Portal', $portalId);
 
         if (!$portal) {
@@ -57,8 +59,6 @@ class Application extends \Espo\Core\Application
         $this->portal = $portal;
 
         $this->getContainer()->setPortal($portal);
-
-        $GLOBALS['log'] = $this->getContainer()->get('log');
 
         $this->initAutoloads();
     }
