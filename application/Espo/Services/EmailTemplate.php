@@ -176,6 +176,15 @@ class EmailTemplate extends Record
 
             if ($fieldType === 'enum') {
                 $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
+            } else if ($fieldType === 'array' || $fieldType === 'multiEnum') {
+                $valueList = [];
+                if (is_array($value)) {
+                    foreach ($value as $v) {
+                        $valueList[] = $this->getLanguage()->translateOption($v, $field, $entity->getEntityType());
+                    }
+                }
+                $value = implode(', ', $valueList);
+                $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
             } else {
                 if ($entity->fields[$field]['type'] == 'date') {
                     $value = $this->getDateTime()->convertSystemDate($value);
