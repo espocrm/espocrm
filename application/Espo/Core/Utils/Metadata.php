@@ -308,7 +308,7 @@ class Metadata
      *
      * @return bool
      */
-    public function delete($key1, $key2, $unsets)
+    public function delete($key1, $key2, $unsets = null)
     {
         if (!is_array($unsets)) {
             $unsets = (array) $unsets;
