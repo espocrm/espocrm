@@ -43,11 +43,12 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
                 this.listenTo(fieldView, 'insert-field', function (o) {
                     var tag = '{' + o.entityType + '.' + o.field + '}';
 
-                    $body = this.$el.find('[name="body"]');
+                    var bodyView = this.getFieldView('body');
 
                     if (this.model.get('isHtml')) {
-                        $body.summernote('insertText', tag);
+                        bodyView.$summernote.summernote('insertText', tag);
                     } else {
+                        var $body = bodyView.$element;
                         var text = $body.val();
                         text += tag;
                         $body.val(text);
