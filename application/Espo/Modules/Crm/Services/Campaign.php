@@ -33,7 +33,7 @@ use \Espo\ORM\Entity;
 
 class Campaign extends \Espo\Services\Record
 {
-    public function loadAdditionalFields($entity)
+    public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
 

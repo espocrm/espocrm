@@ -56,7 +56,7 @@ class Account extends \Espo\Services\Record
         'targetLists'
     ];
 
-    protected function getDuplicateWhereClause(Entity $entity)
+    protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         return array(
             'name' => $entity->get('name')

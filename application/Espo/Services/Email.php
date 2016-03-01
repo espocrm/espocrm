@@ -173,7 +173,7 @@ class Email extends Record
         return $entity;
     }
 
-    protected function afterUpdate(Entity $entity)
+    protected function afterUpdate(Entity $entity, array $data = array())
     {
         if ($entity && $entity->get('status') == 'Sending') {
             $this->send($entity);

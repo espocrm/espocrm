@@ -419,7 +419,7 @@ class User extends Record
         return parent::deleteEntity($id);
     }
 
-    public function afterUpdate(Entity $entity, array $data)
+    public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
         if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {

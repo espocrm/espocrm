@@ -42,7 +42,7 @@ class Contact extends \Espo\Services\Record
         'portalUserId'
     ];
 
-    protected function getDuplicateWhereClause(Entity $entity)
+    protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(
             'OR' => array(
@@ -61,7 +61,7 @@ class Contact extends \Espo\Services\Record
         return $data;
     }
 
-    public function afterCreate($entity, array $data)
+    public function afterCreate($entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
         if (!empty($data['emailId'])) {
