@@ -277,7 +277,7 @@ class Base
 
             $foreignEntity = $defs['entity'];
             if (empty($foreignEntity)) {
-                continue;
+                return;
             }
 
             $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
