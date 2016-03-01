@@ -34,6 +34,13 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
 
         messageName: 'mentionInPost',
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
+            data.showPost = !!this.model.get('post');
+            return data;
+        },
+
         setup: function () {
             if (this.model.get('post')) {
                 this.createField('post', null, null, 'views/stream/fields/post');
