@@ -29,7 +29,7 @@
 
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
+use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
 
