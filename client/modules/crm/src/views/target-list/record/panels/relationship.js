@@ -30,6 +30,8 @@ Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/pa
 
     return Dep.extend({
 
+        fetchOnModelAfterRelate: true,
+
         actionOptOut: function (data) {
             if (confirm(this.translate('confirmation', 'messages'))) {
                 $.ajax({

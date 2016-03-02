@@ -40,6 +40,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         readOnly: false,
 
+        fetchOnModelAfterRelate: false,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -137,6 +139,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.collection = collection;
 
                 this.setFilter(this.filter);
+
+                if (this.fetchOnModelAfterRelate) {
+                    this.listenToOnce(this.model, 'after:relate', function () {
+                        collection.fetch();
+                    }, this);
+                }
 
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
