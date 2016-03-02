@@ -445,7 +445,7 @@ class MassEmail extends \Espo\Services\Record
             $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmentList);
 
             $emailObject = $emailTemplate;
-            if ($massEmail->get('storeSentEmails')) {
+            if ($massEmail->get('storeSentEmails') && !$isTest) {
                 $this->getEntityManager()->saveEntity($email);
                 $emailObject = $email;
             }
