@@ -52,5 +52,22 @@ class Account extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function accessPortalOnlyAccount(&$result)
+    {
+        $d = array();
+
+        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
+
+        if (count($accountIdList)) {
+            $result['whereClause'][] = array(
+                'id' => $accountIdList
+            );
+        } else {
+            $result['whereClause'][] = array(
+                'id' => null
+            );
+        }
+    }
+
  }
 

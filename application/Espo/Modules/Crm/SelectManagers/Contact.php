@@ -44,5 +44,22 @@ class Contact extends \Espo\Core\SelectManagers\Base
         ), $result);
     }
 
+    protected function accessPortalOnlyContact(&$result)
+    {
+        $d = array();
+
+        $contactId = $this->getUser()->get('contactId');
+
+        if ($contactId) {
+            $result['whereClause'][] = array(
+                'id' => $contactId
+            );
+        } else {
+            $result['whereClause'][] = array(
+                'id' => null
+            );
+        }
+    }
+
  }
 
