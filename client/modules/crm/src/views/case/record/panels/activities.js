@@ -24,31 +24,31 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Crm:Views.Case.Record.Panels.Activities', 'Crm:Views.Record.Panels.Activities', function (Dep) {
+Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/activities', function (Dep) {
 
     return Dep.extend({
-        
+
         getComposeEmailAttributes: function (data, callback) {
             data = data || {};
             var attributes = {
                 status: 'Draft',
                 name: '[#' + this.model.get('number') + '] ' + this.model.get('name')
             };
-            
+
             if (this.model.get('contactId')) {
                 this.getModelFactory().create('Contact', function (contact) {
                     contact.id = this.model.get('contactId');
-                    
+
                     this.listenToOnce(contact, 'sync', function () {
-                        var emailAddress = contact.get('emailAddress');                        
+                        var emailAddress = contact.get('emailAddress');
                         if (emailAddress) {
                             attributes.to = emailAddress;
                         }
-                        
+
                         callback.call(this, attributes);
-                    });                    
+                    });
                     contact.fetch({
                         error: function () {
                             callback.call(this, attributes);
@@ -58,8 +58,7 @@ Espo.define('Crm:Views.Case.Record.Panels.Activities', 'Crm:Views.Record.Panels.
             } else {
                 callback.call(this, attributes);
             }
-        },
-        
+        }
     });
 });
 
