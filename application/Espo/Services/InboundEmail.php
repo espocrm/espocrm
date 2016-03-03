@@ -421,6 +421,7 @@ class InboundEmail extends \Espo\Services\Record
 
         if ($user) {
             $case->set('assignedUserId', $user->id);
+            $case->set('status', 'Assigned');
         }
     }
 
@@ -437,6 +438,7 @@ class InboundEmail extends \Espo\Services\Record
 
         if ($user) {
             $case->set('assignedUserId', $user->id);
+            $case->set('status', 'Assigned');
         }
     }
 
@@ -468,19 +470,17 @@ class InboundEmail extends \Espo\Services\Record
             $caseDistribution = $params['caseDistribution'];
         }
 
-
-
         $targetUserPosition = null;
         if (!empty($params['targetUserPosition'])) {
             $targetUserPosition = $params['targetUserPosition'];
         }
 
-        $case->set('status', 'Assigned');
 
         switch ($caseDistribution) {
             case 'Direct-Assignment':
                 if ($userId) {
                     $case->set('assignedUserId', $userId);
+                    $case->set('status', 'Assigned');
                 }
                 break;
             case 'Round-Robin':
