@@ -175,7 +175,7 @@ class Table
     public function getLevel($scope, $action)
     {
         if (isset($this->data->table->$scope)) {
-            if (isset($this->table->$scope->$action)) {
+            if (isset($this->data->table->$scope->$action)) {
                 return $this->data->table->$scope->$action;
             }
         }

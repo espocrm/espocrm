@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Controllers;
 
@@ -43,10 +43,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-                
+
         return $this->getService('Opportunity')->reportByLeadSource($dateFrom, $dateTo);
     }
-    
+
     public function actionReportByStage($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
@@ -56,10 +56,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-        
+
         return $this->getService('Opportunity')->reportByStage($dateFrom, $dateTo);
     }
-    
+
     public function actionReportSalesByMonth($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
@@ -69,10 +69,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-                
-        return $this->getService('Opportunity')->reportSalesByMonth($dateFrom, $dateTo);        
+
+        return $this->getService('Opportunity')->reportSalesByMonth($dateFrom, $dateTo);
     }
-    
+
     public function actionReportSalesPipeline($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
@@ -82,7 +82,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
-        
+
         return $this->getService('Opportunity')->reportSalesPipeline($dateFrom, $dateTo);
     }
 }
