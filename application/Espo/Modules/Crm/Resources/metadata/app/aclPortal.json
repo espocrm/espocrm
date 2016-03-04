@@ -11,6 +11,12 @@
         "scopeFieldLevel": {
             "KnowledgeBaseArticle": {
                 "portals": false
+            },
+            "Case": {
+                "status": {
+                    "read": "yes",
+                    "edit": "no"
+                }
             }
         }
     }
