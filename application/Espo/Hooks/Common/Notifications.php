@@ -151,7 +151,10 @@ class Notifications extends \Espo\Core\Hooks\Base
         $query = $this->getEntityManager()->getQuery();
         $sql = "
             DELETE FROM `notification`
-            WHERE related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) ."
+            WHERE
+                (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
+                OR
+                (related_parent_id = ".$query->quote($entity->id)." AND related_parent_type = ".$query->quote($entity->getEntityType()) .")
         ";
         $this->getEntityManager()->getPDO()->query($sql);
     }

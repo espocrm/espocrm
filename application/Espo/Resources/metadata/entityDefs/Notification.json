@@ -30,6 +30,10 @@
         "related": {
             "type": "linkParent",
             "readOnly": true
+        },
+        "relatedParent": {
+            "type": "linkParent",
+            "readOnly": true
         }
     },
     "links": {
@@ -38,6 +42,9 @@
             "entity": "User"
         },
         "related": {
+            "type": "belongsToParent"
+        },
+        "relatedParent": {
             "type": "belongsToParent"
         }
     },

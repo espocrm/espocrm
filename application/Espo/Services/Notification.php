@@ -79,7 +79,7 @@ class Notification extends \Espo\Services\Record
         $now = date('Y-m-d H:i:s');
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`) VALUES ";
+        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
         $arr = [];
         foreach ($userIdList as $userId) {
             if (empty($userId)) continue;
@@ -91,7 +91,7 @@ class Notification extends \Espo\Services\Record
                 continue;
             }
             $id = uniqid();
-            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote($note->id).", ".$pdo->quote('Note').")";
+            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote($note->id).", ".$pdo->quote('Note').", ".$pdo->quote($note->get('parentId')).", ".$pdo->quote($note->get('parentType')).")";
         }
 
         if (empty($arr)) {
