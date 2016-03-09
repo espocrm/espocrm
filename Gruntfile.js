@@ -216,6 +216,7 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/install',
                     'build/EspoCRM-<%= pkg.version %>/api',
                     'build/EspoCRM-<%= pkg.version %>/api/v1',
+                    'build/EspoCRM-<%= pkg.version %>',
                 ]
             }
         },
