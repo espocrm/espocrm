@@ -610,7 +610,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         fetch: function () {
-            this.textFilter = this.$el.find('input[name="textFilter"]').val();
+            this.textFilter = this.$el.find('input[name="textFilter"]').val().trim();
 
             this.bool = {};
 
