@@ -271,7 +271,8 @@
     },
     "collection": {
         "sortBy": "name",
-        "asc": true
+        "asc": true,
+        "textFilterFields": ["name", "emailAddress"]
     },
     "indexes": {
         "name": {
