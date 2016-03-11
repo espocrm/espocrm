@@ -460,13 +460,15 @@ class Importer
         if (preg_match('/filename="?([^"]+)"?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
             return $fileName;
-        } else if (preg_match('/filename\*="?([^"]+)"?/i', $contentDisposition, $m)) {
+        } else if (preg_match('/filename\*[01]?="?([^"]+)"?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-            if ($fileName && stripos($fileName, "''") !== false) {
-                list($encoding, $fileName) = explode("''", $fileName);
-                $fileName = rawurldecode($fileName);
-                if (strtoupper($encoding) !== 'UTF-8') {
-                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
+            if ($fileName) {
+                if (stripos($fileName, "''") !== false) {
+                    list($encoding, $fileName) = explode("''", $fileName);
+                    $fileName = rawurldecode($fileName);
+                    if (strtoupper($encoding) !== 'UTF-8') {
+                        $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
+                    }
                 }
                 return $fileName;
             }
