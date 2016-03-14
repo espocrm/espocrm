@@ -224,7 +224,9 @@ class User extends Record
 
         if (!is_null($newPassword) && !empty($data['sendAccessInfo'])) {
             if ($user->isActive()) {
-                $this->sendPassword($user, $newPassword);
+                try {
+                    $this->sendPassword($user, $newPassword);
+                } catch (\Exception $e) {}
             }
         }
 
