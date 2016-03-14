@@ -1069,7 +1069,7 @@ class Base
 
     public function hasLeftJoin($leftJoin, &$result)
     {
-        return in_array($leftJoin, $result['leftJoin']);
+        return in_array($leftJoin, $result['leftJoins']);
     }
 
     public function addJoin($join, &$result)
