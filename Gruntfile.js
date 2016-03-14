@@ -214,8 +214,10 @@ module.exports = function (grunt) {
                 },
                 src: [
                     'build/EspoCRM-<%= pkg.version %>/install',
+                    'build/EspoCRM-<%= pkg.version %>/portal',
                     'build/EspoCRM-<%= pkg.version %>/api',
                     'build/EspoCRM-<%= pkg.version %>/api/v1',
+                    'build/EspoCRM-<%= pkg.version %>/api/v1/portal-access',
                     'build/EspoCRM-<%= pkg.version %>',
                 ]
             }
