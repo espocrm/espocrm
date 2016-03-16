@@ -53,6 +53,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         escapeDisabled: false,
 
+        isDraggable: false,
+
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -135,6 +137,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     width: this.width,
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
+                    draggable: this.isDraggable,
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)

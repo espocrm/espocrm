@@ -40,11 +40,11 @@ Espo.define('ui', [], function () {
         this.height = false;
         this.buttons = [];
         this.removeOnClose = true;
-        this.graggable = false;
+        this.draggable = false;
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
+        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'draggable', 'container', 'onRemove'];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -99,7 +99,7 @@ Espo.define('ui', [], function () {
             }
         }.bind(this));
 
-        if (this.graggable) {
+        if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
             this.$el.draggable({
                 handle: 'header',

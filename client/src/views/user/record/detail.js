@@ -57,6 +57,11 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 }
             }
 
+            if (this.model.get('isPortalUser')) {
+                this.hidePanel('activities');
+                this.hidePanel('history');
+            }
+
             if (this.model.id == this.getUser().id) {
                 this.listenTo(this.model, 'after:save', function () {
                     this.getUser().set(this.model.toJSON());
