@@ -64,7 +64,7 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
         return null;
     }
 
-    protected function beforeSave(Entity $entity, array $options)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
 

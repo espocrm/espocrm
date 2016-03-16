@@ -37,9 +37,6 @@ class Notification extends \Espo\Core\Controllers\Record
 
     public function actionList($params, $data, $request)
     {
-        $scope = $params['scope'];
-        $id = $params['id'];
-
         $userId = $this->getUser()->id;
 
         $offset = intval($request->get('offset'));
