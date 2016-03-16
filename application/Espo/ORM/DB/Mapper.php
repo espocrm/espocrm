@@ -798,7 +798,7 @@ abstract class Mapper implements IMapper
         foreach ($entity->fields as $field => $fieldDefs) {
             if ($entity->has($field)) {
                 if ($onlyStorable) {
-                    if (!empty($fieldDefs['notStorable']) || isset($fieldDefs['source']) && $fieldDefs['source'] != 'db')
+                    if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['autoincrement']) || isset($fieldDefs['source']) && $fieldDefs['source'] != 'db')
                         continue;
                     if ($fieldDefs['type'] == IEntity::FOREIGN)
                         continue;
