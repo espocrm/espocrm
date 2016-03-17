@@ -63,7 +63,7 @@ class Lead extends \Espo\Services\Record
         return $data;
     }
 
-    public function afterCreate($entity, array $data = array())
+    public function afterCreate(Entity $entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
         if (!empty($data['emailId'])) {

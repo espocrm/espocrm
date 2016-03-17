@@ -103,7 +103,8 @@ class Activities extends \Espo\Core\Services\Base
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
                 'usersLeftMiddle.userId' => $entity->id
-            )
+            ),
+            'customJoin' => ''
         );
 
         if (!empty($statusList)) {
@@ -142,7 +143,8 @@ class Activities extends \Espo\Core\Services\Base
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
                 'usersLeftMiddle.userId' => $entity->id
-            )
+            ),
+            'customJoin' => ''
         );
 
         if (!empty($statusList)) {
@@ -181,7 +183,8 @@ class Activities extends \Espo\Core\Services\Base
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
                 'usersLeftMiddle.userId' => $entity->id
-            )
+            ),
+            'customJoin' => ''
         );
 
         if (!empty($statusList)) {
@@ -225,7 +228,8 @@ class Activities extends \Espo\Core\Services\Base
                 'status',
                 'createdAt'
             ],
-            'whereClause' => array()
+            'whereClause' => array(),
+            'customJoin' => ''
         );
 
         if (!empty($statusList)) {
@@ -439,7 +443,8 @@ class Activities extends \Espo\Core\Services\Base
                 'status',
                 'createdAt'
             ],
-            'whereClause' => array()
+            'whereClause' => array(),
+            'customJoin' => ''
         );
 
         if (!empty($statusList)) {
@@ -686,7 +691,8 @@ class Activities extends \Espo\Core\Services\Base
                 'dateStart>=' => $from,
                 'dateStart<' => $to,
                 'usersMiddle.status!=' => 'Declined'
-            )
+            ),
+            'customJoin' => ''
         );
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Meeting', $selectParams);
@@ -716,7 +722,8 @@ class Activities extends \Espo\Core\Services\Base
                 'dateStart>=' => $from,
                 'dateStart<' => $to,
                 'usersMiddle.status!=' => 'Declined'
-            )
+            ),
+            'customJoin' => ''
         );
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Call', $selectParams);
@@ -943,8 +950,11 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($unionSql);
 
-        $sth->bindParam(':offset', intval($params['offset']), \PDO::PARAM_INT);
-        $sth->bindParam(':maxSize', intval($params['maxSize']), \PDO::PARAM_INT);
+        $offset = intval($params['offset']);
+        $maxSize = intval($params['maxSize']);
+
+        $sth->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $sth->bindParam(':maxSize', $maxSize, \PDO::PARAM_INT);
         $sth->execute();
         $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
 

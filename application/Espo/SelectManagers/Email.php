@@ -31,9 +31,9 @@ namespace Espo\SelectManagers;
 
 class Email extends \Espo\Core\SelectManagers\Base
 {
-    public function getSelectParams(array $params, $withAcl = false)
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $result = parent::getSelectParams($params, $withAcl);
+        $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addLeftJoin('users', $result);

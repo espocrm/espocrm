@@ -116,7 +116,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         $entity->set('idHash', $idHash);
     }
 
-    protected function beforeSave(Entity $entity, array $options)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
@@ -187,7 +187,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function afterSave(Entity $entity, array $options)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
         if (!$entity->isNew()) {

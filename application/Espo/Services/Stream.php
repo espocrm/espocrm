@@ -1017,8 +1017,8 @@ class Stream extends \Espo\Core\Services\Base
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', array());
         foreach ($scopes as $scope => $d) {
-            if (!$d['entity']) continue;
-            if (!$d['object']) continue;
+            if (empty($d['entity']) || !$d['entity']) continue;
+            if (empty($d['object']) || !$d['object']) continue;
             if (!$this->getAcl()->checkScope($scope)) {
                 $ignoreScopeList[] = $scope;
             }

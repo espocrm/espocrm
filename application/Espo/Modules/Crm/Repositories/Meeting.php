@@ -124,7 +124,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
         return $reminders;
     }
 
-    protected function afterSave(Entity $entity, array $options)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 
