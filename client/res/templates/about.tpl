@@ -7,7 +7,7 @@
         <section>
             <h5>Version {{version}}</h5>
             <p>
-                Copyright &copy; 2014-2015 EspoCRM: Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko.
+                Copyright &copy; 2014-2016 EspoCRM: Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko.
                 <br>
                 Website: <a href="http://www.espocrm.com">http://www.espocrm.com</a>.
             </p>
