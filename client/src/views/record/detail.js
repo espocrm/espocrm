@@ -416,13 +416,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var fields = {};
 
             if (this.hasView('middle')) {
-                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+                if ('getFieldViews' in this.getView('middle')) {
+                    _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+                }
             }
             if (this.hasView('side')) {
-                _.extend(fields, this.getView('side').getFieldViews(withHidden));
+                if ('getFieldViews' in this.getView('side')) {
+                    _.extend(fields, this.getView('side').getFieldViews(withHidden));
+                }
             }
             if (this.hasView('bottom')) {
-                _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
+                if ('getFieldViews' in this.getView('bottom')) {
+                    _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
+                }
             }
             return fields;
         },
