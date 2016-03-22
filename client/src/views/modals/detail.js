@@ -42,6 +42,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         detailViewName: null,
 
+        removeDisabled: true,
+
         columnCount: 2,
 
         backdrop: true,
@@ -58,7 +60,15 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.editDisabled = this.options.editDisabled;
             }
 
+            if ('removeDisabled' in this.options) {
+                this.removeDisabled = this.options.removeDisabled;
+            }
+
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
+
+            if (!this.removeDisabled) {
+                this.addRemoveButton();
+            }
 
             if (!this.editDisabled) {
                 this.addEditButton();
@@ -129,31 +139,27 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         addEditButton: function () {
-            var index = -1;
-            this.buttonList.forEach(function (item, i) {
-                if (item.name === 'edit') {
-                    index = i;
-                }
-            }, this);
-            if (~index) return;
-
-            this.buttonList.unshift({
+            this.addButton({
                 name: 'edit',
                 label: 'Edit',
                 style: 'primary'
-            });
+            }, true);
         },
 
         removeEditButton: function () {
-            var index = -1;
-            this.buttonList.forEach(function (item, i) {
-                if (item.name === 'edit') {
-                    index = i;
-                }
-            }, this);
-            if (~index) {
-                this.buttonList.splice(index, 1);
-            }
+            this.removeButton('edit');
+        },
+
+        addRemoveButton: function () {
+            this.addButton({
+                name: 'remove',
+                label: 'Remove',
+                style: 'danger'
+            }, true);
+        },
+
+        removeRemoveButton: function () {
+            this.removeButton('remove');
         },
 
         createRecordView: function (callback) {
@@ -177,6 +183,22 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                         this.listenToOnce(model, 'sync', function() {
                             if (this.getAcl().check(model, 'edit')) {
                                 this.showButton('edit');
+                            }
+                        }, this);
+                    }
+                }
+            }
+
+            if (!this.removeDisabled) {
+                var removeAccess = this.getAcl().check(model, 'delete', true);
+                if (removeAccess) {
+                    this.showButton('remove');
+                } else {
+                    this.hideButton('remove');
+                    if (removeAccess === null) {
+                        this.listenToOnce(model, 'sync', function() {
+                            if (this.getAcl().check(model, 'delete')) {
+                                this.showButton('remove');
                             }
                         }, this);
                     }
@@ -317,7 +339,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionEdit: function () {
-            this.createView('quickEdit', 'views/modals/edit', {
+            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
+            this.createView('quickEdit', viewName, {
                 scope: this.scope,
                 id: this.id,
                 fullFormDisabled: this.fullFormDisabled
@@ -328,19 +351,35 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }, this);
 
                 this.listenToOnce(view, 'remove', function () {
-                    this.close();
+                    this.dialog.show();
                 }, this);
 
                 this.listenToOnce(view, 'after:save', function (model) {
                     this.trigger('after:save', model);
-                }, this);
 
-                this.listenToOnce(view, 'cancel', function () {
-                    this.trigger('after:edit-cancel');
+                    this.model.set(model.getClonedAttributes());
                 }, this);
 
                 view.render();
             }, this);
+        },
+
+        actionRemove: function () {
+            var model = this.getView('record').model;
+
+            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+                var $buttons = this.dialog.$el.find('.modal-footer button');
+                $buttons.addClass('disabled');
+                model.destroy({
+                    success: function () {
+                        this.trigger('after:destroy', model);
+                        this.dialog.close();
+                    }.bind(this),
+                    error: function () {
+                        $buttons.removeClass('disabled');
+                    }
+                });
+            }
         },
 
         actionFullForm: function () {

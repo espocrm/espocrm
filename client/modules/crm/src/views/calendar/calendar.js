@@ -415,13 +415,23 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 }.bind(this),
                 eventClick: function (event) {
                     this.notify('Loading...');
-                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) || 'views/modals/detail';
+                    this.createView('quickView', viewName, {
                         scope: event.scope,
-                        id: event.recordId
+                        id: event.recordId,
+                        removeDisabled: false
                     }, function (view) {
                         view.render();
                         view.notify(false);
-                    });
+
+                        this.listenToOnce(view, 'after:destroy', function (model) {
+                            this.removeModel(model);
+                        }, this);
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.updateModel(model);
+                        }, this);
+                    }, this);
                 }.bind(this),
                 viewRender: function (view, el) {
                     var mode = view.name;

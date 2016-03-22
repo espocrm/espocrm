@@ -159,6 +159,7 @@ Espo.define('ui', [], function () {
              backdrop: this.backdrop,
              keyboard: this.keyboard
         });
+        this.$el.find('.modal-content').removeClass('hidden');
     };
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');
