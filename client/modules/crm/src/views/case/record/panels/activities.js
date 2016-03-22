@@ -45,6 +45,8 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                         var emailAddress = contact.get('emailAddress');
                         if (emailAddress) {
                             attributes.to = emailAddress;
+                            attributes.nameHash = {};
+                            attributes.nameHash[emailAddress] = contact.get('name');
                         }
 
                         callback.call(this, attributes);
