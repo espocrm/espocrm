@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use \Espo\ORM\Entity;
+
 class Team extends Record
 {
     protected function init()
@@ -49,7 +51,7 @@ class Team extends Record
         return $this->getInjection('fileManager');
     }
 
-    public function afterUpdate(Entity $entity, array $data)
+    public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
         if (array_key_exists('rolesIds', $data)) {

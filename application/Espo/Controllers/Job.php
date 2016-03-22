@@ -41,17 +41,17 @@ class Job extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionCreate($params, $data)
+    public function actionCreate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
         throw new Forbidden();
     }
@@ -66,12 +66,12 @@ class Job extends \Espo\Core\Controllers\Record
         throw new Forbidden();
     }
 
-    public function actionCreateLink($params, $data)
+    public function actionCreateLink($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink($params, $data)
+    public function actionRemoveLink($params, $data, $request)
     {
         throw new Forbidden();
     }
