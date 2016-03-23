@@ -128,7 +128,7 @@ class Record extends Base
         $where = $request->get('where');
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc') === 'true';
+        $asc = $request->get('asc', 'true') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
         $primaryFilter = $request->get('primaryFilter');
@@ -174,7 +174,7 @@ class Record extends Base
         $where = $request->get('where');
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
-        $asc = $request->get('asc') === 'true';
+        $asc = $request->get('asc', 'true') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');

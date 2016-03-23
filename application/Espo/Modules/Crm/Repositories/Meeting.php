@@ -93,6 +93,25 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if (!$entity->isNew()) {
+            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
+                $dateEndPrevious = $entity->getFetched('dateEnd');
+                $dateStartPrevious = $entity->getFetched('dateStart');
+                if ($dateStartPrevious && $dateEndPrevious) {
+                    $dtStart = new \DateTime($dateStartPrevious);
+                    $dtEnd = new \DateTime($dateEndPrevious);
+                    $dt = new \DateTime($entity->get('dateStart'));
+
+                    if ($dtStart && $dtEnd && $dt) {
+                        $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
+                        $dt->modify('+' . $duration . ' seconds');
+                        $dateEnd = $dt->format('Y-m-d H:i:s');
+                        $entity->set('dateEnd', $dateEnd);
+                    }
+                }
+            }
+        }
     }
 
     public function getEntityReminders(Entity $entity)
