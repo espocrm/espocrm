@@ -460,7 +460,9 @@
         },
         "varcharSearchRanges": {
             "equals": "Equals",
+            "like": "Is Like (%)",
             "startsWith": "Starts With",
+            "endsWith": "Ends With",
             "contains": "Contains",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty"

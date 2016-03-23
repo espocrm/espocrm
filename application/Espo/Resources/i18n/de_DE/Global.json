@@ -436,7 +436,9 @@
         },
         "varcharSearchRanges": {
             "equals": "Gleich",
+            "like": "Wie (%)",
             "startsWith": "Beginnt mit",
+            "endsWith": "Endet mit",
             "contains": "Enthält",
             "isEmpty": "Ist leer",
             "isNotEmpty": "Ist nicht leer"

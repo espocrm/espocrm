@@ -35,7 +35,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         searchTemplate: 'fields/varchar/search',
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'];
+            this.searchParams.typeOptions = ['startsWith', 'endsWith', 'contains', 'equals', 'like', 'isEmpty', 'isNotEmpty'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
