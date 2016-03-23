@@ -77,14 +77,16 @@ class Invitations
                 case 'datetime':
                     $value = $entity->get($field);
                     if ($value) {
-                        $contents = str_replace($key, $this->dateTime->convertSystemDateTime($value), $contents);
+                        $value = $this->dateTime->convertSystemDateTime($value);
                     }
+                    $contents = str_replace($key, $value, $contents);
                     break;
                 case 'date':
                     $value = $entity->get($field);
                     if ($value) {
-                        $contents = str_replace($key, $this->dateTime->convertSystemDate($value), $contents);
+                        $value = $this->dateTime->convertSystemDate($value);
                     }
+                    $contents = str_replace($key, $value, $contents);
                     break;
                 case 'jsonArray':
                     break;
