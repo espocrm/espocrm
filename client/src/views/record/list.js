@@ -1057,7 +1057,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.removeRowHtml(id);
-            var key = 'row-' + id;
+            var key = id;
             this.clearView(key);
             var index = this.rowList.indexOf(key);
             if (~index) {
