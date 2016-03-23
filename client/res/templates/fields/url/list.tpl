@@ -1,3 +1,3 @@
 {{#if value}}
-	<a href="{{url}}" target="_blank">{{value}}</a>
+	<a href="{{url}}" target="_blank" title="{{value}}">{{value}}</a>
 {{/if}}
