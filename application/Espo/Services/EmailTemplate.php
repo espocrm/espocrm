@@ -192,7 +192,9 @@ class EmailTemplate extends Record
                     $value = $this->getDateTime()->convertSystemDateTime($value);
                 }
             }
-            $text = str_replace('{' . $type . '.' . $field . '}', $value, $text);
+            if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                $text = str_replace('{' . $type . '.' . $field . '}', $value, $text);
+            }
         }
         return $text;
     }

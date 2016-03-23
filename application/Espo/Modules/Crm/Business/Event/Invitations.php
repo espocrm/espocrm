@@ -75,17 +75,26 @@ class Invitations
             $key = '{'.$field.'}';
             switch ($d['type']) {
                 case 'datetime':
-                    $contents = str_replace($key, $this->dateTime->convertSystemDateTime($entity->get($field)), $contents);
+                    $value = $entity->get($field);
+                    if ($value) {
+                        $contents = str_replace($key, $this->dateTime->convertSystemDateTime($value), $contents);
+                    }
                     break;
                 case 'date':
-                    $contents = str_replace($key, $this->dateTime->convertSystemDate($entity->get($field)), $contents);
+                    $value = $entity->get($field);
+                    if ($value) {
+                        $contents = str_replace($key, $this->dateTime->convertSystemDate($value), $contents);
+                    }
                     break;
                 case 'jsonArray':
                     break;
                 case 'jsonObject':
                     break;
                 default:
-                    $contents = str_replace($key, $entity->get($field), $contents);
+                    $value = $entity->get($field);
+                    if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                        $contents = str_replace($key, $value, $contents);
+                    }
             }
         }
 
