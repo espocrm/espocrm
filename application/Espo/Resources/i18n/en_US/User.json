@@ -72,7 +72,8 @@
         "userNameEmailAddressNotFound": "Username/Email Address not found",
         "forbidden": "Forbidden, please try later",
         "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
-        "passwordChangedByRequest": "Password has been changed."
+        "passwordChangedByRequest": "Password has been changed.",
+        "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
     },
     "boolFilters": {
         "onlyMyTeam": "Only My Team"
