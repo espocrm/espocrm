@@ -37,11 +37,11 @@ return array(
 		'phpRequires' => array(
 			'JSON',
 			'mcrypt',
-			'pdo_mysql',
-			'zip'
+			'pdo_mysql'
 		),
 
 		'phpRecommendations' => array(
+			'zip',
 			'gd',
 			'mbstring',
 			'imap',
