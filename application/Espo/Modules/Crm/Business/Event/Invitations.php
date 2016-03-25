@@ -45,11 +45,9 @@ class Invitations
 
     protected $language;
 
-    protected $fileManager;
-
     protected $ics;
 
-    public function __construct($entityManager, $smtpParams, $mailSender, $config, $dateTime, $language, $fileManager)
+    public function __construct($entityManager, $smtpParams, $mailSender, $config, $dateTime, $language)
     {
         $this->entityManager = $entityManager;
         $this->smtpParams = $smtpParams;
@@ -57,7 +55,6 @@ class Invitations
         $this->config = $config;
         $this->dateTime = $dateTime;
         $this->language = $language;
-        $this->fileManager = $fileManager;
     }
 
     protected function getEntityManager()

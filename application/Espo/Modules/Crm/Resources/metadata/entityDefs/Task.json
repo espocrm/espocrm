@@ -135,9 +135,6 @@
         "dateStart": {
             "columns": ["dateStart", "deleted"]
         },
-        "dateEnd": {
-            "columns": ["dateStart", "deleted"]
-        },
         "status": {
             "columns": ["status", "deleted"]
         },
