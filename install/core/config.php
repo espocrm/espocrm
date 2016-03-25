@@ -38,11 +38,13 @@ return array(
 			'JSON',
 			'mcrypt',
 			'pdo_mysql',
+			'zip'
 		),
 
 		'phpRecommendations' => array(
-			'GD',
-			'IMAP',
+			'gd',
+			'mbstring',
+			'imap',
 			'max_execution_time' => 180,
 			'max_input_time' => 180,
 			'memory_limit' => '256M',
