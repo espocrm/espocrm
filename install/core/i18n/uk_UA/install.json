@@ -90,7 +90,7 @@
 		"Enable mod_rewrite in Apache server": "Увімкнути mod_rewrite в Apache сервер",
 		"checkWritable error": "checkWritable помилка",
 		"applySett error": "applySett помилка",
-		"buildDatabse error": "buildDatabse помилка",
+		"buildDatabase error": "buildDatabase помилка",
 		"createUser error": "createUser помилка",
 		"checkAjaxPermission error": "checkAjaxPermission помилка",
 		"Ajax failed": "Ajax провалився",

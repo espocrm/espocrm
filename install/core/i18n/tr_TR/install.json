@@ -78,7 +78,7 @@
 		"Enable mod_rewrite in Apache server": "Mod_rewrite ı Apache sunucusunda etkinleştirin",
 		"checkWritable error": "checkWritable hatası",
 		"applySett error": "applySett hatası",
-		"buildDatabse error": "buildDatabse hatası",
+		"buildDatabase error": "buildDatabase hatası",
 		"createUser error": "createUser hatası",
 		"checkAjaxPermission error": "checkAjaxPermission hatası",
 		"Ajax failed": "Ajax çalışmıyor",

@@ -79,7 +79,7 @@
 		"Enable mod_rewrite in Apache server": "Activeaza mod_rewrite in server-ul Apache",
 		"checkWritable error": "Eroare la verificarea drepturilor de scriere",
 		"applySett error": "Eroare la aplicarea setarilor",
-		"buildDatabse error": "Eroare la crearea Bazei de Date",
+		"buildDatabase error": "Eroare la crearea Bazei de Date",
 		"createUser error": "Eroare la crearea utilizatorului",
 		"checkAjaxPermission error": "Eroare la verificarea permisiunilor Ajax",
 		"Ajax failed": "Ajax nu a reusit",

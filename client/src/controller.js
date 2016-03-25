@@ -260,8 +260,7 @@ Espo.define('controller', [], function () {
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
                         if (this.hasStoredMainView(master.currentViewKey)) {
-                            master.nestedViews['main'].undelegateEvents();
-                            delete master.nestedViews['main'];
+                            master.unchainView('main');
                         }
                     }
                     master.currentViewKey = storedKey;

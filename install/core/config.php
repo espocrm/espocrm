@@ -37,12 +37,14 @@ return array(
 		'phpRequires' => array(
 			'JSON',
 			'mcrypt',
-			'pdo_mysql',
+			'pdo_mysql'
 		),
 
 		'phpRecommendations' => array(
-			'GD',
-			'IMAP',
+			'zip',
+			'gd',
+			'mbstring',
+			'imap',
 			'max_execution_time' => 180,
 			'max_input_time' => 180,
 			'memory_limit' => '256M',

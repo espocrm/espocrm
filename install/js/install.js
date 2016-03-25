@@ -72,7 +72,7 @@ var InstallScript = function(opt) {
 			'break': true
 		},
 		{
-			'action': 'buildDatabse',
+			'action': 'buildDatabase',
 			'break': true
 		}/*,
 		{

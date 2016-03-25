@@ -90,7 +90,7 @@
 		"Enable mod_rewrite in Apache server": "Activeer mod_rewrite in Apache server",
 		"checkWritable error": "Controleer schrijf fout",
 		"applySett error": "Instellings fout",
-		"buildDatabse error": "Database maken fout",
+		"buildDatabase error": "Database maken fout",
 		"createUser error": "Fout in aanmaken gebruiker",
 		"checkAjaxPermission error": "Ajax Permissie fout",
 		"Ajax failed": "Ajax weigerd",

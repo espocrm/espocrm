@@ -79,7 +79,7 @@
 		"Enable mod_rewrite in Apache server": "Bật mod_rewrite trong Apache",
 		"checkWritable error": "Lỗi checkWritable",
 		"applySett error": "Lỗi applySett",
-		"buildDatabse error": "Lỗi buildDatabse",
+		"buildDatabase error": "Lỗi buildDatabase",
 		"createUser error": "Lỗi createUser",
 		"checkAjaxPermission error": "Lỗi checkAjaxPermission",
 		"Ajax failed": "Lỗi Ajax",
