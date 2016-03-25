@@ -782,6 +782,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     acl: {
                         edit: this.getAcl().checkModel(model, 'edit')
                     },
+                    el: this.options.el + ' .list-row[data-id="'+key+'"]',
                     optionsToPass: ['acl'],
                     noCache: true,
                     _layout: {
