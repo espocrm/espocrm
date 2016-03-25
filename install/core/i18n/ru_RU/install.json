@@ -92,7 +92,7 @@
     "Enable mod_rewrite in Apache server": "Подключите модуль mod_rewrite к серверу Apache",
     "checkWritable error": "ошибка checkWritable",
     "applySett error": "ошибка applySett",
-    "buildDatabse error": "ошибка buildDatabse",
+    "buildDatabase error": "ошибка buildDatabase",
     "createUser error": "ошибка createUser",
     "checkAjaxPermission error": "ошибка checkAjaxPermission",
     "Ajax failed": "Сбой Ajax",

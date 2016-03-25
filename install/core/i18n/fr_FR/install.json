@@ -79,7 +79,7 @@
 		"Enable mod_rewrite in Apache server": "Activer mod_rewrite sur le serveur Apache",
 		"checkWritable error": "erreur de vérification d'écriture",
 		"applySett error": "Erreur applySett",
-		"buildDatabse error": "Erreur dans la construction de la base de donnée",
+		"buildDatabase error": "Erreur dans la construction de la base de donnée",
 		"createUser error": "Erreur dans la création de l'utilisateur",
 		"checkAjaxPermission error": "Erreur checkAjaxPermission",
 		"Ajax failed": "Ajax a échoué",

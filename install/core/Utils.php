@@ -31,7 +31,7 @@ class Utils
 {
 	static public $actionPath = 'install/core/actions';
 
-	static public function isActionExists($actionName)
+	static public function checkActionExists($actionName)
 	{
 		$actionPath = static::$actionPath;
 		$actionFileName = $actionName . '.php';
