@@ -292,7 +292,6 @@ class Record extends Base
             $params['where'] = $where;
         }
         if (array_key_exists('ids', $data)) {
-            $where = json_decode(json_encode($data['where']), true);
             $params['ids'] = $data['ids'];
         }
 
