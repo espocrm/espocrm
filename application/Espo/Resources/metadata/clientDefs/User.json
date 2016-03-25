@@ -14,5 +14,8 @@
       "active",
       "activePortal"
    ],
-   "boolFilterList": ["onlyMyTeam"]
+   "boolFilterList": ["onlyMyTeam"],
+    "selectDefaultFilters": {
+        "filter": "active"
+    }
 }
