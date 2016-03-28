@@ -30,7 +30,7 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
 
     return Dep.extend({
 
-        _template: '<button class="btn btn-default disabled" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
+        _template: '<button class="btn btn-default hidden" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
 
         events: {
             'click [data-action="sendTestEmail"]': function () {
@@ -44,9 +44,9 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
 
         checkAvailability: function () {
             if (this.model.get('smtpServer')) {
-                this.$el.find('button').removeClass('disabled');
+                this.$el.find('button').removeClass('hidden');
             } else {
-                this.$el.find('button').addClass('disabled');
+                this.$el.find('button').addClass('hidden');
             }
         },
 
