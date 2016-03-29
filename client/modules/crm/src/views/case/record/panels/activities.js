@@ -94,30 +94,6 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                 callback.call(this, attributes);
 
             }.bind(this));
-
-            /*if (this.model.get('contactId')) {
-                this.getModelFactory().create('Contact', function (contact) {
-                    contact.id = this.model.get('contactId');
-
-                    this.listenToOnce(contact, 'sync', function () {
-                        var emailAddress = contact.get('emailAddress');
-                        if (emailAddress) {
-                            attributes.to = emailAddress;
-                            attributes.nameHash = {};
-                            attributes.nameHash[emailAddress] = contact.get('name');
-                        }
-
-                        callback.call(this, attributes);
-                    });
-                    contact.fetch({
-                        error: function () {
-                            callback.call(this, attributes);
-                        }.bind(this)
-                    });
-                }, this);
-            } else {
-                callback.call(this, attributes);
-            }*/
         }
     });
 });

@@ -74,7 +74,8 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
                 var attributes = {
                     parentType: 'Case',
                     parentId: parentModel.id,
-                    parentName: parentModel.get('name')
+                    parentName: parentModel.get('name'),
+                    name: '[#' + parentModel.get('number') + ']'
                 };
 
                 attributes.to = '';

@@ -41,7 +41,12 @@ Espo.define('crm:knowledge-base-helper', 'ajax', function (Ajax) {
         getAttributesForEmail: function (model, attributes, callback) {
             attributes = attributes || {};
             attributes.body = model.get('body');
-            attributes.name = this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' + model.get('name');
+            if (attributes.name) {
+                attributes.name = attributes.name + ' ';
+            } else {
+                attributes.name = '';
+            }
+            attributes.name += this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' + model.get('name');
 
             Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
                 id: model.id
