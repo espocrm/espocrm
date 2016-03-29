@@ -40,7 +40,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         fullFormDisabled: false,
 
-        detailViewName: null,
+        detailView: null,
 
         removeDisabled: true,
 
@@ -205,7 +205,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }
             }
 
-            var viewName = this.detailViewName || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
+            var viewName = this.detailViewName || this.detailView || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'Record.DetailSmall'; 
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',

@@ -11,7 +11,8 @@
       "detail": "views/email/record/detail",
       "edit": "views/email/record/edit",
       "editQuick":"views/email/record/edit-quick",
-      "detailQuick":"views/email/record/detail-quick"
+      "detailQuick":"views/email/record/detail-quick",
+      "compose": "views/email/record/compose"
    },
    "modalViews": {
       "detail": "views/email/modals/detail",

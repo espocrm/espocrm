@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,17 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/knowledge-base-article/record/detail', 'views/record/detail', function (Dep) {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $id = $data['id'];
+    return Dep.extend({
 
-        return $this->getRecordService()->getCopiedAttachments($id);
-    }
-}
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.dropdownItemList.push({
+                'label': 'Send in Email',
+                'name': 'sendInEmail'
+            });
+        },
+
+        actionSendInEmail: function () {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.require('crm:knowledge-base-helper', function (Helper) {
+                var helper = new Helper(this.getLanguage());
+
+                helper.getAttributesForEmail(this.model, {}, function (attributes) {
+                    var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                    this.createView('composeEmail', viewName, {
+                        attributes: attributes,
+                        selectTemplateDisabled: true,
+                        signatureDisabled: true
+                    }, function (view) {
+                        Espo.Ui.notify(false);
+                        view.render();
+                    }, this);
+                }.bind(this));
+            }, this);
+        },
+
+    });
+});
+

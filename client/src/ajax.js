@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,17 +26,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('ajax', [], function () {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+    var Ajax = Espo.Ajax = {
+
+        request: function (url, type, data, options) {
+            var options = options || {};
+            options.type = type;
+            options.url = url;
+
+            if (data) {
+                options.data = data;
+            }
+
+            var xhr = $.ajax(options);
+
+            return xhr;
+
+            var obj = {
+                then: xhr.then,
+                fail: xhr.fail,
+                catch: xhr.fail
+            };
+
+            return obj;
+        },
+
+
+        postRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return Ajax.request(url, 'POST', data, options);
+        },
+
+        patchRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return Ajax.request(url, 'PATCH', data, options);
+        },
+
+        putRequest: function (url, data, options) {
+            if (data) {
+                data = JSON.stringify(data);
+            }
+            return Ajax.request(url, 'PUT', data, options);
+        },
+
+        getRequest: function (url, data, options) {
+            return Ajax.request(url, 'GET', data, options);
         }
-        $id = $data['id'];
+    };
 
-        return $this->getRecordService()->getCopiedAttachments($id);
-    }
-}
+    return Ajax;
+
+});

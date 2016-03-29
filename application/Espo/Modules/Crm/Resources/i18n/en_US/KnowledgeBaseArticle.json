@@ -1,7 +1,8 @@
 {
     "labels": {
         "Create KnowledgeBaseArticle": "Create Article",
-        "Any": "Any"
+        "Any": "Any",
+        "Send in Email": "Send in Email"
     },
     "fields": {
         "name": "Name",

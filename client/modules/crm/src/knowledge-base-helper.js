@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,17 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:knowledge-base-helper', 'ajax', function (Ajax) {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $id = $data['id'];
-
-        return $this->getRecordService()->getCopiedAttachments($id);
+    var KnowledgeBaseHelper = function (language) {
+        this.language = language;
     }
-}
+
+    _.extend(KnowledgeBaseHelper.prototype, {
+
+        getLanguage: function () {
+            return this.language;
+        },
+
+        getAttributesForEmail: function (model, attributes, callback) {
+            attributes = attributes || {};
+            attributes.body = model.get('body');
+            attributes.name = this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' + model.get('name');
+
+            Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
+                id: model.id
+            }).then(function (data) {
+                attributes.attachmentsIds = data.ids;
+                attributes.attachmentsNames = data.names;
+                attributes.isHtml = true;
+
+                callback(attributes);
+            }.bind(this));
+        }
+    });
+
+    return KnowledgeBaseHelper;
+
+});

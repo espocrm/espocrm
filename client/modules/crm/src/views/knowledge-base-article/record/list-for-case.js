@@ -26,20 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/activities', function (Dep) {
+Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        getComposeEmailAttributes: function (data, callback) {
-            data = data || {};
-            var attributes = {
-                status: 'Draft',
-                name: '[#' + this.model.get('number') + '] ' + this.model.get('name')
-            };
+        actionSendInEmail: function (data) {
+            var model = this.collection.get(data.id);
+
+            var parentModel = this.getParentView().model;
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            var parentModel = this.model;
 
             new Promise(function (resolve, reject) {
                 if (parentModel.get('contactsIds') && parentModel.get('contactsIds').length) {
@@ -75,6 +71,12 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                     resolve([]);
                 }
             }.bind(this)).then(function (list) {
+                var attributes = {
+                    parentType: 'Case',
+                    parentId: parentModel.id,
+                    parentName: parentModel.get('name')
+                };
+
                 attributes.to = '';
                 attributes.cc = '';
                 attributes.nameHash = {};
@@ -89,36 +91,29 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                         attributes.nameHash[model.get('emailAddress')] = model.get('name');
                     }
                 });
-                Espo.Ui.notify(false);
 
-                callback.call(this, attributes);
+                Espo.require('crm:knowledge-base-helper', function (Helper) {
+                    (new Helper(this.getLanguage())).getAttributesForEmail(model, attributes, function (attributes) {
+                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+                        this.createView('composeEmail', viewName, {
+                            attributes: attributes,
+                            selectTemplateDisabled: true,
+                            signatureDisabled: true
+                        }, function (view) {
+                            Espo.Ui.notify(false);
+                            view.render();
 
-            }.bind(this));
-
-            /*if (this.model.get('contactId')) {
-                this.getModelFactory().create('Contact', function (contact) {
-                    contact.id = this.model.get('contactId');
-
-                    this.listenToOnce(contact, 'sync', function () {
-                        var emailAddress = contact.get('emailAddress');
-                        if (emailAddress) {
-                            attributes.to = emailAddress;
-                            attributes.nameHash = {};
-                            attributes.nameHash[emailAddress] = contact.get('name');
-                        }
-
-                        callback.call(this, attributes);
-                    });
-                    contact.fetch({
-                        error: function () {
-                            callback.call(this, attributes);
-                        }.bind(this)
-                    });
+                            this.listenToOnce(view, 'after:send', function () {
+                                parentModel.trigger('after:relate');
+                            }, this);
+                        }, this);
+                    }.bind(this));
                 }, this);
-            } else {
-                callback.call(this, attributes);
-            }*/
+            }.bind(this)).catch(function () {
+                Espo.Ui.notify(false);
+            });
         }
+
     });
 });
 

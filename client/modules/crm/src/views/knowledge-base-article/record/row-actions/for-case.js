@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,17 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/knowledge-base-article/record/row-actions/for-case', 'views/record/row-actions/relationship-view-and-unlink', function (Dep) {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+    return Dep.extend({
+
+        getActionList: function () {
+            var actionList = Dep.prototype.getActionList.call(this);
+
+            if (this.getAcl().checkScope('Email')) {
+                actionList.push({
+                    action: 'sendInEmail',
+                    label: 'Send in Email',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+
+            return actionList;
         }
-        $id = $data['id'];
+    });
 
-        return $this->getRecordService()->getCopiedAttachments($id);
-    }
-}
+});
