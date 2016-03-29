@@ -390,7 +390,7 @@ class User extends Record
         $email = $this->getEntityManager()->getEntity('Email');
 
         if (!$this->getConfig()->get('smtpServer')) {
-            return;
+            throw new Error("SMTP settings is not setup.");
         }
 
         $subject = $this->getLanguage()->translate('passwordChangeLinkEmailSubject', 'messages', 'User');
