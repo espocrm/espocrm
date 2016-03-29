@@ -126,14 +126,24 @@ class Notification extends \Espo\Services\Record
 
     public function getNotReadCount($userId)
     {
-        $searchParams = array();
-        $searchParams['whereClause'] = array(
-            'userId' => $userId
-        );
-        return $this->getEntityManager()->getRepository('Notification')->where(array(
+        $whereClause = array(
             'userId' => $userId,
-            'read' => 0,
-        ))->count();
+            'read' => 0
+        );
+
+        $ignoreScopeList = $this->getIgnoreScopeList();
+        if (!empty($ignoreScopeList)) {
+            $where = [];
+            $where[] = array(
+                'OR' => array(
+                    'relatedParentType' => null,
+                    'relatedParentType!=' => $ignoreScopeList
+                )
+            );
+            $whereClause[] = $where;
+        }
+
+        return $this->getEntityManager()->getRepository('Notification')->where($whereClause)->count();
     }
 
     public function markAllRead($userId)
@@ -153,6 +163,18 @@ class Notification extends \Espo\Services\Record
         );
         if (!empty($params['after'])) {
             $whereClause['createdAt>'] = $params['after'];
+        }
+
+        $ignoreScopeList = $this->getIgnoreScopeList();
+        if (!empty($ignoreScopeList)) {
+            $where = [];
+            $where[] = array(
+                'OR' => array(
+                    'relatedParentType' => null,
+                    'relatedParentType!=' => $ignoreScopeList
+                )
+            );
+            $whereClause[] = $where;
         }
 
         $searchParams['whereClause'] = $whereClause;
@@ -230,6 +252,20 @@ class Notification extends \Espo\Services\Record
             'total' => $count,
             'collection' => $collection
         );
+    }
+
+    protected function getIgnoreScopeList()
+    {
+        $ignoreScopeList = [];
+        $scopes = $this->getMetadata()->get('scopes', array());
+        foreach ($scopes as $scope => $d) {
+            if (empty($d['entity']) || !$d['entity']) continue;
+            if (empty($d['object']) || !$d['object']) continue;
+            if (!$this->getAcl()->checkScope($scope)) {
+                $ignoreScopeList[] = $scope;
+            }
+        }
+        return $ignoreScopeList;
     }
 }
 
