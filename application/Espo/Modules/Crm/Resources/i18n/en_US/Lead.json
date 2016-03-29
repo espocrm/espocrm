@@ -31,7 +31,8 @@
         "campaign": "Campaign",
         "createdAccount": "Account",
         "createdContact": "Contact",
-        "createdOpportunity": "Opportunity"
+        "createdOpportunity": "Opportunity",
+        "cases": "Cases"
     },
     "options": {
         "status": {

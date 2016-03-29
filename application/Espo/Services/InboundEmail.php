@@ -514,6 +514,15 @@ class InboundEmail extends \Espo\Services\Record
         ))->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
+        } else {
+            if (!$case->get('accountId')) {
+                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+                    'emailAddresses.id' => $email->get('fromEmailAddressId')
+                ))->findOne();
+                if ($lead) {
+                    $case->set('leadId', $lead->id);
+                }
+            }
         }
 
         $this->getEntityManager()->saveEntity($case);
@@ -526,7 +535,6 @@ class InboundEmail extends \Espo\Services\Record
 
         return $case;
     }
-
 
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {

@@ -9,7 +9,8 @@
         "priority": "Priority",
         "type": "Type",
         "description": "Description",
-        "inboundEmail": "Inbound Email"
+        "inboundEmail": "Inbound Email",
+        "lead": "Lead"
     },
     "links": {
         "inboundEmail": "Inbound Email",
@@ -20,7 +21,8 @@
         "calls": "Calls",
         "tasks": "Tasks",
         "emails": "Emails",
-        "articles": "Knowledge Base Articles"
+        "articles": "Knowledge Base Articles",
+        "lead": "Lead"
     },
     "options": {
         "status": {

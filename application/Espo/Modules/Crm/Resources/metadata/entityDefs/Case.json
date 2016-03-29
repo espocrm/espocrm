@@ -38,6 +38,9 @@
         "account": {
             "type": "link"
         },
+        "lead": {
+            "type": "link"
+        },
         "contact": {
             "type": "link",
             "view": "crm:views/case/fields/contact"
@@ -102,6 +105,11 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account",
+            "foreign": "cases"
+        },
+        "lead": {
+            "type": "belongsTo",
+            "entity": "Lead",
             "foreign": "cases"
         },
         "contact": {
