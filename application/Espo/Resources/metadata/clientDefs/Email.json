@@ -17,6 +17,7 @@
       "detail": "views/email/modals/detail",
       "compose": "views/modals/compose-email"
    },
+   "quickCreateModalType": "compose",
    "menu": {
       "list": {
          "buttons": [
