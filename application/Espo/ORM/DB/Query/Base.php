@@ -630,6 +630,12 @@ abstract class Base
                         } else if ($operator == '<>') {
                             $operatorModified = 'NOT IN';
                         }
+                    } else if (is_null($value)) {
+                        if ($operator == '=') {
+                            $operatorModified = 'IS NULL';
+                        } else if ($operator == '<>') {
+                            $operatorModified = 'IS NOT NULL';
+                        }
                     }
 
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
