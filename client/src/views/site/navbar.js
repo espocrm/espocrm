@@ -58,13 +58,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             'click a[data-action="quick-create"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
-                this.notify('Loading...');
-                this.createView('quickCreate', 'views/modals/edit', {scope: scope}, function (view) {
-                    view.once('after:render', function () {
-                        this.notify(false);
-                    });
-                    view.render();
-                });
+                this.quickCreate(scope);
             },
             'click .navbar-header a.minimizer': function () {
                 var $body = $('body');
@@ -379,6 +373,18 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
             }
             return menuDefs;
+        },
+
+        quickCreate: function (scope) {
+            Espo.Ui.notify(this.translate('Loading...'));
+            var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
+            var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
+            this.createView('quickCreate', viewName , {scope: scope}, function (view) {
+                view.once('after:render', function () {
+                    Espo.Ui.notify(false);
+                });
+                view.render();
+            });
         }
     });
 
