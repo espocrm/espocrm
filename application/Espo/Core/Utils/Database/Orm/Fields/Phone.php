@@ -40,30 +40,41 @@ class Phone extends Base
                         'select' => 'phoneNumbers.name',
                         'where' =>
                         array (
-                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_phone_number
-                                JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE
-                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name LIKE {value}
-                            )",
-                            '=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_phone_number
-                                JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE
-                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name = {value}
-                            )",
-                            '<>' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_phone_number
-                                JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
-                                WHERE
-                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
-                                    phone_number.deleted = 0 AND phone_number.name <> {value}
-                            )"
+                            'LIKE' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name LIKE {value}',
+                                'distinct' => true
+                            ),
+                            '=' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name = {value}',
+                                'distinct' => true
+                            ),
+                            '<>' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name <> {value}',
+                                'distinct' => true
+                            ),
+                            'IN' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name IN {value}',
+                                'distinct' => true
+                            ),
+                            'NOT IN' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name NOT IN {value}',
+                                'distinct' => true
+                            ),
+                            'IS NULL' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name IS NULL',
+                                'distinct' => true
+                            ),
+                            'IS NOT NULL' => array(
+                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
+                                'sql' => 'phoneNumbersMultiple.name IS NOT NULL',
+                                'distinct' => true
+                            )
                         ),
                         'orderBy' => 'phoneNumbers.name {direction}',
                     ),
@@ -73,7 +84,7 @@ class Phone extends Base
                     ),
                 ),
                 'relations' => array(
-                    $fieldName.'s' => array(
+                    'phoneNumbers' => array(
                         'type' => 'manyMany',
                         'entity' => 'PhoneNumber',
                         'relationName' => 'entityPhoneNumber',

@@ -21,8 +21,9 @@
         "accountId": {
             "where": {
                 "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})",
+                "<>": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id <> {value})",
                 "IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
-                "NOT IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id NOT IN {value})",
+                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
                 "IS NULL": "contact.account_id IS NULL",
                 "IS NOT NULL": "contact.account_id IS NOT NULL"
             },
@@ -35,8 +36,31 @@
             "select": "accountContact.role",
             "orderBy": "accountContact.role {direction}",
             "where": {
-                "LIKE": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role LIKE {value})",
-                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND role = {value})"
+                "LIKE": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.role LIKE {value}",
+                    "distinct": true
+                },
+                "=": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.role = {value}",
+                    "distinct": true
+                },
+                "<>": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.role <> {value}",
+                    "distinct": true
+                },
+                "IS NULL": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.role IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.role IS NOT NULL",
+                    "distinct": true
+                }
             },
             "trim": true
         },

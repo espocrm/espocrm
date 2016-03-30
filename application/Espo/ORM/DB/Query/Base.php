@@ -110,6 +110,18 @@ abstract class Base
             $whereClause = $whereClause + array('deleted' => 0);
         }
 
+        if (empty($params['joins'])) {
+            $params['joins'] = array();
+        }
+        if (empty($params['leftJoins'])) {
+            $params['leftJoins'] = array();
+        }
+        if (empty($params['customJoin'])) {
+            $params['customJoin'] = '';
+        }
+
+        $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
+
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect($entity, $params['select'], $params['distinct']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
@@ -134,16 +146,8 @@ abstract class Base
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
 
-        if (empty($params['joins'])) {
-            $params['joins'] = array();
-        }
-        if (empty($params['leftJoins'])) {
-            $params['leftJoins'] = array();
-        }
-
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
 
-        $wherePart = $this->getWhere($entity, $whereClause);
 
         if (!empty($params['customWhere'])) {
             $wherePart .= ' ' . $params['customWhere'];
@@ -581,7 +585,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND')
+    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array())
     {
         $whereParts = array();
 
@@ -639,7 +643,45 @@ abstract class Base
                     }
 
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
-                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $fieldDefs['where'][$operatorModified]);
+                        $whereSqlPart = '';
+                        if (is_string($fieldDefs['where'][$operatorModified])) {
+                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
+                        } else {
+                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
+                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                                $jAlias = $this->obtainJoinAlias($j);
+                                foreach ($params['leftJoins'] as $jE) {
+                                    $jEAlias = $this->obtainJoinAlias($jE);
+                                    if ($jEAlias === $jAlias) {
+                                        continue 2;
+                                    }
+                                }
+                                $params['leftJoins'][] = $j;
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                                $jAlias = $this->obtainJoinAlias($j);
+                                foreach ($params['joins'] as $jE) {
+                                    $jEAlias = $this->obtainJoinAlias($jE);
+                                    if ($jEAlias === $jAlias) {
+                                        continue 2;
+                                    }
+                                }
+                                $params['joins'][] = $j;
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
+                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
+                            $params['distinct'] = true;
+                        }
+                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
                     } else {
                         if ($fieldDefs['type'] == IEntity::FOREIGN) {
                             $leftPart = '';
@@ -688,13 +730,27 @@ abstract class Base
                     }
                 }
             } else {
-                $internalPart = $this->getWhere($entity, $value, $field);
+                $internalPart = $this->getWhere($entity, $value, $field, $params);
                 if ($internalPart) {
                     $whereParts[] = "(" . $internalPart . ")";
                 }
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);
+    }
+
+    public function obtainJoinAlias($j)
+    {
+        if (is_array($j)) {
+            if (count($j)) {
+                $joinAlias = $j[1];
+            } else {
+                $joinAlias = $j[0];
+            }
+        } else {
+            $joinAlias = $j;
+        }
+        return $joinAlias;
     }
 
     public function stringifyValue($value)
