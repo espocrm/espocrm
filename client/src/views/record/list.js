@@ -935,6 +935,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         Espo.Ui.notify(false);
                     });
                     view.render();
+
+                    this.listenToOnce(view, 'remove', function () {
+                        this.clearView('modal');
+                    }, this);
                     this.listenToOnce(view, 'after:save', function (m) {
                         var model = this.collection.get(m.id);
                         if (model) {
