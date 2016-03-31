@@ -940,14 +940,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.clearView('modal');
                     }, this);
 
-                    /*this.listenToOnce(view, 'after:save', function (m) {
-                        var model = this.collection.get(m.id);
-                        if (model) {
-                            model.set(m.getClonedAttributes());
-                            this.actionQuickView({id: m.id, scope: model.name});
-                        }
-                    }, this);*/
-
                     this.listenToOnce(view, 'after:edit-cancel', function () {
                         this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
