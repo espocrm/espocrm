@@ -73,7 +73,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             'Meeting': {
                 rows: [
                     [
-                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {name: 'ico', view: 'crm:views/fields/ico'},
                         {
                             name: 'name',
                             link: true,
@@ -89,7 +89,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             'Call': {
                 rows: [
                     [
-                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {name: 'ico', view: 'crm:views/fields/ico'},
                         {
                             name: 'name',
                             link: true,
@@ -105,7 +105,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             'Email': {
                 rows: [
                     [
-                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {name: 'ico', view: 'crm:views/fields/ico'},
                         {
                             name: 'name',
                             link: true,

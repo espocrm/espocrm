@@ -105,8 +105,6 @@ class TargetList extends \Espo\Services\Record
 
     protected function findLinkedEntitiesOptedOut($id, $params)
     {
-        $collection = new \Espo\ORM\EntityCollection;
-
         $pdo = $this->getEntityManager()->getPDO();
         $query = $this->getEntityManager()->getQuery();
 
