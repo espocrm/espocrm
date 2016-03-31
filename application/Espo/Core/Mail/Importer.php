@@ -71,7 +71,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [])
+    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false)
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -166,28 +166,33 @@ class Importer
 
             $inlineIds = array();
 
-            if ($message->isMultipart()) {
-                foreach (new \RecursiveIteratorIterator($message) as $part) {
-                    $this->importPartDataToEmail($email, $part, $inlineIds);
+            if (!$fetchOnlyHeader) {
+                if ($message->isMultipart()) {
+                    foreach (new \RecursiveIteratorIterator($message) as $part) {
+                        $this->importPartDataToEmail($email, $part, $inlineIds);
+                    }
+                } else {
+                    $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
+                }
+
+                if (!$email->get('body') && $email->get('bodyPlain')) {
+                    $email->set('body', $email->get('bodyPlain'));
+                }
+
+                $body = $email->get('body');
+                if (!empty($body)) {
+                    foreach ($inlineIds as $cid => $attachmentId) {
+                        $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
+                    }
+                    $email->set('body', $body);
+                }
+
+                if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
+                    return false;
                 }
             } else {
-                $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
-            }
-
-            if (!$email->get('body') && $email->get('bodyPlain')) {
-                $email->set('body', $email->get('bodyPlain'));
-            }
-
-            $body = $email->get('body');
-            if (!empty($body)) {
-                foreach ($inlineIds as $cid => $attachmentId) {
-                    $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
-                }
-                $email->set('body', $body);
-            }
-
-            if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
-                return false;
+                $email->set('body', '(Not fetched)');
+                $email->set('isHtml', false);
             }
 
             $parentFound = false;

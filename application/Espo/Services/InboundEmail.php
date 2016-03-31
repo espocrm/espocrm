@@ -276,10 +276,10 @@ class InboundEmail extends \Espo\Services\Record
                     $lastUID = $storage->getUniqueId($id);
                 }
 
+                $fetchOnlyHeader = false;
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
-                        $k++;
-                        continue;
+                        $fetchOnlyHeader = true;
                     }
                 }
 
@@ -300,7 +300,7 @@ class InboundEmail extends \Espo\Services\Record
                     }
                     if (!$toSkip) {
                         try {
-                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection);
+                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader);
                         } catch (\Exception $e) {
                             $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
                         }
