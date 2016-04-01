@@ -361,13 +361,16 @@ class Record extends \Espo\Core\Services\Base
 
         $assignedUserId = $entity->get('assignedUserId');
 
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
         if (empty($assignedUserId)) {
+            if ($assignmentPermission === 'no') {
+                return false;
+            }
             return true;
         }
 
-        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
-
-        if (empty($assignmentPermission) || $assignmentPermission === true || !in_array($assignmentPermission, ['team', 'no'])) {
+        if ($assignmentPermission === true || !in_array($assignmentPermission, ['team', 'no'])) {
             return true;
         }
 

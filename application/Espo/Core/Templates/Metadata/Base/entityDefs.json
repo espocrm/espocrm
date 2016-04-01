@@ -29,7 +29,7 @@
         "assignedUser": {
             "type": "link",
             "required": true,
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
             "type": "linkMultiple"
