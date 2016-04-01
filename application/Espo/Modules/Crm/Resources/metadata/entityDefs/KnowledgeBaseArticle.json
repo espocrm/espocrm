@@ -51,7 +51,8 @@
             "readOnly": true
         },
         "assignedUser": {
-            "type": "link"
+            "type": "link",
+            "views/fields/assigned-user"
         },
         "teams": {
             "type": "linkMultiple"
