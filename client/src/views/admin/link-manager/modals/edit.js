@@ -338,7 +338,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             if (view) {
                 view.disabled = true;
             }
-            this.$el.find('.cell-' + name).css('visibility', 'hidden');
+            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'hidden');
         },
 
         showField: function (name) {
@@ -346,7 +346,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             if (view) {
                 view.disabled = false;
             }
-            this.$el.find('.cell-' + name).css('visibility', 'visible');
+            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
         },
 
         handleLinkTypeChange: function () {
