@@ -115,7 +115,8 @@
             "disabled": true
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "campaign": {
             "type": "link",

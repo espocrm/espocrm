@@ -107,7 +107,8 @@
             "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         }
     },
     "links": {

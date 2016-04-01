@@ -25,7 +25,8 @@
             "readOnly": true
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "parent": {
             "type": "link"
