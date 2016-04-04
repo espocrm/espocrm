@@ -36,7 +36,8 @@
             "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "campaigns": {
             "type": "link"

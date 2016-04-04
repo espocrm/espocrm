@@ -320,8 +320,14 @@ class EntityManager
 
         switch ($linkType) {
             case 'oneToMany':
-                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.field.' . $linkForeign)) {
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
+                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
                 }
                 $dataLeft = array(
                     'fields' => array(
@@ -361,8 +367,14 @@ class EntityManager
                 );
                 break;
             case 'manyToOne':
-                if ($this->getMetadata()->get('entityDefs.' . $entity . '.field.' . $link)) {
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
+                }
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
+                    throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
                 }
                 $dataLeft = array(
                     'fields' => array(

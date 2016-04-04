@@ -233,6 +233,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                                 ".$pdo->quote($phoneNumber->id).",
                                 ".$pdo->quote((int)($number === $primary))."
                             )
+                        ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($number === $primary))."
                     ";
                     $sth = $pdo->prepare($query);
                     $sth->execute();

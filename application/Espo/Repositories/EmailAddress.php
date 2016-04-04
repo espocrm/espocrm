@@ -320,6 +320,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                                 ".$pdo->quote($emailAddress->id).",
                                 ".$pdo->quote((int)($address === $primary))."
                             )
+                        ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($address === $primary))."
                     ";
                     $sth = $pdo->prepare($query);
                     $sth->execute();
