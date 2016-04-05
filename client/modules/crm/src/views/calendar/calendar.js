@@ -237,7 +237,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 if (!o.dateStartDate) {
                     event.start = this.getDateTime().toMoment(o.dateStart);
                 } else {
-                    event.start = this.getDateTime().toMoment(o.dateStartDate);
+                    event.start = this.getDateTime().toMomentDate(o.dateStartDate);
                 }
             }
             if (o.dateEnd) {
