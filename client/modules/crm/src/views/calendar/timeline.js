@@ -26,19 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
+Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
     return Dep.extend({
 
-        template: 'crm:calendar/calendar',
+        template: 'crm:calendar/timeline',
 
         eventAttributes: [],
 
         colors: {},
 
-        allDayScopeList: ['Task'],
-
-        scopeList: ['Meeting', 'Call', 'Task'],
+        scopeList: [],
 
         canceledStatusList: [],
 
@@ -48,17 +46,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         modeList: [],
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay'],
-
-        defaultMode: 'agendaWeek',
-
-        slotDuration: 30,
-
-        titleFormat: {
-            month: 'MMMM YYYY',
-            week: 'MMMM D, YYYY',
-            day: 'dddd, MMMM D, YYYY'
-        },
+        defaultMode: 'timeline',
 
         data: function () {
             var scopeFilterList = Espo.Utils.clone(this.scopeList);
@@ -82,26 +70,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         events: {
-            'click button[data-action="prev"]': function () {
-                this.$calendar.fullCalendar('prev');
-                this.updateDate();
-            },
-            'click button[data-action="next"]': function () {
-                this.$calendar.fullCalendar('next');
-                this.updateDate();
-            },
             'click button[data-action="today"]': function () {
                 this.$calendar.fullCalendar('today');
                 this.updateDate();
             },
             'click button[data-action="mode"]': function (e) {
                 var mode = $(e.currentTarget).data('mode');
-                if (~this.fullCalendarModeList.indexOf(mode)) {
-                    this.$el.find('button[data-action="mode"]').removeClass('active');
-                    this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
-                    this.$calendar.fullCalendar('changeView', mode);
-                    this.updateDate();
-                }
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
@@ -128,13 +102,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.date = this.options.date || null;
             this.mode = this.options.mode || this.defaultMode;
             this.header = ('header' in this.options) ? this.options.header : this.header;
-            this.slotDuration = this.options.slotDuration || this.slotDuration;
 
             this.$container = this.options.$container;
 
             this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
-            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
@@ -170,7 +142,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.storeEnabledScopeList(this.enabledScopeList);
 
-            this.$calendar.fullCalendar('refetchEvents');
+            //.this.$calendar.fullCalendar('refetchEvents');
         },
 
         getStoredEnabledScopeList: function () {
@@ -187,31 +159,18 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (!this.header) {
                 return;
             }
-            var view = this.$calendar.fullCalendar('getView');
+            /*var view = this.$calendar.fullCalendar('getView');
             var today = new Date();
 
             if (view.start <= today && today < view.end) {
                 this.$el.find('button[data-action="today"]').addClass('active');
             } else {
                 this.$el.find('button[data-action="today"]').removeClass('active');
-            }
+            }*/
 
-            var map = {
-                'agendaWeek': 'week',
-                'agendaDay': 'day',
-                'basicWeek': 'week',
-                'basicDay': 'day',
-            };
-
-            var viewName = map[view.name] || view.name
 
             var title;
 
-            if (viewName == 'week') {
-                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
-            } else {
-                title = view.intervalStart.format(this.titleFormat[viewName]);
-            }
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
@@ -347,208 +306,33 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             return m.format(format) + ':00';
         },
 
-        getCalculatedHeight: function () {
-            if (this.$container && this.$container.size()) {
-                return this.$container.height();
-            }
-            var height = $(window).height();
-            var width = $(window).width();
-            var spaceHeight = 150;
-            if (width < 768) {
-                spaceHeight = 164;
-            }
-            return $(window).height() - spaceHeight;
-        },
-
-        adjustSize: function () {
-            var height = this.getCalculatedHeight();
-            this.$calendar.fullCalendar('option', 'contentHeight', height);
-        },
-
         afterRender: function () {
             if (this.options.containerSelector) {
                 this.$container = $(this.options.containerSelector);
             }
 
-            var $calendar = this.$calendar = this.$el.find('div.calendar');
+            var $timeline = this.$timeline = this.$el.find('div.timeline');
 
-            var slotDuration = '00:' + this.slotDuration + ':00';
+            this.initGroupsDataSet();
+            this.initItemsDataSet();
 
-            var options = {
-                header: false,
-                axisFormat: this.getDateTime().timeFormat,
-                timeFormat: this.getDateTime().timeFormat,
-                defaultView: this.mode,
-                weekNumbers: true,
-                editable: true,
-                selectable: true,
-                selectHelper: true,
-                height: this.options.height || null,
-                firstDay: this.getPreferences().get('weekStart'),
-                slotEventOverlap: true,
-                slotDuration: slotDuration,
-                snapDuration: this.slotDuration * 60 * 1000,
-                timezone: this.getDateTime().timeZone,
-                windowResize: function () {
-                    this.adjustSize();
-                }.bind(this),
-                select: function (start, end, allDay) {
-                    var dateStart = this.convertTime(start);
-                    var dateEnd = this.convertTime(end);
+            //this.updateDate();
+        },
 
-                    var attributes = {
-                        dateStart: dateStart,
-                        dateEnd: dateEnd
-                    };
-                    if (this.options.userId) {
-                        attributes.assignedUserId = this.options.userId;
-                        attributes.assignedUserName = this.options.userName || this.options.userId;
-                    }
-
-                    this.notify('Loading...');
-                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                        attributes: attributes
-                    }, function (view) {
-                        view.render();
-                        view.notify(false);
-                    });
-                    $calendar.fullCalendar('unselect');
-                }.bind(this),
-                eventClick: function (event) {
-                    this.notify('Loading...');
-                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) || 'views/modals/detail';
-                    this.createView('quickView', viewName, {
-                        scope: event.scope,
-                        id: event.recordId,
-                        removeDisabled: false
-                    }, function (view) {
-                        view.render();
-                        view.notify(false);
-
-                        this.listenToOnce(view, 'after:destroy', function (model) {
-                            this.removeModel(model);
-                        }, this);
-
-                        this.listenToOnce(view, 'after:save', function (model) {
-                            this.updateModel(model);
-                        }, this);
-                    }, this);
-                }.bind(this),
-                viewRender: function (view, el) {
-                    var mode = view.name;
-                    var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-
-                    var m = moment(this.$calendar.fullCalendar('getDate'));
-                    this.trigger('view', m.format('YYYY-MM-DD'), mode);
-                }.bind(this),
-                events: function (from, to, timezone, callback) {
-                    var dateTimeFormat = this.getDateTime().internalDateTimeFormat;
-
-                    var fromStr = from.format(dateTimeFormat);
-                    var toStr = to.format(dateTimeFormat);
-
-                    from = moment.tz(fromStr, timezone);
-                    to = moment.tz(toStr, timezone);
-
-                    fromStr = from.utc().format(dateTimeFormat);
-                    toStr = to.utc().format(dateTimeFormat);
-
-                    this.fetchEvents(fromStr, toStr, callback);
-                }.bind(this),
-                eventDrop: function (event, delta, callback) {
-                    var dateStart = this.convertTime(event.start) || null;
-
-                    var dateEnd = null;
-                    if (event.duration) {
-                        dateEnd = this.convertTime(event.start.clone().add(event.duration, 's')) || null;
-                    }
-
-                    var attributes = {};
-
-                    if (event.dateStart) {
-                        event.dateStart = this.convertTime(this.getDateTime().toMoment(event.dateStart).add(delta));
-                        attributes.dateStart = event.dateStart;
-                    }
-                    if (event.dateEnd) {
-                        event.dateEnd = this.convertTime(this.getDateTime().toMoment(event.dateEnd).add(delta));
-                        attributes.dateEnd = event.dateEnd;
-                    }
-                    if (event.dateStartDate) {
-                        var d = this.getDateTime().toMomentDate(event.dateStartDate).add(delta);
-                        event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
-                        attributes.dateStartDate = event.dateStartDate;
-                    }
-                    if (event.dateEndDate) {
-                        var d = this.getDateTime().toMomentDate(event.dateEndDate).add(delta);
-                        event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
-                        attributes.dateEndDate = event.dateEndDate;
-                    }
-
-                    if (!event.end) {
-                        if (!~this.allDayScopeList.indexOf(event.scope)) {
-                            event.end = event.start.clone().add(event.duration, 's');
-                        }
-                    }
-
-                    event.allDay = false;
-
-                    this.handleAllDay(event, true);
-
-                    this.fillColor(event);
-
-                    this.notify('Saving...');
-                    this.getModelFactory().create(event.scope, function (model) {
-                        model.once('sync', function () {
-                            this.notify(false);
-                        }, this);
-                        model.id = event.recordId;
-                        model.save(attributes, {patch: true});
-                    }, this);
-                }.bind(this),
-                eventResize: function (event, delta, revertFunc) {
-                    var attributes = {
-                        dateEnd: this.convertTime(event.end)
-                    };
-                    event.dateEnd = attributes.dateEnd;
-                    event.duration = event.end.unix() - event.start.unix();
-
-                    this.fillColor(event);
-
-                    this.notify('Saving...');
-                    this.getModelFactory().create(event.scope, function (model) {
-                        model.once('sync', function () {
-                            this.notify(false);
-                        }.bind(this));
-                        model.id = event.recordId;
-                        model.save(attributes, {patch: true});
-                    }.bind(this));
-                }.bind(this),
-                allDayText: '',
-                firstHour: 8,
-                columnFormat: {
-                    week: 'ddd DD',
-                    day: 'ddd DD',
-                },
-                weekNumberTitle: '',
-            };
-
-            if (!this.options.height) {
-                options.contentHeight = this.getCalculatedHeight();
-            } else {
-                options.aspectRatio = 1.62;
-            }
-
-            if (this.date) {
-                options.defaultDate = moment.utc(this.date);
-            }
-
-            setTimeout(function () {
-                $calendar.fullCalendar(options);
-                this.updateDate();
-                if (this.$container && this.$container.size()) {
-                    this.adjustSize();
+        initGroupsDataSet: function () {
+            var list = [
+                {
+                    id: this.getUser().id,
+                    content: this.getUser().get('name'),
                 }
-            }.bind(this), 150);
+            ];
+            this.groupsDataSet = new Vis.DataSet(list);
+        },
+
+        initItemsDataSet: function () {
+            var list = [];
+            this.getUserList
+            this.itemsDataSet = new Vis.DataSet(list);
         },
 
         fetchEvents: function (from, to, callback) {
