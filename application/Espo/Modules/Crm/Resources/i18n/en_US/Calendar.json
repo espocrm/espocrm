@@ -4,7 +4,8 @@
         "week": "Week",
         "day": "Day",
         "agendaWeek": "Week",
-        "agendaDay": "Day"
+        "agendaDay": "Day",
+        "timeline": "Timeline"
     },
     "labels": {
         "Today": "Today",

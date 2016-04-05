@@ -64,6 +64,10 @@ Espo.define('date-time', [], function () {
             return this.dateFormat;
         },
 
+        getTimeFormat: function () {
+            return this.timeFormat;
+        },
+
         getDateTimeFormat: function () {
             return this.dateFormat + ' ' + this.timeFormat;
         },

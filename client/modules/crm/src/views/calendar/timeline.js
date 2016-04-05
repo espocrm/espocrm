@@ -71,15 +71,15 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         events: {
             'click button[data-action="today"]': function () {
-                this.$calendar.fullCalendar('today');
-                this.updateDate();
+                this.timeline.moveTo(moment());
+                this.triggerView();
             },
             'click button[data-action="mode"]': function (e) {
                 var mode = $(e.currentTarget).data('mode');
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
-            	this.$calendar.fullCalendar('refetchEvents');
+            	this.runFetch();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
                 var $target = $(e.currentTarget);
@@ -142,7 +142,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             this.storeEnabledScopeList(this.enabledScopeList);
 
-            //.this.$calendar.fullCalendar('refetchEvents');
+            this.runFetch();
         },
 
         getStoredEnabledScopeList: function () {
@@ -177,17 +177,19 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.$el.find('.date-title h4 span').text(title);
         },
 
-        convertToFcEvent: function (o) {
+        convertEvent: function (o) {
+            var userId = o.userId || this.userList[0].id || this.getUser().id;
+
             var event = {
-                title: o.name,
-                scope: o.scope,
-                id: o.scope + '-' + o.id,
+                content: o.name,
+                id: o.userId + '-' + o.scope + '-' + o.id,
+                group: userId,
                 recordId: o.id,
+                scope: o.scope,
+                status: o.status,
                 dateStart: o.dateStart,
                 dateEnd: o.dateEnd,
-                dateStartDate: o.dateStartDate,
-                dateEndDate: o.dateEndDate,
-                status: o.status
+                type: 'range'
             };
 
             this.eventAttributes.forEach(function (attr) {
@@ -207,16 +209,13 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     event.end = this.getDateTime().toMomentDate(o.dateEndDate);
                 }
             }
-            if (event.end && event.start) {
-                event.duration = event.end.unix() - event.start.unix();
-                if (event.duration < 1800) {
-                    event.end = event.start.clone().add(30, 'm');
+
+            if (~['Task'].indexOf(o.scope)) {
+                event.type = 'box';
+                if (event.end) {
+                    event.start = event.end;
                 }
             }
-
-            event.allDay = false;
-
-            this.handleAllDay(event);
 
             this.fillColor(event);
 
@@ -229,10 +228,15 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
+            color = this.shadeColor(color, 0.3);
+
             if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
             }
-            event.color = color;
+
+            event.style = event.style || '';
+            event.style += 'background-color:' + color + ';';
+            event.style += 'border-color:' + color + ';';
         },
 
         handleStatus: function (event) {
@@ -271,7 +275,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     event.allDay = true;
                     if (!notInitial) {
                         if (event.end.hours() != 0 || event.end.minutes() != 0) {
-                            event.end.add(1, 'days');
+                            event.end.add('days', 1);
                         }
                     }
                 } else {
@@ -280,15 +284,13 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }
         },
 
-        convertToFcEvents: function (list) {
-            this.now = moment.tz(this.getDateTime().timeZone);
-
-            var events = [];
+        convertEventList: function (list) {
+            var resultList = [];
             list.forEach(function (o) {
-                var event = this.convertToFcEvent(o);
-                events.push(event);
-            }.bind(this));
-            return events;
+                var event = this.convertEvent(o);
+                resultList.push(event);
+            }, this);
+            return resultList;
         },
 
         convertTime: function (d) {
@@ -313,47 +315,150 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             var $timeline = this.$timeline = this.$el.find('div.timeline');
 
+            this.initUserList();
+            this.initDates();
             this.initGroupsDataSet();
-            this.initItemsDataSet();
 
-            //this.updateDate();
+            this.fetchEvents(this.start, this.end, function (eventList) {
+                var itemsDataSet = new Vis.DataSet(eventList);
+                var timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+                    dataAttributes: 'all',
+                    start: this.start,
+                    end: this.end,
+                    moment: function (date) {
+                        return Vis.moment(date).tz(this.getDateTime().timeZone);
+                    }.bind(this),
+                    format: this.getFormatObject()
+                });
+
+                timeline.on('rangechanged', function (e) {
+                    this.start = moment(e.start);
+                    this.end = moment(e.end);
+                    this.runFetch();
+                }.bind(this));
+
+                this.once('remove', function () {
+                    timeline.destroy();
+                }, this);
+            }.bind(this));
+        },
+
+        runFetch: function () {
+            this.fetchEvents(this.start, this.end, function (eventList) {
+                var itemsDataSet = new Vis.DataSet(eventList);
+                this.timeline.setItems(itemsDataSet);
+                this.triggerView();
+            }.bind(this));
+        },
+
+        getFormatObject: function () {
+            var format = {
+                minorLabels: {
+                    millisecond: 'SSS',
+                    second: 's',
+                    minute: this.getDateTime().getTimeFormat(),
+                    hour: this.getDateTime().getTimeFormat(),
+                    weekday: 'ddd D',
+                    day: 'D',
+                    month: 'MMM',
+                    year: 'YYYY'
+                },
+                majorLabels: {
+                    millisecond: this.getDateTime().getTimeFormat() + ' ss',
+                    second: this.getDateTime().getReadableDateFormat() + ' HH:mm',
+                    minute: 'ddd D MMMM',
+                    hour: 'ddd D MMMM',
+                    weekday: 'MMMM YYYY',
+                    day: 'MMMM YYYY',
+                    month: 'YYYY',
+                    year: ''
+                }
+            };
+            return format;
+        },
+
+        triggerView: function () {
+            this.trigger('view', this.start.clone().format(this.getDateTime().internalDateFormat), this.mode);
+        },
+
+        initUserList: function () {
+            this.userList = [];
+            if (this.options.userId) {
+                this.userList.push({
+                    id: this.options.userId,
+                    name: this.options.userName || this.options.userId
+                });
+            } else {
+                this.userList.push({
+                    id: this.getUser().id,
+                    name: this.getUser().get('name')
+                });
+            }
+        },
+
+        initDates: function () {
+            if (this.date) {
+                this.start = this.getDateTime().toMomentDate(this.date);
+            } else {
+                this.start = moment.utc();
+            }
+            this.start.add('day', 0);
+            this.end = this.start.clone();
+            this.end.add('day', 1);
+
+            this.fetchedStart = null;
+            this.fetchedEnd = null;
         },
 
         initGroupsDataSet: function () {
-            var list = [
-                {
-                    id: this.getUser().id,
-                    content: this.getUser().get('name'),
-                }
-            ];
+            var list = [];
+            this.userList.forEach(function (user) {
+                list.push({
+                    id: user.id,
+                    content: user.name
+                });
+            }, this);
             this.groupsDataSet = new Vis.DataSet(list);
         },
 
         initItemsDataSet: function () {
-            var list = [];
-            this.getUserList
             this.itemsDataSet = new Vis.DataSet(list);
         },
 
         fetchEvents: function (from, to, callback) {
-            var url = 'Activities?from=' + from + '&to=' + to;
-            if (this.options.userId) {
-                url += '&userId=' + this.options.userId;
-                if (this.options.userName) {
-                    url += '&userName=' + this.options.userName;
-                }
-            }
+            Espo.Ui.notify(this.translate('Loading...'));
 
+            var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
+            var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
+
+            var url = 'Activities?from=' + fromString + '&to=' + toString;
+            var userIdList = this.userList.map(function (user) {
+                return user.id
+            }, this);
+
+
+            if (userIdList.length === 1) {
+                url += '&userId=' + userIdList[0];
+            } else {
+                url += '&userIdList=' + encodeURIComponent(userIdList.join(','));
+            }
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
-            $.ajax({
-                url: url,
-                success: function (data) {
-                    var events = this.convertToFcEvents(data);
-                    callback(events);
-                    this.notify(false);
-                }.bind(this)
-            });
+            this.ajaxGetRequest(url).then(function (data) {
+
+                if (!this.fetchedStart || from.unix() < this.fetchedStart.unix) {
+                    this.fetchedStart = from.clone();
+                }
+
+                if (!this.fetchedEnd || to.unix() > this.fetchedEnd.unix) {
+                    this.fetchedEnd = to.clone();
+                }
+
+                var eventList = this.convertEventList(data);
+                callback(eventList);
+                this.notify(false);
+            }.bind(this));
+
         },
 
         addModel: function (model) {
