@@ -1,3 +1,16 @@
+.vis-item .vis-item-content {
+  color: #FFF !important;
+  cursor: default;
+}
+
+.vis-item.event-canceled .vis-item-content {
+  text-decoration: line-through !important;
+}
+
+.vis-item.vis-range, .vis-item.vis-box {
+  border-radius: 0 !important;
+}
+
 .vis .overlay {
   position: absolute;
   top: 0;
@@ -394,7 +407,6 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
   left: 0;
   top: 0;
   width: 100%;
-  color: #4d4d4d;
 
   box-sizing: border-box;
 }
@@ -615,7 +627,6 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
 
 .vis-time-axis .vis-text {
   position: absolute;
-  color: #4d4d4d;
   padding: 3px;
   overflow: hidden;
   box-sizing: border-box;
@@ -709,7 +720,6 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
 .vis-data-axis .vis-y-axis.vis-major {
   width: 100%;
   position: absolute;
-  color: #4d4d4d;
   white-space: nowrap;
 }
 
@@ -739,7 +749,6 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
 
 .vis-data-axis .vis-y-axis.vis-title {
   position: absolute;
-  color: #4d4d4d;
   white-space: nowrap;
   bottom: 20px;
   text-align: center;

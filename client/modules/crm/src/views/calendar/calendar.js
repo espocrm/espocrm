@@ -134,7 +134,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
-            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.canceledStatusList;
+            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
@@ -279,7 +279,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         handleStatus: function (event) {
         	if (~this.canceledStatusList.indexOf(event.status)) {
         		event.className = 'event-canceled';
-        	}
+        	} else {
+                event.className = '';
+            }
         },
 
         shadeColor: function (color, percent) {

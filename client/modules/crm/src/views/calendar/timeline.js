@@ -107,6 +107,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
+            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
@@ -159,16 +160,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (!this.header) {
                 return;
             }
-            /*var view = this.$calendar.fullCalendar('getView');
-            var today = new Date();
-
-            if (view.start <= today && today < view.end) {
-                this.$el.find('button[data-action="today"]').addClass('active');
-            } else {
-                this.$el.find('button[data-action="today"]').removeClass('active');
-            }*/
-
-
             var title;
 
             if (this.options.userId && this.options.userName) {
@@ -228,7 +219,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
-            color = this.shadeColor(color, 0.3);
+            color = this.shadeColor(color, 0.15);
 
             if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
@@ -240,9 +231,11 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         handleStatus: function (event) {
-        	if (~this.canceledStatusList.indexOf(event.status)) {
-        		event.className = 'event-canceled';
-        	}
+            if (~this.canceledStatusList.indexOf(event.status)) {
+                event.className = 'event-canceled';
+            } else {
+                event.className = '';
+            }
         },
 
         shadeColor: function (color, percent) {
@@ -323,10 +316,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 var itemsDataSet = new Vis.DataSet(eventList);
                 var timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
-                    start: this.start,
-                    end: this.end,
+                    start: this.start.format(this.getDateTime().internalDateTimeFormat),
+                    end: this.end.format(this.getDateTime().internalDateTimeFormat),
                     moment: function (date) {
-                        return Vis.moment(date).tz(this.getDateTime().timeZone);
+                        return moment(date).tz(this.getDateTime().timeZone);
                     }.bind(this),
                     format: this.getFormatObject()
                 });
@@ -378,7 +371,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         triggerView: function () {
-            this.trigger('view', this.start.clone().format(this.getDateTime().internalDateFormat), this.mode);
+            var m = this.start.clone().add('seconds', Math.round((this.end.unix() - this.start.unix()) / 2));
+
+            this.trigger('view', m.format(this.getDateTime().internalDateFormat), this.mode);
         },
 
         initUserList: function () {
@@ -398,11 +393,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         initDates: function () {
             if (this.date) {
-                this.start = this.getDateTime().toMomentDate(this.date);
+                this.start = moment.tz(this.date, this.getDateTime().timeZone);
             } else {
-                this.start = moment.utc();
+                this.start = moment.tz(this.getDateTime().timeZone);
             }
-            this.start.add('day', 0);
             this.end = this.start.clone();
             this.end.add('day', 1);
 
@@ -428,6 +422,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         fetchEvents: function (from, to, callback) {
             Espo.Ui.notify(this.translate('Loading...'));
 
+            from = from.clone().add('days', -2);
+            to = to.clone().add('hours', 12);
+
             var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
@@ -445,20 +442,16 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
             this.ajaxGetRequest(url).then(function (data) {
-
                 if (!this.fetchedStart || from.unix() < this.fetchedStart.unix) {
                     this.fetchedStart = from.clone();
                 }
-
                 if (!this.fetchedEnd || to.unix() > this.fetchedEnd.unix) {
                     this.fetchedEnd = to.clone();
                 }
-
                 var eventList = this.convertEventList(data);
                 callback(eventList);
                 this.notify(false);
             }.bind(this));
-
         },
 
         addModel: function (model) {
