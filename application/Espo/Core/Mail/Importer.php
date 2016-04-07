@@ -456,24 +456,37 @@ class Importer
 
     protected function fetchFileNameFromContentDisposition($contentDisposition)
     {
+        $contentDisposition = preg_replace('/\\\\"/', "{{_!Q!U!O!T!E!_}}", $contentDisposition);
+
+        $fileName = false;
         $m = array();
-        if (preg_match('/filename="?([^"]+)"?/i', $contentDisposition, $m)) {
+        $asterisk = false;
+
+        if (preg_match('/filename="([^"]+)";?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-            return $fileName;
-        } else if (preg_match('/filename\*[01]?="?([^"]+)"?/i', $contentDisposition, $m)) {
+        } else if (preg_match('/filename=([^";]+);?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-            if ($fileName) {
-                if (stripos($fileName, "''") !== false) {
-                    list($encoding, $fileName) = explode("''", $fileName);
-                    $fileName = rawurldecode($fileName);
-                    if (strtoupper($encoding) !== 'UTF-8') {
-                        $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
-                    }
+        } else if (preg_match('/filename\*[01]?="([^"]+)";?/i', $contentDisposition, $m)) {
+            $fileName = $m[1];
+            $asterisk = true;
+        } else if (preg_match('/filename\*[01]?=([^";]+);?/i', $contentDisposition, $m)) {
+            $fileName = $m[1];
+            $asterisk = true;
+        }
+
+        if ($asterisk) {
+            if ($fileName && stripos($fileName, "''") !== false) {
+                list($encoding, $fileName) = explode("''", $fileName);
+                $fileName = rawurldecode($fileName);
+                if (strtoupper($encoding) !== 'UTF-8') {
+                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
                 }
-                return $fileName;
             }
         }
-        return false;
+
+        $fileName = str_replace('{{_!Q!U!O!T!E!_}}', '"', $fileName);
+
+        return $fileName;
     }
 
     protected function getContentFromPart($part)
