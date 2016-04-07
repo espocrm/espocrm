@@ -2,7 +2,9 @@
   "controller": "controllers/record",
   "acl": "crm:acl/mass-email",
   "recordViews": {
-    "detail": "crm:views/mass-email/record/detail"
+    "detail": "crm:views/mass-email/record/detail",
+    "edit": "crm:views/mass-email/record/edit",
+    "editQuick": "crm:views/mass-email/record/edit-small"
   },
   "views": {
     "detail": "crm:views/mass-email/detail"

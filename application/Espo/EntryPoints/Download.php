@@ -73,6 +73,9 @@ class Download extends \Espo\Core\EntryPoints\Base
             throw new NotFound();
         }
 
+        $outputFileName = $attachment->get('name');
+        $outputFileName = str_replace("\"", "\\\"", $outputFileName);
+
         $type = $attachment->get('type');
 
         $disposition = 'attachment';
@@ -84,7 +87,7 @@ class Download extends \Espo\Core\EntryPoints\Base
         if ($type) {
             header('Content-Type: ' . $type);
         }
-        header("Content-Disposition: " . $disposition . ";filename=\"" . $attachment->get('name') . "\"");
+        header("Content-Disposition: " . $disposition . ";filename=\"" . $outputFileName . "\"");
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');

@@ -26,21 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/account/detail', 'views/detail', function (Dep) {
+Espo.define('crm:views/mass-email/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
-        relatedAttributeMap: {
-            'contacts': {
-                'billingAddressCity': 'addressCity',
-                'billingAddressStreet': 'addressStreet',
-                'billingAddressPostalCode': 'addressPostalCode',
-                'billingAddressState': 'addressState',
-                'billingAddressCountry': 'addressCountry',
-                'id': 'accountId',
-                'name': 'accountName'
-            }
-        }
+        sideView: false
+
     });
 });
 

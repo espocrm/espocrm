@@ -1,4 +1,8 @@
 {
     "controller": "controllers/record",
-    "acl": "crm:acl/campaign-tracking-url"
+    "acl": "crm:acl/campaign-tracking-url",
+    "recordViews": {
+        "edit": "crm:views/campaign-tracking-url/record/edit",
+        "editQuick": "crm:views/campaign-tracking-url/record/edit-small"
+    }
 }
