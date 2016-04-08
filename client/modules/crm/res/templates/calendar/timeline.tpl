@@ -2,9 +2,11 @@
 
 {{#if header}}
 <div class="row button-container">
-    <div class="col-sm-4 col-xs-2">
-        <button class="btn btn-default hidden-xs" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
-
+    <div class="col-sm-4 col-xs-6">
+        <div class="btn-group">
+            <button class="btn btn-default" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
+            <button class="btn btn-default" title="{{translate 'Refresh'}}" data-action="refresh"><span class="glyphicon glyphicon-refresh"></span></button>
+        </div>
         {{#if calendarTypeSelectEnabled}}
         <div class="btn-group calendar-type-button-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
@@ -18,13 +20,14 @@
                 {{/each}}
             </ul>
         </div>
+        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="addUser"><span class="glyphicon glyphicon-plus"></span> {{translate 'Add User' scope='Calendar'}}</button>
         {{/if}}
     </div>
 
 
-    <div class="date-title col-sm-4 col-xs-4"><h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
+    <div class="date-title col-sm-4 hidden-xs"><h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
 
-    <div class="col-sm-4 col-xs-5">
+    <div class="col-sm-4 col-xs-6">
         <div class="btn-group pull-right">
             {{#each ../modeList}}
             <button class="btn btn-default{{#ifEqual this ../../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{./this}}">{{translate this scope='Calendar' category='modes'}}</button>

@@ -50,7 +50,15 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         maxRange: 120,
 
+        rangeMarginThreshold: 12 * 3600,
+
+        leftMargin: 24 * 3600,
+
+        rightMargin: 48 * 3600,
+
         calendarType: 'single',
+
+        calendarTypeList: ['single', 'shared'],
 
         data: function () {
             var scopeFilterList = Espo.Utils.clone(this.scopeList);
@@ -71,10 +79,11 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 mode: this.mode,
                 modeList: this.modeList,
                 header: this.header,
+                calendarType: this.calendarType,
                 scopeFilterDataList: scopeFilterDataList,
                 calendarTypeDataList: calendarTypeDataList,
                 calendarTypeSelectEnabled: calendarTypeDataList.length > 1,
-                calendarTypeLabel: this.getCalendarTypeLabel(this.calendarType)
+                calendarTypeLabel: this.getCalendarTypeLabel(this.calendarType),
             };
         },
 
@@ -118,8 +127,18 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
                 $target.closest('.calendar-type-button-group').find('.calendar-type-label').text(this.getCalendarTypeLabel(calendarType));
 
+                var $addUser = this.$el.find('> .button-container button[data-action="addUser"]');
+                if (calendarType == 'shared') {
+                    $addUser.removeClass('hidden');
+                } else {
+                    $addUser.addClass('hidden');
+                }
+
                 this.selectCalendarType(calendarType);
-            }
+            },
+            'click button[data-action="addUser"]': function () {
+                this.actionAddUser();
+            },
         },
 
         setup: function () {
@@ -155,6 +174,22 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
                 this.enabledScopeList = [];
             }
+
+            if (this.options.userId) {
+                this.calendarType = 'single';
+            } else {
+                this.calendarType = this.getStorage().get('calendar', 'timelineType') || 'single';
+            }
+
+            if (this.getAcl().get('userPermission' === 'no')) {
+                if (this.calendarType === 'shared') {
+                    this.calendarType = 'single';
+                }
+            }
+
+            if (!~this.calendarTypeList.indexOf(this.calendarType)) {
+                this.calendarType = 'single';
+            }
         },
 
         getCalendarTypeDataList: function () {
@@ -173,11 +208,13 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 return list;
             }
 
-            list.push({
-                type: 'shared',
-                label: this.getCalendarTypeLabel('shared'),
-                disabled: this.calendarType !== 'shared'
-            });
+            if (this.getAcl().get('userPermission') !== 'no') {
+                list.push({
+                    type: 'shared',
+                    label: this.getCalendarTypeLabel('shared'),
+                    disabled: this.calendarType !== 'shared'
+                });
+            }
 
             return list;
         },
@@ -199,11 +236,18 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         selectCalendarType: function (name) {
-            this.clendarType = name;
-        },
+            this.calendarType = name;
 
-        getSharedCalenderUserList: function () {
-            this.getStorage().get('calendar', 'sharedUserList');
+            this.initUserList();
+            this.initGroupsDataSet();
+            this.timeline.setOptions({
+                groupEditable: this.getGroupEditableOptions()
+            });
+            this.timeline.setGroups(this.groupsDataSet);
+
+            this.runFetch();
+
+            this.getStorage().set('calendar', 'timelineType', name);
         },
 
         toggleScopeFilter: function (name) {
@@ -246,13 +290,14 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             var event = {
                 content: o.name,
-                id: o.userId + '-' + o.scope + '-' + o.id,
+                title: o.name,
+                id: userId + '-' + o.scope + '-' + o.id,
                 group: userId,
-                recordId: o.id,
+                'record-id': o.id,
                 scope: o.scope,
                 status: o.status,
-                dateStart: o.dateStart,
-                dateEnd: o.dateEnd,
+                'date-start': o.dateStart,
+                'date-end': o.dateEnd,
                 type: 'range'
             };
 
@@ -396,13 +441,36 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     }.bind(this),
                     format: this.getFormatObject(),
                     zoomMax: 24 * 3600 *  1000 * this.maxRange,
-                    zoomMin: 1000 * 60 * 15
+                    zoomMin: 1000 * 60 * 15,
+                    orientation: 'top',
+                    groupEditable: this.getGroupEditableOptions(),
+                    editable: {
+                        add: false,
+                        updateTime: false,
+                        updateGroup: false,
+                        remove: false
+                    }
                 });
+
+                timeline.on('click', function (e) {
+                    console.log(e);
+                }.bind(this));
+
+                timeline.on('groupDragged', function (e) {
+                    console.log(e);
+                }.bind(this));
 
                 timeline.on('rangechanged', function (e) {
                     this.start = moment(e.start);
                     this.end = moment(e.end);
-                    this.runFetch();
+
+                    if (
+                        (this.start.unix() < this.fetchedStart.unix() + this.rangeMarginThreshold)
+                        ||
+                        (this.end.unix() > this.fetchedEnd.unix() - this.rangeMarginThreshold)
+                    ) {
+                        this.runFetch();
+                    }
                 }.bind(this));
 
                 this.once('remove', function () {
@@ -417,6 +485,21 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.timeline.setItems(itemsDataSet);
                 this.triggerView();
             }.bind(this));
+        },
+
+        getGroupEditableOptions: function () {
+            if (this.calendarType === 'single') {
+                return {
+                    add: false,
+                    remove: false,
+                    order: false
+                };
+            }
+            return {
+                add: false,
+                remove: false,
+                order: true
+            };
         },
 
         getFormatObject: function () {
@@ -478,6 +561,58 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }
         },
 
+        addSharedCalenderUser: function (id, name) {
+            var isMet = false;
+            this.userList.forEach(function (item) {
+                if (item.id === id) {
+                    isMet = true;
+                }
+            });
+            if (isMet) return;
+
+            this.userList.push({
+                id: id,
+                name: name
+            });
+
+            this.getStorage().set('calendar', 'sharedUserList', this.userList);
+        },
+
+        removeSharedCalendarUser: function (id) {
+            var index = -1;
+            this.userList.forEach(function (item, i) {
+                if (item.id === id) {
+                    index = i;
+                }
+            });
+            if (~index) {
+                this.userList.splice(index, 1);
+                this.getStorage().set('calendar', 'sharedUserList', this.userList);
+            }
+        },
+
+        getSharedCalenderUserList: function () {
+            var list = this.getStorage().get('calendar', 'sharedUserList');
+
+            if (list && list.length) {
+                var isBad = false;
+
+                list.forEach(function (item) {
+                    if (typeof item !== 'object' || !item.id || !item.name) {
+                        isBad = true;
+                    }
+                }, this);
+                if (!isBad) {
+                    return list;
+                }
+            }
+
+            return [{
+                id: this.getUser().id,
+                name: this.getUser().get('name')
+            }];
+        },
+
         initDates: function () {
             if (this.date) {
                 this.start = moment.tz(this.date, this.getDateTime().timeZone);
@@ -493,13 +628,21 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         initGroupsDataSet: function () {
             var list = [];
-            this.userList.forEach(function (user) {
+            this.userList.forEach(function (user, i) {
                 list.push({
                     id: user.id,
-                    content: user.name
+                    content: this.getGroupContent(user.id, user.name),
+                    order: i
                 });
             }, this);
             this.groupsDataSet = new Vis.DataSet(list);
+        },
+
+        getGroupContent: function (id, name) {
+            if (this.calendarType === 'single') {
+                return name;
+            }
+            return '<a href="#User/view/'+id+'">' + name + '</a>';
         },
 
         initItemsDataSet: function () {
@@ -509,8 +652,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         fetchEvents: function (from, to, callback) {
             Espo.Ui.notify(this.translate('Loading...'));
 
-            from = from.clone().add('days', -2);
-            to = to.clone().add('hours', 12);
+            from = from.clone().add('seconds', (-1) * this.leftMargin);
+            to = to.clone().add('seconds', this.rightMargin);
 
             var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
@@ -529,12 +672,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
             this.ajaxGetRequest(url).then(function (data) {
-                if (!this.fetchedStart || from.unix() < this.fetchedStart.unix) {
-                    this.fetchedStart = from.clone();
-                }
-                if (!this.fetchedEnd || to.unix() > this.fetchedEnd.unix) {
-                    this.fetchedEnd = to.clone();
-                }
+                this.fetchedStart = from.clone();
+                this.fetchedEnd = to.clone();
+
                 var eventList = this.convertEventList(data);
                 callback(eventList);
                 this.notify(false);
@@ -568,8 +708,32 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         removeModel: function (model) {
             this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
-        }
+        },
 
+        actionAddUser: function () {
+            var boolFilterList = [];
+            if (this.getAcl().get('userPermission') === 'team') {
+                boolFilterList.push('onlyMyTeam');
+            }
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || 'views/modals/select-records';
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: 'User',
+                createButton: false,
+                boolFilterList: boolFilterList
+            }, function (view) {
+                view.render();
+                this.notify(false);
+                this.listenToOnce(view, 'select', function (model) {
+                    this.addSharedCalenderUser(model.id, model.get('name'));
+                    this.initGroupsDataSet();
+                    this.timeline.setGroups(this.groupsDataSet);
+                    this.runFetch();
+                }, this);
+            }, this);
+        }
     });
 });
 
