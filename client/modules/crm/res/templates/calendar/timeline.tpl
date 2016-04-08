@@ -2,9 +2,25 @@
 
 {{#if header}}
 <div class="row button-container">
-    <div class="col-sm-4 col-xs-3">
+    <div class="col-sm-4 col-xs-2">
         <button class="btn btn-default hidden-xs" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
+
+        {{#if calendarTypeSelectEnabled}}
+        <div class="btn-group calendar-type-button-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                {{#each calendarTypeDataList}}
+                    <li>
+                        <a href="javascript:" data-action="toggleCalendarType" data-name="{{type}}">
+                            <span class="glyphicon glyphicon-ok calendar-type-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span> {{label}}
+                        </a>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
     </div>
+
 
     <div class="date-title col-sm-4 col-xs-4"><h4><span style="cursor: pointer;" data-action="refresh" title="{{translate 'Refresh'}}"></span></h4></div>
 

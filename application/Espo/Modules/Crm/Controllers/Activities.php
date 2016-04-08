@@ -35,6 +35,9 @@ use \Espo\Core\Exceptions\Error,
 
 class Activities extends \Espo\Core\Controllers\Base
 {
+    protected $maxCalendarRange = 123;
+
+    protected $maxSizeLimit = 200;
 
     public function actionListCalendarEvents($params, $data, $request)
     {
@@ -47,6 +50,10 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if (empty($from) || empty($to)) {
             throw new BadRequest();
+        }
+
+        if (strtotime($to) - strtotime($from) > $this->maxCalendarRange * 24 * 3600) {
+            throw new Forbidden('Too long range.');
         }
 
         $service = $this->getService('Activities');
@@ -75,6 +82,13 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
+
+        if (empty($maxSize)) {
+            $maxSize = $this->maxSizeLimit;
+        }
+        if ($maxSize > $this->maxSizeLimit) {
+            throw new Forbidden("Max should should not exceed " . $this->maxSizeLimit . ". Use pagination (offset, limit).");
+        }
 
         return $service->getUpcomingActivities($userId, array(
             'offset' => $offset,
@@ -130,6 +144,13 @@ class Activities extends \Espo\Core\Controllers\Base
         $asc = $request->get('asc') === 'true';
         $sortBy = $request->get('sortBy');
         $where = $request->get('where');
+
+        if (empty($maxSize)) {
+            $maxSize = $this->maxSizeLimit;
+        }
+        if ($maxSize > $this->maxSizeLimit) {
+            throw new Forbidden("Max should should not exceed " . $this->maxSizeLimit . ". Use pagination (offset, limit).");
+        }
 
         $scope = null;
         if (is_array($where) && !empty($where[0]) && $where[0] !== 'false') {
