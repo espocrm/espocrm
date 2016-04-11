@@ -59,8 +59,24 @@ class Activities extends \Espo\Core\Controllers\Base
         $service = $this->getService('Activities');
 
         $userId = $request->get('userId');
-        if (!$userId) {
-            $userId = $this->getUser()->id;
+        $userIdList = $request->get('userIdList');
+
+        if ($userIdList) {
+            $userIdList = explode(',', $userIdList);
+
+            $resultList = [];
+            foreach ($userIdList as $userId) {
+                $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
+                foreach ($userResultList as $item) {
+                    $item['userId'] = $userId;
+                    $resultList[] = $item;
+                }
+            }
+            return $resultList;
+        } else {
+            if (!$userId) {
+                $userId = $this->getUser()->id;
+            }
         }
 
         $scopeList = null;

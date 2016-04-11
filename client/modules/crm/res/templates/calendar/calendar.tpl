@@ -37,6 +37,3 @@
 {{/if}}
 
 <div class="calendar"></div>
-
-
-

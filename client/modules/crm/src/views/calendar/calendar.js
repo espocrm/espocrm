@@ -137,7 +137,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
             this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
-            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
+            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
             this.scopeFilter = false;
 
@@ -413,7 +413,10 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     }, function (view) {
                         view.render();
                         view.notify(false);
-                    });
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.addModel(model);
+                        }, this);
+                    }, this);
                     $calendar.fullCalendar('unselect');
                 }.bind(this),
                 eventClick: function (event) {

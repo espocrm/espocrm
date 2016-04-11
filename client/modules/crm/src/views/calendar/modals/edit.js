@@ -129,20 +129,6 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     style: 'danger'
                 });
             }
-
-            this.once('after:save', function (model) {
-                var parentView = this.getParentView();
-                if (!this.id) {
-                    parentView.addModel.call(parentView, model);
-                } else {
-                    parentView.updateModel.call(parentView, model);
-                }
-            }, this);
-
-            this.once('after:destroy', function (model) {
-                var parentView = this.getParentView();
-                parentView.removeModel.call(parentView, model);
-            }, this);
         },
 
         actionRemove: function () {
