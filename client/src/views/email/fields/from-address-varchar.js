@@ -114,7 +114,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
         },
 
         getCreateHtml: function (address) {
-            var html = '<span class="dorpdown email-address-create-dropdown">' +
+            var html = '<span class="dropdown email-address-create-dropdown">' +
                 '<button class="dropdown-toggle btn btn-link btn-sm" data-toggle="dropdown">' +
                     '<span class="caret text-muted"></span>' +
                 '</button>' +
