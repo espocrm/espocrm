@@ -386,7 +386,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 selectable: true,
                 selectHelper: true,
                 height: this.options.height || null,
-                firstDay: this.getPreferences().get('weekStart'),
+                firstDay: this.getDateTime().weekStart,
                 slotEventOverlap: true,
                 slotDuration: slotDuration,
                 snapDuration: this.slotDuration * 60 * 1000,
