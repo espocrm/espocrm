@@ -530,6 +530,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 }, this);
 
                 this.listenToOnce(view, 'after:save', function (model) {
+                    view.close();
                     this.runFetch();
                 }, this);
             }, this);

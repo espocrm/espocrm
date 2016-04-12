@@ -435,6 +435,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                         }, this);
 
                         this.listenToOnce(view, 'after:save', function (model) {
+                            view.close();
                             this.updateModel(model);
                         }, this);
                     }, this);
