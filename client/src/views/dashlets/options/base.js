@@ -146,6 +146,94 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
             this.trigger('save', attributes);
         },
+
+        getFieldViews: function (withHidden) {
+            if (this.hasView('record')) {
+                return this.getView('record').getFieldViews(withHidden) || {};
+            }
+            return {};
+        },
+
+        getFieldView: function () {
+            return (this.getFieldViews(true) || {})[name] || null;
+        },
+
+        hideField: function (name, locked) {
+            this.recordHelper.setFieldStateParam(name, 'hidden', true);
+            if (locked) {
+                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
+            }
+
+            var processHtml = function () {
+                var fieldView = this.getFieldView(name);
+
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                    $field.addClass('hidden');
+                    $label.addClass('hidden');
+                    $cell.addClass('hidden-cell');
+                } else {
+                    this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
+                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
+                    this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
+            }
+
+            var view = this.getFieldView(name);
+            if (view) {
+                view.setDisabled(locked);
+            }
+        },
+
+        showField: function (name) {
+            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+                return;
+            }
+            this.recordHelper.setFieldStateParam(name, 'hidden', false);
+
+            var processHtml = function () {
+                var fieldView = this.getFieldView(name);
+
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                    $field.removeClass('hidden');
+                    $label.removeClass('hidden');
+                    $cell.removeClass('hidden-cell');
+                } else {
+                    this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
+                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
+                    this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
+                }
+            }.bind(this);
+
+            if (this.isRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
+            }
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if (!view.disabledLocked) {
+                    view.setNotDisabled();
+                }
+            }
+        }
     });
 });
 

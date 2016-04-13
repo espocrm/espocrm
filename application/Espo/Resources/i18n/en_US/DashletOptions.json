@@ -7,13 +7,17 @@
         "displayRecords": "Display Records",
         "isDoubleHeight": "Height 2x",
         "mode": "Mode",
-        "enabledScopeList": "What to display"
+        "enabledScopeList": "What to display",
+        "users": "Users"
     },
     "options": {
     	"mode": {
     		"agendaWeek": "Week (agenda)",
     		"basicWeek": "Week",
-    		"month": "Month"
+    		"month": "Month",
+            "basicDay": "Day",
+            "agendaDay": "Day (agenda)",
+            "timeline": "Timeline"
     	}
     }
 }
