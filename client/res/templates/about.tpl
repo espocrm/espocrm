@@ -60,6 +60,7 @@
             <li>JQuery Textcomplete by Yuku Takahashi</li>
             <li>JQuery Timepicker by Jon Thornton</li>
             <li>gridstack.js by Pavel Reznikov</li>
+            <li>vis.js by Almende B.V.</li>
         </ul>
         </section>
         <section style="margin-top: 30px;">
