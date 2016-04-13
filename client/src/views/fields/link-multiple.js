@@ -134,7 +134,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 });
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id').toString();
+                    var id = $(e.currentTarget).attr('data-id');
                     this.deleteLink(id);
                 };
             }
@@ -206,6 +206,17 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 });
 
                 this.renderLinks();
+
+                if (this.mode == 'edit') {
+                    if (this.params.sortable) {
+                        this.$el.find('.link-container').sortable({
+                            stop: function () {
+                                this.fetchFromDom();
+                                this.trigger('change');
+                            }.bind(this)
+                        });
+                    }
+                }
             }
         },
 
@@ -219,6 +230,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
+
             if (index > -1) {
                 this.ids.splice(index, 1);
             }
@@ -241,7 +253,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         addLinkHtml: function (id, name) {
             var $container = this.$el.find('.link-container');
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(name + '&nbsp');
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
             $container.append($el);
@@ -282,6 +294,15 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             data[this.nameHashName] = this.nameHash;
 
             return data;
+        },
+
+        fetchFromDom: function () {
+            this.ids = [];
+            this.$el.find('.link-container').children().each(function(i, li) {
+                var id = $(li).attr('data-id');
+                if (!id) return;
+                this.ids.push(id);
+            }.bind(this));
         },
 
         fetchSearch: function () {

@@ -58,7 +58,8 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     el: this.options.el + ' > .calendar-container',
                     header: false,
                     calendarType: 'shared',
-                    userList: userList
+                    userList: userList,
+                    enabledScopeList: this.getOption('enabledScopeList')
                 }, function (view) {
                     view.render();
                 }, this);
@@ -78,7 +79,13 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     });
                 }, this);
             }
-        }
+        },
+
+        actionRefresh: function () {
+            var view = this.getView('calendar');
+            if (!view) return;
+            view.actionRefresh();
+        },
     });
 });
 

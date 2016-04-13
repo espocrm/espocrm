@@ -58,6 +58,11 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $service = $this->getService('Activities');
 
+        $scopeList = null;
+        if ($request->get('scopeList') !== null) {
+            $scopeList = explode(',', $request->get('scopeList'));
+        }
+
         $userId = $request->get('userId');
         $userIdList = $request->get('userIdList');
 
@@ -77,11 +82,6 @@ class Activities extends \Espo\Core\Controllers\Base
             if (!$userId) {
                 $userId = $this->getUser()->id;
             }
-        }
-
-        $scopeList = null;
-        if ($request->get('scopeList') !== null) {
-            $scopeList = explode(',', $request->get('scopeList'));
         }
 
         return $service->getEvents($userId, $from, $to, $scopeList);

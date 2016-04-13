@@ -25,7 +25,8 @@
             "users": {
                 "type": "linkMultiple",
                 "entity": "User",
-                "view": "views/fields/assigned-users"
+                "view": "views/fields/assigned-users",
+                "sortable": true
             }
         },
         "defaults": {

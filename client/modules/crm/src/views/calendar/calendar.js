@@ -105,7 +105,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
-            	this.$calendar.fullCalendar('refetchEvents');
+                this.actionRefresh();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
                 var $target = $(e.currentTarget);
@@ -605,7 +605,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         removeModel: function (model) {
             this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
-        }
+        },
+
+        actionRefresh: function () {
+            this.$calendar.fullCalendar('refetchEvents');
+        },
 
     });
 });

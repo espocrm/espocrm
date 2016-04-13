@@ -97,7 +97,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
-            	this.runFetch();
+                this.actionRefresh();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
                 var $target = $(e.currentTarget);
@@ -798,6 +798,10 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     this.runFetch();
                 }, this);
             }, this);
+        },
+
+        actionRefresh: function () {
+            this.runFetch();
         }
     });
 });
