@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-3 col-xs-3">
         <select name="salutation{{ucName}}" class="form-control">
-            {{options salutationOptions salutationValue field='salutationName'}}
+            {{options salutationOptions salutationValue field='salutationName' scope=scope}}
         </select>
     </div>
     <div class="col-sm-4 col-xs-4">
