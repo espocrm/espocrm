@@ -331,7 +331,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 event.type = 'box';
                 if (event.end) {
                     if (o.dateEndDate) {
-                        event.start = event.end.clone().add('days', 1);
+                        event.start = event.end.clone().add(1, 'days');
                     } else {
                         event.start = event.end.clone();
                     }
@@ -582,7 +582,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         triggerView: function () {
-            var m = this.start.clone().add('seconds', Math.round((this.end.unix() - this.start.unix()) / 2));
+            var m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
             this.trigger('view', m.format(this.getDateTime().internalDateFormat), this.mode);
         },
 
@@ -702,7 +702,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.start = moment.tz(this.getDateTime().timeZone);
             }
             this.end = this.start.clone();
-            this.end.add('day', 1);
+            this.end.add(1, 'day');
 
             this.fetchedStart = null;
             this.fetchedEnd = null;
@@ -740,8 +740,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         fetchEvents: function (from, to, callback) {
             Espo.Ui.notify(this.translate('Loading...'));
 
-            from = from.clone().add('seconds', (-1) * this.leftMargin);
-            to = to.clone().add('seconds', this.rightMargin);
+            from = from.clone().add((-1) * this.leftMargin, 'seconds');
+            to = to.clone().add(this.rightMargin, 'seconds');
 
             var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);

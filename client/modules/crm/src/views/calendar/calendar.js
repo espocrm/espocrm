@@ -251,7 +251,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (event.end && event.start) {
                 event.duration = event.end.unix() - event.start.unix();
                 if (event.duration < 1800) {
-                    event.end = event.start.clone().add('m', 30);
+                    event.end = event.start.clone().add(30, 'm');
                 }
             }
 
@@ -314,7 +314,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     event.allDay = true;
                     if (!notInitial) {
                         if (event.end.hours() != 0 || event.end.minutes() != 0) {
-                            event.end.add('days', 1);
+                            event.end.add(1, 'days');
                         }
                     }
                 } else {
@@ -466,7 +466,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
                     var dateEnd = null;
                     if (event.duration) {
-                        dateEnd = this.convertTime(event.start.clone().add('s', event.duration)) || null;
+                        dateEnd = this.convertTime(event.start.clone().add(event.duration, 's')) || null;
                     }
 
                     var attributes = {};
@@ -492,7 +492,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
                     if (!event.end) {
                         if (!~this.allDayScopeList.indexOf(event.scope)) {
-                            event.end = event.start.clone().add('s', event.duration);
+                            event.end = event.start.clone().add(event.duration, 's');
                         }
                     }
 
