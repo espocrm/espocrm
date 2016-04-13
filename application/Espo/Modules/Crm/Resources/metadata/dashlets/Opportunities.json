@@ -18,8 +18,8 @@
             }
         },
         "defaults": {
-            "sortBy": "createdAt",
-            "asc": false,
+            "sortBy": "closeDate",
+            "asc": true,
             "displayRecords": 5,
             "expandedLayout": {
                 "rows": [
