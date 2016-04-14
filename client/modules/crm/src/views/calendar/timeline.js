@@ -146,7 +146,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         setup: function () {
-            this.date = this.options.date || null;
+            this.date = this.options.date || this.getDateTime().getToday();
             this.mode = this.options.mode || this.defaultMode;
             this.header = ('header' in this.options) ? this.options.header : this.header;
 
