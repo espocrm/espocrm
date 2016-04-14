@@ -500,7 +500,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             this.notify('Loading...');
             this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                attributes: attributes
+                attributes: attributes,
+                enabledScopeList: this.enabledScopeList,
+                scopeList: this.scopeList
             }, function (view) {
                 view.render();
                 view.notify(false);

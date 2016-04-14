@@ -94,11 +94,16 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
         },
 
         setup: function () {
+            this.scopeList = Espo.Utils.clone(this.options.scopeList || this.scopeList);
+            this.enabledScopeList = this.options.enabledScopeList || this.scopeList;
+
             if (!this.options.id && !this.options.scope) {
                 var scopeList = [];
                 this.scopeList.forEach(function (scope) {
                     if (this.getAcl().check(scope, 'edit')) {
-                        scopeList.push(scope);
+                        if (~this.enabledScopeList.indexOf(scope)) {
+                            scopeList.push(scope);
+                        }
                     }
                 }, this);
                 this.scopeList = scopeList;

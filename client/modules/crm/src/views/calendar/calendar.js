@@ -409,7 +409,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
                     this.notify('Loading...');
                     this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                        attributes: attributes
+                        attributes: attributes,
+                        enabledScopeList: this.enabledScopeList,
+                        scopeList: this.scopeList
                     }, function (view) {
                         view.render();
                         view.notify(false);
