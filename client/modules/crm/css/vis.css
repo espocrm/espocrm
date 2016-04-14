@@ -1,33 +1,3 @@
-.vis-item .vis-item-content {
-  color: #FFF !important;
-  cursor: default;
-}
-
-
-.vis-item.vis-range .vis-item-content,
-.vis-item.vis-box .vis-item-content {
-  padding-left: 2px;
-  padding-right: 2px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.vis-item .vis-item-overflow {
-  text-overflow: ellipsis;
-}
-
-.vis-item .vis-item-content {
-  font-size: 0.85em;
-}
-
-.vis-item.event-canceled .vis-item-content {
-  text-decoration: line-through !important;
-}
-
-.vis-item.vis-range, .vis-item.vis-box {
-  border-radius: 0 !important;
-}
-
 .vis .overlay {
   position: absolute;
   top: 0;

@@ -1,0 +1,60 @@
+#main > .calendar-container .timeline {
+    border: 1px solid @input-border;
+}
+
+.calendar-container .timeline {
+    border-bottom: 1px solid @input-border;
+}
+
+.vis-foreground .vis-group,
+.vis-labelset .vis-label {
+    border-bottom-color: @input-border !important;
+}
+
+.vis-panel.vis-center,
+.vis-panel.vis-left,
+.vis-panel.vis-right,
+.vis-panel.vis-top,
+.vis-panel.vis-bottom,
+.vis-time-axis .vis-grid.vis-major {
+    border-color: @input-border !important;
+}
+
+.vis-item .vis-item-content {
+    color: #FFF !important;
+    cursor: default !important;
+}
+
+.vis-item.vis-range .vis-item-content,
+.vis-item.vis-box .vis-item-content {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+.vis-timeline {
+    border-width: 0 !important;
+}
+
+.vis-item .vis-item-content {
+    font-size: 0.85em !important;
+}
+
+.vis-item.event-canceled .vis-item-content {
+  text-decoration: line-through !important;
+}
+
+.vis-item.vis-range, .vis-item.vis-box {
+  border-radius: 0 !important;
+}
+
+.vis-current-time {
+    background-color: lighten(@brand-danger, 20%) !important;
+}
+
+.calendar-container .timeline .vis-item,
+.calendar-container .timeline .vis-item.vis-selected {
+    border-color: lighten(@brand-primary, 30%);
+    background-color: lighten(@brand-primary, 50%);
+}
