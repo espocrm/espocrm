@@ -11,6 +11,8 @@
         "Today": "Today",
         "Create": "Create",
         "Shared": "Shared",
-        "Add User": "Add User"
+        "Add User": "Add User",
+        "current": "current",
+        "time": "time"
     }
 }

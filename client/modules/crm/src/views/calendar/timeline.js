@@ -432,7 +432,14 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                         updateTime: false,
                         updateGroup: false,
                         remove: false
-                    }
+                    },
+                    locales: {
+                        mylocale: {
+                            current: this.translate('current', 'labels', 'Calendar'),
+                            time: this.translate('time', 'labels', 'Calendar')
+                        }
+                    },
+                    locale: 'mylocale'
                 });
 
                 timeline.on('click', function (e) {
