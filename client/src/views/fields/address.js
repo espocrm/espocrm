@@ -230,6 +230,12 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             if (streetValue) {
                 html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
             }
+            if (cityValue) {
+                if (html != '') {
+                    html += '<br>';
+                }
+                html += cityValue;
+            }
             if (countryValue || stateValue || postalCodeValue) {
                 if (html != '') {
                     html += '<br>'
@@ -250,12 +256,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                     html += postalCodeValue;
                 }
             }
-            if (cityValue) {
-                if (html != '') {
-                    html += '<br>';
-                }
-                html += cityValue;
-            }
+
             return html;
         },
 
