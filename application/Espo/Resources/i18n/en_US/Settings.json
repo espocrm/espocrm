@@ -63,7 +63,9 @@
         "authTokenLifetime": "Auth Token Lifetime (hours)",
         "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
         "dashboardLayout": "Dashboard Layout (default)",
-        "siteUrl": "Site URL"
+        "siteUrl": "Site URL",
+        "addressPreview": "Address Preview",
+        "addressFormat": "Address Format"
     },
     "options": {
         "weekStart": {
