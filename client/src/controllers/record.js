@@ -196,7 +196,8 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 var proceed = function () {
                     this.main('views/merge', {
                         models: models,
-                        scope: this.name
+                        scope: this.name,
+                        collection: options.collection
                     });
                 }.bind(this);
 

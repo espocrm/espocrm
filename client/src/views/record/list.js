@@ -408,7 +408,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
             this.checkedList.sort();
             var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
-            this.getRouter().navigate(url, {trigger: true});
+            this.getRouter().navigate(url, {trigger: false});
+            this.getRouter().dispatch(this.scope, 'merge', {
+                ids: this.checkedList.join(','),
+                collection: this.collection
+            });
         },
 
         massActionMassUpdate: function () {
