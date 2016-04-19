@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('Views.Admin.Layouts.Record.EditAttributes', 'Views.Record.Base', function (Dep) {
+Espo.define('views/admin/layouts/record/edit-attributes', 'views/record/base', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.layouts.record.edit-attributes',
+        template: 'admin/layouts/record/edit-attributes',
 
         data: function () {
             return {

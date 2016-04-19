@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.DetailConvert', 'Views.Admin.Layouts.Detail', function (Dep) {
+Espo.define('views/admin/layouts/detail-convert', 'views/admin/layouts/detail', function (Dep) {
 
     return Dep.extend({
 
