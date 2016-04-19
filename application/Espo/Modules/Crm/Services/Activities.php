@@ -641,6 +641,9 @@ class Activities extends \Espo\Core\Services\Base
     public function getHistory($scope, $id, $params)
     {
         $entity = $this->getEntityManager()->getEntity($scope, $id);
+        if (!$entity) {
+            throw new NotFound();
+        }
 
         $this->accessCheck($entity);
 
