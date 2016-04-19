@@ -1,39 +1,49 @@
 {
-    "fields": {
-        "name": "Imię",
-        "parent": "Konto",
-        "status": "Status",
-        "dateStart": "Data Startu",
-        "dateEnd": "Data Zakończenia",
-        "direction": "Kierunek",
-        "duration": "Czas",
-        "description": "Opis ",
-        "users": "Użytkownik",
-        "contacts": "Kontakty",
-        "leads": "Potencjalne Kontakty"
+  "fields": {
+    "name": "Nazwa",
+    "parent": "Rodzic",
+    "status": "Status",
+    "dateStart": "Data rozpoczęcia",
+    "dateEnd": "Data zakończenia",
+    "direction": "Kierunek",
+    "duration": "Czas",
+    "description": "Opis ",
+    "users": "Użytkownik",
+    "contacts": "Kontakty",
+    "leads": "Potencjalne Kontakty",
+    "reminders": "Przypomnienia",
+    "account": "Klient"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planowane",
+      "Held": "Odbyło się",
+      "Not Held": "Nie odbyło się"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Wychodzący",
+      "Inbound": "Przychodzący"
     },
-    "options": {
-        "status": {
-            "Planned": "Planowane",
-            "Held": "Zatrzymany",
-            "Not Held": "Nie zatrzymany"
-        },
-        "direction": {
-            "Outbound": "Wychodzący",
-            "Inbound": "Przychodzący"
-        }
-    },
-    "labels": {
-        "Create Call": "Utwórz Telefon",
-        "Set Held": "Ustaw Zatrzymanie",
-        "Set Not Held": "Ustaw nie Zatrzymany",
-        "Send Invitations": "Wyślij Powiadomienie"        
-    },
-    "presetFilters": {
-        "planned": "Planowane",
-        "held": "Zatrzymany",
-        "todays": "Dzisiaj"
+    "acceptanceStatus": {
+      "None": "Brak",
+      "Accepted": "Zaakceptowany",
+      "Declined": "Odrzucony",
+      "Tentative": "Niepewny"
     }
+  },
+  "massActions": {
+    "setHeld": "Odbyło się",
+    "setNotHeld": "Nie odbyło się"
+  },
+  "labels": {
+    "Create Call": "Utwórz Telefon",
+    "Set Held": "Odbyło się",
+    "Set Not Held": "Nie odbyło się",
+    "Send Invitations": "Wyślij Powiadomienie"
+  },
+  "presetFilters": {
+    "planned": "Planowane",
+    "held": "Odbyło się",
+    "todays": "Dzisiaj"
+  }
 }

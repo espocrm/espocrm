@@ -1,37 +1,47 @@
 {
-    "fields": {
-        "dateFormat": "Format Daty",
-        "timeFormat": "Format Czasu",
-        "timeZone": "Strefa Czasowa",
-        "weekStart": "Pierwszy dzień tygodnia",
-        "thousandSeparator": "Separator Dziesiętny",
-        "decimalMark": "Znak rozdzielenia",
-        "defaultCurrency": "Domyślna Waluta",
-        "currencyList": "Domyślana Lista",
-        "language": "Język",
-        
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Zabezpieczenia",
-        "smtpUsername": "Użytkownik",
-        "emailAddress": "E-mail",
-        "smtpPassword": "Hasło",
-        "smtpEmailAddress": "E-mail Adres",
-        
-        "exportDelimiter": "Znak rodzielenia eksportu",
-        
-        "receiveAssignmentEmailNotifications": "Otrzymać informację w trakcie jej przypisywania"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Niedziela",
-            "1": "Poniedziałek"
-        }
-    },
-    "labels": {
-        "Notifications": "powiadomienia"
+  "fields": {
+    "dateFormat": "Format daty",
+    "timeFormat": "Format Czasu",
+    "timeZone": "Strefa Czasowa",
+    "weekStart": "Pierwszy dzień tygodnia",
+    "thousandSeparator": "Separator Dziesiętny",
+    "decimalMark": "Znak rozdzielenia",
+    "defaultCurrency": "Domyślna waluta",
+    "currencyList": "Domyślana Lista",
+    "language": "Język",
+    "smtpServer": "Server",
+    "smtpPort": "Port",
+    "smtpAuth": "Auth",
+    "smtpSecurity": "Zabezpieczenia",
+    "smtpUsername": "Użytkownik",
+    "emailAddress": "E-mail",
+    "smtpPassword": "Hasło",
+    "smtpEmailAddress": "E-mail Adres",
+    "exportDelimiter": "Znak rodzielenia eksportu",
+    "receiveAssignmentEmailNotifications": "Prześlij wiadomość po przypisaniu",
+    "autoFollowEntityTypeList": "Automatycznie obserwuj",
+    "signature": "Sygnatura",
+    "dashboardTabList": "Lista zakładek",
+    "tabList": "Lista zakładek",
+    "defaultReminders": "Domyślne powiadomienia",
+    "theme": "Motyw",
+    "useCustomTabList": "Custom Tab List",
+    "emailReplyToAllByDefault": "Domyślnie odpowiadaj wszystkim"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Niedziela",
+      "1": "Poniedziałek"
     }
+  },
+  "labels": {
+    "Notifications": "powiadomienia",
+    "User Interface": "Interfejs Użytkonika",
+    "SMTP": "SMTP",
+    "Misc": "Różne",
+    "Locale": "Lokalizacja"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Użytkownik będzie automatycznie obserwować nowe rekordy wybranych typów jednostek, będzie widzieć informacje w wiadomościach oraz otrzyma powiadomienia."
+  }
 }

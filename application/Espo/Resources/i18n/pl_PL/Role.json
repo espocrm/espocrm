@@ -1,35 +1,51 @@
 {
-    "fields": {
-        "name": "Imię",
-        "roles": "Rola"
+  "fields": {
+    "name": "Nazwa",
+    "roles": "Rola",
+    "assignmentPermission": "Uprawnienia przypisania",
+    "userPermission": "Uprawnienia użytkownika",
+    "portalPermission": "Portal Permission"
+  },
+  "links": {
+    "users": "Użytkownik",
+    "teams": "Zespoły"
+  },
+  "tooltips": {
+    "assignmentPermission": "Pozwala ograniczyć możliwość przypisania rekordów oraz wysyłanie wiadomości do innych użytkowników.\n\nwszystko - brak ograniczeń\n\nzespół - może przydzielać i wysyłać wiadomości wyłącznie do członków swojego zespołu\n\nnie - może przypisywać i wysyłać wiadomości tylko do siebie",
+    "userPermission": "Pozwala ograniczyć użytkownikom możliwość wyświetlania aktywności, kalendarza i wiadomości innych użytkowników.\n\nwszystko - może przeglądać wszystko\n\nzespół - może wyświetlać wyłącznie aktywności użytkowników swojego zespołu\n\nnie - nic nie widzi",
+    "portalPermission": "Defines an access to portal information, ability to convert contacts to portal users and post messages to portal users."
+  },
+  "labels": {
+    "Access": "Dostęp",
+    "Create Role": "Utwórz Role ",
+    "Scope Level": "Scope Level",
+    "Field Level": "Field Level"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nie ustawiony",
+      "enabled": "włączony",
+      "disabled": "wyłączony"
     },
-    "links": {
-        "users": "Użytkownik",
-        "teams": "Zespoły"
-    },
-    "labels": {
-        "Access": "Dostęp",
-        "Create Role": "Utwórz Role "
-    },
-    "options": {
-        "accessList": {
-            "not-set": "nie ustawiony",
-            "enabled": "włączony",
-            "disabled": "wyłączony"
-        },
-        "levelList": {
-            "all": "wszystko",
-            "team": "zespół",
-            "own": "własny",
-            "no": "nie"
-        }
-    },
-    "actions": {
-        "read": "Przeczytany",
-        "edit": "Edytuj",
-        "delete": "Usuń"
-    },
-    "messages": {
-        "changesAfterClearCache": "Wszystkie zmiany w dostępie zostaną aktywowany w momencie wyczyszczenia pamięci."
+    "levelList": {
+      "all": "wszystko",
+      "team": "zespół",
+      "account": "Klient",
+      "contact": "contact",
+      "own": "własny",
+      "no": "nie",
+      "yes": "tak",
+      "not-set": "nie ustawiony"
     }
+  },
+  "actions": {
+    "read": "Przeczytany",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "stream": "Stream",
+    "create": "Utwórz"
+  },
+  "messages": {
+    "changesAfterClearCache": "Wszystkie zmiany w dostępie zostaną aktywowany w momencie wyczyszczenia pamięci."
+  }
 }

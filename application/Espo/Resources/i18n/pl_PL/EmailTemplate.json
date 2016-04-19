@@ -1,16 +1,25 @@
 {
-    "fields": {
-        "name": "Imię",
-        "status": "Status",
-        "isHtml": "Format HTML",
-        "body": "Treść",
-        "subject": "Temat",
-        "attachments": "Załącznik",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Utwórz Szkic Wiadomości"
-    }
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "isHtml": "Format HTML",
+    "body": "Treść",
+    "subject": "Temat",
+    "attachments": "Załączniki",
+    "insertField": "Wstaw pole",
+    "oneOff": "One-off"
+  },
+  "labels": {
+    "Create EmailTemplate": "Utwórz Szkic wiadomości",
+    "Info": "Info"
+  },
+  "messages": {
+    "infoText": "Dostępne zmienne:\n\n{optOutUrl} &#8211; Adres URL wypisania;\n\n{optOutLink} &#8211; link wypisania."
+  },
+  "tooltips": {
+    "oneOff": "Sprawdź, czy będziesz używać tego szablonu tylko raz (np w poczcie masowej)."
+  },
+  "presetFilters": {
+    "actual": "Bieżący"
+  }
 }

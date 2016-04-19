@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "version": "Wersja",
+    "description": "Opis",
+    "isInstalled": "Zainstalowano"
+  },
+  "labels": {
+    "Uninstall": "Deinstaluj",
+    "Install": "Instaluj"
+  },
+  "messages": {
+    "uninstalled": "Rozszerzenie {name} zostało usunięte"
+  }
+}

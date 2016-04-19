@@ -1,13 +1,13 @@
 {
-    "modes": {
-        "month": "Miesiąc",
-        "week": "Tydzień",
-        "day": "Dzień",
-        "agendaWeek": "Tydzień",
-        "agendaDay": "Dzień"
-    },
-    "labels": {
-        "Today": "Dziś",
-        "Create": "Utwórz"
-    }
+  "modes": {
+    "month": "Miesiąc",
+    "week": "Tydzień",
+    "agendaWeek": "Tydzień",
+    "day": "Dzień",
+    "agendaDay": "Dzień"
+  },
+  "labels": {
+    "Today": "Dziś",
+    "Create": "Utwórz"
+  }
 }

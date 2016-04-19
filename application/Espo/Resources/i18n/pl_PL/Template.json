@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "body": "Treść",
+    "entityType": "Typ jednostki",
+    "header": "Nagłówek",
+    "footer": "Stopka",
+    "leftMargin": "Lewy margines",
+    "topMargin": "Górny margines",
+    "rightMargin": "Prawy margines",
+    "bottomMargin": "Dolny margines",
+    "printFooter": "Drukuj stopkę",
+    "footerPosition": "Pozycja stopki"
+  },
+  "labels": {
+    "Create Template": "Utwórz szablon"
+  },
+  "tooltips": {
+    "footer": "Użyj {pageNumber} aby wydrukować numer strony."
+  }
+}

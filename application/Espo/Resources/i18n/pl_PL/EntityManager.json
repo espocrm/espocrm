@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "Fields": "Pola",
+    "Relationships": "Relacje"
+  },
+  "fields": {
+    "name": "Nazwa",
+    "type": "Typ",
+    "labelSingular": "Label Singular",
+    "labelPlural": "Label Plural",
+    "stream": "Stream",
+    "label": "Etykieta",
+    "linkType": "Typ linku",
+    "entityForeign": "Jednostka obca",
+    "linkForeign": "Link obcy",
+    "link": "Link",
+    "labelForeign": "Etykieta obca",
+    "sortBy": "Domyślna kolejność (pole)",
+    "sortDirection": "Domyślna kolejność (kierunek)",
+    "relationName": "Nazwa tabeli łączącej",
+    "linkMultipleField": "Połącz kilka pól",
+    "linkMultipleFieldForeign": "Foreign Link Multiple Field",
+    "disabled": "Wyłączony"
+  },
+  "options": {
+    "type": {
+      "": "Brak",
+      "Base": "Base",
+      "Person": "Osoba",
+      "CategoryTree": "Drzewo kategorii"
+    },
+    "linkType": {
+      "manyToMany": "Many-to-Many",
+      "oneToMany": "Jeden-do-wielu",
+      "manyToOne": "Many-to-One",
+      "parentToChildren": "Parent-to-Children",
+      "childrenToParent": "Children-to-Parent"
+    },
+    "sortDirection": {
+      "asc": "Rosnąco",
+      "desc": "Malejąco"
+    }
+  },
+  "messages": {
+    "entityCreated": "Jednostka została utworzona",
+    "linkAlreadyExists": "Konflikt nazw linku.",
+    "linkConflict": "Konflikt nazw: pole ze wskazaną nazwą już istnieje."
+  }
+}

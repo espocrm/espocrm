@@ -1,0 +1,42 @@
+{
+  "labels": {
+    "Create Document": "Utwórz dokument",
+    "Details": "Szczegóły"
+  },
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "file": "Plik",
+    "type": "Typ",
+    "source": "Źródło",
+    "publishDate": "Data publikacji",
+    "expirationDate": "Data przedawnienia",
+    "description": "Opis",
+    "accounts": "Klienci",
+    "folder": "Katalog"
+  },
+  "links": {
+    "accounts": "Klienci",
+    "opportunities": "Szanse sprzedaży",
+    "folder": "Katalog"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywny",
+      "Draft": "Szkic",
+      "Expired": "Przedawniony",
+      "Canceled": "Anulowane"
+    },
+    "type": {
+      "": "Brak",
+      "Contract": "Kontrakt",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "Postanowienia licencyjne"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktywny",
+    "draft": "Szkic"
+  }
+}

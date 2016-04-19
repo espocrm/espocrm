@@ -1,31 +1,46 @@
 {
-    "fields": {
-        "name": "Imię",
-        "emailAddress": "E-mail",
-        "title": "Tytuł",
-        "account": "Konto",
-        "accounts": "Klienci",
-        "phoneNumber": "Telefon",
-        "accountType": "Typ Klienta",
-        "doNotCall": "Nie Dzwoń",
-        "address": "Adres",
-        "opportunityRole": "Rola Szansy Sprzedaży",
-        "accountRole": "Rola",
-        "description": "Opis "
-    },
-    "links": {
-        "opportunities": "Szanse Sprzedaży",
-        "cases": "Zlecenia"
-    },
-    "labels": {
-        "Create Contact": "Utwórz Kontakt"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--NIC--",
-            "Decision Maker": "Osoba Decyzyjna",
-            "Evaluator": "Oceniający",
-            "Influencer": "Wpływający"
-        }
+  "fields": {
+    "name": "Nazwa",
+    "emailAddress": "E-mail",
+    "title": "Tytuł",
+    "accountRole": "Tytuł",
+    "account": "Klient",
+    "accounts": "Klienci",
+    "phoneNumber": "Telefon",
+    "accountType": "Typ Klienta",
+    "doNotCall": "Nie Dzwoń",
+    "address": "Adres",
+    "opportunityRole": "Rola szansy sprzedaży",
+    "description": "Opis ",
+    "campaign": "Kampania",
+    "targetLists": "Listy docelowe",
+    "targetList": "Lista docelowa",
+    "portalUser": "Portal User"
+  },
+  "links": {
+    "opportunities": "Szanse sprzedaży",
+    "cases": "Sprawy",
+    "targetLists": "Listy docelowe",
+    "campaignLogRecords": "Log kampanii",
+    "campaign": "Kampania",
+    "account": "Konto (podstawowe)",
+    "accounts": "Klienci",
+    "casesPrimary": "Cases (Primary)",
+    "portalUser": "Portal User"
+  },
+  "labels": {
+    "Create Contact": "Utwórz Kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--NIC--",
+      "Decision Maker": "Osoba Decyzyjna",
+      "Evaluator": "Oceniający",
+      "Influencer": "Wpływający"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Portal Users",
+    "notPortalUsers": "Not Portal Users"
+  }
 }

@@ -1,15 +1,19 @@
 {
-    "fields": {
-        "name": "Imię",
-        "roles": "Rola"
-    },
-    "links": {
-        "users": "Użytkownik"
-    },
-    "tooltips": {
-        "roles": "Wszyscy użytkownicy z zespołu, otrzymają dostęp do ustawień zgodnie z rolami ."
-    },
-    "labels": {
-        "Create Team": "Utwórz Zespół"
-    }
+  "fields": {
+    "name": "Nazwa",
+    "roles": "Rola",
+    "positionList": "Position List"
+  },
+  "links": {
+    "users": "Użytkownik",
+    "notes": "Notatki",
+    "roles": "Role"
+  },
+  "tooltips": {
+    "roles": "Wszyscy użytkownicy z zespołu otrzymają dostęp do ustawień zgodnie z rolami.",
+    "positionList": "Pozycje dostępne w tym zespole, np sprzedawca, menadżer."
+  },
+  "labels": {
+    "Create Team": "Utwórz Zespół"
+  }
 }

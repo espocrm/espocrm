@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "from": "Od",
+    "to": "Do",
+    "subject": "Temat",
+    "bodyContains": "Treść zawiera"
+  },
+  "labels": {
+    "Create EmailFilter": "Utwórz filtr poczty"
+  },
+  "tooltips": {
+    "name": "Nazwa tego filtra.",
+    "subject": "Użyj maski *:\n\ntekst* - rozpoczyna się od tekst,\n*tekst* - zawiera tekst,\n*tekst - kończy się na tekst.",
+    "bodyContains": "Treść wiadomości zawiera dowolne z podanych słów lub zwrotów.",
+    "from": "Wiadomości zostaną wysłane z podanym adresem. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
+    "to": "Wiadomości zostaną wysłane na podany adres. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
+    "parent": "Pozostaw puste aby zaaplikować ten filtr globalnie (do wszystkich przychodzących wiadomości)."
+  }
+}
