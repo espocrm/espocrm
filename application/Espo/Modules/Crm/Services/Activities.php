@@ -752,7 +752,6 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'whereClause' => array(
                 'assignedUserId' => $userId,
-
                 array(
                     'OR' => array(
                         array(
@@ -775,6 +774,75 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
+    }
+
+    protected function getCalendarQuery($scope, $userId, $from, $to)
+    {
+        $selectManager = $this->getSelectManagerFactory()->create($scope);
+
+        $seed = $this->getEntityManager()->getEntity($scope);
+
+        $select = [
+            ['VALUE:' . $scope, 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
+            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
+            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
+            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
+            'createdAt'
+        ];
+
+        $wherePart = array(
+            'assignedUserId' => $userId,
+        );
+
+        if ($seed->hasRelation('users')) {
+            $wherePart['usersMiddle.userId'] = $userId;
+        }
+
+        if ($seed->hasRelation('assignedUsers')) {
+            $wherePart['assignedUsersMiddle.userId'] = $userId;
+        }
+
+        $selectParams = array(
+            'select' => $select,
+            'leftJoins' => [],
+            'whereClause' => array(
+                'OR' => $wherePart,
+                array(
+                    'OR' => array(
+                        array(
+                            'dateEnd' => null,
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ),
+                        array(
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ),
+                        array(
+                            'dateEndDate!=' => null,
+                            'dateEndDate>=' => $from,
+                            'dateEndDate<' => $to,
+                        )
+                    )
+                )
+            )
+        );
+
+        if ($seed->hasRelation('users')) {
+            $selectParams['leftJoins'][] = 'users';
+        }
+
+        if ($seed->hasRelation('assignedUsers')) {
+            $selectParams['leftJoins'][] = 'assignedUsers';
+        }
+
+        return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
     }
 
     public function getEvents($userId, $from, $to, $scopeList = null)
@@ -801,6 +869,10 @@ class Activities extends \Espo\Core\Services\Base
                 $methodName = 'getCalendar' . $scope . 'Query';
                 if (method_exists($this, $methodName)) {
                     $sqlPartList[] = $this->$methodName($userId, $from, $to);
+                } else {
+                    if ($this->getMetadata()->get('scopes.' . $scope . '.calendar')) {
+                        $sqlPartList[] = $this->getCalendarQuery($scope, $userId, $from, $to);
+                    }
                 }
             }
         }
