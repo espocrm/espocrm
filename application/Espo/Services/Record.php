@@ -1199,30 +1199,65 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function merge($id, array $sourceIds = array())
+    public function merge($id, array $sourceIdList = array(), array $attributes = array())
     {
         if (empty($id)) {
             throw new Error();
         }
 
-        $entity = $this->getEntity($id);
+        $repository = $this->getRepository();
+
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
 
         if (!$entity) {
             throw new NotFound();
         }
-
         if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $this->filterInput($attributes);
+        $entity->set($attributes);
+        if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
         $sourceList = array();
-        foreach ($sourceIds as $sourceId) {
+        foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
                 throw new Forbidden();
+            }
+        }
+
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+
+        $hasPhoneNumber = false;
+        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
+            $hasPhoneNumber = true;
+        }
+
+        $hasEmailAddress = false;
+        if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
+            $hasEmailAddress = true;
+        }
+
+        if ($hasPhoneNumber) {
+            $phoneNumberToRelateList = [];
+            $phoneNumberList = $repository->findRelated($entity, 'phoneNumbers');
+            foreach ($phoneNumberList as $phoneNumber) {
+                $phoneNumberToRelateList[] = $phoneNumber;
+            }
+        }
+
+        if ($hasEmailAddress) {
+            $emailAddressToRelateList = [];
+            $emailAddressList = $repository->findRelated($entity, 'emailAddresses');
+            foreach ($emailAddressList as $emailAddress) {
+                $emailAddressToRelateList[] = $emailAddress;
             }
         }
 
@@ -1239,9 +1274,20 @@ class Record extends \Espo\Core\Services\Base
                     `deleted` = 0
             ";
             $pdo->query($sql);
-        }
 
-        $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+            if ($hasPhoneNumber) {
+                $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
+                foreach ($phoneNumberList as $phoneNumber) {
+                    $phoneNumberToRelateList[] = $phoneNumber;
+                }
+            }
+            if ($hasEmailAddress) {
+                $emailAddressList = $repository->findRelated($source, 'emailAddresses');
+                foreach ($emailAddressList as $emailAddress) {
+                    $emailAddressToRelateList[] = $emailAddress;
+                }
+            }
+        }
 
         foreach ($sourceList as $source) {
             foreach ($this->mergeLinkList as $link) {
@@ -1255,6 +1301,49 @@ class Record extends \Espo\Core\Services\Base
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
         }
+
+
+        if ($hasEmailAddress) {
+            $emailAddressData = [];
+            foreach ($emailAddressToRelateList as $i => $emailAddress) {
+                $o = (object) [];
+                $o->emailAddress = $emailAddress->get('name');
+                $o->primary = false;
+                if (empty($attributes['emailAddress'])) {
+                    if ($i === 0) {
+                        $o->primary = true;
+                    }
+                } else {
+                    $o->primary = $o->emailAddress === $attributes['emailAddress'];
+                }
+                $o->optOut = $emailAddress->get('optOut');
+                $o->invalid = $emailAddress->get('invalid');
+                $emailAddressData[] = $o;
+            }
+            $attributes['emailAddressData'] = $emailAddressData;
+        }
+
+        if ($hasPhoneNumber) {
+            $phoneNumberData = [];
+            foreach ($phoneNumberToRelateList as $i => $phoneNumber) {
+                $o = (object) [];
+                $o->phoneNumber = $phoneNumber->get('name');
+                $o->primary = false;
+                if (empty($attributes['phoneNumber'])) {
+                    if ($i === 0) {
+                        $o->primary = true;
+                    }
+                } else {
+                    $o->primary = $o->phoneNumber === $attributes['phoneNumber'];
+                }
+                $o->type = $phoneNumber->get('type');
+                $phoneNumberData[] = $o;
+            }
+            $attributes['phoneNumberData'] = $phoneNumberData;
+        }
+
+        $entity->set($attributes);
+        $repository->save($entity);
 
         return true;
     }

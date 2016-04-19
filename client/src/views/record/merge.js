@@ -116,7 +116,9 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                         })
                     })
                 }).done(function () {
-                    model.once('sync', function () {
+                        this.notify('Merged', 'success');
+                        this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
+                    /*model.once('sync', function () {
                         this.notify('Merged', 'success');
                         this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
 
@@ -128,9 +130,8 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                         error: function () {
                             self.notify('Error occured', 'error')
                         },
-                    });
+                    });*/
                 }.bind(this));
-
 
             }
         },

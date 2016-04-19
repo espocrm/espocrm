@@ -410,17 +410,18 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (empty($data['targetId']) || empty($data['sourceIds']) || !is_array($data['sourceIds'])) {
+        if (empty($data['targetId']) || empty($data['sourceIds']) || !is_array($data['sourceIds']) || !($data['attributes'] instanceof \StdClass)) {
             throw new BadRequest();
         }
         $targetId = $data['targetId'];
         $sourceIds = $data['sourceIds'];
+        $attributes = get_object_vars($data['attributes']);
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->merge($targetId, $sourceIds);
+        return $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
     }
 }
 

@@ -174,7 +174,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
     public function storeEntityEmailAddress(Entity $entity)
     {
-            $email = trim($entity->get('emailAddress'));
+            $emailAddressValue = trim($entity->get('emailAddress'));
             $emailAddressData = null;
 
             if ($entity->has('emailAddressData')) {
@@ -357,22 +357,24 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
             } else {
                 $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityName());
-                if (!empty($email)) {
-                    if ($email != $entity->getFetched('emailAddress')) {
+                if (!empty($emailAddressValue)) {
+                    if ($emailAddressValue != $entity->getFetched('emailAddress')) {
 
-                        $emailAddressNew = $this->where(array('lower' => strtolower($email)))->findOne();
+                        $emailAddressNew = $this->where(array('lower' => strtolower($emailAddressValue)))->findOne();
                         $isNewEmailAddress = false;
                         if (!$emailAddressNew) {
                             $emailAddressNew = $this->get();
-                            $emailAddressNew->set('name', $email);
+                            $emailAddressNew->set('name', $emailAddressValue);
                             $this->save($emailAddressNew);
                             $isNewEmailAddress = true;
                         }
 
-                        $emailOld = $entity->getFetched('emailAddress');
-                        if (!empty($emailOld)) {
-                            $emailAddressOld = $this->getByAddress($emailOld);
-                            $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                        $emailAddressValueOld = $entity->getFetched('emailAddress');
+                        if (!empty($emailAddressValueOld)) {
+                            $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+                            if ($emailAddressOld) {
+                                $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                            }
                         }
                         $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew);
 
@@ -388,10 +390,12 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $sth->execute();
                     }
                 } else {
-                    $emailOld = $entity->getFetched('emailAddress');
-                    if (!empty($emailOld)) {
-                        $emailAddressOld = $this->getByAddress($emailOld);
-                        $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                    $emailAddressValueOld = $entity->getFetched('emailAddress');
+                    if (!empty($emailAddressValueOld)) {
+                        $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+                        if ($emailAddressOld) {
+                            $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                        }
                     }
                 }
             }

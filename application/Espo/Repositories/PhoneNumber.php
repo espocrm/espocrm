@@ -104,7 +104,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
     public function storeEntityPhoneNumber(Entity $entity)
     {
-            $phone = trim($entity->get('phoneNumber'));
+            $phoneNumberValue = trim($entity->get('phoneNumber'));
             $phoneNumberData = null;
 
             if ($entity->has('phoneNumberData')) {
@@ -269,14 +269,14 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 }
             } else {
                 $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityName());
-                if (!empty($phone)) {
-                    if ($phone != $entity->getFetched('phoneNumber')) {
+                if (!empty($phoneNumberValue)) {
+                    if ($phoneNumberValue !== $entity->getFetched('phoneNumber')) {
 
-                        $phoneNumberNew = $this->where(array('name' => $phone))->findOne();
+                        $phoneNumberNew = $this->where(array('name' => $phoneNumberValue))->findOne();
                         $isNewPhoneNumber = false;
                         if (!$phoneNumberNew) {
                             $phoneNumberNew = $this->get();
-                            $phoneNumberNew->set('name', $phone);
+                            $phoneNumberNew->set('name', $phoneNumberValue);
                             $defaultType = $this->getEntityManager()->getEspoMetadata()->get('entityDefs.' .  $entity->getEntityName() . '.fields.phoneNumber.defaultType');
 
                             $phoneNumberNew->set('type', $defaultType);
@@ -285,10 +285,12 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                             $isNewPhoneNumber = true;
                         }
 
-                        $phoneOld = $entity->getFetched('phoneNumber');
-                        if (!empty($phoneOld)) {
-                            $phoneNumberOld = $this->getByNumber($phoneOld);
-                            $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                        $phoneNumberValueOld = $entity->getFetched('phoneNumber');
+                        if (!empty($phoneNumberValueOld)) {
+                            $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
+                            if ($phoneNumberOld) {
+                                $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                            }
                         }
                         $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew);
 
@@ -304,10 +306,12 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                         $sth->execute();
                     }
                 } else {
-                    $phoneOld = $entity->getFetched('phoneNumber');
-                    if (!empty($phoneOld)) {
-                        $phoneNumberOld = $this->getByNumber($phoneOld);
-                        $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                    $phoneNumberValueOld = $entity->getFetched('phoneNumber');
+                    if (!empty($phoneNumberValueOld)) {
+                        $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
+                        if ($phoneNumberOld) {
+                            $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                        }
                     }
                 }
             }
