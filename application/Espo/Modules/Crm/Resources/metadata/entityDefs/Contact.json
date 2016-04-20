@@ -117,7 +117,8 @@
             "type": "foreign",
             "link": "account",
             "field": "type",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/foreign-enum"
         },
         "opportunityRole": {
             "type": "enum",
