@@ -74,6 +74,9 @@ class GlobalSearch extends \Espo\Core\Services\Base
             if (!$this->getAcl()->checkScope($entityType, 'read')) {
                 continue;
             }
+            if (!$this->getMetadata()->get('scopes.' . $entityType)) {
+                continue;
+            }
             $params = array(
                 'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
             );
