@@ -216,6 +216,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         allResultIsChecked: false,
 
         data: function () {
+
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
             return {
@@ -368,9 +369,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 		}
                 	} else {
                 		var idsRemoved = result.ids || [];
-	                    if (this.collection.total > 0) {
-	                        this.collection.total = this.collection.total - count;
-	                    }
 	                    if (count) {
 	                        idsRemoved.forEach(function (id) {
 	                            Espo.Ui.notify(false);
