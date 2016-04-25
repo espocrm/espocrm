@@ -193,6 +193,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     }, this).forEach(function (item) {
                         fieldList.push(field + Espo.Utils.upperCaseFirst(item));
                     }, this);
+                    continue;
                 }
 
                 if (d.type == 'link') {
