@@ -240,7 +240,7 @@ class RDB extends \Espo\ORM\Repository
         $entityName = $entity->relations[$relationName]['entity'];
         $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
 
-        return $this->getMapper()->countRelated($entity, $relationName, $params);
+        return intval($this->getMapper()->countRelated($entity, $relationName, $params));
     }
 
     public function isRelated(Entity $entity, $relationName, $foreign)
@@ -406,7 +406,7 @@ class RDB extends \Espo\ORM\Repository
         $params = $this->getSelectParams($params);
         $count = $this->getMapper()->count($this->seed, $params);
         $this->reset();
-        return $count;
+        return intval($count);
     }
 
     public function max($field)
