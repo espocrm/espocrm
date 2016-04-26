@@ -36,8 +36,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         decimalMark: '.',
 
-        thousandSeparator: ',',
-
         validations: ['required', 'float', 'range'],
 
         setup: function () {
@@ -48,13 +46,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             } else {
                 if (this.getConfig().has('decimalMark')) {
                     this.decimalMark = this.getConfig().get('decimalMark');
-                }
-            }
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
             }
         },
