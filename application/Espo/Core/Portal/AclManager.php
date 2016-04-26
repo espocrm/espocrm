@@ -72,7 +72,10 @@ class AclManager extends \Espo\Core\AclManager
 
     protected function getTable(User $user)
     {
-        $key = spl_object_hash($user);
+        $key = $user->id;
+        if (empty($key)) {
+            $key = spl_object_hash($user);
+        }
 
         if (empty($this->tableHashMap[$key])) {
             $config = $this->getContainer()->get('config');
