@@ -278,7 +278,8 @@
         "children": "Children"
     },
     "dashlets": {
-        "Stream": "Stream"
+        "Stream": "Stream",
+        "Emails": "My Inbox"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",

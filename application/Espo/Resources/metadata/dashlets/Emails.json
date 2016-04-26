@@ -1,7 +1,7 @@
 {
-    "view":"views/dashlets/abstract/record-list",
-    "aclScope": "Opportunity",
-    "entityType": "Opportunity",
+    "view":"views/dashlets/emails",
+    "aclScope": "Email",
+    "entityType": "Email",
     "options": {
         "fields": {
             "title": {
@@ -14,27 +14,27 @@
             },
             "displayRecords": {
                 "type": "enumInt",
-                "options": [3,4,5,10,15,20,30]
+                "options": [3,4,5,10,15,20,30,50]
             }
         },
         "defaults": {
-            "sortBy": "closeDate",
-            "asc": true,
+            "sortBy": "dateSent",
+            "asc": false,
             "displayRecords": 5,
             "expandedLayout": {
                 "rows": [
                     [
                         {
-                            "name": "name",
+                            "name": "subject",
                             "link": true
                         }
                     ],
                     [
                         {
-                            "name": "stage"
+                            "name": "personStringData"
                         },
                         {
-                            "name": "amount"
+                            "name": "parent"
                         }
                     ]
                 ]
@@ -43,7 +43,7 @@
                 "bool": {
                     "onlyMy": true
                 },
-                "primary": "open"
+                "primary": "inbox"
             }
         },
         "layout": [
