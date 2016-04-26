@@ -97,7 +97,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         getValueForEdit: function () {
-            var value = this.model.get(this.name);
+            var value = this.model.get(this.name) || '';
             value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
             return value;
         },
