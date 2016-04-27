@@ -433,5 +433,16 @@ class User extends Record
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
+
+    protected function afterMassUpdate(array $idList, array $data)
+    {
+        parent::afterMassUpdate($idList, $data);
+
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {
+            foreach ($idList as $id) {
+                $this->clearRoleCache($id);
+            }
+        }
+    }
 }
 
