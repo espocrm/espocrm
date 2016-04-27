@@ -119,7 +119,6 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                     this.notify('Merged', 'success');
                     this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
                     if (this.collection) {
-                        console.log(1);
                         this.collection.fetch();
                     }
                 }.bind(this));
@@ -141,7 +140,8 @@ Espo.define('views/record/merge', 'view', function (Dep) {
 
             for (var field in fieldsDefs) {
                 var type = fieldsDefs[field].type;
-                if (fieldManager.isMergable(type) && !this.models[0].isFieldReadOnly(field)) {
+                if (type === 'linkMultiple') continue;
+                if (fieldManager.isMergeable(type) && !this.models[0].isFieldReadOnly(field)) {
                     var actualFields = fieldManager.getActualAttributeList(type, field);
                     var differs = false;
                     actualFields.forEach(function (field) {

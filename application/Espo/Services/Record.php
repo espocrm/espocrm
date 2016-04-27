@@ -73,8 +73,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected $linkSelectParams = [];
 
-    protected $mergeLinkList = [];
-
     protected $noEditAccessRequiredLinkList = [];
 
     protected $exportSkipAttributeList = [];
@@ -1306,8 +1304,19 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
+        $mergeLinkList = [];
+        $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
+        foreach ($linksDefs as $link => $d) {
+            if (!empty($d['notMergeable'])) {
+                continue;
+            }
+            if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
+                $mergeLinkList[] = $link;
+            }
+        }
+
         foreach ($sourceList as $source) {
-            foreach ($this->mergeLinkList as $link) {
+            foreach ($mergeLinkList as $link) {
                 $linkedList = $repository->findRelated($source, $link);
                 foreach ($linkedList as $linked) {
                     $repository->relate($entity, $link, $linked);

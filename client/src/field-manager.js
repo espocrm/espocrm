@@ -57,13 +57,9 @@
             return false;
         },
 
-        isMergable: function (fieldType) {
+        isMergeable: function (fieldType) {
             if (fieldType in this.defs) {
-                if ('mergable' in this.defs[fieldType]) {
-                    return this.defs[fieldType].mergable;
-                } else {
-                    return true;
-                }
+                return !this.defs[fieldType].notMergeable;
             }
             return false;
         },
