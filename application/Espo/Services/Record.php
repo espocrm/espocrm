@@ -619,6 +619,14 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
+    protected function afterMassUpdate(array $idList, array $data)
+    {
+    }
+
+    protected function afterMassRemove(array $idList)
+    {
+    }
+
     public function deleteEntity($id)
     {
         if (empty($id)) {
@@ -911,7 +919,7 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
-                            $idsUpdated[] = $id;
+                            $idsUpdated[] = $entity->id;
                             $count++;
                         }
                     }
@@ -932,17 +940,21 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
-                            $idsUpdated[] = $id;
+                            $idsUpdated[] = $entity->id;
                             $count++;
                         }
                     }
                 }
             }
 
+            $this->afterMassUpdate($idsUpdated, $data);
+
             return array(
                 'count' => $count
             );
         }
+
+        $this->afterMassUpdate($idsUpdated, $data);
 
         return array(
             'count' => $count,
@@ -957,20 +969,20 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
-        if (array_key_exists('ids',$params)) {
+        if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
                 if ($entity && $this->getAcl()->check($entity, 'remove')) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $id;
+                        $idsRemoved[] = $entity->id;
                         $count++;
                     }
                 }
             }
         }
 
-        if (array_key_exists('where',$params)) {
+        if (array_key_exists('where', $params)) {
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
@@ -980,15 +992,20 @@ class Record extends \Espo\Core\Services\Base
             foreach ($collection as $entity) {
                 if ($this->getAcl()->check($entity, 'remove')) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $id;
+                        $idsRemoved[] = $entity->id;
                         $count++;
                     }
                 }
             }
+
+            $this->afterMassUpdate($idsRemoved);
+
             return array(
                 'count' => $count
             );
         }
+
+        $this->afterMassRemove($idsRemoved);
 
         return array(
             'count' => $count,
