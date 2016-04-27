@@ -96,6 +96,11 @@ class ScheduledJob
         $entityManager = $this->getEntityManager();
 
         $scheduledJob = $entityManager->getEntity('ScheduledJob', $scheduledJobId);
+
+        if (!$scheduledJob) {
+            return;
+        }
+
         $scheduledJob->set('lastRun', $runTime);
         $entityManager->saveEntity($scheduledJob);
 
