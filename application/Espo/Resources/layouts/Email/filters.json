@@ -8,5 +8,6 @@
     "status",
     "parent",
     "teams",
-    "users"
+    "users",
+    "createdAt"
 ]
