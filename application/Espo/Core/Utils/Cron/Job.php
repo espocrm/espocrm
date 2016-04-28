@@ -98,6 +98,8 @@ class Job
 
     public function getRunningScheduledJobIdList()
     {
+        $list = [];
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $query = "
