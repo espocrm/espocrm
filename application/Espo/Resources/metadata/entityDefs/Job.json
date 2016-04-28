@@ -17,7 +17,7 @@
         "serviceName": {
             "type": "varchar",
             "required": true,
-            "maxLength":100
+            "maxLength": 100
         },
         "method": {
             "type": "varchar",
@@ -32,6 +32,14 @@
         },
         "attempts": {
             "type": "int"
+        },
+        "targetId": {
+            "type": "varchar",
+            "maxLength": 48
+        },
+        "targetType": {
+            "type": "varchar",
+            "maxLength": 64
         },
         "failedAttempts": {
             "type": "int"

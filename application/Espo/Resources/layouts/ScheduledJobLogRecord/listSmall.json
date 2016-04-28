@@ -1,1 +1,5 @@
-[{"name":"status"},{"name":"executionTime"}]
+[
+    {"name":"status", "width": 30, "notSortable": true},
+    {"name":"target", "notSortable": true},
+    {"name":"executionTime", "width": 30, "notSortable": true}
+]

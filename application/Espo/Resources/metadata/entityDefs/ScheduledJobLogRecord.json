@@ -19,6 +19,9 @@
         },
         "scheduledJob": {
             "type": "link"
+        },
+        "target": {
+            "type": "linkParent"
         }
     },
     "links": {
