@@ -154,8 +154,11 @@ class CronManager
         }
 
         $this->setLastRunTime(time());
+
+        $this->getCronJob()->markFailedJobs();
+        $this->getCronJob()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
-        $this->getCronJob()->handleExistingJobs();
+        $this->getCronJob()->removePendingJobDuplicates();
 
         $pendingJobList = $this->getCronJob()->getPendingJobList();
 

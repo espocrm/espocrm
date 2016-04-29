@@ -64,14 +64,6 @@ class Job
         return $this->cronScheduledJob;
     }
 
-
-    public function handleExistingJobs()
-    {
-        $this->markFailedJobs();
-        $this->markJobAttempts();
-        $this->removePendingJobDuplicates();
-    }
-
     /**
      * Get Pending Jobs
      *
@@ -194,7 +186,7 @@ class Job
      *
      * @return void
      */
-    protected function markFailedJobs()
+    public function markFailedJobs()
     {
         $jobConfigs = $this->getConfig()->get('cron');
 
@@ -238,7 +230,7 @@ class Job
      *
      * @return void
      */
-    protected function removePendingJobDuplicates()
+    public function removePendingJobDuplicates()
     {
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -294,7 +286,7 @@ class Job
      *
      * @return void
      */
-    protected function markJobAttempts()
+    public function updateFailedJobAttempts()
     {
         $query = "
             SELECT * FROM job
