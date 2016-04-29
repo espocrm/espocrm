@@ -1,7 +1,8 @@
 {
   "labels": {
     "Create DocumentFolder": "Utwórz folder dokumentów",
-    "Manage Categories": "Zarządzaj katalogami"
+    "Manage Categories": "Zarządzaj katalogami",
+    "Documents": "Dokumenty"
   },
   "links": {
     "documents": "Dokumenty"
