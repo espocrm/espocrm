@@ -308,21 +308,25 @@ class InboundEmail extends \Espo\Services\Record
                     $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
-                if (!empty($email)) {
-                    if (!$emailAccount->get('createCase')) {
-                        if (!$email->isFetched()) {
-                            $this->noteAboutEmail($email);
+                try {
+                    if (!empty($email)) {
+                        if (!$emailAccount->get('createCase')) {
+                            if (!$email->isFetched()) {
+                                $this->noteAboutEmail($email);
+                            }
                         }
-                    }
 
-                    if ($emailAccount->get('createCase')) {
-                        $this->createCase($emailAccount, $email);
-                    } else {
-                        if ($emailAccount->get('reply')) {
-                            $user = $this->getEntityManager()->getEntity('User', $userId);
-                            $this->autoReply($emailAccount, $email, $user);
+                        if ($emailAccount->get('createCase')) {
+                            $this->createCase($emailAccount, $email);
+                        } else {
+                            if ($emailAccount->get('reply')) {
+                                $user = $this->getEntityManager()->getEntity('User', $userId);
+                                $this->autoReply($emailAccount, $email, $user);
+                            }
                         }
                     }
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if ($k == count($ids) - 1) {

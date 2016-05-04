@@ -264,11 +264,17 @@ class Table
         $roleList = [];
 
         $userRoleList = $this->getUser()->get('roles');
+        if (!(is_array($userRoleList) || $userRoleList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
         }
 
         $teamList = $this->getUser()->get('teams');
+        if (!(is_array($teamList) || $teamList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($teamList as $team) {
             $teamRoleList = $team->get('roles');
             foreach ($teamRoleList as $role) {

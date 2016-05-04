@@ -142,11 +142,11 @@ abstract class Entity implements IEntity
             return $this->$method();
         }
 
-        if (isset($this->valuesContainer[$name])) {
+        if ($this->hasAttribute($name) && isset($this->valuesContainer[$name])) {
             return $this->valuesContainer[$name];
         }
 
-        if (!empty($this->relations[$name]) && $this->id) {
+        if ($this->hasRelation($name) && $this->id) {
             $value = $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
             return $value;
         }
@@ -157,7 +157,7 @@ abstract class Entity implements IEntity
     public function has($name)
     {
         if ($name == 'id') {
-            return isset($this->id);
+            return !!$this->id;
         }
         $method = '_has' . ucfirst($name);
         if (method_exists($this, $method)) {

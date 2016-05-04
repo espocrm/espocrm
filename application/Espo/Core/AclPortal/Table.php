@@ -76,11 +76,17 @@ class Table extends \Espo\Core\Acl\Table
         $roleList = [];
 
         $userRoleList = $this->getUser()->get('portalRoles');
+        if (!(is_array($userRoleList) || $userRoleList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
         }
 
         $portalRoleList = $this->getPortal()->get('portalRoles');
+        if (!(is_array($portalRoleList) || $portalRoleList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($portalRoleList as $role) {
             $roleList[] = $role;
         }
@@ -115,7 +121,7 @@ class Table extends \Espo\Core\Acl\Table
     {
         foreach ($this->getScopeList() as $scope) {
             $d = $this->getMetadata()->get('scopes.' . $scope);
-            if ($d['disabled'] || $d['portalDisabled']) {
+            if (!empty($d['disabled']) || !empty($d['portalDisabled'])) {
                 $table->$scope = false;
                 unset($fieldTable->$scope);
             }
