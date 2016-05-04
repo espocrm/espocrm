@@ -86,6 +86,7 @@ class Notification extends \Espo\Services\Record
 
             $user = $this->getEntityManager()->getEntity('User');
             $user->id = $userId;
+            $user->setIsNew(false);
             $user->setAsFetched();
             if (!$this->checkUserNoteAccess($user, $note)) {
                 continue;
