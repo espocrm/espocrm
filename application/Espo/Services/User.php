@@ -358,11 +358,15 @@ class User extends Record
                 'users.id' => $user->id
             ))->find();
             foreach ($portalList as $portal) {
-                $url = $siteUrl . '?entryPoint=portal';
-                if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
-                    $url .= '&id=' . $portal->id;
+                if ($portal->get('customUrl')) {
+                    $urlList[] = $portal->get('customUrl');
+                } else {
+                    $url = $siteUrl . '?entryPoint=portal';
+                    if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
+                        $url .= '&id=' . $portal->id;
+                    }
+                    $urlList[] = $url;
                 }
-                $urlList[] = $url;
             }
             if (!count($urlList)) {
                 return;
