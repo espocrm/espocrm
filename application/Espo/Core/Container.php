@@ -200,7 +200,9 @@ class Container
             $this->get('entityManager'),
             $this->get('user'),
             $this->get('acl'),
-            $this->get('metadata')
+            $this->get('aclManager'),
+            $this->get('metadata'),
+            $this->get('config')
         );
     }
 
