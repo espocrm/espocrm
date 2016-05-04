@@ -359,7 +359,7 @@ class User extends Record
             ))->find();
             foreach ($portalList as $portal) {
                 $url = $siteUrl . '?entryPoint=portal';
-                if (!$this->getConfig()->get('defaultPortalId') === $portal->id) {
+                if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
                     $url .= '&id=' . $portal->id;
                 }
                 $urlList[] = $url;
