@@ -102,10 +102,23 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersLeftMiddle.userId' => $entity->id
             ),
             'customJoin' => ''
         );
+
+        $where = array(
+            'usersLeftMiddle.userId' => $entity->id
+        );
+
+        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+            $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
+            $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
+            $selectParams['whereClause'][] = array(
+                'OR' => $where
+            );
+        } else {
+            $selectParams['whereClause'][] = $where;
+        }
 
         if (!empty($statusList)) {
             $statusOpKey = 'status';
@@ -142,10 +155,23 @@ class Activities extends \Espo\Core\Services\Base
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
-                'usersLeftMiddle.userId' => $entity->id
             ),
             'customJoin' => ''
         );
+
+        $where = array(
+            'usersLeftMiddle.userId' => $entity->id
+        );
+
+        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+            $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
+            $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
+            $selectParams['whereClause'][] = array(
+                'OR' => $where
+            );
+        } else {
+            $selectParams['whereClause'][] = $where;
+        }
 
         if (!empty($statusList)) {
             $statusOpKey = 'status';
@@ -164,6 +190,13 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getUserEmailQuery($entity, $op = 'IN', $statusList = null)
     {
+        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
+            $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
+            if ($contact) {
+                return $this->getEmailQuery($contact, $op, $statusList);
+            }
+        }
+
         $selectManager = $this->getSelectManagerFactory()->create('Email');
 
         $selectParams = array(
