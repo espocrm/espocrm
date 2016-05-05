@@ -52,7 +52,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "views/fields/assigned-user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
             "type": "linkMultiple",
