@@ -46,7 +46,7 @@ Espo.define('crm:crm:views/meeting/popup-notification', 'views/popup-notificatio
 
                     model.set('dateStart', this.notificationData.dateStart);
 
-                    this.createView('dateStart', 'Fields.Datetime', {
+                    this.createView('dateStart', 'views/fields/date-time', {
                         model: model,
                         mode: 'detail',
                         el: this.options.el + ' .field[data-name="dateStart"]',
