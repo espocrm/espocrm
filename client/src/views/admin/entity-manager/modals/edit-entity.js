@@ -120,7 +120,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'name',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 },
                 readOnly: scope != false
@@ -132,7 +133,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'labelSingular',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 }
             });
@@ -143,7 +145,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'labelPlural',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 }
             });

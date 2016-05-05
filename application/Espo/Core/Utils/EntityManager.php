@@ -82,6 +82,8 @@ class EntityManager
             throw new Error();
         }
 
+        $name = trim($name);
+
         $normalizedName = Util::normilizeClassName($name);
 
         $contents = "<" . "?" . "php\n\n".
@@ -270,9 +272,9 @@ class EntityManager
         $linkType = $params['linkType'];
 
         $entity = $params['entity'];
-        $link = $params['link'];
+        $link = trim($params['link']);
         $entityForeign = $params['entityForeign'];
-        $linkForeign = $params['linkForeign'];
+        $linkForeign = trim($params['linkForeign']);
 
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];
