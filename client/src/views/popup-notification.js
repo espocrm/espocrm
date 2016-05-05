@@ -44,6 +44,8 @@ Espo.define('views/popup-notification', 'view', function (Dep) {
             var id = this.options.id;
             var containerSelector = this.containerSelector = '#' + id;
 
+            this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
+
             this.on('render', function () {
                 $(containerSelector).remove();
 
@@ -85,6 +87,8 @@ Espo.define('views/popup-notification', 'view', function (Dep) {
         },
 
         playSound: function () {
+            if (this.notificationSoundsDisabled) return;
+
             var html = '' +
                 '<audio autoplay="autoplay">'+
                     '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+

@@ -304,6 +304,9 @@
             "notStorable": true,
             "readOnly": true,
             "view": "views/settings/fields/address-preview"
+        },
+        "notificationSoundsDisabled": {
+            "type": "bool"
         }
     }
 }

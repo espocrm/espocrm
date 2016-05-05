@@ -65,7 +65,8 @@
         "dashboardLayout": "Dashboard Layout (default)",
         "siteUrl": "Site URL",
         "addressPreview": "Address Preview",
-        "addressFormat": "Address Format"
+        "addressFormat": "Address Format",
+        "notificationSoundsDisabled": "Disable Notification Sounds"
     },
     "options": {
         "weekStart": {
