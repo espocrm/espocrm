@@ -42,7 +42,6 @@ class Meeting extends \Espo\Core\Acl\Base
 
         if (is_object($data)) {
             if ($data->read === 'own') {
-                $entity->loadLinkMultipleField('users');
                 if ($entity->hasLinkMultipleId('users', $user->id)) {
                     return true;
                 }
