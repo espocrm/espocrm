@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,54 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+Espo.define('crm:acl/call', 'crm:acl/meeting', function (Dep) {
 
-class Call extends \Espo\Core\SelectManagers\Base
-{
-    protected function accessOnlyOwn(&$result)
-    {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'OR' => array(
-                'usersMiddle.userId' => $this->getUser()->id,
-                'assignedUserId' => $this->getUser()->id
-            )
-        );
-    }
+    return Dep.extend({
 
-    protected function boolFilterOnlyMy(&$result)
-    {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'users.id' => $this->getUser()->id,
-            'OR' => array(
-                'usersMiddle.status!=' => 'Declined',
-                'usersMiddle.status=' => null
-            )
-        );
-    }
 
-    protected function filterPlanned(&$result)
-    {
-        $result['whereClause'][] = array(
-        	'status' => 'Planned'
-        );
-    }
+    });
 
-    protected function filterHeld(&$result)
-    {
-        $result['whereClause'][] = array(
-        	'status' => 'Held'
-        );
-    }
-
-    protected function filterTodays(&$result)
-    {
-        $result['whereClause'][] = $this->convertDateTimeWhere(array(
-        	'type' => 'today',
-        	'field' => 'dateStart',
-        	'timeZone' => $this->getUserTimeZone()
-        ));
-    }
-}
+});
 

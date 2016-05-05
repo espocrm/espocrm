@@ -1,5 +1,6 @@
 {
     "controller": "controllers/record",
+    "acl": "crm:acl/meeting",
     "views":{
         "detail":"crm:views/meeting/detail"
     },

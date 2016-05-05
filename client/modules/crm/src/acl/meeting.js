@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,54 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+Espo.define('crm:acl/meeting', 'acl', function (Dep) {
 
-class Call extends \Espo\Core\SelectManagers\Base
-{
-    protected function accessOnlyOwn(&$result)
-    {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'OR' => array(
-                'usersMiddle.userId' => $this->getUser()->id,
-                'assignedUserId' => $this->getUser()->id
-            )
-        );
-    }
+    return Dep.extend({
 
-    protected function boolFilterOnlyMy(&$result)
-    {
-        $this->addJoin('users', $result);
-        $result['whereClause'][] = array(
-            'users.id' => $this->getUser()->id,
-            'OR' => array(
-                'usersMiddle.status!=' => 'Declined',
-                'usersMiddle.status=' => null
-            )
-        );
-    }
+        checkModelRead: function (model, data, precise) {
+            var result = this.checkModel(model, data, 'read', precise);
 
-    protected function filterPlanned(&$result)
-    {
-        $result['whereClause'][] = array(
-        	'status' => 'Planned'
-        );
-    }
+            if (result) {
+                return true;
+            }
 
-    protected function filterHeld(&$result)
-    {
-        $result['whereClause'][] = array(
-        	'status' => 'Held'
-        );
-    }
+            if (data === false) {
+                return false;
+            }
 
-    protected function filterTodays(&$result)
-    {
-        $result['whereClause'][] = $this->convertDateTimeWhere(array(
-        	'type' => 'today',
-        	'field' => 'dateStart',
-        	'timeZone' => $this->getUserTimeZone()
-        ));
-    }
-}
+            var d = data || {};
+            if (d.read === 'no') {
+                return false;
+            }
+
+            if (model.has('usersIds')) {
+                if (~(model.get('usersIds') || []).indexOf(this.getUser().id)) {
+                    return true;
+                }
+            } else {
+                if (precise) {
+                    return null;
+                }
+            }
+
+            return result;
+        }
+
+    });
+
+});
 
