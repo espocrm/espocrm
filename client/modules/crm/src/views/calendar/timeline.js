@@ -654,7 +654,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }, {patch: true});
         },
 
-        addSharedCalenderUser: function (id, name) {
+        addSharedCalenderUser: function (id, name, skipStore) {
             var isMet = false;
             this.userList.forEach(function (item) {
                 if (item.id === id) {
@@ -667,8 +667,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 id: id,
                 name: name
             });
-
-            this.storeUserList();
+            if (!skipStore) {
+                this.storeUserList();
+            }
         },
 
         removeSharedCalendarUser: function (id) {
@@ -807,6 +808,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     modelList.forEach(function (model) {
                         this.addSharedCalenderUser(model.id, model.get('name'));
                     }, this);
+                    this.storeUserList();
                     this.initGroupsDataSet();
                     this.timeline.setGroups(this.groupsDataSet);
                     this.runFetch();
