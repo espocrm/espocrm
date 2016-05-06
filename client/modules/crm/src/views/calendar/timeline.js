@@ -649,7 +649,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         storeUserList: function () {
-            this.getStorage().set('calendar', 'sharedUserList', this.userList);
+            this.getPreferences().save({
+                'sharedCalendarUserList': Espo.Utils.clone(this.userList)
+            }, {patch: true});
         },
 
         addSharedCalenderUser: function (id, name) {
@@ -683,7 +685,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         getSharedCalenderUserList: function () {
-            var list = this.getStorage().get('calendar', 'sharedUserList');
+            var list = this.getPreferences().get('sharedCalendarUserList');
 
             if (list && list.length) {
                 var isBad = false;
@@ -796,12 +798,15 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.createView('dialog', viewName, {
                 scope: 'User',
                 createButton: false,
-                boolFilterList: boolFilterList
+                boolFilterList: boolFilterList,
+                multiple: true
             }, function (view) {
                 view.render();
                 this.notify(false);
-                this.listenToOnce(view, 'select', function (model) {
-                    this.addSharedCalenderUser(model.id, model.get('name'));
+                this.listenToOnce(view, 'select', function (modelList) {
+                    modelList.forEach(function (model) {
+                        this.addSharedCalenderUser(model.id, model.get('name'));
+                    }, this);
                     this.initGroupsDataSet();
                     this.timeline.setGroups(this.groupsDataSet);
                     this.runFetch();

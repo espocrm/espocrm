@@ -46,6 +46,9 @@
         "dashletsOptions": {
             "type": "jsonObject"
         },
+        "sharedCalendarUserList": {
+            "type": "jsonArray"
+        },
         "presetFilters": {
             "type": "jsonObject"
         },
