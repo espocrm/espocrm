@@ -31,10 +31,11 @@
                     ],
                     [
                         {
-                            "name": "personStringData"
+                            "name": "dateSent",
+                            "view": "views/fields/datetime-short"
                         },
                         {
-                            "name": "parent"
+                            "name": "personStringData"
                         }
                     ]
                 ]
