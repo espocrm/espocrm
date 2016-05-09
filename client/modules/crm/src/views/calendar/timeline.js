@@ -127,11 +127,11 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
                 $target.closest('.calendar-type-button-group').find('.calendar-type-label').text(this.getCalendarTypeLabel(calendarType));
 
-                var $addUser = this.$el.find('> .button-container button[data-action="addUser"]');
+                var $showSharedCalendarOptions = this.$el.find('> .button-container button[data-action="showSharedCalendarOptions"]');
                 if (calendarType == 'shared') {
-                    $addUser.removeClass('hidden');
+                    $showSharedCalendarOptions.removeClass('hidden');
                 } else {
-                    $addUser.addClass('hidden');
+                    $showSharedCalendarOptions.addClass('hidden');
                 }
 
                 this.selectCalendarType(calendarType);
@@ -139,9 +139,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             'click button[data-action="addUser"]': function () {
                 this.actionAddUser();
             },
-            'click [data-action="removeGroup"]': function (e) {
-                var id = $(e.currentTarget).attr('data-id');
-                this.removeUser(id);
+            'click button[data-action="showSharedCalendarOptions"]': function () {
+                this.actionShowSharedCalendarOptions();
             },
         },
 
@@ -248,9 +247,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             this.initUserList();
             this.initGroupsDataSet();
-            this.timeline.setOptions({
-                groupEditable: this.getGroupEditableOptions()
-            });
             this.timeline.setGroups(this.groupsDataSet);
 
             this.runFetch();
@@ -426,7 +422,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     zoomMax: 24 * 3600 *  1000 * this.maxRange,
                     zoomMin: 1000 * 60 * 15,
                     orientation: 'top',
-                    groupEditable: this.getGroupEditableOptions(),
+                    groupEditable: false,
                     editable: {
                         add: false,
                         updateTime: false,
@@ -454,19 +450,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                         var dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
                         this.createEvent(dateStart, e.group);
                     }
-                }.bind(this));
-
-                timeline.on('changed', function (e) {
-                    if (this.calendarType === 'single') return;
-                    if (this.options.userList) return;
-
-                    var $title = this.$el.find('.vis-labelset .group-title');
-                    if ($title.size() === 0) return;
-                    var list = [];
-                    $title.each(function (i, el) {
-                        list.push($(el).attr('data-id'));
-                    });
-                    this.orderUserList(list);
                 }.bind(this));
 
                 timeline.on('rangechanged', function (e) {
@@ -547,21 +530,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.timeline.setItems(itemsDataSet);
                 this.triggerView();
             }.bind(this));
-        },
-
-        getGroupEditableOptions: function () {
-            if (this.calendarType === 'single' || this.options.userList) {
-                return {
-                    add: false,
-                    remove: false,
-                    order: false
-                };
-            }
-            return {
-                add: false,
-                remove: false,
-                order: true
-            };
         },
 
         getFormatObject: function () {
@@ -686,7 +654,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         getSharedCalenderUserList: function () {
-            var list = this.getPreferences().get('sharedCalendarUserList');
+            var list = Espo.Utils.clone(this.getPreferences().get('sharedCalendarUserList'));
 
             if (list && list.length) {
                 var isBad = false;
@@ -738,10 +706,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }
             var html = '<span data-id="'+id+'" class="group-title">' + name + '</span>';
 
-            if (!this.options.userList) {
-                html += ' <a class="glyphicon glyphicon-remove small" data-action="removeGroup" data-id="'+id+'"></a>';
-            }
-
             return html;
         },
 
@@ -785,6 +749,22 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.removeSharedCalendarUser(id);
             this.initGroupsDataSet();
             this.timeline.setGroups(this.groupsDataSet);
+        },
+
+        actionShowSharedCalendarOptions: function () {
+            this.createView('dialog', 'crm:views/calendar/modals/shared-options', {
+                userList: this.userList
+            }, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'save', function (data) {
+                    this.userList = data.userList;
+                    this.storeUserList();
+                    this.initGroupsDataSet();
+                    this.timeline.setGroups(this.groupsDataSet);
+                    this.runFetch();
+                }, this);
+            }, this);
         },
 
         actionAddUser: function () {

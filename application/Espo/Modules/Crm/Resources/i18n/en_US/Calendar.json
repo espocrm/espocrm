@@ -13,6 +13,8 @@
         "Shared": "Shared",
         "Add User": "Add User",
         "current": "current",
-        "time": "time"
+        "time": "time",
+        "User List": "User List",
+        "Manage Users": "Manage Users"
     }
 }

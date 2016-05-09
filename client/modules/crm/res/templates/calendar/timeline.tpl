@@ -19,8 +19,9 @@
                     </li>
                 {{/each}}
             </ul>
+        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="showSharedCalendarOptions">{{translate 'Manage Users' scope='Calendar'}}</button>
         </div>
-        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="addUser"><span class="glyphicon glyphicon-plus"></span> {{translate 'Add User' scope='Calendar'}}</button>
+
         {{/if}}
     </div>
 

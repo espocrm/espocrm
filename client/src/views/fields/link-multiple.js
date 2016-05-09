@@ -56,6 +56,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        sortable: false,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -104,6 +106,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
             }, this);
 
+            this.sortable = this.sortable || this.params.sortable;
 
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
@@ -167,7 +170,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
-                           formatResult: function (suggestion) {
+                        formatResult: function (suggestion) {
                             return suggestion.name;
                         },
                         transformResult: function (response) {
@@ -208,7 +211,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.renderLinks();
 
                 if (this.mode == 'edit') {
-                    if (this.params.sortable) {
+                    if (this.sortable) {
                         this.$el.find('.link-container').sortable({
                             stop: function () {
                                 this.fetchFromDom();
