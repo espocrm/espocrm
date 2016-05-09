@@ -63,18 +63,11 @@ class User extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterOnlyMyTeam(&$result)
     {
-        $teamIds = $this->getUser()->get('teamsIds');
-        if (empty($teamIds)) {
-            $teamIds = [];
-        }
-
-        if (!in_array('teams', $result['joins'])) {
-        	$result['joins'][] = 'teams';
-        }
+        $this->addJoin('teams', $result);
         $result['whereClause'][] = array(
-        	'teamsMiddle.teamId' => $teamIds
+        	'teamsMiddle.teamId' => $this->getUser()->getLinkMultipleIdList('teams')
         );
-        $result['distinct'] = true;
+        $this->setDistinct(true, $result);
     }
 }
 
