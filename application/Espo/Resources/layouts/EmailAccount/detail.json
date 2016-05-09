@@ -28,6 +28,12 @@
                 false,{"name":"keepFetchedEmailsUnread"}
             ],
             [
+                false, {"name":"storeSentEmails"}
+            ],
+            [
+                false, {"name":"sentFolder"}
+            ],
+            [
                 {"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false
             ]
         ]
