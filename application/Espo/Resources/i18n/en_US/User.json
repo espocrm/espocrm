@@ -21,7 +21,7 @@
         "isPortalUser": "Is Portal User",
         "contact": "Contact",
         "accounts": "Accounts",
-        "account": "Account",
+        "account": "Account (Primary)",
         "sendAccessInfo": "Send Email with Access Info to User",
         "portal": "Portal"
     },
@@ -32,7 +32,8 @@
         "portals": "Portals",
         "portalRoles": "Portal Roles",
         "contact": "Contact",
-        "accounts": "Accounts"
+        "accounts": "Accounts",
+        "account": "Account (Primary)"
     },
     "labels": {
         "Create User": "Create User",

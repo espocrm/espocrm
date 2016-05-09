@@ -125,7 +125,8 @@
         "portal": {
             "type": "link",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "disabled": true
         },
         "avatar": {
             "type": "image",
