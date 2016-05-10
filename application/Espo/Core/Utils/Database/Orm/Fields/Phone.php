@@ -40,11 +40,14 @@ class Phone extends Base
                         'select' => 'phoneNumbers.name',
                         'where' =>
                         array (
-                            'LIKE' => array(
-                                'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
-                                'sql' => 'phoneNumbersMultiple.name LIKE {value}',
-                                'distinct' => true
-                            ),
+                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+                                SELECT entity_id
+                                FROM entity_phone_number
+                                JOIN phone_number ON phone_number.id = entity_phone_number.phone_number_id
+                                WHERE
+                                    entity_phone_number.deleted = 0 AND entity_phone_number.entity_type = '{$entityName}' AND
+                                    phone_number.deleted = 0 AND phone_number.name LIKE {value}
+                            )",
                             '=' => array(
                                 'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                                 'sql' => 'phoneNumbersMultiple.name = {value}',
