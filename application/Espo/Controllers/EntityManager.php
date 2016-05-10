@@ -78,6 +78,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['sortDirection'])) {
             $params['asc'] = $data['sortDirection'] === 'asc';
         }
+        if (isset($data['textFilterFields']) && is_array($data['textFilterFields'])) {
+            $params['textFilterFields'] = $data['textFilterFields'];
+        }
 
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 

@@ -59,4 +59,14 @@
 		</div>
 	</div>
 </div>
+
+
+<div class="row">
+	<div class="cell form-group col-md-6" data-name="textFilterFields">
+		<label class="control-label" data-name="textFilterFields">{{translate 'textFilterFields' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="textFilterFields">
+			{{{textFilterFields}}}
+		</div>
+	</div>
+</div>
 {{/if}}

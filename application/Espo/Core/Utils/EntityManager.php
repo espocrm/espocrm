@@ -219,6 +219,15 @@ class EntityManager
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
+        if (isset($data['textFilterFields'])) {
+            $entityDefsData = array(
+                'collection' => array(
+                    'textFilterFields' => $data['textFilterFields']
+                )
+            );
+            $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
         $this->getMetadata()->save();
         $this->getLanguage()->save();
 
