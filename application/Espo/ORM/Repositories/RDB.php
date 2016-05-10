@@ -216,7 +216,7 @@ class RDB extends \Espo\ORM\Repository
     public function findRelated(Entity $entity, $relationName, array $params = array())
     {
         if ($entity->isNew()) {
-            return;
+            return [];
         }
         $entityName = $entity->relations[$relationName]['entity'];
         $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
@@ -382,7 +382,7 @@ class RDB extends \Espo\ORM\Repository
         if (is_string($foreign)) {
             return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
         }
-        return false;
+        return null;
     }
 
     public function massRelate(Entity $entity, $relationName, array $params = array())
