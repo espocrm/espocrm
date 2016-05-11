@@ -47,7 +47,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
 
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'views/stream/record/list', {
-                        el: this.options.el + ' > .list-container',
+                        el: this.getSelector() + ' > .list-container',
                         collection: collection,
                         isUserStream: true,
                         noEdit: false,

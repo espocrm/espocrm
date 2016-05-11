@@ -187,7 +187,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.$el.selector + ' > .list-container',
+                    el: this.getSelector() + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: this.rowActionsView,
