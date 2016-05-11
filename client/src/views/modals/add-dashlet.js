@@ -35,6 +35,8 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
 
         template: 'modals/add-dashlet',
 
+        fitHeight: true,
+
         data: function () {
             return {
                 dashletList: this.dashletList,
