@@ -30,7 +30,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
     return Dep.extend({
 
-        el: '#main',
+        //el: '#main',
 
         scope: null,
 
