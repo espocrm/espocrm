@@ -2,7 +2,8 @@
     {
         "label": "In-app Notifications",
         "rows": [
-            [{"name": "assignmentNotificationsEntityList"}]
+            [{"name": "assignmentNotificationsEntityList"}],
+            [{"name": "notificationSoundsDisabled"}]
         ]
     },
     {

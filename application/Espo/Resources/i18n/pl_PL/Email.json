@@ -1,42 +1,91 @@
 {
-    "fields": {
-        "name": "Temat",
-        "parent": "Konto",
-        "status": "Status",
-        "dateSent": "Data Wysłania",
-        "from": "Od",
-        "to": "Do",
-        "cc": "Kopia Do",
-        "bcc": "Ukryta Kopia Do",
-        "isHtml": "Format HTML",
-        "body": "Treść",
-        "subject": "Temat",
-        "attachments": "Załącznik",
-        "selectTemplate": "Wybierz szkic wiadomości",
-        "fromEmailAddress": "Z adresu",
-        "toEmailAddresses": "Do adresu",
-        "emailAddress": "E-mail Adres"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Szkic",
-        "Sending": "Wysyłam",
-        "Sent": "Wysłane",
-        "Archived": "Zapisane"
-    },
-    "labels": {
-        "Create Email": "Archiwizuj e-mail",
-        "Archive Email": "Archiwizuj e-mail",
-        "Compose": "Utwórz",
-        "Reply": "Odpowiedz",
-        "Reply to All": "Reply to All",
-        "Forward": "Forward",
-        "Original message": "Original message",
-        "Forwarded message": "Forwarded message"
-    },
-    "presetFilters": {
-        "sent": "Wysłane",
-        "archived": "Zapisane"
+  "fields": {
+    "name": "Temat",
+    "parent": "Rodzic",
+    "status": "Status",
+    "dateSent": "Data wysłania",
+    "from": "Od",
+    "to": "Do",
+    "cc": "Kopia Do",
+    "bcc": "Ukryta Kopia Do",
+    "replyTo": "Odpowiedz do",
+    "replyToString": "Odpowiedz do (string)",
+    "isHtml": "Format HTML",
+    "body": "Treść",
+    "subject": "Temat",
+    "attachments": "Załączniki",
+    "selectTemplate": "Wybierz szkic wiadomości",
+    "fromEmailAddress": "Z adresu",
+    "toEmailAddresses": "Do adresu",
+    "emailAddress": "Adres e-mail",
+    "deliveryDate": "Data dostarczenia",
+    "account": "Klient",
+    "users": "Użytkownicy",
+    "replied": "Odpowiedziane",
+    "replies": "Odpowiedzi",
+    "isRead": "Jest przeczytany",
+    "isNotRead": "Nie jest przeczytany",
+    "isImportant": "Jest ważny",
+    "isUsers": "Jest użytkownika",
+    "inTrash": "W koszu"
+  },
+  "links": {
+    "replied": "Odpowiedziany",
+    "replies": "Odpowiedzi"
+  },
+  "options": {
+    "status": {
+      "Draft": "Szkic",
+      "Sending": "Wysyłanie",
+      "Sent": "Wysłano",
+      "Archived": "Zarchiwizowany",
+      "Received": "Otrzymane",
+      "Failed": "Niepowodzenie"
     }
+  },
+  "labels": {
+    "Create Email": "Archiwizuj e-mail",
+    "Archive Email": "Archiwizuj e-mail",
+    "Compose": "Utwórz",
+    "Reply": "Odpowiedz",
+    "Reply to All": "Reply to All",
+    "Forward": "Forward",
+    "Original message": "Original message",
+    "Forwarded message": "Forwarded message",
+    "Email Accounts": "Osobiste konta pocztowe",
+    "Inbound Emails": "Grupowe konta pocztowe",
+    "Email Templates": "Szablony wiadomości",
+    "Send Test Email": "Wyślij wiadomość testową",
+    "Send": "Wyślij",
+    "Email Address": "Adres e-mail",
+    "Mark Read": "Oznacz jako przeczytane",
+    "Sending...": "Wysyłanie ...",
+    "Save Draft": "Zapisz szkic",
+    "Mark all as read": "Oznacz wszystkie jako przeczytane",
+    "Show Plain Text": "Pokaż tylko tekst",
+    "Mark as Important": "Oznacz jako ważne",
+    "Unmark Importance": "Odznacz ważność",
+    "Move to Trash": "Przenieś do kosza",
+    "Retrieve from Trash": "Przywróć z kosza"
+  },
+  "messages": {
+    "noSmtpSetup": "Brak konfiguracji SMTP {link}.",
+    "testEmailSent": "Testowa wiadomość została wysłana",
+    "emailSent": "Wiadomość została wysłana",
+    "savedAsDraft": "Zapisz jako szablon"
+  },
+  "presetFilters": {
+    "sent": "Wysłane",
+    "archived": "Zarchiwizowany",
+    "inbox": "Przychodzące",
+    "drafts": "Szkice",
+    "trash": "Kosz"
+  },
+  "massActions": {
+    "markAsRead": "Oznacz jako przeczytane",
+    "markAsNotRead": "Oznacz jako nieprzeczytane",
+    "markAsImportant": "Oznacz jako ważne",
+    "markAsNotImportant": "Odznacz ważność",
+    "moveToTrash": "Przenieś do kosza"
+  }
 }

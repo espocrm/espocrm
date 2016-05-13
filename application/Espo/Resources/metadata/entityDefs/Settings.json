@@ -294,6 +294,19 @@
         },
         "readableDateFormatDisabled": {
             "type": "bool"
+        },
+        "addressFormat": {
+            "type": "enumInt",
+            "options": [1, 2, 3, 4]
+        },
+        "addressPreview": {
+            "type": "address",
+            "notStorable": true,
+            "readOnly": true,
+            "view": "views/settings/fields/address-preview"
+        },
+        "notificationSoundsDisabled": {
+            "type": "bool"
         }
     }
 }

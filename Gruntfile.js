@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         'client/lib/jquery.autocomplete.js',
         'client/lib/bootstrap.min.js',
         'client/lib/bootstrap-datepicker.js',
-        'client/lib/bull.min.js',
+        'client/lib/bull.js',
         'client/src/namespace.js',
         'client/src/exceptions.js',
         'client/src/loader.js',

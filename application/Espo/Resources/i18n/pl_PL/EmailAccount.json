@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "host": "Host",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "port": "Port",
+    "monitoredFolders": "Monitorowane katalogi",
+    "ssl": "SSL",
+    "fetchSince": "Fetch Since",
+    "emailAddress": "Adres e-mail",
+    "sentFolder": "Sent Folder",
+    "storeSentEmails": "Zapisz wysłane wiadomości",
+    "keepFetchedEmailsUnread": "Pozostaw pobrane wiadomości jako nieprzeczytane"
+  },
+  "links": {
+    "filters": "Filtry"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywne",
+      "Inactive": "Nieaktywny"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Utwórz konto pocztowe",
+    "IMAP": "IMAP",
+    "Main": "Główne",
+    "Test Connection": "Test połączenia"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nie można połączyć z serwerem IMAP",
+    "connectionIsOk": "Połączenie OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Możesz dodać folder 'Wysłane' aby synchronizować wysłaną pocztę z zewnętrznym klientem poczty.",
+    "storeSentEmails": "Wysłane wiadomości będą przechowywane na serwerze IMAP. Adres e-mail powinien być taki jak podany w wiadomości wychodzącej."
+  }
+}

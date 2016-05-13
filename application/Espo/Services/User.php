@@ -358,11 +358,15 @@ class User extends Record
                 'users.id' => $user->id
             ))->find();
             foreach ($portalList as $portal) {
-                $url = $siteUrl . '?entryPoint=portal';
-                if (!$this->getConfig()->get('defaultPortalId') === $portal->id) {
-                    $url .= '&id=' . $portal->id;
+                if ($portal->get('customUrl')) {
+                    $urlList[] = $portal->get('customUrl');
+                } else {
+                    $url = $siteUrl . '?entryPoint=portal';
+                    if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
+                        $url .= '&id=' . $portal->id;
+                    }
+                    $urlList[] = $url;
                 }
-                $urlList[] = $url;
             }
             if (!count($urlList)) {
                 return;
@@ -432,6 +436,17 @@ class User extends Record
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
+    }
+
+    protected function afterMassUpdate(array $idList, array $data)
+    {
+        parent::afterMassUpdate($idList, $data);
+
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {
+            foreach ($idList as $id) {
+                $this->clearRoleCache($id);
+            }
+        }
     }
 }
 

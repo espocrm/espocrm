@@ -89,6 +89,7 @@ class FieldManager
 
     public function update($name, $fieldDefs, $scope)
     {
+        $name = trim($name);
         /*Add option to metadata to identify the custom field*/
         if (!$this->isCore($name, $scope)) {
             $fieldDefs[$this->customOptionName] = true;

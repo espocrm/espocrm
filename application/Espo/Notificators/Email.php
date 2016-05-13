@@ -125,11 +125,12 @@ class Email extends \Espo\Core\Notificators\Base
         }
 
         foreach ($userIdList as $userId) {
-            if ($userIdFrom == $userId) {
-                continue;
-            }
+            if (!$userId) continue;
+            if ($userIdFrom === $userId) continue;
+
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) continue;
+            if ($user->get('isPortalUser')) continue;
             if (!$this->getAclManager()->checkScope($user, 'Email')) {
                 continue;
             }

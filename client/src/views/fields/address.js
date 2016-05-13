@@ -38,6 +38,14 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
         editTemplate: 'fields/address/edit',
 
+        editTemplate1: 'fields/address/edit-1',
+
+        editTemplate2: 'fields/address/edit-2',
+
+        editTemplate3: 'fields/address/edit-3',
+
+        editTemplate4: 'fields/address/edit-4',
+
         searchTemplate: 'fields/address/search',
 
         data: function () {
@@ -81,6 +89,21 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             if (isEmpty) {
                 return this.translate('None');
             }
+
+            var methodName = 'getFormattedAddress' + this.getAddressFormat().toString();
+
+            if (methodName in this) {
+                return this[methodName]();
+            }
+        },
+
+        getFormattedAddress1: function () {
+            var postalCodeValue = this.model.get(this.postalCodeField);
+            var streetValue = this.model.get(this.streetField);
+            var cityValue = this.model.get(this.cityField);
+            var stateValue = this.model.get(this.stateField);
+            var countryValue = this.model.get(this.countryField);
+
             var html = '';
             if (streetValue) {
                 html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
@@ -112,9 +135,144 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                 html += countryValue;
             }
             return html;
-
         },
 
+        getFormattedAddress2: function () {
+            var postalCodeValue = this.model.get(this.postalCodeField);
+            var streetValue = this.model.get(this.streetField);
+            var cityValue = this.model.get(this.cityField);
+            var stateValue = this.model.get(this.stateField);
+            var countryValue = this.model.get(this.countryField);
+
+            var html = '';
+            if (streetValue) {
+                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+            }
+            if (cityValue || postalCodeValue) {
+                if (html != '') {
+                    html += '<br>'
+                }
+                if (postalCodeValue) {
+                    html += postalCodeValue;
+                    if (cityValue) {
+                        html += ' ';
+                    }
+                }
+                if (cityValue) {
+                    html += cityValue;
+                }
+            }
+            if (stateValue || countryValue) {
+                if (html != '') {
+                    html += '<br>';
+                }
+                if (stateValue) {
+                    html += stateValue;
+                    if (countryValue) {
+                        html += ' ';
+                    }
+                }
+                if (countryValue) {
+                    html += countryValue;
+                }
+            }
+            return html;
+        },
+
+        getFormattedAddress3: function () {
+            var postalCodeValue = this.model.get(this.postalCodeField);
+            var streetValue = this.model.get(this.streetField);
+            var cityValue = this.model.get(this.cityField);
+            var stateValue = this.model.get(this.stateField);
+            var countryValue = this.model.get(this.countryField);
+
+            var html = '';
+            if (countryValue) {
+                html += countryValue;
+            }
+            if (cityValue || stateValue || postalCodeValue) {
+                if (html != '') {
+                    html += '<br>'
+                }
+                if (postalCodeValue) {
+                    html += postalCodeValue;
+                }
+                if (stateValue) {
+                    if (postalCodeValue) {
+                        html += ' ';
+                    }
+                    html += stateValue;
+                }
+                if (cityValue) {
+                    if (postalCodeValue || stateValue) {
+                        html += ' ';
+                    }
+                    html += cityValue;
+                }
+            }
+            if (streetValue) {
+                if (html != '') {
+                    html += '<br>';
+                }
+                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+            }
+            return html;
+        },
+
+        getFormattedAddress4: function () {
+            var postalCodeValue = this.model.get(this.postalCodeField);
+            var streetValue = this.model.get(this.streetField);
+            var cityValue = this.model.get(this.cityField);
+            var stateValue = this.model.get(this.stateField);
+            var countryValue = this.model.get(this.countryField);
+
+            var html = '';
+            if (streetValue) {
+                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+            }
+            if (cityValue) {
+                if (html != '') {
+                    html += '<br>';
+                }
+                html += cityValue;
+            }
+            if (countryValue || stateValue || postalCodeValue) {
+                if (html != '') {
+                    html += '<br>'
+                }
+                if (countryValue) {
+                    html += countryValue;
+                }
+                if (stateValue) {
+                    if (countryValue) {
+                        html += ' - ';
+                    }
+                    html += stateValue;
+                }
+                if (postalCodeValue) {
+                    if (countryValue || stateValue) {
+                        html += ' ';
+                    }
+                    html += postalCodeValue;
+                }
+            }
+
+            return html;
+        },
+
+        _getTemplateName: function () {
+            if (this.mode == 'edit') {
+                var prop = 'editTemplate' + this.getAddressFormat().toString();
+                if (prop in this) {
+                    return this[prop];
+                }
+            }
+            return Dep.prototype._getTemplateName.call(this);
+        },
+
+        getAddressFormat: function () {
+            return this.getConfig().get('addressFormat') || 1;
+        },
 
         afterRender: function () {
             var self = this;

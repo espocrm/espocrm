@@ -9,6 +9,13 @@
                     "link": "#KnowledgeBaseCategory\/list",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "label": "Articles",
+                    "link": "#KnowledgeBaseArticle",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "KnowledgeBaseArticle"
                 }
             ]
         },
@@ -19,6 +26,13 @@
                     "link": "#KnowledgeBaseCategory",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "label": "Articles",
+                    "link": "#KnowledgeBaseArticle",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "KnowledgeBaseArticle"
                 }
             ]
         }

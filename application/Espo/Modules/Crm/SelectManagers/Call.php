@@ -31,13 +31,22 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class Call extends \Espo\Core\SelectManagers\Base
 {
+    protected function accessOnlyOwn(&$result)
+    {
+        $this->addJoin('users', $result);
+        $result['whereClause'][] = array(
+            'OR' => array(
+                'usersMiddle.userId' => $this->getUser()->id,
+                'assignedUserId' => $this->getUser()->id
+            )
+        );
+    }
+
     protected function boolFilterOnlyMy(&$result)
     {
-        if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
-        }
+        $this->addJoin('users', $result);
         $result['whereClause'][] = array(
-        	'users.id' => $this->getUser()->id,
+            'users.id' => $this->getUser()->id,
             'OR' => array(
                 'usersMiddle.status!=' => 'Declined',
                 'usersMiddle.status=' => null

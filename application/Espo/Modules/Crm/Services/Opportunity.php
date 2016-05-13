@@ -36,13 +36,6 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Opportunity extends \Espo\Services\Record
 {
-    protected $mergeLinkList = array(
-        'tasks',
-        'meetings',
-        'calls',
-        'emails'
-    );
-
     public function reportSalesPipeline($dateFrom, $dateTo)
     {
         $pdo = $this->getEntityManager()->getPDO();

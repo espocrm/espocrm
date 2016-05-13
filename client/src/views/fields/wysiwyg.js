@@ -96,6 +96,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             return value || '';
         },
 
+        getValueForEdit: function () {
+            var value = this.model.get(this.name) || '';
+            value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
+            return value;
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -169,7 +175,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
-            var contents = this.model.get(this.name);
+            var contents = this.getValueForEdit();
 
             this.$summernote.html(contents);
 

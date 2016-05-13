@@ -115,8 +115,12 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.model.populateDefaults();
                 }
 
-                this.createFieldView('varchar', 'name', !this.isNew);
-                this.createFieldView('varchar', 'label');
+                this.createFieldView('varchar', 'name', !this.isNew, {
+                    trim: true
+                });
+                this.createFieldView('varchar', 'label', null, {
+                    trim: true
+                });
 
                 this.params.forEach(function (o) {
                     if (o.hidden) {

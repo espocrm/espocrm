@@ -278,7 +278,8 @@
         "children": "Children"
     },
     "dashlets": {
-        "Stream": "Stream"
+        "Stream": "Stream",
+        "Emails": "My Inbox"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
@@ -460,7 +461,9 @@
         },
         "varcharSearchRanges": {
             "equals": "Equals",
+            "like": "Is Like (%)",
             "startsWith": "Starts With",
+            "endsWith": "Ends With",
             "contains": "Contains",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty"

@@ -97,8 +97,6 @@ class Table
             throw new Error('User must be fetched before ACL check.');
         }
 
-        $this->user->loadLinkMultipleField('teams');
-
         if ($fileManager) {
             $this->fileManager = $fileManager;
         }
@@ -119,7 +117,7 @@ class Table
 
     protected function initCacheFilePath()
     {
-        $this->cacheFilePath = 'data/cache/application/acl/' . $this->user->id . '.php';
+        $this->cacheFilePath = 'data/cache/application/acl/' . $this->getUser()->id . '.php';
     }
 
     protected function getUser()
@@ -192,7 +190,7 @@ class Table
         $aclTableList = [];
         $fieldTableList = [];
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->getUser()->isAdmin()) {
             $roleList = $this->getRoleList();
 
             foreach ($roleList as $role) {
@@ -242,7 +240,7 @@ class Table
 
         $this->fillFieldTableQuickAccess();
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->getUser()->isAdmin()) {
             foreach ($this->valuePermissionList as $permission) {
                 $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.'.$this->type.'.default.' . $permission, 'yes'));
                 if ($this->metadata->get('app.'.$this->type.'.mandatory.' . $permission)) {
@@ -266,11 +264,17 @@ class Table
         $roleList = [];
 
         $userRoleList = $this->getUser()->get('roles');
+        if (!(is_array($userRoleList) || $userRoleList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
         }
 
         $teamList = $this->getUser()->get('teams');
+        if (!(is_array($teamList) || $teamList instanceof \Traversable)) {
+            throw new Error();
+        }
         foreach ($teamList as $team) {
             $teamRoleList = $team->get('roles');
             foreach ($teamRoleList as $role) {
@@ -396,7 +400,7 @@ class Table
 
     protected function applyDefault(&$table, &$fieldTable)
     {
-        if ($this->user->isAdmin()) {
+        if ($this->getUser()->isAdmin()) {
             return;
         }
 
@@ -461,7 +465,7 @@ class Table
 
     protected function applyMandatory(&$table, &$fieldTable)
     {
-        if ($this->user->isAdmin()) {
+        if ($this->getUser()->isAdmin()) {
             return;
         }
 
@@ -508,7 +512,7 @@ class Table
 
     protected function applyDisabled(&$table, &$fieldTable)
     {
-        if ($this->user->isAdmin()) {
+        if ($this->getUser()->isAdmin()) {
             return;
         }
 

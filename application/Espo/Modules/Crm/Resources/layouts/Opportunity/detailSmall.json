@@ -5,8 +5,8 @@
             [{"name":"name", "fullWidth": true}],
             [{"name":"account", "fullWidth": true}],
             [{"name":"stage"}, {"name":"closeDate"}],
-            [{"name":"amount"}],
-            [{"name":"description"}]
+            [{"name":"amount", "fullWidth": true}],
+            [{"name":"description", "fullWidth": true}]
         ]
     }
 ]

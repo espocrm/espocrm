@@ -41,7 +41,8 @@
     "relationshipPanels": {
         "articles": {
             "create": false,
-            "rowActionsView": "views/record/row-actions/relationship-view-and-unlink"
+            "recordListView": "crm:views/knowledge-base-article/record/list-for-case",
+            "rowActionsView": "crm:views/knowledge-base-article/record/row-actions/for-case"
         }
     },
     "boolFilterList": ["onlyMy"],

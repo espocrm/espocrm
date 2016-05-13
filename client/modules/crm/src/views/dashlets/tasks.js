@@ -30,7 +30,7 @@ Espo.define('crm:views/dashlets/tasks', 'views/dashlets/abstract/record-list', f
 
     return Dep.extend({
 
-        listViewName: 'crm:views/task/record/list-expanded',
+        listView: 'crm:views/task/record/list-expanded',
 
         rowActionsView: 'crm:views/task/record/row-actions/dashlet'
 

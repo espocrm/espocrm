@@ -1,0 +1,64 @@
+{
+    "view":"views/dashlets/emails",
+    "aclScope": "Email",
+    "entityType": "Email",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "displayRecords": {
+                "type": "enumInt",
+                "options": [3,4,5,10,15,20,30,50]
+            }
+        },
+        "defaults": {
+            "sortBy": "dateSent",
+            "asc": false,
+            "displayRecords": 5,
+            "expandedLayout": {
+                "rows": [
+                    [
+                        {
+                            "name": "subject",
+                            "link": true
+                        }
+                    ],
+                    [
+                        {
+                            "name": "dateSent",
+                            "view": "views/fields/datetime-short"
+                        },
+                        {
+                            "name": "personStringData"
+                        }
+                    ]
+                ]
+            },
+            "searchData": {
+                "bool": {
+                    "onlyMy": true
+                },
+                "primary": "inbox"
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

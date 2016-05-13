@@ -6,6 +6,7 @@
     },
     "scopeList": ["Meeting", "Call", "Task"],
     "allDayScopeList": ["Task"],
-    "modeList": ["month", "agendaWeek", "agendaDay"],
+    "modeList": ["month", "agendaWeek", "agendaDay", "timeline"],
+    "canceledStatusList": ["Not Held", "Canceled"],
     "completedStatusList": ["Held", "Completed"]
 }

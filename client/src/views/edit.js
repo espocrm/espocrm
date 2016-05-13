@@ -32,8 +32,6 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         template: 'edit',
 
-        el: '#main',
-
         scope: null,
 
         name: 'Edit',

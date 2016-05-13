@@ -397,17 +397,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.notify('Removing...');
 
+                var collection = this.model.collection;
+
                 var self = this;
                 this.model.destroy({
                     wait: true,
                     error: function () {
-                        self.notify('Error occured!', 'error');
-                    },
+                        this.notify('Error occured!', 'error');
+                    }.bind(this),
                     success: function () {
-                        self.notify('Removed', 'success');
-                        self.trigger('after:delete');
-                        self.exit('delete');
-                    },
+                        if (collection) {
+                            if (collection.total > 0) {
+                                collection.total--;
+                            }
+                        }
+
+                        this.notify('Removed', 'success');
+                        this.trigger('after:delete');
+                        this.exit('delete');
+                    }.bind(this),
                 });
             }
         },

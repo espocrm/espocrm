@@ -37,29 +37,63 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                 name: '[#' + this.model.get('number') + '] ' + this.model.get('name')
             };
 
-            if (this.model.get('contactId')) {
-                this.getModelFactory().create('Contact', function (contact) {
-                    contact.id = this.model.get('contactId');
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                    this.listenToOnce(contact, 'sync', function () {
-                        var emailAddress = contact.get('emailAddress');
-                        if (emailAddress) {
-                            attributes.to = emailAddress;
-                            attributes.nameHash = {};
-                            attributes.nameHash[emailAddress] = contact.get('name');
+            var parentModel = this.model;
+
+            new Promise(function (resolve, reject) {
+                if (parentModel.get('contactsIds') && parentModel.get('contactsIds').length) {
+                    this.getCollectionFactory().create('Contact', function (contactList) {
+                        var contactListFinal = [];
+                        contactList.url = 'Case/' + parentModel.id + '/contacts';
+                        contactList.fetch().then(function () {
+                            contactList.forEach(function (contact) {
+                                if (contact.id == parentModel.get('contactId')) {
+                                    contactListFinal.unshift(contact);
+                                } else {
+                                    contactListFinal.push(contact);
+                                }
+                            });
+                            resolve(contactListFinal);
+                        }, function () {resolve([])});
+                    }, this);
+                } else if (parentModel.get('accountId')) {
+                    this.getModelFactory().create('Account', function (account) {
+                        account.id = parentModel.get('accountId');
+                        account.fetch().then(function () {
+                            resolve([account]);
+                        }, function () {resolve([])});
+                    }, this);
+                } else if (parentModel.get('leadId')) {
+                    this.getModelFactory().create('Lead', function (account) {
+                        lead.id = parentModel.get('leadId');
+                        lead.fetch().then(function () {
+                            resolve([lead]);
+                        }, function () {resolve([])});
+                    }, this);
+                } else {
+                    resolve([]);
+                }
+            }.bind(this)).then(function (list) {
+                attributes.to = '';
+                attributes.cc = '';
+                attributes.nameHash = {};
+
+                list.forEach(function (model, i) {
+                    if (model.get('emailAddress')) {
+                        if (i === 0) {
+                            attributes.to += model.get('emailAddress') + ';';
+                        } else {
+                            attributes.cc += model.get('emailAddress') + ';';
                         }
+                        attributes.nameHash[model.get('emailAddress')] = model.get('name');
+                    }
+                });
+                Espo.Ui.notify(false);
 
-                        callback.call(this, attributes);
-                    });
-                    contact.fetch({
-                        error: function () {
-                            callback.call(this, attributes);
-                        }.bind(this)
-                    });
-                }, this);
-            } else {
                 callback.call(this, attributes);
-            }
+
+            }.bind(this));
         }
     });
 });

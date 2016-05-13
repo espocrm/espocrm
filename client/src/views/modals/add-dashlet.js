@@ -35,6 +35,8 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
 
         template: 'modals/add-dashlet',
 
+        fitHeight: true,
+
         data: function () {
             return {
                 dashletList: this.dashletList,
@@ -57,13 +59,6 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
         ],
 
         setup: function () {
-            /*this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];*/
-
             this.header = this.translate('Add Dashlet');
 
             var dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {

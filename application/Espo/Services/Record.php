@@ -73,8 +73,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected $linkSelectParams = [];
 
-    protected $mergeLinkList = [];
-
     protected $noEditAccessRequiredLinkList = [];
 
     protected $exportSkipAttributeList = [];
@@ -619,6 +617,14 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
+    protected function afterMassUpdate(array $idList, array $data)
+    {
+    }
+
+    protected function afterMassRemove(array $idList)
+    {
+    }
+
     public function deleteEntity($id)
     {
         if (empty($id)) {
@@ -911,7 +917,7 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
-                            $idsUpdated[] = $id;
+                            $idsUpdated[] = $entity->id;
                             $count++;
                         }
                     }
@@ -932,17 +938,21 @@ class Record extends \Espo\Core\Services\Base
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
-                            $idsUpdated[] = $id;
+                            $idsUpdated[] = $entity->id;
                             $count++;
                         }
                     }
                 }
             }
 
+            $this->afterMassUpdate($idsUpdated, $data);
+
             return array(
                 'count' => $count
             );
         }
+
+        $this->afterMassUpdate($idsUpdated, $data);
 
         return array(
             'count' => $count,
@@ -957,20 +967,20 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
-        if (array_key_exists('ids',$params)) {
+        if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
                 if ($entity && $this->getAcl()->check($entity, 'remove')) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $id;
+                        $idsRemoved[] = $entity->id;
                         $count++;
                     }
                 }
             }
         }
 
-        if (array_key_exists('where',$params)) {
+        if (array_key_exists('where', $params)) {
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
@@ -980,15 +990,20 @@ class Record extends \Espo\Core\Services\Base
             foreach ($collection as $entity) {
                 if ($this->getAcl()->check($entity, 'remove')) {
                     if ($repository->remove($entity)) {
-                        $idsRemoved[] = $id;
+                        $idsRemoved[] = $entity->id;
                         $count++;
                     }
                 }
             }
+
+            $this->afterMassUpdate($idsRemoved);
+
             return array(
                 'count' => $count
             );
         }
+
+        $this->afterMassRemove($idsRemoved);
 
         return array(
             'count' => $count,
@@ -1199,30 +1214,65 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function merge($id, array $sourceIds = array())
+    public function merge($id, array $sourceIdList = array(), array $attributes = array())
     {
         if (empty($id)) {
             throw new Error();
         }
 
-        $entity = $this->getEntity($id);
+        $repository = $this->getRepository();
+
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
 
         if (!$entity) {
             throw new NotFound();
         }
-
         if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $this->filterInput($attributes);
+        $entity->set($attributes);
+        if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
         $sourceList = array();
-        foreach ($sourceIds as $sourceId) {
+        foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
                 throw new Forbidden();
+            }
+        }
+
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+
+        $hasPhoneNumber = false;
+        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
+            $hasPhoneNumber = true;
+        }
+
+        $hasEmailAddress = false;
+        if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
+            $hasEmailAddress = true;
+        }
+
+        if ($hasPhoneNumber) {
+            $phoneNumberToRelateList = [];
+            $phoneNumberList = $repository->findRelated($entity, 'phoneNumbers');
+            foreach ($phoneNumberList as $phoneNumber) {
+                $phoneNumberToRelateList[] = $phoneNumber;
+            }
+        }
+
+        if ($hasEmailAddress) {
+            $emailAddressToRelateList = [];
+            $emailAddressList = $repository->findRelated($entity, 'emailAddresses');
+            foreach ($emailAddressList as $emailAddress) {
+                $emailAddressToRelateList[] = $emailAddress;
             }
         }
 
@@ -1239,12 +1289,34 @@ class Record extends \Espo\Core\Services\Base
                     `deleted` = 0
             ";
             $pdo->query($sql);
+
+            if ($hasPhoneNumber) {
+                $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
+                foreach ($phoneNumberList as $phoneNumber) {
+                    $phoneNumberToRelateList[] = $phoneNumber;
+                }
+            }
+            if ($hasEmailAddress) {
+                $emailAddressList = $repository->findRelated($source, 'emailAddresses');
+                foreach ($emailAddressList as $emailAddress) {
+                    $emailAddressToRelateList[] = $emailAddress;
+                }
+            }
         }
 
-        $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+        $mergeLinkList = [];
+        $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
+        foreach ($linksDefs as $link => $d) {
+            if (!empty($d['notMergeable'])) {
+                continue;
+            }
+            if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
+                $mergeLinkList[] = $link;
+            }
+        }
 
         foreach ($sourceList as $source) {
-            foreach ($this->mergeLinkList as $link) {
+            foreach ($mergeLinkList as $link) {
                 $linkedList = $repository->findRelated($source, $link);
                 foreach ($linkedList as $linked) {
                     $repository->relate($entity, $link, $linked);
@@ -1255,6 +1327,49 @@ class Record extends \Espo\Core\Services\Base
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
         }
+
+
+        if ($hasEmailAddress) {
+            $emailAddressData = [];
+            foreach ($emailAddressToRelateList as $i => $emailAddress) {
+                $o = (object) [];
+                $o->emailAddress = $emailAddress->get('name');
+                $o->primary = false;
+                if (empty($attributes['emailAddress'])) {
+                    if ($i === 0) {
+                        $o->primary = true;
+                    }
+                } else {
+                    $o->primary = $o->emailAddress === $attributes['emailAddress'];
+                }
+                $o->optOut = $emailAddress->get('optOut');
+                $o->invalid = $emailAddress->get('invalid');
+                $emailAddressData[] = $o;
+            }
+            $attributes['emailAddressData'] = $emailAddressData;
+        }
+
+        if ($hasPhoneNumber) {
+            $phoneNumberData = [];
+            foreach ($phoneNumberToRelateList as $i => $phoneNumber) {
+                $o = (object) [];
+                $o->phoneNumber = $phoneNumber->get('name');
+                $o->primary = false;
+                if (empty($attributes['phoneNumber'])) {
+                    if ($i === 0) {
+                        $o->primary = true;
+                    }
+                } else {
+                    $o->primary = $o->phoneNumber === $attributes['phoneNumber'];
+                }
+                $o->type = $phoneNumber->get('type');
+                $phoneNumberData[] = $o;
+            }
+            $attributes['phoneNumberData'] = $phoneNumberData;
+        }
+
+        $entity->set($attributes);
+        $repository->save($entity);
 
         return true;
     }

@@ -1,6 +1,27 @@
 {
-    "fields": {
-        "post": "Opublikuj",
-        "attachments": "Załącznik"
+  "fields": {
+    "post": "Opublikuj",
+    "attachments": "Załącznik",
+    "targetType": "Cel",
+    "teams": "Zespoły",
+    "users": "Użytkownicy",
+    "portals": "Portale"
+  },
+  "filters": {
+    "all": "Wszystko",
+    "posts": "Posty",
+    "updates": "Aktualizacje"
+  },
+  "options": {
+    "targetType": {
+      "self": "Do siebie",
+      "users": "Do wybranego użytkownika(ów)",
+      "teams": "Do wybranych grup(y)",
+      "all": "Do wszystkich użytkowników wewnętrznych",
+      "portals": "Do wszystkich użytkowników portalu"
     }
+  },
+  "messages": {
+    "writeMessage": "Tutaj wpisz swoją wiadomość"
+  }
 }

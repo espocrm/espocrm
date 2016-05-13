@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Meeting.PopupNotification', 'Views.PopupNotification', function (Dep) {
+Espo.define('crm:crm:views/meeting/popup-notification', 'views/popup-notification', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Crm:Views.Meeting.PopupNotification', 'Views.PopupNotification', fu
 
         style: 'primary',
 
-        template: 'crm:meeting.popup-notification',
+        template: 'crm:meeting/popup-notification',
 
         closeButton: true,
 
@@ -46,7 +46,7 @@ Espo.define('Crm:Views.Meeting.PopupNotification', 'Views.PopupNotification', fu
 
                     model.set('dateStart', this.notificationData.dateStart);
 
-                    this.createView('dateStart', 'Fields.Datetime', {
+                    this.createView('dateStart', 'views/fields/date-time', {
                         model: model,
                         mode: 'detail',
                         el: this.options.el + ' .field[data-name="dateStart"]',

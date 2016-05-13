@@ -71,7 +71,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [])
+    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false)
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -166,28 +166,37 @@ class Importer
 
             $inlineIds = array();
 
-            if ($message->isMultipart()) {
-                foreach (new \RecursiveIteratorIterator($message) as $part) {
-                    $this->importPartDataToEmail($email, $part, $inlineIds);
+            if (!$fetchOnlyHeader) {
+                if ($message->isMultipart()) {
+                    foreach (new \RecursiveIteratorIterator($message) as $part) {
+                        $this->importPartDataToEmail($email, $part, $inlineIds);
+                    }
+                } else {
+                    $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
+                }
+
+                if (!$email->get('body') && $email->get('bodyPlain')) {
+                    $email->set('body', $email->get('bodyPlain'));
+                }
+
+                $body = $email->get('body');
+                if (!empty($body)) {
+                    foreach ($inlineIds as $cid => $attachmentId) {
+                        if (strpos($body, 'cid:' . $cid) !== false) {
+                            $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
+                        } else {
+                            $email->addLinkMultipleId('attachments', $attachmentId);
+                        }
+                    }
+                    $email->set('body', $body);
+                }
+
+                if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
+                    return false;
                 }
             } else {
-                $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
-            }
-
-            if (!$email->get('body') && $email->get('bodyPlain')) {
-                $email->set('body', $email->get('bodyPlain'));
-            }
-
-            $body = $email->get('body');
-            if (!empty($body)) {
-                foreach ($inlineIds as $cid => $attachmentId) {
-                    $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
-                }
-                $email->set('body', $body);
-            }
-
-            if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
-                return false;
+                $email->set('body', '(Not fetched)');
+                $email->set('isHtml', false);
             }
 
             $parentFound = false;
@@ -352,6 +361,8 @@ class Importer
                 } else if (strpos(strtolower($part->ContentDisposition), 'inline') === 0) {
                     $contentDisposition = 'inline';
                 }
+            } else if (isset($part->contentID)) {
+                $contentDisposition = 'inline';
             }
 
             if (empty($type)) {
@@ -395,7 +406,6 @@ class Importer
                 $contentId = null;
 
                 if ($contentDisposition) {
-
                     if ($contentDisposition === 'attachment') {
                         $fileName = $this->fetchFileNameFromContentDisposition($part->ContentDisposition);
                         if ($fileName) {
@@ -454,37 +464,59 @@ class Importer
         } catch (\Exception $e) {}
     }
 
+    protected function decodeAttachmentFileName($fileName)
+    {
+        if ($fileName && stripos($fileName, "''") !== false) {
+            list($encoding, $fileName) = explode("''", $fileName);
+            $fileName = rawurldecode($fileName);
+            if (strtoupper($encoding) !== 'UTF-8') {
+                if ($encoding) {
+                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
+                }
+            }
+        }
+        return $fileName;
+    }
+
     protected function fetchFileNameFromContentDisposition($contentDisposition)
     {
         $contentDisposition = preg_replace('/\\\\"/', "{{_!Q!U!O!T!E!_}}", $contentDisposition);
 
         $fileName = false;
         $m = array();
-        $asterisk = false;
 
         if (preg_match('/filename="([^"]+)";?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
         } else if (preg_match('/filename=([^";]+);?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-        } else if (preg_match('/filename\*[01]?="([^"]+)";?/i', $contentDisposition, $m)) {
+        } else if (preg_match('/filename\*="([^"]+)";?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-            $asterisk = true;
-        } else if (preg_match('/filename\*[01]?=([^";]+);?/i', $contentDisposition, $m)) {
+            $fileName = $this->decodeAttachmentFileName($fileName);
+        } else if (preg_match('/filename\*=([^";]+);?/i', $contentDisposition, $m)) {
             $fileName = $m[1];
-            $asterisk = true;
-        }
-
-        if ($asterisk) {
-            if ($fileName && stripos($fileName, "''") !== false) {
-                list($encoding, $fileName) = explode("''", $fileName);
-                $fileName = rawurldecode($fileName);
-                if (strtoupper($encoding) !== 'UTF-8') {
-                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
+            $fileName = $this->decodeAttachmentFileName($fileName);
+        } else {
+            $fileName = '';
+            foreach (['0', '1'] as $i) {
+                if (preg_match('/filename\*'.$i.'[\*]?="([^"]+)";?/i', $contentDisposition, $m)) {
+                    $part = $m[1];
+                    $fileName .= $part;
+                } else if (preg_match('/filename\*'.$i.'[\*]?=([^";]+);?/i', $contentDisposition, $m)) {
+                    $part = $m[1];
+                    $fileName .= $part;
                 }
+            }
+
+            if ($fileName === '') {
+                $fileName = null;
+            } else {
+                $fileName = $this->decodeAttachmentFileName($fileName);
             }
         }
 
-        $fileName = str_replace('{{_!Q!U!O!T!E!_}}', '"', $fileName);
+        if ($fileName) {
+            $fileName = str_replace('{{_!Q!U!O!T!E!_}}', '"', $fileName);
+        }
 
         return $fileName;
     }

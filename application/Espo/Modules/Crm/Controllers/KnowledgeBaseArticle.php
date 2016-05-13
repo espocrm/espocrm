@@ -31,5 +31,13 @@ namespace Espo\Modules\Crm\Controllers;
 
 class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 {
+    public function postActionGetCopiedAttachments($params, $data, $request)
+    {
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+        $id = $data['id'];
 
+        return $this->getRecordService()->getCopiedAttachments($id);
+    }
 }

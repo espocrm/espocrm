@@ -136,13 +136,10 @@ class EmailReminder
         $email->set('subject', $subject);
         $email->set('body', $body);
         $email->set('isHtml', true);
-        $this->getEntityManager()->saveEntity($email);
 
         $emailSender = $this->mailSender;
 
         $emailSender->send($email);
-
-        $this->getEntityManager()->removeEntity($email);
     }
 }
 

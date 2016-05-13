@@ -216,6 +216,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         allResultIsChecked: false,
 
         data: function () {
+
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
             return {
@@ -368,9 +369,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 		}
                 	} else {
                 		var idsRemoved = result.ids || [];
-	                    if (this.collection.total > 0) {
-	                        this.collection.total = this.collection.total - count;
-	                    }
 	                    if (count) {
 	                        idsRemoved.forEach(function (id) {
 	                            Espo.Ui.notify(false);
@@ -408,7 +406,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
             this.checkedList.sort();
             var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
-            this.getRouter().navigate(url, {trigger: true});
+            this.getRouter().navigate(url, {trigger: false});
+            this.getRouter().dispatch(this.scope, 'merge', {
+                ids: this.checkedList.join(','),
+                collection: this.collection
+            });
         },
 
         massActionMassUpdate: function () {
@@ -760,7 +762,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
+            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.name + '"]';
         },
 
         prepareInternalLayout: function (internalLayout, model) {
@@ -938,13 +940,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     this.listenToOnce(view, 'remove', function () {
                         this.clearView('modal');
-                    }, this);
-                    this.listenToOnce(view, 'after:save', function (m) {
-                        var model = this.collection.get(m.id);
-                        if (model) {
-                            model.set(m.getClonedAttributes());
-                            this.actionQuickView({id: m.id, scope: model.name});
-                        }
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {

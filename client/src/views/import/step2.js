@@ -193,6 +193,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     }, this).forEach(function (item) {
                         fieldList.push(field + Espo.Utils.upperCaseFirst(item));
                     }, this);
+                    continue;
                 }
 
                 if (d.type == 'link') {
@@ -265,7 +266,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.$el.selector + ' .field[data-name="' + name + '"]',
+                el: this.getSelector() + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                 },

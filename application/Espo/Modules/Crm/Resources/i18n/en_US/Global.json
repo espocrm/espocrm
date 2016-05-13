@@ -89,7 +89,7 @@
         "shippingAddressCountry": "Country (Shipping)",
         "shippingAddressState": "State (Shipping)",
         "shippingAddressPostalCode": "Postal Code (Shipping)",
-        "shippingAddressState": "Map (Shipping)"
+        "shippingAddressMap": "Map (Shipping)"
     },
     "links": {
         "contacts": "Contacts",

@@ -57,13 +57,16 @@
         "userThemesDisabled": "Disable User Themes",
         "emailMessageMaxSize": "Email Max Size (Mb)",
         "massEmailMaxPerHourCount": "Max count of emails sent per hour",
-        "personalEmailMaxPortionSize": "Max email portion size for a personal account fetching",
-        "inboundEmailMaxPortionSize": "Max email portion size for a group account fetching",
+        "personalEmailMaxPortionSize": "Max email portion size for personal account fetching",
+        "inboundEmailMaxPortionSize": "Max email portion size for group account fetching",
         "maxEmailAccountCount": "Max count of personal email accounts per user",
         "authTokenLifetime": "Auth Token Lifetime (hours)",
         "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
         "dashboardLayout": "Dashboard Layout (default)",
-        "siteUrl": "Site URL"
+        "siteUrl": "Site URL",
+        "addressPreview": "Address Preview",
+        "addressFormat": "Address Format",
+        "notificationSoundsDisabled": "Disable Notification Sounds"
     },
     "options": {
         "weekStart": {
@@ -76,7 +79,7 @@
         "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
         "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
         "followCreatedEntities": "Users will automatically follow records they created.",
-        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped.",
+        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be fetched w/o body and attachments.",
         "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
         "authTokenMaxIdleTime": "Defines how long since the last access tokens can exist.\n0 - means no expiration.",
         "userThemesDisabled": "If checked then users won't be able to select another theme."

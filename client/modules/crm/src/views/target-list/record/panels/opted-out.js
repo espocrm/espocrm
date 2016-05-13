@@ -121,7 +121,7 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.$el.selector + ' > .list-container',
+                    el: this.getSelector() + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: 'crm:views/target-list/record/row-actions/opted-out',

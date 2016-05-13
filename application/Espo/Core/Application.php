@@ -323,5 +323,12 @@ class Application
         }
         return null;
     }
+
+    public function setupSystemUser()
+    {
+        $user = $this->getContainer()->get('entityManager')->getEntity('User', 'system');
+        $this->getContainer()->setUser($user);
+        $this->getContainer()->get('entityManager')->setUser($user);
+    }
 }
 

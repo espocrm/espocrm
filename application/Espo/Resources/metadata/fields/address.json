@@ -33,7 +33,7 @@
          "height": 300
       }
    },
-   "mergable":false,
+   "notMergeable":true,
    "notCreatable": false,
    "filter": true,
    "fieldDefs":{

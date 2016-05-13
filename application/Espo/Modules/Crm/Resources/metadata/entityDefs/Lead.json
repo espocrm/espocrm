@@ -197,6 +197,11 @@
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
         },
+        "cases": {
+            "type": "hasMany",
+            "entity": "Case",
+            "foreign": "lead"
+        },
         "emails": {
             "type": "hasChildren",
             "entity": "Email",

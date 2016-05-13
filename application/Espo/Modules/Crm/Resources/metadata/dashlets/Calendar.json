@@ -2,6 +2,7 @@
     "view":"crm:views/dashlets/calendar",
     "aclScope": "Calendar",
     "options": {
+        "view": "crm:views/dashlets/options/calendar",
         "fields": {
             "title": {
                 "type": "varchar",
@@ -19,7 +20,13 @@
             },
             "mode": {
                 "type": "enum",
-                "options": ["basicWeek", "agendaWeek", "month"]
+                "options": ["basicWeek", "agendaWeek", "timeline", "month", "basicDay", "agendaDay"]
+            },
+            "users": {
+                "type": "linkMultiple",
+                "entity": "User",
+                "view": "views/fields/assigned-users",
+                "sortable": true
             }
         },
         "defaults": {
@@ -37,6 +44,10 @@
                     [
                         {"name": "mode"},
                         {"name": "enabledScopeList"}
+                    ],
+                    [
+                        {"name": "users"},
+                        false
                     ]
                 ]
             }

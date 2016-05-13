@@ -113,11 +113,13 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     padding: 0;
 }
 
-.list > table.table td > span.glyphicon {
+.list > table.table td > span.glyphicon,
+.list > ul.list-group > li.list-row .cell > span.glyphicon {
     line-height: @line-height-computed;
 }
 
-.list > table.table td > span.glyphicon.pull-right {
+.list > table.table td > span.glyphicon.pull-right,
+.list > ul.list-group > li.list-row .cell > span.glyphicon.pull-right {
     margin-left: 5px;
 }
 
@@ -535,8 +537,14 @@ table.no-margin {
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.list > table td.cell-buttons {
+.list > table td.cell[data-name="buttons"] {
     overflow: visible;
+}
+
+td.cell[data-name="buttons"] > .btn-group {
+    margin-top: -8px;
+    margin-bottom: -8px;
+    margin-right: -10px;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -602,12 +610,6 @@ table.no-margin {
 .list-container + .button-container {
     margin-top: 6px;
     padding-bottom: 0;
-}
-
-td.cell-buttons > .btn-group {
-    margin-top: -8px;
-    margin-bottom: -8px;
-    margin-right: -10px;
 }
 
 .list-expanded > li > .right > .btn-group {

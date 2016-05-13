@@ -113,6 +113,7 @@ return array (
     'authTokenLifetime' => 0,
     'authTokenMaxIdleTime' => 120,
     'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',
+    'addressFormat' => 1,
     'displayListViewRecordCount' => true,
     'dashboardLayout' => [
         (object) [

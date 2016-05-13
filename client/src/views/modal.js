@@ -77,7 +77,8 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.header = this.options.header || this.header;
 
             this.options = this.options || {};
-            this.options.el = this.containerSelector;
+
+            this.setSelector(this.containerSelector);
 
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
 
@@ -195,6 +196,42 @@ Espo.define('views/modal', 'view', function (Dep) {
             }, this);
             if (!this.isRendered()) return;
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled');
+        },
+
+        addButton: function (o, toBeginnig, doNotReRender) {
+            var index = -1;
+            this.buttonList.forEach(function (item, i) {
+                if (item.name === o.name) {
+                    index = i;
+                }
+            }, this);
+            if (~index) return;
+
+            if (toBeginnig) {
+                this.buttonList.unshift(o);
+            } else {
+                this.buttonList.push(o);
+            }
+
+            if (!doNotReRender && this.isRendered()) {
+                this.reRender();
+            }
+        },
+
+        removeButton: function (name, doNotReRender) {
+            var index = -1;
+            this.buttonList.forEach(function (item, i) {
+                if (item.name === name) {
+                    index = i;
+                }
+            }, this);
+            if (~index) {
+                this.buttonList.splice(index, 1);
+            }
+
+            if (!doNotReRender && this.isRendered()) {
+                this.reRender();
+            }
         },
 
         showButton: function (name) {

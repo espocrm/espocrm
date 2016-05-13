@@ -1,7 +1,7 @@
 {
-    "labels": {
-        "Primary": "Główny",
-        "Opted Out": "Porzucony",
-        "Invalid": "Błędny"
-    }
+  "labels": {
+    "Primary": "Główny",
+    "Opted Out": "Wypisany",
+    "Invalid": "Błędny"
+  }
 }

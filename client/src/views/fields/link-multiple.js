@@ -56,6 +56,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        sortable: false,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -83,7 +85,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
 
-            this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.defs.links[this.name].entity;
+            this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
@@ -104,6 +106,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
             }, this);
 
+            this.sortable = this.sortable || this.params.sortable;
 
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
@@ -134,7 +137,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 });
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id').toString();
+                    var id = $(e.currentTarget).attr('data-id');
                     this.deleteLink(id);
                 };
             }
@@ -167,7 +170,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         minChars: 1,
                         paramName: 'q',
-                           formatResult: function (suggestion) {
+                        formatResult: function (suggestion) {
                             return suggestion.name;
                         },
                         transformResult: function (response) {
@@ -206,6 +209,17 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 });
 
                 this.renderLinks();
+
+                if (this.mode == 'edit') {
+                    if (this.sortable) {
+                        this.$el.find('.link-container').sortable({
+                            stop: function () {
+                                this.fetchFromDom();
+                                this.trigger('change');
+                            }.bind(this)
+                        });
+                    }
+                }
             }
         },
 
@@ -219,6 +233,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
+
             if (index > -1) {
                 this.ids.splice(index, 1);
             }
@@ -241,7 +256,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         addLinkHtml: function (id, name) {
             var $container = this.$el.find('.link-container');
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(name + '&nbsp');
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
             $container.append($el);
@@ -282,6 +297,15 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             data[this.nameHashName] = this.nameHash;
 
             return data;
+        },
+
+        fetchFromDom: function () {
+            this.ids = [];
+            this.$el.find('.link-container').children().each(function(i, li) {
+                var id = $(li).attr('data-id');
+                if (!id) return;
+                this.ids.push(id);
+            }.bind(this));
         },
 
         fetchSearch: function () {

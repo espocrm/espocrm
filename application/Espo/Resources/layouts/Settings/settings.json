@@ -13,7 +13,9 @@
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
             [false, {"name": "thousandSeparator"}],
-            [{"name": "language"}, {"name": "decimalMark"}]
+            [{"name": "language"}, {"name": "decimalMark"}],
+            [{"name": "addressFormat"}, false],
+            [{"name": "addressPreview"}, false]
         ]
     }
 ]

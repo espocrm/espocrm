@@ -35,15 +35,21 @@ use Espo\Core\Exceptions\NotFound;
 class CronManager
 {
     private $container;
+
     private $config;
+
     private $fileManager;
+
     private $entityManager;
 
     private $scheduledJobUtil;
 
     const PENDING = 'Pending';
+
     const RUNNING = 'Running';
+
     const SUCCESS = 'Success';
+
     const FAILED = 'Failed';
 
     protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
@@ -149,19 +155,15 @@ class CronManager
 
         $this->setLastRunTime(time());
 
-        $entityManager = $this->getEntityManager();
-
-        $cronJob = $this->getCronJob();
-        $cronScheduledJob = $this->getCronScheduledJob();
-
-        //Check scheduled jobs and create related jobs
+        $this->getCronJob()->markFailedJobs();
+        $this->getCronJob()->updateFailedJobAttempts();
         $this->createJobsFromScheduledJobs();
+        $this->getCronJob()->removePendingJobDuplicates();
 
-        $pendingJobs = $cronJob->getPendingJobs();
+        $pendingJobList = $this->getCronJob()->getPendingJobList();
 
-        foreach ($pendingJobs as $job) {
-
-            $jobEntity = $entityManager->getEntity('Job', $job['id']);
+        foreach ($pendingJobList as $job) {
+            $jobEntity = $this->getEntityManager()->getEntity('Job', $job['id']);
 
             if (!isset($jobEntity)) {
                 $GLOBALS['log']->error('CronManager: empty Job entity ['.$job['id'].'].');
@@ -169,7 +171,7 @@ class CronManager
             }
 
             $jobEntity->set('status', self::RUNNING);
-            $entityManager->saveEntity($jobEntity);
+            $this->getEntityManager()->saveEntity($jobEntity);
 
             $isSuccess = true;
 
@@ -187,11 +189,10 @@ class CronManager
             $status = $isSuccess ? self::SUCCESS : self::FAILED;
 
             $jobEntity->set('status', $status);
-            $entityManager->saveEntity($jobEntity);
+            $this->getEntityManager()->saveEntity($jobEntity);
 
-            //set status in the schedulerJobLog
             if (!empty($job['scheduled_job_id'])) {
-                $cronScheduledJob->addLogRecord($job['scheduled_job_id'], $status);
+                $this->getCronScheduledJob()->addLogRecord($job['scheduled_job_id'], $status, null, $job['target_id'], $job['target_type']);
             }
         }
     }
@@ -213,12 +214,20 @@ class CronManager
         }
 
         $jobClass = new $className($this->container);
-        $method = $this->getScheduledJobUtil()->getMethodName();
+        $method = 'run';
         if (!method_exists($jobClass, $method)) {
             throw new NotFound();
         }
 
-        $jobClass->$method();
+        $data = null;
+        if (!empty($job['data'])) {
+            $data = $job['data'];
+            if (Json::isJSON($data)) {
+                $data = Json::decode($data, true);
+            }
+        }
+
+        $jobClass->$method($data, $job['target_id'], $job['target_type']);
     }
 
     /**
@@ -248,7 +257,7 @@ class CronManager
             $data = Json::decode($data, true);
         }
 
-        $service->$serviceMethod($data);
+        $service->$serviceMethod($data, $job['target_id'], $job['target_type']);
     }
 
     /**
@@ -258,55 +267,56 @@ class CronManager
      */
     protected function createJobsFromScheduledJobs()
     {
-        $entityManager = $this->getEntityManager();
+        $activeScheduledJobList = $this->getCronScheduledJob()->getActiveScheduledJobList();
 
-        $activeScheduledJobs = $this->getCronScheduledJob()->getActiveJobs();
+        $runningScheduledJobIdList = $this->getCronJob()->getRunningScheduledJobIdList();
 
-        $cronJob = $this->getCronJob();
-        $runningScheduledJobs = $cronJob->getActiveJobs('scheduled_job_id', self::RUNNING, PDO::FETCH_COLUMN);
-
-        $createdJobs = array();
-        foreach ($activeScheduledJobs as $scheduledJob) {
-
-            if (in_array($scheduledJob['id'], $runningScheduledJobs)) {
-                continue;
-            }
-
+        $createdJobIdList = array();
+        foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob['scheduling'];
-
             $cronExpression = \Cron\CronExpression::factory($scheduling);
 
             try {
-                $prevDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
+                $previousDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('CronManager: ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
                 continue;
             }
 
             if ($cronExpression->isDue()) {
-                $prevDate = date('Y-m-d H:i:s');
+                $previousDate = date('Y-m-d H:i:s');
             }
 
-            $existsJob = $cronJob->getJobByScheduledJob($scheduledJob['id'], $prevDate);
-
-            if (!isset($existsJob) || empty($existsJob)) {
-                //create a new job
-                $jobEntity = $entityManager->getEntity('Job');
-                $jobEntity->set(array(
-                    'name' => $scheduledJob['name'],
-                    'status' => self::PENDING,
-                    'scheduledJobId' => $scheduledJob['id'],
-                    'executeTime' => $prevDate,
-                    'method' => $scheduledJob['job'],
-                ));
-                $jobEntityId = $entityManager->saveEntity($jobEntity);
-                if (!empty($jobEntityId)) {
-                    $createdJobs[] = $jobEntityId;
+            $className = $this->getScheduledJobUtil()->get($scheduledJob['job']);
+            if ($className) {
+                if (method_exists($className, 'prepare')) {
+                    $implementation = new $className($this->container);
+                    $implementation->prepare($scheduledJob, $previousDate);
+                    continue;
                 }
             }
+
+            if (in_array($scheduledJob['id'], $runningScheduledJobIdList)) {
+                continue;
+            }
+
+            $existingJob = $this->getCronJob()->getJobByScheduledJob($scheduledJob['id'], $previousDate);
+            if ($existingJob) continue;
+
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set(array(
+                'name' => $scheduledJob['name'],
+                'status' => self::PENDING,
+                'scheduledJobId' => $scheduledJob['id'],
+                'executeTime' => $previousDate,
+                'method' => $scheduledJob['job']
+            ));
+            $this->getEntityManager()->saveEntity($jobEntity);
+
+            $createdJobIdList[] = $jobEntity->id;
         }
 
-        return $createdJobs;
+        return $createdJobIdList;
     }
 }
 

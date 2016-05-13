@@ -82,6 +82,8 @@ class EntityManager
             throw new Error();
         }
 
+        $name = trim($name);
+
         $normalizedName = Util::normilizeClassName($name);
 
         $contents = "<" . "?" . "php\n\n".
@@ -217,6 +219,15 @@ class EntityManager
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
+        if (isset($data['textFilterFields'])) {
+            $entityDefsData = array(
+                'collection' => array(
+                    'textFilterFields' => $data['textFilterFields']
+                )
+            );
+            $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
         $this->getMetadata()->save();
         $this->getLanguage()->save();
 
@@ -270,9 +281,9 @@ class EntityManager
         $linkType = $params['linkType'];
 
         $entity = $params['entity'];
-        $link = $params['link'];
+        $link = trim($params['link']);
         $entityForeign = $params['entityForeign'];
-        $linkForeign = $params['linkForeign'];
+        $linkForeign = trim($params['linkForeign']);
 
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];

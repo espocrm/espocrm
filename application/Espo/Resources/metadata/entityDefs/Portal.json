@@ -85,6 +85,9 @@
             "type": "jsonObject",
             "disabled": true
         },
+        "customUrl": {
+            "type": "url"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true

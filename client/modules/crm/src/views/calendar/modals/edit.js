@@ -94,11 +94,16 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
         },
 
         setup: function () {
+            this.scopeList = Espo.Utils.clone(this.options.scopeList || this.scopeList);
+            this.enabledScopeList = this.options.enabledScopeList || this.scopeList;
+
             if (!this.options.id && !this.options.scope) {
                 var scopeList = [];
                 this.scopeList.forEach(function (scope) {
                     if (this.getAcl().check(scope, 'edit')) {
-                        scopeList.push(scope);
+                        if (~this.enabledScopeList.indexOf(scope)) {
+                            scopeList.push(scope);
+                        }
                     }
                 }, this);
                 this.scopeList = scopeList;
@@ -129,20 +134,6 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     style: 'danger'
                 });
             }
-
-            this.once('after:save', function (model) {
-                var parentView = this.getParentView();
-                if (!this.id) {
-                    parentView.addModel.call(parentView, model);
-                } else {
-                    parentView.updateModel.call(parentView, model);
-                }
-            }, this);
-
-            this.once('after:destroy', function (model) {
-                var parentView = this.getParentView();
-                parentView.removeModel.call(parentView, model);
-            }, this);
         },
 
         actionRemove: function () {

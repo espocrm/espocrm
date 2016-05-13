@@ -151,7 +151,7 @@ class EmailAccount extends Record
             throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
         }
 
-        $storage->appendMessage($message, $folder);
+        $storage->appendMessage($message->toString(), $folder);
     }
 
     protected function getStorage(Entity $emailAccount)
@@ -269,10 +269,10 @@ class EmailAccount extends Record
                     $lastUID = $storage->getUniqueId($id);
                 }
 
+                $fetchOnlyHeader = false;
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
-                        $k++;
-                        continue;
+                        $fetchOnlyHeader = true;
                     }
                 }
 
@@ -284,7 +284,7 @@ class EmailAccount extends Record
                         $flags = $message->getFlags();
                     }
                     try {
-                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection);
+                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection, $fetchOnlyHeader);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }

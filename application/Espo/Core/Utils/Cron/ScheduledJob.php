@@ -59,11 +59,14 @@ class ScheduledJob
      *
      * @return array
      */
-    public function getActiveJobs()
+    public function getActiveScheduledJobList()
     {
-        $query = "SELECT * FROM scheduled_job WHERE
-                    `status` = 'Active'
-                    AND deleted = 0";
+        $query = "
+            SELECT * FROM scheduled_job
+            WHERE
+                `status` = 'Active' AND
+                deleted = 0
+        ";
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
@@ -87,7 +90,7 @@ class ScheduledJob
      *
      * @return string ID of created ScheduledJobLogRecord
      */
-    public function addLogRecord($scheduledJobId, $status, $runTime = null)
+    public function addLogRecord($scheduledJobId, $status, $runTime = null, $targetId = null, $targetType = null)
     {
         if (!isset($runTime)) {
             $runTime = date('Y-m-d H:i:s');
@@ -96,6 +99,11 @@ class ScheduledJob
         $entityManager = $this->getEntityManager();
 
         $scheduledJob = $entityManager->getEntity('ScheduledJob', $scheduledJobId);
+
+        if (!$scheduledJob) {
+            return;
+        }
+
         $scheduledJob->set('lastRun', $runTime);
         $entityManager->saveEntity($scheduledJob);
 
@@ -105,6 +113,8 @@ class ScheduledJob
             'name' => $scheduledJob->get('name'),
             'status' => $status,
             'executionTime' => $runTime,
+            'targetId' => $targetId,
+            'targetType' => $targetType
         ));
         $scheduledJobLogId = $entityManager->saveEntity($scheduledJobLog);
 

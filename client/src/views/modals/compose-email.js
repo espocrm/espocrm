@@ -38,8 +38,6 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
         fullFormDisabled: true,
 
-        editViewName: 'views/email/record/compose',
-
         columnCount: 2,
 
         setup: function () {
@@ -59,6 +57,22 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             this.header = this.getLanguage().translate('Compose Email');
         },
 
+        createEdit: function (model, callback) {
+            var viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') || 'views/email/record/compose';
+            var options = {
+                model: model,
+                el: this.containerSelector + ' .edit-container',
+                type: 'editSmall',
+                layoutName: this.layoutName || 'detailSmall',
+                columnCount: this.columnCount,
+                buttonsPosition: false,
+                selectTemplateDisabled: this.options.selectTemplateDisabled,
+                signatureDisabled: this.options.signatureDisabled,
+                exit: function () {}
+            };
+            this.createView('edit', viewName, options, callback);
+        },
+
         actionSend: function () {
             var dialog = this.dialog;
 
@@ -68,6 +82,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             var afterSend = function () {
                 this.trigger('after:save', model);
+                this.trigger('after:send', model);
                 dialog.close();
             };
 

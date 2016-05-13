@@ -43,12 +43,14 @@ class SelectManagerFactory
 
     private $metadata;
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
+    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Utils\Metadata $metadata, Utils\Config $config)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
+        $this->aclManager = $aclManager;
         $this->metadata = $metadata;
+        $this->config = $config;
     }
 
     public function create($entityType)
@@ -68,7 +70,7 @@ class SelectManagerFactory
             }
         }
 
-        $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->metadata);
+        $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
         $selectManager->setEntityType($entityType);
 
         return $selectManager;

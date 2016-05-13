@@ -1,7 +1,8 @@
 {
     "labels": {
         "Create DocumentFolder": "Vytvořit složku",
-        "Manage Categories": "Spravovat složky"
+        "Manage Categories": "Spravovat složky",
+        "documents": "Dokumenty"
     },
     "links": {
         "documents": "Dokumenty"

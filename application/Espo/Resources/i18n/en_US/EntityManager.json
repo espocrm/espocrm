@@ -20,7 +20,8 @@
         "relationName": "Middle Table Name",
         "linkMultipleField": "Link Multiple Field",
         "linkMultipleFieldForeign": "Foreign Link Multiple Field",
-        "disabled": "Disabled"
+        "disabled": "Disabled",
+        "textFilterFields": "Text Filter Fields"
     },
     "options": {
         "type": {

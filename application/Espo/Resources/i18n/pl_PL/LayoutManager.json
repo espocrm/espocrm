@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "width": "Szerokość (%)",
+    "link": "Link",
+    "notSortable": "Niesortowalne",
+    "align": "Wyrównanie"
+  },
+  "options": {
+    "align": {
+      "left": "Lewy",
+      "right": "Prawy"
+    }
+  }
+}

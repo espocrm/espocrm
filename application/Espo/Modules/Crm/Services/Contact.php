@@ -33,9 +33,6 @@ use \Espo\ORM\Entity;
 
 class Contact extends \Espo\Services\Record
 {
-    protected $mergeLinkList = [
-        'targetLists'
-    ];
 
     protected $readOnlyAttributeList = [
         'inboundEmailId',

@@ -40,11 +40,14 @@ class Email extends Base
                         'select' => 'emailAddresses.name',
                         'where' =>
                         array (
-                            'LIKE' => array(
-                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name LIKE {value}',
-                                'distinct' => true
-                            ),
+                            'LIKE' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
+                                SELECT entity_id
+                                FROM entity_email_address
+                                JOIN email_address ON email_address.id = entity_email_address.email_address_id
+                                WHERE
+                                    entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
+                                    email_address.deleted = 0 AND email_address.name LIKE {value}
+                            )",
                             '=' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                                 'sql' => 'emailAddressesMultiple.name = {value}',

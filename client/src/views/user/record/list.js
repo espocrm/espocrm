@@ -34,7 +34,7 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
         massActionList: ['remove', 'massUpdate', 'export'],
 
-        checkAllResultDisabled: true
+        checkAllResultMassActionList: ['massUpdate', 'export'],
 
     });
 

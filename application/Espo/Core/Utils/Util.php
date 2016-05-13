@@ -449,7 +449,7 @@ class Util
      * Return values of defined $key.
      *
      * @param  array $array
-     * @param  string $key     Ex. of key is "entityDefs", "entityDefs.User"
+     * @param  mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
      * @param  mixed $default
      * @return mixed
      */
@@ -459,7 +459,11 @@ class Util
             return $array;
         }
 
-        $keys = explode('.', $key);
+        if (is_array($key)) {
+            $keys = $key;
+        } else {
+            $keys = explode('.', $key);
+        }
 
         $lastItem = $array;
         foreach($keys as $keyName) {

@@ -36,14 +36,6 @@ use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
 {
-    protected $mergeLinkList = [
-        'tasks',
-        'meetings',
-        'calls',
-        'emails',
-        'targetLists'
-    ];
-
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(

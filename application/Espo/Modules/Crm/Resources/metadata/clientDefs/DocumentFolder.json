@@ -9,6 +9,13 @@
                     "link": "#DocumentFolder\/list",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "label": "Documents",
+                    "link": "#Document",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "Document"
                 }
             ]
         },
@@ -19,6 +26,13 @@
                     "link": "#DocumentFolder",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "label": "Documents",
+                    "link": "#Document",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "Document"
                 }
             ]
         }
