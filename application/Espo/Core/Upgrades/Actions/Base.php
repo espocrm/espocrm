@@ -32,7 +32,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
-use vierbergenlars\SemVer;
+use Composer\Semver\Semver;
 
 abstract class Base
 {
@@ -221,20 +221,12 @@ abstract class Base
             $versionList = (array) $versionList;
         }
 
-        try {
-            $semver = new SemVer\version($currentVersion);
-        } catch (\Exception $e) {
-            $GLOBALS['log']->error('Cannot recognize currentVersion ['.$currentVersion.'], error: '.$e->getMessage().'.');
-            return false;
-        }
-
         foreach ($versionList as $version) {
-
             $isInRange = false;
             try {
-                $isInRange = $semver->satisfies(new SemVer\expression($version));
+                $isInRange = Semver::satisfies($currentVersion, $version);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Version identification error: '.$e->getMessage().'.');
+                $GLOBALS['log']->error('SemVer: Version identification error: '.$e->getMessage().'.');
             }
 
             if ($isInRange) {
