@@ -73,12 +73,26 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         },
 
         getGridLayout: function (callback) {
-
-            var self = this;
-
             this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
+                var layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                var layout = _.clone(simpleLayout);
+                layout.push({
+                    "label": "Teams and Access Control",
+                    "name": "accessControl",
+                    "rows": [
+                        [{"name":"isActive"}, {"name":"isAdmin"}],
+                        [{"name":"teams"}, {"name":"isPortalUser"}],
+                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                    ]
+                });
+                layout.push({
+                    "label": "Portal",
+                    "name": "portal",
+                    "rows": [
+                        [{"name":"portals"}, {"name":"contact"}],
+                        [{"name":"portalRoles"}, {"name":"accounts"}]
+                    ]
+                });
 
                 if (this.type == 'edit') {
                     layout.push({
@@ -89,7 +103,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     name: 'password',
                                     type: 'password',
                                     params: {
-                                        required: self.isNew,
+                                        required: this.isNew,
                                         readyToChange: true
                                     }
                                 },
@@ -104,7 +118,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     name: 'passwordConfirm',
                                     type: 'password',
                                     params: {
-                                        required: self.isNew,
+                                        required: this.isNew,
                                         readyToChange: true
                                     }
                                 },

@@ -26,19 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/detail-quick', 'views/record/detail-small', function (Dep) {
+Espo.define('views/user/record/edit-quick', 'views/record/edit-small', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'views/user/record/detail-quick-side',
+        sideView: 'views/user/record/edit-side',
 
-        bottomView: null,
-
-        editModeEnabled: false,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        }
 
     });
 
