@@ -207,6 +207,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
           array( '11\.5\.2', ),
           array( '11.5*', ),
           array( '11.1-11.9', ),
+          array( '.0.1' ),
         );
     }
 
