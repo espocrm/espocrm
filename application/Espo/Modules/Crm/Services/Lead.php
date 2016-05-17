@@ -172,6 +172,17 @@ class Lead extends \Espo\Services\Record
             }
         }
 
+        if ($documents = $lead->get('documents')) {
+            foreach ($documents as $document) {
+                if (!empty($account)) {
+                    $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
+                }
+                if (!empty($opportunity)) {
+                    $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
+                }
+            }
+        }
+
         $streamService = $this->getStreamService();
         if ($streamService->checkIsFollowed($lead, $this->getUser()->id)) {
             if (!empty($opportunity)) {
