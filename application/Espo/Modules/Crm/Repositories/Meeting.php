@@ -83,7 +83,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                         $usersColumns = new \StdClass();
                     }
                     if ($usersColumns instanceof \StdClass) {
-                        if (!($usersColumns->$currentUserId instanceof \StdClass)) {
+                        if (empty($usersColumns->$currentUserId) || !($usersColumns->$currentUserId instanceof \StdClass)) {
                             $usersColumns->$currentUserId = new \StdClass();
                         }
                         if (empty($usersColumns->$currentUserId->status)) {
