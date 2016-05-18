@@ -30,17 +30,15 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
 
     return Dep.extend({
 
-        panelList: [
-            {
-                name: 'default',
-                label: false,
-                view: 'views/record/panels/side',
-                options: {
-                    fieldList: ['avatar'],
-                    mode: 'detail',
-                }
+        defaultPanelDefs: {
+            name: 'default',
+            label: false,
+            view: 'views/record/panels/side',
+            options: {
+                fieldList: ['avatar'],
+                mode: 'detail',
             }
-        ],
+        },
 
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
