@@ -77,7 +77,8 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.header = this.options.header || this.header;
 
             this.options = this.options || {};
-            this.options.el = this.containerSelector;
+
+            this.setSelector(this.containerSelector);
 
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
 

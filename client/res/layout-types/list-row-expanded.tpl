@@ -1,13 +1,13 @@
 
 <% if (layout.right) { %>
-<div class="pull-right right cell-buttons">
+<div class="pull-right right cell" data-name="buttons">
     {{{<%= layout.right.name %>}}}
 </div>
 <% } %>
 <% _.each(layout.rows, function (row, key) { %>
     <div class="expanded-row">
     <% _.each(row, function (defs, key) { %>
-        <span class="cell cell-<%= defs.name %>"><%
+        <span class="cell" data-name="<%= defs.name %>"><%
                 var tag = 'tag' in defs ? defs.tag : false;
                 if (tag) {
                     print( '<' + tag);

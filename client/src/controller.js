@@ -219,7 +219,7 @@ Espo.define('controller', [], function () {
             var master = this.get('master');
             if (!master) {
                 var masterView = this.masterView || 'views/site/master';
-                this.viewFactory.create(masterView, null, function (master) {
+                this.viewFactory.create(masterView, {el: 'body'}, function (master) {
                     this.set('master', master);
                     if (!this.get('masterRendered')) {
                         master.render(function () {

@@ -32,7 +32,8 @@
         "createdAccount": "Account",
         "createdContact": "Contact",
         "createdOpportunity": "Opportunity",
-        "cases": "Cases"
+        "cases": "Cases",
+        "documents": "Documents"
     },
     "options": {
         "status": {

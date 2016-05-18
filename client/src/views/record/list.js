@@ -762,7 +762,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell-' + item.name;
+            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.name + '"]';
         },
 
         prepareInternalLayout: function (internalLayout, model) {

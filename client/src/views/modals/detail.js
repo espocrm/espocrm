@@ -354,6 +354,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.dialog.show();
                 }, this);
 
+                this.listenToOnce(view, 'leave', function () {
+                    this.remove();
+                }, this);
+
                 this.listenToOnce(view, 'after:save', function (model) {
                     this.trigger('after:save', model);
 

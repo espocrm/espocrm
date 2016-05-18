@@ -8,9 +8,9 @@
 		"zendframework/zend-ldap": "2.*",
 		"monolog/monolog": "1.*",
 		"yzalis/identicon": "*",
-        "vierbergenlars/php-semver": "~3.0",
 		"tecnick.com/tcpdf": "6.*",
-		"zordius/lightncandy": "0.*"
+		"zordius/lightncandy": "0.*",
+		"composer/semver": "^1.4"
 	},
 	"autoload": {
 		"psr-0": {

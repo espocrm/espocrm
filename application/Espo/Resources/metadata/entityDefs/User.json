@@ -200,7 +200,8 @@
         "notes": {
             "type": "hasMany",
             "entity": "Note",
-            "foreign": "users"
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
         },
         "contact": {
             "type": "belongsTo",

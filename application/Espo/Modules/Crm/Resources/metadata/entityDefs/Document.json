@@ -91,6 +91,11 @@
             "entity": "Opportunity",
             "foreign": "documents"
         },
+        "leads": {
+            "type": "hasMany",
+            "entity": "Lead",
+            "foreign": "documents"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

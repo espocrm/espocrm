@@ -47,8 +47,6 @@ Espo.define('views/site/master', 'view', function (Dep) {
             },
         },
 
-        el: 'body',
-
         showLoadingNotification: function () {
             this.notify('Loading...');
         },
@@ -60,7 +58,7 @@ Espo.define('views/site/master', 'view', function (Dep) {
         afterRender: function () {
             var footerView = this.getView('footer');
             if (footerView) {
-                var html = footerView.$el.html();
+                var html = footerView.$el.html() || '';
                 if ((html.match(/espocrm/gi) || []).length < 2) {
                     var text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2NybS5jb20iPkVzcG9DUk08L2E+PC9wPg==';
                     if (typeof window.atob === "function") {

@@ -895,9 +895,9 @@ abstract class Base
     {
         $sql = "SELECT";
 
-        /*if (!empty($distinct)) {
+        if (!empty($distinct) && empty($groupBy)) {
             $sql .= " DISTINCT";
-        }*/
+        }
 
         $sql .= " {$select} FROM `{$table}`";
 
@@ -911,10 +911,6 @@ abstract class Base
 
         if (!empty($groupBy)) {
             $sql .= " GROUP BY {$groupBy}";
-        } else {
-            if (!empty($distinct)) {
-                $sql .= " GROUP BY `{$table}`.id";
-            }
         }
 
         if (!empty($order)) {

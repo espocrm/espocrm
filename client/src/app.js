@@ -206,8 +206,11 @@ Espo.define(
             this.router.on('routed', function (params) {
                 this.doAction(params);
             }.bind(this));
+
             try {
-                Backbone.history.start();
+                Backbone.history.start({
+                    root: window.location.pathname
+                });
             } catch (e) {
                 Backbone.history.loadUrl();
             }

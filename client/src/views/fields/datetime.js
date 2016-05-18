@@ -121,7 +121,6 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
         },
 
         afterRender: function () {
-            var self = this;
             Dep.prototype.afterRender.call(this);
 
             if (this.mode == 'edit') {
@@ -132,19 +131,20 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                 this.$element.on('change.datetime', function (e) {
                     if (this.$element.val() && !$time.val()) {
                         this.setDefaultTime();
+                        this.trigger('change');
                     }
                 }.bind(this));
 
                 var timeout = false;
                 var changeCallback = function () {
                     if (!timeout) {
-                        self.trigger('change');
+                        this.trigger('change');
                     }
                     timeout = true;
                     setTimeout(function () {
                         timeout = false;
                     }, 100)
-                };
+                }.bind(this);
                 $time.on('change', changeCallback);
             }
         },

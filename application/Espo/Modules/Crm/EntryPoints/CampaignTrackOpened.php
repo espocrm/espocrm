@@ -81,6 +81,17 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
         }
         $campaignService = $this->getServiceFactory()->create('Campaign');
         $campaignService->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
+
+        header('Content-Type: image/png');
+
+        $img  = imagecreatetruecolor(1, 1);
+        imagesavealpha($img, true);
+        $color = imagecolorallocatealpha($img, 0, 0, 0, 127);
+        imagefill($img, 0, 0, $color);
+
+        imagepng($img);
+        imagecolordeallocate($background);
+        imagedestroy( $tt_image );
     }
 }
 

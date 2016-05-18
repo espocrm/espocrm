@@ -195,7 +195,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
+            return this.options.el + ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
         },
 
         getCreateAttributes: function () {

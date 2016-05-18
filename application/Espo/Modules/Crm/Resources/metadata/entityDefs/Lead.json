@@ -238,6 +238,11 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "leads"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "Document",
+            "foreign": "leads"
         }
     },
     "convertEntityList": [
