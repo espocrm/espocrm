@@ -64,7 +64,7 @@ class Record extends Base
         return $service;
     }
 
-    public function actionRead($params)
+    public function actionRead($params, $data, $request)
     {
         $id = $params['id'];
         $entity = $this->getRecordService()->getEntity($id);
