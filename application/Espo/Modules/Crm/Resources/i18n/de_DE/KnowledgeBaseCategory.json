@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Neue Kategorie",
+    "Manage Categories": "Kategorien verwalten"
+  },
+  "links": {
+    "articles": "Artikel"
+  }
+}

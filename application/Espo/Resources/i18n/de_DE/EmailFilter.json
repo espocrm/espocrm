@@ -1,19 +1,19 @@
 {
-    "fields": {
-        "from": "Von",
-        "to": "An",
-        "subject": "Betreff",
-        "bodyContains": "Mailinhalt"
-    },
-    "labels": {
-        "Create EmailFilter": "E.Mail Filter erstellen"
-    },
-    "tooltips": {
-        "name": "Ein Name für den Filter",
-        "subject": "Verwendung des Platzhalters *:\n\ntext* - beginnt mit text,\n*text* - enthält text,\n*text - endet mit text.",
-        "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
-        "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-        "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-        "parent": "Leer lassen um den Filter global anzuwenden (für alle eingehenden E-Mails)."
-    }
+  "fields": {
+    "from": "Von",
+    "to": "An",
+    "subject": "Betreff",
+    "bodyContains": "Mailinhalt"
+  },
+  "labels": {
+    "Create EmailFilter": "E.Mail Filter erstellen"
+  },
+  "tooltips": {
+    "name": "Ein Name für den Filter",
+    "subject": "Verwendung des Platzhalters *:\n\ntext* - beginnt mit text,\n*text* - enthält text,\n*text - endet mit text.",
+    "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
+    "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
+    "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
+    "parent": "Leer lassen um den Filter global anzuwenden (für alle eingehenden E-Mails)."
+  }
 }

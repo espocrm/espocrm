@@ -1,19 +1,23 @@
 {
-    "fields": {
-        "title": "Funktion",
-        "dateFrom": "Von Datum",
-        "dateTo": "Bis Datum",
-        "autorefreshInterval": "Aktualisierungsintervall",
-        "displayRecords": "Sätze anzeigen",
-        "isDoubleHeight": "Zweifache Höhe",
-        "mode": "Modus",
-        "enabledScopeList": "Was soll angezeigt werden"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Woche (Agenda)",
-    		"basicWeek": "Woche",
-    		"month": "Monat"
-    	}
+  "fields": {
+    "title": "Titel",
+    "dateFrom": "Von Datum",
+    "dateTo": "Bis Datum",
+    "autorefreshInterval": "Aktualisierungsintervall",
+    "displayRecords": "Sätze anzeigen",
+    "isDoubleHeight": "Zweifache Höhe",
+    "mode": "Modus",
+    "enabledScopeList": "Was soll angezeigt werden",
+    "users": "Benutzer"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Woche (Agenda)",
+      "basicWeek": "Woche",
+      "month": "Monat",
+      "basicDay": "Tag",
+      "agendaDay": "Tag (Agenda)",
+      "timeline": "Zeitachse"
     }
+  }
 }

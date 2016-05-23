@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Betreff",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
+    "portalRoles": "Rollen",
+    "isActive": "Ist aktiv",
+    "isDefault": "Ist Standard",
+    "tabList": "Reiter Liste",
+    "quickCreateList": "Liste Schnellerstellung",
+    "theme": "Design",
+    "language": "Sprache",
+    "dashboardLayout": "Layout Übersicht",
+    "dateFormat": "Datumsformat",
+    "timeFormat": "Zeitformat",
+    "timeZone": "Zeitzone",
+    "weekStart": "Erster Tag der Woche",
+    "defaultCurrency": "Standardwährung"
+  },
+  "links": {
+    "users": "Benutzer",
+    "portalRoles": "Rollen",
+    "notes": "Notizen"
+  },
+  "tooltips": {
+    "portalRoles": "Die spezifizierten Portal Rollen werden auf alle Benutzer dieses Portals angewendet."
+  },
+  "labels": {
+    "Create Portal": "Portal erstellen",
+    "User Interface": "Benutzeroberfläche",
+    "General": "Allgemein",
+    "Settings": "Einstellungen"
+  }
+}

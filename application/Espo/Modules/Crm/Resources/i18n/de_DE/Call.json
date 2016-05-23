@@ -1,50 +1,49 @@
 {
-    "fields": {
-        "name": "Name",
-        "parent": "Bezieht sich auf",
-        "status": "Status",
-        "dateStart": "Startdatum",
-        "dateEnd": "Enddatum",
-        "direction": "Richtung",
-        "duration": "Dauer",
-        "description": "Beschreibung",
-        "users": "Benutzer",
-        "contacts": "Kontakte",
-        "leads": "Interessenten",
-        "reminders": "Erinnerungen",
-        "account": "Firma"
+  "fields": {
+    "name": "Betreff",
+    "parent": "Bezieht sich auf",
+    "status": "Status",
+    "dateStart": "Startdatum",
+    "dateEnd": "Enddatum",
+    "direction": "Richtung",
+    "duration": "Dauer",
+    "description": "Beschreibung",
+    "users": "Benutzer",
+    "contacts": "Kontakte",
+    "leads": "Interessenten",
+    "reminders": "Erinnerungen",
+    "account": "Firma"
+  },
+  "options": {
+    "status": {
+      "Planned": "Geplant",
+      "Held": "Durchgeführt",
+      "Not Held": "Nicht durchgeführt"
     },
-    "links": {},
-    "options": {
-        "status": {
-            "Planned": "Geplant",
-            "Held": "Durchgeführt",
-            "Not Held": "Nicht durchgeführt"
-        },
-        "direction": {
-            "Outbound": "Ausgehend",
-            "Inbound": "Eingehend"
-        },
-        "acceptanceStatus": {
-            "None": "Kein(e)",
-            "Accepted": "Akzeptiert",
-            "Declined": "Abgelehnt",
-            "Tentative": "Mit Vorbehalt"
-        }
+    "direction": {
+      "Outbound": "Ausgehend",
+      "Inbound": "Eingehend"
     },
-    "massActions": {
-        "setHeld": "Auf gehalten setzen",
-        "setNotHeld": "Auf nicht gehalten setzen"
-    },
-    "labels": {
-        "Create Call": "Anruf erstellen",
-        "Set Held": "Auf gehalten setzen",
-        "Set Not Held": "Auf nicht gehalten setzen",
-        "Send Invitations": "Einladungen versenden"
-    },
-    "presetFilters": {
-        "planned": "Geplant",
-        "held": "Durchgeführt",
-        "todays": "Heutige"
+    "acceptanceStatus": {
+      "None": "Kein(e)",
+      "Accepted": "Akzeptiert",
+      "Declined": "Abgelehnt",
+      "Tentative": "Mit Vorbehalt"
     }
+  },
+  "massActions": {
+    "setHeld": "Auf gehalten setzen",
+    "setNotHeld": "Auf nicht gehalten setzen"
+  },
+  "labels": {
+    "Create Call": "Anruf erstellen",
+    "Set Held": "Auf gehalten setzen",
+    "Set Not Held": "Auf nicht gehalten setzen",
+    "Send Invitations": "Einladungen versenden"
+  },
+  "presetFilters": {
+    "planned": "Geplant",
+    "held": "Durchgeführt",
+    "todays": "Heutige"
+  }
 }

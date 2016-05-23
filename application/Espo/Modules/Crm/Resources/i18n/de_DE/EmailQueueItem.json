@@ -1,28 +1,28 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "target": "Zielkontakt",
-        "sentAt": "Sendedatum",
-        "attemptCount": "Versuche",
-        "emailAddress": "E-Mail Adresse",
-        "massEmail": "Massen E-Mails",
-        "isTest": "Ist Test"
-    },
-    "links": {
-        "target": "Zielkontakt",
-        "massEmail": "Massen E-Mails"
-    },
-    "options": {
-        "status": {
-            "Pending": "Schwebend",
-            "Sent": "Gesendet",
-            "Failed": "Fehlgeschlagen"
-        }
-    },
-    "presetFilters": {
-        "pending": "Schwebend",
-        "sent": "Gesendet",
-        "failed": "Fehlgeschlagen"
+  "fields": {
+    "name": "Betreff",
+    "status": "Status",
+    "target": "Ziel",
+    "sentAt": "Sendedatum",
+    "attemptCount": "Versuche",
+    "emailAddress": "E-Mail Adresse",
+    "massEmail": "Massen E-Mails",
+    "isTest": "Ist Test"
+  },
+  "links": {
+    "target": "Ziel",
+    "massEmail": "Massen E-Mails"
+  },
+  "options": {
+    "status": {
+      "Pending": "Schwebend",
+      "Sent": "Gesendet",
+      "Failed": "Fehlgeschlagen"
     }
+  },
+  "presetFilters": {
+    "pending": "Schwebend",
+    "sent": "Gesendet",
+    "failed": "Fehlgeschlagen"
+  }
 }

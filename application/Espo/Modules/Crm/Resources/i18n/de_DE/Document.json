@@ -1,42 +1,42 @@
 {
-    "labels": {
-        "Create Document": "Dokument erstellen",
-        "Details": "Details"
+  "labels": {
+    "Create Document": "Dokument erstellen",
+    "Details": "Details"
+  },
+  "fields": {
+    "name": "Betreff",
+    "status": "Status",
+    "file": "Datei",
+    "type": "Typ",
+    "source": "Quelle",
+    "publishDate": "Veröffentlichungsdatum",
+    "expirationDate": "Ablaufdatum",
+    "description": "Beschreibung",
+    "accounts": "Firmen",
+    "folder": "Ordner"
+  },
+  "links": {
+    "accounts": "Firmen",
+    "opportunities": "Verkaufschancen",
+    "folder": "Ordner"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Draft": "Entwurf",
+      "Expired": "Abgelaufen",
+      "Canceled": "Storniert"
     },
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "file": "Datei",
-        "type": "Typ",
-        "source": "Quelle",
-        "publishDate": "Veröffentlichungsdatum",
-        "expirationDate": "Ablaufdatum",
-        "description": "Beschreibung",
-        "accounts": "Firmen",
-        "folder": "Ordner"
-    },
-    "links": {
-        "accounts": "Firmen",
-        "opportunities": "Verkaufschancen",
-        "folder": "Ordner"
-    },
-    "options": {
-        "status": {
-            "Active": "Aktiv",
-            "Draft": "Entwurf",
-            "Expired": "Abgelaufen",
-            "Canceled": "Storniert"
-        },
-        "type": {
-            "": "Kein(e)",
-            "Contract": "Vertrag",
-            "NDA": "NDA",
-            "EULA": "EULA",
-            "License Agreement": "Lizenz Vereinbarung"
-        }
-    },
-    "presetFilters": {
-        "active": "Aktiv",
-        "draft": "Entwurf"
+    "type": {
+      "": "Kein(e)",
+      "Contract": "Vertrag",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "Lizenz Vereinbarung"
     }
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "draft": "Entwurf"
+  }
 }

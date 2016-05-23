@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Name",
-        "description": "Beschreibung",
-        "entryCount": "Eingabezähler",
-        "campaigns": "Kampagnen",
-        "endDate": "Enddatum",
-        "targetLists": "Kontaktlisten"
-    },
-    "links": {
-        "accounts": "Firmen",
-        "contacts": "Kontakte",
-        "leads": "Interessenten",
-        "campaigns": "Kampagnen",
-        "massEmails": "Massen E-Mails"
-    },
-    "options": {
-        "type": {
-            "Email": "E-Mail",
-            "Web": "Web",
-            "Television": "Fernsehen",
-            "Radio": "Radio Button",
-            "Newsletter": "Newsletter"
-        }
-    },
-    "labels": {
-        "Create TargetList": "Kontaktliste erstellen",
-        "Opted Out": "Keine E-Mails",
-        "Cancel Opt-Out": "Opt-Out zurücksetzen",
-        "Opt-Out": "Keine E-Mails"
+  "fields": {
+    "name": "Betreff",
+    "description": "Beschreibung",
+    "entryCount": "Eingabezähler",
+    "campaigns": "Kampagnen",
+    "endDate": "Enddatum",
+    "targetLists": "Kontaktlisten"
+  },
+  "links": {
+    "accounts": "Firmen",
+    "contacts": "Kontakte",
+    "leads": "Interessenten",
+    "campaigns": "Kampagnen",
+    "massEmails": "Massen E-Mails"
+  },
+  "options": {
+    "type": {
+      "Email": "E-Mail",
+      "Web": "Web",
+      "Television": "Fernsehen",
+      "Radio": "Radio Button",
+      "Newsletter": "Newsletter"
     }
+  },
+  "labels": {
+    "Create TargetList": "Kontaktliste erstellen",
+    "Opted Out": "Keine E-Mails",
+    "Cancel Opt-Out": "Opt-Out zurücksetzen",
+    "Opt-Out": "Keine E-Mails"
+  }
 }

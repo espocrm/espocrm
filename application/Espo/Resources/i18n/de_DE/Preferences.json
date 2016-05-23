@@ -1,47 +1,47 @@
 {
-    "fields": {
-        "dateFormat": "Datumsformat",
-        "timeFormat": "Zeitformat",
-        "timeZone": "Zeitzone",
-        "weekStart": "Erster Tag der Woche",
-        "thousandSeparator": "Tausender Trennzeichen",
-        "decimalMark": "Dezimaltrennzeichen",
-        "defaultCurrency": "Standardwährung",
-        "currencyList": "Währungsliste",
-        "language": "Sprache",
-        "smtpServer": "Server",
-        "smtpPort": "Port",
-        "smtpAuth": "Autorisierung",
-        "smtpSecurity": "Sicherheit",
-        "smtpUsername": "Benutzername",
-        "emailAddress": "E-Mail",
-        "smtpPassword": "Passwort",
-        "smtpEmailAddress": "E-Mail Adresse",
-        "exportDelimiter": "Export Trennzeichen",
-        "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten",
-        "autoFollowEntityTypeList": "Autom. Beobachten",
-        "signature": "E-Mail Signatur",
-        "dashboardTabList": "Reiter Liste",
-        "defaultReminders": "Standarderinnerungen",
-        "theme": "Design",
-        "useCustomTabList": "Benutzerdefinierte Reiter Liste",
-        "tabList": "Reiter Liste"
-    },
-    "links": {},
-    "options": {
-        "weekStart": {
-            "0": "Sonntag",
-            "1": "Montag"
-        }
-    },
-    "labels": {
-        "Notifications": "Benachrichtigungen",
-        "User Interface": "Benutzeroberfläche",
-        "SMTP": "SMTP",
-        "Misc": "Verschiedenes",
-        "Locale": "Lokale Einstellungen"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
+  "fields": {
+    "dateFormat": "Datumsformat",
+    "timeFormat": "Zeitformat",
+    "timeZone": "Zeitzone",
+    "weekStart": "Erster Tag der Woche",
+    "thousandSeparator": "Tausender Trennzeichen",
+    "decimalMark": "Dezimaltrennzeichen",
+    "defaultCurrency": "Standardwährung",
+    "currencyList": "Währungsliste",
+    "language": "Sprache",
+    "smtpServer": "Server",
+    "smtpPort": "Port",
+    "smtpAuth": "Autorisierung",
+    "smtpSecurity": "Sicherheit",
+    "smtpUsername": "Benutzername",
+    "emailAddress": "E-Mail",
+    "smtpPassword": "Passwort",
+    "smtpEmailAddress": "E-Mail Adresse",
+    "exportDelimiter": "Export Trennzeichen",
+    "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten",
+    "autoFollowEntityTypeList": "Autom. Beobachten",
+    "signature": "E-Mail Signatur",
+    "dashboardTabList": "Reiter Liste",
+    "tabList": "Reiter Liste",
+    "defaultReminders": "Standarderinnerungen",
+    "theme": "Design",
+    "useCustomTabList": "Benutzerdefinierte Reiter Liste",
+    "emailReplyToAllByDefault": "Allen antworten als Standard"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Sonntag",
+      "1": "Montag"
     }
+  },
+  "labels": {
+    "Notifications": "Benachrichtigungen",
+    "User Interface": "Benutzeroberfläche",
+    "SMTP": "SMTP",
+    "Misc": "Verschiedenes",
+    "Locale": "Lokale Einstellungen"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
+  }
 }
