@@ -428,7 +428,7 @@ class User extends Record
     public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
             $this->clearRoleCache($entity->id);
         }
     }
@@ -442,7 +442,7 @@ class User extends Record
     {
         parent::afterMassUpdate($idList, $data);
 
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data)) {
+        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
             foreach ($idList as $id) {
                 $this->clearRoleCache($id);
             }
