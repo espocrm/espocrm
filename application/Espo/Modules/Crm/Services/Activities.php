@@ -821,7 +821,7 @@ class Activities extends \Espo\Core\Services\Base
             'name',
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
-            'status',
+            ($seed->hasAttribute('status') ? ['status', 'status'] : ['VALUE:', 'status']),
             ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
             ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
