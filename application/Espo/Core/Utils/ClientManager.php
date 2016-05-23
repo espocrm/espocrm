@@ -96,8 +96,9 @@ class ClientManager
         foreach ($vars as $key => $value) {
             $html = str_replace('{{'.$key.'}}', $value, $html);
         }
+        $html = str_replace('{{applicationName}}', $this->getConfig()->get('applicationName', 'EspoCRM'), $html);
         $html = str_replace('{{cacheTimestamp}}', $this->getCacheTimestamp(), $html);
-        $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false' , $html);
+        $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false', $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
         $html = str_replace('{{basePath}}', $this->basePath , $html);
