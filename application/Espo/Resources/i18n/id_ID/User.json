@@ -1,0 +1,84 @@
+{
+  "fields": {
+    "name": "Nama",
+    "userName": "Nama pengguna",
+    "title": "Judul",
+    "isAdmin": "adalah Admin",
+    "defaultTeam": "Pengaturan Tim",
+    "emailAddress": "E-mail",
+    "phoneNumber": "Telepon",
+    "roles": "peran",
+    "portals": "portal",
+    "portalRoles": "Peran Portal",
+    "teamRole": "Posisi",
+    "password": "Kata sandi",
+    "currentPassword": "kata sandi saat ini",
+    "passwordConfirm": "konfirmasi sandi",
+    "newPassword": "kata sandi baru",
+    "newPasswordConfirm": "Konfirmasi password baru",
+    "avatar": "Avatar",
+    "isActive": "Aktif",
+    "isPortalUser": "Adalah Portal Pengguna",
+    "contact": "Kontak",
+    "accounts": "Akun",
+    "sendAccessInfo": "Kirim Email dengan Access Info untuk Pengguna",
+    "portal": "Portal"
+  },
+  "links": {
+    "teams": "tim",
+    "roles": "Roles",
+    "notes": "Catatan",
+    "portals": "portals",
+    "portalRoles": "Portal Roles",
+    "contact": "Kontak",
+    "accounts": "Akun"
+  },
+  "labels": {
+    "Create User": "Buat pengguna",
+    "Generate": "Perbanyak",
+    "Access": "Akses",
+    "Preferences": "Pilihan",
+    "Change Password": "Ganti kata sandi",
+    "Teams and Access Control": "Tim dan akses kontrol",
+    "Forgot Password?": "Lupa kata sandi?",
+    "Password Change Request": "Permintaan penggantian kata sandi",
+    "Email Address": "Alamat email",
+    "External Accounts": "Accounts eksternal",
+    "Email Accounts": "Akun email",
+    "Portal": "Portal",
+    "Create Portal User": "Buat Portal Pengguna"
+  },
+  "tooltips": {
+    "defaultTeam": "Semua catatan yang dibuat oleh pengguna ini akan berhubungan dengan tim ini secara default.",
+    "userName": "Huruf a-z, angka 0-9, titik, tanda hubung, @ -signs dan garis bawah diperbolehkan.",
+    "isAdmin": "user admin dapat mengakses segala sesuatu.",
+    "isActive": "Jika dicentang maka pengguna tidak akan bisa login.",
+    "teams": "Tim yang pengguna ini milik. Tingkat kontrol akses diwariskan dari peran tim.",
+    "roles": "peran akses tambahan. Menggunakannya jika pengguna bukan milik tim manapun atau Anda perlu untuk memperpanjang tingkat kontrol akses eksklusif untuk pengguna ini.",
+    "portalRoles": "peran Portal tambahan. Menggunakannya untuk memperluas tingkat kontrol akses eksklusif untuk pengguna ini.",
+    "portals": "Portal yang pengguna ini memiliki akses ke."
+  },
+  "messages": {
+    "passwordWillBeSent": "Password akan dikirimkan ke alamat email pengguna.",
+    "accountInfoEmailSubject": "EspoCRM Info Pengguna Access",
+    "accountInfoEmailBody": "akses informasi Anda:\n\nUsername: {username}\nPassword: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Ubah Password Permintaan",
+    "passwordChangeLinkEmailBody": "Anda dapat mengubah password Anda dengan tautan ini {link}. url yang unik ini akan segera expired.",
+    "passwordChanged": "Sandi telah diubah",
+    "userCantBeEmpty": "Username tidak boleh kosong",
+    "wrongUsernamePasword": "Salah username / password",
+    "emailAddressCantBeEmpty": "Alamat Email tidak boleh kosong",
+    "userNameEmailAddressNotFound": "Username / Email Alamat tidak ditemukan",
+    "forbidden": "Dilarang, coba nanti",
+    "uniqueLinkHasBeenSent": "URL unik telah dikirim ke alamat email tertentu.",
+    "passwordChangedByRequest": "Password telah berubah.",
+    "setupSmtpBefore": "Anda perlu pengaturan href=\"{url}\"> SMTP pengaturan </a> untuk membuat sistem dapat mengirim password email."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Hanya Tim saya"
+  },
+  "presetFilters": {
+    "active": "Aktif",
+    "activePortal": "Portal Aktif"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "fields": {
+    "name": "Nama",
+    "emailAddress": "E-mail",
+    "website": "Situs web",
+    "phoneNumber": "Telepon",
+    "billingAddress": "Alamat tagihan",
+    "shippingAddress": "Alamat Pengiriman",
+    "description": "Deskripsi",
+    "sicCode": "Kode Sic",
+    "industry": "Industri",
+    "type": "Mengetik",
+    "contactRole": "Judul",
+    "campaign": "Kampanye",
+    "targetLists": "Daftar Target",
+    "targetList": "Target Daftar"
+  },
+  "links": {
+    "contacts": "Kontak",
+    "opportunities": "peluang",
+    "cases": "kasus",
+    "documents": "dokumen",
+    "meetingsPrimary": "Rapat (diperluas)",
+    "callsPrimary": "Panggilan (diperluas)",
+    "tasksPrimary": "Tugas (diperluas)",
+    "emailsPrimary": "Email (diperluas)",
+    "targetLists": "Daftar Target",
+    "campaignLogRecords": "kampanye Log",
+    "campaign": "Kampanye",
+    "portalUsers": "Pengguna Portal"
+  },
+  "options": {
+    "type": {
+      "Customer": "Pelanggan",
+      "Investor": "Investor",
+      "Partner": "Pasangan",
+      "Reseller": "Reseller"
+    },
+    "industry": {
+      "Agriculture": "Pertanian",
+      "Advertising": "pengiklanan",
+      "Apparel & Accessories": "Pakaian & Aksesoris",
+      "Automotive": "otomotif",
+      "Banking": "Perbankan",
+      "Biotechnology": "bioteknologi",
+      "Building Materials & Equipment": "Bahan & Peralatan Bangunan",
+      "Chemical": "Bahan kimia",
+      "Computer": "Komputer",
+      "Education": "pendidikan",
+      "Electronics": "Elektronik",
+      "Energy": "Energi",
+      "Entertainment & Leisure": "Hiburan & Kenyamanan",
+      "Finance": "Keuangan",
+      "Food & Beverage": "makanan & Minuman",
+      "Grocery": "toko bahan makanan",
+      "Healthcare": "Kesehatan",
+      "Insurance": "Asuransi",
+      "Legal": "Hukum",
+      "Manufacturing": "pabrik",
+      "Publishing": "Penerbitan",
+      "Real Estate": "Perumahan",
+      "Service": "Layanan",
+      "Sports": "Olahraga",
+      "Software": "Perangkat lunak",
+      "Technology": "Teknologi",
+      "Telecommunications": "telekomunikasi",
+      "Television": "Televisi",
+      "Transportation": "Angkutan",
+      "Venture Capital": "Modal usaha"
+    }
+  },
+  "labels": {
+    "Create Account": "buat akun",
+    "Copy Billing": "Salin Penagihan"
+  },
+  "presetFilters": {
+    "customers": "pelanggan",
+    "partners": "Rekan"
+  }
+}

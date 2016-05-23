@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Nama",
+    "roles": "peran",
+    "assignmentPermission": "Ijin Penugasan",
+    "userPermission": "Izin pengguna",
+    "portalPermission": "Izin Portal"
+  },
+  "links": {
+    "users": "pengguna",
+    "teams": "tim"
+  },
+  "tooltips": {
+    "assignmentPermission": "Memungkinkan untuk membatasi kemampuan untuk menetapkan catatan dan pesan posting ke pengguna lain.\n\nsemua - tidak ada pembatasan\n\nTim - dapat menetapkan dan posting hanya untuk rekan\n\ntidak ada - dapat menetapkan dan posting hanya untuk diri",
+    "userPermission": "Memungkinkan untuk membatasi kemampuan bagi pengguna untuk melihat kegiatan, kalender dan aliran pengguna lain.\n\nsemua - bisa melihat semua\n\nTim - dapat melihat kegiatan rekan tim hanya\n\ntidak ada - tidak bisa melihat",
+    "portalPermission": "Mendefinisikan akses ke portal informasi, kemampuan untuk mengkonversi kontak untuk pengguna portal dan memposting pesan ke pengguna Portal."
+  },
+  "labels": {
+    "Access": "Mengakses",
+    "Create Role": "Buat Peran",
+    "Scope Level": "lingkup Tingkat",
+    "Field Level": "Tingkat lapangan"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "tidak diatur",
+      "enabled": "diaktifkan",
+      "disabled": "dimatikan"
+    },
+    "levelList": {
+      "all": "semua",
+      "team": "tim",
+      "account": "Account",
+      "contact": "kontak",
+      "own": "sendiri",
+      "no": "tidak",
+      "yes": "ya",
+      "not-set": "tidak diatur"
+    }
+  },
+  "actions": {
+    "read": "Baca",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "stream": "Aliran",
+    "create": "Membuat"
+  },
+  "messages": {
+    "changesAfterClearCache": "Semua perubahan dalam kontrol akses akan diterapkan setelah cache dibersihkan."
+  }
+}

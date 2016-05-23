@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "Nama",
+    "parent": "Induk",
+    "status": "Status",
+    "dateStart": "Tanggal mulai",
+    "dateEnd": "Tanggal jatuh tempo",
+    "dateStartDate": "Tanggal mulai (sepanjang hari)",
+    "dateEndDate": "Tanggal akhir (sepanjang hari)",
+    "priority": "Prioritas",
+    "description": "Deskripsi",
+    "isOverdue": "Apakah tempo",
+    "account": "Rekening",
+    "dateCompleted": "Tanggal Selesai",
+    "attachments": "lampiran"
+  },
+  "links": {
+    "attachments": "lampiran"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Belum mulai",
+      "Started": "mulai",
+      "Completed": "Lengkap",
+      "Canceled": "Dibatalkan",
+      "Deferred": "Tangguhan"
+    },
+    "priority": {
+      "Low": "Rendah",
+      "Normal": "Normal",
+      "High": "Tinggi",
+      "Urgent": "Penting"
+    }
+  },
+  "labels": {
+    "Create Task": "Buat tugas",
+    "Complete": "Lengkap"
+  },
+  "presetFilters": {
+    "actual": "Sebenarnya",
+    "completed": "Lengkap",
+    "todays": "hari ini",
+    "overdue": "Terlambat"
+  }
+}

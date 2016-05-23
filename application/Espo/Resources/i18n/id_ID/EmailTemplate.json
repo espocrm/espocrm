@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Nama",
+    "status": "Status",
+    "isHtml": "Apakah Html",
+    "body": "Isi",
+    "subject": "Subyek",
+    "attachments": "lampiran",
+    "insertField": "Insert kolom",
+    "oneOff": "Satu-off"
+  },
+  "labels": {
+    "Create EmailTemplate": "Buat Template Email",
+    "Info": "Info"
+  },
+  "messages": {
+    "infoText": "variabel yang tersedia:\n\n{OptOutUrl} & # 8211; URL untuk link unsubsbribe};\n\n{OptOutLink} & # 8211; link unsubscribe."
+  },
+  "tooltips": {
+    "oneOff": "Periksa apakah Anda akan menggunakan template ini hanya sekali. Misalnya. untuk Mass Email."
+  },
+  "presetFilters": {
+    "actual": "Aktual"
+  }
+}

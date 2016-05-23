@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Nama",
+    "description": "Deskripsi",
+    "entryCount": "entri Hitungan",
+    "campaigns": "kampanye",
+    "endDate": "Tanggal akhir",
+    "targetLists": "Daftar Target"
+  },
+  "links": {
+    "accounts": "Akun",
+    "contacts": "kontak",
+    "leads": "memimpin",
+    "campaigns": "kampanye",
+    "massEmails": "Email massal"
+  },
+  "options": {
+    "type": {
+      "Email": "E-mail",
+      "Web": "jaringan",
+      "Television": "Televisi",
+      "Radio": "Radio",
+      "Newsletter": "laporan berkala"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Buat target Daftar",
+    "Opted Out": "Memilih keluar",
+    "Cancel Opt-Out": "Batal Opt-Out",
+    "Opt-Out": "Opt-Out"
+  }
+}

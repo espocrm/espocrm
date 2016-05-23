@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Nama",
+    "emailAddress": "E-mail",
+    "title": "Judul",
+    "website": "Situs web",
+    "accountName": "Nama akun",
+    "phoneNumber": "Telepon",
+    "doNotCall": "Jangan panggil",
+    "address": "Alamat",
+    "description": "Deskripsi"
+  },
+  "labels": {
+    "Create Target": "Buat target",
+    "Convert to Lead": "Mengkonversi Memimpin"
+  }
+}

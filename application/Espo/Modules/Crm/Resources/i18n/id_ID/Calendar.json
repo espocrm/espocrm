@@ -1,0 +1,18 @@
+{
+  "modes": {
+    "month": "Bulan",
+    "week": "Minggu",
+    "agendaWeek": "Minggu",
+    "day": "Hari",
+    "agendaDay": "Hari",
+    "timeline": "Timeline"
+  },
+  "labels": {
+    "Today": "Hari ini",
+    "Create": "Membuat",
+    "Shared": "Bersama",
+    "Add User": "Tambahkan pengguna",
+    "current": "arus",
+    "time": "waktu"
+  }
+}

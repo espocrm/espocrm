@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "Nama",
+    "parent": "Induk",
+    "status": "Status",
+    "dateStart": "Tanggal mulai",
+    "dateEnd": "Tanggal akhir",
+    "duration": "Lamanya",
+    "description": "Deskripsi",
+    "users": "pengguna",
+    "contacts": "kontak",
+    "leads": "memimpin",
+    "reminders": "pengingat",
+    "account": "Akun"
+  },
+  "options": {
+    "status": {
+      "Planned": "Berencana",
+      "Held": "diadakan",
+      "Not Held": "tidak diadakan"
+    },
+    "acceptanceStatus": {
+      "None": "tak satupun",
+      "Accepted": "diterima",
+      "Declined": "ditolak",
+      "Tentative": "Sementara"
+    }
+  },
+  "massActions": {
+    "setHeld": "set diadakan",
+    "setNotHeld": "Set Tidak diadakan"
+  },
+  "labels": {
+    "Create Meeting": "Buat Rapat",
+    "Set Held": "set diadakan",
+    "Set Not Held": "Set Tidak diadakan",
+    "Send Invitations": "Kirim undangan",
+    "on time": "tepat waktu",
+    "before": "sebelum"
+  },
+  "presetFilters": {
+    "planned": "Berencana",
+    "held": "diadakan",
+    "todays": "hari ini"
+  }
+}

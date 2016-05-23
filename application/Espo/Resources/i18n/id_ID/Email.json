@@ -1,0 +1,91 @@
+{
+  "fields": {
+    "name": "Nama",
+    "parent": "Induk",
+    "status": "Status",
+    "dateSent": "Tanggal Dikirim",
+    "from": "Dari",
+    "to": "Untuk",
+    "cc": "CC",
+    "bcc": "BCC",
+    "replyTo": "Membalas ke",
+    "replyToString": "Balas Untuk (String)",
+    "isHtml": "Apakah Html",
+    "body": "Isi",
+    "subject": "Subyek",
+    "attachments": "lampiran",
+    "selectTemplate": "Pilih Template",
+    "fromEmailAddress": "dari Alamat",
+    "toEmailAddresses": "Alamat Tujuan",
+    "emailAddress": "Alamat email",
+    "deliveryDate": "Tanggal pengiriman",
+    "account": "Akun",
+    "users": "pengguna",
+    "replied": "membalas",
+    "replies": "balasan",
+    "isRead": "Sudah terbaca",
+    "isNotRead": "Belum dibaca",
+    "isImportant": "Penting",
+    "isUsers": "Apakah Pengguna",
+    "inTrash": "In Trash"
+  },
+  "links": {
+    "replied": "membalas",
+    "replies": "balasan"
+  },
+  "options": {
+    "status": {
+      "Draft": "Konsep",
+      "Sending": "mengirim",
+      "Sent": "Terkirim",
+      "Archived": "diarsipkan",
+      "Received": "menerima",
+      "Failed": "Gagal"
+    }
+  },
+  "labels": {
+    "Create Email": "Arsip Email",
+    "Archive Email": "Arsip Email",
+    "Compose": "Menyusun",
+    "Reply": "Balasan",
+    "Reply to All": "Balas ke semua",
+    "Forward": "Meneruskan",
+    "Original message": "Pesan asli",
+    "Forwarded message": "pesan diteruskan",
+    "Email Accounts": "Akun Email Pribadi",
+    "Inbound Emails": "Akun Group Email",
+    "Email Templates": "Template email",
+    "Send Test Email": "Tes Kirim Email",
+    "Send": "Kirim",
+    "Email Address": "Alamat email",
+    "Mark Read": "Tandai Terbaca",
+    "Sending...": "Mengirim ...",
+    "Save Draft": "Simpan konsep",
+    "Mark all as read": "tandai semua telah dibaca",
+    "Show Plain Text": "Tampilkan Plain Text",
+    "Mark as Important": "Tandai sebagai Penting",
+    "Unmark Importance": "Hapus tanda Pentingnya",
+    "Move to Trash": "Pindah ke Trash",
+    "Retrieve from Trash": "Mengambil dari Trash"
+  },
+  "messages": {
+    "noSmtpSetup": "Tidak ada SMTP setup. {link}.",
+    "testEmailSent": "tes email telah dikirim",
+    "emailSent": "Email telah dikirim",
+    "savedAsDraft": "Disimpan sebagai konsep"
+  },
+  "presetFilters": {
+    "sent": "mengirim",
+    "archived": "diarsipkan",
+    "inbox": "Inbox",
+    "drafts": "draft",
+    "trash": "Trash"
+  },
+  "massActions": {
+    "markAsRead": "Tandai sebagai terbaca",
+    "markAsNotRead": "Tandai sebagai Tidak dibaca",
+    "markAsImportant": "Tandai sebagai Penting",
+    "markAsNotImportant": "Hapus tanda Pentingnya",
+    "moveToTrash": "Pindah ke Trash"
+  }
+}
