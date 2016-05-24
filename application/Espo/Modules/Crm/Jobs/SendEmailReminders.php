@@ -45,7 +45,7 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
         $collection = $this->getEntityManager()->getRepository('Reminder')->where(array(
             'type' => 'Email',
             'remindAt<=' => $now,
-            'startAt>' => $nowShifted,
+            'startAt>' => $nowShifted
         ))->find();
 
         if (!empty($collection)) {
