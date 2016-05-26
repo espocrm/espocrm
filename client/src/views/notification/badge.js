@@ -204,8 +204,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
             this.shownNotificationIds.push(id);
 
-            console.log(view);
-
             this.createView('popup-' + id, view, {
                 notificationData: data.data || {},
                 notificationId: data.id,
