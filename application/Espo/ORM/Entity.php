@@ -275,6 +275,11 @@ abstract class Entity implements IEntity
         return isset($this->relations[$relationName]);
     }
 
+    public function getAttributeList()
+    {
+        return array_keys($this->getAttributes());
+    }
+
     public function getValues()
     {
         return $this->toArray();

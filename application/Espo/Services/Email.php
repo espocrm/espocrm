@@ -53,6 +53,10 @@ class Email extends Record
 
     protected $getEntityBeforeUpdate = true;
 
+    protected $allowedForUpdateAttributeList = [
+        'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
+    ];
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
@@ -610,6 +614,20 @@ class Email extends Record
         $emailSender->useSmtp($data)->send($email);
 
         return true;
+    }
+
+    protected function beforeUpdate(Entity $entity, array $data = array())
+    {
+        if ($this->getUser()->isAdmin()) return;
+
+        if ($entity->isManuallyArchived()) return;
+
+        $attributList = $entity;
+
+        foreach ($entity->getAttributeList() as $attribute) {
+            if (in_array($attribute, $this->allowedForUpdateAttributeList)) return;
+            $entity->clear($attribute);
+        }
     }
 }
 
