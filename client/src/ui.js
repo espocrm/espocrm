@@ -56,7 +56,7 @@ Espo.define('ui', [], function () {
         this.contents = '';
         if (this.header) {
             this.contents += '<header class="modal-header">' +
-                             ((this.closeButton) ? '<a href="javascript:" class="close" aria-hidden="true">&times;</a>' : '') +
+                             ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></a>' : '') +
                              '<h4 class="modal-title">' + this.header + '</h4>' +
                              '</header>';
         }
@@ -88,7 +88,7 @@ Espo.define('ui', [], function () {
         this.el = this.$el.get(0);
 
         this.$el.find('header a.close').on('click', function () {
-            this.close();
+            //this.close();
         }.bind(this));
 
         this.buttons.forEach(function (o) {
@@ -123,7 +123,7 @@ Espo.define('ui', [], function () {
 
         $window = $(window);
 
-        this.$el.on('shown.bs.modal', function (event) {
+        this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
             if (this.fitHeight) {
                 var processResize = function () {
@@ -145,7 +145,7 @@ Espo.define('ui', [], function () {
                 processResize();
             }
         }.bind(this));
-        this.$el.on('hidden.bs.modal', function (event) {
+        this.$el.on('hidden.bs.modal', function (e) {
             if ($('.modal:visible').length > 0) {
                 setTimeout(function() {
                     $(document.body).addClass('modal-open');
@@ -160,6 +160,11 @@ Espo.define('ui', [], function () {
              keyboard: this.keyboard
         });
         this.$el.find('.modal-content').removeClass('hidden');
+
+        this.$el.off('click.dismiss.bs.modal');
+        this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
+            this.close();
+        }.bind(this));
     };
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');
