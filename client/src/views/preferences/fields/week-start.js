@@ -25,12 +25,13 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 Espo.define('views/preferences/fields/week-start', 'views/fields/enum-int', function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+            this.params.options = Espo.Utils.clone(this.params.options);
             this.params.options.unshift(-1);
 
             this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('weekStart', 'options', 'Settings') || {});

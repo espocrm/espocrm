@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('Views.Preferences.Fields.AutoFollowEntityTypeList', 'Views.Fields.MultiEnum', function (Dep) {
+
+Espo.define('views/preferences/fields/auto-follow-entity-type-list', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 
