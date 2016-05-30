@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Buat Kategori",
+    "Manage Categories": "mengelola Kategori"
+  },
+  "links": {
+    "articles": "Artikel"
+  }
+}

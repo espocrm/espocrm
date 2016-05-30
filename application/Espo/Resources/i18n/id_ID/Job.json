@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "status": "Status",
+    "executeTime": "mengeksekusi Pada",
+    "attempts": "Attempts Left",
+    "failedAttempts": "Failed Attempts",
+    "serviceName": "Layanan",
+    "method": "metode",
+    "scheduledJob": "Pekerjaan Terjadwal",
+    "data": "Data"
+  },
+  "options": {
+    "status": {
+      "Pending": "Tunda",
+      "Success": "Berhasil",
+      "Running": "Berjalan",
+      "Failed": "Gagal"
+    }
+  }
+}

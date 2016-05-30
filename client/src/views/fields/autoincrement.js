@@ -38,6 +38,8 @@ Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
 
         readOnly: true,
 
+        disableFormatting: true,
+
         parse: function (value) {
             value = (value !== '') ? value : null;
             if (value !== null) {

@@ -1,42 +1,51 @@
 {
-    "fields": {
-        "name": "Name",
-        "roles": "Rollen",
-        "assignmentPermission": "Zuweisungsberechtigungen",
-        "userPermission": "Benutzerberechtigung"
+  "fields": {
+    "name": "Betreff",
+    "roles": "Rollen",
+    "assignmentPermission": "Zuweisungsberechtigungen",
+    "userPermission": "Benutzerberechtigung",
+    "portalPermission": "Portal Berechtigungen"
+  },
+  "links": {
+    "users": "Benutzer",
+    "teams": "Teams"
+  },
+  "tooltips": {
+    "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
+    "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Vorgänge anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen",
+    "portalPermission": "Gibt Zugang zu Portalinformationen, die Möglichkeit Kontakte zu Portalbenutzern zu konvertieren und erlaubt das Senden von Nachrichten an Portalbenutzer"
+  },
+  "labels": {
+    "Access": "Zugang",
+    "Create Role": "Rolle erstellen",
+    "Scope Level": "Scope Ebene",
+    "Field Level": "Feldebene"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nicht gesetzt",
+      "enabled": "Aktiv",
+      "disabled": "Inaktiv"
     },
-    "links": {
-        "users": "Benutzer",
-        "teams": "Teams"
-    },
-    "tooltips": {
-        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen\/senden\n\nNein - Kann nur sich selbst zuweisen\/senden",
-        "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Vorgänge anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen"
-    },
-    "labels": {
-        "Access": "Zugang",
-        "Create Role": "Rolle erstellen"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "nicht gesetzt",
-            "enabled": "Aktiv",
-            "disabled": "Inaktiv"
-        },
-        "levelList": {
-            "all": "Alle",
-            "team": "Team",
-            "own": "Eigene",
-            "no": "Nein",
-            "not-set": "nicht gesetzt"
-        }
-    },
-    "actions": {
-        "read": "Lesen",
-        "edit": "Bearbeiten",
-        "delete": "Löschen"
-    },
-    "messages": {
-        "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
+    "levelList": {
+      "all": "Alle",
+      "team": "Team",
+      "account": "Firma",
+      "contact": "Kontakt",
+      "own": "Eigene",
+      "no": "Nein",
+      "yes": "Ja",
+      "not-set": "nicht gesetzt"
     }
+  },
+  "actions": {
+    "read": "Lesen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "stream": "Vorgänge",
+    "create": "Erstellen"
+  },
+  "messages": {
+    "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
+  }
 }

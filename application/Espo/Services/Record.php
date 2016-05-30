@@ -409,40 +409,41 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity->hasAttribute('teamsIds')) {
             return true;
         }
-        $teamIds = $entity->get('teamsIds');
-        if (empty($teamIds)) {
+        $teamIdList = $entity->get('teamsIds');
+        if (empty($teamIdList)) {
             return true;
         }
 
-        $newIds = [];
+        $newIdList = [];
 
         if (!$entity->isNew()) {
-            $existingIds = [];
+            $existingIdList = [];
             foreach ($entity->get('teams') as $team) {
-                $existingIds[] = $team->id;
+                $existingIdList[] = $team->id;
             }
-            foreach ($teamIds as $id) {
-                if (!in_array($id, $existingIds)) {
-                    $newIds[] = $id;
+            foreach ($teamIdList as $id) {
+                if (!in_array($id, $existingIdList)) {
+                    $newIdList[] = $id;
                 }
             }
         } else {
-            $newIds = $teamIds;
+            $newIdList = $teamIdList;
         }
 
-        if (empty($newIds)) {
+        if (empty($newIdList)) {
             return true;
         }
 
-        $userTeamIds = $this->getUser()->get('teamsIds');
+        $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
 
-        foreach ($newIds as $id) {
-            if (!in_array($id, $userTeamIds)) {
+        foreach ($newIdList as $id) {
+            if (!in_array($id, $userTeamIdList)) {
                 return false;
             }
         }
         return true;
     }
+
 
     protected function stripTags($string)
     {

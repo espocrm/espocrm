@@ -1,25 +1,27 @@
 {
-    "fields": {
-        "post": "Senden",
-        "attachments": "Anhänge",
-        "targetType": "Zielkontakt",
-        "teams": "Teams",
-        "users": "Benutzer"
-    },
-    "filters": {
-        "all": "Alle",
-        "posts": "Posts",
-        "updates": "Aktualisierungen"
-    },
-    "options": {
-        "targetType": {
-            "self": "An sich selbst",
-            "users": "An (einen) bestimmte(n) Benutzer",
-            "teams": "An (ein) bestimmte(s) Team(s)",
-            "all": "An alle Benutzer"
-        }
-    },
-    "messages": {
-        "writeMessage": "Schreiben Sie hier Ihre Nachricht"
+  "fields": {
+    "post": "Senden",
+    "attachments": "Anhänge",
+    "targetType": "Ziel",
+    "teams": "Teams",
+    "users": "Benutzer",
+    "portals": "Portale"
+  },
+  "filters": {
+    "all": "Alle",
+    "posts": "Posts",
+    "updates": "Aktualisierungen"
+  },
+  "options": {
+    "targetType": {
+      "self": "An sich selbst",
+      "users": "An (einen) bestimmte(n) Benutzer",
+      "teams": "An (ein) bestimmte(s) Team(s)",
+      "all": "An alle Benutzer",
+      "portals": "An alle Portal Benutzer"
     }
+  },
+  "messages": {
+    "writeMessage": "Schreiben Sie hier Ihre Nachricht"
+  }
 }

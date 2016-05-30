@@ -1,8 +1,8 @@
 {
-    "labels": {
-        "Create Lead": "Interessent erstellen",
-        "Create Contact": "Kontakt erstellen",
-        "Create Task": "Neue Aufgabe",
-        "Create Case": "Fall erstellen"
-    }
+  "labels": {
+    "Create Lead": "Interessent erstellen",
+    "Create Contact": "Kontakt erstellen",
+    "Create Task": "Neue Aufgabe",
+    "Create Case": "Fall erstellen"
+  }
 }

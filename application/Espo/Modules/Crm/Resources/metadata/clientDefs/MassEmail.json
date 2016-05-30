@@ -9,6 +9,10 @@
   "views": {
     "detail": "crm:views/mass-email/detail"
   },
+  "defaultSidePanel": {
+    "edit": false,
+    "editSmall": false
+  },
   "formDependency": {
     "status": {
       "map": {

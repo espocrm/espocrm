@@ -1,33 +1,40 @@
 {
-    "fields": {
-        "action": "Aktion",
-        "actionDate": "Datum",
-        "data": "Daten",
-        "campaign": "Kampagne",
-        "parent": "Zielkontakt",
-        "object": "Objekt",
-        "application": "Applikation",
-        "queueItem": "Warteschlangeneintrag"
-    },
-    "options": {
-    	"action": {
-            "Sent": "Gesendet",
-            "Opened": "Geöffnet",
-            "Opted Out": "Keine E-Mails",
-            "Bounced": "Nicht zustellbar",
-            "Clicked": "Geklickt",
-            "Lead Created": "Interessent erstellt"
-    	}
-    },
-    "labels": {
-        "All": "Alle"
-    },
-    "presetFilters": {
-        "sent": "Gesendet",
-        "opened": "Geöffnet",
-        "optedOut": "Keine E-Mails",
-        "bounced": "Nicht zustellbar",
-        "clicked": "Geklickt",
-        "leadCreated": "Interessent erstellt"
+  "fields": {
+    "action": "Aktion",
+    "actionDate": "Datum",
+    "data": "Daten",
+    "campaign": "Kampagne",
+    "parent": "Ziel",
+    "object": "Objekt",
+    "application": "Applikation",
+    "queueItem": "Warteschlangeneintrag",
+    "stringData": "String Daten",
+    "stringAdditionalData": "String zusätzliche Daten"
+  },
+  "links": {
+    "queueItem": "Warteschlangeneintrag",
+    "parent": "Bezieht sich auf",
+    "object": "Objekt"
+  },
+  "options": {
+    "action": {
+      "Sent": "Gesendet",
+      "Opened": "Geöffnet",
+      "Opted Out": "Keine E-Mails",
+      "Bounced": "Nicht zustellbar",
+      "Clicked": "Geklickt",
+      "Lead Created": "Interessent erstellt"
     }
+  },
+  "labels": {
+    "All": "Alle"
+  },
+  "presetFilters": {
+    "sent": "Gesendet",
+    "opened": "Geöffnet",
+    "optedOut": "Keine E-Mails",
+    "bounced": "Nicht zustellbar",
+    "clicked": "Geklickt",
+    "leadCreated": "Interessent erstellt"
+  }
 }

@@ -292,6 +292,9 @@
         "siteUrl": {
             "type": "varchar"
         },
+        "applicationName": {
+            "type": "varchar"
+        },
         "readableDateFormatDisabled": {
             "type": "bool"
         },

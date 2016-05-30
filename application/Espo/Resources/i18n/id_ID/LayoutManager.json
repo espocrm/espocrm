@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "width": "Lebar (%)",
+    "link": "Tautan",
+    "notSortable": "Not Sortable",
+    "align": "Rata"
+  },
+  "options": {
+    "align": {
+      "left": "Kiri",
+      "right": "Kanan"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "Nama",
+    "number": "Jumlah",
+    "status": "Status",
+    "account": "Akun",
+    "contact": "Kontak",
+    "contacts": "kontak",
+    "priority": "Prioritas",
+    "type": "Mengetik",
+    "description": "Deskripsi",
+    "inboundEmail": "Email masuk",
+    "lead": "Memimpin"
+  },
+  "links": {
+    "inboundEmail": "Email masuk",
+    "account": "Akun",
+    "contact": "Kontak (Primer)",
+    "Contacts": "kontak",
+    "meetings": "rapat",
+    "calls": "panggilan",
+    "tasks": "tugas",
+    "emails": "email",
+    "articles": "Basis Pengetahuan Artikel",
+    "lead": "Memimpin"
+  },
+  "options": {
+    "status": {
+      "New": "Baru",
+      "Assigned": "ditugaskan",
+      "Pending": "tertunda",
+      "Closed": "Tertutup",
+      "Rejected": "Ditolak",
+      "Duplicate": "Duplikat"
+    },
+    "priority": {
+      "Low": "Rendah",
+      "Normal": "Normal",
+      "High": "Tinggi",
+      "Urgent": "Penting"
+    },
+    "type": {
+      "Question": "Pertanyaan",
+      "Incident": "Kejadian",
+      "Problem": "Masalah"
+    }
+  },
+  "labels": {
+    "Create Case": "Buat Case",
+    "Close": "Tutup",
+    "Reject": "Menolak",
+    "Closed": "Tertutup",
+    "Rejected": "Ditolak"
+  },
+  "presetFilters": {
+    "open": "Buka",
+    "closed": "Tertutup"
+  }
+}

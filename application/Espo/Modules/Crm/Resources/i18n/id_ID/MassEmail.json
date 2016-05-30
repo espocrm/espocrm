@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Nama",
+    "status": "Status",
+    "storeSentEmails": "Simpan EmailTerkirim",
+    "startAt": "Tanggal mulai",
+    "fromAddress": "Alamat pengirim",
+    "fromName": "nama pengirim",
+    "replyToAddress": "Balas ke Alamat",
+    "replyToName": "Balas-ke Nama",
+    "campaign": "Kampanye",
+    "emailTemplate": "Template email",
+    "inboundEmail": "Akun email",
+    "targetLists": "Daftar Target",
+    "excludingTargetLists": "Tidak termasuk Daftar Sasaran",
+    "optOutEntirely": "Opt-Out Sepenuhnya"
+  },
+  "links": {
+    "targetLists": "Daftar Target",
+    "excludingTargetLists": "Tidak termasuk Daftar Sasaran",
+    "queueItems": "antrian Item",
+    "campaign": "Kampanye",
+    "emailTemplate": "Template email",
+    "inboundEmail": "Akun email"
+  },
+  "options": {
+    "status": {
+      "Draft": "Konsep",
+      "Pending": "tertunda",
+      "In Process": "dalam Proses",
+      "Complete": "Lengkap",
+      "Canceled": "Dibatalkan",
+      "Failed": "Gagal"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Buat Mass Email",
+    "Send Test": "Kirim Uji"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Pilih setidaknya satu sasaran.",
+    "testSent": "Uji email (s) seharusnya dikirim"
+  },
+  "tooltips": {
+    "optOutEntirely": "alamat email penerima yang berhenti berlangganan akan ditandai sebagai memilih keluar dan mereka tidak akan menerima email massal lagi.",
+    "targetLists": "Target yang harus menerima pesan.",
+    "excludingTargetLists": "Target yang seharusnya tidak menerima pesan."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Nama",
+    "roles": "peran",
+    "positionList": "Daftar posisi"
+  },
+  "links": {
+    "users": "pengguna",
+    "notes": "Catatan",
+    "roles": "peran"
+  },
+  "tooltips": {
+    "roles": "Peran akses. Pengguna tim ini memperoleh tingkat kontrol akses dari peran yang dipilih.",
+    "positionList": "posisi yang tersedia di tim ini. Misalnya. Sales Person, Manager."
+  },
+  "labels": {
+    "Create Team": "Buat Tim"
+  }
+}

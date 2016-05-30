@@ -1,90 +1,91 @@
 {
-    "fields": {
-        "name": "Betreff",
-        "parent": "Bezieht sich auf",
-        "status": "Status",
-        "dateSent": "Sendedatum",
-        "from": "Von",
-        "to": "An",
-        "cc": "CC",
-        "bcc": "BCC",
-        "replyTo": "Antwort an",
-        "replyToString": "Antwort an (Zeichenkette)",
-        "isHtml": "Ist HTML",
-        "body": "Inhalt",
-        "subject": "Betreff",
-        "attachments": "Anhänge",
-        "selectTemplate": "Vorlage wählen",
-        "fromEmailAddress": "Von Adresse",
-        "toEmailAddresses": "An Adresse",
-        "emailAddress": "E-Mail Adresse",
-        "deliveryDate": "Zustelldatum",
-        "account": "Firma",
-        "users": "Benutzer",
-        "replied": "Beantwortet",
-        "replies": "Antworten",
-        "isRead": "Ist gelesen",
-        "isImportant": "Ist wichtig",
-        "isUsers": "Gehört Benutzer",
-        "inTrash": "Im Papierkorb"
-    },
-    "links": {
-        "replied": "Beantwortet",
-        "replies": "Antworten"
-    },
-    "options": {
-        "status": {
-            "Draft": "Entwurf",
-            "Sending": "Wird gesendet",
-            "Sent": "Gesendet",
-            "Archived": "Archiviert",
-            "Received": "Empfangen",
-            "Failed": "Fehlgeschlagen"
-        }
-    },
-    "labels": {
-        "Create Email": "E-Mail archivieren",
-        "Archive Email": "E-Mail archivieren",
-        "Compose": "Erstellen",
-        "Reply": "Antworten",
-        "Reply to All": "Allen antworten",
-        "Forward": "Weiterleiten",
-        "Original message": "Originalnachricht",
-        "Forwarded message": "Weitergeleitete Nachricht:",
-        "Email Accounts": "Persönliche E-Mail Konten",
-        "Inbound Emails": "Gruppen E-Mail Konten",
-        "Email Templates": "E-Mail Vorlagen",
-        "Send Test Email": "Test E-Mail senden",
-        "Send": "Senden",
-        "Email Address": "E-Mail Adresse",
-        "Mark Read": "Als gelesen markieren",
-        "Sending...": "Wird gesendet...",
-        "Save Draft": "Entwurf speichern",
-        "Mark all as read": "Als gelesen markieren",
-        "Show Plain Text": "Als Text zeigen",
-        "Mark as Important": "Als wichtig markieren",
-        "Unmark Importance": "Wichtig Markierung entfernen",
-        "Move to Trash": "In den Papierkorb verschieben",
-        "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
-    },
-    "messages": {
-        "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
-        "testEmailSent": "Eine Test E-Mail wurde gesendet",
-        "emailSent": "E-Mail wurde gesendet",
-        "savedAsDraft": "Als Entwurf gepeichert"
-    },
-    "presetFilters": {
-        "sent": "Gesendet",
-        "archived": "Archiviert",
-        "inbox": "Posteingang",
-        "drafts": "Entwürfe",
-        "trash": "Papierkorb"
-    },
-    "massActions": {
-        "markAsRead": "Als gelesen markieren",
-        "markAsNotRead": "Als ungelesen markieren",
-        "markAsImportant": "Als wichtig markieren",
-        "markAsNotImportant": "Wichtig Markierung entfernen",
-        "moveToTrash": "In den Papierkorb verschieben"
+  "fields": {
+    "name": "Betreff",
+    "parent": "Bezieht sich auf",
+    "status": "Status",
+    "dateSent": "Sendedatum",
+    "from": "Von",
+    "to": "An",
+    "cc": "CC",
+    "bcc": "BCC",
+    "replyTo": "Antwort an",
+    "replyToString": "Antwort an (Zeichenkette)",
+    "isHtml": "Ist HTML",
+    "body": "Inhalt",
+    "subject": "Betreff",
+    "attachments": "Anhänge",
+    "selectTemplate": "Vorlage wählen",
+    "fromEmailAddress": "Von Adresse",
+    "toEmailAddresses": "An Adresse",
+    "emailAddress": "E-Mail Adresse",
+    "deliveryDate": "Zustelldatum",
+    "account": "Firma",
+    "users": "Benutzer",
+    "replied": "Beantwortet",
+    "replies": "Antworten",
+    "isRead": "Ist gelesen",
+    "isNotRead": "Ungelesen",
+    "isImportant": "Ist wichtig",
+    "isUsers": "Gehört Benutzer",
+    "inTrash": "Im Papierkorb"
+  },
+  "links": {
+    "replied": "Beantwortet",
+    "replies": "Antworten"
+  },
+  "options": {
+    "status": {
+      "Draft": "Entwurf",
+      "Sending": "Wird gesendet",
+      "Sent": "Gesendet",
+      "Archived": "Archiviert",
+      "Received": "Empfangen",
+      "Failed": "Fehlgeschlagen"
     }
+  },
+  "labels": {
+    "Create Email": "E-Mail archivieren",
+    "Archive Email": "E-Mail archivieren",
+    "Compose": "Erstellen",
+    "Reply": "Antworten",
+    "Reply to All": "Allen antworten",
+    "Forward": "Weiterleiten",
+    "Original message": "Originalnachricht",
+    "Forwarded message": "Weitergeleitete Nachricht:",
+    "Email Accounts": "Persönliche E-Mail Konten",
+    "Inbound Emails": "Gruppen E-Mail Konten",
+    "Email Templates": "E-Mail Vorlagen",
+    "Send Test Email": "Test E-Mail senden",
+    "Send": "Senden",
+    "Email Address": "E-Mail Adresse",
+    "Mark Read": "Als gelesen markieren",
+    "Sending...": "Wird gesendet...",
+    "Save Draft": "Entwurf speichern",
+    "Mark all as read": "Als gelesen markieren",
+    "Show Plain Text": "Als Text zeigen",
+    "Mark as Important": "Als wichtig markieren",
+    "Unmark Importance": "Wichtig Markierung entfernen",
+    "Move to Trash": "In den Papierkorb verschieben",
+    "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
+  },
+  "messages": {
+    "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
+    "testEmailSent": "Eine Test E-Mail wurde gesendet",
+    "emailSent": "E-Mail wurde gesendet",
+    "savedAsDraft": "Als Entwurf gepeichert"
+  },
+  "presetFilters": {
+    "sent": "Gesendet",
+    "archived": "Archiviert",
+    "inbox": "Posteingang",
+    "drafts": "Entwürfe",
+    "trash": "Papierkorb"
+  },
+  "massActions": {
+    "markAsRead": "Als gelesen markieren",
+    "markAsNotRead": "Als ungelesen markieren",
+    "markAsImportant": "Als wichtig markieren",
+    "markAsNotImportant": "Wichtig Markierung entfernen",
+    "moveToTrash": "In den Papierkorb verschieben"
+  }
 }

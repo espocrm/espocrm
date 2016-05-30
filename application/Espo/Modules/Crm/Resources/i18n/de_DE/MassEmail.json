@@ -1,49 +1,49 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "storeSentEmails": "Gesendete E-Mails speichern",
-        "startAt": "Startdatum",
-        "fromAddress": "Von Adresse",
-        "fromName": "Von Name",
-        "replyToAddress": "Antwort-an Adresse",
-        "replyToName": "Antwort-an Name",
-        "campaign": "Kampagne",
-        "emailTemplate": "E-Mail Vorlage",
-        "inboundEmail": "E-Mail Konto",
-        "targetLists": "Kontaktlisten",
-        "excludingTargetLists": "Kontaktlisten ausschließen",
-        "optOutEntirely": "Überhaupt keine E-Mail"
-    },
-    "links": {
-        "targetLists": "Kontaktlisten",
-        "excludingTargetLists": "Kontaktlisten ausschließen",
-        "queueItems": "Warteschlangeneinträge",
-        "campaign": "Kampagne",
-        "emailTemplate": "E-Mail Vorlage",
-        "inboundEmail": "E-Mail Konto"
-    },
-    "options": {
-        "status": {
-            "Draft": "Entwurf",
-            "Pending": "Schwebend",
-            "In Process": "In Arbeit",
-            "Complete": "Fertig",
-            "Canceled": "Storniert",
-            "Failed": "Fehlgeschlagen"
-        }
-    },
-    "labels": {
-        "Create MassEmail": "Massen E-Mail erstellen",
-        "Send Test": "Test senden"
-    },
-    "messages": {
-        "selectAtLeastOneTarget": "Zumindest ein Ziel auswählen",
-        "testSent": "Test E-Mail(s) die gesendet werden sollen"
-    },
-    "tooltips": {
-        "optOutEntirely": "Die E-Mail Adresse von abgemeldeten Empfängern wird mit 'Keine E-Mails' markiert, diese werden keine Massenaussendungen mehr erhalten.",
-        "targetLists": "Zielkontakte die Nachrichten empfangen sollen ",
-        "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen "
+  "fields": {
+    "name": "Betreff",
+    "status": "Status",
+    "storeSentEmails": "Gesendete E-Mails speichern",
+    "startAt": "Startdatum",
+    "fromAddress": "Von Adresse",
+    "fromName": "Von Name",
+    "replyToAddress": "Antwort-an Adresse",
+    "replyToName": "Antwort-an Name",
+    "campaign": "Kampagne",
+    "emailTemplate": "E-Mail Vorlage",
+    "inboundEmail": "E-Mail Konto",
+    "targetLists": "Kontaktlisten",
+    "excludingTargetLists": "Kontaktlisten ausschließen",
+    "optOutEntirely": "Überhaupt keine E-Mail"
+  },
+  "links": {
+    "targetLists": "Kontaktlisten",
+    "excludingTargetLists": "Kontaktlisten ausschließen",
+    "queueItems": "Warteschlangeneinträge",
+    "campaign": "Kampagne",
+    "emailTemplate": "E-Mail Vorlage",
+    "inboundEmail": "E-Mail Konto"
+  },
+  "options": {
+    "status": {
+      "Draft": "Entwurf",
+      "Pending": "Schwebend",
+      "In Process": "In Arbeit",
+      "Complete": "Fertig",
+      "Canceled": "Storniert",
+      "Failed": "Fehlgeschlagen"
     }
+  },
+  "labels": {
+    "Create MassEmail": "Massen E-Mail erstellen",
+    "Send Test": "Test senden"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Zumindest ein Ziel auswählen",
+    "testSent": "Test E-Mail(s) die gesendet werden sollen"
+  },
+  "tooltips": {
+    "optOutEntirely": "Die E-Mail Adresse von abgemeldeten Empfängern wird mit 'Keine E-Mails' markiert, diese werden keine Massenaussendungen mehr erhalten.",
+    "targetLists": "Zielkontakte die Nachrichten empfangen sollen",
+    "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen"
+  }
 }

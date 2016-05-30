@@ -1,56 +1,59 @@
 {
-    "fields": {
-        "name": "Name",
-        "number": "Nummer",
-        "status": "Status",
-        "account": "Firma",
-        "contact": "Kontakt",
-        "contacts": "Kontakte",
-        "priority": "Priorität",
-        "type": "Typ",
-        "description": "Beschreibung",
-        "inboundEmail": "Eingehende E-Mail"
+  "fields": {
+    "name": "Betreff",
+    "number": "Nummer",
+    "status": "Status",
+    "account": "Firma",
+    "contact": "Kontakt",
+    "contacts": "Kontakte",
+    "priority": "Priorität",
+    "type": "Typ",
+    "description": "Beschreibung",
+    "inboundEmail": "Eingehende E-Mail",
+    "lead": "Interessent"
+  },
+  "links": {
+    "inboundEmail": "Eingehende E-Mail",
+    "account": "Firma",
+    "contact": "Kontakt (Primär)",
+    "Contacts": "Kontakte",
+    "meetings": "Meetings",
+    "calls": "Anrufe",
+    "tasks": "Aufgaben",
+    "emails": "E-Mails",
+    "articles": "Wissensbasis Artikel",
+    "lead": "Interessent"
+  },
+  "options": {
+    "status": {
+      "New": "Neu",
+      "Assigned": "Zugewiesen",
+      "Pending": "Schwebend",
+      "Closed": "Abgeschlossen",
+      "Rejected": "Abgelehnt",
+      "Duplicate": "Duplizieren"
     },
-    "links": {
-        "inboundEmail": "Eingehende E-Mail",
-        "account": "Firma",
-        "contact": "Kontakt (Primär)",
-        "Contacts": "Kontakte",
-        "meetings": "Meetings",
-        "calls": "Anrufe",
-        "tasks": "Aufgaben",
-        "emails": "E-Mails"
+    "priority": {
+      "Low": "Niedrig",
+      "Normal": "Normal",
+      "High": "Hoch",
+      "Urgent": "Dringend"
     },
-    "options": {
-        "status": {
-            "New": "Neu",
-            "Assigned": "Zugewiesen",
-            "Pending": "Schwebend",
-            "Closed": "Abgeschlossen",
-            "Rejected": "Abgelehnt",
-            "Duplicate": "Duplizieren"
-        },
-        "priority": {
-            "Low": "Niedrig",
-            "Normal": "Normal",
-            "High": "Hoch",
-            "Urgent": "Dringend"
-        },
-        "type": {
-            "Question": "Frage",
-            "Incident": "Vorfall",
-            "Problem": "Problem"
-        }
-    },
-    "labels": {
-        "Create Case": "Fall erstellen",
-        "Close": "Schließen",
-        "Reject": "Ablehnen",
-        "Closed": "Abgeschlossen",
-        "Rejected": "Abgelehnt"
-    },
-    "presetFilters": {
-        "open": "Offen",
-        "closed": "Abgeschlossen"
+    "type": {
+      "Question": "Frage",
+      "Incident": "Vorfall",
+      "Problem": "Problem"
     }
+  },
+  "labels": {
+    "Create Case": "Fall erstellen",
+    "Close": "Schließen",
+    "Reject": "Ablehnen",
+    "Closed": "Abgeschlossen",
+    "Rejected": "Abgelehnt"
+  },
+  "presetFilters": {
+    "open": "Offen",
+    "closed": "Abgeschlossen"
+  }
 }

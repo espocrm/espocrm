@@ -30,8 +30,6 @@ Espo.define('crm:views/mass-email/record/edit-small', 'views/record/edit-small',
 
     return Dep.extend({
 
-        sideView: false
-
     });
 });
 

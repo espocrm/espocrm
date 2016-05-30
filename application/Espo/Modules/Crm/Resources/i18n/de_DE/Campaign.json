@@ -1,68 +1,71 @@
 {
-    "fields": {
-        "name": "Name",
-        "description": "Beschreibung",
-        "status": "Status",
-        "type": "Typ",
-        "startDate": "Startdatum",
-        "endDate": "Enddatum",
-        "targetLists": "Kontaktlisten",
-        "excludingTargetLists": "Kontaktlisten ausschließen",
-        "sentCount": "Gesendet",
-        "openedCount": "Geöffnet",
-        "clickedCount": "Geklickt",
-        "optedOutCount": "Keine E-Mails",
-        "bouncedCount": "Nicht zustellbar",
-        "hardBouncedCount": "Hard Bounced",
-        "softBouncedCount": "Soft Bounced",
-        "leadCreatedCount": "Erstellte Interessenten",
-        "revenue": "Umsatz",
-        "revenueConverted": "Umsatz (konvertiert)",
-        "budget": "Budget"
+  "fields": {
+    "name": "Betreff",
+    "description": "Beschreibung",
+    "status": "Status",
+    "type": "Typ",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "targetLists": "Kontaktlisten",
+    "excludingTargetLists": "Kontaktlisten ausschließen",
+    "sentCount": "Gesendet",
+    "openedCount": "Geöffnet",
+    "clickedCount": "Geklickt",
+    "optedOutCount": "Keine E-Mails",
+    "bouncedCount": "Nicht zustellbar",
+    "hardBouncedCount": "Hard Bounced",
+    "softBouncedCount": "Soft Bounced",
+    "leadCreatedCount": "Erstellte Interessenten",
+    "revenue": "Umsatz",
+    "revenueConverted": "Umsatz (konvertiert)",
+    "budget": "Budget",
+    "budgetConverted": "Budget (konvertiert)"
+  },
+  "links": {
+    "targetLists": "Kontaktlisten",
+    "excludingTargetLists": "Kontaktlisten ausschließen",
+    "accounts": "Firmen",
+    "contacts": "Kontakte",
+    "leads": "Interessenten",
+    "opportunities": "Verkaufschancen",
+    "campaignLogRecords": "Protokoll",
+    "massEmails": "Massen E-Mails",
+    "trackingUrls": "Tracking URLs"
+  },
+  "options": {
+    "type": {
+      "Email": "E-Mail",
+      "Web": "Web",
+      "Television": "Fernsehen",
+      "Radio": "Radio Button",
+      "Newsletter": "Newsletter",
+      "Mail": "Mail"
     },
-    "links": {
-        "targetLists": "Kontaktlisten",
-        "excludingTargetLists": "Kontaktlisten ausschließen",
-        "accounts": "Firmen",
-        "contacts": "Kontakte",
-        "leads": "Interessenten",
-        "opportunities": "Verkaufschancen",
-        "campaignLogRecords": "Protokoll",
-        "massEmails": "Massen E-Mails",
-        "trackingUrls": "Tracking URLs"
-    },
-    "options": {
-        "type": {
-            "Email": "E-Mail",
-            "Web": "Web",
-            "Television": "Fernsehen",
-            "Radio": "Radio Button",
-            "Newsletter": "Newsletter",
-            "Mail": "Mail"
-        },
-        "status": {
-            "Planning": "Planung",
-            "Active": "Aktiv",
-            "Inactive": "Inaktiv",
-            "Complete": "Fertig"
-        }
-    },
-    "labels": {
-        "Create Campaign": "Neue Kampagne",
-        "Target Lists": "Kontaktlisten",
-        "Statistics": "Statistik",
-        "hard": "hart",
-        "soft": "weich",
-        "Unsubscribe": "Abmelden"
-    },
-    "presetFilters": {
-        "active": "Aktiv"
-    },
-    "messages": {
-        "unsubscribed": "Sie wurden erfolgreich von unserem Verteiler entfernt"
-    },
-    "tooltips": {
-        "targetLists": "Zielkontakte die Nachrichten empfangen sollen ",
-        "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen "
+    "status": {
+      "Planning": "Planung",
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv",
+      "Complete": "Fertig"
     }
+  },
+  "labels": {
+    "Create Campaign": "Neue Kampagne",
+    "Target Lists": "Kontaktlisten",
+    "Statistics": "Statistik",
+    "hard": "hart",
+    "soft": "weich",
+    "Unsubscribe": "Abmelden",
+    "Mass Emails": "Massen E-Mails",
+    "Email Templates": "E-Mail Vorlagen"
+  },
+  "presetFilters": {
+    "active": "Aktiv"
+  },
+  "messages": {
+    "unsubscribed": "Sie wurden erfolgreich von unserem Verteiler entfernt"
+  },
+  "tooltips": {
+    "targetLists": "Zielkontakte die Nachrichten empfangen sollen",
+    "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen"
+  }
 }

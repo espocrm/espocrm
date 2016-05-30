@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Buat Dokumen Folder",
+    "Manage Categories": "mengelola Folder"
+  },
+  "links": {
+    "documents": "dokumen"
+  }
+}

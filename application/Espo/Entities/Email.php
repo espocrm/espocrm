@@ -51,6 +51,11 @@ class Email extends \Espo\Core\ORM\Entity
         }
     }
 
+    public function isManuallyArchived()
+    {
+        return $this->get('status') === 'Archived' && $this->get('createdById') !== 'system';
+    }
+
     public function addAttachment(\Espo\Entities\Attachment $attachment)
     {
         if (!empty($this->id)) {

@@ -4,5 +4,9 @@
     "recordViews": {
         "edit": "crm:views/campaign-tracking-url/record/edit",
         "editQuick": "crm:views/campaign-tracking-url/record/edit-small"
+    },
+    "defaultSidePanel": {
+        "edit": false,
+        "editSmall": false
     }
 }

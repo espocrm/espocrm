@@ -157,10 +157,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var view = this.getFieldView(name);
             if (view) {
-                var view = this.getFieldView(name);
-                if (view) {
-                    view.setRequired();
-                }
+                view.setRequired();
             }
         },
 
@@ -169,10 +166,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             var view = this.getFieldView(name);
             if (view) {
-                var view = this.getFieldView(name);
-                if (view) {
-                    view.setNotRequired();
-                }
+                view.setNotRequired();
             }
         },
 

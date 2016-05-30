@@ -30,8 +30,6 @@ Espo.define('crm:views/campaign-tracking-url/record/edit', 'views/record/edit', 
 
     return Dep.extend({
 
-        sideView: false
-
     });
 });
 

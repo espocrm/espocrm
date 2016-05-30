@@ -56,6 +56,9 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         },
 
         formatNumber: function (value) {
+            if (this.disableFormatting) {
+                return value;
+            }
             if (value !== null) {
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);

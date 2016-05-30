@@ -66,7 +66,8 @@
         "siteUrl": "Site URL",
         "addressPreview": "Address Preview",
         "addressFormat": "Address Format",
-        "notificationSoundsDisabled": "Disable Notification Sounds"
+        "notificationSoundsDisabled": "Disable Notification Sounds",
+        "applicationName": "Application Name"
     },
     "options": {
         "weekStart": {

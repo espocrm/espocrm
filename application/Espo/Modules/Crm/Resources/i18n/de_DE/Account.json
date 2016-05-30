@@ -1,79 +1,80 @@
 {
-    "fields": {
-        "name": "Name",
-        "emailAddress": "E-Mail",
-        "website": "Webseite",
-        "phoneNumber": "Telefon",
-        "billingAddress": "Rechnungsadresse",
-        "shippingAddress": "Lieferadresse",
-        "description": "Beschreibung",
-        "sicCode": "WKN Nummer",
-        "industry": "Branche",
-        "type": "Typ",
-        "contactRole": "Rolle",
-        "campaign": "Kampagne",
-        "targetLists": "Kontaktlisten",
-        "targetList": "Kontaktliste"
+  "fields": {
+    "name": "Betreff",
+    "emailAddress": "E-Mail",
+    "website": "Webseite",
+    "phoneNumber": "Telefon",
+    "billingAddress": "Rechnungsadresse",
+    "shippingAddress": "Lieferadresse",
+    "description": "Beschreibung",
+    "sicCode": "WKN Nummer",
+    "industry": "Branche",
+    "type": "Typ",
+    "contactRole": "Rolle",
+    "campaign": "Kampagne",
+    "targetLists": "Kontaktlisten",
+    "targetList": "Kontaktliste"
+  },
+  "links": {
+    "contacts": "Kontakte",
+    "opportunities": "Verkaufschancen",
+    "cases": "Fälle",
+    "documents": "Dokumente",
+    "meetingsPrimary": "Meetings (erweitert)",
+    "callsPrimary": "Anrufe (erweitert)",
+    "tasksPrimary": "Aufgaben (erweitert)",
+    "emailsPrimary": "E-Mails (erweitert)",
+    "targetLists": "Kontaktlisten",
+    "campaignLogRecords": "Kampagnen Log",
+    "campaign": "Kampagne",
+    "portalUsers": "Portal Benutzer"
+  },
+  "options": {
+    "type": {
+      "Customer": "Kunde",
+      "Investor": "Investor",
+      "Partner": "Partner",
+      "Reseller": "Wiederverkäufer"
     },
-    "links": {
-        "contacts": "Kontakte",
-        "opportunities": "Verkaufschancen",
-        "cases": "Fälle",
-        "documents": "Dokumente",
-        "meetingsPrimary": "Meetings (erweitert)",
-        "callsPrimary": "Anrufe (erweitert)",
-        "tasksPrimary": "Aufgaben (erweitert)",
-        "emailsPrimary": "E-Mails (erweitert)",
-        "targetLists": "Kontaktlisten",
-        "campaignLogRecords": "Kampagnen Log",
-        "campaign": "Kampagne"
-    },
-    "options": {
-        "type": {
-            "Customer": "Kunde",
-            "Investor": "Investor",
-            "Partner": "Partner",
-            "Reseller": "Wiederverkäufer"
-        },
-        "industry": {
-            "Agriculture": "Landwirtschaft",
-            "Advertising": "Werbewirtschaft",
-            "Apparel & Accessories": "Bekleidungsindustrie",
-            "Automotive": "Automobilindustrie",
-            "Banking": "Bankwesen",
-            "Biotechnology": "Biotechnologie",
-            "Building Materials & Equipment": "Baumaterial & -ausstattung",
-            "Chemical": "Chemieindustrie",
-            "Computer": "Informationstechnologie",
-            "Education": "Bildungswesen",
-            "Electronics": "Elektronik",
-            "Energy": "Energieerzeuger",
-            "Entertainment & Leisure": "Freizeit- und Unterhaltungsindustrie",
-            "Finance": "Finanzsektor",
-            "Food & Beverage": "Speisen und Getränke",
-            "Grocery": "Einzelhandel",
-            "Healthcare": "Gesundheitswesen",
-            "Insurance": "Versicherung",
-            "Legal": "Rechtswesen",
-            "Manufacturing": "Produktion",
-            "Publishing": "Medien",
-            "Real Estate": "Immobilien",
-            "Service": "Service",
-            "Sports": "Sport",
-            "Software": "Software",
-            "Technology": "Technologie",
-            "Telecommunications": "Telekommunikation",
-            "Television": "Fernsehen",
-            "Transportation": "Transportwesen",
-            "Venture Capital": "Risikokapital"
-        }
-    },
-    "labels": {
-        "Create Account": "Firma erstellen",
-        "Copy Billing": "Rechnungsadresse kopieren"
-    },
-    "presetFilters": {
-        "customers": "Kunden",
-        "partners": "Partner"
+    "industry": {
+      "Agriculture": "Landwirtschaft",
+      "Advertising": "Werbewirtschaft",
+      "Apparel & Accessories": "Bekleidungsindustrie",
+      "Automotive": "Automobilindustrie",
+      "Banking": "Bankwesen",
+      "Biotechnology": "Biotechnologie",
+      "Building Materials & Equipment": "Baumaterial & -ausstattung",
+      "Chemical": "Chemieindustrie",
+      "Computer": "Informationstechnologie",
+      "Education": "Bildungswesen",
+      "Electronics": "Elektronik",
+      "Energy": "Energieerzeuger",
+      "Entertainment & Leisure": "Freizeit- und Unterhaltungsindustrie",
+      "Finance": "Finanzsektor",
+      "Food & Beverage": "Speisen und Getränke",
+      "Grocery": "Einzelhandel",
+      "Healthcare": "Gesundheitswesen",
+      "Insurance": "Versicherung",
+      "Legal": "Rechtswesen",
+      "Manufacturing": "Produktion",
+      "Publishing": "Medien",
+      "Real Estate": "Immobilien",
+      "Service": "Service",
+      "Sports": "Sport",
+      "Software": "Software",
+      "Technology": "Technologie",
+      "Telecommunications": "Telekommunikation",
+      "Television": "Fernsehen",
+      "Transportation": "Transportwesen",
+      "Venture Capital": "Risikokapital"
     }
+  },
+  "labels": {
+    "Create Account": "Firma erstellen",
+    "Copy Billing": "Rechnungsadresse kopieren"
+  },
+  "presetFilters": {
+    "customers": "Kunden",
+    "partners": "Partner"
+  }
 }

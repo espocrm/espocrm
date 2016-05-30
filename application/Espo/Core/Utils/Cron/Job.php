@@ -245,7 +245,7 @@ class Job
                 deleted = 0
             GROUP BY scheduled_job_id
             HAVING count( * ) > 1
-            ORDER BY execute_time ASC
+            ORDER BY MAX(execute_time) ASC
         ";
         $sth = $pdo->prepare($query);
         $sth->execute();

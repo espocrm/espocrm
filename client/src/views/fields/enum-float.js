@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Fields.EnumFloat', 'Views.Fields.EnumInt', function (Dep) {
+Espo.define('views/fields/enum-float', 'views/fields/enum-int', function (Dep) {
 
     return Dep.extend({
 

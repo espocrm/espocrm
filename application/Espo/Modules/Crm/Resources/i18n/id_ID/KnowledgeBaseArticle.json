@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Buat Pasal",
+    "Any": "Apa saja",
+    "Send in Email": "Kirim Email"
+  },
+  "fields": {
+    "name": "Nama",
+    "status": "Status",
+    "type": "Mengetik",
+    "attachments": "lampiran",
+    "publishDate": "mempublikasikan Tanggal",
+    "expirationDate": "Tanggal kadaluarsa",
+    "description": "Deskripsi",
+    "body": "Tubuh",
+    "categories": "kategori",
+    "language": "Bahasa",
+    "portals": "portal"
+  },
+  "links": {
+    "cases": "kasus",
+    "opportunities": "peluang",
+    "categories": "kategori",
+    "portals": "portal"
+  },
+  "options": {
+    "status": {
+      "In Review": "dalam Ulasan",
+      "Draft": "Konsep",
+      "Archived": "diarsipkan",
+      "Published": "Diterbitkan"
+    },
+    "type": {
+      "Article": "Artikel"
+    }
+  },
+  "tooltips": {
+    "portals": "Jika tidak kosong maka artikel ini akan tersedia hanya dalam portal yang ditentukan. Jika kosong maka akan tersedia di semua portal."
+  },
+  "presetFilters": {
+    "published": "Diterbitkan"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Nama",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
+    "portalRoles": "peran",
+    "isActive": "Aktif",
+    "isDefault": "Atur ",
+    "tabList": "Daftar tabel",
+    "quickCreateList": "Buat Daftar Cepat",
+    "theme": "Tema",
+    "language": "Bahasa",
+    "dashboardLayout": "dashboard Layout",
+    "dateFormat": "Format tanggal",
+    "timeFormat": "Format waktu",
+    "timeZone": "Zona waktu",
+    "weekStart": "Hari Pertama dalam satu minggu",
+    "defaultCurrency": "Setelan mata uang"
+  },
+  "links": {
+    "users": "pengguna",
+    "portalRoles": "peran",
+    "notes": "Catatan"
+  },
+  "tooltips": {
+    "portalRoles": "Peran spesifik Portal akan diterapkan untuk semua pengguna portal ini."
+  },
+  "labels": {
+    "Create Portal": "Buat Portal",
+    "User Interface": "Antarmuka pengguna",
+    "General": "Umum",
+    "Settings": "pengaturan"
+  }
+}

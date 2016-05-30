@@ -1030,6 +1030,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.getGridLayout(function (layout) {
                 this.createView('middle', this.middleView, {
                     model: this.model,
+                    type: this.type,
                     _layout: layout,
                     el: el + ' .middle',
                     layoutData: {
@@ -1048,6 +1049,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 el: el + ' .bottom',
                 notToRender: true,
                 readOnly: this.readOnly,
+                type: this.type,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper
             }, function (view) {

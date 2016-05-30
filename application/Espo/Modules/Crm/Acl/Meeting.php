@@ -41,7 +41,7 @@ class Meeting extends \Espo\Core\Acl\Base
         }
 
         if (is_object($data)) {
-            if ($data->read === 'own') {
+            if ($data->read === 'own' || $data->read === 'team') {
                 if ($entity->hasLinkMultipleId('users', $user->id)) {
                     return true;
                 }

@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Nama",
+    "status": "Status",
+    "target": "Target",
+    "sentAt": "Tanggal Dikirim",
+    "attemptCount": "upaya",
+    "emailAddress": "Alamat email",
+    "massEmail": "Mass Email",
+    "isTest": "adalah Uji"
+  },
+  "links": {
+    "target": "Target",
+    "massEmail": "Email massal"
+  },
+  "options": {
+    "status": {
+      "Pending": "tertunda",
+      "Sent": "mengirim",
+      "Failed": "Gagal"
+    }
+  },
+  "presetFilters": {
+    "pending": "tertunda",
+    "sent": "mengirim",
+    "failed": "Gagal"
+  }
+}

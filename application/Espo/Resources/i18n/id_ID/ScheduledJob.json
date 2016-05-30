@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "name": "Nama",
+    "status": "Status",
+    "job": "Pekerjaan",
+    "scheduling": "penjadwalan"
+  },
+  "links": {
+    "log": "Log"
+  },
+  "labels": {
+    "Create ScheduledJob": "Buat Pekerjaan Terjadwal"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Membersihkan",
+      "CheckInboundEmails": "Periksa Akun Email Grup",
+      "CheckEmailAccounts": "Periksa Akun Email Pribadi",
+      "SendEmailReminders": "Kirim Pengingat Email",
+      "AuthTokenControl": "Tupoksi Token Kontrol"
+    },
+    "cronSetup": {
+      "linux": "Catatan: Tambahkan baris ini ke file kontak untuk menjalankan Espo Pekerjaan Terjadwal:",
+      "mac": "Catatan: Tambahkan baris ini ke file kontak untuk menjalankan Espo Pekerjaan Terjadwal:",
+      "windows": "Catatan: Buat file batch dengan perintah berikut untuk menjalankan Espo Pekerjaan Terjadwal menggunakan Windows Scheduled Tasks:",
+      "default": "Catatan: Tambahkan perintah ini untuk Cron Job (Scheduled Task):"
+    },
+    "status": {
+      "Active": "Aktif",
+      "Inactive": "non-aktif"
+    }
+  },
+  "tooltips": {
+    "scheduling": "notasi crontab. Mendefinisikan frekuensi berjalan pekerjaan.\n\n* / 5 * * * * - setiap 5 menit\n\n0 * / 2 * * * - setiap 2 jam\n\n30 1 * * * - di 1:30 sekali sehari\n\n0 0 1 * * - pada hari pertama bulan"
+  }
+}

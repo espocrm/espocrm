@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "name": "Nama",
+    "description": "Deskripsi",
+    "status": "Status",
+    "type": "Mengetik",
+    "startDate": "Mulai tanggal",
+    "endDate": "Tanggal akhir",
+    "targetLists": "Daftar Target",
+    "excludingTargetLists": "Tidak termasuk Daftar Sasaran",
+    "sentCount": "mengirim",
+    "openedCount": "dibuka",
+    "clickedCount": "diklik",
+    "optedOutCount": "Memilih keluar",
+    "bouncedCount": "terpental",
+    "hardBouncedCount": "Terpental Keras",
+    "softBouncedCount": "lembut Terpental",
+    "leadCreatedCount": "memimpin Dibuat",
+    "revenue": "Pendapatan",
+    "revenueConverted": "Pendapatan (dikonversi)",
+    "budget": "anggaran belanja",
+    "budgetConverted": "Anggaran (dikonversi)"
+  },
+  "links": {
+    "targetLists": "Daftar Target",
+    "excludingTargetLists": "Tidak termasuk Daftar Sasaran",
+    "accounts": "Akun",
+    "contacts": "kontak",
+    "leads": "memimpin",
+    "opportunities": "peluang",
+    "campaignLogRecords": "Log",
+    "massEmails": "Email massal",
+    "trackingUrls": "pelacakan URL"
+  },
+  "options": {
+    "type": {
+      "Email": "E-mail",
+      "Web": "jaringan",
+      "Television": "Televisi",
+      "Radio": "Radio",
+      "Newsletter": "laporan berkala",
+      "Mail": "Surat"
+    },
+    "status": {
+      "Planning": "perencanaan",
+      "Active": "Aktif",
+      "Inactive": "non-aktif",
+      "Complete": "Lengkap"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Buat Kampanye",
+    "Target Lists": "Daftar Target",
+    "Statistics": "statistika",
+    "hard": "keras",
+    "soft": "lembut",
+    "Unsubscribe": "berhenti berlangganan",
+    "Mass Emails": "Email massal",
+    "Email Templates": "Template email"
+  },
+  "presetFilters": {
+    "active": "Aktif"
+  },
+  "messages": {
+    "unsubscribed": "Anda telah berhenti berlangganan dari milis kami."
+  },
+  "tooltips": {
+    "targetLists": "Target yang harus menerima pesan.",
+    "excludingTargetLists": "Target yang seharusnya tidak menerima pesan."
+  }
+}

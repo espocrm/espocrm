@@ -24,19 +24,20 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-Espo.define('Views.Preferences.Fields.SmtpEmailAddress', 'Views.Fields.Varchar', function (Dep) {
+ ************************************************************************/
+
+Espo.define('views/preferences/fields/smtp-email-address', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
-    
-        detailTemplate: 'preferences.fields.smtp-email-address.detail',
-        
+
+        detailTemplate: 'preferences/fields/smtp-email-address/detail',
+
         data: function () {
             return _.extend({
                 isAdmin: this.getUser().isAdmin()
             }, Dep.prototype.data.call(this));
         },
-        
+
     });
-    
+
 });

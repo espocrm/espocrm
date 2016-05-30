@@ -42,7 +42,8 @@ class Activities extends \Espo\Core\Services\Base
         'user',
         'metadata',
         'acl',
-        'selectManagerFactory'
+        'selectManagerFactory',
+        'serviceFactory'
     );
 
     protected $calendarScopeList = ['Meeting', 'Call', 'Task'];
@@ -75,6 +76,11 @@ class Activities extends \Espo\Core\Services\Base
     protected function getSelectManagerFactory()
     {
         return $this->getInjection('selectManagerFactory');
+    }
+
+    protected function getServiceFactory()
+    {
+        return $this->getInjection('serviceFactory');
     }
 
     protected function isPerson($scope)
@@ -809,7 +815,7 @@ class Activities extends \Espo\Core\Services\Base
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
     }
 
-    protected function getCalendarQuery($scope, $userId, $from, $to)
+    protected function getCalendarSelectParams($scope, $userId, $from, $to)
     {
         $selectManager = $this->getSelectManagerFactory()->create($scope);
 
@@ -821,7 +827,7 @@ class Activities extends \Espo\Core\Services\Base
             'name',
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
-            'status',
+            ($seed->hasAttribute('status') ? ['status', 'status'] : ['VALUE:', 'status']),
             ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
             ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
@@ -873,6 +879,19 @@ class Activities extends \Espo\Core\Services\Base
 
         if ($seed->hasRelation('assignedUsers')) {
             $selectParams['leftJoins'][] = 'assignedUsers';
+        }
+
+        return $selectParams;
+    }
+
+    protected function getCalendarQuery($scope, $userId, $from, $to)
+    {
+        $service = $this->getServiceFactory()->create($scope);
+
+        if (method_exists($service, 'getCalendarSelectParams')) {
+            $selectParams = $service->getCalendarSelectParams($userId, $from, $to);
+        } else {
+            $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to);
         }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
