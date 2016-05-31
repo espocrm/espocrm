@@ -62,6 +62,9 @@
             [
                 {"name":"useCustomTabList"},
                 {"name":"tabList"}
+            ],
+            [
+                {"name":"dashboardLayout", "fullWidth": true}
             ]
         ]
     },

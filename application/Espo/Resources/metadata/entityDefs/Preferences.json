@@ -41,7 +41,8 @@
             "maxLength": 1
         },
         "dashboardLayout": {
-            "type": "jsonArray"
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
         },
         "dashletsOptions": {
             "type": "jsonObject"

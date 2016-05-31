@@ -26,7 +26,8 @@
         "theme": "Theme",
         "useCustomTabList": "Custom Tab List",
         "tabList": "Tab List",
-        "emailReplyToAllByDefault": "Email Reply to All by Default"
+        "emailReplyToAllByDefault": "Email Reply to All by Default",
+        "dashboardLayout": "Dashboard Layout"
     },
     "links": {
     },
