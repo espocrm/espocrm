@@ -32,6 +32,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         template: 'admin/field-manager/edit',
 
+        entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
+
         data: function () {
             return {
                 scope: this.scope,
@@ -198,7 +200,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
 
 
-                    if (~['enum', 'phone'].indexOf(this.model.get('type')) && this.model.get('translatedOptions')) {
+                    if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {
                         langData[this.scope].options = langData[this.scope].options || {};
                         langData[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
                     }
