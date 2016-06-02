@@ -24,14 +24,14 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.GlobalSearch.ScopeBadge', 'View', function (Dep) {
+Espo.define('views/global-search/scope-badge', 'view', function (Dep) {
 
     return Dep.extend({
-        
-        template: 'global-search.scope-badge',
-        
+
+        template: 'global-search/scope-badge',
+
         data: function () {
             return {
                 label: this.translate(this.model.get('_scope'), 'scopeNames')
@@ -39,6 +39,6 @@ Espo.define('Views.GlobalSearch.ScopeBadge', 'View', function (Dep) {
         },
 
     });
-    
+
 });
 

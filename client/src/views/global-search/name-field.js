@@ -24,14 +24,14 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.GlobalSearch.NameField', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/global-search/name-field', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
-        
-        listTemplate: 'global-search.name-field',
-        
+
+        listTemplate: 'global-search/name-field',
+
         data: function () {
             return {
                 scope: this.model.get('_scope'),
@@ -41,6 +41,6 @@ Espo.define('Views.GlobalSearch.NameField', 'Views.Fields.Base', function (Dep) 
         },
 
     });
-    
+
 });
 
