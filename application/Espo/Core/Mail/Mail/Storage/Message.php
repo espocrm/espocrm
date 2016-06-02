@@ -34,6 +34,7 @@ use Zend\Mail\Header\HeaderInterface;
 use Zend\Mime;
 use Zend\Mail\Storage\Exception;
 use Zend\Mail\Storage\AbstractStorage;
+use Zend\Stdlib\ErrorHandler;
 
 class Message extends \Zend\Mail\Storage\Message
 {
