@@ -18,6 +18,10 @@
          "name": "noEmptyString",
          "type": "bool",
          "default": false
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "filter": true,
