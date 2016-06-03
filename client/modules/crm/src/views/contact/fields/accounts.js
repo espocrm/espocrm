@@ -161,7 +161,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;
-            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || '';
+            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
 
             return data;
         },
