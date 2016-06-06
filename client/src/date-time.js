@@ -91,6 +91,10 @@ Espo.define('date-time', [], function () {
             return m.format(this.internalDateFormat);
         },
 
+        getTimeZone: function () {
+            return this.timeZone ? this.timeZone : 'UTC';
+        },
+
         toDisplayDate: function (string) {
             if (!string || (typeof string != 'string')) {
                 return '';

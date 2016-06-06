@@ -324,7 +324,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         convertToFcEvents: function (list) {
-            this.now = moment.tz(this.getDateTime().timeZone);
+            this.now = moment.tz(this.getDateTime().getTimeZone());
 
             var events = [];
             list.forEach(function (o) {

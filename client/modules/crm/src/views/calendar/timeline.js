@@ -312,14 +312,14 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 if (!o.dateStartDate) {
                     event.start = this.getDateTime().toMoment(o.dateStart);
                 } else {
-                    event.start = moment.tz(o.dateStartDate, this.getDateTime().timeZone);
+                    event.start = moment.tz(o.dateStartDate, this.getDateTime().getTimeZone());
                 }
             }
             if (o.dateEnd) {
                 if (!o.dateEndDate) {
                     event.end = this.getDateTime().toMoment(o.dateEnd);
                 } else {
-                    event.end = moment.tz(o.dateEndDate, this.getDateTime().timeZone);
+                    event.end = moment.tz(o.dateEndDate, this.getDateTime().getTimeZone());
                 }
             }
 
@@ -416,7 +416,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                         if (date && date.noTimeZone) {
                             return m;
                         }
-                        return m.tz(this.getDateTime().timeZone);
+                        return m.tz(this.getDateTime().getTimeZone());
                     }.bind(this),
                     format: this.getFormatObject(),
                     zoomMax: 24 * 3600 *  1000 * this.maxRange,
@@ -677,9 +677,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         initDates: function () {
             if (this.date) {
-                this.start = moment.tz(this.date, this.getDateTime().timeZone);
+                this.start = moment.tz(this.date, this.getDateTime().getTimeZone());
             } else {
-                this.start = moment.tz(this.getDateTime().timeZone);
+                this.start = moment.tz(this.getDateTime().getTimeZone());
             }
             this.end = this.start.clone();
             this.end.add(1, 'day');
