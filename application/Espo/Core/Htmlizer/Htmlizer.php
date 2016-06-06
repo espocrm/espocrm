@@ -92,10 +92,9 @@ class Htmlizer
         foreach ($fieldList as $field) {
             if (in_array($field, $forbidenAttributeList)) continue;
 
-            $type = null;
-            if (!empty($fieldDefs[$field]['type'])) {
-                $type = $fieldDefs[$field]['type'];
-            }
+
+            $type = $entity->getAttributeType($field);
+
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$field])) {
                     $data[$field] = $this->dateTime->convertSystemDateTime($data[$field]);
@@ -130,6 +129,8 @@ class Htmlizer
                         $data[$field][$k] = $this->format($data[$field][$k]);
                     }
                 }
+            } else if ($type === Entity::PASSWORD) {
+                continue;
             }
 
             if (array_key_exists($field, $data)) {
