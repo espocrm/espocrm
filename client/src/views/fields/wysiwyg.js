@@ -246,6 +246,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         	text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 
+            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
+
             var $div = $('<div>').html(value);
             $div.find('style').remove();
             $div.find('link[ref="stylesheet"]').remove();
