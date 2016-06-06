@@ -130,7 +130,7 @@ class Htmlizer
                     }
                 }
             } else if ($type === Entity::PASSWORD) {
-                continue;
+                unset($data[$field]);
             }
 
             if (array_key_exists($field, $data)) {
