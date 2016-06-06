@@ -3,5 +3,5 @@
     "modalViews": {
         "edit": "views/email-filter/modals/edit"
     },
-    "searchPanelDisabled": true
+    "searchPanelDisabled": false
 }
