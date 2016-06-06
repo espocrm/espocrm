@@ -88,7 +88,7 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'));
+        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl());
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 

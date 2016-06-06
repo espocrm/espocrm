@@ -280,6 +280,11 @@ abstract class Entity implements IEntity
         return array_keys($this->getAttributes());
     }
 
+    public function getRelationList()
+    {
+        return array_keys($this->getRelations());
+    }
+
     public function getValues()
     {
         return $this->toArray();

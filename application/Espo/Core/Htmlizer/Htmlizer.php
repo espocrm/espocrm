@@ -46,11 +46,19 @@ class Htmlizer
 
     protected $config;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number)
+    protected $acl;
+
+    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number, $acl = null)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
         $this->number = $number;
+        $this->acl = $acl;
+    }
+
+    protected function getAcl()
+    {
+        return $this->acl;
     }
 
     protected function formatNumber($value)
@@ -68,16 +76,22 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity)
+    protected function getDataFromEntity(Entity $entity, $notLinks = false)
     {
         $data = $entity->toArray();
-
-
 
         $fieldDefs = $entity->getFields();
         $fieldList = array_keys($fieldDefs);
 
+        $forbidenAttributeList = [];
+
+        if ($this->getAcl()) {
+            $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        }
+
         foreach ($fieldList as $field) {
+            if (in_array($field, $forbidenAttributeList)) continue;
+
             $type = null;
             if (!empty($fieldDefs[$field]['type'])) {
                 $type = $fieldDefs[$field]['type'];
@@ -120,6 +134,25 @@ class Htmlizer
 
             if (array_key_exists($field, $data)) {
                $data[$field] = $this->format($data[$field]);
+            }
+        }
+
+        if (!$notLinks) {
+            $relationDefs = $entity->getRelations();
+            foreach ($entity->getRelationList() as $relation) {
+                if (
+                    !empty($relationDefs[$relation]['type'])
+                    &&
+                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
+                ) {
+                    $relatedEntity = $entity->get($relation);
+                    if (!$relatedEntity) continue;
+                    if ($this->getAcl()) {
+                        if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
+                    }
+
+                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                }
             }
         }
 
