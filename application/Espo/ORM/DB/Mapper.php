@@ -414,24 +414,29 @@ abstract class Mapper implements IMapper
 
                 $relTable = $this->toDb($relOpt['relationName']);
 
-
-                $params['select'] = array('id');
-                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
-
                 $fieldsPart = $this->toDb($nearKey);
                 $valuesPart = $this->pdo->quote($entity->id);
+
+                $valueList = [];
+                $valueList[] = $entity->id;
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     foreach ($relOpt['conditions'] as $f => $v) {
                         $fieldsPart .= ", " . $this->toDb($f);
                         $valuesPart .= ", " . $this->pdo->quote($v);
+                        $valueList[] = $v;
                     }
                 }
                 $fieldsPart .= ", " . $this->toDb($distantKey);
 
-                $subSql = substr($subSql, 7);
+                $params['select'] = [];
+                foreach ($valueList as $value) {
+                   $params['select'][] = ['VALUE:' . $value, $value];
+                }
 
-                $subSql = "SELECT " . $valuesPart . ", " . $subSql;
+                $params['select'][] = 'id';
+
+                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
 
                 $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
 
