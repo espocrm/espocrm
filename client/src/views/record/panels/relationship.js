@@ -141,7 +141,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.setFilter(this.filter);
 
                 if (this.fetchOnModelAfterRelate) {
-                    this.listenToOnce(this.model, 'after:relate', function () {
+                    this.listenTo(this.model, 'after:relate', function () {
                         collection.fetch();
                     }, this);
                 }
