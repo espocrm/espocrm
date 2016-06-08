@@ -187,6 +187,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }
 
             this.listenToOnce(this.model, 'sync', function () {
+                Espo.Ui.notify(false);
+
                 this.getMetadata().load(function () {
                     this.getMetadata().storeToCache();
                     this.trigger('after:save');

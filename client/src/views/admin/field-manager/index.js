@@ -128,8 +128,7 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
                 this.notify(false);
                 $(window).scrollTop(0);
 
-                view.once('after:save', function () {
-                    //this.openScope(this.scope);
+                this.listenTo(view, 'after:save', function () {
                     this.notify('Saved', 'success');
                 }, this);
             }.bind(this));
