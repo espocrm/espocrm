@@ -99,7 +99,8 @@
         "rangeFloat": "Range Float",
         "rangeCurrency": "Range Currency",
         "wysiwyg": "Wysiwyg",
-        "map": "Map"
+        "map": "Map",
+        "number": "Number"
     },
     "fields": {
         "type": "Type",
@@ -130,7 +131,10 @@
         "typeList": "Type List",
         "rows": "Number of rows of textarea",
         "lengthOfCut": "Length of cut",
-        "sourceList": "Source List"
+        "sourceList": "Source List",
+        "prefix": "Prefix",
+        "nextNumber": "Next Number",
+        "padLength": "Pad Length"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

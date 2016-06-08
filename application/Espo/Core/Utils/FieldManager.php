@@ -31,6 +31,8 @@ namespace Espo\Core\Utils;
 use \Espo\Core\Exceptions\Error,
     \Espo\Core\Exceptions\Conflict;
 
+use \Espo\Core\Container;
+
 class FieldManager
 {
     private $metadata;
@@ -41,14 +43,17 @@ class FieldManager
 
     protected $isChanged = null;
 
+    private $container;
+
     protected $metadataType = 'entityDefs';
 
     protected $customOptionName = 'isCustom';
 
-    public function __construct(Metadata $metadata, Language $language)
+    public function __construct(Metadata $metadata, Language $language, Container $container = null)
     {
         $this->metadata = $metadata;
         $this->language = $language;
+        $this->container = $container;
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
     }
@@ -73,6 +78,10 @@ class FieldManager
         $fieldDefs = $this->getFieldDefs($name, $scope);
 
         $fieldDefs['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
+
+        $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
+
+        $this->processHook('onRead', $type, $scope, $name, $fieldDefs);
 
         return $fieldDefs;
     }
@@ -100,7 +109,11 @@ class FieldManager
             $this->setLabel($name, $fieldDefs['label'], $scope);
         }
 
-        if (isset($fieldDefs['type']) && $this->getMetadata()->get(['fields', $fieldDefs['type'], 'translatedOptions'])) {
+        $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
+
+        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs);
+
+        if ($this->getMetadata()->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
                 $this->setTranslatedOptions($name, $fieldDefs['translatedOptions'], $scope);
             }
@@ -108,6 +121,8 @@ class FieldManager
 
         if (isset($fieldDefs['label']) || isset($fieldDefs['translatedOptions'])) {
             $res &= $this->getLanguage()->save();
+
+            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs);
         }
 
         if ($this->isDefsChanged($name, $fieldDefs, $scope)) {
@@ -123,6 +138,10 @@ class FieldManager
             throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
         }
 
+        $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
+
+        $this->processHook('beforeRemove', $type, $scope, $name);
+
         $unsets = array(
             'fields.'.$name,
             'links.'.$name,
@@ -131,6 +150,8 @@ class FieldManager
         $this->getMetadata()->delete($this->metadataType, $scope, $unsets);
         $res = $this->getMetadata()->save();
         $res &= $this->deleteLabel($name, $scope);
+
+        $this->processHook('afterRemove', $type, $scope, $name);
 
         return (bool) $res;
     }
@@ -336,5 +357,32 @@ class FieldManager
     public function getAttributeList($scope, $name)
     {
         return array_merge($this->getActualAttributeList($scope, $name), $this->getNotActualAttributeList($scope, $name));
+    }
+
+    protected function processHook($methodName, $type, $scope, $name, &$defs = null)
+    {
+        $hook = $this->getHook($type);
+        if (!$hook) return;
+
+        if (!method_exists($hook, $methodName)) return;
+
+        $hook->$methodName($scope, $name, $defs);
+    }
+
+    protected function getHook($type)
+    {
+        $className = $this->getMetadata()->get(['fields', $type, 'hookClassName']);
+
+        if (!$className) return;
+
+        if (class_exists($className)) {
+            $hook = new $className();
+            foreach ($hook->getDependencyList() as $name) {
+                $hook->inject($name, $this->container->get($name));
+            }
+            return $hook;
+        }
+        $GLOBALS['log']->error("Field Manager hook class '{$className}' does not exist.");
+        return;
     }
 }

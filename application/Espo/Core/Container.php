@@ -295,7 +295,8 @@ class Container
     {
         return new \Espo\Core\Utils\FieldManager(
             $this->get('metadata'),
-            $this->get('language')
+            $this->get('language'),
+            $this
         );
     }
 
