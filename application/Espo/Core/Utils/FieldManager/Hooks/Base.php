@@ -23,7 +23,7 @@ abstract class Base
 
     public function getDependencyList()
     {
-        return $this->dependencies;
+        return $this->dependencyList;
     }
 
     protected function addDependency($name)
