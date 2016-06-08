@@ -32,6 +32,7 @@ return array (
         'driver' => 'pdo_mysql',
         'host' => 'localhost',
         'port' => '',
+        'charset' => 'utf8',
         'dbname' => '',
         'user' => '',
         'password' => '',

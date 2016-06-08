@@ -40,6 +40,7 @@ class EntityManager extends Base
             'port' => $config->get('database.port'),
             'dbname' => $config->get('database.dbname'),
             'user' => $config->get('database.user'),
+            'charset' => $config->get('database.charset', 'utf8'),
             'password' => $config->get('database.password'),
             'metadata' => $this->getContainer()->get('metadata')->getOrmMetadata(),
             'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
