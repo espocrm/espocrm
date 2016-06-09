@@ -618,7 +618,7 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassUpdate(array $idList, array $data)
+    protected function afterMassUpdate(array $idList, array $data = array())
     {
     }
 
@@ -997,7 +997,7 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->afterMassUpdate($idsRemoved);
+            $this->afterMassRemove($idsRemoved);
 
             return array(
                 'count' => $count
