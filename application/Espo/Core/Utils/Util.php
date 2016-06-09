@@ -394,11 +394,18 @@ class Util
             $unsets = (array) $unsets;
         }
 
-        foreach($unsets as $rootKey => $unsetItem){
+        if (!isset($content)) {
+            $e = new \Exception;
+            var_dump($e->getTraceAsString());
+            die;
+        }
+
+
+        foreach ($unsets as $rootKey => $unsetItem) {
             $unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
 
-            foreach($unsetItem as $unsetSett){
-                if (!empty($unsetSett)){
+            foreach ($unsetItem as $unsetSett) {
+                if (!empty($unsetSett)) {
                     $keyItems = explode('.', $unsetSett);
                     $currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
 

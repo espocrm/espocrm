@@ -336,7 +336,7 @@ class Manager
     public function unsetContents($path, $unsets, $isJSON = true)
     {
         $currentData = $this->getContents($path);
-        if ($currentData == false) {
+        if (!isset($currentData) || !$currentData) {
             $GLOBALS['log']->notice('FileManager::unsetContents: File ['.$this->concatPaths($path).'] does not exist.');
             return false;
         }

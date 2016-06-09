@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "entityType": {
+            "type": "varchar",
+            "index": true
+        },
+        "fieldName": {
+            "type": "varchar"
+        },
+        "value": {
+            "type": "int",
+            "default": 1
+        }
+    }
+}
