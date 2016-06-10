@@ -36,20 +36,25 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
 
         events: _.extend({
             'input textarea': function (e) {
-                var $text = $(e.currentTarget);
-                var numberOfLines = e.currentTarget.value.split("\n").length;
-                var numberOfRows = $text.prop('rows');
-
-                if (numberOfRows < numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                } else if (numberOfRows > numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                }
+                this.controlTextareaHeight();
             },
         }, Dep.prototype.events),
 
         setup: function () {
             Dep.prototype.setup.call(this);
+        },
+
+        controlTextareaHeight: function () {
+            var scrollHeight = this.$element.prop('scrollHeight');
+            var clientHeight = this.$element.prop('clientHeight');
+            if (this.$element.prop('scrollHeight') > clientHeight) {
+                this.$element.prop('rows', this.$element.prop('rows') + 1);
+                this.controlTextareaHeight();
+            }
+
+            if (this.$element.val().length === 0) {
+                this.$element.prop('rows', 1);
+            }
         },
 
         afterRender: function () {

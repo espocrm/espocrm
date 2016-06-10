@@ -54,15 +54,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
             },
             'input textarea.note': function (e) {
-                var $text = $(e.currentTarget);
-                var numberOfLines = e.currentTarget.value.split("\n").length;
-                var numberOfRows = $text.prop('rows');
-
-                if (numberOfRows < numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                } else if (numberOfRows > numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                }
+                this.controlTextareaHeight();
             },
         }, Dep.prototype.events),
 
@@ -71,6 +63,18 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
             return data;
+        },
+
+        controlTextareaHeight: function () {
+            var scrollHeight = this.$textarea.prop('scrollHeight');
+            var clientHeight = this.$textarea.prop('clientHeight');
+            if (this.$textarea.prop('scrollHeight') > clientHeight) {
+                this.$textarea.prop('rows', this.$textarea.prop('rows') + 1);
+                this.controlTextareaHeight();
+            }
+            if (this.$textarea.val().length === 0) {
+                this.$textarea.prop('rows', 1);
+            }
         },
 
         enablePostingMode: function () {
@@ -102,6 +106,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$el.find('.buttons-panel').addClass('hide');
 
             $('body').off('click.stream-panel');
+
+            this.$textarea.prop('rows', 1);
         },
 
         setup: function () {

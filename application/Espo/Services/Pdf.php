@@ -78,7 +78,13 @@ class Pdf extends \Espo\Core\Services\Base
     {
         $entityType = $entity->getEntityType();
 
-        $this->getServiceFactory()->create($entityType)->loadAdditionalFields($entity);
+        $service = $this->getServiceFactory()->create($entityType);
+
+        $service->loadAdditionalFields($entity);
+
+        if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
+            $service->loadAdditionalFieldsForPdf($entity);
+        }
 
         if ($template->get('entityType') !== $entityType) {
             throw new Forbidden();

@@ -394,40 +394,28 @@ class Util
             $unsets = (array) $unsets;
         }
 
-        if (!isset($content)) {
-            $e = new \Exception;
-            var_dump($e->getTraceAsString());
-            die;
-        }
-
-
         foreach ($unsets as $rootKey => $unsetItem) {
             $unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
 
-            foreach ($unsetItem as $unsetSett) {
-                if (!empty($unsetSett)) {
-                    $keyItems = explode('.', $unsetSett);
-                    $currVal = isset($content[$rootKey]) ? "\$content['{$rootKey}']" : "\$content";
+            foreach ($unsetItem as $unsetString) {
+                if (is_string($rootKey)) {
+                    $unsetString = $rootKey . '.' . $unsetString;
+                }
 
-                    $lastKey = array_pop($keyItems);
-                    foreach($keyItems as $keyItem){
-                        $currVal .= "['{$keyItem}']";
-                    }
+                $keyСhain = explode('.', $unsetString);
+                $keyChainCount = count($keyСhain) - 1;
 
-                    $unsetElem = $currVal . "['{$lastKey}']";
+                $elem = & $content;
+                for ($i = 0; $i <= $keyChainCount; $i++) {
 
-                    $evalString = "
-                    if (isset({$unsetElem}) || ( is_array({$currVal}) && array_key_exists('{$lastKey}', {$currVal}) )) {
-                        unset({$unsetElem});
-                    } ";
-                    eval($evalString);
+                    if (array_key_exists($keyСhain[$i], $elem)) {
 
-                    if ($unsetParentEmptyArray) {
-                        $evalString = "
-                        if (is_array({$currVal}) && empty({$currVal})) {
-                            unset({$currVal});
-                        } ";
-                        eval($evalString);
+                        if ($i == $keyChainCount) {
+                            unset($elem[$keyСhain[$i]]);
+                        } else if (is_array($elem[$keyСhain[$i]])) {
+                            $elem = & $elem[$keyСhain[$i]];
+                        }
+
                     }
                 }
             }
