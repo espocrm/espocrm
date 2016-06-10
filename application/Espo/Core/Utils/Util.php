@@ -394,12 +394,6 @@ class Util
             $unsets = (array) $unsets;
         }
 
-        if (!isset($content)) {
-            $e = new \Exception;
-            var_dump($e->getTraceAsString());
-            die;
-        }
-
         foreach ($unsets as $rootKey => $unsetItem) {
             $unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
 
@@ -414,10 +408,17 @@ class Util
                 $elem = & $content;
                 for ($i = 0; $i <= $keyChainCount; $i++) {
 
-                    if (array_key_exists($keyСhain[$i], $elem)) {
+                    if (is_array($elem) && array_key_exists($keyСhain[$i], $elem)) {
 
                         if ($i == $keyChainCount) {
+
                             unset($elem[$keyСhain[$i]]);
+
+                            if ($unsetParentEmptyArray && is_array($elem) && empty($elem)) {
+                                unset($keyСhain[$i]);
+                                $content = static::unsetInArray($content, implode('.', $keyСhain), false);
+                            }
+
                         } else if (is_array($elem[$keyСhain[$i]])) {
                             $elem = & $elem[$keyСhain[$i]];
                         }
