@@ -176,6 +176,8 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.$el.find('.post-control').addClass('hidden');
             this.setConfirmLeaveOut(false);
             $('body').off('click.stream-create-post');
+
+            this.getView('post').$element.prop('rows', 1);
         },
 
         enablePostingMode: function () {

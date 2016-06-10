@@ -24,14 +24,14 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('Views.Stream.Fields.AttachmentMultiple', 'Views.Fields.AttachmentMultiple', function (Dep) {
+Espo.define('views/stream/fields/attachment-multiple', 'views/fields/attachment-multiple', function (Dep) {
 
     return Dep.extend({
-    
-        showPreviews: true,
-        
+
+        showPreviews: true
+
     });
-    
+
 });
