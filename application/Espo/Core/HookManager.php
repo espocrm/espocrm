@@ -131,7 +131,7 @@ class HookManager
             }
             return $hook;
         }
-        $GLOBALS['log']->error("Hook class '{$name}' does not exist.");
+        $GLOBALS['log']->error("Hook class '{$className}' does not exist.");
     }
 
     /**
