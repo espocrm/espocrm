@@ -65,6 +65,12 @@ class NextNumber extends \Espo\Core\Hooks\Base
 
         foreach ($fieldDefs as $fieldName => $defs) {
             if (isset($defs['type']) && $defs['type'] === 'number') {
+                if (!$entity->isNew()) {
+                    if ($entity->isAttributeChanged($fieldName)) {
+                        $entity->set($fieldName, $entity->getFetched($fieldName));
+                    }
+                    continue;
+                }
                 $nextNumber = $this->getEntityManager()->getRepository('NextNumber')->where(array(
                     'fieldName' => $fieldName,
                     'entityType' => $entity->getEntityType()
@@ -77,6 +83,8 @@ class NextNumber extends \Espo\Core\Hooks\Base
 
     public function afterSave(Entity $entity, array $options = array())
     {
+        if (!$entity->isNew()) return;
+
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], array());
 
         foreach ($fieldDefs as $fieldName => $defs) {
