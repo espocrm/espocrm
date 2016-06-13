@@ -86,9 +86,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         if ($result) {
             $tabList = $this->getConfig()->get('tabList', []);
-            $tabList[] = $name;
-            $this->getConfig()->set('tabList', $tabList);
-            $this->getConfig()->save();
+
+            if (!in_array($name, $tabList)) {
+                $tabList[] = $name;
+                $this->getConfig()->set('tabList', $tabList);
+                $this->getConfig()->save();
+            }
 
             $this->getContainer()->get('dataManager')->rebuild();
         } else {
