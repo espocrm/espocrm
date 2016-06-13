@@ -128,7 +128,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-                    this.showValidationMessage(msg, '.select2-container');
+                    this.showValidationMessage(msg, '.selectize-control');
                     return true;
                 }
             }
