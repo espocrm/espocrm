@@ -310,6 +310,10 @@
         },
         "notificationSoundsDisabled": {
             "type": "bool"
+        },
+        "calendarEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/calendar-entity-list"
         }
     }
 }

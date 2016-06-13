@@ -132,11 +132,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.$container = this.options.$container;
 
-            this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
+            this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
             this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
-            this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
+            this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
             this.scopeFilter = false;
@@ -270,7 +270,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
-            if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
+            if (!color) {
+                color = this.getColorFromScopeName(event.scope);
+            }
+
+            if (color && ~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
             }
             event.color = color;
@@ -612,6 +616,32 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         actionRefresh: function () {
             this.$calendar.fullCalendar('refetchEvents');
         },
+
+        getColorFromScopeName: function (scope) {
+            var additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
+
+            if (!additionalColorList.length) return;
+
+            var colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+
+            var scopeList = this.getConfig().get('calendarEntityList') || [];
+
+            var index = 0;
+            var j = 0;
+            for (var i = 0; i < scopeList.length; i++) {
+                if (scopeList[i] in colors) continue;
+                if (scopeList[i] === scope) {
+                    index = j;
+                    break;
+                }
+                j++;
+            }
+
+            index = index % additionalColorList.length;
+            this.colors[scope] = additionalColorList[index];
+
+            return this.colors[scope];
+        }
 
     });
 });

@@ -108,7 +108,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                 }, this);
                 this.scopeList = scopeList;
 
-                var calendarDefaultEntity = this.getConfig().get('calendarDefaultEntity');
+                var calendarDefaultEntity = scopeList[0];
 
                 if (calendarDefaultEntity && ~this.scopeList.indexOf(calendarDefaultEntity)) {
                     this.options.scope = calendarDefaultEntity;

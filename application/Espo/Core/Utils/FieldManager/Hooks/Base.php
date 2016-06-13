@@ -26,6 +26,13 @@ abstract class Base
         return $this->dependencyList;
     }
 
+    protected function addDependencyList(array $list)
+    {
+        foreach ($list as $item) {
+            $this->addDependency($item);
+        }
+    }
+
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;

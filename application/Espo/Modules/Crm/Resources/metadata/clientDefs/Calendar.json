@@ -8,5 +8,6 @@
     "allDayScopeList": ["Task"],
     "modeList": ["month", "agendaWeek", "agendaDay", "timeline"],
     "canceledStatusList": ["Not Held", "Canceled"],
-    "completedStatusList": ["Held", "Completed"]
+    "completedStatusList": ["Held", "Completed"],
+    "additionalColorList": ["#AE84B0", "#D6B247"]
 }

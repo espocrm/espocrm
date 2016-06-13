@@ -52,6 +52,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dependencies[] = $name;
     }
 
+    protected function addDependencyList(array $list)
+    {
+        foreach ($list as $item) {
+            $this->addDependency($item);
+        }
+    }
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;

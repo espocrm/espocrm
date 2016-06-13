@@ -28,7 +28,8 @@
             "": "None",
             "Base": "Base",
             "Person": "Person",
-            "CategoryTree": "Category Tree"
+            "CategoryTree": "Category Tree",
+            "Event": "Event"
         },
         "linkType": {
             "manyToMany": "Many-to-Many",

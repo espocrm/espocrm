@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,70 +25,21 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+Espo.define('views/settings/fields/calendar-entity-list', 'views/fields/entity-type-list', function (Dep) {
 
-namespace Espo\Core\Services;
+    return Dep.extend({
 
-use \Espo\Core\Interfaces\Injectable;
+        setupOptions: function () {
 
-abstract class Base implements Injectable
-{
-    protected $dependencies = array(
-        'config',
-        'entityManager',
-        'user',
-    );
+            Dep.prototype.setupOptions.call(this);
 
-    protected $injections = array();
+            this.params.options = this.params.options.filter(function (scope) {
+                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
+                if (!this.getMetadata().get('scopes.' + scope + '.object')) return;
+                if (!this.getMetadata().get('scopes.' + scope + '.calendar')) return;
+                return true;
+            }, this)
+        },
 
-    public function inject($name, $object)
-    {
-        $this->injections[$name] = $object;
-    }
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
-    protected function init()
-    {
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
-    protected function addDependency($name)
-    {
-        $this->dependencies[] = $name;
-    }
-
-    protected function addDependencyList(array $list)
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getInjection('entityManager');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    protected function getUser()
-    {
-        return $this->getInjection('user');
-    }
-}
-
+    });
+});

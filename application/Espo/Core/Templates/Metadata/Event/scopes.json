@@ -1,0 +1,11 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": true,
+    "aclPortal": true,
+    "customizable": true,
+    "importable": true,
+    "calendar": true,
+    "notifications": true
+}

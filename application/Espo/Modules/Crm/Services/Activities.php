@@ -37,16 +37,15 @@ use \PDO;
 
 class Activities extends \Espo\Core\Services\Base
 {
-    protected $dependencies = array(
-        'entityManager',
-        'user',
-        'metadata',
-        'acl',
-        'selectManagerFactory',
-        'serviceFactory'
-    );
-
-    protected $calendarScopeList = ['Meeting', 'Call', 'Task'];
+    protected function init()
+    {
+        $this->addDependencyList([
+            'metadata',
+            'acl',
+            'selectManagerFactory',
+            'serviceFactory'
+        ]);
+    }
 
     protected function getPDO()
     {
@@ -907,14 +906,16 @@ class Activities extends \Espo\Core\Services\Base
 
         $pdo = $this->getPDO();
 
+        $calendarEntityList = $this->getConfig()->get('calendarEntityList', []);
+
         if (is_null($scopeList)) {
-            $scopeList = $this->calendarScopeList;
+            $scopeList = $calendarEntityList;
         }
 
         $sqlPartList = [];
 
         foreach ($scopeList as $scope) {
-            if (!in_array($scope, $this->calendarScopeList)) {
+            if (!in_array($scope, $calendarEntityList)) {
                 continue;
             }
             if ($this->getAcl()->checkScope($scope)) {

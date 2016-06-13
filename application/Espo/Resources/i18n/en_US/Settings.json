@@ -67,7 +67,8 @@
         "addressPreview": "Address Preview",
         "addressFormat": "Address Format",
         "notificationSoundsDisabled": "Disable Notification Sounds",
-        "applicationName": "Application Name"
+        "applicationName": "Application Name",
+        "calendarEntityList": "Calendar Entity List"
     },
     "options": {
         "weekStart": {

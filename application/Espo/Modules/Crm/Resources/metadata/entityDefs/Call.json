@@ -9,7 +9,7 @@
             "type": "enum",
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
-            "view": "Fields.EnumStyled",
+            "view": "views/fields/enum-styled",
             "style": {
                 "Held": "success"
             },

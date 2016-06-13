@@ -1,53 +1,45 @@
 {
     "fields": {
         "name": {
-            "type": "personName"
-        },
-        "salutationName": {
-            "type": "enum",
-            "options": ["", "Mr.", "Mrs.", "Ms.", "Dr."]
-        },
-        "firstName": {
             "type": "varchar",
-            "maxLength": 100,
-            "default": ""
-        },
-        "lastName": {
-            "type": "varchar",
-            "maxLength": 100,
             "required": true,
-            "default": ""
+            "trim": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Planned", "Held", "Not Held"],
+            "default": "Planned",
+            "view": "views/fields/enum-styled",
+            "style": {
+                "Held": "success"
+            },
+            "audited": true
+        },
+        "dateStart": {
+            "type": "datetime",
+            "required": true,
+            "default": "javascript: return this.dateTime.getNow(15);",
+            "audited": true
+        },
+        "dateEnd": {
+            "type": "datetime",
+            "required": true,
+            "after": "dateStart"
+        },
+        "duration": {
+            "type": "duration",
+            "start": "dateStart",
+            "end": "dateEnd",
+            "options": [300, 600, 900, 1800, 2700, 3600, 7200],
+            "default": 300,
+            "notStorable": true
+        },
+        "parent": {
+            "type": "linkParent",
+            "entityList": ["Account", "Lead"]
         },
         "description": {
             "type": "text"
-        },
-        "emailAddress": {
-            "type": "email"
-        },
-        "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
-        },
-        "address": {
-            "type": "address"
-        },
-        "addressStreet": {
-            "type": "text",
-            "maxLength": 255,
-            "dbType": "varchar"
-        },
-        "addressCity": {
-            "type": "varchar"
-        },
-        "addressState": {
-            "type": "varchar"
-        },
-        "addressCountry": {
-            "type": "varchar"
-        },
-        "addressPostalCode": {
-            "type": "varchar"
         },
         "createdAt": {
             "type": "datetime",
@@ -78,6 +70,9 @@
         }
     },
     "links": {
+        "parent": {
+            "type": "belongsToParent"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
@@ -98,18 +93,24 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
+        "sortBy": "dateStart",
         "asc": false
     },
     "indexes": {
-        "firstName": {
-            "columns": ["firstName", "deleted"]
+        "dateStartStatus": {
+            "columns": ["dateStart", "status"]
         },
-        "name": {
-            "columns": ["firstName", "lastName"]
+        "dateStart": {
+            "columns": ["dateStart", "deleted"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
         },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
+        },
+        "assignedUserStatus": {
+            "columns": ["assignedUserId", "status"]
         }
     }
 }
