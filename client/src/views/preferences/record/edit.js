@@ -96,7 +96,7 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 }, this);
             }
 
-            if (!this.getUser().isAdmin()) {
+            if (!this.getUser().isAdmin() || this.model.get('isPortalUser')) {
                 this.hideField('dashboardLayout');
             }
         },
