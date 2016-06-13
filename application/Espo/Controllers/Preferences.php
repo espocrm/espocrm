@@ -132,6 +132,7 @@ class Preferences extends \Espo\Core\Controllers\Base
 
         $entity->set('smtpEmailAddress', $user->get('emailAddress'));
         $entity->set('name', $user->get('name'));
+        $entity->set('isPortalUser', $user->get('isPortalUser'));
 
         $entity->clear('smtpPassword');
 

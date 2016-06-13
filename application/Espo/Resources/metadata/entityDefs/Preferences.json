@@ -130,6 +130,10 @@
         "emailReplyToAllByDefault": {
             "type": "bool",
             "default": true
+        },
+        "isPortalUser": {
+            "type": "bool",
+            "notStorable": true
         }
     }
 }
