@@ -50,7 +50,9 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.soundPath = this.getConfig().get('notificationSound') || this.soundPath;
+            this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
+
+            this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
             this.once('remove', function () {
                 if (this.timeout) {
@@ -105,6 +107,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         playSound: function () {
+            if (this.notificationSoundsDisabled) return;
+
             var html = '' +
                 '<audio autoplay="autoplay">'+
                     '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
