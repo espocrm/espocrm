@@ -201,6 +201,7 @@ class Importer
 
             $parentFound = false;
 
+            $replied = null;
             if (isset($message->inReplyTo) && !empty($message->inReplyTo)) {
                 $arr = explode(' ', $message->inReplyTo);
                 $inReplyTo = $arr[0];
@@ -250,6 +251,15 @@ class Importer
                 }
             }
 
+            if (!$parentFound) {
+                if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
+                    $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
+                    if ($parentFound) {
+                        $email->set('parentType', $replied->get('parentType'));
+                        $email->set('parentId', $replied->get('parentId'));
+                    }
+                }
+            }
             if (!$parentFound) {
                 $from = $email->get('from');
                 if ($from) {
