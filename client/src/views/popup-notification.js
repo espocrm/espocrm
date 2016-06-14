@@ -48,6 +48,8 @@ Espo.define('views/popup-notification', 'view', function (Dep) {
 
             this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
+            this.soundPath = this.getBasePath() + (this.getConfig().get('popupNotificationSound') || this.soundPath);
+
             this.on('render', function () {
                 $(containerSelector).remove();
 
