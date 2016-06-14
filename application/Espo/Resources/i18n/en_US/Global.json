@@ -224,7 +224,8 @@
         "writeMessageToSelf": "Write a message to self",
         "typeAndPressEnter": "Type & press enter",
         "checkForNewNotifications": "Check for new notifications",
-        "checkForNewNotes": "Check for new Stream entries"
+        "checkForNewNotes": "Check for new Stream entries",
+        "internalPost": "Post will be seen only by internal users"
     },
     "boolFilters": {
         "onlyMy": "Only My",

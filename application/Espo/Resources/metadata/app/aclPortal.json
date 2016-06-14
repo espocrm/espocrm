@@ -63,6 +63,10 @@
             },
             "Attachment": {
                 "parent": false
+            },
+            "Note": {
+                "isInternal": false,
+                "isGlobal": false
             }
         }
     },

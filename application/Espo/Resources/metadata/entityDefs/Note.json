@@ -50,6 +50,9 @@
             "type": "jsonArray",
             "notStorable": true
         },
+        "isInternal": {
+            "type": "bool"
+        },
         "isToSelf": {
             "type": "bool"
         },

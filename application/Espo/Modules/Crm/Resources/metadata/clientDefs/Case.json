@@ -48,5 +48,6 @@
     "boolFilterList": ["onlyMy"],
     "selectDefaultFilters": {
         "filter": "open"
-    }
+    },
+    "allowInternalNotes": true
 }

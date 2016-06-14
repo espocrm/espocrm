@@ -43,6 +43,18 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             'click button.post': function () {
                 this.post();
             },
+            'click .action[data-action="switchInternalMode"]': function (e) {
+                this.isInternalNoteMode = !this.isInternalNoteMode;
+
+                var $a = $(e.currentTarget);
+
+                if (this.isInternalNoteMode) {
+                    $a.addClass('enabled');
+                } else {
+                    $a.removeClass('enabled');
+                }
+
+            },
             'keypress textarea.note': function (e) {
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
@@ -62,6 +74,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             var data = Dep.prototype.data.call(this);
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
+            data.allowInternalNotes = this.allowInternalNotes;
             return data;
         },
 
@@ -118,6 +131,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.filter = this.getStoredFilter();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
+
+            this.allowInternalNotes = false;
+            if (!this.getUser().get('isPortalUser')) {
+                this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
+            }
+
+            this.isInternalNoteMode = false;
 
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
@@ -249,7 +269,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     return;
                 }
 
-                model.once('sync', function () {
+                this.listenToOnce(model, 'sync', function () {
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
 
@@ -259,11 +279,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }, this);
 
                 model.set('post', message);
-                model.set('attachmentsIds', _.clone(this.seed.get('attachmentsIds')));
+                model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds')));
                 model.set('type', 'Post');
+                model.set('isInternal', this.isInternalNoteMode);
 
                 this.prepareNoteForPost(model);
-
 
                 this.notify('Posting...');
                 model.save(null, {

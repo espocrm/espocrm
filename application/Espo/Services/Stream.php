@@ -300,7 +300,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $selectParamsList = [];
 
-        $selectParamsList[] = array(
+        $selectParamsSubscription = array(
             'select' => $select,
             'leftJoins' => ['createdBy'],
             'customJoin' => "
@@ -318,7 +318,15 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         );
 
-        $selectParamsList[] = array(
+        if ($user->get('isPortalUser')) {
+            $selectParamsSubscription['whereClause'][] = array(
+                'isInternal' => false
+            );
+        }
+
+        $selectParamsList[] = $selectParamsSubscription;
+
+        $selectParamsSubscriptionSuper = array(
             'select' => $select,
             'leftJoins' => ['createdBy'],
             'customJoin' => "
@@ -341,6 +349,14 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC'
         );
+
+        if ($user->get('isPortalUser')) {
+            $selectParamsSubscriptionSuper['whereClause'][] = array(
+                'isInternal' => false
+            );
+        }
+
+        $selectParamsList[] = $selectParamsSubscriptionSuper;
 
         $selectParamsList[] = array(
             'select' => $select,
@@ -592,6 +608,12 @@ class Stream extends \Espo\Core\Services\Base
                     'type!=' => ['EmailReceived', 'EmailSent']
                 );
             }
+        }
+
+        if ($this->getUser()->get('isPortalUser')) {
+            $where[] = array(
+                'isInternal' => false
+            );
         }
 
         $collection = $this->getEntityManager()->getRepository('Note')->find(array(
