@@ -28,9 +28,10 @@
 
 Espo.define('email-helper', [], function () {
 
-    var EmailHelper = function (language, user) {
+    var EmailHelper = function (language, user, dateTime) {
         this.language = language;
         this.user = user;
+        this.dateTime = dateTime;
     }
 
     _.extend(EmailHelper.prototype, {
@@ -41,6 +42,10 @@ Espo.define('email-helper', [], function () {
 
         getUser: function () {
             return this.user;
+        },
+
+        getDateTime: function () {
+            return this.dateTime;
         },
 
         getReplyAttributes: function (model, data, cc) {
@@ -130,6 +135,107 @@ Espo.define('email-helper', [], function () {
             this.addReplyBodyAttrbutes(model, attributes);
 
             return attributes;
+        },
+
+        getForwardAttributes: function (model, data, cc) {
+            var attributes = {
+                status: 'Draft',
+                isHtml: model.get('isHtml')
+            };
+
+            var subject = model.get('name');
+            if (~!subject.toUpperCase().indexOf('FWD:') && ~!subject.toUpperCase().indexOf('FW:')) {
+                attributes['name'] = 'Fwd: ' + subject;
+            } else {
+                attributes['name'] = subject;
+            }
+
+            if (model.get('parentId')) {
+                attributes['parentId'] = model.get('parentId');
+                attributes['parentName'] = model.get('parentName');
+                attributes['parentType'] = model.get('parentType');
+            }
+
+            this.addForwardBodyAttrbutes(model, attributes);
+
+            return attributes;
+        },
+
+        addForwardBodyAttrbutes: function (model, attributes) {
+            var prepending = '';
+
+            if (model.get('isHtml')) {
+                prepending = '<br>' + '------' + this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
+            } else {
+                prepending = '\n\n' + '------' + this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
+            }
+
+            var list = [];
+
+            if (model.get('from')) {
+                var from = model.get('from');
+                var line = this.getLanguage().translate('from', 'fields', 'Email') + ': ';
+                var nameHash = model.get('nameHash') || {};
+                if (from in nameHash) {
+                    line += nameHash[from] + ' ';
+                }
+                if (model.get('isHtml')) {
+                    line += '&lt;' + from + '&gt;';
+                } else {
+                    line += '<' + from + '>';
+                }
+
+                list.push(line);
+            }
+
+            if (model.get('dateSent')) {
+                line = this.getLanguage().translate('dateSent', 'fields', 'Email') + ': ';
+                line += this.getDateTime().toDisplayDateTime(model.get('dateSent'));
+                list.push(line);
+            }
+
+            if (model.get('name')) {
+                var line = this.getLanguage().translate('subject', 'fields', 'Email') + ': ';
+                line += model.get('name');
+                list.push(line);
+            }
+
+            if (model.get('to')) {
+                var line = this.getLanguage().translate('to', 'fields', 'Email') + ': ';
+                var partList = [];
+                model.get('to').split(';').forEach(function (to) {
+                    var nameHash = model.get('nameHash') || {};
+                    var line = '';
+                    if (to in nameHash) {
+                        line += nameHash[to] + ' ';
+                    }
+                    if (model.get('isHtml')) {
+                        line += '&lt;' + to + '&gt;';
+                    } else {
+                        line += '<' + to + '>';
+                    }
+                    partList.push(line);
+
+                }, this);
+                line += partList.join('; ');
+                list.push(line);
+            }
+
+            list.forEach(function (line) {
+                if (model.get('isHtml')) {
+                    prepending += '<br>' + line;
+                } else {
+                    prepending += '\n' + line;
+                }
+            }, this);
+
+            if (model.get('isHtml')) {
+                var body = model.get('body');
+                attributes['body'] = prepending + '<br><br>' + body;
+            } else {
+                var bodyPlain = model.get('body') || model.get('bodyPlain') || '';
+                attributes['bodyPlain'] = attributes['body'] = prepending + '\n\n' + bodyPlain;
+            }
         },
 
         parseNameFromStringAddress: function (value) {
