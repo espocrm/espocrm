@@ -295,7 +295,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $select = [
             'id', 'number', 'type', 'post', 'data', 'parentType', 'parentId', 'relatedType', 'relatedId',
-            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal'
+            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal', 'isInternal'
         ];
 
         $selectParamsList = [];
