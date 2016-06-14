@@ -18,7 +18,7 @@
             "users": "To particular user(s)",
             "teams": "To particular team(s)",
             "all": "To all internal users",
-            "portals": "To all portal users"
+            "portals": "To portal users"
         }
     },
     "messages": {
