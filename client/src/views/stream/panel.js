@@ -95,13 +95,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             if (!this.postingMode) {
                 $('body').on('click.stream-panel', function (e) {
-                    if (!$.contains(this.$postContainer.get(0), e.target)) {
-                        if (this.$textarea.val() == '') {
-                            var attachmentsIds = this.seed.get('attachmentsIds');
-                            if (!attachmentsIds.length) {
-                                this.disablePostingMode();
-                            }
-                        }
+                    var $target = $(e.target);
+                    if ($target.parent().hasClass('remove-attachment')) return;
+                    if ($.contains(this.$postContainer.get(0), e.target)) return;
+                    if (this.$textarea.val() !== '') return;
+
+                    var attachmentsIds = this.seed.get('attachmentsIds');
+                    if (!attachmentsIds.length) {
+                        this.disablePostingMode();
                     }
                 }.bind(this));
             }
