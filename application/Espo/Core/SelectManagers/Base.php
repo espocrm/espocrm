@@ -77,6 +77,11 @@ class Base
         return $this->entityManager;
     }
 
+    protected function getMetadata()
+    {
+        return $this->metadata;
+    }
+
     protected function getUser()
     {
         return $this->user;
@@ -121,11 +126,23 @@ class Base
     {
         if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
-            $type = $this->metadata->get("entityDefs.{$this->entityType}.fields." . $result['orderBy'] . ".type");
-            if ($type == 'link') {
+            $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
+            if ($type === 'link') {
                 $result['orderBy'] .= 'Name';
-            } else if ($type == 'linkParent') {
+            } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
+            } else if ($type === 'enum') {
+                $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
+                if ($list && is_array($list) && count($list)) {
+                    if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
+                        $list = asort($list);
+                    }
+                    if (!$asc) {
+                        $list = array_reverse($list);
+                    }
+                    $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
+                    return;
+                }
             }
         }
         if ($asc) {
@@ -137,7 +154,7 @@ class Base
 
     protected function getTextFilterFieldList()
     {
-        return $this->metadata->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
+        return $this->getMetadata()->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
     }
 
     protected function getSeed()
