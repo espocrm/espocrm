@@ -454,6 +454,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             selector = selector || '.main-element';
 
             var $el = this.$el.find(selector);
+            if (!$el.size() && this.$element) {
+                $el = this.$element;
+            }
             $el.popover({
                 placement: 'bottom',
                 container: 'body',

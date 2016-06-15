@@ -109,9 +109,9 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            this.$input = this.$el.find('input');
-
             if (this.mode == 'edit') {
+                this.$input = this.$element = this.$el.find('input');
+
                 this.addressList.forEach(function (item) {
                     this.addAddressHtml(item, this.nameHash[item] || '');
                 }, this);
