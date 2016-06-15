@@ -57,14 +57,28 @@
         "isRead": {
             "type": "bool",
             "notStorable": true,
-            "default": true
+            "default": true,
+            "readOnly": true
         },
         "isNotRead": {
             "type": "bool",
             "notStorable": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
+        "isReplied": {
+            "type": "bool",
+            "readOnly": true
+        },
+        "isNotReplied": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
         },
         "isImportant": {
             "type": "bool",

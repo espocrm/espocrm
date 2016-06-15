@@ -205,6 +205,20 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if (
+            ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent')
+            &&
+            ($entity->isAttributeChanged('status') || $entity->isNew())
+        ) {
+            if ($entity->get('repliedId')) {
+                $replied = $this->getEntityManager()->getEntity('Email', $entity->get('repliedId'));
+                if ($replied && $replied->id !== $entity->id && !$replied->get('isReplied')) {
+                    $replied->set('isReplied', true);
+                    $this->getEntityManager()->saveEntity($replied, array('silent' => true));
+                }
+            }
+        }
     }
 
 }

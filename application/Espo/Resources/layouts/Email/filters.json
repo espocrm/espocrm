@@ -4,6 +4,7 @@
     "emailAddress",
     "isNotRead",
     "isImportant",
+    "isNotReplied",
     "name",
     "status",
     "parent",

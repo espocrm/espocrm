@@ -26,6 +26,8 @@
         "isRead": "Is Read",
         "isNotRead": "Is Not Read",
         "isImportant": "Is Important",
+        "isReplied": "Is Replied",
+        "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
         "inTrash": "In Trash"
     },
