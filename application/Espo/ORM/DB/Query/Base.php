@@ -51,7 +51,8 @@ abstract class Base
         'joinConditions',
         'aggregation',
         'aggregationBy',
-        'groupBy'
+        'groupBy',
+        'skipTextColumns'
     );
 
     protected static $sqlOperators = array(
@@ -123,7 +124,7 @@ abstract class Base
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct']);
+            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
@@ -260,7 +261,7 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false)
+    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false)
     {
         $select = "";
         $arr = array();
@@ -278,6 +279,11 @@ abstract class Base
         }
 
         foreach ($fieldList as $field) {
+            if ($skipTextColumns) {
+                if ($entity->getAttributeType($field) === $entity::TEXT) {
+                    continue;
+                }
+            }
             if (is_array($field) && count($field) == 2) {
                 if (stripos($field[0], 'VALUE:') === 0) {
                     $part = substr($field[0], 6);

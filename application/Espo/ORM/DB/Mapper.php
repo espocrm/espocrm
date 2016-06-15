@@ -53,35 +53,6 @@ abstract class Mapper implements IMapper
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
-    protected static $sqlOperators = array(
-        'OR',
-        'AND',
-    );
-
-    protected static $comparisonOperators = array(
-        '!=' => '<>',
-        '*' => 'LIKE',
-        '>=' => '>=',
-        '<=' => '<=',
-        '>' => '>',
-        '<' => '<',
-        '=' => '=',
-    );
-
-    protected static $selectParamList = array(
-        'offset',
-        'limit',
-        'order',
-        'orderBy',
-        'customWhere',
-        'customJoin',
-        'joins',
-        'leftJoins',
-        'distinct',
-        'joinConditions',
-        'additionalColumnsConditions'
-    );
-
     public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query) {
         $this->pdo = $pdo;
         $this->query = $query;

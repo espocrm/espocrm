@@ -986,6 +986,7 @@ class Record extends \Espo\Core\Services\Base
             $p = array();
             $p['where'] = $where;
             $selectParams = $this->getSelectParams($p);
+            $skipTextColumns['skipTextColumns'] = true;
             $collection = $repository->find($selectParams);
 
             foreach ($collection as $entity) {
