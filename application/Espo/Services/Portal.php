@@ -47,6 +47,12 @@ class Portal extends Record
         $this->loadUrlField($entity);
     }
 
+    protected function afterUpdate(Entity $entity, array $data = array())
+    {
+        parent::afterUpdate($entity, $data);
+        $this->loadUrlField($entity);
+    }
+
     protected function loadUrlField(Entity $entity)
     {
         if ($entity->get('customUrl')) {
@@ -55,12 +61,16 @@ class Portal extends Record
         }
         $siteUrl = $this->getConfig()->get('siteUrl');
         $siteUrl = rtrim($siteUrl , '/') . '/';
-        $url = $siteUrl . 'portal';
+        $url = $siteUrl . 'portal/';
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
         } else {
-            $url .= '?id=' . $entity->id;
+            if ($entity->get('customId')) {
+                $url .= $entity->get('customId') . '/';
+            } else {
+                $url .= $entity->id . '/';
+            }
             $entity->setFetched('isDefault', false);
         }
         $entity->set('url', $url);

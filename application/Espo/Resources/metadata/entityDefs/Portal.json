@@ -13,6 +13,13 @@
             "notStorable": true,
             "readOnly": true
         },
+        "customId": {
+            "type": "varchar",
+            "maxLength": 36,
+            "view": "views/portal/fields/custom-id",
+            "trim": true,
+            "index": true
+        },
         "isActive": {
             "type": "bool",
             "default": true

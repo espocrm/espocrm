@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,34 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+Espo.define('views/portal/fields/custom-id', 'views/fields/varchar', function (Dep) {
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class Portal extends \Espo\Core\EntryPoints\Base
-{
-    public static $authRequired = false;
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-    public function run($data = array())
-    {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else if (!empty($data['id'])) {
-            $id = $data['id'];
-        } else {
-            $id = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-            if (!$id) {
-                $id = $this->getConfig()->get('defaultPortalId');
-            }
-            if (!$id) {
-                throw new NotFound();
-            }
-        }
+            this.listenTo(this, 'change', function () {
+                var value = this.model.get('customId');
+                if (!value || value === '') return;
 
-        $application = new \Espo\Core\Portal\Application($id);
-        $application->setBasePath($this->getContainer()->get('clientManager')->getBasePath());
-        $application->runClient();
-    }
-}
+                value = value.replace(/ /i, '-').toLowerCase();
+
+                value = encodeURIComponent(value);
+
+                this.model.set('customId', value);
+            }, this);
+        },
+
+    });
+
+});

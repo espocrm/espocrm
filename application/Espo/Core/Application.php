@@ -315,7 +315,7 @@ class Application
             return $_GET['portalId'];
         }
         if (!empty($_COOKIE['auth-token'])) {
-            $token = $this->getContainer()->get('entityManager')->getRepository('AuthToken')->where(array('token'=>$_COOKIE['auth-token']))->findOne();
+            $token = $this->getContainer()->get('entityManager')->getRepository('AuthToken')->where(array('token' => $_COOKIE['auth-token']))->findOne();
 
             if ($token && $token->get('portalId')) {
                 return $token->get('portalId');

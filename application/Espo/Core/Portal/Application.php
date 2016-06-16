@@ -50,6 +50,12 @@ class Application extends \Espo\Core\Application
         $portal = $this->getContainer()->get('entityManager')->getEntity('Portal', $portalId);
 
         if (!$portal) {
+            $portal = $this->getContainer()->get('entityManager')->getRepository('Portal')->where(array(
+                'customId' => $portalId
+            ))->findOne();
+        }
+
+        if (!$portal) {
             throw new NotFound();
         }
         if (!$portal->get('isActive')) {

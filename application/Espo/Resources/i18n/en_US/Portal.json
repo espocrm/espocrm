@@ -17,7 +17,8 @@
         "timeZone": "Time Zone",
         "weekStart": "First Day of Week",
         "defaultCurrency": "Default Currency",
-        "customUrl": "Custom URL"
+        "customUrl": "Custom URL",
+        "customId": "Custom ID"
     },
     "links": {
         "users": "Users",

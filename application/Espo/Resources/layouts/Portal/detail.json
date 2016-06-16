@@ -4,7 +4,7 @@
         "rows": [
             [{"name": "name"}, {"name": "isActive"}],
             [{"name": "url"}, {"name": "isDefault"}],
-            [{"name": "portalRoles"}, {"name": "language"}],
+            [{"name": "portalRoles"}, {"name": "customId"}],
             [false, {"name": "customUrl"}]
         ]
     },
@@ -13,7 +13,7 @@
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}, false]
+            [{"name": "defaultCurrency"}, {"name": "language"}]
         ]
     },
     {
