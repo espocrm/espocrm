@@ -165,6 +165,11 @@ Espo.define('ui', [], function () {
         this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
             this.close();
         }.bind(this));
+        this.$el.on('click.dismiss.bs.modal', function (e) {
+            if (e.target === e.currentTarget) {
+                return this.backdrop == 'static' ? this.$el[0].focus() : this.close();
+            }
+        }.bind(this));
     };
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');
