@@ -438,7 +438,7 @@ class User extends Record
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
-    protected function afterMassUpdate(array $idList, array $data)
+    protected function afterMassUpdate(array $idList, array $data = array())
     {
         parent::afterMassUpdate($idList, $data);
 
