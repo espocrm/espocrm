@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.assign',
+        template: 'stream/notes/assign',
 
         messageName: 'assign',
 
@@ -56,7 +56,7 @@ Espo.define('Views.Stream.Notes.Assign', 'Views.Stream.Note', function (Dep) {
 
             if (this.isUserStream) {
                 if (this.assignedUserId == this.getUser().id) {
-                    this.messageData['assignee'] = this.translate('you');
+                    this.messageName += 'You';
                 }
             }
 

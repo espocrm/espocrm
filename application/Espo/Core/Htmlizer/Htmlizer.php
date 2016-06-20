@@ -76,7 +76,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $notLinks = false)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false)
     {
         $data = $entity->toArray();
 
@@ -138,7 +138,7 @@ class Htmlizer
             }
         }
 
-        if (!$notLinks) {
+        if (!$skipLinks) {
             $relationDefs = $entity->getRelations();
             foreach ($entity->getRelationList() as $relation) {
                 if (
@@ -160,16 +160,30 @@ class Htmlizer
         return $data;
     }
 
-    public function render(Entity $entity, $template)
+    public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
     {
         $code = \LightnCandy::compile($template);
-        $id = uniqid('', true);
-        $fileName = 'data/cache/template-' . $id;
+
+        $toRemove = false;
+        if ($id === null) {
+            $id = uniqid('', true);
+            $toRemove = true;
+        }
+
+        $fileName = 'data/cache/templates/' . $id . '.php';
+
         $this->fileManager->putContents($fileName, $code);
         $renderer = include($fileName);
-        $this->fileManager->removeFile($fileName);
 
-        $data = $this->getDataFromEntity($entity);
+        if ($toRemove) {
+            $this->fileManager->removeFile($fileName);
+        }
+
+        $data = $this->getDataFromEntity($entity, $skipLinks);
+
+        foreach ($additionalData as $k => $value) {
+            $data[$k] = $value;
+        }
 
         $html = $renderer($data);
 

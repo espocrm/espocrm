@@ -165,8 +165,6 @@
         "fieldShouldBeGreater": "{field} doit être plus grand que {value}",
         "fieldBadPasswordConfirm": "{field} n'a pas été confirmé correctement",
         "resetPreferencesDone": "Vos préférences ont été réinitialisées.",
-        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-        "assignmentEmailNotificationBody": "{assignerUserName} vous a assigné {entityType} '{Entity.name}' .\n\n{recordUrl}",
         "confirmation": "Êtes-vous sûr?",
         "resetPreferencesConfirmation": "Êtes-vous sûr de vouloir réinitialiser vos préférences?",
         "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer cet enregistrement?",

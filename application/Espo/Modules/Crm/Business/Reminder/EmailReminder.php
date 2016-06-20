@@ -97,15 +97,15 @@ class EmailReminder
     {
         $systemLanguage = $this->config->get('language');
 
-        $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+        $fileName = "custom/Espo/Custom/Resources/templates/reminder/{$systemLanguage}/{$name}.tpl";
         if (!file_exists($fileName)) {
-            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+            $fileName = "application/Espo/Modules/Crm/Resources/templates/reminder/{$systemLanguage}/{$name}.tpl";
         }
         if (!file_exists($fileName)) {
-            $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.en_US.tpl';
+            $fileName = "custom/Espo/Custom/Resources/templates/reminder/en_US/{$name}.tpl";
         }
         if (!file_exists($fileName)) {
-            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.en_US.tpl';
+            $fileName = "application/Espo/Modules/Crm/Resources/templates/reminder/en_US/{$name}.tpl";
         }
 
         return file_get_contents($fileName);
@@ -125,8 +125,8 @@ class EmailReminder
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set('to', $emailAddress);
 
-        $subjectTpl = $this->getTemplate('ReminderSubject');
-        $bodyTpl = $this->getTemplate('ReminderBody');
+        $subjectTpl = $this->getTemplate('subject');
+        $bodyTpl = $this->getTemplate('body');
 
         $subject = $this->parseInvitationTemplate($subjectTpl, $entity, $user);
         $subject = str_replace(array("\n", "\r"), '', $subject);

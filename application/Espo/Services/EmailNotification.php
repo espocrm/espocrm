@@ -38,9 +38,14 @@ class EmailNotification extends \Espo\Core\Services\Base
 {
     protected function init()
     {
-        $this->dependencies[] = 'metadata';
-        $this->dependencies[] = 'mailSender';
-        $this->dependencies[] = 'language';
+        $this->addDependencyList([
+            'metadata',
+            'mailSender',
+            'language',
+            'dateTime',
+            'number',
+            'fileManager'
+        ]);
     }
 
     protected function getMailSender()
@@ -58,21 +63,59 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $this->getInjection('language');
     }
 
-    protected function replaceMessageVariables($text, $entity, $user, $assignerUser)
+    protected function getDateTime()
     {
-        $recordUrl = $this->getConfig()->get('siteUrl') . '#' . $entity->getEntityName() . '/view/' . $entity->id;
+        return $this->getInjection('dateTime');
+    }
 
-        $text = str_replace('{userName}', $user->get('name'), $text);
-        $text = str_replace('{assignerUserName}', $assignerUser->get('name'), $text);
-        $text = str_replace('{recordUrl}', $recordUrl, $text);
-        $text = str_replace('{entityType}', $this->getLanguage()->translate($entity->getEntityName(), 'scopeNames'), $text);
+    protected function getHtmlizer()
+    {
+        if (empty($this->htmlizer)) {
+            $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->getInjection('fileManager'), $this->getInjection('dateTime'), $this->getInjection('number'), null);
+        }
+        return $this->htmlizer;
+    }
 
-        $fields = $entity->getFields();
-        foreach ($fields as $field => $d) {
-            $text = str_replace('{Entity.' . $field . '}', $entity->get($field), $text);
+    protected function parseAssignmentTemplate($contents, $entity, $user, $assignerUser)
+    {
+        $recordUrl = $this->getConfig()->get('siteUrl') . '#' . $entity->getEntityType() . '/view/' . $entity->id;
+
+        $contents = str_replace('{userName}', $user->get('name'), $contents);
+        $contents = str_replace('{assignerUserName}', $assignerUser->get('name'), $contents);
+        $contents = str_replace('{recordUrl}', $recordUrl, $contents);
+        $contents = str_replace('{entityType}', $this->getLanguage()->translate($entity->getEntityName(), 'scopeNames'), $contents);
+
+        foreach ($entity->getAttributes() as $field => $d) {
+            if (empty($d['type'])) continue;
+            $key = '{'.$field.'}';
+            switch ($d['type']) {
+                case 'datetime':
+                    $value = $entity->get($field);
+                    if ($value) {
+                        $value = $this->getDateTime()->convertSystemDateTime($value);
+                    }
+                    $contents = str_replace($key, $value, $contents);
+                    break;
+                case 'date':
+                    $value = $entity->get($field);
+                    if ($value) {
+                        $value = $this->getDateTime()->convertSystemDate($value);
+                    }
+                    $contents = str_replace($key, $value, $contents);
+                    break;
+                case 'jsonArray':
+                    break;
+                case 'jsonObject':
+                    break;
+                default:
+                    $value = $entity->get($field);
+                    if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                        $contents = str_replace($key, $value, $contents);
+                    }
+            }
         }
 
-        return $text;
+        return $contents;
     }
 
     public function notifyAboutAssignmentJob($data)
@@ -102,16 +145,25 @@ class EmailNotification extends \Espo\Core\Services\Base
             if (!empty($emailAddress)) {
                 $email = $this->getEntityManager()->getEntity('Email');
 
-                $subject = $this->getLanguage()->translate('assignmentEmailNotificationSubject', 'messages', $entity->getEntityName());
-                $body = $this->getLanguage()->translate('assignmentEmailNotificationBody', 'messages', $entity->getEntityName());
+                $subjectTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'subject');
+                $bodyTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'body');
 
-                $subject = $this->replaceMessageVariables($subject, $entity, $user, $assignerUser);
-                $body = $this->replaceMessageVariables($body, $entity, $user, $assignerUser);
+                $recordUrl = $this->getConfig()->get('siteUrl') . '#' . $entity->getEntityType() . '/view/' . $entity->id;
+                $data = array(
+                    'userName' => $user->get('name'),
+                    'assignerUserName' => $assignerUser->get('name'),
+                    'recordUrl' => $recordUrl,
+                    'entityType' => $this->getLanguage()->translate($entity->getEntityType(), 'scopeNames')
+                );
+                $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+                $subject = $this->getHtmlizer()->render($entity, $subjectTpl, 'assignment-email-subject-' . $entity->getEntityType(), $data, true);
+                $body = $this->getHtmlizer()->render($entity, $bodyTpl, 'assignment-email-body-' . $entity->getEntityType(), $data, true);
 
                 $email->set(array(
                     'subject' => $subject,
                     'body' => $body,
-                    'isHtml' => false,
+                    'isHtml' => true,
                     'to' => $emailAddress,
                     'isSystem' => true
                 ));
@@ -125,5 +177,53 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         return true;
     }
-}
 
+    protected function getAssignmentTemplate($entityType, $name)
+    {
+        $fileName = $this->getAssignmentTemplateFileName($entityType, $name);
+        return file_get_contents($fileName);
+    }
+
+    protected function getAssignmentTemplateFileName($entityType, $name)
+    {
+        $language = $this->getConfig()->get('language');
+        $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
+        $type = 'assignment';
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        if ($moduleName) {
+            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            if (file_exists($fileName)) return $fileName;
+        }
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $language = 'en_US';
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        if ($moduleName) {
+            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            if (file_exists($fileName)) return $fileName;
+        }
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        return $fileName;
+    }
+}

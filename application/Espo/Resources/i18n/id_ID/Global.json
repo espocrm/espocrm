@@ -202,8 +202,6 @@
     "fieldShouldBeGreater": "{field} harus lebih besar maka {value}",
     "fieldBadPasswordConfirm": "{field} tidak dikonfirmasi benar",
     "resetPreferencesDone": "Preferensi telah diatur ulang ke default",
-    "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-    "assignmentEmailNotificationBody": "{AssignerUserName} telah ditetapkan {entityType} '{Entity.name}' kepada Anda.\n\n{RecordUrl}",
     "confirmation": "Apa kamu yakin?",
     "unlinkAllConfirmation": "Apakah Anda yakin ingin membatalkan tautan semua catatan terkait?",
     "resetPreferencesConfirmation": "Apakah Anda yakin ingin ulang preferensi ke default?",

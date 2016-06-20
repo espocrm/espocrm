@@ -202,8 +202,6 @@
     "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "fieldBadPasswordConfirm": "{field} falsch bestätigt",
     "resetPreferencesDone": "Die Einstellungen wurden auf Standardwerte zurückgesetzt",
-    "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-    "assignmentEmailNotificationBody": "{assignerUserName} hat Ihnen {entityType} '{Entity.name}' zugewiesen.\n\n{recordUrl}",
     "confirmation": "Sind Sie sicher?",
     "unlinkAllConfirmation": "Sind Sie sicher, dass Sie die Beziehungen zu allen verbundenen Datensätzen entfernen möchten?",
     "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
