@@ -107,6 +107,8 @@ class Email extends Record
 
         $params = array();
 
+        $parent = null;
+
         if ($entity->get('parentType') && $entity->get('parentId')) {
             $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
             if ($parent) {
