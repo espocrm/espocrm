@@ -1,0 +1,1 @@
+Приглашение на {{entityTypeLowerFirst}} '{{name}}'

@@ -76,48 +76,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $this->htmlizer;
     }
 
-    protected function parseAssignmentTemplate($contents, $entity, $user, $assignerUser)
-    {
-        $recordUrl = $this->getConfig()->get('siteUrl') . '#' . $entity->getEntityType() . '/view/' . $entity->id;
-
-        $contents = str_replace('{userName}', $user->get('name'), $contents);
-        $contents = str_replace('{assignerUserName}', $assignerUser->get('name'), $contents);
-        $contents = str_replace('{recordUrl}', $recordUrl, $contents);
-        $contents = str_replace('{entityType}', $this->getLanguage()->translate($entity->getEntityName(), 'scopeNames'), $contents);
-
-        foreach ($entity->getAttributes() as $field => $d) {
-            if (empty($d['type'])) continue;
-            $key = '{'.$field.'}';
-            switch ($d['type']) {
-                case 'datetime':
-                    $value = $entity->get($field);
-                    if ($value) {
-                        $value = $this->getDateTime()->convertSystemDateTime($value);
-                    }
-                    $contents = str_replace($key, $value, $contents);
-                    break;
-                case 'date':
-                    $value = $entity->get($field);
-                    if ($value) {
-                        $value = $this->getDateTime()->convertSystemDate($value);
-                    }
-                    $contents = str_replace($key, $value, $contents);
-                    break;
-                case 'jsonArray':
-                    break;
-                case 'jsonObject':
-                    break;
-                default:
-                    $value = $entity->get($field);
-                    if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                        $contents = str_replace($key, $value, $contents);
-                    }
-            }
-        }
-
-        return $contents;
-    }
-
     public function notifyAboutAssignmentJob($data)
     {
         $userId = $data['userId'];
@@ -147,8 +105,10 @@ class EmailNotification extends \Espo\Core\Services\Base
 
                 $subjectTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'subject');
                 $bodyTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'body');
+                $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
-                $recordUrl = $this->getConfig()->get('siteUrl') . '#' . $entity->getEntityType() . '/view/' . $entity->id;
+                $recordUrl = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
+
                 $data = array(
                     'userName' => $user->get('name'),
                     'assignerUserName' => $assignerUser->get('name'),

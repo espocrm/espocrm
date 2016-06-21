@@ -1,4 +1,4 @@
-<p>Betreff: {name}</p>
-<p>Beginn: {dateStart}</p>
+<p>Betreff: {{name}}</p>
+<p>Beginn: {{dateStart}}</p>
 
-<p><a href="{url}">Eintrag öffnen</a></p>
+<p><a href="{{recordUrl}}">Eintrag öffnen</a></p>

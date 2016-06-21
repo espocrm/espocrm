@@ -1,1 +1,1 @@
-Invitation pour votre {eventType} '{name}'
+Invitation pour votre {{entityTypeLowerFirst}} '{{name}}'

@@ -1,9 +1,13 @@
-<p>Betreff: {name}</p>
-<p>Beginn: {dateStart}</p>
+<p>Betreff: {{name}}</p>
+<p>Beginn: {{dateStart}}</p>
+{{#if isUser}}
+    {{#if description}}
+    <p>{{{description}}}</p>
+    {{/if}}
+{{/if}}
 <p>
-<a href="{acceptLink}">Annehmen</a>, <a href="{declineLink}">Ablehnen</a>, <a href="{tentativeLink}">mit Vorbehalt</a>
+<a href="{{acceptLink}}">Annehmen</a>, <a href="{{declineLink}}">Decline</a>, <a href="{{tentativeLink}}">mit Vorbehalt</a>
 </p>
-</p>
-{#userOnly}
-<p><a href="{url}">Eintrag öffnen</a></p>
-{/userOnly}
+{{#if isUser}}
+<p><a href="{{recordUrl}}">Eintrag öffnen</a></p>
+{{/if}}

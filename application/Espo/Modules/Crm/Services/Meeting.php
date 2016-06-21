@@ -39,39 +39,43 @@ class Meeting extends \Espo\Services\Record
 {
     protected function init()
     {
-        $this->dependencies[] = 'mailSender';
-        $this->dependencies[] = 'preferences';
-        $this->dependencies[] = 'language';
-        $this->dependencies[] = 'dateTime';
-        $this->dependencies[] = 'crypt';
+        $this->addDependencyList([
+            'preferences',
+            'language',
+            'dateTime',
+            'container',
+            'fileManager',
+            'number'
+        ]);
     }
 
     protected $exportSkipFieldList = ['duration'];
 
     protected function getMailSender()
     {
-        return $this->injections['mailSender'];
+        return $this->getInjection('container')->get('mailSender');
     }
 
     protected function getPreferences()
     {
-        return $this->injections['preferences'];
+        return $this->getInjection('preferences');
     }
 
     protected function getCrypt()
     {
-        return $this->injections['crypt'];
+        return $this->getInjection('container')->get('crypt');
     }
 
     protected function getLanguage()
     {
-        return $this->injections['language'];
+        return $this->getInjection('language');
     }
 
     protected function getDateTime()
     {
-        return $this->injections['dateTime'];
+        return $this->getInjection('dateTime');
     }
+
 
     protected function getInvitationManager()
     {
@@ -83,7 +87,16 @@ class Meeting extends \Espo\Services\Record
             $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
             $smtpParams['fromName'] = $this->getUser()->get('name');
         }
-        return new Invitations($this->getEntityManager(), $smtpParams, $this->getMailSender(), $this->getConfig(), $this->getDateTime(), $this->getLanguage());
+        return new Invitations(
+            $this->getEntityManager(),
+            $smtpParams,
+            $this->getMailSender(),
+            $this->getConfig(),
+            $this->getInjection('fileManager'),
+            $this->getDateTime(),
+            $this->getInjection('number'),
+            $this->getLanguage()
+        );
     }
 
     public function sendInvitations(Entity $entity)

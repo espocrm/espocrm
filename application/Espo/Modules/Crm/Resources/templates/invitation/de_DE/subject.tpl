@@ -1,1 +1,1 @@
-Einladung zu {eventType} '{name}'
+Einladung zu {{eventType}} '{{name}}'

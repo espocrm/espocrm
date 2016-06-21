@@ -1,1 +1,1 @@
-Reminder about {eventType} '{name}'
+Reminder about {{entityTypeLowerFirst}} '{{name}}'

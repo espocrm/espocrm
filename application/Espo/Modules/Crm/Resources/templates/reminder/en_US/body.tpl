@@ -1,4 +1,4 @@
-<p>Subject: {name}</p>
-<p>Start at: {dateStart}</p>
+<p>Subject: {{name}}</p>
+<p>Start: {{dateStart}}</p>
 
-<p><a href="{url}">Open entry</a></p>
+<p><a href="{{recordUrl}}">View record</a></p>

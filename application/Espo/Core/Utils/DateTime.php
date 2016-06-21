@@ -116,6 +116,11 @@ class DateTime
         return null;
     }
 
+    public function setTimezone($timezone)
+    {
+        $this->timezone = new \DateTimeZone($timezone);
+    }
+
 }
 
 

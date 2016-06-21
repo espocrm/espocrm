@@ -1,1 +1,1 @@
-Rappel au sujet de votre {eventType} '{name}'
+Rappel au sujet de votre {{entityTypeLowerFirst}} '{{name}}'

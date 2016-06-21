@@ -1,1 +1,1 @@
-Erinnerung für {eventType} '{name}'
+Erinnerung für {{eventType}} '{{name}}'
