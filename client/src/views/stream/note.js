@@ -128,9 +128,34 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             });
         },
 
+        isMale: function () {
+            return this.model.get('createdByGender') === 'Male';
+        },
+
+        isFemale: function () {
+            return this.model.get('createdByGender') === 'Female';
+        },
+
         createMessage: function () {
             if (!this.messageTemplate) {
-                this.messageTemplate = this.translate(this.messageName, 'streamMessages') || '';
+                var isTranslated = false;
+
+                if (this.isMale()) {
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', this.model.get('parentType') || null) || '';
+                    if (this.messageTemplate !== this.messageName) {
+                        isTranslated = true;
+                    }
+                }
+
+                if (!isTranslated && this.isFemale()) {
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', this.model.get('parentType') || null) || '';
+                    if (this.messageTemplate !== this.messageName) {
+                        isTranslated = true;
+                    }
+                }
+                if (!isTranslated) {
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessages', this.model.get('parentType') || null) || '';
+                }
             }
 
             this.createView('message', 'views/stream/message', {

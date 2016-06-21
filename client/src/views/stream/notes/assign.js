@@ -55,8 +55,16 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
             this.messageData['assignee'] = '<a href="#User/view/' + data.assignedUserId + '">' + data.assignedUserName + '</a>';
 
             if (this.isUserStream) {
-                if (this.assignedUserId == this.getUser().id) {
-                    this.messageName += 'You';
+                if (this.assignedUserId == this.model.get('createdById')) {
+                    this.messageName += 'Self';
+                } else {
+                    if (this.assignedUserId == this.getUser().id) {
+                        this.messageName += 'You';
+                    }
+                }
+            } else {
+                if (this.assignedUserId == this.model.get('createdById')) {
+                    this.messageName += 'Self';
                 }
             }
 

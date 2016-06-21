@@ -67,6 +67,9 @@
             "Note": {
                 "isInternal": false,
                 "isGlobal": false
+            },
+            "User": {
+                "gender": false
             }
         }
     },

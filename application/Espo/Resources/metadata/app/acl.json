@@ -64,6 +64,9 @@
         "scopeFieldLevel": {
             "Attachment": {
                 "parent": false
+            },
+            "User": {
+                "gender": false
             }
         }
     },

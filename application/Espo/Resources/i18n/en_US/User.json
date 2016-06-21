@@ -23,7 +23,8 @@
         "accounts": "Accounts",
         "account": "Account (Primary)",
         "sendAccessInfo": "Send Email with Access Info to User",
-        "portal": "Portal"
+        "portal": "Portal",
+        "gender": "Gender"
     },
     "links": {
         "teams": "Teams",
@@ -75,6 +76,14 @@
         "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed.",
         "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
+    },
+    "options": {
+        "gender": {
+            "": "Not Set",
+            "Male": "Male",
+            "Female": "Female",
+            "Neutral": "Neutral"
+        }
     },
     "boolFilters": {
         "onlyMyTeam": "Only My Team"

@@ -46,6 +46,11 @@
         "isGlobal": {
             "type": "bool"
         },
+        "createdByGender": {
+            "type": "foreign",
+            "link": "createdBy",
+            "field": "gender"
+        },
         "notifiedUserIdList": {
             "type": "jsonArray",
             "notStorable": true

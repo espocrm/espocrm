@@ -14,11 +14,11 @@
     },
     "options": {
         "targetType": {
-            "self": "To self",
-            "users": "To particular user(s)",
-            "teams": "To particular team(s)",
-            "all": "To all internal users",
-            "portals": "To portal users"
+            "self": "to myself",
+            "users": "to particular user(s)",
+            "teams": "to particular team(s)",
+            "all": "to all internal users",
+            "portals": "to portal users"
         }
     },
     "messages": {

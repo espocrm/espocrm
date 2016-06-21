@@ -138,6 +138,11 @@
             "notStorable": true,
             "disabled": true
         },
+        "gender": {
+            "type": "enum",
+            "options": ["", "Male", "Female", "Neutral"],
+            "default": ""
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
