@@ -145,9 +145,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
                     }
-                }
-
-                if (!isTranslated && this.isFemale()) {
+                } else if (this.isFemale()) {
                     this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', this.model.get('parentType') || null) || '';
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
