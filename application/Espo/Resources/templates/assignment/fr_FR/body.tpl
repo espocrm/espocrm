@@ -1,6 +1,3 @@
-{{assignerUserName}} vous a assigné {{entityTypeLowerFirst}}.
-<br>
-<br>
-<strong>{{name}}</strong>
-<br><br>
-<a href="{{recordUrl}}">{{recordUrl}}</a>
+<p>{{assignerUserName}} vous a assigné {{entityTypeLowerFirst}}.</p>
+<p><strong>{{name}}</strong></p>
+<p><a href="{{recordUrl}}">{{recordUrl}}</a></p>

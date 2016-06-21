@@ -1,14 +1,7 @@
-{{assignerUserName}} has assigned {{entityTypeLowerFirst}} to you.
-<br>
-<br>
-<strong>{{name}}</strong>
-<br>
-Start: {{dateStart}}
+<p>{{assignerUserName}} has assigned {{entityTypeLowerFirst}} to you.</p>
+<p><strong>{{name}}</strong></p>
+<p>Start: {{dateStart}}</p>
 {{#if description}}
-    <br>
-    <br>
-    {{{description}}}
+<p>{{{description}}}</p>
 {{/if}}
-<br>
-<br>
-<a href="{{recordUrl}}">{{recordUrl}}</a>
+<p><a href="{{recordUrl}}">View record</a></p>

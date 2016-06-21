@@ -1,6 +1,3 @@
-{{assignerUserName}} призначив Вам {{entityTypeLowerFirst}}.
-<br>
-<br>
-<strong>{{name}}</strong>
-<br><br>
-<a href="{{recordUrl}}">{{recordUrl}}</a>
+<p>{{assignerUserName}} призначив Вам {{entityTypeLowerFirst}}.</p>
+<p><strong>{{name}}</strong></p>
+<p><a href="{{recordUrl}}">Відкрити запис</a></p>
