@@ -66,8 +66,6 @@ class Attachment extends \Espo\Core\EntryPoints\Base
 
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
-        ob_clean();
-        flush();
         readfile($fileName);
         exit;
     }

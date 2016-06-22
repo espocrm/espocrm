@@ -92,8 +92,7 @@ class Download extends \Espo\Core\EntryPoints\Base
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
-        ob_clean();
-        flush();
+
         readfile($fileName);
         exit;
     }
