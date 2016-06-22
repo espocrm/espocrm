@@ -171,7 +171,8 @@
         "Number": "Número",
         "From": "De",
         "To": "Para",
-        "Create Post": "Crear entrada"
+        "Create Post": "Crear entrada",
+        "View List": "Ver lista completa"
     },
     "messages": {
         "pleaseWait": "Por favor espere...",
