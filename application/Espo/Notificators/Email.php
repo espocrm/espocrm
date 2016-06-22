@@ -125,6 +125,7 @@ class Email extends \Espo\Core\Notificators\Base
         }
 
         foreach ($userIdList as $userId) {
+            continue;
             if (!$userId) continue;
             if ($userIdFrom === $userId) continue;
 

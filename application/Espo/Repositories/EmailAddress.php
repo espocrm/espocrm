@@ -152,7 +152,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             WHERE
                 email_address.lower = ".$pdo->quote(strtolower($address))." AND
                 entity_email_address.deleted = 0
-            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, ".join(',', $a).")
+        ";
+
+        $sql .= "
+            ORDER BY FIELD(entity_email_address.entity_type, ".join(',', array_reverse($a)).") DESC, entity_email_address.primary DESC
         ";
 
         $sth = $pdo->prepare($sql);
