@@ -140,19 +140,21 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             if (!this.messageTemplate) {
                 var isTranslated = false;
 
+                var parentType = this.model.get('parentType');
+
                 if (this.isMale()) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', this.model.get('parentType') || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', parentType || null) || '';
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
                     }
                 } else if (this.isFemale()) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', this.model.get('parentType') || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', parentType || null) || '';
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
                     }
                 }
                 if (!isTranslated) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessages', this.model.get('parentType') || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessages', parentType || null) || '';
                 }
             }
 
