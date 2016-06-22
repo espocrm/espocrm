@@ -290,23 +290,16 @@
         "attach": "{user} attached on {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
+
         "postTargetTeam": "{user} posted to team {target}",
         "postTargetTeams": "{user} posted to teams {target}",
-
         "postTargetPortal": "{user} posted to portal {target}",
-
         "postTargetPortals": "{user} posted to portals {target}",
-
         "postTarget": "{user} posted to {target}",
-
         "postTargetYou": "{user} posted to you",
-
         "postTargetYouAndOthers": "{user} posted to {target} and you",
-
         "postTargetAll": "{user} posted to all",
-
         "postTargetSelf": "{user} posted on they stream",
-
         "postTargetSelfAndOthers": "{user} posted to {target} and themself",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",

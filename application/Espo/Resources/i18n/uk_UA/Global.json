@@ -239,7 +239,7 @@
         "Stream": "Потік"
     },
     "notificationMessages": {
-        "assign": "{entityType} {entity} призначено на вас",
+        "assign": "{entityType} {entity} призначено на Вас",
         "emailReceived": "Email отриманий від {from}"
     },
     "streamMessages": {
@@ -247,42 +247,121 @@
         "createAssigned": "{user} створив {entityType} {entity}, призначену {assignee}",
         "createAssignedYou": "{user} створив {entityType} {entity}, призначену Вам",
 
-        "assign": "{user} призначив {entityType} {entity} {assignee}",
-        "assignYou": "{user} призначив {entityType} {entity} Вам",
+        "assign": "{user} призначив {entityType} {entity} на {assignee}",
+        "assignYou": "{user} призначив {entityType} {entity} на Вас",
 
-        "post": "{user} опублікований на {entityType} {entity}",
+        "post": "{user} написав на {entityType} {entity}",
         "attach": "{user} прикрипив до {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} поновив {entityType} {entity}",
-        "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
+        "createRelated": "{user} створив {relatedEntityType} {relatedEntity} пов'язаний з  {entityType} {entity}",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
 
         "createThis": "{user} створив {entityType}",
         "createAssignedThis": "{user} створив {entityType} призначену {assignee}",
-        "assignThis": "{user} призначив {entityType} {assignee}",
+        "assignThis": "{user} призначив {entityType} на {assignee}",
 
         "postThis": "{user} опублікував",
         "attachThis": "{user} приклав",
         "statusThis": "{user} поновив {field}",
         "updateThis": "{user} поновив {entityType}",
-        "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} related to this {entityType}",
+        "createRelatedThis": "{user} створив {relatedEntityType} {relatedEntity} пов'язаний з {entityType}",
 
-        "emailReceivedFromThis": "Email received from {from}",
-        "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",
+        "emailReceivedFromThis": "Email отримано від {from}",
+        "emailReceivedInitialFromThis": "Email отримано від {from}, це {entityType} створено",
 
-        "emailReceivedThis": "Email received",
-        "emailReceivedInitialThis": "Email received, this {entityType} created",
+        "emailReceivedThis": "Email отримано",
+        "emailReceivedInitialThis": "Email отримано, це {entityType} створено",
 
-        "emailReceivedFrom": "Email received from {from}, related to {entityType} {entity}",
-        "emailReceivedFromInitial": "Email received from {from}, {entityType} {entity} created",
+        "emailReceivedFrom": "Email отримано від {from}, related to {entityType} {entity}",
+        "emailReceivedFromInitial": "Email отримано від {from}, {entityType} {entity} створено",
 
         "emailReceived": "Email отримано, відноситься до {entityType} {entity}",
         "emailReceivedInitial": "Email отримано: {entityType} {entity} створено",
         "emailReceivedInitialFrom": "Email отримано від {from}, {entityType} {entity} створено",
 
         "emailSent": "{by} відправив email {entityType} {entity}",
-        "emailSentThis": "{by} відправив email"
+        "emailSentThis": "{by} відправив email",
+
+        "postTargetTeam": "{user} написав команді {target}",
+        "postTargetTeams": "{user} написав командам {target}",
+        "postTargetPortal": "{user} написав для користувачів порталу {target}",
+        "postTargetPortals": "{user} написав для користувачів порталів {target}",
+        "postTarget": "{user} написав для {target}",
+        "postTargetYou": "{user} написав для вас",
+        "postTargetYouAndOthers": "{user} написав для {target} та вас",
+        "postTargetAll": "{user} написав для всіх",
+        "postTargetSelf": "{user} написав для себе",
+        "postTargetSelfAndOthers": "{user} написав для {target} та себе"
+    },
+    "streamMessagesMale": {
+        "assignThisSelf": "{user} призначив {entityType} на себе",
+        "assignSelf": "{user} призначив {entityType} {entity} на себе",
+        "postTargetSelfAndOthers": "{user} написав для {target} та себе",
+        "postTargetTeam": "{user} написав команді {target}",
+        "postTargetTeams": "{user} написав командам {target}",
+        "postTargetPortal": "{user} написав для користувачів порталу {target}",
+        "postTargetPortals": "{user} написав для користувачів порталів {target}",
+        "postTarget": "{user} написав для {target}",
+        "postTargetYou": "{user} написав для вас",
+        "postTargetYouAndOthers": "{user} написав для {target} та вас",
+        "postTargetAll": "{user} написав для всіх",
+        "postTargetSelf": "{user} написав для себе"
+    },
+    "streamMessagesFemale": {
+        "create": "{user} створила {entityType} {entity}",
+        "createAssigned": "{user} створила {entityType} {entity}, призначену {assignee}",
+        "createAssignedYou": "{user} створила {entityType} {entity}, призначену Вам",
+
+        "assign": "{user} призначила {entityType} {entity} на {assignee}",
+        "assignYou": "{user} призначила {entityType} {entity} на Вас",
+
+        "post": "{user} написав на {entityType} {entity}",
+        "attach": "{user} прикріпила до {entityType} {entity}",
+        "status": "{user} змінила поле {field} в {entityType} {entity}",
+        "update": "{user} змінила {entityType} {entity}",
+        "createRelated": "{user} створила {relatedEntityType} {relatedEntity} пов'язаний з {entityType} {entity}",
+
+        "mentionInPost": "{user} згадала {mentioned} в {entityType} {entity}",
+
+        "createThis": "{user} створила {entityType}",
+        "createAssignedThis": "{user} створила {entityType} призначену {assignee}",
+        "assignThis": "{user} призначила {entityType} на {assignee}",
+
+        "postThis": "{user} опублікувала",
+        "attachThis": "{user} приклала",
+        "statusThis": "{user} змінила {field}",
+        "updateThis": "{user} змінила {entityType}",
+        "createRelatedThis": "{user} створила {relatedEntityType} {relatedEntity} пов'язану з {entityType}",
+
+        "emailReceivedFromThis": "Email отримвано від {from}",
+        "emailReceivedInitialFromThis": "Email received from {from}, this {entityType} created",
+
+        "emailReceivedThis": "Email отримано",
+        "emailReceivedInitialThis": "Email отримано, {entityType} створено",
+
+        "emailReceivedFrom": "Email отримано від {from}, пов'язаний з {entityType} {entity}",
+        "emailReceivedFromInitial": "Email отримано від {from}, {entityType} {entity} створено",
+
+        "emailReceived": "Email отримано, відноситься до {entityType} {entity}",
+        "emailReceivedInitial": "Email отримано: {entityType} {entity} створено",
+        "emailReceivedInitialFrom": "Email отримано від {from}, {entityType} {entity} створено",
+
+        "emailSent": "{by} відправила email {entityType} {entity}",
+        "emailSentThis": "{by} відправила email",
+        "postTargetSelf": "{user} опублікувала у себе",
+        "assignThisSelf": "{user} призначила {entityType} на себе",
+        "assignSelf": "{user} призначла {entityType} {entity} на себе",
+        "postTargetSelfAndOthers": "{user} відправила повідомлення для {target} та себе",
+        "postTargetTeam": "{user} написав команді {target}",
+        "postTargetTeams": "{user} написав командам {target}",
+        "postTargetPortal": "{user} написав для користувачів порталу {target}",
+        "postTargetPortals": "{user} написав для користувачів порталів {target}",
+        "postTarget": "{user} написав для {target}",
+        "postTargetYou": "{user} написав для вас",
+        "postTargetYouAndOthers": "{user} написав для {target} та вас",
+        "postTargetAll": "{user} написав для всіх"
     },
     "lists": {
         "monthNames": ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"],

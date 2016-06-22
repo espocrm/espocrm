@@ -76,5 +76,8 @@
   "presetFilters": {
     "customers": "Заказчики",
     "partners": "Партнеры"
+  },
+  "streamMessages": {
+    "emailReceivedFrom": "Получено эл. письмо от {from}, относится к контрагенту {entity}"
   }
 }
