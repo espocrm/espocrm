@@ -50,13 +50,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
             $idList = $eaRepositoty->getIdListFormAddressList($arr);
             foreach ($idList as $id) {
-                $this->setUsersIdsByEmailAddressId($entity, $id, $addAssignedUser);
+                $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
             }
         }
         $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
     }
 
-    protected function setUsersIdsByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
+    protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
         $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
         if ($user) {
@@ -138,7 +138,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $ids = $eaRepositoty->getIds(array($from));
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
-                        $this->setUsersIdsByEmailAddressId($entity, $ids[0], true);
+                        $this->addUserByEmailAddressId($entity, $ids[0], true);
                     }
                 } else {
                     $entity->set('fromEmailAddressId', null);
