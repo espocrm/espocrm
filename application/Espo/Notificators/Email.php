@@ -33,6 +33,8 @@ use \Espo\ORM\Entity;
 
 class Email extends \Espo\Core\Notificators\Base
 {
+    const DAYS_THRESHOLD = 2;
+
     protected function init()
     {
         $this->addDependency('serviceFactory');
@@ -68,6 +70,13 @@ class Email extends \Espo\Core\Notificators\Base
                 $previousUserIdList = [];
             }
         }
+
+        $dateSent = $entity->get('dateSent');
+        if (!$dateSent) return;
+        $dt = new \DateTime($dateSent);
+        if (!$dt) return;
+
+        if ($dt->diff(new \DateTime())->days > self::DAYS_THRESHOLD) return;
 
         $emailUserIdList = $entity->get('usersIds');
 
