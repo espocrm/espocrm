@@ -701,7 +701,7 @@ class Base
         }
     }
 
-    protected function getUserTimeZone()
+    public function getUserTimeZone()
     {
         if (empty($this->userTimeZone)) {
             $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
@@ -712,7 +712,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    protected function convertDateTimeWhere($item)
+    public function convertDateTimeWhere($item)
     {
         $format = 'Y-m-d H:i:s';
 

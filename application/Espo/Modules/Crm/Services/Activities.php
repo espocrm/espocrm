@@ -47,6 +47,8 @@ class Activities extends \Espo\Core\Services\Base
         ]);
     }
 
+    const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
+
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
@@ -1034,23 +1036,26 @@ class Activities extends \Espo\Core\Services\Base
 
             $selectManager->applyPrimaryFilter('planned', $selectParams);
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
-            $selectManager->applyWhere(array(
-                '1' =>  array(
-                    'type' => 'or',
-                    'value' => array(
-                        '1' => array(
-                            'type' => 'today',
-                            'field' => 'dateStart',
-                            'dateTime' => true
-                        ),
-                        '2' => array(
-                            'type' => 'future',
-                            'field' => 'dateEnd',
-                            'dateTime' => true
-                        )
-                    )
-                )
-            ), $selectParams);
+            $selectManager->addOrWhere([
+                $selectManager->convertDateTimeWhere(array(
+                    'type' => 'today',
+                    'field' => 'dateStart',
+                    'timeZone' => $selectManager->getUserTimeZone()
+                )),
+                [
+                    $selectManager->convertDateTimeWhere(array(
+                        'type' => 'future',
+                        'field' => 'dateEnd',
+                        'timeZone' => $selectManager->getUserTimeZone()
+                    )),
+                    $selectManager->convertDateTimeWhere(array(
+                        'type' => 'before',
+                        'field' => 'dateStart',
+                        'value' => (new \DateTime())->modify('+' . self::UPCOMING_ACTIVITIES_FUTURE_DAYS . ' days')->format('Y-m-d H:i:s'),
+                        'timeZone' => $selectManager->getUserTimeZone()
+                    ))
+                ]
+            ], $selectParams);
 
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $selectParams);
 

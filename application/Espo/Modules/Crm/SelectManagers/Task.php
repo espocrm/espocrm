@@ -111,7 +111,7 @@ class Task extends \Espo\Core\SelectManagers\Base
         ));
     }
 
-    protected function convertDateTimeWhere($item)
+    public function convertDateTimeWhere($item)
     {
         $result = parent::convertDateTimeWhere($item);
 
