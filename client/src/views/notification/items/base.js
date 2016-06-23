@@ -64,7 +64,7 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
         },
 
         createMessage: function () {
-            var parentType = this.model.get('relatedType') || null;
+            var parentType = this.model.get('relatedParentType') || null;
 
             if (!this.messageTemplate && this.messageName) {
                 this.messageTemplate = this.translate(this.messageName, 'notificationMessages', parentType) || '';
