@@ -9,7 +9,7 @@
     {
         "label": "Email Notifications",
         "rows": [
-            [{"name": "assignmentEmailNotifications"}],
+            [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
             [{"name": "assignmentEmailNotificationsEntityList"}]
         ]
     }

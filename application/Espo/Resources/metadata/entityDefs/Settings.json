@@ -223,6 +223,10 @@
             "translation": "Global.scopeNamesPlural",
             "view": "views/settings/fields/assignment-notifications-entity-list"
         },
+        "mentionEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
         "b2cMode": {
             "type": "bool",
             "default": false

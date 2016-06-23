@@ -46,9 +46,9 @@
         "ldapAccountDomainNameShort": "Account Domain Name Short",
         "ldapOptReferrals": "Opt Referrals",
         "exportDisabled": "Disable Export (only admin is allowed)",
-        "assignmentNotificationsEntityList": "Entities to Notify about upon Assignment",
-        "assignmentEmailNotifications": "Send Email Notifications upon Assignment",
-        "assignmentEmailNotificationsEntityList": "Entities to Notify about with Email upon Assignment",
+        "assignmentNotificationsEntityList": "Entities to notify about upon assignment",
+        "assignmentEmailNotifications": "Send email notifications upon assignment",
+        "assignmentEmailNotificationsEntityList": "Entities to notify about with email upon assignment",
         "b2cMode": "B2C Mode",
         "avatarsDisabled": "Disable Avatars",
         "followCreatedEntities": "Follow Created Entities",
@@ -68,7 +68,8 @@
         "addressFormat": "Address Format",
         "notificationSoundsDisabled": "Disable Notification Sounds",
         "applicationName": "Application Name",
-        "calendarEntityList": "Calendar Entity List"
+        "calendarEntityList": "Calendar Entity List",
+        "mentionEmailNotifications": "Send email notifications about mentions in posts"
     },
     "options": {
         "weekStart": {

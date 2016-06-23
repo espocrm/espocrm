@@ -36,6 +36,8 @@ use Espo\ORM\Entity;
 
 class EmailNotification extends \Espo\Core\Services\Base
 {
+    const HOURS_THERSHOLD = 5;
+
     protected function init()
     {
         $this->addDependencyList([
@@ -185,5 +187,133 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
         return $fileName;
+    }
+
+    protected function getMentionTemplate($name)
+    {
+        $fileName = $this->getMentionTemplateFileName($name);
+        return file_get_contents($fileName);
+    }
+
+    protected function getMentionTemplateFileName($name)
+    {
+        $language = $this->getConfig()->get('language');
+        $type = 'mention';
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $language = 'en_US';
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        return $fileName;
+    }
+
+    public function process()
+    {
+        $dateTime = new \DateTime();
+        $dateTime->modify('-' . self::HOURS_THERSHOLD . ' hours');
+
+        $mentionEmailNotifications = $this->getConfig()->get('mentionEmailNotifications');
+
+        $typeList = [];
+        if ($mentionEmailNotifications) {
+            $typeList[] = 'MentionInPost';
+        }
+
+        if (!$mentionEmailNotifications) return;
+
+        $where = array(
+            'createdAt' > $dateTime,
+            'read' => false,
+            'emailIsProcessed' => false
+        );
+
+        $where['type'] = $typeList;
+
+        $notificationList = $this->getEntityManager()->getRepository('Notification')->where($where)->order('createdAt')->find();
+
+        foreach ($notificationList as $notification) {
+            $notification->set('emailIsProcessed', true);
+
+            $type = $notification->get('type');
+
+            $methodName = 'processNotification' . ucfirst($type);
+            if (method_exists($this, $methodName)) {
+                $this->$methodName($notification);
+            }
+
+            $this->getEntityManager()->saveEntity($notification);
+        }
+    }
+
+    public function processNotificationMentionInPost(Entity $notification)
+    {
+        $userId = $notification->get('userId');
+
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        $emailAddress = $user->get('emailAddress');
+
+        if (!$emailAddress) return;
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (!$preferences) return;
+
+        if (!$preferences->get('receiveMentionEmailNotifications')) return;
+
+        if ($notification->get('relatedType') !== 'Note' || !$notification->get('relatedId')) return;
+        $note = $this->getEntityManager()->getEntity('Note', $notification->get('relatedId'));
+        if (!$note) return;
+
+        $post = $note->get('post');
+        $parentId = $note->get('parentId');
+        $parentType = $note->get('parentType');
+
+        $data = array();
+
+        if ($parentId && $parentType) {
+            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if (!$parent) return;
+
+            $data['url'] = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $parentType . '/' . $parentId;
+            $data['parentName'] = $parent->get('name');
+            $data['parentType'] = $parentType;
+            $data['parentId'] = $parentId;
+        } else {
+            $data['url'] = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#Notification';
+        }
+
+        $data['userName'] = $note->get('createdByName');
+
+        $data['post'] = $note->get('post');
+
+        $subjectTpl = $this->getMentionTemplate('subject');
+        $bodyTpl = $this->getMentionTemplate('body');
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
+        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        $email->set(array(
+            'subject' => $subject,
+            'body' => $body,
+            'isHtml' => true,
+            'to' => $emailAddress,
+            'isSystem' => true
+        ));
+        try {
+            $this->getMailSender()->send($email);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
     }
 }

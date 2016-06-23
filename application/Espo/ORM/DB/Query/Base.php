@@ -407,6 +407,9 @@ abstract class Base
             }
 
             if (!is_null($order)) {
+                if (is_bool($order)) {
+                    $order = $order ? 'DESC' : 'ASC';
+                }
                 $order = strtoupper($order);
                 if (!in_array($order, ['ASC', 'DESC'])) {
                     $order = 'ASC';

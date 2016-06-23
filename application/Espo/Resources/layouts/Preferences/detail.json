@@ -71,7 +71,7 @@
     {
         "label": "Notifications",
         "rows": [
-            [{"name": "receiveAssignmentEmailNotifications"}, false]
+            [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}]
         ]
     }
 ]
