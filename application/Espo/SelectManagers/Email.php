@@ -73,10 +73,14 @@ class Email extends \Espo\Core\SelectManagers\Base
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;
         }
-        $result['whereClause'][] = array(
-            'fromEmailAddressId!=' => $idList,
+        $d = array(
             'usersMiddle.inTrash=' => false
         );
+        if (!empty($idList)) {
+            $d['fromEmailAddressId!='] = $idList;
+        }
+        $result['whereClause'][] = $d;
+
         $this->boolFilterOnlyMy($result);
     }
 
