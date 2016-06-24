@@ -200,6 +200,16 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         afterRender: function () {
             this.$post = this.$el.find('button.post');
+
+            var postView = this.getFieldView('post');
+            if (postView) {
+                this.listenTo(postView, 'add-files', function (files) {
+                    this.enablePostingMode();
+                    var attachmentsView = this.getFieldView('attachments');
+                    if (!attachmentsView) return;
+                    attachmentsView.uploadFiles(files);
+                }, this);
+            }
         },
 
         validate: function () {
