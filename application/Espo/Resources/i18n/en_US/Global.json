@@ -299,7 +299,7 @@
         "postTargetYou": "{user} posted to you",
         "postTargetYouAndOthers": "{user} posted to {target} and you",
         "postTargetAll": "{user} posted to all",
-        "postTargetSelf": "{user} posted on they stream",
+        "postTargetSelf": "{user} self-posted",
         "postTargetSelfAndOthers": "{user} posted to {target} and themself",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
@@ -329,8 +329,8 @@
         "assignThis": "{user} assigned this {entityType} to {assignee}",
         "assignYou": "{user} assigned {entityType} {entity} to you",
 
-        "assignThisSelf": "{user} assigned this {entityType} to themself",
-        "assignSelf": "{user} assigned {entityType} {entity} to themself",
+        "assignThisSelf": "{user} self-assigned this {entityType}",
+        "assignSelf": "{user} self-assigned {entityType} {entity}",
 
         "postThis": "{user} posted",
         "attachThis": "{user} attached",
@@ -359,16 +359,10 @@
         "emailSentThis": "{by} sent email"
     },
     "streamMessagesMale": {
-        "postTargetSelf": "{user} posted on his stream",
-        "postTargetSelfAndOthers": "{user} posted to {target} and himself",
-        "assignThisSelf": "{user} assigned this {entityType} to himself",
-        "assignSelf": "{user} assigned {entityType} {entity} to himself"
+        "postTargetSelfAndOthers": "{user} posted to {target} and himself"
     },
     "streamMessagesFemale": {
-        "postTargetSelf": "{user} posted on her stream",
-        "postTargetSelfAndOthers": "{user} posted to {target} and herself",
-        "assignThisSelf": "{user} assigned this {entityType} to herself",
-        "assignSelf": "{user} assigned {entityType} {entity} to herself"
+        "postTargetSelfAndOthers": "{user} posted to {target} and herself"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

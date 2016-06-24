@@ -165,8 +165,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
 
-            this.$textarea.get(0).addEventListener('drop', function (e) {
+            var $textarea = this.$textarea;
+
+            $textarea.off('drop');
+            $textarea.off('dragover');
+            $textarea.off('dragleave');
+
+            $textarea.on('drop', function (e) {
                 e.preventDefault();
+                e.stopPropagation();
+                var e = e.originalEvent;
                 if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                     this.getView('attachments').uploadFiles(e.dataTransfer.files);
                     this.enablePostingMode();
@@ -176,11 +184,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             var originalPlaceholderText = this.$textarea.attr('placeholder');
 
-            this.$textarea.get(0).addEventListener('dragover', function (e) {
+            $textarea.on('dragover', function (e) {
                 e.preventDefault();
                 this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
             }.bind(this));
-            this.$textarea.get(0).addEventListener('dragleave', function (e) {
+
+            $textarea.on('dragleave', function (e) {
                 e.preventDefault();
                 this.$textarea.attr('placeholder', originalPlaceholderText);
             }.bind(this));
