@@ -70,6 +70,7 @@
     },
     {
         "label": "Notifications",
+        "name": "notifications",
         "rows": [
             [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}]
         ]
