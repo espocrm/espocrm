@@ -739,7 +739,7 @@ InstallScript.prototype.getModRewriteErrorMesssage = function() {
 
 	var message = '';
 	if (typeof(this.langs) !== 'undefined') {
-		message = (typeof(this.langs['options']['modRewriteHelp'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteHelp'][this.serverType] : this.langs['options']['modRewriteHelp']['default'];
+		message = (typeof(this.langs['options']['modRewriteTitle'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteTitle'][this.serverType] : this.langs['options']['modRewriteTitle']['default'];
 		message += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
 		message = message.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
 	}
