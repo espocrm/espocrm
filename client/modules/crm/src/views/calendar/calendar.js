@@ -386,6 +386,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 timeFormat: this.getDateTime().timeFormat,
                 defaultView: this.mode,
                 weekNumbers: true,
+                weekNumberCalculation: 'ISO',
                 editable: true,
                 selectable: true,
                 selectHelper: true,
