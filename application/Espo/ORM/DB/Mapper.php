@@ -88,12 +88,12 @@ abstract class Mapper implements IMapper
 
     public function max(IEntity $entity, $params = array(), $field, $deleted = false)
     {
-        return $this->aggregate($entity, $params, 'MAX', $field, true);
+        return $this->aggregate($entity, $params, 'MAX', $field, $deleted);
     }
 
     public function min(IEntity $entity, $params = array(), $field, $deleted = false)
     {
-        return $this->aggregate($entity, $params, 'MIN', $field, true);
+        return $this->aggregate($entity, $params, 'MIN', $field, $deleted);
     }
 
     public function sum(IEntity $entity, $params = array())

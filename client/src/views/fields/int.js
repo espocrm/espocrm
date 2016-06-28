@@ -53,6 +53,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
             }
+
+            if (this.params.disableFormatting) {
+                this.disableFormatting = true;
+            }
         },
 
         data: function () {
