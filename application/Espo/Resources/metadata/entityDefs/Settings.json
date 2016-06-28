@@ -318,6 +318,9 @@
         "calendarEntityList": {
             "type": "multiEnum",
             "view": "views/settings/fields/calendar-entity-list"
+        },
+        "googleMapsApiKey": {
+            "type": "varchar"
         }
     }
 }

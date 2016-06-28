@@ -70,7 +70,7 @@ Espo.define('views/admin/integrations/index', 'view', function (Dep) {
 
             this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
 
-            var viewName = this.getMetadata().get('integrations.' + integration + '.view') || 'Admin.Integrations.' + this.getMetadata().get('integrations.' + integration + '.authMethod');
+            var viewName = this.getMetadata().get('integrations.' + integration + '.view') || 'views/admin/integrations/' + Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
             this.notify('Loading...');
             this.createView('content', viewName, {
                 el: '#integration-content',
