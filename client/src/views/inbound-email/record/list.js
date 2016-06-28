@@ -34,7 +34,7 @@ Espo.define('Views.InboundEmail.Record.List', 'Views.Record.List', function (Dep
 
         quickEditDisabled: true,
 
-        massActionList: ['remove'],
+        massActionList: ['remove', 'massUpdate'],
 
         checkAllResultDisabled: true
 
