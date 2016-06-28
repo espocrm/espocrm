@@ -6,9 +6,10 @@
      }
   },
   "recordViews":{
-    "list":"ScheduledJob.Record.List"
+    "list": "views/scheduled-job/record/list",
+    "detail": "views/scheduled-job/record/detail"
   },
   "views": {
-    "list": "ScheduledJob.List"
+    "list": "views/scheduled-job/list"
   }
 }

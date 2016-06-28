@@ -108,7 +108,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         dependencyDefs: {},
 
-        duplicateAction: false,
+        duplicateAction: true,
 
         events: {
             'click .button-container .action': function (e) {
@@ -157,10 +157,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.duplicateAction) {
-                this.dropdownItemList.push({
-                    'label': 'Duplicate',
-                    'name': 'duplicate'
-                });
+                if (this.getAcl().check(this.scope, 'create')) {
+                    this.dropdownItemList.push({
+                        'label': 'Duplicate',
+                        'name': 'duplicate'
+                    });
+                }
             }
         },
 

@@ -32,6 +32,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         sideView: 'views/email/record/detail-side',
 
+        duplicateAction: false,
+
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
                 var isRestricted = false;
