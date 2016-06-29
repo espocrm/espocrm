@@ -988,6 +988,36 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
 
+    public function getEntityFolowerIdList(Entity $entity)
+    {
+        $query = $this->getEntityManager()->getQuery();
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = $query->createSelectQuery('User', array(
+            'select' => ['id'],
+            'customJoin' => "
+                JOIN subscription AS `subscription` ON
+                    subscription.user_id = user.id AND
+                    subscription.entity_id = ".$query->quote($entity->id)." AND
+                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
+            ",
+            'offset' => $offset,
+            'limit' => $limit,
+            'whereClause' => array(
+                'isActive' => true
+            )
+        ));
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+
+        $idList = [];
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $idList[] = $row['id'];
+        }
+
+        return $idList;
+    }
+
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
         $query = $this->getEntityManager()->getQuery();
@@ -1046,6 +1076,22 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
         return $ignoreScopeList;
+    }
+
+    public function controlFollowersJob($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+        if (empty($data['entityId']) || empty($data['entityType'])) {
+            return;
+        }
+        $entity = $this->getEntityManager()->getEntity($data['entityType'], $data['entityId']);
+        if (!$entity) return;
+
+        $idList = $this->getEntityFolowerIdList($entity);
+
+        
     }
 }
 

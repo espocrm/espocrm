@@ -223,6 +223,14 @@
             "translation": "Global.scopeNamesPlural",
             "view": "views/settings/fields/assignment-notifications-entity-list"
         },
+        "postEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
+        "updateEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
         "mentionEmailNotifications": {
             "type": "bool",
             "default": false

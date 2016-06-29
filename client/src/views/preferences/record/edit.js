@@ -102,13 +102,13 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
 
             var hideNotificationPanel = true;
-            if (!this.getConfig().get('assignmentEmailNotifications')) {
+            if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
                 this.hideField('receiveAssignmentEmailNotifications');
             } else {
                 hideNotificationPanel = false;
             }
 
-            if (!this.getConfig().get('mentionEmailNotifications')) {
+            if (!this.getConfig().get('mentionEmailNotifications') || this.model.get('isPortalUser')) {
                 this.hideField('receiveMentionEmailNotifications');
             } else {
                 hideNotificationPanel = false;
