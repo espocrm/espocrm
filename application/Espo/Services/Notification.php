@@ -88,9 +88,8 @@ class Notification extends \Espo\Services\Record
         ))->find();
         foreach ($userList as $user) {
             $userId = $user->id;
-            if (!$this->checkUserNoteAccess($user, $note)) {
-                continue;
-            }
+            if (!$this->checkUserNoteAccess($user, $note)) continue;
+            if ($note->get('createdById') === $user->id) continue;
             $id = uniqid();
             $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote($note->id).", ".$pdo->quote('Note').", ".$pdo->quote($note->get('parentId')).", ".$pdo->quote($note->get('parentType')).")";
         }
