@@ -1000,8 +1000,6 @@ class Stream extends \Espo\Core\Services\Base
                     subscription.entity_id = ".$query->quote($entity->id)." AND
                     subscription.entity_type = ".$query->quote($entity->getEntityType())."
             ",
-            'offset' => $offset,
-            'limit' => $limit,
             'whereClause' => array(
                 'isActive' => true
             )
@@ -1091,7 +1089,24 @@ class Stream extends \Espo\Core\Services\Base
 
         $idList = $this->getEntityFolowerIdList($entity);
 
-        
+        $userList = $this->getEntityManager()->getRepository('User')->where(array(
+            'id' => $idList
+        ))->find();
+
+        foreach ($userList as $user) {
+            if (!$user->get('isActive')) {
+                $this->unfollowEntity($entity, $user->id);
+                continue;
+            }
+
+            if (!$user->get('isPortalUser')) {
+                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                    $this->unfollowEntity($entity, $user->id);
+                    continue;
+                }
+            }
+        }
+
     }
 }
 
