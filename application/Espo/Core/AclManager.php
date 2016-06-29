@@ -184,7 +184,7 @@ class AclManager
         return $this->getImplementation($entity->getEntityType())->checkIsOwner($user, $entity);
     }
 
-    public function checkInTeam(User $user, Entity $entity, $action)
+    public function checkInTeam(User $user, Entity $entity)
     {
         return $this->getImplementation($entity->getEntityType())->checkInTeam($user, $entity);
     }

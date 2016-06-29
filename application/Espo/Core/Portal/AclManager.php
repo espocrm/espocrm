@@ -193,12 +193,12 @@ class AclManager extends \Espo\Core\AclManager
         return parent::check($user, $subject, $action);
     }
 
-    public function checkEntity(User $user, $subject, $action = null)
+    public function checkEntity(User $user, Entity $entity, $action = 'read')
     {
         if ($this->checkUserIsNotPortal($user)) {
-            return $this->getMainManager()->checkEntity($user, $subject, $action);
+            return $this->getMainManager()->checkEntity($user, $entity, $action);
         }
-        return parent::checkEntity($user, $subject, $action);
+        return parent::checkEntity($user, $entity, $action);
     }
 
     public function checkIsOwner(User $user, Entity $entity)
