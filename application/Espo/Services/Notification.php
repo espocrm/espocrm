@@ -81,13 +81,13 @@ class Notification extends \Espo\Services\Record
 
         $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
         $arr = [];
-        foreach ($userIdList as $userId) {
-            if (empty($userId)) continue;
 
-            $user = $this->getEntityManager()->getEntity('User');
-            $user->id = $userId;
-            $user->setIsNew(false);
-            $user->setAsFetched();
+        $userList = $this->getEntityManager()->getRepository('User')->where(array(
+            'isActive' => true,
+            'id' => $userIdList
+        ))->find();
+        foreach ($userList as $user) {
+            $userId = $user->id;
             if (!$this->checkUserNoteAccess($user, $note)) {
                 continue;
             }
@@ -105,11 +105,16 @@ class Notification extends \Espo\Services\Record
 
     public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)
     {
-        if (in_array($note->get('type'), ['EmailSent', 'EmailReceived'])) {
-            if (!$this->getAclManager()->checkScope($user, 'Email')) {
+        if ($user->get('isPortalUser')) {
+            if ($note->get('relatedType')) {
+                if ($note->get('relatedType') === 'Email' && $note->get('parentType') === 'Case') {
+                    return true;
+                }
                 return false;
             }
+            return true;
         }
+
         if ($note->get('relatedType')) {
             if (!$this->getAclManager()->checkScope($user, $note->get('relatedType'))) {
                 return false;

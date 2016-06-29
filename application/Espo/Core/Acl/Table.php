@@ -207,6 +207,7 @@ class Table
             $this->applyDefault($aclTable, $fieldTable);
             $this->applyDisabled($aclTable, $fieldTable);
             $this->applyMandatory($aclTable, $fieldTable);
+            $this->applyAdditional($aclTable, $fieldTable, $valuePermissionLists);
         } else {
             $aclTable = (object) [];
             foreach ($this->getScopeList() as $scope) {
@@ -520,6 +521,19 @@ class Table
             if ($this->getMetadata()->get('scopes.' . $scope . '.disabled')) {
                 $table->$scope = false;
                 unset($fieldTable->$scope);
+            }
+        }
+    }
+
+    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
+    {
+        if ($this->getUser()->get('isPortalUser')) {
+            foreach ($this->getScopeList() as $scope) {
+                $table->$scope = false;
+                unset($fieldTable->$scope);
+            }
+            foreach ($this->valuePermissionList as $permission) {
+                $valuePermissionLists->{$permission}[] = 'no';
             }
         }
     }

@@ -127,5 +127,9 @@ class Table extends \Espo\Core\Acl\Table
             }
         }
     }
+
+    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
+    {
+    }
 }
 
