@@ -53,6 +53,7 @@
                 "smtpPassword": false,
                 "smtpAuth": false,
                 "receiveAssignmentEmailNotifications": false,
+                "receiveMentionEmailNotifications": false,
                 "defaultReminders": false,
                 "autoFollowEntityTypeList": false
             },

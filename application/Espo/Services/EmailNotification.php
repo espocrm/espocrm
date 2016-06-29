@@ -87,15 +87,11 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
-        $prefs = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if ($user->get('isPortalUser')) return;
 
-        if (!$prefs) {
-            return true;
-        }
-
-        if (!$prefs->get('receiveAssignmentEmailNotifications')) {
-            return true;
-        }
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (!$preferences) return;
+        if (!$preferences->get('receiveAssignmentEmailNotifications')) return;
 
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);

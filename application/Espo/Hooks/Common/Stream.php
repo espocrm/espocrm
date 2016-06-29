@@ -200,6 +200,9 @@ class Stream extends \Espo\Core\Hooks\Base
                     if (in_array($userId, $userIdList)) {
                         unset($autofollowUserIdList[$i]);
                     }
+                    if ($createdById === $userId) {
+                        unset($autofollowUserIdList[$i]);
+                    }
                 }
                 $autofollowUserIdList = array_values($autofollowUserIdList);
 
