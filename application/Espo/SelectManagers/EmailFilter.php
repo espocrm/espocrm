@@ -27,30 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\SelectManagers;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
-
-class EmailFilter extends \Espo\Core\Acl\Base
+class EmailFilter extends \Espo\Core\SelectManagers\Base
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    protected function boolFilterOnlyMy(&$result)
     {
-        if ($entity->has('parentId') && $entity->has('parentType')) {
-            $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');
-            if (!$parentType || !$parentId) return;
+        $this->accessOnlyOwn($result);
+    }
 
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+    protected function accessOnlyOwn(&$result)
+    {
+        $d = array();
+        $d[] = array(
+            'parentType' => 'User',
+            'parentId' => $this->getUser()->id
+        );
 
-            if ($parent->getEntityType() === 'User') {
-                return $parent->id === $user->id;
-            }
-            if ($parent && $parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->id) {
-                return true;
-            }
+        $idList = [];
+        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
+            'assignedUserId' => $this->getUser()->id
+        ))->find();
+        foreach ($emailAccountList as $emailAccount) {
+            $idList = $emailAccount->id;
         }
-        return;
+
+        if (count($idList)) {
+            $d = array(
+                'OR' => array(
+                    $d,
+                    array(
+                        'parentType' => 'EmailAccount',
+                        'parentId' => $idList
+                    )
+                )
+
+            );
+        }
+        $result['whereClause'][] = $d;
     }
 }
 

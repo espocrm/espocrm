@@ -3,5 +3,10 @@
     "modalViews": {
         "edit": "views/email-filter/modals/edit"
     },
-    "searchPanelDisabled": false
+    "recordViews": {
+        "detail": "views/email-filter/record/detail",
+        "edit": "views/email-filter/record/edit"
+    },
+    "searchPanelDisabled": false,
+    "boolFilterList": ["onlyMy"]
 }

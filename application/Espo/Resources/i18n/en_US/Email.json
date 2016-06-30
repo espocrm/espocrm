@@ -69,7 +69,8 @@
         "Mark as Important": "Mark as Important",
         "Unmark Importance": "Unmark Importance",
         "Move to Trash": "Move to Trash",
-        "Retrieve from Trash": "Retrieve from Trash"
+        "Retrieve from Trash": "Retrieve from Trash",
+        "Filters": "Filters"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",

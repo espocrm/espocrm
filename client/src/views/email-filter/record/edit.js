@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,30 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+Espo.define('views/email-filter/record/edit', ['views/record/edit', 'views/email-filter/record/detail'], function (Dep, Detail) {
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class EmailFilter extends \Espo\Core\Acl\Base
-{
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('parentId') && $entity->has('parentType')) {
-            $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');
-            if (!$parentType || !$parentId) return;
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            Detail.prototype.setupFilterFields.call(this);
+        },
 
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+        controlIsGlobal: function () {
+            Detail.prototype.controlIsGlobal.call(this);
+        },
 
-            if ($parent->getEntityType() === 'User') {
-                return $parent->id === $user->id;
-            }
-            if ($parent && $parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->id) {
-                return true;
-            }
-        }
-        return;
-    }
-}
+    });
+
+});
 

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,31 +25,27 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+Espo.define('views/email-filter/fields/action', 'views/fields/enum', function (Dep) {
 
-namespace Espo\Acl;
+    return Dep.extend({
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.controlActionOptions();
+            this.listenTo(this.model, 'change:parentType', this.controlActionOptions, this);
+        },
 
-class EmailFilter extends \Espo\Core\Acl\Base
-{
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('parentId') && $entity->has('parentType')) {
-            $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');
-            if (!$parentType || !$parentId) return;
-
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-
-            if ($parent->getEntityType() === 'User') {
-                return $parent->id === $user->id;
+        controlActionOptions: function () {
+            if (this.model.get('parentType') === 'User') {
+                this.params.options = ['Skip', 'Move to Folder'];
+            } else {
+                this.params.options = ['Skip'];
             }
-            if ($parent && $parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->id) {
-                return true;
+            if (this.isRendered()) {
+                this.reRender();
             }
         }
-        return;
-    }
-}
 
+    });
+
+});
