@@ -91,12 +91,13 @@ class Email extends \Espo\Core\SelectManagers\Base
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;
         }
+
         $result['whereClause'][] = array(
             'OR' => array(
                 'fromEmailAddressId=' => $idList,
                 array(
                     'status' => 'Sent',
-                    'createdBy' => $this->getUser()->id
+                    'createdById' => $this->getUser()->id
                 )
             ),
             'usersMiddle.inTrash=' => false
