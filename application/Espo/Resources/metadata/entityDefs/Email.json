@@ -189,6 +189,11 @@
             "readOnly": true,
             "view": "views/fields/user"
         },
+        "sentBy": {
+            "type": "link",
+            "readOnly": true,
+            "noLoad": true
+        },
         "modifiedBy": {
             "type": "link",
             "readOnly": true,
@@ -279,6 +284,10 @@
                     "default": false
                 }
             }
+        },
+        "sentBy": {
+            "type": "belongsTo",
+            "entity": "User"
         },
         "attachments": {
             "type": "hasChildren",

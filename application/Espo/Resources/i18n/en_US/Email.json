@@ -29,7 +29,8 @@
         "isReplied": "Is Replied",
         "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
-        "inTrash": "In Trash"
+        "inTrash": "In Trash",
+        "sentBy": "Sent by (User)"
     },
     "links": {
         "replied": "Replied",

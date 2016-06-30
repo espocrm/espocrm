@@ -296,7 +296,11 @@ class Email extends \Espo\Core\SelectManagers\Base
     protected function getWherePartIsNotReadIsTrue()
     {
         return array(
-            'usersMiddle.isRead' => false
+            'usersMiddle.isRead' => false,
+            'OR' => array(
+                'sentById' => null,
+                'sentById!=' => $this->getUser()->id
+            )
         );
     }
 
@@ -317,7 +321,11 @@ class Email extends \Espo\Core\SelectManagers\Base
     protected function getWherePartIsReadIsFalse()
     {
         return array(
-            'usersMiddle.isRead' => false
+            'usersMiddle.isRead' => false,
+            'OR' => array(
+                'sentById' => null,
+                'sentById!=' => $this->getUser()->id
+            )
         );
     }
 

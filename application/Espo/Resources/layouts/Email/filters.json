@@ -9,6 +9,7 @@
     "status",
     "parent",
     "teams",
+    "sentBy",
     "users",
     "createdAt"
 ]
