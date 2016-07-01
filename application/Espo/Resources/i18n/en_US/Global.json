@@ -20,7 +20,8 @@
         "EmailFilter": "Email Filter",
         "Portal": "Portal",
         "PortalRole": "Portal Role",
-        "Attachment": "Attachment"
+        "Attachment": "Attachment",
+        "EmailFolder": "Email Folder"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -43,7 +44,8 @@
         "EmailFilter": "Email Filters",
         "Portal": "Portals",
         "PortalRole": "Portal Roles",
-        "Attachment": "Attachments"
+        "Attachment": "Attachments",
+        "EmailFolder": "Email Folders"
     },
     "labels": {
         "Misc": "Misc",

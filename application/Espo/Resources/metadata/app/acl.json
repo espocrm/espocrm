@@ -44,6 +44,12 @@
                 "delete": "own",
                 "create": "yes"
             },
+            "EmailFolder": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
             "Preferences": {
                 "read": "own",
                 "edit": "own",
@@ -67,6 +73,9 @@
             },
             "User": {
                 "gender": false
+            },
+            "EmailFolder": {
+                "assignedUser": false
             }
         }
     },

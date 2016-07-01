@@ -209,9 +209,17 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         if ($entity->get('isBeingImported')) {
             foreach ($entity->getLinkMultipleIdList('users') as $userId) {
-                $action = $this->getEmailFilterManager()->getAction($entity, $userId);
-                if ($action === 'Skip') {
-                    $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
+                if ($filter) {
+                    $action = $filter->get('action');
+                    if ($action === 'Skip') {
+                        $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                    } else if ($action === 'Move to Folder') {
+                        $folderId = $filter->get('folderId');
+                        if ($folderId) {
+                            $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
+                        }
+                    }
                 }
             }
         }

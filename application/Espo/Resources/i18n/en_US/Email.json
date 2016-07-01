@@ -30,7 +30,8 @@
         "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
         "inTrash": "In Trash",
-        "sentBy": "Sent by (User)"
+        "sentBy": "Sent by (User)",
+        "folder": "Folder"
     },
     "links": {
         "replied": "Replied",
@@ -70,7 +71,8 @@
         "Unmark Importance": "Unmark Importance",
         "Move to Trash": "Move to Trash",
         "Retrieve from Trash": "Retrieve from Trash",
-        "Filters": "Filters"
+        "Filters": "Filters",
+        "Folders": "Folders"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",

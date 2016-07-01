@@ -42,6 +42,10 @@
                "aclScope": "EmailTemplate"
              },
              {
+               "label": "Folders",
+               "link": "#EmailFolder"
+             },
+             {
                "label": "Filters",
                "link": "#EmailFilter"
              },

@@ -95,6 +95,11 @@
             "notStorable": true,
             "default": false
         },
+        "folder": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true
+        },
         "nameHash": {
             "type": "text",
             "notStorable": true,
@@ -241,7 +246,8 @@
             "layoutMassUpdateDisabled": true,
             "readOnly": true,
             "columns": {
-                "inTrash": "usersInTrash"
+                "inTrash": "inTrash",
+                "folderId": "folderId"
             }
         },
         "assignedUsers": {
@@ -290,6 +296,11 @@
                 "inTrash": {
                     "type": "bool",
                     "default": false
+                },
+                "folderId": {
+                    "type": "varchar",
+                    "default": null,
+                    "maxLength": 24
                 }
             }
         },

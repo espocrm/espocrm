@@ -33,6 +33,7 @@
             "Role": false,
             "PortalRole": false,
             "EmailFilter": false,
+            "EmailFolder": false,
             "EmailAccount": false,
             "EmailTemplate": false,
             "Preferences": {

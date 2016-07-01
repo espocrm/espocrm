@@ -63,6 +63,7 @@ class Email extends \Espo\Core\SelectManagers\Base
             $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
             $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
             $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+            $result['additionalSelectColumns']['usersMiddle.folder_id'] = 'folderId';
         }
     }
 
@@ -74,7 +75,8 @@ class Email extends \Espo\Core\SelectManagers\Base
             $idList[] = $ea->id;
         }
         $d = array(
-            'usersMiddle.inTrash=' => false
+            'usersMiddle.inTrash=' => false,
+            'usersMiddle.folderId' => null
         );
         if (!empty($idList)) {
             $d['fromEmailAddressId!='] = $idList;
