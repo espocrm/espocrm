@@ -224,6 +224,11 @@
             "disabled": true,
             "notStorable": true
         },
+        "isBeingImported": {
+            "type": "bool",
+            "disabled": true,
+            "notStorable": true
+        },
         "teams": {
             "type": "linkMultiple",
             "view": "views/fields/teams"
@@ -234,7 +239,10 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "columns": {
+                "inTrash": "usersInTrash"
+            }
         },
         "assignedUsers": {
             "type": "linkMultiple",

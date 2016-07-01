@@ -195,6 +195,7 @@ class EmailAccount extends Record
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
+            'action' => 'Skip',
             'OR' => [
                 [
                     'parentType' => $emailAccount->getEntityType(),

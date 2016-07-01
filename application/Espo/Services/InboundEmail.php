@@ -187,6 +187,7 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
+            'action' => 'Skip',
             'OR' => [
                 [
                     'parentType' => $emailAccount->getEntityType(),

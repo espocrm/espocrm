@@ -136,6 +136,7 @@ class Email extends \Espo\Core\Notificators\Base
         foreach ($userIdList as $userId) {
             if (!$userId) continue;
             if ($userIdFrom === $userId) continue;
+            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
 
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) continue;

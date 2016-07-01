@@ -105,7 +105,27 @@ class Entity extends \Espo\ORM\Entity
                 }
             }
         }
+    }
 
+    public function setLinkMultipleColumn($field, $column, $id, $value)
+    {
+        $columnsField = $field . 'Columns';
+        if (!$this->hasField($columnsField)) {
+            return;
+        }
+        $object = $this->get($columnsField);
+        if (!isset($object) || !($object instanceof \StdClass)) {
+            $object = (object) [];
+        }
+        if (!isset($object->$id)) {
+            $object->$id = (object) [];
+        }
+        if (!isset($object->$id->$column)) {
+            $object->$id->$column = (object) [];
+        }
+
+        $object->$id->$column = $value;
+        $this->set($columnsField, $object);
     }
 
     public function setLinkMultipleIdList($field, array $idList)

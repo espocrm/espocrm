@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class Email extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('emailFilterManager');
+    }
+
     protected function prepareAddressess(Entity $entity, $type, $addAssignedUser = false)
     {
         if (!$entity->has($type)) {
@@ -200,6 +206,15 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if ($entity->get('isBeingImported')) {
+            foreach ($entity->getLinkMultipleIdList('users') as $userId) {
+                $action = $this->getEmailFilterManager()->getAction($entity, $userId);
+                if ($action === 'Skip') {
+                    $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                }
+            }
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -234,6 +249,15 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if ($entity->get('isBeingImportered')) {
+            $entity->set('isBeingImportered', false);
+        }
+    }
+
+    protected function getEmailFilterManager()
+    {
+        return $this->getInjection('emailFilterManager');
     }
 
 }

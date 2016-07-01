@@ -76,6 +76,8 @@ class Importer
         try {
             $email = $this->getEntityManager()->getEntity('Email');
 
+            $email->set('isBeingImported', true);
+
             $subject = $message->subject;
             if ($subject !== '0' && empty($subject)) {
                 $subject = '(No Subject)';
@@ -87,12 +89,14 @@ class Importer
             $email->set('attachmentsIds', []);
             if ($assignedUserId) {
                 $email->set('assignedUserId', $assignedUserId);
-                $email->set('assignedUsersIds', [$assignedUserId]);
+                $email->addLinkMultipleId('assignedUsers', $assignedUserId);
             }
             $email->set('teamsIds', $teamsIdList);
 
             if (!empty($userIdList)) {
-                $email->set('usersIds', $userIdList);
+                foreach ($userIdList as $uId) {
+                    $email->addLinkMultipleId('users', $uId);
+                }
             }
 
             $fromArr = $this->getAddressListFromMessage($message, 'from');
@@ -112,7 +116,7 @@ class Importer
             $email->set('cc', implode(';', $ccArr));
             $email->set('replyTo', implode(';', $replyToArr));
 
-            if ($this->getFiltersMatcher()->match($email, $filterList)) {
+            if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
                 return false;
             }
 
@@ -136,6 +140,8 @@ class Importer
                         $duplicate->addLinkMultipleId('users', $uId);
                     }
                 }
+
+                $duplicate->set('isBeingImported', true);
 
             	$this->getEntityManager()->saveEntity($duplicate);
 
