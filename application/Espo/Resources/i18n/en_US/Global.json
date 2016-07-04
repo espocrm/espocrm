@@ -184,7 +184,8 @@
         "Previous Entry": "Previous Entry",
         "Next Entry": "Next Entry",
         "View List": "View List",
-        "Attach File": "Attach File"    },
+        "Attach File": "Attach File"
+    },
     "messages": {
         "pleaseWait": "Please wait...",
         "posting": "Posting...",
