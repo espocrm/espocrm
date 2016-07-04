@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}, {"name": "skipNotifications"}
+            ]
+        ]
+    }
+
+]

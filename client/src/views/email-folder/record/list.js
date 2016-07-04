@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,37 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/email-folder/record/list', 'views/record/list', function (Dep) {
 
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class EmailFolder extends \Espo\Core\Controllers\Record
-{
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+        rowActionsView: 'views/email-folder/record/row-actions/default',
 
-        $this->getRecordService()->moveUp($data['id']);
+        actionMoveUp: function (data) {
+            var model = this.collection.get(data.id);
+            if (!model) return;
 
-        return true;
-    }
+            var index = this.collection.indexOf(model);
+            if (index === 0) return;
 
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+            this.ajaxPostRequest('EmailFolder/action/moveUp', {
+                id: model.id
+            }).then(function () {
+                this.collection.fetch();
+            }.bind(this));
+        },
 
-        $this->getRecordService()->moveDown($data['id']);
+        actionMoveDown: function (data) {
+            var model = this.collection.get(data.id);
+            if (!model) return;
 
-        return true;
-    }
+            var index = this.collection.indexOf(model);
+            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) return;
 
-    public function getActionListAll()
-    {
-        return $this->getRecordService()->listAll();
-    }
-}
+            this.ajaxPostRequest('EmailFolder/action/moveDown', {
+                id: model.id
+            }).then(function () {
+                this.collection.fetch();
+            }.bind(this));
+        },
+
+    });
+});
 

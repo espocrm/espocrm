@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,37 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/email-folder/list-side', 'view', function (Dep) {
 
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class EmailFolder extends \Espo\Core\Controllers\Record
-{
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+        template: 'email-folder/list-side',
 
-        $this->getRecordService()->moveUp($data['id']);
+        events: {
+            'click [data-action="selectFolder"]': function (e) {
+                var id = $(e.currentTarget).data('id');
 
-        return true;
-    }
+                this.$el.find('li > a.text-bold').removeClass('text-bold');
 
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+                this.selectFolder(id);
 
-        $this->getRecordService()->moveDown($data['id']);
+                this.$el.find('li > a[data-id="'+id+'"]').addClass('text-bold');
+            }
+        },
 
-        return true;
-    }
+        data: function () {
+            var data = {};
+            data.selectedFolderId = this.selectedFolderId;
+            data.showEditLink = this.options.showEditLink;
+            data.scope = this.scope;
+            return data;
+        },
 
-    public function getActionListAll()
-    {
-        return $this->getRecordService()->listAll();
-    }
-}
+        setup: function () {
+            this.scope = 'EmailFolder';
+            this.selectedFolderId = this.options.selectedFolderId || 'all';
+        },
+
+        selectFolder: function (id) {
+            this.trigger('select', id);
+        },
+
+    });
+});
 

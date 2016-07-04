@@ -77,14 +77,9 @@
       }
    },
    "filterList": [
-      "inbox",
-      "sent",
-      "drafts",
-      "trash"
+
    ],
    "defaultFilterData": {
-       "presetName": "inbox",
-       "primary": "inbox"
    },
    "boolFilterList": []
 }

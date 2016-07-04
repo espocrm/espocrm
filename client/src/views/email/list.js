@@ -32,6 +32,14 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         createButton: false,
 
+        template: 'email/list',
+
+        folderId: null,
+
+        folderScope: 'EmailFolder',
+
+        currentFolderId: null,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -41,6 +49,21 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                     label: 'Inbound Emails'
                 });
             }
+        },
+
+        data: function () {
+            var data = {};
+            data.foldersDisabled = this.foldersDisabled;
+            return data;
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.foldersDisabled = this.foldersDisabled ||
+                                   this.getMetadata().get('scopes.' + this.folderScope + '.disabled') ||
+                                   !this.getAcl().checkScope(this.folderScope);
+
+            this.selectedFolderId = 'inbox';
         },
 
         actionComposeEmail: function () {
@@ -58,6 +81,58 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                 }, this);
             }, this);
         },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            if (!this.foldersDisabled && !this.hasView('folders')) {
+                this.loadFolders();
+            }
+        },
+
+        getFolderCollection: function (callback) {
+            this.getCollectionFactory().create(this.folderScope, function (collection) {
+                collection.url = 'EmailFolder/action/listAll';
+
+                this.collection.folderCollection = collection;
+
+                this.listenToOnce(collection, 'sync', function () {
+                    callback.call(this, collection);
+                }, this);
+                collection.fetch();
+            }, this);
+        },
+
+        loadFolders: function () {
+            this.getFolderCollection(function (collection) {
+                this.createView('folders', 'views/email-folder/list-side', {
+                    collection: collection,
+                    el: this.options.el + ' .folders-container',
+                    showEditLink: this.getAcl().check(this.folderScope, 'edit'),
+                    selectedFolderId: this.selectedFolderId
+                }, function (view) {
+                    view.render();
+                    this.listenTo(view, 'select', function (id) {
+                        this.selectedFolderId = id;
+                        this.applyFolder();
+
+                        this.notify('Please wait...');
+                        this.listenToOnce(this.collection, 'sync', function () {
+                            this.notify(false);
+                        }, this);
+                        this.collection.fetch();
+                    }, this);
+                }, this);
+            }, this);
+        },
+
+        applyFolder: function () {
+            this.collection.whereAdditional = [
+                {
+                    field: 'folder',
+                    value: this.selectedFolderId
+                }
+            ];
+        }
 
     });
 });

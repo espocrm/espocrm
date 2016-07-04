@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,37 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/email-folder/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class EmailFolder extends \Espo\Core\Controllers\Record
-{
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+        setup: function () {
+            Dep.prototype.setup.call(this);
+        },
+
+        getActionList: function () {
+            var list = Dep.prototype.getActionList.call(this);
+            if (this.options.acl.edit) {
+                list.unshift({
+                    action: 'moveDown',
+                    label: 'Move Down',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                list.unshift({
+                    action: 'moveUp',
+                    label: 'Move Up',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+            return list;
         }
 
-        $this->getRecordService()->moveUp($data['id']);
+    });
 
-        return true;
-    }
+});
 
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-
-        $this->getRecordService()->moveDown($data['id']);
-
-        return true;
-    }
-
-    public function getActionListAll()
-    {
-        return $this->getRecordService()->listAll();
-    }
-}
 

@@ -27,37 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Repositories;
 
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
 
-class EmailFolder extends \Espo\Core\Controllers\Record
+use \Espo\Core\Exceptions\Error;
+
+class EmailFolder extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function postActionMoveUp($params, $data, $request)
+    protected function beforeSave(Entity $entity, $options = array())
     {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+        parent::beforeSave($entity, $options);
+        $order = $entity->get('order');
+        if (is_null($order)) {
+            $order = $this->max('order');
+            if (!$order) {
+                $order = 0;
+            }
+            $order++;
+            $entity->set('order', $order);
         }
-
-        $this->getRecordService()->moveUp($data['id']);
-
-        return true;
-    }
-
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-
-        $this->getRecordService()->moveDown($data['id']);
-
-        return true;
-    }
-
-    public function getActionListAll()
-    {
-        return $this->getRecordService()->listAll();
     }
 }
 

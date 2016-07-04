@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,37 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/email-folder/list', 'views/list', function (Dep) {
 
-use \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class EmailFolder extends \Espo\Core\Controllers\Record
-{
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+        quickCreate: true
 
-        $this->getRecordService()->moveUp($data['id']);
-
-        return true;
-    }
-
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-
-        $this->getRecordService()->moveDown($data['id']);
-
-        return true;
-    }
-
-    public function getActionListAll()
-    {
-        return $this->getRecordService()->listAll();
-    }
-}
+    });
+});
 

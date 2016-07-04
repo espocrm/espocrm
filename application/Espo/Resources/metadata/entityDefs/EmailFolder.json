@@ -10,7 +10,11 @@
             "type": "int"
         },
         "assignedUser": {
-            "type": "link"
+            "type": "link",
+            "readOnly": true
+        },
+        "skipNotifications": {
+            "type": "bool"
         },
         "createdAt": {
             "type": "datetime",
