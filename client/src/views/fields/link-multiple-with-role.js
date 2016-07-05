@@ -30,8 +30,6 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
     return Dep.extend({
 
-        type: 'linkMultipleWithRole',
-
         roleType: 'enum',
 
         columnName: 'role',
