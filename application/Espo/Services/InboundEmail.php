@@ -317,6 +317,8 @@ class InboundEmail extends \Espo\Services\Record
                             }
                         }
 
+                        $this->getEntityManager()->getRepository('InboundEmail')->relate($emailAccount, 'emails', $email);
+
                         if ($emailAccount->get('createCase')) {
                             $this->createCase($emailAccount, $email);
                         } else {

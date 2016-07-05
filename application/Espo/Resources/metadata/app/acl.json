@@ -76,6 +76,10 @@
             },
             "EmailFolder": {
                 "assignedUser": false
+            },
+            "Email": {
+                "inboundEmails": false,
+                "emailAccounts": false
             }
         }
     },

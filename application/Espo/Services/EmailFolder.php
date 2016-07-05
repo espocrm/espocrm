@@ -109,7 +109,7 @@ class EmailFolder extends Record
     {
         $folderList = $this->getRepository()->where(array(
             'assignedUserId' => $this->getUser()->id
-        ))->order('order')->find();
+        ))->order('order')->limit(0, 20)->find();
 
         $list = new \Espo\ORM\EntityCollection();
 

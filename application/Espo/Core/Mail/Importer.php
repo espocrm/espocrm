@@ -56,6 +56,7 @@ class Importer
     {
         return $this->entityManager;
     }
+
     protected function getConfig()
     {
         return $this->config;
@@ -71,7 +72,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false)
+    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
     {
         try {
             $email = $this->getEntityManager()->getEntity('Email');
@@ -116,6 +117,12 @@ class Importer
             $email->set('cc', implode(';', $ccArr));
             $email->set('replyTo', implode(';', $replyToArr));
 
+            if ($folderData) {
+                foreach ($folderData as $uId => $folderId) {
+                    $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+                }
+            }
+
             if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
                 return false;
             }
@@ -138,6 +145,12 @@ class Importer
                 if (!empty($userIdList)) {
                     foreach ($userIdList as $uId) {
                         $duplicate->addLinkMultipleId('users', $uId);
+                    }
+                }
+
+                if ($folderData) {
+                    foreach ($folderData as $uId => $folderId) {
+                        $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
                     }
                 }
 

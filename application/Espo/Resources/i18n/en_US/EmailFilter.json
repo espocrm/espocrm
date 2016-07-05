@@ -13,7 +13,7 @@
     "options": {
         "action": {
             "Skip": "Skip",
-            "Move to Folder": "Move to Folder"
+            "Move to Folder": "Put in Folder"
         }
     },
     "tooltips": {

@@ -12,10 +12,12 @@
         "emailAddress": "Email Address",
         "sentFolder": "Sent Folder",
         "storeSentEmails": "Store Sent Emails",
-        "keepFetchedEmailsUnread": "Keep Fetched Emails Unread"
+        "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
+        "emailFolder": "Put in Folder"
     },
     "links": {
-        "filters": "Filters"
+        "filters": "Filters",
+        "emails": "Emails"
     },
     "options": {
         "status": {

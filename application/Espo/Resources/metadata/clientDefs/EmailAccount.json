@@ -1,12 +1,12 @@
 {
     "controller": "controllers/email-account",
     "recordViews": {
-        "list":"EmailAccount.Record.List",
-        "detail": "EmailAccount.Record.Detail",
-        "edit": "EmailAccount.Record.Edit"
+        "list":"views/email-account/record/list",
+        "detail": "views/email-account/record/detail",
+        "edit": "views/email-account/record/edit"
     },
     "views": {
-    	"list": "EmailAccount.List"
+    	"list": "views/email-account/list"
     },
     "searchPanelDisabled": true,
     "formDependency": {
@@ -39,6 +39,11 @@
         "filters": {
             "select": false,
             "rowActionsView": "views/record/row-actions/relationship-edit-and-remove"
+        },
+        "emails": {
+            "select": false,
+            "create": false,
+            "rowActionsView": "views/record/row-actions/remove-only"
         }
     }
 }

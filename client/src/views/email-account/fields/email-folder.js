@@ -25,20 +25,42 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-
-Espo.define('views/email-folder/list', 'views/list', function (Dep) {
+Espo.define('views/email-account/fields/email-folder', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        quickCreate: true,
+        createDisabled: true,
+
+        autocompleteDisabled: true,
+
+        getSelectFilters: function () {
+            if (this.getUser().isAdmin()) {
+                if (this.model.get('assignedUserId')) {
+                    return {
+                        assignedUser: {
+                            type: 'equals',
+                            field: 'assignedUserId',
+                            value: this.model.get('assignedUserId'),
+                            valueName: this.model.get('assignedUserName')
+                        }
+                    };
+                }
+            }
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.collection.data = {
-                boolFilterList: ['onlyMy']
-            };
-        },
+
+            this.listenTo(this.model, 'change:assignedUserId', function (model, e, data) {
+                if (data.ui) {
+                    this.model.set({
+                        emailFolderId: null,
+                        emailFolderName: null
+                    });
+                }
+            }, this);
+        }
 
     });
-});
 
+});

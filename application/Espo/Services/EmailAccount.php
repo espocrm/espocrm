@@ -277,6 +277,12 @@ class EmailAccount extends Record
                     }
                 }
 
+                $folderData = null;
+                if ($emailAccount->get('emailFolderId')) {
+                    $folderData = array();
+                    $folderData[$userId] = $emailAccount->get('emailFolderId');
+                }
+
                 $message = null;
                 $email = null;
                 try {
@@ -285,7 +291,7 @@ class EmailAccount extends Record
                         $flags = $message->getFlags();
                     }
                     try {
-                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection, $fetchOnlyHeader);
+                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection, $fetchOnlyHeader, $folderData);
     	            } catch (\Exception $e) {
     	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
     	            }
@@ -302,6 +308,7 @@ class EmailAccount extends Record
 
                 if (!empty($email)) {
                     if (!$email->isFetched()) {
+                        $this->getEntityManager()->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
                         $this->noteAboutEmail($email);
                     }
                 }

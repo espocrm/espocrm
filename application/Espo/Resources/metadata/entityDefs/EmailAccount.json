@@ -10,7 +10,7 @@
             "required": true,
             "maxLength": 100,
             "trim": true,
-            "view": "EmailAccount.Fields.EmailAddress"
+            "view": "views/email-account/fields/email-address"
         },
         "status": {
             "type": "enum",
@@ -41,12 +41,12 @@
             "type": "varchar",
             "required": true,
             "default": "INBOX",
-            "view": "EmailAccount.Fields.Folders",
+            "view": "views/email-account/fields/folders",
             "tooltip": true
         },
         "sentFolder": {
             "type": "varchar",
-            "view": "EmailAccount.Fields.Folder"
+            "view": "views/email-account/fields/folder"
         },
         "storeSentEmails": {
             "type": "bool",
@@ -62,6 +62,10 @@
         "fetchData": {
             "type": "jsonObject",
             "readOnly": true
+        },
+        "emailFolder": {
+            "type": "link",
+            "view": "views/email-account/fields/email-folder"
         },
         "createdAt": {
             "type": "datetime",
@@ -101,6 +105,15 @@
             "type": "hasChildren",
             "foreign": "parent",
             "entity": "EmailFilter"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "emailAccounts"
+        },
+        "emailFolder": {
+            "type": "belongsTo",
+            "entity": "EmailFolder"
         }
     },
     "collection": {

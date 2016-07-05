@@ -31,11 +31,15 @@
         "isUsers": "Is User's",
         "inTrash": "In Trash",
         "sentBy": "Sent by (User)",
-        "folder": "Folder"
+        "folder": "Folder",
+        "inboundEmails": "Group Accounts",
+        "emailAccounts": "Personal Accounts"
     },
     "links": {
         "replied": "Replied",
-        "replies": "Replies"
+        "replies": "Replies",
+        "inboundEmails": "Group Accounts",
+        "emailAccounts": "Personal Accounts"
     },
     "options": {
         "status": {

@@ -1,7 +1,7 @@
 
 <ul class="list-group list-group-side list-group-no-border">
     <li data-id="all" class="list-group-item">
-        <a href="javascript:" data-action="selectFolder" data-id="all" class="{{#ifEqual 'all' ../selectedFolderId}}text-bold{{/ifEqual}}">{{translate 'All' category='presetFilters' scope='Email'}}</a>
+        <a href="javascript:" data-action="selectFolder" data-id="all" class="{{#ifEqual 'all' selectedFolderId}}text-bold{{/ifEqual}}">{{translate 'All' category='presetFilters' scope='Email'}}</a>
 
         {{#if showEditLink}}
         <a href="#{{scope}}" class="small pull-right" title="{{translate 'Manage Folders' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>

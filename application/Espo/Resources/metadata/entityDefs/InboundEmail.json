@@ -138,6 +138,11 @@
             "type": "hasChildren",
             "foreign": "parent",
             "entity": "EmailFilter"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "inboundEmails"
         }
     },
     "collection": {

@@ -49,21 +49,18 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                     label: 'Inbound Emails'
                 });
             }
+
+            this.foldersDisabled = this.foldersDisabled ||
+                                   this.getMetadata().get('scopes.' + this.folderScope + '.disabled') ||
+                                   !this.getAcl().checkScope(this.folderScope);
+
+            this.selectedFolderId = 'inbox';
         },
 
         data: function () {
             var data = {};
             data.foldersDisabled = this.foldersDisabled;
             return data;
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.foldersDisabled = this.foldersDisabled ||
-                                   this.getMetadata().get('scopes.' + this.folderScope + '.disabled') ||
-                                   !this.getAcl().checkScope(this.folderScope);
-
-            this.selectedFolderId = 'inbox';
         },
 
         actionComposeEmail: function () {
