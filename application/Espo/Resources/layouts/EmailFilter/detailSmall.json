@@ -11,6 +11,9 @@
                 {"name": "action"}
             ],
             [
+                {"name": "emailFolder"}
+            ],
+            [
                 {"name": "from"}
             ],
             [

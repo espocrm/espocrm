@@ -215,7 +215,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     if ($action === 'Skip') {
                         $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
                     } else if ($action === 'Move to Folder') {
-                        $folderId = $filter->get('folderId');
+                        $folderId = $filter->get('emailFolderId');
                         if ($folderId) {
                             $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
                         }

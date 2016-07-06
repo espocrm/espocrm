@@ -39,6 +39,10 @@ Espo.define('views/email-filter/record/edit', ['views/record/edit', 'views/email
             Detail.prototype.controlIsGlobal.call(this);
         },
 
+        controlEmailFolder: function () {
+            Detail.prototype.controlEmailFolder.call(this);
+        }
+
     });
 
 });

@@ -138,6 +138,20 @@ class Email extends \Espo\Core\Notificators\Base
             if ($userIdFrom === $userId) continue;
             if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
 
+            if ($entity->get('isBeingImported')) {
+                $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
+                if ($folderId) {
+                    if (
+                        $this->getEntityManager()->getRepository('EmailFolder')->where(array(
+                            'id' => $folderId,
+                            'skipNotifications' => true
+                        ))->count()
+                    ) {
+                        continue;
+                    }
+                }
+            }
+
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) continue;
             if ($user->get('isPortalUser')) continue;

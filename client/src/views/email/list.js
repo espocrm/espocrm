@@ -55,6 +55,8 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                                    !this.getAcl().checkScope(this.folderScope);
 
             this.selectedFolderId = 'inbox';
+
+            this.applyFolder();
         },
 
         data: function () {
@@ -123,12 +125,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
         },
 
         applyFolder: function () {
-            this.collection.whereAdditional = [
-                {
-                    field: 'folder',
-                    value: this.selectedFolderId
-                }
-            ];
+            this.collection.data.folderId = this.selectedFolderId;
         }
 
     });

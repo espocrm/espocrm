@@ -5,14 +5,15 @@
         "subject": "Subject",
         "bodyContains": "Body Contains",
         "action": "Action",
-        "isGlobal": "Is Global"
+        "isGlobal": "Is Global",
+        "emailFolder": "Folder"
     },
     "labels": {
         "Create EmailFilter": "Create Email Filter"
     },
     "options": {
         "action": {
-            "Skip": "Skip",
+            "Skip": "Ignore",
             "Move to Folder": "Put in Folder"
         }
     },

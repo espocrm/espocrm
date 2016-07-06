@@ -11,6 +11,9 @@
                 {"name": "to"}, {"name": "action"}
             ],
             [
+                false, {"name": "emailFolder"}
+            ],
+            [
                 {"name": "subject", "fullWidth": true}
             ],
             [

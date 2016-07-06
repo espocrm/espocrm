@@ -74,6 +74,12 @@ Espo.define('views/email-filter/record/detail', 'views/record/detail', function 
                 this.setFieldReadOnly('isGlobal');
                 this.setFieldReadOnly('parent');
             }
+
+
+            this.controlEmailFolder();
+            this.listenTo(this.model, 'change', function () {
+                this.controlEmailFolder();
+            }, this);
         },
 
         controlIsGlobal: function () {
@@ -83,6 +89,14 @@ Espo.define('views/email-filter/record/detail', 'views/record/detail', function 
                 this.showField('parent');
             }
         },
+
+        controlEmailFolder: function () {
+            if (this.model.get('action') !== 'Move to Folder' || this.model.get('parentType') !== 'User') {
+                this.hideField('emailFolder');
+            } else {
+                this.showField('emailFolder');
+            }
+        }
 
     });
 

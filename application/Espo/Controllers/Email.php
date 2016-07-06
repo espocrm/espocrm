@@ -161,5 +161,15 @@ class Email extends \Espo\Core\Controllers\Record
         }
         return $this->getRecordService()->retrieveFromTrashByIdList($ids);
     }
+
+    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    {
+        parent::fetchListParamsFromRequest($params, $request, $data);
+
+        $folderId = $request->get('folderId');
+        if ($folderId) {
+            $params['folderId'] = $request->get('folderId');
+        }
+    }
 }
 

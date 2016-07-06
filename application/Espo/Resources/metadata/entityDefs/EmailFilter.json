@@ -41,6 +41,10 @@
             "options": ["Skip", "Move to Folder"],
             "view": "views/email-filter/fields/action"
         },
+        "emailFolder": {
+            "type": "link",
+            "view": "views/email-filter/fields/email-folder"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -70,6 +74,10 @@
         "parent": {
             "type": "belongsToParent",
             "entityList": ["User", "EmailAccount", "InboundEmail"]
+        },
+        "emailFolder": {
+            "type": "belongsTo",
+            "entity": "EmailFolder"
         }
     },
     "collection": {

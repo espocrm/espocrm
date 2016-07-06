@@ -131,9 +131,7 @@ class Record extends Base
         $asc = $request->get('asc', 'true') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
-        $primaryFilter = $request->get('primaryFilter');
         $textFilter = $request->get('textFilter');
-        $boolFilterList = $request->get('boolFilterList');
 
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
@@ -151,12 +149,8 @@ class Record extends Base
             'q' => $q,
             'textFilter' => $textFilter
         );
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
-        }
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
-        }
+
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
 
@@ -164,6 +158,16 @@ class Record extends Base
             'total' => $result['total'],
             'list' => isset($result['collection']) ? $result['collection']->toArray() : $result['list']
         );
+    }
+
+    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    {
+        if ($request->get('primaryFilter')) {
+            $params['primaryFilter'] = $request->get('primaryFilter');
+        }
+        if ($request->get('boolFilterList')) {
+            $params['boolFilterList'] = $request->get('boolFilterList');
+        }
     }
 
     public function actionListLinked($params, $data, $request)
@@ -195,12 +199,8 @@ class Record extends Base
             'q' => $q,
             'textFilter' => $textFilter
         );
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
-        }
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
-        }
+
+        $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 

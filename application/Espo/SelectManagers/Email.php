@@ -35,6 +35,29 @@ class Email extends \Espo\Core\SelectManagers\Base
     {
         $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
+        if (!empty($params['folderId'])) {
+            $folderId = $params['folderId'];
+
+            switch ($folderId) {
+                case 'all':
+                    break;
+                case 'inbox':
+                    $this->filterInbox($result);
+                    break;
+                case 'sent':
+                    $this->filterSent($result);
+                    break;
+                case 'trash':
+                    $this->filterTrash($result);
+                    break;
+                case 'drafts':
+                    $this->filterDrafts($result);
+                    break;
+                default:
+                    $this->applyFolder($folderId, $result);
+            }
+        }
+
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addLeftJoin('users', $result);
             $this->setJoinCondition('users', array(
@@ -44,7 +67,18 @@ class Email extends \Espo\Core\SelectManagers\Base
 
         $this->addUsersColumns($result);
 
+
+
         return $result;
+    }
+
+    protected function applyFolder($folderId, &$result)
+    {
+        $result['whereClause'][] = array(
+            'usersMiddle.inTrash' => false,
+            'usersMiddle.folderId' => $folderId
+        );
+        $this->boolFilterOnlyMy($result);
     }
 
     protected function boolFilterOnlyMy(&$result)
