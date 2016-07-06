@@ -65,6 +65,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                     ids: ids
                 })
             });
+
             ids.forEach(function (id) {
                 var model = this.collection.get(id);
                 if (model) {
@@ -85,6 +86,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                     ids: ids
                 })
             });
+
             ids.forEach(function (id) {
                 var model = this.collection.get(id);
                 if (model) {
@@ -144,7 +146,10 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 data: JSON.stringify({
                     ids: ids
                 })
-            });
+            }).done(function () {
+                this.collection.trigger('not-read-change');
+            }.bind(this));
+
             ids.forEach(function (id) {
                 this.removeRecordFromList(id);
             }, this);
@@ -160,6 +165,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                     id: id
                 })
             });
+
             var model = this.collection.get(id);
             if (model) {
                 model.set('isImportant', true);
@@ -176,6 +182,8 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                     id: id
                 })
             });
+
+
             var model = this.collection.get(id);
             if (model) {
                 model.set('isImportant', false);
@@ -187,9 +195,12 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 url: 'Email/action/markAllAsRead',
                 type: 'POST'
             });
+
             this.collection.forEach(function (model) {
                 model.set('isRead', true);
             }, this);
+
+            this.collection.trigger('all-marked-read');
         },
 
         actionMoveToTrash: function (data) {

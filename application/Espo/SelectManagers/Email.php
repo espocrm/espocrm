@@ -36,28 +36,41 @@ class Email extends \Espo\Core\SelectManagers\Base
         $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
         if (!empty($params['folderId'])) {
-            $folderId = $params['folderId'];
-
-            switch ($folderId) {
-                case 'all':
-                    break;
-                case 'inbox':
-                    $this->filterInbox($result);
-                    break;
-                case 'sent':
-                    $this->filterSent($result);
-                    break;
-                case 'trash':
-                    $this->filterTrash($result);
-                    break;
-                case 'drafts':
-                    $this->filterDrafts($result);
-                    break;
-                default:
-                    $this->applyFolder($folderId, $result);
-            }
+            $this->applyFolder($params['folderId'], $result);
         }
 
+        $this->addUsersJoin($result);
+
+        return $result;
+    }
+
+    public function applyFolder($folderId, &$result)
+    {
+        switch ($folderId) {
+            case 'all':
+                break;
+            case 'inbox':
+                $this->filterInbox($result);
+                break;
+            case 'important':
+                $this->filterImportant($result);
+                break;
+            case 'sent':
+                $this->filterSent($result);
+                break;
+            case 'trash':
+                $this->filterTrash($result);
+                break;
+            case 'drafts':
+                $this->filterDrafts($result);
+                break;
+            default:
+                $this->applyEmailFolder($folderId, $result);
+        }
+    }
+
+    public function addUsersJoin(&$result)
+    {
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addLeftJoin('users', $result);
             $this->setJoinCondition('users', array(
@@ -66,13 +79,9 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
 
         $this->addUsersColumns($result);
-
-
-
-        return $result;
     }
 
-    protected function applyFolder($folderId, &$result)
+    protected function applyEmailFolder($folderId, &$result)
     {
         $result['whereClause'][] = array(
             'usersMiddle.inTrash' => false,
@@ -117,6 +126,12 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
         $result['whereClause'][] = $d;
 
+        $this->boolFilterOnlyMy($result);
+    }
+
+    protected function filterImportant(&$result)
+    {
+        $result['whereClause'][] = $this->getWherePartIsImportantIsTrue();
         $this->boolFilterOnlyMy($result);
     }
 
@@ -329,7 +344,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function getWherePartIsNotReadIsTrue()
+    public function getWherePartIsNotReadIsTrue()
     {
         return array(
             'usersMiddle.isRead' => false,

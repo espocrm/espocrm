@@ -1003,7 +1003,13 @@ stream-head-text-container .span {
 }
 .list-group-side > li {
     border: 0;
-    padding: 5px 0 5px 0;
+    padding: 5px 0 5px (@container-padding - 3px);
+    margin-left: -(@container-padding);
+    border-left: 3px solid transparent;
+}
+
+.list-group-side > li.selected {
+    border-color: @brand-danger;
 }
 
 .list-group-side a:hover,
@@ -1015,6 +1021,15 @@ stream-head-text-container .span {
 
 .list-group-side > li .cell {
     padding: 2px 0;
+}
+
+.list-group-side li.selected a.side-link,
+.list-group-side li.selected a:hover.side-link,
+.list-group-side li.selected a:active.side-link,
+.list-group-side li.selected a:visited.side-link,
+.list-group-side li.selected a:focus.side-link {
+    color: @brand-danger;
+    font-weight: bold;
 }
 
 .text-bold {

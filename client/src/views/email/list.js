@@ -105,6 +105,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
             this.getFolderCollection(function (collection) {
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
+                    emailCollection: this.collection,
                     el: this.options.el + ' .folders-container',
                     showEditLink: this.getAcl().check(this.folderScope, 'edit'),
                     selectedFolderId: this.selectedFolderId

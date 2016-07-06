@@ -162,6 +162,11 @@ class Email extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->retrieveFromTrashByIdList($ids);
     }
 
+    public function getActionGetFoldersNotReadCounts(&$params, $request, $data)
+    {
+        return $this->getRecordService()->getFoldersNotReadCounts();
+    }
+
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
         parent::fetchListParamsFromRequest($params, $request, $data);

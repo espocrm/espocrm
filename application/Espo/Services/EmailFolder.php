@@ -37,7 +37,9 @@ use \Espo\Core\Exceptions\Error;
 
 class EmailFolder extends Record
 {
-    protected $systemFolderList = ['inbox', 'sent', 'drafts', 'trash'];
+    protected $systemFolderList = ['inbox', 'important', 'sent'];
+
+    protected $systemFolderEndList = ['drafts', 'trash'];
 
     protected function init()
     {
@@ -122,6 +124,13 @@ class EmailFolder extends Record
 
 
         foreach ($folderList as $folder) {
+            $list[] = $folder;
+        }
+
+        foreach ($this->systemFolderEndList as $name) {
+            $folder = $this->getEntityManager()->getEntity('EmailFolder');
+            $folder->set('name', $this->getInjection('language')->translate($name, 'presetFilters', 'Email'));
+            $folder->id = $name;
             $list[] = $folder;
         }
 

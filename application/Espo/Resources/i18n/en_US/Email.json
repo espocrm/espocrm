@@ -89,7 +89,8 @@
         "archived": "Archived",
         "inbox": "Inbox",
         "drafts": "Drafts",
-        "trash": "Trash"
+        "trash": "Trash",
+        "important": "Important"
     },
     "massActions": {
         "markAsRead": "Mark as Read",

@@ -536,7 +536,7 @@ class Email extends Record
             }
         }
 
-        $selectManager = $this->getSelectManager($this->entityName);
+        $selectManager = $this->getSelectManager($this->getEntityType());
 
         $selectParams = $selectManager->getSelectParams($params, true);
 
@@ -630,6 +630,33 @@ class Email extends Record
             if (in_array($attribute, $this->allowedForUpdateAttributeList)) return;
             $entity->clear($attribute);
         }
+    }
+
+    public function getFoldersNotReadCounts()
+    {
+        $data = array();
+
+        $selectManager = $this->getSelectManager($this->getEntityType());
+        $selectParams = $selectManager->getEmptySelectParams();
+        $selectManager->applyAccess($selectParams);
+
+        $selectParams['whereClause'][] = $selectManager->getWherePartIsNotReadIsTrue();
+
+        $folderIdList = ['inbox'];
+
+        $emailFolderList = $this->getEntityManager()->getRepository('EmailFolder')->where(['assignedUserId' => $this->getUser()->id])->find();
+        foreach ($emailFolderList as $folder) {
+            $folderIdList[] = $folder->id;
+        }
+
+        foreach ($folderIdList as $folderId) {
+            $folderSelectParams = $selectParams;
+            $selectManager->applyFolder($folderId, $folderSelectParams);
+            $selectManager->addUsersJoin($folderSelectParams);
+            $data[$folderId] = $this->getEntityManager()->getRepository('Email')->count($folderSelectParams);
+        }
+
+        return $data;
     }
 }
 
