@@ -74,21 +74,55 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
             this.listenTo(this.emailCollection, 'change:isRead', function (model) {
                 if (this.countsIsBeingLoaded) return;
                 this.manageCountsDataAfterModelChanged(model);
-                this.renderCounts();
             }, this);
+
+            this.listenTo(this.emailCollection, 'model-removing', function (id) {
+                var model = this.emailCollection.get(id);
+                if (!model) return;
+                if (this.countsIsBeingLoaded) return;
+                this.manageModelRemoving(model);
+            }, this);
+
+            this.listenTo(this.emailCollection, 'moving-to-trash', function (id) {
+                var model = this.emailCollection.get(id);
+                if (!model) return;
+                if (this.countsIsBeingLoaded) return;
+                this.manageModelRemoving(model);
+            }, this);
+
+            this.listenTo(this.emailCollection, 'retrieving-to-trash', function (id) {
+                var model = this.emailCollection.get(id);
+                if (!model) return;
+                if (this.countsIsBeingLoaded) return;
+                this.manageModelRetrieving(model);
+            }, this);
+        },
+
+        manageModelRemoving: function (model) {
+            if (!model.get('isUsers')) return;
+            if (model.get('isRead')) return;
+            var folderId = model.get('folderId') || 'inbox';
+            this.decreaseNotReadCount(folderId);
+            this.renderCounts();
+        },
+
+        manageModelRetrieving: function (model) {
+            if (!model.get('isUsers')) return;
+            if (model.get('isRead')) return;
+            var folderId = model.get('folderId') || 'inbox';
+            this.increaseNotReadCount(folderId);
+            this.renderCounts();
         },
 
         manageCountsDataAfterModelChanged: function (model) {
             if (!model.get('isUsers')) return;
-            var folderId = model.get('folderId');
-            if (!folderId)  {
-                folderId = 'inbox';
-            }
+            var folderId = model.get('folderId') || 'inbox';
             if (!model.get('isRead')) {
                 this.increaseNotReadCount(folderId);
             } else {
                 this.decreaseNotReadCount(folderId);
             }
+            this.renderCounts();
         },
 
         increaseNotReadCount: function (folderId) {

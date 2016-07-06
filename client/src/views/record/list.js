@@ -374,6 +374,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 	                            Espo.Ui.notify(false);
 	                            this.checkedList = [];
 
+                                this.collection.trigger('model-removing', id);
                                 this.removeRecordFromList(id);
 
 	                        }, this);
@@ -1035,6 +1036,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
             var self = this;
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+                this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
                 this.notify('Removing...');
                 model.destroy({

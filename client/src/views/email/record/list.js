@@ -146,12 +146,11 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 data: JSON.stringify({
                     ids: ids
                 })
-            }).done(function () {
-                this.collection.trigger('not-read-change');
-            }.bind(this));
+            });
 
             ids.forEach(function (id) {
                 this.removeRecordFromList(id);
+                this.collection.trigger('moving-to-trash', model);
             }, this);
         },
 
@@ -209,6 +208,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 id: id
             }).then(function () {
                 Espo.Ui.warning('Moved to Trash');
+                this.collection.trigger('moving-to-trash', id);
                 this.removeRecordFromList(id);
             }.bind(this));
         },
@@ -219,11 +219,10 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 id: id
             }).then(function () {
                 Espo.Ui.warning('Retrieved from Trash');
+                this.collection.trigger('retrieving-to-trash', id);
                 this.removeRecordFromList(id);
-
             }.bind(this));
         }
-
 
     });
 });
