@@ -1,9 +1,5 @@
 <div style="background-color: #4A6492; padding: 3px 10px;" class="panel-heading">
-	{if $isBuilt eq true}
-		<img src="../client/img/logo.png">
-	{else}
-		<img src="../frontend/client/img/logo.png">
-	{/if}
+	<img src="../client/img/logo.png">
 </div>
 <header class="panel-heading">
 	<div class="row">

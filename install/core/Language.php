@@ -115,9 +115,22 @@ class Language{
 	{
 		/** Get rewrite rules */
 		$serverType = $this->getSystemHelper()->getServerType();
+		$serverOs = $this->getSystemHelper()->getOs();
+
 		$rewriteRules = $this->getSystemHelper()->getRewriteRules();
-		$i18n['options']['modRewriteHelp'][$serverType] = str_replace('{0}', $rewriteRules, $i18n['options']['modRewriteHelp'][$serverType]);
+		if (isset($i18n['options']['modRewriteInstruction'][$serverType][$serverOs])) {
+			$modRewriteInstruction = $i18n['options']['modRewriteInstruction'][$serverType][$serverOs];
+
+			preg_match_all('/\{(.*?)\}/', $modRewriteInstruction, $match);
+			if (isset($match[1])) {
+				foreach ($match[1] as $varName) {
+					if (isset($rewriteRules[$varName])) {
+						$modRewriteInstruction = str_replace('{'.$varName.'}', $rewriteRules[$varName], $modRewriteInstruction);
+					}
+				}
+			}
+
+			$i18n['options']['modRewriteInstruction'][$serverType][$serverOs] = $modRewriteInstruction;
+		}
 	}
-
-
 }

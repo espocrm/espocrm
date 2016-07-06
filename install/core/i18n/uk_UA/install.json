@@ -116,16 +116,20 @@
 		},
 		"modRewriteInstruction": {
 			"apache": {
-				"linux": "<br><br>Щоби додати шлях RewriteBase, відкрийте файл {API_PATH}.htaccess і змініть наступний рядок:<pre># RewriteBase /</pre>До<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre><br>Для увімкнення підтримки .htaccess додайте/поправте параметри конфіґурації сервера всередині Вашої &lt;virtualhost&gt; секції (httpd.conf):<pre>&lt;Директорія /PATH_TO_ESPO/&#62;\n <b>AllowOverride для всих</b>\n&#60;/Directory&#62;</pre> Тоді запустіть цю команду в терміналі:<pre><b>service apache2 restart</b></pre><br>Для увімкнення \"mod_rewrite\" запустіть оті команди у терміналі:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre>",
+				"linux": "<br><br>1. Для увімкнення \"mod_rewrite\" запустіть ці команди у терміналі:<pre>{APACHE1}</pre><br>2. Для увімкнення підтримки .htaccess додайте/поправте параметри конфігурації сервера (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Тоді запустіть цю команду в терміналі:<pre>{APACHE3}</pre><br>3. Спробуйте додати шлях RewriteBase, відкрийте файл {API_PATH}.htaccess і змініть наступний рядок:<pre>{APACHE4}</pre>на<pre>{APACHE5}</pre><br> Для отримання більш детальної інформації, будь ласка, перейдіть <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>",
 				"windows": "<br> <pre>1. Знайти файл httpd.conf файл (зазвичай його можна знайти у теці, званій conf, config або ще якось так)<br> Н2. Всередині файла httpd.conf розкоментувати рядок LoadModule rewrite_module модулі/через mod_rewrite.so (видалити знак '#' на початку рядка)<br> 3. Також пересвідчитися, що рядок ClearModuleList некоментований і переконайтеся, що рядок AddModule mod_rewrite.c не закомментирований.</pre>"
 			},
+			"nginx": {
+                "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Для отримання більш детальної інформації, будь ласка, перейдіть <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",
+                "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Для отримання більш детальної інформації, будь ласка, перейдіть <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+            },
 			"microsoft-iis": {
 				"windows": ""
 			}
 		},
-		"modRewriteHelp": {
-			"apache": "Помилка API: EspoCRM API недоступне.<br> Можливі проблеми: бракує RewriteBase, вимкнено \"mod_rewrite\" в Apache-сервері або файлі підтримки .htaccess.",
-			"nginx": "Помилка API: EspoCRM API недоступне.<br> Додайте цей код до Вашого Nginx Host Config (всередині блоку \"сервер\"):<br>\n<pre>\n{0}\n</pre>",
+		"modRewriteTitle": {
+			"apache": "Помилка API: API EspoCRM недоступне.<br> Можливі проблеми: бракує RewriteBase, вимкнено \"mod_rewrite\" в Apache-сервері або файлі підтримки .htaccess.",
+			"nginx": "Помилка API: API EspoCRM недоступне.<br> Додайте цей код до Вашого файлу конфігурації Nginx (/etc/nginx/sites-available/YOUR_SITE) всередині блоку \"сервер\":",
 			"microsoft-iis": "Помилка API: EspoCRM API недоступне.<br> Можлива проблема: вимкнено \"URL Rewrite\". Будь ласка, перевірте і включіть модуль \"URL Rewrite\" сервера IIS",
 			"default": "Помилка API: EspoCRM API недоступний.<br> Можлива проблема: вимкнений Rewrite Module. Будь ласка, перевірте й увімкніть Rewrite Module у вашому сервері (наприклад mod_rewrite в Apache) і підтримку .htaccess."
 		}

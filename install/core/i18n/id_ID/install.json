@@ -115,13 +115,20 @@
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br> 1. Aktifkan \"mod_rewrite\". Untuk melakukannya menjalankan perintah-perintah dalam Terminal: <pre> <b> a2enmod rewrite Situs layanan apache2 Restart </ b> </ pre> Situs 2. Mengaktifkan dukungan .htaccess. Tambahkan / edit pengaturan konfigurasi Server (apache2.conf, httpd.conf): <pre> & # 60; direktori / PATH_TO_ESPO / & # 62;\n <B> AllowOverride Semua </ b>\n& # 60; / Directory & # 62; </ pre>\n Setelah menjalankan perintah ini di Terminal: <pre> <b> layanan apache2 Restart </ b> </ pre> Situs 3. Cobalah untuk menambahkan jalur RewriteBase, membuka file {API_PATH} .htaccess dan mengganti baris berikut: <pre> # RewriteBase / </ pre> Untuk <pre> RewriteBase {ESPO_PATH} {API_PATH} </ pre>",
+        "linux": "<br><br>1. Aktifkan \"mod_rewrite\". Untuk melakukannya menjalankan perintah-perintah dalam Terminal: <pre>{APACHE1}</pre> 2. Mengaktifkan dukungan .htaccess. Tambahkan/edit pengaturan konfigurasi Server (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre>{APACHE2}</pre>\n Setelah menjalankan perintah ini di Terminal: <pre>{APACHE3}</pre> 3. Cobalah untuk menambahkan jalur RewriteBase, membuka file {API_PATH} .htaccess dan mengganti baris berikut: <pre>{APACHE4}</pre> Untuk <pre>{APACHE5}</pre><br> For more information please visit the guideline <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>",
         "windows": "Situs <pre> 1. Cari file httpd.conf (biasanya Anda akan menemukannya dalam folder bernama conf, konfigurasi atau sesuatu sepanjang garis) Situs\n2. Di dalam file httpd.conf tanda komentar pada LoadModule baris modul rewrite_module / mod_rewrite.so (menghapus pound '#' tanda dari di garis depan) <br>\n3. Juga menemukan garis ClearModuleList adalah tanda komentar kemudian cari dan pastikan bahwa garis AddModule mod_rewrite.c tidak komentar.\n</ Pre>"
-      }
+      },
+      "nginx": {
+            "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> For more information please visit the guideline <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",
+            "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> For more information please visit the guideline <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+        },
+        "microsoft-iis": {
+            "windows": ""
+        }
     },
-    "modRewriteHelp": {
-      "apache": "API Kesalahan:. EspoCRM API tersedia <br> Kemungkinan masalah: cacat \"mod_rewrite\" di server Apache, dukungan htaccess cacat atau masalah RewriteBase Situs Apakah langkah hanya diperlukan.. Setelah setiap cek langkah jika masalah tersebut dipecahkan.",
-      "nginx": "API Kesalahan:. EspoCRM API tersedia Situs Tambahkan kode ini ke Anda Nginx host Config (dalam \"server\" block): Situs\n<Pre>\n{0}\n</ Pre>",
+    "modRewriteTitle": {
+      "apache": "API Kesalahan: EspoCRM API tersedia <br> Kemungkinan masalah: cacat \"mod_rewrite\" di server Apache, dukungan htaccess cacat atau masalah RewriteBase Situs Apakah langkah hanya diperlukan.. Setelah setiap cek langkah jika masalah tersebut dipecahkan.",
+      "nginx": "API Kesalahan: EspoCRM API tersedia Situs Tambahkan kode ini ke Anda Nginx host Config (dalam \"server\" block):",
       "microsoft-iis": "API Kesalahan:. EspoCRM API tersedia <br> masalah yang mungkin terjadi: cacat \"URL Rewrite\". Silakan periksa dan mengaktifkan \"URL Rewrite\" Modul di IIS server",
       "default": "API Kesalahan:. EspoCRM API tersedia <br> masalah Kemungkinan: cacat Modul Rewrite. Silakan periksa dan memungkinkan Modul Rewrite di server Anda (misalnya mod_rewrite di Apache) dan dukungan .htaccess."
     }

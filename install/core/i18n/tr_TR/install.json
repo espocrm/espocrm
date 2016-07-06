@@ -98,21 +98,6 @@
 		"db driver": {
 			"mysqli": "MySQLi",
 			"pdo_mysql": "PDO MySQL"
-		},
-		"modRewriteInstruction": {
-			"apache": {
-				"linux": "<br><br>1. Enable \"mod_rewrite\". To do it run those commands in a Terminal:<pre><b>a2enmod rewrite <br>service apache2 restart</b></pre><br>2. Enable .htaccess support. Add/edit the Server configuration settings (apache2.conf, httpd.conf):<pre>&#60;Directory /PATH_TO_ESPO/&#62;\n <b>AllowOverride All</b>\n&#60;/Directory&#62;</pre>\n Afterwards run this command in a Terminal:<pre><b>service apache2 restart</b></pre><br>3. Tro to add the RewriteBase path, open a file {API_PATH}.htaccess and replace the following line:<pre># RewriteBase /</pre>To<pre>RewriteBase {ESPO_PATH}{API_PATH}</pre>",
-				"windows": "<br> <pre>1. Find the httpd.conf file (usually you will find it in a folder called conf, config or something along those lines)<br>\n2. Inside the httpd.conf file uncomment the line LoadModule rewrite_module modules\/mod_rewrite.so (remove the pound '#' sign from in front of the line)<br>\n3. Also find the line ClearModuleList is uncommented then find and make sure that the line AddModule mod_rewrite.c is not commented out.\n<\/pre>"
-			},
-			"microsoft-iis": {
-				"windows": ""
-			}
-		},
-		"modRewriteHelp": {
-			"apache": "API Error: EspoCRM API unavailable.<br> Possible problems: disabled \"mod_rewrite\" in Apache server, disabled .htaccess support or  RewriteBase issue.<br>Do only necessary steps. After each step check if the issue is solved.",
-			"nginx": "API Error: EspoCRM API unavailable.<br> Add this code to your Nginx Host Config (inside \"server\" block):<br>\n<pre>\n{0}\n</pre>",
-			"microsoft-iis": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled \"URL Rewrite\". Please check and enable \"URL Rewrite\" Module in IIS server",
-			"default": "API Error: EspoCRM API unavailable.<br> Possible problem: disabled Rewrite Module. Please check and enable Rewrite Module in your server (e.g. mod_rewrite in Apache) and .htaccess support."
 		}
 	}
 }
