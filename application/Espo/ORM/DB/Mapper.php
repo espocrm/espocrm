@@ -303,17 +303,18 @@ abstract class Mapper implements IMapper
         return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
     }
 
-    public function updateRelation(IEntity $entity, $relationName, $id = null, array $columnData)
+    public function updateRelation(IEntity $entity, $relationName, $id = null, $columnData)
     {
         if (empty($id) || empty($relationName)) {
             return false;
         }
 
+        if (empty($columnData)) return;
+
         $relOpt = $entity->relations[$relationName];
         $keySet = $this->query->getKeys($entity, $relationName);
 
         $relType = $relOpt['type'];
-
 
         switch ($relType) {
             case IEntity::MANY_MANY:
