@@ -40,6 +40,8 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         currentFolderId: null,
 
+        defaultFolderId: 'inbox',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -54,7 +56,9 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                                    this.getMetadata().get('scopes.' + this.folderScope + '.disabled') ||
                                    !this.getAcl().checkScope(this.folderScope);
 
-            this.selectedFolderId = 'inbox';
+            var params = this.options.params || {};
+
+            this.selectedFolderId = params.folder || this.defaultFolderId;
 
             this.applyFolder();
         },
@@ -120,6 +124,12 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                             this.notify(false);
                         }, this);
                         this.collection.fetch();
+
+                        if (id !== this.defaultFolderId) {
+                            this.getRouter().navigate('#Email/list/folder=' + id);
+                        } else {
+                            this.getRouter().navigate('#Email');
+                        }
                     }, this);
                 }, this);
             }, this);

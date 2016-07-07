@@ -34,6 +34,8 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
 
         events: {
             'click [data-action="selectFolder"]': function (e) {
+                e.preventDefault();
+
                 var id = $(e.currentTarget).data('id');
 
                 this.$el.find('li.selected').removeClass('selected');
@@ -58,10 +60,6 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
             this.loadNotReadCounts();
 
             this.listenTo(this.emailCollection, 'sync', this.loadNotReadCounts);
-
-            this.listenTo(this.emailCollection, 'not-read-change', function (m) {
-                //this.loadNotReadCounts();
-            });
 
             this.listenTo(this.emailCollection, 'all-marked-read', function (m) {
                 this.countsData = this.countsData || {};

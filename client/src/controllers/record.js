@@ -73,7 +73,8 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             this.getCollection(function (collection) {
                 this.main(this.getViewName('list'), {
                     scope: this.name,
-                    collection: collection
+                    collection: collection,
+                    params: options
                 }, null, isReturn, key);
             }, this, false);
         },
@@ -91,6 +92,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     model: model,
                     returnUrl: options.returnUrl,
                     returnDispatchParams: options.returnDispatchParams,
+                    params: options
                 });
             }.bind(this);
 
@@ -131,7 +133,8 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                     model: model,
                     returnUrl: options.returnUrl,
-                    returnDispatchParams: options.returnDispatchParams
+                    returnDispatchParams: options.returnDispatchParams,
+                    params: options
                 };
 
                 if (options.attributes) {
@@ -170,7 +173,8 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                         scope: this.name,
                         model: model,
                         returnUrl: options.returnUrl,
-                        returnDispatchParams: options.returnDispatchParams
+                        returnDispatchParams: options.returnDispatchParams,
+                        params: options
                     };
 
                     if (options.attributes) {
