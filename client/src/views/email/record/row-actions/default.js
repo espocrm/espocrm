@@ -76,6 +76,8 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                         }
                     });
                 }
+
+
             }
             if (this.getAcl().checkModel(this.model, 'delete')) {
                 list.push({
@@ -88,17 +90,30 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
             }
             if (this.model.get('isUsers')) {
                 if (!this.model.get('isImportant')) {
-                    list.push({
-                        action: 'markAsImportant',
-                        label: 'Mark as Important',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
+                    if (!this.model.get('inTrash')) {
+                        list.push({
+                            action: 'markAsImportant',
+                            label: 'Mark as Important',
+                            data: {
+                                id: this.model.id
+                            }
+                        });
+                    }
                 } else {
                     list.push({
                         action: 'markAsNotImportant',
                         label: 'Unmark Importance',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
+            }
+            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+                if (!this.model.get('inTrash')) {
+                    list.push({
+                        action: 'moveToFolder',
+                        label: 'Move to Folder',
                         data: {
                             id: this.model.id
                         }

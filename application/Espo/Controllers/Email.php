@@ -176,5 +176,23 @@ class Email extends \Espo\Core\Controllers\Record
             $params['folderId'] = $request->get('folderId');
         }
     }
+
+    public function postActionMoveToFolder($params, $data)
+    {
+        if (!empty($data['ids'])) {
+            $ids = $data['ids'];
+        } else {
+            if (!empty($data['id'])) {
+                $ids = [$data['id']];
+            } else {
+                throw new BadRequest();
+            }
+        }
+
+        if (empty($data['folderId'])) {
+            throw new BadRequest();
+        }
+        return $this->getRecordService()->moveToFolderByIdList($ids);
+    }
 }
 

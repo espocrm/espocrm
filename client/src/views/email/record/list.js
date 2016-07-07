@@ -51,6 +51,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.massActionList.push('markAsNotRead');
             this.massActionList.push('markAsImportant');
             this.massActionList.push('markAsNotImportant');
+            this.massActionList.push('moveToFolder');
         },
 
         massActionMarkAsRead: function () {
@@ -207,7 +208,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.ajaxPostRequest('Email/action/moveToTrash', {
                 id: id
             }).then(function () {
-                Espo.Ui.warning('Moved to Trash');
+                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
                 this.collection.trigger('moving-to-trash', id);
                 this.removeRecordFromList(id);
             }.bind(this));
@@ -218,10 +219,27 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.ajaxPostRequest('Email/action/retrieveFromTrash', {
                 id: id
             }).then(function () {
-                Espo.Ui.warning('Retrieved from Trash');
+                Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
                 this.collection.trigger('retrieving-to-trash', id);
                 this.removeRecordFromList(id);
             }.bind(this));
+        },
+
+        actionMoveToFolder: function (data) {
+            var id = data.id;
+
+            this.createView('modal', 'views/email-folder/modals/select-folder', {}, function (view) {
+                view.render();
+                this.listenToOnce(view, 'select', function (folderId) {
+                    this.ajaxPostRequest('Email/action/moveToFolder', {
+                        id: id,
+                        folderId: folderId
+                    }).then(function () {
+                        Espo.Ui.warning(this.translate('Done'));
+                        this.collecton.fetch();
+                    }.bind(this));
+                }, this);
+            }, this);
         }
 
     });

@@ -306,6 +306,14 @@ class Email extends Record
         return true;
     }
 
+    public function moveToFolderByIdList(array $idList, $folderId, $userId = null)
+    {
+        foreach ($idList as $id) {
+            $this->moveToFolder($id, $folderId, $userId);
+        }
+        return true;
+    }
+
     public function retrieveFromTrashByIdList(array $idList, $userId = null)
     {
         foreach ($idList as $id) {
