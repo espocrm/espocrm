@@ -169,8 +169,9 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                         ids: ids,
                         folderId: folderId
                     }).then(function () {
-                        Espo.Ui.warning(this.translate('Done'));
-                        this.collection.fetch();
+                        this.collection.fetch().then(function () {
+                            Espo.Ui.success(this.translate('Done'));
+                        }.bind(this));
                     }.bind(this));
                 }, this);
             }, this);
@@ -257,8 +258,9 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                         id: id,
                         folderId: folderId
                     }).then(function () {
-                        Espo.Ui.success(this.translate('Done'));
-                        this.collection.fetch();
+                        this.collection.fetch().then(function () {
+                            Espo.Ui.success(this.translate('Done'));
+                        }.bind(this));
                     }.bind(this));
                 }, this);
             }, this);
