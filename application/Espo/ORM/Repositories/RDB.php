@@ -215,7 +215,7 @@ class RDB extends \Espo\ORM\Repository
 
     public function findRelated(Entity $entity, $relationName, array $params = array())
     {
-        if ($entity->isNew()) {
+        if (!$entity->id) {
             return [];
         }
         $entityName = $entity->relations[$relationName]['entity'];
