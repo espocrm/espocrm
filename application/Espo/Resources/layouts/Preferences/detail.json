@@ -49,6 +49,12 @@
                     "name": "emailReplyToAllByDefault"
                 },
                 false
+            ],
+            [
+                {
+                    "name": "emailReplyForceHtml"
+                },
+                false
             ]
         ]
     },

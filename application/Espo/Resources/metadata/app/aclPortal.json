@@ -56,7 +56,10 @@
                 "receiveAssignmentEmailNotifications": false,
                 "receiveMentionEmailNotifications": false,
                 "defaultReminders": false,
-                "autoFollowEntityTypeList": false
+                "autoFollowEntityTypeList": false,
+                "emailReplyForceHtml": false,
+                "emailReplyToAllByDefault": false,
+                "signature": false
             },
             "Call": {
                 "reminders": false

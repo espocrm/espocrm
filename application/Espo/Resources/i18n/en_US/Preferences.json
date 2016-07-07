@@ -28,7 +28,8 @@
         "useCustomTabList": "Custom Tab List",
         "tabList": "Tab List",
         "emailReplyToAllByDefault": "Email Reply to All by Default",
-        "dashboardLayout": "Dashboard Layout"
+        "dashboardLayout": "Dashboard Layout",
+        "emailReplyForceHtml": "Email Reply in HTML"
     },
     "links": {
     },

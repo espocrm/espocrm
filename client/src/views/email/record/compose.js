@@ -37,6 +37,12 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         setup: function () {
         	Dep.prototype.setup.call(this);
 
+            if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
+                var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
+                this.model.set('body', body);
+                this.model.set('isHtml', true);
+            }
+
         	if (!this.options.signatureDisabled && this.hasSignature()) {
                 var body = this.prependSignature(this.model.get('body') || '', this.model.get('isHtml'));
 	        	this.model.set('body', body);

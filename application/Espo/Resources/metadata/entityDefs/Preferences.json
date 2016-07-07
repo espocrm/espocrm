@@ -135,6 +135,10 @@
             "type": "bool",
             "default": true
         },
+        "emailReplyForceHtml": {
+            "type": "bool",
+            "default": false
+        },
         "isPortalUser": {
             "type": "bool",
             "notStorable": true
