@@ -440,6 +440,26 @@ class Email extends Record
         return true;
     }
 
+    public function moveToFolder($id, $folderId, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->getUser()->id;
+        }
+        if ($folderId === 'inbox') {
+            $folderId = null;
+        }
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            UPDATE email_user SET folder_id = " . $this->getEntityManager()->getQuery()->quote($folderId) . "
+            WHERE
+                deleted = 0 AND
+                user_id = " . $pdo->quote($userId) . " AND
+                email_id = " . $pdo->quote($id) . "
+        ";
+        $pdo->query($sql);
+        return true;
+    }
+
     static public function parseFromName($string)
     {
         $fromName = '';

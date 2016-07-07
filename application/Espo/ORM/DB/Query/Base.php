@@ -475,7 +475,11 @@ abstract class Base
 
     public function quote($value)
     {
-        return $this->pdo->quote($value);
+        if (is_null($value)) {
+            return 'NULL';
+        } else {
+            return $this->pdo->quote($value);
+        }
     }
 
     public function toDb($field)

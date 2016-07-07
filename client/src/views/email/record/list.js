@@ -155,6 +155,27 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             }, this);
         },
 
+        massActionMoveToFolder: function () {
+            var ids = [];
+            for (var i in this.checkedList) {
+                ids.push(this.checkedList[i]);
+            }
+
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
+                view.render();
+                this.listenToOnce(view, 'select', function (folderId) {
+                    this.clearView('dialog');
+                    this.ajaxPostRequest('Email/action/moveToFolder', {
+                        ids: ids,
+                        folderId: folderId
+                    }).then(function () {
+                        Espo.Ui.warning(this.translate('Done'));
+                        this.collection.fetch();
+                    }.bind(this));
+                }, this);
+            }, this);
+        },
+
         actionMarkAsImportant: function (data) {
             data = data || {};
             var id = data.id;
@@ -228,15 +249,16 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
         actionMoveToFolder: function (data) {
             var id = data.id;
 
-            this.createView('modal', 'views/email-folder/modals/select-folder', {}, function (view) {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
                 view.render();
                 this.listenToOnce(view, 'select', function (folderId) {
+                    this.clearView('dialog');
                     this.ajaxPostRequest('Email/action/moveToFolder', {
                         id: id,
                         folderId: folderId
                     }).then(function () {
                         Espo.Ui.warning(this.translate('Done'));
-                        this.collecton.fetch();
+                        this.collection.fetch();
                     }.bind(this));
                 }, this);
             }, this);

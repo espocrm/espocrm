@@ -192,7 +192,7 @@ class Email extends \Espo\Core\Controllers\Record
         if (empty($data['folderId'])) {
             throw new BadRequest();
         }
-        return $this->getRecordService()->moveToFolderByIdList($ids);
+        return $this->getRecordService()->moveToFolderByIdList($ids, $data['folderId']);
     }
 }
 

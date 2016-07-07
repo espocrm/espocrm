@@ -120,10 +120,9 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                         this.applyFolder();
 
                         this.notify('Please wait...');
-                        this.listenToOnce(this.collection, 'sync', function () {
+                        this.collection.fetch().then(function () {
                             this.notify(false);
-                        }, this);
-                        this.collection.fetch();
+                        }.bind(this));
 
                         if (id !== this.defaultFolderId) {
                             this.getRouter().navigate('#Email/list/folder=' + id);
