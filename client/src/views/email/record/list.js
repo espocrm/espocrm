@@ -257,7 +257,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                         id: id,
                         folderId: folderId
                     }).then(function () {
-                        Espo.Ui.warning(this.translate('Done'));
+                        Espo.Ui.success(this.translate('Done'));
                         this.collection.fetch();
                     }.bind(this));
                 }, this);

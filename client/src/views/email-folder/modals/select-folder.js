@@ -46,7 +46,12 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
         events: {
             'click a[data-action="selectFolder"]': function (e) {
                 var id = $(e.currentTarget).data('id');
-                this.trigger('select', id);
+                var model = this.collection.get(id);
+                var name = this.translate('inbox', 'presetFilters', 'Email');
+                if (model) {
+                    name = model.get('name');
+                }
+                this.trigger('select', id, name);
                 this.close();
             },
         },
