@@ -1154,6 +1154,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $fp = fopen('php://temp', 'w');
+	fwrite($fp,b"\xEF\xBB\xBF");
         fputcsv($fp, array_keys($arr[0]), $delimiter);
         foreach ($arr as $row) {
             fputcsv($fp, $row, $delimiter);
