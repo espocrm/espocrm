@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Repositories;
 
@@ -34,12 +34,12 @@ use Espo\ORM\Entity;
 class ExternalAccount extends \Espo\Core\ORM\Repositories\RDB
 {
     public function get($id = null)
-    {     
-        $entity = parent::get($id);        
+    {
+        $entity = parent::get($id);
         if (empty($entity) && !empty($id)) {
             $entity = $this->get();
             $entity->id = $id;
-        }        
+        }
         return $entity;
     }
 }
