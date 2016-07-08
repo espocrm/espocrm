@@ -32,7 +32,9 @@ Espo.define('views/email-account/record/detail', 'views/record/detail', function
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             this.initSslFieldListening();
+            this.initSmtpFieldsControl();
 
             if (this.wasFetched()) {
                 this.setFieldReadOnly('fetchSince');
@@ -64,7 +66,52 @@ Espo.define('views/email-account/record/detail', 'views/record/detail', function
                     this.model.set('port', '143');
                 }
             }, this);
-        }
+        },
+
+        initSmtpFieldsControl: function () {
+            this.controlSmtpFields();
+            this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
+            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpAuthField, this);
+        },
+
+        controlSmtpFields: function () {
+            if (this.model.get('useSmtp')) {
+                this.showField('smtpHost');
+                this.showField('smtpPort');
+                this.showField('smtpAuth');
+                this.showField('smtpSecurity');
+                this.showField('smtpTestSend');
+
+                this.setFieldRequired('smtpHost');
+                this.setFieldRequired('smtpPort');
+
+                this.controlSmtpAuthField();
+            } else {
+                this.hideField('smtpHost');
+                this.hideField('smtpPort');
+                this.hideField('smtpAuth');
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.hideField('smtpSecurity');
+                this.hideField('smtpTestSend');
+
+                this.setFieldNotRequired('smtpHost');
+                this.setFieldNotRequired('smtpPort');
+                this.setFieldNotRequired('smtpUsername');
+            }
+        },
+
+        controlSmtpAuthField: function () {
+            if (this.model.get('smtpAuth')) {
+                this.showField('smtpUsername');
+                this.showField('smtpPassword');
+                this.setFieldRequired('smtpUsername');
+            } else {
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.setFieldNotRequired('smtpUsername');
+            }
+        },
 
     });
 

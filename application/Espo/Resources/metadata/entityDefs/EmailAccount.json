@@ -79,6 +79,33 @@
             "type": "link",
             "readOnly": true
         },
+        "useSmtp": {
+            "type": "bool"
+        },
+        "smtpHost": {
+            "type": "varchar"
+        },
+        "smtpPort": {
+            "type": "int",
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": false
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true
+        },
+        "smtpPassword": {
+            "type": "password"
+        },
         "createdBy": {
             "type": "link",
             "readOnly": true

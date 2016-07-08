@@ -25,39 +25,46 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email/fields/compose-from-address', 'views/fields/base', function (Dep) {
+
+Espo.define('views/email-account/fields/test-send', 'views/outbound-email/fields/test-send', function (Dep) {
 
     return Dep.extend({
 
-        editTemplate: 'email/fields/compose-from-address/edit',
-
-        data: function () {
-            return _.extend({
-                list: this.list,
-                noSmtpMessage: this.translate('noSmtpSetup', 'messages', 'Email').replace('{link}', '<a href="#Preferences">'+this.translate('Preferences')+'</a>')
-            }, Dep.prototype.data.call(this));
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.list = [];
-
-            /*if (this.getUser().get('emailAddress') && this.getPreferences().get('smtpServer')) {
-                this.list.push(this.getUser().get('emailAddress'));
-            }*/
-
-            var emailAddressList = this.getUser().get('emailAddressList') || [];
-            emailAddressList.forEach(function (item) {
-                this.list.push(item);
-            }, this);
-
-            if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
-                var address = this.getConfig().get('outboundEmailFromAddress');
-                if (!~this.list.indexOf(address)) {
-                    this.list.push(this.getConfig().get('outboundEmailFromAddress'));
-                }
+        checkAvailability: function () {
+            if (this.model.get('smtpHost')) {
+                this.$el.find('button').removeClass('hidden');
+            } else {
+                this.$el.find('button').addClass('hidden');
             }
         },
+
+        afterRender: function () {
+            this.checkAvailability();
+
+            this.stopListening(this.model, 'change:smtpHost');
+            this.listenTo(this.model, 'change:smtpHost', function () {
+                this.checkAvailability();
+            }, this);
+        },
+
+        getSmtpData: function () {
+            var data = {
+                'server': this.model.get('smtpHost'),
+                'port': this.model.get('smtpPort'),
+                'auth': this.model.get('smtpAuth'),
+                'security': this.model.get('smtpSecurity'),
+                'username': this.model.get('smtpUsername'),
+                'password': this.model.get('smtpPassword') || null,
+                'fromName': this.getUser().get('name'),
+                'fromAddress': this.model.get('emailAddress'),
+                'type': 'emailAccount',
+                'id': this.model.id
+            };
+            return data;
+        },
+
+
     });
 
 });
+

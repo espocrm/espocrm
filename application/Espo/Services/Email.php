@@ -86,19 +86,39 @@ class Email extends Record
     {
         $emailSender = $this->getMailSender();
 
-        if (strtolower($this->getUser()->get('emailAddress')) == strtolower($entity->get('from'))) {
-            $smtpParams = $this->getPreferences()->getSmtpParams();
-            if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+        $userAddressList = [];
+        foreach ($this->getUser()->get('emailAddresses') as $ea) {
+            $userAddressList[] = $ea->get('lower');
+        }
+
+        $primaryUserAddress = strtolower($this->getUser()->get('emailAddress'));
+        $fromAddress = strtolower($entity->get('from'));
+
+        if (empty($fromAddress)) {
+            throw new Error();
+        }
+
+        $smtpParams = null;
+        if (in_array($fromAddress, $userAddressList)) {
+            if ($primaryUserAddress === $fromAddress) {
+                $smtpParams = $this->getPreferences()->getSmtpParams();
+            }
+            if (!$smtpParams) {
+                $smtpParams = $this->getSmtpParamsFromEmailAccount($entity->get('from'), $this->getUser()->id);
             }
 
             if ($smtpParams) {
+                if (array_key_exists('password', $smtpParams)) {
+                    $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                }
                 $smtpParams['fromName'] = $this->getUser()->get('name');
                 $emailSender->useSmtp($smtpParams);
             }
-        } else {
+        }
+
+        if (!$smtpParams && $fromAddress === strtolower($this->getConfig()->get('outboundEmailFromAddress'))) {
             if (!$this->getConfig()->get('outboundEmailIsShared')) {
-                throw new Error('Can not use system smtp. outboundEmailIsShared is false.');
+                throw new Error('Can not use system smtp. System SMTP is not shared.');
             }
             $emailSender->setParams(array(
                 'fromName' => $this->getUser()->get('name')
@@ -108,7 +128,6 @@ class Email extends Record
         $params = array();
 
         $parent = null;
-
         if ($entity->get('parentType') && $entity->get('parentId')) {
             $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
             if ($parent) {
@@ -158,6 +177,31 @@ class Email extends Record
         $entity->set('isJustSent', true);
 
         $this->getEntityManager()->saveEntity($entity);
+    }
+
+    protected function getSmtpParamsFromEmailAccount($address, $userId)
+    {
+        $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
+            'emailAddress' => $address,
+            'assignedUserId' => $userId,
+            'active' => true,
+            'useSmtp' => true
+        ])->findOne();
+
+        if (!$emailAccount) return;
+
+        $smtpParams = array();
+        $smtpParams['server'] = $emailAccount->get('smtpHost');
+        if ($smtpParams['server']) {
+            $smtpParams['port'] = $emailAccount->get('smtpPort');
+            $smtpParams['auth'] = $emailAccount->get('smtpAuth');
+            $smtpParams['security'] = $emailAccount->get('smtpSecurity');
+            $smtpParams['username'] = $emailAccount->get('smtpUsername');
+            $smtpParams['password'] = $emailAccount->get('smtpPassword');
+            return $smtpParams;
+        }
+
+        return;
     }
 
     protected function getStreamService()

@@ -37,7 +37,7 @@ use \Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
-    protected $internalAttributeList = ['password'];
+    protected $internalAttributeList = ['password', 'smtpPassword'];
 
     protected $readOnlyAttributeList= ['fetchData'];
 
@@ -64,6 +64,9 @@ class EmailAccount extends Record
         parent::handleInput($data);
         if (array_key_exists('password', $data)) {
             $data['password'] = $this->getCrypt()->encrypt($data['password']);
+        }
+        if (array_key_exists('smtpPassword', $data)) {
+            $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
         }
     }
 

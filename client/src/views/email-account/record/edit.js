@@ -34,6 +34,7 @@ Espo.define('views/email-account/record/edit', ['views/record/edit', 'views/emai
             Dep.prototype.afterRender.call(this);
 
             Detail.prototype.initSslFieldListening.call(this);
+            Detail.prototype.initSmtpFieldsControl.call(this);
 
             if (Detail.prototype.wasFetched.call(this)) {
                 this.setFieldReadOnly('fetchSince');
@@ -47,6 +48,14 @@ Espo.define('views/email-account/record/edit', ['views/record/edit', 'views/emai
                     fieldView.render();
                 }
             }
+        },
+
+        controlSmtpFields: function () {
+            Detail.prototype.controlSmtpFields.call(this);
+        },
+
+        controlSmtpAuthField: function () {
+            Detail.prototype.controlSmtpAuthField.call(this);
         }
 
     });

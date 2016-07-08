@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Preferences.Fields.TestSend', 'Views.OutboundEmail.Fields.TestSend', function (Dep) {
+Espo.define('views/preferences/fields/test-send', 'views/outbound-email/fields/test-send', function (Dep) {
 
     return Dep.extend({
 
         checkAvailability: function () {
             if (this.model.get('smtpServer')) {
-                this.$el.find('button').removeClass('disabled');
+                this.$el.find('button').removeClass('hidden');
             } else {
-                this.$el.find('button').addClass('disabled');
+                this.$el.find('button').addClass('hidden');
             }
         },
 
@@ -42,7 +42,6 @@ Espo.define('Views.Preferences.Fields.TestSend', 'Views.OutboundEmail.Fields.Tes
             this.checkAvailability();
 
             this.stopListening(this.model, 'change:smtpServer');
-
             this.listenTo(this.model, 'change:smtpServer', function () {
                 this.checkAvailability();
             }, this);
