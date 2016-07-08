@@ -33,13 +33,16 @@ use Espo\ORM\Entity;
 
 class Import extends \Espo\Core\ORM\Repositories\RDB
 {
-    public function findRelated(Entity $entity, $link, $selectParams = array())
+    public function findRelated(Entity $entity, $relationName, array $params = array())
     {
         $entityType = $entity->get('entityType');
 
-        $selectParams['customJoin'] .= $this->getRelatedJoin($entity, $link);
+        if (empty($params['customJoin'])) {
+            $params['customJoin'] = '';
+        }
+        $params['customJoin'] .= $this->getRelatedJoin($entity, $relationName);
 
-        return $this->getEntityManager()->getRepository($entityType)->find($selectParams);
+        return $this->getEntityManager()->getRepository($entityType)->find($params);
     }
 
     protected function getRelatedJoin(Entity $entity, $link)
@@ -73,13 +76,16 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
         return $sql;
     }
 
-    public function countRelated(Entity $entity, $link, $selectParams = array())
+    public function countRelated(Entity $entity, $relationName, array $params = array())
     {
         $entityType = $entity->get('entityType');
 
-        $selectParams['customJoin'] .= $this->getRelatedJoin($entity, $link);
+        if (empty($params['customJoin'])) {
+            $params['customJoin'] = '';
+        }
+        $params['customJoin'] .= $this->getRelatedJoin($entity, $relationName);
 
-        return $this->getEntityManager()->getRepository($entityType)->count($selectParams);
+        return $this->getEntityManager()->getRepository($entityType)->count($params);
     }
 
     protected function afterRemove(Entity $entity, array $options = array())

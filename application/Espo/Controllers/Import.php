@@ -43,12 +43,12 @@ class Import extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionPatch($params, $data)
+    public function actionPatch($params, $data, $request)
     {
         throw new BadRequest();
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         throw new BadRequest();
     }
@@ -58,12 +58,12 @@ class Import extends \Espo\Core\Controllers\Record
         throw new BadRequest();
     }
 
-    public function actionCreateLink($params, $data)
+    public function actionCreateLink($params, $data, $request)
     {
         throw new BadRequest();
     }
 
-    public function actionRemoveLink($params, $data)
+    public function actionRemoveLink($params, $data, $request)
     {
         throw new BadRequest();
     }

@@ -186,12 +186,14 @@ class Import extends \Espo\Services\Record
                 }
             }
             else {
+                if (!array_key_exists($num, $o)) {
+                    $o[$num] = '';
+                }
                 if ($escesc) {
-                    $o[$num].= $CSV_ENCLOSURE;
+                    $o[$num] .= $CSV_ENCLOSURE;
                     $escesc = false;
                 }
-
-                $o[$num].= $s;
+                $o[$num] .= $s;
             }
 
             $i++;
@@ -406,7 +408,7 @@ class Import extends \Espo\Services\Record
         if (!empty($fieldsDefs['phoneNumber']) && !empty($fieldsDefs['phoneNumber']['type']) && $fieldsDefs['phoneNumber']['type'] == 'phone') {
             $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
             foreach ($typeList as $type) {
-                $attr = $field . str_replace(' ', '_', ucfirst($type));
+                $attr = str_replace(' ', '_', ucfirst($type));
                 $phoneFieldList[] = 'phoneNumber' . $attr;
             }
         }
