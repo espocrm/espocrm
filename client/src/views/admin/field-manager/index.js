@@ -102,7 +102,7 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope, {trigger: false});
 
             this.notify('Loading...');
-            this.createView('content', 'Admin.FieldManager.List', {
+            this.createView('content', 'views/admin/field-manager/list', {
                 el: '#fields-content',
                 scope: scope,
             }, function (view) {
@@ -119,7 +119,7 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
 
             this.notify('Loading...');
-            this.createView('content', 'Admin.FieldManager.Edit', {
+            this.createView('content', 'views/admin/field-manager/edit', {
                 el: '#fields-content',
                 scope: scope,
                 field: field,
@@ -128,8 +128,7 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
                 this.notify(false);
                 $(window).scrollTop(0);
 
-                view.once('after:save', function () {
-                    //this.openScope(this.scope);
+                this.listenTo(view, 'after:save', function () {
                     this.notify('Saved', 'success');
                 }, this);
             }.bind(this));

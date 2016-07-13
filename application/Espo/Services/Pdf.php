@@ -78,7 +78,13 @@ class Pdf extends \Espo\Core\Services\Base
     {
         $entityType = $entity->getEntityType();
 
-        $this->getServiceFactory()->create($entityType)->loadAdditionalFields($entity);
+        $service = $this->getServiceFactory()->create($entityType);
+
+        $service->loadAdditionalFields($entity);
+
+        if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
+            $service->loadAdditionalFieldsForPdf($entity);
+        }
 
         if ($template->get('entityType') !== $entityType) {
             throw new Forbidden();
@@ -88,7 +94,7 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'));
+        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl());
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 

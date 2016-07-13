@@ -39,7 +39,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 
     protected $container = array();
 
-    public function __construct($data = array(), $entityName, EntityFactory $entityFactory = null)
+    public function __construct($data = array(), $entityName = null, EntityFactory $entityFactory = null)
     {
         $this->container = $data;
         $this->entityName = $entityName;

@@ -60,13 +60,26 @@ class Notifications extends \Espo\Core\Hooks\Base
         return $mentionedUserList;
     }
 
-    protected function getSubscriberIdList($parentType, $parentId)
+    protected function getSubscriberIdList($parentType, $parentId, $isInternal = false)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT user_id AS userId
-            FROM subscription
-            WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType);
+
+        if (!$isInternal) {
+            $sql = "
+                SELECT user_id AS userId
+                FROM subscription
+                WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType) . "
+            ";
+        } else {
+            $sql = "
+                SELECT subscription.user_id AS userId
+                FROM subscription
+                JOIN user ON user.id = subscription.user_id
+                WHERE
+                    entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType) . " AND
+                    user.is_portal_user = 0
+            ";
+        }
         $sth = $pdo->prepare($sql);
         $sth->execute();
         $userIdList = [];
@@ -89,9 +102,9 @@ class Notifications extends \Espo\Core\Hooks\Base
             $userIdList = [];
 
             if ($parentType && $parentId) {
-				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId));
+				$userIdList = array_merge($userIdList, $this->getSubscriberIdList($parentType, $parentId, $entity->get('isInternal')));
                 if ($superParentType && $superParentId) {
-                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentId));
+                    $userIdList = array_merge($userIdList, $this->getSubscriberIdList($superParentType, $superParentId, $entity->get('isInternal')));
                 }
             } else {
                 $targetType = $entity->get('targetType');

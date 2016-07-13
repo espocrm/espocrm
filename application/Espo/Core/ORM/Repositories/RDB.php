@@ -52,6 +52,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dependencies[] = $name;
     }
 
+    protected function addDependencyList(array $list)
+    {
+        foreach ($list as $item) {
+            $this->addDependency($item);
+        }
+    }
+
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
@@ -196,10 +203,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
         parent::afterSave($entity, $options);
 
-        $this->handleEmailAddressSave($entity);
-        $this->handlePhoneNumberSave($entity);
-        $this->handleSpecifiedRelations($entity);
-        $this->handleFileFields($entity);
+        $this->processEmailAddressSave($entity);
+        $this->processPhoneNumberSave($entity);
+        $this->processSpecifiedRelationsSave($entity);
+        $this->processFileFieldsSave($entity);
 
         $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity, $options);
     }
@@ -257,7 +264,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $result;
     }
 
-    protected function handleFileFields(Entity $entity)
+    protected function processFileFieldsSave(Entity $entity)
     {
         foreach ($entity->getRelations() as $name => $defs) {
             if (!isset($defs['type']) || !isset($defs['entity'])) continue;
@@ -278,23 +285,22 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function handleEmailAddressSave(Entity $entity)
+    protected function processEmailAddressSave(Entity $entity)
     {
         if ($entity->hasRelation('emailAddresses') && $entity->hasAttribute('emailAddress')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
         }
     }
 
-    protected function handlePhoneNumberSave(Entity $entity)
+    protected function processPhoneNumberSave(Entity $entity)
     {
         if ($entity->hasRelation('phoneNumbers') && $entity->hasAttribute('phoneNumber')) {
             $emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }
 
-    protected function handleSpecifiedRelations(Entity $entity)
+    protected function processSpecifiedRelationsSave(Entity $entity)
     {
-
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypeList)) {
@@ -358,14 +364,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             } else {
                                 if (!empty($columns)) {
                                     foreach ($columns as $columnName => $columnField) {
-                                        if ($columnData->$id->$columnName != $existingColumnsData->$id->$columnName) {
-                                            $toUpdateIds[] = $id;
+                                        if (isset($columnData->$id)) {
+                                            if ($columnData->$id->$columnName !== $existingColumnsData->$id->$columnName) {
+                                                $toUpdateIds[] = $id;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-
 
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {

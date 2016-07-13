@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep) {
+Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -96,6 +96,31 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
                 }, this);
             }
 
+            if (!this.getUser().isAdmin() || this.model.get('isPortalUser')) {
+                this.hideField('dashboardLayout');
+            }
+
+
+            var hideNotificationPanel = true;
+            if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
+                this.hideField('receiveAssignmentEmailNotifications');
+            } else {
+                hideNotificationPanel = false;
+            }
+
+            if (!this.getConfig().get('mentionEmailNotifications') || this.model.get('isPortalUser')) {
+                this.hideField('receiveMentionEmailNotifications');
+            } else {
+                hideNotificationPanel = false;
+            }
+
+            if (hideNotificationPanel) {
+                this.hidePanel('notifications');
+            }
+
+            if (this.getConfig().get('userThemesDisabled')) {
+                this.hideField('theme');
+            }
         },
 
         actionReset: function () {
@@ -115,13 +140,6 @@ Espo.define('Views.Preferences.Record.Edit', 'Views.Record.Edit', function (Dep)
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (!this.getConfig().get('assignmentEmailNotifications')) {
-                this.hideField('receiveAssignmentEmailNotifications');
-            }
-
-            if (this.getConfig().get('userThemesDisabled')) {
-                this.hideField('theme');
-            }
 
             var smtpSecurityField = this.getFieldView('smtpSecurity');
             this.listenTo(smtpSecurityField, 'change', function () {

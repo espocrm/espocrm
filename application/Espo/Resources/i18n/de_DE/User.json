@@ -1,67 +1,84 @@
 {
-    "fields": {
-        "name": "Name",
-        "userName": "Benutzername",
-        "title": "Funktion",
-        "isAdmin": "Ist Admin",
-        "defaultTeam": "Standard Team",
-        "emailAddress": "E-Mail",
-        "phoneNumber": "Telefon",
-        "roles": "Rollen",
-        "teamRole": "Position",
-        "password": "Passwort",
-        "currentPassword": "Aktuelles Passwort",
-        "passwordConfirm": "Passwort bestätigen",
-        "newPassword": "Neues Passwort",
-        "newPasswordConfirm": "Neues Passwort bestätigen",
-        "avatar": "Avatar",
-        "isActive": "Ist aktiv"
-    },
-    "links": {
-        "teams": "Teams",
-        "roles": "Rollen",
-        "notes": "Notizen"
-    },
-    "labels": {
-        "Create User": "Benutzer erstellen",
-        "Generate": "Erzeugen",
-        "Access": "Zugang",
-        "Preferences": "Benutzereinstellungen",
-        "Change Password": "Passwort ändern",
-        "Teams and Access Control": "Teams und Zugriffsberechtigung",
-        "Forgot Password?": "Passwort vergessen?",
-        "Password Change Request": "Anforderung zur Passwortänderung",
-        "Email Address": "E-Mail Adresse",
-        "External Accounts": "Externe Konten",
-        "Email Accounts": "E-Mail Konten"
-    },
-    "tooltips": {
-        "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
-        "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
-        "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-        "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
-        "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
-        "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
-    },
-    "messages": {
-        "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
-        "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
-        "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
-        "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
-        "passwordChanged": "Das Passwort wurde geändert",
-        "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
-        "wrongUsernamePasword": "Falscher Benutzername\/Passwort",
-        "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
-        "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
-        "forbidden": "Verboten, bitte später nochmals versuchen",
-        "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
-        "passwordChangedByRequest": "Das Passwort wurde geändert"
-    },
-    "boolFilters": {
-        "onlyMyTeam": "Nur mein Team"
-    },
-    "presetFilters": {
-        "active": "Aktiv"
-    }
+  "fields": {
+    "name": "Betreff",
+    "userName": "Benutzername",
+    "title": "Funktion",
+    "isAdmin": "Ist Admin",
+    "defaultTeam": "Standard Team",
+    "emailAddress": "E-Mail",
+    "phoneNumber": "Telefon",
+    "roles": "Rollen",
+    "portals": "Portale",
+    "portalRoles": "Portal Rollen",
+    "teamRole": "Position",
+    "password": "Passwort",
+    "currentPassword": "Aktuelles Passwort",
+    "passwordConfirm": "Passwort bestätigen",
+    "newPassword": "Neues Passwort",
+    "newPasswordConfirm": "Neues Passwort bestätigen",
+    "avatar": "Avatar",
+    "isActive": "Ist aktiv",
+    "isPortalUser": "Ist Portal Benutzer",
+    "contact": "Kontakt",
+    "accounts": "Firmen",
+    "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
+    "portal": "Portal"
+  },
+  "links": {
+    "teams": "Teams",
+    "roles": "Rollen",
+    "notes": "Notizen",
+    "portals": "Portale",
+    "portalRoles": "Portal Rollen",
+    "contact": "Kontakt",
+    "accounts": "Firmen"
+  },
+  "labels": {
+    "Create User": "Benutzer erstellen",
+    "Generate": "Erzeugen",
+    "Access": "Zugang",
+    "Preferences": "Benutzereinstellungen",
+    "Change Password": "Passwort ändern",
+    "Teams and Access Control": "Teams und Zugriffsberechtigung",
+    "Forgot Password?": "Passwort vergessen?",
+    "Password Change Request": "Anforderung zur Passwortänderung",
+    "Email Address": "E-Mail Adresse",
+    "External Accounts": "Externe Konten",
+    "Email Accounts": "E-Mail Konten",
+    "Portal": "Portal",
+    "Create Portal User": "Portalbenutzer erstellen"
+  },
+  "tooltips": {
+    "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
+    "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
+    "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
+    "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
+    "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
+    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
+    "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
+    "portals": "Portale auf die der Benutzer Zugriff hat."
+  },
+  "messages": {
+    "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
+    "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
+    "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
+    "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
+    "passwordChanged": "Das Passwort wurde geändert",
+    "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
+    "wrongUsernamePasword": "Falscher Benutzername/Passwort",
+    "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
+    "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",
+    "forbidden": "Verboten, bitte später nochmals versuchen",
+    "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
+    "passwordChangedByRequest": "Das Passwort wurde geändert",
+    "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Nur mein Team"
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "activePortal": "Portal Aktiv"
+  }
 }

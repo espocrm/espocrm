@@ -106,6 +106,23 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectSkipTextColumns()
+    {
+        $sql = $this->query->createSelectQuery('Article', array(
+            'orderBy' => 'name',
+            'order' => 'ASC',
+            'offset' => 10,
+            'limit' => 20,
+            'skipTextColumns' => true
+        ));
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name`, article.deleted AS `deleted` FROM `article` " .
+            "WHERE article.deleted = '0' ORDER BY article.name ASC LIMIT 10, 20";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectWithBelongsToJoin()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -235,7 +252,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY post.name ".
-            "ORDER BY FIELD(post.name, 'Test', 'Hello')";
+            "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -252,7 +269,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = '0' " .
             "GROUP BY YEAR(post.created_at), post.name ".
-            "ORDER BY 2 DESC, FIELD(post.name, 'Test', 'Hello')";
+            "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
     }
 

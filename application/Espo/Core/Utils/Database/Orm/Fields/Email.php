@@ -48,22 +48,36 @@ class Email extends Base
                                     entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
                                     email_address.deleted = 0 AND email_address.name LIKE {value}
                             )",
-                            '=' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_email_address
-                                JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE
-                                    entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name = {value}
-                            )",
-                            '<>' => \Espo\Core\Utils\Util::toUnderScore($entityName) . ".id IN (
-                                SELECT entity_id
-                                FROM entity_email_address
-                                JOIN email_address ON email_address.id = entity_email_address.email_address_id
-                                WHERE
-                                    entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name <> {value}
-                            )"
+                            '=' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name = {value}',
+                                'distinct' => true
+                            ),
+                            '<>' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name <> {value}',
+                                'distinct' => true
+                            ),
+                            'IN' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name IN {value}',
+                                'distinct' => true
+                            ),
+                            'NOT IN' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name NOT IN {value}',
+                                'distinct' => true
+                            ),
+                            'IS NULL' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name IS NULL',
+                                'distinct' => true
+                            ),
+                            'IS NOT NULL' => array(
+                                'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
+                                'sql' => 'emailAddressesMultiple.name IS NOT NULL',
+                                'distinct' => true
+                            )
                         ),
                         'orderBy' => 'emailAddresses.name {direction}',
                     ),
@@ -73,7 +87,7 @@ class Email extends Base
                     ),
                 ),
                 'relations' => array(
-                    $fieldName.'es' => array(
+                    'emailAddresses' => array(
                         'type' => 'manyMany',
                         'entity' => 'EmailAddress',
                         'relationName' => 'entityEmailAddress',

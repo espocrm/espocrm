@@ -91,8 +91,7 @@
             "trim": true
         },
         "smtpServer": {
-            "type": "varchar",
-            "required": true
+            "type": "varchar"
         },
         "smtpPort": {
             "type": "int",
@@ -224,6 +223,18 @@
             "translation": "Global.scopeNamesPlural",
             "view": "views/settings/fields/assignment-notifications-entity-list"
         },
+        "postEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
+        "updateEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
+        "mentionEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
         "b2cMode": {
             "type": "bool",
             "default": false
@@ -293,8 +304,31 @@
         "siteUrl": {
             "type": "varchar"
         },
+        "applicationName": {
+            "type": "varchar"
+        },
         "readableDateFormatDisabled": {
             "type": "bool"
+        },
+        "addressFormat": {
+            "type": "enumInt",
+            "options": [1, 2, 3, 4]
+        },
+        "addressPreview": {
+            "type": "address",
+            "notStorable": true,
+            "readOnly": true,
+            "view": "views/settings/fields/address-preview"
+        },
+        "notificationSoundsDisabled": {
+            "type": "bool"
+        },
+        "calendarEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/calendar-entity-list"
+        },
+        "googleMapsApiKey": {
+            "type": "varchar"
         }
     }
 }

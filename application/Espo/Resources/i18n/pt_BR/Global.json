@@ -161,8 +161,6 @@
         "fieldShouldBeGreater": "{field} deve ser maior que {value}",
         "fieldBadPasswordConfirm": "{field} confirmado impropriamente",
 		"resetPreferencesDone": "As preferências foram redefinidas para o padrão",
-		"assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-		"assignmentEmailNotificationBody": "{assignerUserName} designou {entityType} '{Entity.name}' para você\n\n{recordUrl}",
 		"confirmation": "Você tem certeza?",
         "resetPreferencesConfirmation": "Você gostaria mesmo de redefenir as preferências para o padrão?",
 		"removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",

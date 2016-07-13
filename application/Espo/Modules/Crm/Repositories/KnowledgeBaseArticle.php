@@ -87,4 +87,19 @@ class KnowledgeBaseArticle extends \Espo\Core\ORM\Repositories\RDB
 
         $this->getEntityManager()->removeEntity($note);
     }
+
+    protected function beforeSave(Entity $entity, $options = array())
+    {
+        parent::beforeSave($entity, $options);
+        $order = $entity->get('order');
+        if (is_null($order)) {
+            $order = $this->max('order');
+            if (!$order) {
+                $order = 999;
+            }
+            $order++;
+            $entity->set('order', $order);
+        }
+
+    }
 }

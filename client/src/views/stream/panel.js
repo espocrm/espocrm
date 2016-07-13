@@ -43,6 +43,18 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             'click button.post': function () {
                 this.post();
             },
+            'click .action[data-action="switchInternalMode"]': function (e) {
+                this.isInternalNoteMode = !this.isInternalNoteMode;
+
+                var $a = $(e.currentTarget);
+
+                if (this.isInternalNoteMode) {
+                    $a.addClass('enabled');
+                } else {
+                    $a.removeClass('enabled');
+                }
+
+            },
             'keypress textarea.note': function (e) {
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
@@ -54,15 +66,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
             },
             'input textarea.note': function (e) {
-                var $text = $(e.currentTarget);
-                var numberOfLines = e.currentTarget.value.split("\n").length;
-                var numberOfRows = $text.prop('rows');
-
-                if (numberOfRows < numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                } else if (numberOfRows > numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                }
+                this.controlTextareaHeight();
             },
         }, Dep.prototype.events),
 
@@ -70,7 +74,20 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             var data = Dep.prototype.data.call(this);
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
+            data.allowInternalNotes = this.allowInternalNotes;
             return data;
+        },
+
+        controlTextareaHeight: function () {
+            var scrollHeight = this.$textarea.prop('scrollHeight');
+            var clientHeight = this.$textarea.prop('clientHeight');
+            if (this.$textarea.prop('scrollHeight') > clientHeight) {
+                this.$textarea.prop('rows', this.$textarea.prop('rows') + 1);
+                this.controlTextareaHeight();
+            }
+            if (this.$textarea.val().length === 0) {
+                this.$textarea.prop('rows', 1);
+            }
         },
 
         enablePostingMode: function () {
@@ -78,13 +95,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             if (!this.postingMode) {
                 $('body').on('click.stream-panel', function (e) {
-                    if (!$.contains(this.$postContainer.get(0), e.target)) {
-                        if (this.$textarea.val() == '') {
-                            var attachmentsIds = this.seed.get('attachmentsIds');
-                            if (!attachmentsIds.length) {
-                                this.disablePostingMode();
-                            }
-                        }
+                    var $target = $(e.target);
+                    if ($target.parent().hasClass('remove-attachment')) return;
+                    if ($.contains(this.$postContainer.get(0), e.target)) return;
+                    if (this.$textarea.val() !== '') return;
+
+                    var attachmentsIds = this.seed.get('attachmentsIds');
+                    if (!attachmentsIds.length) {
+                        this.disablePostingMode();
                     }
                 }.bind(this));
             }
@@ -102,6 +120,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$el.find('.buttons-panel').addClass('hide');
 
             $('body').off('click.stream-panel');
+
+            this.$textarea.prop('rows', 1);
         },
 
         setup: function () {
@@ -112,6 +132,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.filter = this.getStoredFilter();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
+
+            this.allowInternalNotes = false;
+            if (!this.getUser().get('isPortalUser')) {
+                this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
+            }
+
+            this.isInternalNoteMode = false;
 
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
@@ -137,6 +164,35 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$textarea = this.$el.find('textarea.note');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
+
+            var $textarea = this.$textarea;
+
+            $textarea.off('drop');
+            $textarea.off('dragover');
+            $textarea.off('dragleave');
+
+            $textarea.on('drop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var e = e.originalEvent;
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                    this.getView('attachments').uploadFiles(e.dataTransfer.files);
+                    this.enablePostingMode();
+                }
+                this.$textarea.attr('placeholder', originalPlaceholderText);
+            }.bind(this));
+
+            var originalPlaceholderText = this.$textarea.attr('placeholder');
+
+            $textarea.on('dragover', function (e) {
+                e.preventDefault();
+                this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
+            }.bind(this));
+
+            $textarea.on('dragleave', function (e) {
+                e.preventDefault();
+                this.$textarea.attr('placeholder', originalPlaceholderText);
+            }.bind(this));
 
             var collection = this.collection;
 
@@ -243,7 +299,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     return;
                 }
 
-                model.once('sync', function () {
+                this.listenToOnce(model, 'sync', function () {
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
 
@@ -253,11 +309,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }, this);
 
                 model.set('post', message);
-                model.set('attachmentsIds', _.clone(this.seed.get('attachmentsIds')));
+                model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds')));
                 model.set('type', 'Post');
+                model.set('isInternal', this.isInternalNoteMode);
 
                 this.prepareNoteForPost(model);
-
 
                 this.notify('Posting...');
                 model.save(null, {

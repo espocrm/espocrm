@@ -104,10 +104,10 @@ class Sender
             $opts['connection_config']['ssl'] = strtolower($params['security']);
         }
 
-        if (in_array('fromName', $params)) {
+        if (array_key_exists('fromName', $params)) {
             $this->params['fromName'] = $params['fromName'];
         }
-        if (in_array('fromAddress', $params)) {
+        if (array_key_exists('fromAddress', $params)) {
             $this->params['fromAddress'] = $params['fromAddress'];
         }
 

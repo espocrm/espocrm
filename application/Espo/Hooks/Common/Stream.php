@@ -242,6 +242,36 @@ class Stream extends \Espo\Core\Hooks\Base
                         }
                     }
                 }
+
+                $methodName = 'isChangedWithAclAffect';
+                if (
+                    (
+                        method_exists($entity, $methodName) && $entity->$methodName()
+                    )
+                    ||
+                    (
+                        !method_exists($entity, $methodName)
+                        &&
+                        (
+                            $entity->isAttributeChanged('assignedUserId')
+                            ||
+                            $entity->isAttributeChanged('teamsIds')
+                            ||
+                            $entity->isAttributeChanged('assignedUsersIds')
+                        )
+                    )
+                ) {
+                    $job = $this->getEntityManager()->getEntity('Job');
+                    $job->set(array(
+                        'serviceName' => 'Stream',
+                        'method' => 'controlFollowersJob',
+                        'data' => array(
+                            'entityType' => $entity->getEntityType(),
+                            'entityId' => $entity->id
+                        )
+                    ));
+                    $this->getEntityManager()->saveEntity($job);
+                }
             }
 
         }

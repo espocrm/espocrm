@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function (Dep) {
+Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        _template: '<button class="btn btn-default disabled" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
+        _template: '<button class="btn btn-default hidden" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
 
         events: {
             'click [data-action="sendTestEmail"]': function () {
@@ -44,9 +44,9 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
 
         checkAvailability: function () {
             if (this.model.get('smtpServer')) {
-                this.$el.find('button').removeClass('disabled');
+                this.$el.find('button').removeClass('hidden');
             } else {
-                this.$el.find('button').addClass('disabled');
+                this.$el.find('button').addClass('hidden');
             }
         },
 
@@ -79,7 +79,7 @@ Espo.define('Views.OutboundEmail.Fields.TestSend', 'Views.Fields.Base', function
         send: function () {
             var data = this.getSmtpData();
 
-            this.createView('popup', 'OutboundEmail.Modals.TestSend', {
+            this.createView('popup', 'views/outbound-email/modals/test-send', {
                 emailAddress: this.getUser().get('emailAddress')
             }, function (view) {
                 view.render();

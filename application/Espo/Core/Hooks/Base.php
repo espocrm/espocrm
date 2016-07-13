@@ -38,6 +38,7 @@ abstract class Base implements Injectable
         'config',
         'metadata',
         'acl',
+        'aclManager',
         'user',
     );
 
@@ -59,6 +60,13 @@ abstract class Base implements Injectable
         return $this->dependencies;
     }
 
+    protected function addDependencyList(array $list)
+    {
+        foreach ($list as $item) {
+            $this->addDependency($item);
+        }
+    }
+
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;
@@ -76,27 +84,32 @@ abstract class Base implements Injectable
 
     protected function getEntityManager()
     {
-        return $this->injections['entityManager'];
+        return $this->getInjection('entityManager');
     }
 
     protected function getUser()
     {
-        return $this->injections['user'];
+        return $this->getInjection('user');
     }
 
     protected function getAcl()
     {
-        return $this->injections['acl'];
+        return $this->getInjection('acl');
+    }
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
     }
 
     protected function getConfig()
     {
-        return $this->injections['config'];
+        return $this->getInjection('config');
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->getInjection('metadata');
     }
 
     protected function getRepository()

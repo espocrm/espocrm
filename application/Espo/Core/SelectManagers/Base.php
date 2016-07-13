@@ -33,6 +33,9 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 
 use \Espo\Core\Acl;
+use \Espo\Core\AclManager;
+use \Espo\Core\Utils\Metadata;
+use \Espo\Core\Utils\Config;
 
 class Base
 {
@@ -48,6 +51,8 @@ class Base
 
     protected $metadata;
 
+    private $config;
+
     private $seed = null;
 
     private $userTimeZone = null;
@@ -56,18 +61,25 @@ class Base
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, $metadata)
+    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
+        $this->aclManager = $aclManager;
 
         $this->metadata = $metadata;
+        $this->config = $config;
     }
 
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     protected function getUser()
@@ -78,6 +90,16 @@ class Base
     protected function getAcl()
     {
         return $this->acl;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getAclManager()
+    {
+        return $this->aclManager;
     }
 
     public function setEntityType($entityType)
@@ -104,11 +126,23 @@ class Base
     {
         if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
-            $type = $this->metadata->get("entityDefs.{$this->entityType}.fields." . $result['orderBy'] . ".type");
-            if ($type == 'link') {
+            $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
+            if ($type === 'link') {
                 $result['orderBy'] .= 'Name';
-            } else if ($type == 'linkParent') {
+            } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
+            } else if ($type === 'enum') {
+                $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
+                if ($list && is_array($list) && count($list)) {
+                    if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
+                        $list = asort($list);
+                    }
+                    if (!$asc) {
+                        $list = array_reverse($list);
+                    }
+                    $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
+                    return;
+                }
             }
         }
         if ($asc) {
@@ -120,7 +154,7 @@ class Base
 
     protected function getTextFilterFieldList()
     {
-        return $this->metadata->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
+        return $this->getMetadata()->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
     }
 
     protected function getSeed()
@@ -667,7 +701,7 @@ class Base
         }
     }
 
-    protected function getUserTimeZone()
+    public function getUserTimeZone()
     {
         if (empty($this->userTimeZone)) {
             $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
@@ -678,7 +712,7 @@ class Base
         return $this->userTimeZone;
     }
 
-    protected function convertDateTimeWhere($item)
+    public function convertDateTimeWhere($item)
     {
         $format = 'Y-m-d H:i:s';
 
@@ -1072,7 +1106,7 @@ class Base
 
     public function hasLeftJoin($leftJoin, &$result)
     {
-        return in_array($leftJoin, $result['leftJoin']);
+        return in_array($leftJoin, $result['leftJoins']);
     }
 
     public function addJoin($join, &$result)
@@ -1166,15 +1200,21 @@ class Base
         $d = array();
 
         foreach ($fieldList as $field) {
+            $expression = $textFilter . '%';
             if (
                 strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
                 &&
-                !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+                (
+                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+                    ||
+                    $this->getConfig()->get('textFilterUseContainsForVarchar')
+                )
             ) {
-                $d[$field . '*'] = '%' . $textFilter . '%';
+                $expression = '%' . $textFilter . '%';
             } else {
-                $d[$field . '*'] = $textFilter . '%';
+                $expression = $textFilter . '%';
             }
+            $d[$field . '*'] = $expression;
         }
         $result['whereClause'][] = array(
             'OR' => $d

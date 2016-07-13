@@ -65,6 +65,13 @@ abstract class Base implements Injectable
         $this->dependencies[] = $name;
     }
 
+    protected function addDependencyList(array $list)
+    {
+        foreach ($list as $item) {
+            $this->addDependency($item);
+        }
+    }
+
     public function getDependencyList()
     {
         return $this->dependencies;

@@ -82,10 +82,11 @@
         "assignedUser": {
             "type": "link",
             "required": true,
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "attachments": {
             "type": "attachmentMultiple",
@@ -133,9 +134,6 @@
             "columns": ["dateEnd", "status"]
         },
         "dateStart": {
-            "columns": ["dateStart", "deleted"]
-        },
-        "dateEnd": {
             "columns": ["dateStart", "deleted"]
         },
         "status": {

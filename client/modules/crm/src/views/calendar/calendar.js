@@ -34,23 +34,21 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         eventAttributes: [],
 
-        colors: {
-            'Meeting': '#558BBD',
-            'Call': '#cf605d',
-            'Task': '#76BA4E',
-        },
+        colors: {},
 
         allDayScopeList: ['Task'],
 
         scopeList: ['Meeting', 'Call', 'Task'],
 
-        canceledStatusList: ['Not Held', 'Canceled'],
+        canceledStatusList: [],
 
-        completedStatusList: ['Held', 'Completed'],
+        completedStatusList: [],
 
         header: true,
 
-        modeList: ['month', 'agendaWeek', 'agendaDay'],
+        modeList: [],
+
+        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay'],
 
         defaultMode: 'agendaWeek',
 
@@ -98,14 +96,16 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             },
             'click button[data-action="mode"]': function (e) {
                 var mode = $(e.currentTarget).data('mode');
-                this.$el.find('button[data-action="mode"]').removeClass('active');
-                this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
-                this.$calendar.fullCalendar('changeView', mode);
-                this.updateDate();
+                if (~this.fullCalendarModeList.indexOf(mode)) {
+                    this.$el.find('button[data-action="mode"]').removeClass('active');
+                    this.$el.find('button[data-mode="' + mode + '"]').addClass('active');
+                    this.$calendar.fullCalendar('changeView', mode);
+                    this.updateDate();
+                }
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
-            	this.$calendar.fullCalendar('refetchEvents');
+                this.actionRefresh();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
                 var $target = $(e.currentTarget);
@@ -132,11 +132,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             this.$container = this.options.$container;
 
-            this.colors = this.getMetadata().get('clientDefs.Calendar.colors') || this.colors;
+            this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
             this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
+            this.canceledStatusList = this.getMetadata().get('clientDefs.Calendar.canceledStatusList') || this.canceledStatusList;
             this.completedStatusList = this.getMetadata().get('clientDefs.Calendar.completedStatusList') || this.completedStatusList;
-            this.scopeList = this.getMetadata().get('clientDefs.Calendar.scopeList') || Espo.Utils.clone(this.scopeList);
-            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDaySopeList') || this.allDayScopeList;
+            this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
             this.scopeFilter = false;
 
@@ -237,7 +238,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 if (!o.dateStartDate) {
                     event.start = this.getDateTime().toMoment(o.dateStart);
                 } else {
-                    event.start = this.getDateTime().toMoment(o.dateStartDate);
+                    event.start = this.getDateTime().toMomentDate(o.dateStartDate);
                 }
             }
             if (o.dateEnd) {
@@ -269,7 +270,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var color = this.colors[event.scope];
             var d = event.dateEnd;
 
-            if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
+            if (!color) {
+                color = this.getColorFromScopeName(event.scope);
+            }
+
+            if (color && ~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
             }
             event.color = color;
@@ -278,7 +283,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         handleStatus: function (event) {
         	if (~this.canceledStatusList.indexOf(event.status)) {
         		event.className = 'event-canceled';
-        	}
+        	} else {
+                event.className = '';
+            }
         },
 
         shadeColor: function (color, percent) {
@@ -321,7 +328,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         convertToFcEvents: function (list) {
-            this.now = moment.tz(this.getDateTime().timeZone);
+            this.now = moment.tz(this.getDateTime().getTimeZone());
 
             var events = [];
             list.forEach(function (o) {
@@ -379,11 +386,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 timeFormat: this.getDateTime().timeFormat,
                 defaultView: this.mode,
                 weekNumbers: true,
+                weekNumberCalculation: 'ISO',
                 editable: true,
                 selectable: true,
                 selectHelper: true,
                 height: this.options.height || null,
-                firstDay: this.getPreferences().get('weekStart'),
+                firstDay: this.getDateTime().weekStart,
                 slotEventOverlap: true,
                 slotDuration: slotDuration,
                 snapDuration: this.slotDuration * 60 * 1000,
@@ -406,22 +414,38 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
                     this.notify('Loading...');
                     this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                        attributes: attributes
+                        attributes: attributes,
+                        enabledScopeList: this.enabledScopeList,
+                        scopeList: this.scopeList
                     }, function (view) {
                         view.render();
                         view.notify(false);
-                    });
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.addModel(model);
+                        }, this);
+                    }, this);
                     $calendar.fullCalendar('unselect');
                 }.bind(this),
                 eventClick: function (event) {
                     this.notify('Loading...');
-                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) || 'views/modals/detail';
+                    this.createView('quickView', viewName, {
                         scope: event.scope,
-                        id: event.recordId
+                        id: event.recordId,
+                        removeDisabled: false
                     }, function (view) {
                         view.render();
                         view.notify(false);
-                    });
+
+                        this.listenToOnce(view, 'after:destroy', function (model) {
+                            this.removeModel(model);
+                        }, this);
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            view.close();
+                            this.updateModel(model);
+                        }, this);
+                    }, this);
                 }.bind(this),
                 viewRender: function (view, el) {
                     var mode = view.name;
@@ -588,6 +612,36 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         removeModel: function (model) {
             this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
+        },
+
+        actionRefresh: function () {
+            this.$calendar.fullCalendar('refetchEvents');
+        },
+
+        getColorFromScopeName: function (scope) {
+            var additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
+
+            if (!additionalColorList.length) return;
+
+            var colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+
+            var scopeList = this.getConfig().get('calendarEntityList') || [];
+
+            var index = 0;
+            var j = 0;
+            for (var i = 0; i < scopeList.length; i++) {
+                if (scopeList[i] in colors) continue;
+                if (scopeList[i] === scope) {
+                    index = j;
+                    break;
+                }
+                j++;
+            }
+
+            index = index % additionalColorList.length;
+            this.colors[scope] = additionalColorList[index];
+
+            return this.colors[scope];
         }
 
     });

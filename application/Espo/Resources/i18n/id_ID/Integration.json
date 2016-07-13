@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "enabled": "Diaktifkan",
+    "clientId": "ID klien",
+    "clientSecret": "klien Rahasia",
+    "redirectUri": "redirect URI"
+  },
+  "messages": {
+    "selectIntegration": "Pilih integrasi dari menu.",
+    "noIntegrations": "Tidak ada integrasi tersedia."
+  },
+  "help": {
+    "Google": "<P> <b> Mendapatkan OAuth 2.0 mandat dari Google Developers Console. </ B> </ p> <p> Kunjungi <a href=\"https://console.developers.google.com/project\"> Google Developers konsol </a> untuk mendapatkan OAuth 2.0 mandat seperti ID Klien dan Klien Rahasia yang dikenal baik aplikasi Google dan EspoCRM. </ p>"
+  }
+}

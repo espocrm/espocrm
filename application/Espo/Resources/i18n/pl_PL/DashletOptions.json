@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "title": "Tytuł",
+    "dateFrom": "Data rozpoczęcia",
+    "dateTo": "Data zakończenia",
+    "autorefreshInterval": "Okres auto-odświeżenia",
+    "displayRecords": "Pokaż rekordy",
+    "isDoubleHeight": "Wysokość 2x",
+    "mode": "Tryb",
+    "enabledScopeList": "Co wyświetlić"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Tydzień (agenda)",
+      "basicWeek": "Tydzień",
+      "month": "Miesiąc"
+    }
+  }
+}

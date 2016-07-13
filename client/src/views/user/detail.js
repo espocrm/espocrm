@@ -40,27 +40,28 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                     action: "preferences"
                 });
 
+                if (!this.model.get('isPortalUser')) {
+                    if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
+                        this.menu.buttons.push({
+                            name: 'emailAccounts',
+                            label: "Email Accounts",
+                            style: 'default',
+                            action: "emailAccounts"
+                        });
+                    }
 
-                if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
-                    this.menu.buttons.push({
-                        name: 'emailAccounts',
-                        label: "Email Accounts",
-                        style: 'default',
-                        action: "emailAccounts"
-                    });
-                }
-
-                if (this.model.id == this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
-                    this.menu.buttons.push({
-                        name: 'externalAccounts',
-                        label: 'External Accounts',
-                        style: 'default',
-                        action: "externalAccounts"
-                    });
+                    if (this.model.id == this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
+                        this.menu.buttons.push({
+                            name: 'externalAccounts',
+                            label: 'External Accounts',
+                            style: 'default',
+                            action: "externalAccounts"
+                        });
+                    }
                 }
             }
 
-            if (this.getAcl().checkScope('Calendar')) {
+            if (this.getAcl().checkScope('Calendar') && !this.model.get('isPortalUser')) {
                 var showActivities = this.getAcl().checkUserPermission(this.model);
                 if (!showActivities) {
                     if (this.getAcl().get('userPermission') === 'team') {

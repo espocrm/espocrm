@@ -63,7 +63,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
 
         runSearch: function (text) {
             var text = this.$input.val().trim();
-            if (text != '' && text.length > 2) {
+            if (text != '' && text.length >= 2) {
                 text = text;
                 this.search(text);
             }
@@ -82,7 +82,7 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
 
             $container.appendTo(this.$el.find('.global-search-panel-container'));
 
-            this.createView('panel', 'GlobalSearch.Panel', {
+            this.createView('panel', 'views/global-search/panel', {
                 el: '#global-search-panel',
                 collection: this.collection,
             }, function (view) {

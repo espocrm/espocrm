@@ -7,12 +7,15 @@
       "detail":"views/user/record/detail",
       "detailQuick":"views/user/record/detail-quick",
       "edit":"views/user/record/edit",
-      "editQuick":"views/user/record/edit",
+      "editQuick":"views/user/record/edit-quick",
       "list":"views/user/record/list"
    },
    "filterList": [
       "active",
       "activePortal"
    ],
-   "boolFilterList": ["onlyMyTeam"]
+   "boolFilterList": ["onlyMyTeam"],
+    "selectDefaultFilters": {
+        "filter": "active"
+    }
 }

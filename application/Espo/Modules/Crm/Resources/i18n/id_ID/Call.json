@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Nama",
+    "parent": "Induk",
+    "status": "Status",
+    "dateStart": "Tanggal mulai",
+    "dateEnd": "Tanggal akhir",
+    "direction": "Arah",
+    "duration": "Lamanya",
+    "description": "Deskripsi",
+    "users": "pengguna",
+    "contacts": "kontak",
+    "leads": "memimpin",
+    "reminders": "pengingat",
+    "account": "Rekening"
+  },
+  "options": {
+    "status": {
+      "Planned": "Berencana",
+      "Held": "diadakan",
+      "Not Held": "tidak Dimiliki"
+    },
+    "direction": {
+      "Outbound": "Keluar",
+      "Inbound": "Masuk"
+    },
+    "acceptanceStatus": {
+      "None": "tak satupun",
+      "Accepted": "diterima",
+      "Declined": "ditolak",
+      "Tentative": "Sementara"
+    }
+  },
+  "massActions": {
+    "setHeld": "set Dimiliki",
+    "setNotHeld": "Set Tidak Dimiliki"
+  },
+  "labels": {
+    "Create Call": "Buat Panggilan",
+    "Set Held": "set Dimiliki",
+    "Set Not Held": "Set Tidak Dimiliki",
+    "Send Invitations": "Mengirim undangan"
+  },
+  "presetFilters": {
+    "planned": "Berencana",
+    "held": "diadakan",
+    "todays": "hari ini"
+  }
+}

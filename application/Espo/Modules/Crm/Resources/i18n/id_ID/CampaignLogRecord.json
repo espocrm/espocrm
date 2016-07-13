@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Tindakan",
+    "actionDate": "Tanggal",
+    "data": "Data",
+    "campaign": "Kampanye",
+    "parent": "Target",
+    "object": "Obyek",
+    "application": "Aplikasi",
+    "queueItem": "antrian Barang",
+    "stringData": "data String",
+    "stringAdditionalData": "String Data Tambahan"
+  },
+  "links": {
+    "queueItem": "antrian Barang",
+    "parent": "Induk",
+    "object": "Obyek"
+  },
+  "options": {
+    "action": {
+      "Sent": "mengirim",
+      "Opened": "dibuka",
+      "Opted Out": "Memilih keluar",
+      "Bounced": "terpental",
+      "Clicked": "diklik",
+      "Lead Created": "memimpin Dibuat"
+    }
+  },
+  "labels": {
+    "All": "Semua"
+  },
+  "presetFilters": {
+    "sent": "mengirim",
+    "opened": "dibuka",
+    "optedOut": "Memilih keluar",
+    "bounced": "terpental",
+    "clicked": "diklik",
+    "leadCreated": "memimpin Dibuat"
+  }
+}

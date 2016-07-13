@@ -31,22 +31,27 @@ class Utils
 {
 	static public $actionPath = 'install/core/actions';
 
-	static public function isActionExists($actionName)
+	static public function checkActionExists($actionName)
 	{
-		$actionPath = static::$actionPath;
-		$actionFileName = $actionName . '.php';
-		$actionRealPath = realpath($actionPath . '/' . $actionFileName);
+		return in_array($actionName, [
+			'applySett',
+			'buildDatabase',
+			'checkPermission',
+			'createUser',
+			'errors',
+			'finish',
+			'main',
+			'setEmailSett',
+			'setPreferences',
+			'settingsTest',
+			'setupConfirmation',
+			'step1',
+			'step2',
+			'step3',
+			'step4',
+			'step5'
+		]);
 
-		$fileManager = new \Espo\Core\Utils\File\Manager();
-		$actionList = $fileManager->getFileList($actionPath);
-
-		foreach ($actionList as $fileName) {
-			$fileRealPath = realpath($actionPath . '/' . $fileName);
-
-			if ($fileRealPath === $actionRealPath) {
-				return true;
-			}
-		}
 
 		return false;
 	}

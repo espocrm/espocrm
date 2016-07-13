@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nama",
+    "body": "Tubuh",
+    "entityType": "Jenis entitas",
+    "header": "Header",
+    "footer": "Footer",
+    "leftMargin": "Batas Kiri",
+    "topMargin": "Batas Atas",
+    "rightMargin": "Batas kanan",
+    "bottomMargin": "Batas Bawah",
+    "printFooter": "cetak Footer",
+    "footerPosition": "Posisi Footer "
+  },
+  "labels": {
+    "Create Template": "Buat Template"
+  },
+  "tooltips": {
+    "footer": "Gunakan {PageNumber} untuk mencetak nomor halaman."
+  }
+}

@@ -39,14 +39,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
-                if (e.keyCode == 188 || e.keyCode == 186) {
+                if (e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 13) {
                     var $input = $(e.currentTarget);
                     var address = $input.val().replace(',', '').replace(';', '').trim();
                     if (~address.indexOf('@')) {
                         this.addAddress(address, '');
                         $input.val('');
                     }
-
                 }
             },
             'change input': function (e) {
@@ -110,9 +109,9 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            this.$input = this.$el.find('input');
-
             if (this.mode == 'edit') {
+                this.$input = this.$element = this.$el.find('input');
+
                 this.addressList.forEach(function (item) {
                     this.addAddressHtml(item, this.nameHash[item] || '');
                 }, this);
@@ -155,6 +154,14 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         },
 
         addAddress: function (address, name, type, id) {
+            if (this.justAddedAddress) {
+                this.deleteAddress(this.justAddedAddress);
+            }
+            this.justAddedAddress = address;
+            setTimeout(function () {
+                this.justAddedAddress = null;
+            }.bind(this), 100);
+
             if (!~this.addressList.indexOf(address)) {
                 this.addressList.push(address);
                 this.nameHash[address] = name;

@@ -47,8 +47,21 @@ class App extends \Espo\Core\Controllers\Base
             $user->loadLinkMultipleField('accounts');
         }
 
+        $userData = $user->getValues();
+
+        $emailAddressList = [];
+        foreach ($user->get('emailAddresses') as $emailAddress) {
+            if ($emailAddress->get('invalid')) continue;
+            if ($user->get('emailAddrses') === $emailAddress->get('name')) continue;
+            $emailAddressList[] = $emailAddress->get('name');
+        }
+        if ($user->get('emailAddrses')) {
+            array_unshift($emailAddressList, $user->get('emailAddrses'));
+        }
+        $userData['emailAddressList'] = $emailAddressList;
+
         return array(
-            'user' => $user->getValues(),
+            'user' => $userData,
             'acl' => $this->getAcl()->getMap(),
             'preferences' => $preferences,
             'token' => $this->getUser()->get('token')

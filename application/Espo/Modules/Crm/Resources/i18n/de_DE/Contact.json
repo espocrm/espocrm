@@ -1,40 +1,46 @@
 {
-    "fields": {
-        "name": "Name",
-        "emailAddress": "E-Mail",
-        "title": "Funktion",
-        "account": "Firma",
-        "accounts": "Firmen",
-        "phoneNumber": "Telefon",
-        "accountType": "Firmentyp",
-        "doNotCall": "Nicht anrufen",
-        "address": "Adresse",
-        "opportunityRole": "Verkaufschance Rolle",
-        "accountRole": "Funktion",
-        "description": "Beschreibung",
-        "campaign": "Kampagne",
-        "targetLists": "Kontaktlisten",
-        "targetList": "Kontaktliste"
-    },
-    "links": {
-        "opportunities": "Verkaufschancen",
-        "cases": "Fälle",
-        "targetLists": "Kontaktlisten",
-        "campaignLogRecords": "Kampagnen Log",
-        "campaign": "Kampagne",
-        "account": "Firma (Primär)",
-        "accounts": "Firmen",
-        "casesPrimary": "Fälle (Primär)"
-    },
-    "labels": {
-        "Create Contact": "Kontakt erstellen"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--Kein(e)--",
-            "Decision Maker": "Entscheider",
-            "Evaluator": "Vorentscheider",
-            "Influencer": "Einflussreiche Person"
-        }
+  "fields": {
+    "name": "Betreff",
+    "emailAddress": "E-Mail",
+    "title": "Funktion",
+    "accountRole": "Funktion",
+    "account": "Firma",
+    "accounts": "Firmen",
+    "phoneNumber": "Telefon",
+    "accountType": "Firmentyp",
+    "doNotCall": "Nicht anrufen",
+    "address": "Adresse",
+    "opportunityRole": "Verkaufschance Rolle",
+    "description": "Beschreibung",
+    "campaign": "Kampagne",
+    "targetLists": "Kontaktlisten",
+    "targetList": "Kontaktliste",
+    "portalUser": "Portal Benutzer"
+  },
+  "links": {
+    "opportunities": "Verkaufschancen",
+    "cases": "Fälle",
+    "targetLists": "Kontaktlisten",
+    "campaignLogRecords": "Kampagnen Log",
+    "campaign": "Kampagne",
+    "account": "Firma (Primär)",
+    "accounts": "Firmen",
+    "casesPrimary": "Fälle (Primär)",
+    "portalUser": "Portal Benutzer"
+  },
+  "labels": {
+    "Create Contact": "Kontakt erstellen"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Kein(e)--",
+      "Decision Maker": "Entscheider",
+      "Evaluator": "Vorentscheider",
+      "Influencer": "Einflussreiche Person"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Portal Benutzer",
+    "notPortalUsers": "Keine Portal Benutzer"
+  }
 }

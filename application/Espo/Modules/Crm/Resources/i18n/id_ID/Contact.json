@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "Nama",
+    "emailAddress": "E-mail",
+    "title": "Judul",
+    "accountRole": "Judul",
+    "account": "Akun",
+    "accounts": "Akun",
+    "phoneNumber": "Telepon",
+    "accountType": "Jenis akun",
+    "doNotCall": "Jangan panggil",
+    "address": "Alamat",
+    "opportunityRole": "peluang Peran",
+    "description": "Deskripsi",
+    "campaign": "Kampanye",
+    "targetLists": "Daftar Target",
+    "targetList": "Daftar Target",
+    "portalUser": "Portal Pengguna"
+  },
+  "links": {
+    "opportunities": "peluang",
+    "cases": "kasus",
+    "targetLists": "Daftar Target",
+    "campaignLogRecords": "kampanye Log",
+    "campaign": "Kampanye",
+    "account": "Akun (Primer)",
+    "accounts": "Akun",
+    "casesPrimary": "Kasus (Primer)",
+    "portalUser": "Portal Pengguna"
+  },
+  "labels": {
+    "Create Contact": "Buat kontak"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--tak satupun--",
+      "Decision Maker": "Pengambil keputusan",
+      "Evaluator": "Penilai",
+      "Influencer": "influencer"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Pengguna Portal",
+    "notPortalUsers": "Bukan Pengguna Portal"
+  }
+}

@@ -8,5 +8,6 @@
     "customizable": true,
     "importable": true,
     "notifications": true,
+    "calendar": true,
     "object": true
 }

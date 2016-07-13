@@ -77,6 +77,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
+
+                this.model.set('textFilterFields', this.getMetadata().get('entityDefs.' + scope + '.collection.textFilterFields') || ['name']);
             }
 
             this.createView('type', 'views/fields/enum', {
@@ -120,7 +122,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'name',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 },
                 readOnly: scope != false
@@ -132,7 +135,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'labelSingular',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 }
             });
@@ -143,7 +147,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 defs: {
                     name: 'labelPlural',
                     params: {
-                        required: true
+                        required: true,
+                        trim: true
                     }
                 }
             });
@@ -156,7 +161,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                     return true;
                 }, this).sort(function (v1, v2) {
-                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
                 }.bind(this));
 
                 var translatedOptions = {};
@@ -171,10 +176,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     defs: {
                         name: 'sortBy',
                         params: {
-                            options: orderableFieldList,
-                            translatedOptions: translatedOptions
+                            options: orderableFieldList
                         }
-                    }
+                    },
+                    translatedOptions: translatedOptions
                 });
 
                 this.createView('sortDirection', 'views/fields/enum', {
@@ -187,6 +192,32 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                             options: ['asc', 'desc']
                         }
                     }
+                });
+                var fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+
+                var optionList = Object.keys(fieldDefs).filter(function (item) {
+                    if (!~['varchar', 'text', 'phoneNumber', 'email', 'personName'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
+                        return false;
+                    }
+                    return true;
+                }, this);
+
+                var textFilterFieldsTranslation = {};
+                optionList.forEach(function (item) {
+                    textFilterFieldsTranslation[item] = this.translate(item, 'fields', scope);
+                }, this);
+
+                this.createView('textFilterFields', 'views/fields/multi-enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="textFilterFields"]',
+                    defs: {
+                        name: 'textFilterFields',
+                        params: {
+                            options: optionList
+                        }
+                    },
+                    translatedOptions: textFilterFieldsTranslation
                 });
             }
         },
@@ -259,7 +290,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 labelPlural: this.model.get('labelPlural'),
                 type: this.model.get('type'),
                 stream: this.model.get('stream'),
-                disabled: this.model.get('disabled')
+                disabled: this.model.get('disabled'),
+                textFilterFields: this.model.get('textFilterFields')
             };
 
             if (this.scope) {

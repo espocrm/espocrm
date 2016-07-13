@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "URL",
+    "urlToUse": "Kode untuk menyisipkan bukan URL",
+    "campaign": "Kampanye"
+  },
+  "links": {
+    "campaign": "Kampanye"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Buat Tracking URL"
+  }
+}

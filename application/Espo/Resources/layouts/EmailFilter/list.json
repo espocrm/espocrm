@@ -1,5 +1,5 @@
 [
-    {"name": "name", "link": true, "Width": 40},
-    {"name": "parent"},
-    {"name": "createdBy", "width": 20}
+    {"name": "name", "link": true},
+    {"name": "parent", "width": 40},
+    {"name": "action", "width": 16}
 ]

@@ -1,59 +1,60 @@
 {
-    "fields": {
-        "name": "Name",
-        "emailAddress": "E-Mail Adresse",
-        "team": "Team",
-        "status": "Status",
-        "assignToUser": "Mit Benutzer verknüpfen",
-        "host": "Host",
-        "username": "Benutzername",
-        "password": "Passwort",
-        "port": "Port",
-        "monitoredFolders": "Überwachte Ordner",
-        "trashFolder": "Papierkorb Ordner",
-        "ssl": "SSL",
-        "createCase": "Fall erstellen",
-        "reply": "Autoantwort",
-        "caseDistribution": "Fall Verteilung",
-        "replyEmailTemplate": "Vorlage E-Mail Antwort",
-        "replyFromAddress": "Von Adresse antworten",
-        "replyToAddress": "Antwort an Adresse",
-        "replyFromName": "Von Name antworten",
-        "targetUserPosition": "Position Zielbenutzer",
-        "fetchSince": "Holen seit",
-        "addAllTeamUsers": "Für alle Teambenutzer"
+  "fields": {
+    "name": "Betreff",
+    "emailAddress": "E-Mail Adresse",
+    "team": "Team",
+    "status": "Status",
+    "assignToUser": "Mit Benutzer verknüpfen",
+    "host": "Host",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "port": "Port",
+    "monitoredFolders": "Überwachte Ordner",
+    "trashFolder": "Papierkorb Ordner",
+    "ssl": "SSL",
+    "createCase": "Fall erstellen",
+    "reply": "Autoantwort",
+    "caseDistribution": "Fall Verteilung",
+    "replyEmailTemplate": "Vorlage E-Mail Antwort",
+    "replyFromAddress": "Von Adresse antworten",
+    "replyToAddress": "Antwort an Adresse",
+    "replyFromName": "Von Name antworten",
+    "targetUserPosition": "Position Zielbenutzer",
+    "fetchSince": "Holen seit",
+    "addAllTeamUsers": "Für alle Teambenutzer"
+  },
+  "tooltips": {
+    "reply": "E-Mail Absender informieren, dass ihre E-Mails empfangen wurde.\n\n Es wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empfänger gesendet um Endlosschleifen zu vermeiden.",
+    "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
+    "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
+    "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
+    "assignToUser": "Benutzer E-Mails/Fälle werden zugewiesen an",
+    "team": "Team E-Mails/Fälle werden verknüpft mit",
+    "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen.",
+    "addAllTeamUsers": "E-Mails erscheinen im Posteingang aller Benutzer eines bestimmten Teams."
+  },
+  "links": {
+    "filters": "Filter"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
     },
-    "tooltips": {
-        "reply": "E-Mail Absender informieren, dass ihre E-Mails empfangen wurde.\n\n Es wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empfänger gesendet um Endlosschleifen zu vermeiden.",
-        "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
-        "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
-        "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
-        "assignToUser": "Benutzer E-Mails\/Fälle werden zugewiesen an",
-        "team": "Team E-Mails\/Fälle werden verknüpft mit",
-        "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen.",
-        "addAllTeamUsers": "E-Mails erscheinen im Posteingang aller Benutzer eines bestimmten Teams."
-    },
-    "links": {
-        "filters": "Filter"
-    },
-    "options": {
-        "status": {
-            "Active": "Aktiv",
-            "Inactive": "Inaktiv"
-        },
-        "caseDistribution": {
-            "Direct-Assignment": "Direkte Zuordnung",
-            "Round-Robin": "Umlauf-Verfahren",
-            "Least-Busy": "Geringste Auslastung"
-        }
-    },
-    "labels": {
-        "Create InboundEmail": "E-Mail Konto erstellen",
-        "IMAP": "IMAP",
-        "Actions": "Aktionen",
-        "Main": "Hauptteil"
-    },
-    "messages": {
-        "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+    "caseDistribution": {
+      "": "Kein(e)",
+      "Direct-Assignment": "Direkte Zuordnung",
+      "Round-Robin": "Umlauf-Verfahren",
+      "Least-Busy": "Geringste Auslastung"
     }
+  },
+  "labels": {
+    "Create InboundEmail": "E-Mail Konto erstellen",
+    "IMAP": "IMAP",
+    "Actions": "Aktionen",
+    "Main": "Hauptteil"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+  }
 }

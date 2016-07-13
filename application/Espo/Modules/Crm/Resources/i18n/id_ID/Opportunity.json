@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "Nama",
+    "account": "Rekening",
+    "stage": "Tahap",
+    "amount": "Jumlah",
+    "probability": "Probabilitas,%",
+    "leadSource": "memimpin Sumber",
+    "doNotCall": "Jangan panggil",
+    "closeDate": "Tutup Tanggal",
+    "contacts": "kontak",
+    "description": "Deskripsi",
+    "amountConverted": "Jumlah (dikonversi)",
+    "amountWeightedConverted": "jumlah Tertimbang",
+    "campaign": "Kampanye"
+  },
+  "links": {
+    "contacts": "kontak",
+    "documents": "dokumen",
+    "campaign": "Kampanye"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Pencarian",
+      "Qualification": "Kualifikasi",
+      "Needs Analysis": "Butuh analisa",
+      "Value Proposition": "Proposisi nilai",
+      "Id. Decision Makers": "Id. Pembuat keputusan",
+      "Perception Analysis": "Analisis persepsi",
+      "Proposal/Price Quote": "Proposal / Harga Penawaran",
+      "Negotiation/Review": "Negosiasi / Ulasan",
+      "Closed Won": "tertutup Won",
+      "Closed Lost": "tertutup Hilang"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Buat Peluang"
+  },
+  "presetFilters": {
+    "open": "Buka",
+    "won": "Won",
+    "lost": "Kalah"
+  }
+}

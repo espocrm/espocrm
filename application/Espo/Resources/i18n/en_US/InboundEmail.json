@@ -34,7 +34,8 @@
         "addAllTeamUsers": "Emails will appear in Inbox of all users of a specified team."
     },
     "links": {
-        "filters": "Filters"
+        "filters": "Filters",
+        "emails": "Emails"
     },
     "options": {
         "status": {

@@ -43,19 +43,30 @@ class EmailReminder
 
     protected $language;
 
-
-    public function __construct($entityManager, $mailSender, $config, $dateTime, $language)
+    public function __construct($entityManager, $mailSender, $config, $fileManager, $dateTime, $number, $language)
     {
         $this->entityManager = $entityManager;
         $this->mailSender = $mailSender;
         $this->config = $config;
         $this->dateTime = $dateTime;
         $this->language = $language;
+        $this->number = $number;
+        $this->fileManager = $fileManager;
     }
 
     protected function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
+    }
+
+    protected function getLanguage()
+    {
+        return $this->language;
     }
 
     protected function parseInvitationTemplate($contents, $entity, $user = null)
@@ -97,15 +108,15 @@ class EmailReminder
     {
         $systemLanguage = $this->config->get('language');
 
-        $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+        $fileName = "custom/Espo/Custom/Resources/templates/reminder/{$systemLanguage}/{$name}.tpl";
         if (!file_exists($fileName)) {
-            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.'.$systemLanguage.'.tpl';
+            $fileName = "application/Espo/Modules/Crm/Resources/templates/reminder/{$systemLanguage}/{$name}.tpl";
         }
         if (!file_exists($fileName)) {
-            $fileName = 'custom/Espo/Custom/Resources/templates/'.$name.'.en_US.tpl';
+            $fileName = "custom/Espo/Custom/Resources/templates/reminder/en_US/{$name}.tpl";
         }
         if (!file_exists($fileName)) {
-            $fileName = 'application/Espo/Modules/Crm/Resources/templates/'.$name.'.en_US.tpl';
+            $fileName = "application/Espo/Modules/Crm/Resources/templates/reminder/en_US/{$name}.tpl";
         }
 
         return file_get_contents($fileName);
@@ -125,24 +136,42 @@ class EmailReminder
         $email = $this->getEntityManager()->getEntity('Email');
         $email->set('to', $emailAddress);
 
-        $subjectTpl = $this->getTemplate('ReminderSubject');
-        $bodyTpl = $this->getTemplate('ReminderBody');
+        $subjectTpl = $this->getTemplate('subject');
+        $bodyTpl = $this->getTemplate('body');
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
-        $subject = $this->parseInvitationTemplate($subjectTpl, $entity, $user);
-        $subject = str_replace(array("\n", "\r"), '', $subject);
+        $data = array();
 
-        $body = $this->parseInvitationTemplate($bodyTpl, $entity, $user);
+        $siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
+        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
+        $data['recordUrl'] = $recordUrl;
+
+        $data['entityType'] = $this->getLanguage()->translate($entity->getEntityType(), 'scopeNames');
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        if ($user) {
+            $data['userName'] = $user->get('name');
+        }
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+        $timezone = $preferences->get('timeZone');
+        $dateTime = clone($this->dateTime);
+        if ($timezone) {
+            $dateTime->setTimezone($timezone);
+        }
+
+        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $dateTime, $this->number, null);
+
+        $subject = $htmlizer->render($entity, $subjectTpl, 'reminder-email-subject-' . $entity->getEntityType(), $data, true);
+        $body = $htmlizer->render($entity, $bodyTpl, 'reminder-email-body-' . $entity->getEntityType(), $data, true);
 
         $email->set('subject', $subject);
         $email->set('body', $body);
         $email->set('isHtml', true);
-        $this->getEntityManager()->saveEntity($email);
 
         $emailSender = $this->mailSender;
 
         $emailSender->send($email);
-
-        $this->getEntityManager()->removeEntity($email);
     }
 }
 

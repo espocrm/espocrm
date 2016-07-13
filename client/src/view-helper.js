@@ -230,7 +230,9 @@ Espo.define('view-helper', [], function () {
             });
 
             Handlebars.registerHelper('options', function (list, value, options) {
-                value = value || false;
+                if (typeof value === 'undefined') {
+                    value = false;
+                }
                 list = list || {};
                 var html = '';
                 var isArray = (Object.prototype.toString.call(list) === '[object Array]');
@@ -238,7 +240,7 @@ Espo.define('view-helper', [], function () {
                 var multiple = (Object.prototype.toString.call(value) === '[object Array]');
                 var checkOption = function (name) {
                     if (multiple) {
-                        return value.indexOf(name) != -1;
+                        return value.indexOf(name) !== -1;
                     } else {
                         return value === name;
                     }

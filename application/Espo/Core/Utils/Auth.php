@@ -163,6 +163,8 @@ class Auth
                     return false;
                 }
                 $user->set('portalId', $this->getPortal()->id);
+            } else {
+                $user->loadLinkMultipleField('teams');
             }
 
             $this->getEntityManager()->setUser($user);

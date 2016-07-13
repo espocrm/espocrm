@@ -1316,6 +1316,38 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, Util::unsetInArray($input, $unsets));
     }
 
+    public function testUnsetInArrayEmptyParent()
+    {
+        $input = array(
+            'Account' => array(
+                'useCache' => true,
+                'sub' =>  array (
+                    'subV' => '125',
+                    'subO' => array(
+                        'subOV' => '125',
+                        'subOV2' => '125',
+                    ),
+                ),
+            ),
+            'Contact' => array(
+                'useCache' => true,
+            ),
+        );
+
+        $unsets = array(
+            'Account.useCache',
+            'Account.sub',
+        );
+
+        $result = array(
+            'Contact' => array(
+                'useCache' => true,
+            ),
+        );
+
+        $this->assertEquals($result, Util::unsetInArray($input, $unsets, true));
+    }
+
     public function testGetValueByKey()
     {
         $inputArray = array(

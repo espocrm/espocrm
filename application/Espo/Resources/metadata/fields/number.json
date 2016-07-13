@@ -1,0 +1,32 @@
+{
+   "params": [
+      {
+         "name": "prefix",
+         "type": "varchar",
+         "maxLength": 16
+      },
+      {
+         "name": "nextNumber",
+         "type": "int",
+         "min": 0,
+         "required": true,
+         "default": 1
+      },
+      {
+         "name": "padLength",
+         "type": "int",
+         "default": 5,
+         "required": true,
+         "min": 1,
+         "max": 20
+      }
+   ],
+   "filter": true,
+   "fieldDefs": {
+      "type":"varchar",
+      "len": 36,
+      "notNull": false,
+      "unique": false
+   },
+   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\NumberType"
+}

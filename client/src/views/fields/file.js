@@ -137,6 +137,26 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (id) {
                     this.addAttachmentBox(name, type, id);
                 }
+
+                this.$el.off('drop');
+                this.$el.off('dragover');
+                this.$el.off('dragleave');
+
+                this.$el.on('drop', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var e = e.originalEvent;
+                    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                        this.uploadFile(e.dataTransfer.files[0]);
+                    }
+                }.bind(this));
+
+                this.$el.on('dragover', function (e) {
+                    e.preventDefault();
+                }.bind(this));
+                this.$el.on('dragleave', function (e) {
+                    e.preventDefault();
+                }.bind(this));
             }
         },
 
@@ -297,9 +317,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             var $att = $('<div>').css('display', 'inline-block')
-                                 .css('width', '300px')
+                                 .css('width', '100%')
+                                 .css('max-width', '300px')
                                  .addClass('gray-box')
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', '270px'))
+                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
                                  .append(removeLink);
 
             var $container = $('<div>').append($att);

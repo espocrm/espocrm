@@ -33,6 +33,7 @@
             "Role": false,
             "PortalRole": false,
             "EmailFilter": false,
+            "EmailFolder": false,
             "EmailAccount": false,
             "EmailTemplate": false,
             "Preferences": {
@@ -53,7 +54,12 @@
                 "smtpPassword": false,
                 "smtpAuth": false,
                 "receiveAssignmentEmailNotifications": false,
-                "defaultReminders": false
+                "receiveMentionEmailNotifications": false,
+                "defaultReminders": false,
+                "autoFollowEntityTypeList": false,
+                "emailReplyForceHtml": false,
+                "emailReplyToAllByDefault": false,
+                "signature": false
             },
             "Call": {
                 "reminders": false
@@ -63,6 +69,13 @@
             },
             "Attachment": {
                 "parent": false
+            },
+            "Note": {
+                "isInternal": false,
+                "isGlobal": false
+            },
+            "User": {
+                "gender": false
             }
         }
     },

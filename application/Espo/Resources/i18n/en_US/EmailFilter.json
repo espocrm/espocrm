@@ -3,10 +3,19 @@
         "from": "From",
         "to": "To",
         "subject": "Subject",
-        "bodyContains": "Body Contains"
+        "bodyContains": "Body Contains",
+        "action": "Action",
+        "isGlobal": "Is Global",
+        "emailFolder": "Folder"
     },
     "labels": {
         "Create EmailFilter": "Create Email Filter"
+    },
+    "options": {
+        "action": {
+            "Skip": "Ignore",
+            "Move to Folder": "Put in Folder"
+        }
     },
     "tooltips": {
         "name": "Just a name of the filter.",
@@ -14,6 +23,6 @@
         "bodyContains": "Body of email contains any of specified words or phrases.",
         "from": "Emails being sent from the specified address. Leave empty if not needed. You can use wildcard *.",
         "to": "Emails being sent to the specified address. Leave empty if not needed. You can use wildcard *.",
-        "parent": "Leave it empty to apply this filter globally (to all incoming emails)."
+        "isGlobal": "Applies this filter to all emails incoming to system."
     }
 }

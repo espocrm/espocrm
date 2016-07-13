@@ -135,7 +135,7 @@ class EntityManager
 
         $platform = strtolower($params['platform']);
 
-        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=utf8', $params['user'], $params['password']);
+        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'], $params['user'], $params['password']);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 

@@ -24,25 +24,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
+ ************************************************************************/
+Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
         type: 'duration',
 
-        listTemplate: 'fields.base.detail',
+        listTemplate: 'fields/base/detail',
 
-        detailTemplate: 'fields.base.detail',
+        detailTemplate: 'fields/base/detail',
 
-        editTemplate: 'fields.duration.edit',
+        editTemplate: 'fields/duration/edit',
 
         data: function () {
             return _.extend({
                 durationOptions: this.durationOptions,
             }, Dep.prototype.data.call(this));
         },
-        
+
         calculateSeconds: function () {
             this.seconds = 0;
             var start = this.model.get(this.startField);
@@ -50,7 +50,7 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
             if (this.mode == 'edit' || this.mode == 'detail') {
                 this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
             }
-            
+
             if (start && end) {
                 this.seconds = moment(this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)).unix();
             } else {
@@ -60,16 +60,14 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
                 }
             }
         },
-        
+
         init: function () {
             Dep.prototype.init.call(this);
-            
-    
-            
+
             this.listenTo(this, 'render', function () {
-            
+
                 this.calculateSeconds();
-                
+
                 var durationOptions = '';
                 var options = this.defaultOptions = _.clone(this.model.getFieldParam(this.name, 'options'));
 
@@ -198,7 +196,7 @@ Espo.define('Views.Fields.Duration', 'Views.Fields.Enum', function (Dep) {
 
         updateDateEnd: function () {
             var end = this._getDateEnd();
-                        
+
             setTimeout(function () {
                 this.model.set(this.endField, end);
             }.bind(this), 1);

@@ -210,3 +210,78 @@ Espo.define('router', [], function () {
     return Router;
 
 });
+
+function isIOS9UIWebView() {
+    var userAgent = window.navigator.userAgent;
+    return /(iPhone|iPad|iPod).* OS 9_\d/.test(userAgent) && !/Version\/9\./.test(userAgent);
+}
+
+//override the backbone.history.loadUrl() and backbone.history.navigate()
+//to fix the navigation issue (location.hash not change immediately) on iOS9
+if (isIOS9UIWebView()) {
+    Backbone.history.loadUrl = function (fragment, oldHash) {
+        fragment = this.fragment = this.getFragment(fragment);
+        return _.any(this.handlers, function (handler) {
+            if (handler.route.test(fragment)) {
+                function runCallback() {
+                    handler.callback(fragment);
+                }
+
+                function wait() {
+                    if (oldHash === location.hash) {
+                        window.setTimeout(wait, 50);
+                    } else {
+                        runCallback();
+                    }
+                }
+                wait();
+                return true;
+            }
+        });
+    };
+
+    Backbone.history.navigate =
+    // Attempt to load the current URL fragment. If a route succeeds with a
+    // match, returns `true`. If no defined routes matches the fragment,
+    // returns `false`.
+    function (fragment, options) {
+        var pathStripper = /#.*$/;
+        if (!Backbone.History.started) return false;
+        if (!options || options === true) options = { trigger: !!options };
+
+        var url = this.root + '#' + (fragment = this.getFragment(fragment || ''));
+
+        // Strip the hash for matching.
+        fragment = fragment.replace(pathStripper, '');
+
+        if (this.fragment === fragment) return;
+        this.fragment = fragment;
+
+        // Don't include a trailing slash on the root.
+        if (fragment === '' && url !== '/') url = url.slice(0, -1);
+        var oldHash = location.hash;
+        // If pushState is available, we use it to set the fragment as a real URL.
+        if (this._hasPushState) {
+            this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
+
+            // If hash changes haven't been explicitly disabled, update the hash
+            // fragment to store history.
+        } else if (this._wantsHashChange) {
+            this._updateHash(this.location, fragment, options.replace);
+            if (this.iframe && (fragment !== this.getFragment(this.getHash(this.iframe)))) {
+                // Opening and closing the iframe tricks IE7 and earlier to push a
+                // history entry on hash-tag change.  When replace is true, we don't
+                // want this.
+                if (!options.replace) this.iframe.document.open().close();
+                this._updateHash(this.iframe.location, fragment, options.replace);
+            }
+
+            // If you've told us that you explicitly don't want fallback hashchange-
+            // based history, then `navigate` becomes a page refresh.
+        } else {
+            return this.location.assign(url);
+        }
+
+        if (options.trigger) return this.loadUrl(fragment, oldHash);
+    }
+}

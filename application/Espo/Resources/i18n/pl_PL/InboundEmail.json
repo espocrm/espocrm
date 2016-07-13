@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "emailAddress": "Adres e-mail",
+    "team": "Zespół",
+    "status": "Status",
+    "assignToUser": "Przydzielone do użytkownika",
+    "host": "Host",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "port": "Port",
+    "monitoredFolders": "Monitorowane katalogi",
+    "trashFolder": "Katalog kosza",
+    "ssl": "SSL",
+    "createCase": "Utwórz sprawę",
+    "reply": "Auto-odpowiedź",
+    "caseDistribution": "Dystrybucja spraw",
+    "replyEmailTemplate": "Szablon wiadomości odpowiedzi",
+    "replyFromAddress": "Pole nadawca",
+    "replyToAddress": "Odpowiedz do",
+    "replyFromName": "Nazwa nadawcy",
+    "targetUserPosition": "Pozycja użytkownika docelowego",
+    "fetchSince": "Fetch Since",
+    "addAllTeamUsers": "Dla wszystkich członków zespołu"
+  },
+  "tooltips": {
+    "reply": "Powiadamiaj nadawcę o dostarczeniu jego wiadomości.\n\nZostanie wysłana tylko jedna wiadomość na jednego odbiorcę w jednostce czasu aby ustrzec przed powstaniem pętli.",
+    "createCase": "Automatycznie twórz sprawę z przychodzących emaili",
+    "replyToAddress": "Specify email address of this mailbox to make responses come here.",
+    "caseDistribution": "How cases will be assigned to. Assigned directly to the user or among the team.",
+    "assignToUser": "Wiadomości użytkownika/sprawy zostaną przypisane do.",
+    "team": "Zespołowe wiadomości/sprawy będą powiązane z.",
+    "targetUserPosition": "Define the position of users which will be destributed with cases.",
+    "addAllTeamUsers": "Emails will appear in Inbox of all users of a specified team."
+  },
+  "links": {
+    "filters": "Filtry"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywne",
+      "Inactive": "Nieaktywny"
+    },
+    "caseDistribution": {
+      "": "Brak",
+      "Direct-Assignment": "Direct-Assignment",
+      "Round-Robin": "Round-Robin",
+      "Least-Busy": "Least-Busy"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Utwórz konto pocztowe",
+    "IMAP": "IMAP",
+    "Actions": "Akcje",
+    "Main": "Main"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Could not connect to IMAP server"
+  }
+}

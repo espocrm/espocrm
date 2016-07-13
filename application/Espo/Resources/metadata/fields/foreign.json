@@ -2,13 +2,20 @@
    "params":[
       {
          "name":"link",
-         "type":"varchar"
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/foreign/link",
+         "required": true
       },
       {
          "name":"field",
-         "type":"varchar"
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/foreign/field",
+         "required": true
       }
    ],
    "filter": true,
-   "notCreatable": true
+   "notCreatable": false,
+   "fieldDefs": {
+      "readOnly": true
+   }
 }

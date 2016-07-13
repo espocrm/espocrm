@@ -1,1 +1,6 @@
-["teams","roles"]
+[
+    "teams",
+    "roles",
+    "defaultTeam",
+    "isActive"
+]

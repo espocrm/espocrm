@@ -200,7 +200,9 @@ class Container
             $this->get('entityManager'),
             $this->get('user'),
             $this->get('acl'),
-            $this->get('metadata')
+            $this->get('aclManager'),
+            $this->get('metadata'),
+            $this->get('config')
         );
     }
 
@@ -293,7 +295,8 @@ class Container
     {
         return new \Espo\Core\Utils\FieldManager(
             $this->get('metadata'),
-            $this->get('language')
+            $this->get('language'),
+            $this
         );
     }
 

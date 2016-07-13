@@ -32,8 +32,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         template: 'list',
 
-        el: '#main',
-
         scope: null,
 
         name: 'List',
@@ -185,7 +183,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 o[option] = this.options[option];
             }, this);
             var listViewName = this.getRecordViewName();
+
             this.createView('list', listViewName, o, function (view) {
+                if (!this.hasParentView()) return;
+
                 view.render();
                 view.notify(false);
                 if (this.searchPanel) {

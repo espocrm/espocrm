@@ -36,8 +36,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         decimalMark: '.',
 
-        thousandSeparator: ',',
-
         validations: ['required', 'float', 'range'],
 
         setup: function () {
@@ -50,13 +48,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                     this.decimalMark = this.getConfig().get('decimalMark');
                 }
             }
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
-                }
-            }
         },
 
         getValueForDisplay: function () {
@@ -65,6 +56,9 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         },
 
         formatNumber: function (value) {
+            if (this.disableFormatting) {
+                return value;
+            }
             if (value !== null) {
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);

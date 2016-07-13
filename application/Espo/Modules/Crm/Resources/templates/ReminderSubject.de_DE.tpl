@@ -1,1 +1,0 @@
-Erinnerung für {eventType} '{name}'

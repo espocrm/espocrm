@@ -1,39 +1,44 @@
 {
-    "fields": {
-        "name": "Imię",
-        "account": "Konto",
-        "stage": "Estap",
-        "amount": "Wartość",
-        "probability": "Prawdopodobieństwo, %",
-        "leadSource": "Zródło Potencjalnego Kontaktu",
-        "doNotCall": "Nie Dzwoń",
-        "closeDate": "Data Zamknięcia",
-        "contacts": "Kontakty",
-        "description": "Opis ",
-        "amountConverted": "Amount (converted)"
-    },
-    "links": {
-        "contacts": "Kontakty"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "I Spotkanie",
-            "Qualification": "Kwalifikacja",
-            "Needs Analysis": "Dodatkowa Analiza",
-            "Value Proposition": "Oferta Produktowa",
-            "Id. Decision Makers": "Oferta przekazna do osoby decyzyjnej",
-            "Perception Analysis": "Perception Analysis",
-            "Proposal/Price Quote": "Oferta Cenowa",
-            "Negotiation/Review": "Negocjacje ",
-            "Closed Won": "Zakończone Wygrane",
-            "Closed Lost": "Zakończone Przegrane" 
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Utwórz Szanse"
-    },
-    "presetFilters": {
-        "open": "Otwórz",
-        "won": "Wygrane"
+  "fields": {
+    "name": "Nazwa",
+    "account": "Klient",
+    "stage": "Etap",
+    "amount": "Wartość",
+    "probability": "Prawdopodobieństwo, %",
+    "leadSource": "Zródło Potencjalnego Kontaktu",
+    "doNotCall": "Nie Dzwoń",
+    "closeDate": "Data Zamknięcia",
+    "contacts": "Kontakty",
+    "description": "Opis ",
+    "amountConverted": "Wartość (konwertowana)",
+    "amountWeightedConverted": "Wartość ważona",
+    "campaign": "Kampania"
+  },
+  "links": {
+    "contacts": "Kontakty",
+    "documents": "Dokumenty",
+    "campaign": "Kampania"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "I Spotkanie",
+      "Qualification": "Kwalifikacja",
+      "Needs Analysis": "Dodatkowa Analiza",
+      "Value Proposition": "Oferta Produktowa",
+      "Id. Decision Makers": "Oferta przekazna do osoby decyzyjnej",
+      "Perception Analysis": "Perception Analysis",
+      "Proposal/Price Quote": "Oferta Cenowa",
+      "Negotiation/Review": "Negocjacje ",
+      "Closed Won": "Zakończone Wygrane",
+      "Closed Lost": "Zakończone Przegrane"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Utwórz Szanse"
+  },
+  "presetFilters": {
+    "open": "Otwórz",
+    "won": "Wygrane",
+    "lost": "Utracone"
+  }
 }

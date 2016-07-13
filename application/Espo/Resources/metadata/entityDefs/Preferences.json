@@ -41,10 +41,14 @@
             "maxLength": 1
         },
         "dashboardLayout": {
-            "type": "jsonArray"
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
         },
         "dashletsOptions": {
             "type": "jsonObject"
+        },
+        "sharedCalendarUserList": {
+            "type": "jsonArray"
         },
         "presetFilters": {
             "type": "jsonObject"
@@ -94,6 +98,10 @@
             "type": "bool",
             "default": true
         },
+        "receiveMentionEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",
@@ -126,6 +134,14 @@
         "emailReplyToAllByDefault": {
             "type": "bool",
             "default": true
+        },
+        "emailReplyForceHtml": {
+            "type": "bool",
+            "default": false
+        },
+        "isPortalUser": {
+            "type": "bool",
+            "notStorable": true
         }
     }
 }

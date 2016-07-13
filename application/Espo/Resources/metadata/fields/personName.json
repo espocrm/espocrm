@@ -16,7 +16,7 @@
       }
    },
    "naming":"prefix",
-   "mergable":false,
+   "notMergeable":true,
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{

@@ -152,7 +152,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             WHERE
                 email_address.lower = ".$pdo->quote(strtolower($address))." AND
                 entity_email_address.deleted = 0
-            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, ".join(',', $a).")
+        ";
+
+        $sql .= "
+            ORDER BY FIELD(entity_email_address.entity_type, ".join(',', array_reverse($a)).") DESC, entity_email_address.primary DESC
         ";
 
         $sth = $pdo->prepare($sql);
@@ -174,7 +177,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
     public function storeEntityEmailAddress(Entity $entity)
     {
-            $email = trim($entity->get('emailAddress'));
+            $emailAddressValue = trim($entity->get('emailAddress'));
             $emailAddressData = null;
 
             if ($entity->has('emailAddressData')) {
@@ -320,6 +323,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                                 ".$pdo->quote($emailAddress->id).",
                                 ".$pdo->quote((int)($address === $primary))."
                             )
+                        ON DUPLICATE KEY UPDATE deleted = 0, `primary` = ".$pdo->quote((int)($address === $primary))."
                     ";
                     $sth = $pdo->prepare($query);
                     $sth->execute();
@@ -356,22 +360,24 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
             } else {
                 $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityName());
-                if (!empty($email)) {
-                    if ($email != $entity->getFetched('emailAddress')) {
+                if (!empty($emailAddressValue)) {
+                    if ($emailAddressValue != $entity->getFetched('emailAddress')) {
 
-                        $emailAddressNew = $this->where(array('lower' => strtolower($email)))->findOne();
+                        $emailAddressNew = $this->where(array('lower' => strtolower($emailAddressValue)))->findOne();
                         $isNewEmailAddress = false;
                         if (!$emailAddressNew) {
                             $emailAddressNew = $this->get();
-                            $emailAddressNew->set('name', $email);
+                            $emailAddressNew->set('name', $emailAddressValue);
                             $this->save($emailAddressNew);
                             $isNewEmailAddress = true;
                         }
 
-                        $emailOld = $entity->getFetched('emailAddress');
-                        if (!empty($emailOld)) {
-                            $emailAddressOld = $this->getByAddress($emailOld);
-                            $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                        $emailAddressValueOld = $entity->getFetched('emailAddress');
+                        if (!empty($emailAddressValueOld)) {
+                            $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+                            if ($emailAddressOld) {
+                                $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                            }
                         }
                         $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew);
 
@@ -387,10 +393,12 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $sth->execute();
                     }
                 } else {
-                    $emailOld = $entity->getFetched('emailAddress');
-                    if (!empty($emailOld)) {
-                        $emailAddressOld = $this->getByAddress($emailOld);
-                        $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                    $emailAddressValueOld = $entity->getFetched('emailAddress');
+                    if (!empty($emailAddressValueOld)) {
+                        $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+                        if ($emailAddressOld) {
+                            $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                        }
                     }
                 }
             }

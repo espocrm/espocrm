@@ -9,7 +9,13 @@
     <div class="stream-head-container">
         <div class="pull-left">
             {{{avatar}}}
+            {{#if isInternal}}
+            <div class="internal-badge">
+                <span class="glyphicon glyphicon-lock small"></span>
+            </div>
+            {{/if}}
         </div>
+
         <div class="stream-head-text-container">
             <span class="text-muted message">{{{message}}}</span>
         </div>

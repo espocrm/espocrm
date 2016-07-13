@@ -31,5 +31,6 @@
    "filter": true,
    "fieldDefs":{
       "type":"varchar"
-   }
+   },
+   "translatedOptions": true
 }

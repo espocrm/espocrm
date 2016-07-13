@@ -125,7 +125,8 @@
         "portal": {
             "type": "link",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "disabled": true
         },
         "avatar": {
             "type": "image",
@@ -136,6 +137,11 @@
             "type": "bool",
             "notStorable": true,
             "disabled": true
+        },
+        "gender": {
+            "type": "enum",
+            "options": ["", "Male", "Female", "Neutral"],
+            "default": ""
         },
         "createdAt": {
             "type": "datetime",
@@ -199,7 +205,8 @@
         "notes": {
             "type": "hasMany",
             "entity": "Note",
-            "foreign": "users"
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
         },
         "contact": {
             "type": "belongsTo",

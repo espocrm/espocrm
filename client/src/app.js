@@ -206,8 +206,11 @@ Espo.define(
             this.router.on('routed', function (params) {
                 this.doAction(params);
             }.bind(this));
+
             try {
-                Backbone.history.start();
+                Backbone.history.start({
+                    root: window.location.pathname
+                });
             } catch (e) {
                 Backbone.history.loadUrl();
             }
@@ -423,7 +426,7 @@ Espo.define(
             this.unsetCookieAuthToken();
 
             xhr = new XMLHttpRequest;
-            xhr.open('GET', this.url + '/', !1, 'logout', 'logout');
+            xhr.open('GET', this.url + '/', true, 'logout', 'logout');
             xhr.send('');
             xhr.abort();
         },
@@ -477,7 +480,7 @@ Espo.define(
 
                 var arr = Base64.decode(this.auth).split(':');
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', this.basePath + this.url + '/', false, arr[0], arr[1]);
+                xhr.open('GET', this.basePath + this.url + '/', true, arr[0], arr[1]);
                 xhr.send('');
 
                 if (callback) {

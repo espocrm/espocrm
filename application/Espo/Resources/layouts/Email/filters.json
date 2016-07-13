@@ -4,9 +4,14 @@
     "emailAddress",
     "isNotRead",
     "isImportant",
+    "isNotReplied",
     "name",
     "status",
     "parent",
     "teams",
-    "users"
+    "sentBy",
+    "users",
+    "createdAt",
+    "inboundEmails",
+    "emailAccounts"
 ]

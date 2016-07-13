@@ -44,6 +44,12 @@
                 "delete": "own",
                 "create": "yes"
             },
+            "EmailFolder": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
             "Preferences": {
                 "read": "own",
                 "edit": "own",
@@ -64,6 +70,16 @@
         "scopeFieldLevel": {
             "Attachment": {
                 "parent": false
+            },
+            "User": {
+                "gender": false
+            },
+            "EmailFolder": {
+                "assignedUser": false
+            },
+            "Email": {
+                "inboundEmails": false,
+                "emailAccounts": false
             }
         }
     },

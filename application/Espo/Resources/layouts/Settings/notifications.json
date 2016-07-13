@@ -2,13 +2,14 @@
     {
         "label": "In-app Notifications",
         "rows": [
-            [{"name": "assignmentNotificationsEntityList"}]
+            [{"name": "assignmentNotificationsEntityList"}],
+            [{"name": "notificationSoundsDisabled"}]
         ]
     },
     {
         "label": "Email Notifications",
         "rows": [
-            [{"name": "assignmentEmailNotifications"}],
+            [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
             [{"name": "assignmentEmailNotificationsEntityList"}]
         ]
     }

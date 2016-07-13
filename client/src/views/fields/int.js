@@ -40,15 +40,23 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'int', 'range'],
 
+        thousandSeparator: ',',
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.defineMaxLength();
 
-            this.on('change', function () {
-                if (this.isRendered()) {
-                    this.reRender();
+            if (this.getPreferences().has('thousandSeparator')) {
+                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
+            } else {
+                if (this.getConfig().has('thousandSeparator')) {
+                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
-            }, this);
+            }
+
+            if (this.params.disableFormatting) {
+                this.disableFormatting = true;
+            }
         },
 
         data: function () {
@@ -58,6 +66,23 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data.isNotEmpty = true;
             }
             return data;
+        },
+
+        getValueForDisplay: function () {
+            var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+            return this.formatNumber(value);
+        },
+
+        formatNumber: function (value) {
+            if (this.disableFormatting) {
+                return value;
+            }
+            if (value !== null) {
+                var stringValue = value.toString();
+                stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+                return stringValue;
+            }
+            return '';
         },
 
         setupSearch: function () {
@@ -141,11 +166,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         parse: function (value) {
             value = (value !== '') ? value : null;
             if (value !== null) {
-                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-                     value = NaN;
-                 } else {
-                     value = parseInt(value);
-                 }
+                value = value.split(this.thousandSeparator).join('');
+                if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
+                    value = NaN;
+                } else {
+                    value = parseInt(value);
+                }
             }
             return value;
         },

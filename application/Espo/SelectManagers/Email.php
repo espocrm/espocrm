@@ -31,10 +31,46 @@ namespace Espo\SelectManagers;
 
 class Email extends \Espo\Core\SelectManagers\Base
 {
-    public function getSelectParams(array $params, $withAcl = false)
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $result = parent::getSelectParams($params, $withAcl);
+        $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
+        if (!empty($params['folderId'])) {
+            $this->applyFolder($params['folderId'], $result);
+        }
+
+        $this->addUsersJoin($result);
+
+        return $result;
+    }
+
+    public function applyFolder($folderId, &$result)
+    {
+        switch ($folderId) {
+            case 'all':
+                break;
+            case 'inbox':
+                $this->filterInbox($result);
+                break;
+            case 'important':
+                $this->filterImportant($result);
+                break;
+            case 'sent':
+                $this->filterSent($result);
+                break;
+            case 'trash':
+                $this->filterTrash($result);
+                break;
+            case 'drafts':
+                $this->filterDrafts($result);
+                break;
+            default:
+                $this->applyEmailFolder($folderId, $result);
+        }
+    }
+
+    public function addUsersJoin(&$result)
+    {
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addLeftJoin('users', $result);
             $this->setJoinCondition('users', array(
@@ -43,8 +79,15 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
 
         $this->addUsersColumns($result);
+    }
 
-        return $result;
+    protected function applyEmailFolder($folderId, &$result)
+    {
+        $result['whereClause'][] = array(
+            'usersMiddle.inTrash' => false,
+            'usersMiddle.folderId' => $folderId
+        );
+        $this->boolFilterOnlyMy($result);
     }
 
     protected function boolFilterOnlyMy(&$result)
@@ -63,6 +106,7 @@ class Email extends \Espo\Core\SelectManagers\Base
             $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
             $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
             $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
+            $result['additionalSelectColumns']['usersMiddle.folder_id'] = 'folderId';
         }
     }
 
@@ -73,10 +117,21 @@ class Email extends \Espo\Core\SelectManagers\Base
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;
         }
-        $result['whereClause'][] = array(
-            'fromEmailAddressId!=' => $idList,
-            'usersMiddle.inTrash=' => false
+        $d = array(
+            'usersMiddle.inTrash=' => false,
+            'usersMiddle.folderId' => null
         );
+        if (!empty($idList)) {
+            $d['fromEmailAddressId!='] = $idList;
+        }
+        $result['whereClause'][] = $d;
+
+        $this->boolFilterOnlyMy($result);
+    }
+
+    protected function filterImportant(&$result)
+    {
+        $result['whereClause'][] = $this->getWherePartIsImportantIsTrue();
         $this->boolFilterOnlyMy($result);
     }
 
@@ -87,12 +142,13 @@ class Email extends \Espo\Core\SelectManagers\Base
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;
         }
+
         $result['whereClause'][] = array(
             'OR' => array(
                 'fromEmailAddressId=' => $idList,
                 array(
                     'status' => 'Sent',
-                    'createdBy' => $this->getUser()->id
+                    'createdById' => $this->getUser()->id
                 )
             ),
             'usersMiddle.inTrash=' => false
@@ -274,10 +330,28 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     }
 
-    protected function getWherePartIsNotReadIsTrue()
+    protected function getWherePartIsNotRepliedIsTrue()
     {
         return array(
-            'usersMiddle.isRead' => false
+            'isReplied' => false
+        );
+    }
+
+    protected function getWherePartIsNotRepliedIsFalse()
+    {
+        return array(
+            'isReplied' => true
+        );
+    }
+
+    public function getWherePartIsNotReadIsTrue()
+    {
+        return array(
+            'usersMiddle.isRead' => false,
+            'OR' => array(
+                'sentById' => null,
+                'sentById!=' => $this->getUser()->id
+            )
         );
     }
 
@@ -298,7 +372,11 @@ class Email extends \Espo\Core\SelectManagers\Base
     protected function getWherePartIsReadIsFalse()
     {
         return array(
-            'usersMiddle.isRead' => false
+            'usersMiddle.isRead' => false,
+            'OR' => array(
+                'sentById' => null,
+                'sentById!=' => $this->getUser()->id
+            )
         );
     }
 

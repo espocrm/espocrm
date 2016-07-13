@@ -2,9 +2,9 @@
     {
         "label": "",
         "rows": [
-            [{"name":"name"}],
+            [{"name":"name", "fullWidth": true}],
             [{"name":"type"}, {"name":"status"}],
-            [{"name":"endDate"}]
+            [{"name":"endDate", "fullWidth": true}]
         ]
     }
 ]

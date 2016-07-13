@@ -28,9 +28,22 @@
             "type": "array",
             "tooltip": true
         },
-        "parent": {
-            "type": "linkParent",
+        "isGlobal": {
+            "type": "bool",
             "tooltip": true
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "action": {
+            "type": "enum",
+            "default": "Skip",
+            "options": ["Skip", "Move to Folder"],
+            "view": "views/email-filter/fields/action"
+        },
+        "emailFolder": {
+            "type": "link",
+            "view": "views/email-filter/fields/email-folder"
         },
         "createdAt": {
             "type": "datetime",
@@ -60,7 +73,11 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entityList": ["EmailAccount", "InboundEmail"]
+            "entityList": ["User", "EmailAccount", "InboundEmail"]
+        },
+        "emailFolder": {
+            "type": "belongsTo",
+            "entity": "EmailFolder"
         }
     },
     "collection": {

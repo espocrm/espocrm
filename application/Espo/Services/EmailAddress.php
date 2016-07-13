@@ -129,7 +129,7 @@ class EmailAddress extends Record
 
         foreach ($result as $r) {
             foreach ($final as $f) {
-                if ($f['emailAddress'] == $r['emailAddress'] && $f['name'] == $r['name']) {
+                if ($f['emailAddress'] == $r['emailAddress']) {
                     continue 2;
                 }
             }

@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 use Espo\Core\Exceptions\Error;
 
 class Metadata
@@ -187,7 +188,7 @@ class Metadata
     /**
     * Get Metadata
     *
-    * @param string $key
+    * @param mixed string|array $key
     * @param mixed $default
     *
     * @return array

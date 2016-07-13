@@ -140,6 +140,9 @@ Espo.define('views/dashlet', 'view', function (Dep) {
         },
 
         actionRemove: function () {
+            if (!confirm(this.translate('confirmation', 'messages'))) {
+                return;
+            }
             this.trigger('remove-dashlet');
             this.$el.remove();
             this.remove();

@@ -51,7 +51,8 @@ abstract class Base
         'joinConditions',
         'aggregation',
         'aggregationBy',
-        'groupBy'
+        'groupBy',
+        'skipTextColumns'
     );
 
     protected static $sqlOperators = array(
@@ -110,8 +111,20 @@ abstract class Base
             $whereClause = $whereClause + array('deleted' => 0);
         }
 
+        if (empty($params['joins'])) {
+            $params['joins'] = array();
+        }
+        if (empty($params['leftJoins'])) {
+            $params['leftJoins'] = array();
+        }
+        if (empty($params['customJoin'])) {
+            $params['customJoin'] = '';
+        }
+
+        $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
+
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct']);
+            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
@@ -134,16 +147,8 @@ abstract class Base
             $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
         }
 
-        if (empty($params['joins'])) {
-            $params['joins'] = array();
-        }
-        if (empty($params['leftJoins'])) {
-            $params['leftJoins'] = array();
-        }
-
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
 
-        $wherePart = $this->getWhere($entity, $whereClause);
 
         if (!empty($params['customWhere'])) {
             $wherePart .= ' ' . $params['customWhere'];
@@ -256,7 +261,7 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false)
+    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false)
     {
         $select = "";
         $arr = array();
@@ -274,6 +279,11 @@ abstract class Base
         }
 
         foreach ($fieldList as $field) {
+            if ($skipTextColumns) {
+                if ($entity->getAttributeType($field) === $entity::TEXT) {
+                    continue;
+                }
+            }
             if (is_array($field) && count($field) == 2) {
                 if (stripos($field[0], 'VALUE:') === 0) {
                     $part = substr($field[0], 6);
@@ -392,18 +402,14 @@ abstract class Base
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
                 $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
-                $part = "FIELD(" . $fieldPath . ", '" . implode("', '", explode(",", $list)) . "')";
-                if (!is_null($order)) {
-                    $order = strtoupper($order);
-                    if (!in_array($order, ['ASC', 'DESC'])) {
-                        $order = 'ASC';
-                    }
-                    $part .= " " . $order;
-                }
+                $part = "FIELD(" . $fieldPath . ", '" . implode("', '", array_reverse(explode(",", $list))) . "') DESC";
                 return $part;
             }
 
             if (!is_null($order)) {
+                if (is_bool($order)) {
+                    $order = $order ? 'DESC' : 'ASC';
+                }
                 $order = strtoupper($order);
                 if (!in_array($order, ['ASC', 'DESC'])) {
                     $order = 'ASC';
@@ -469,7 +475,11 @@ abstract class Base
 
     public function quote($value)
     {
-        return $this->pdo->quote($value);
+        if (is_null($value)) {
+            return 'NULL';
+        } else {
+            return $this->pdo->quote($value);
+        }
     }
 
     public function toDb($field)
@@ -581,7 +591,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND')
+    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array())
     {
         $whereParts = array();
 
@@ -630,10 +640,54 @@ abstract class Base
                         } else if ($operator == '<>') {
                             $operatorModified = 'NOT IN';
                         }
+                    } else if (is_null($value)) {
+                        if ($operator == '=') {
+                            $operatorModified = 'IS NULL';
+                        } else if ($operator == '<>') {
+                            $operatorModified = 'IS NOT NULL';
+                        }
                     }
 
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
-                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $fieldDefs['where'][$operatorModified]);
+                        $whereSqlPart = '';
+                        if (is_string($fieldDefs['where'][$operatorModified])) {
+                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
+                        } else {
+                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
+                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                                $jAlias = $this->obtainJoinAlias($j);
+                                foreach ($params['leftJoins'] as $jE) {
+                                    $jEAlias = $this->obtainJoinAlias($jE);
+                                    if ($jEAlias === $jAlias) {
+                                        continue 2;
+                                    }
+                                }
+                                $params['leftJoins'][] = $j;
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                                $jAlias = $this->obtainJoinAlias($j);
+                                foreach ($params['joins'] as $jE) {
+                                    $jEAlias = $this->obtainJoinAlias($jE);
+                                    if ($jEAlias === $jAlias) {
+                                        continue 2;
+                                    }
+                                }
+                                $params['joins'][] = $j;
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
+                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
+                            $params['distinct'] = true;
+                        }
+                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
                     } else {
                         if ($fieldDefs['type'] == IEntity::FOREIGN) {
                             $leftPart = '';
@@ -682,13 +736,27 @@ abstract class Base
                     }
                 }
             } else {
-                $internalPart = $this->getWhere($entity, $value, $field);
+                $internalPart = $this->getWhere($entity, $value, $field, $params);
                 if ($internalPart) {
                     $whereParts[] = "(" . $internalPart . ")";
                 }
             }
         }
         return implode(" " . $sqlOp . " ", $whereParts);
+    }
+
+    public function obtainJoinAlias($j)
+    {
+        if (is_array($j)) {
+            if (count($j)) {
+                $joinAlias = $j[1];
+            } else {
+                $joinAlias = $j[0];
+            }
+        } else {
+            $joinAlias = $j;
+        }
+        return $joinAlias;
     }
 
     public function stringifyValue($value)
@@ -833,9 +901,9 @@ abstract class Base
     {
         $sql = "SELECT";
 
-        /*if (!empty($distinct)) {
+        if (!empty($distinct) && empty($groupBy)) {
             $sql .= " DISTINCT";
-        }*/
+        }
 
         $sql .= " {$select} FROM `{$table}`";
 
@@ -849,10 +917,6 @@ abstract class Base
 
         if (!empty($groupBy)) {
             $sql .= " GROUP BY {$groupBy}";
-        } else {
-            if (!empty($distinct)) {
-                $sql .= " GROUP BY `{$table}`.id";
-            }
         }
 
         if (!empty($order)) {

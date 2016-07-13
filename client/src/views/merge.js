@@ -59,7 +59,8 @@ Espo.define('views/merge', 'views/main', function (Dep) {
         setupRecord: function () {
             this.createView('body', this.recordView, {
                 el: '#main > .body',
-                models: this.models
+                models: this.models,
+                collection: this.collection
             });
         },
 

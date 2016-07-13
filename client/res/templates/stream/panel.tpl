@@ -3,6 +3,12 @@
     <div class="buttons-panel margin hide floated-row clearfix">
         <div>
             <button class="btn btn-primary post">{{translate 'Post'}}</button>
+
+            {{#if allowInternalNotes}}
+                <span style="cursor: pointer;" class="internal-mode-switcher{{#if isInternalNoteMode}} enabled{{/if}} action" data-action="switchInternalMode" title="{{translate 'internalPost' category='messages'}}">
+                    <span class="glyphicon glyphicon-lock"></span>
+                </span>
+            {{/if}}
         </div>
         <div class="attachments-container">
             {{{attachments}}}

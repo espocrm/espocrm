@@ -33,7 +33,7 @@ require_once('../bootstrap.php');
 //action
 $action = (!empty($_POST['action']))? $_POST['action'] : 'main';
 require_once('core/Utils.php');
-if (!Utils::isActionExists($action)) {
+if (!Utils::checkActionExists($action)) {
 	die('This page does not exist.');
 }
 
@@ -142,7 +142,7 @@ $smarty->assign('action', ucfirst($action));
 /** config */
 $smarty->assign('config', $config);
 
-if (Utils::isActionExists($action)) {
+if (Utils::checkActionExists($action)) {
 	include $actionFile;
 }
 
@@ -151,6 +151,5 @@ if (!empty($actionFile) && file_exists('install/core/tpl/'.$tplName)) {
 	$isBuilt = file_exists('client/espo.min.js');
 	$smarty->assign('isBuilt', $isBuilt);
 
-	ob_clean();
 	$smarty->display('index.tpl');
 }

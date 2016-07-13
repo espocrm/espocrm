@@ -10,7 +10,8 @@
     "default": {
         "scopeFieldLevel": {
             "KnowledgeBaseArticle": {
-                "portals": false
+                "portals": false,
+                "order": false
             },
             "Case": {
                 "status": {

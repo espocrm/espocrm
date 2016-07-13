@@ -32,6 +32,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         sideView: 'views/email/record/detail-side',
 
+        duplicateAction: false,
+
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
                 var isRestricted = false;
@@ -41,7 +43,7 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
 
                 if (this.model.get('status') == 'Archived') {
-                    if (this.model.get('createdById') == 'system' || !this.model.get('createdById')) {
+                    if (this.model.get('createdById') == 'system' || !this.model.get('createdById') || this.model.get('isImported')) {
                         isRestricted = true;
                     }
                 }
@@ -88,6 +90,20 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     'name': 'markAsNotImportant',
                     'hidden': !this.model.get('isImportant')
                 });
+                this.dropdownItemList.push({
+                    'label': 'Move to Trash',
+                    'name': 'moveToTrash',
+                    'hidden': this.model.get('inTrash')
+                });
+                this.dropdownItemList.push({
+                    'label': 'Retrieve from Trash',
+                    'name': 'retrieveFromTrash',
+                    'hidden': !this.model.get('inTrash')
+                });
+                this.dropdownItemList.push({
+                    'label': 'Move to Folder',
+                    'name': 'moveToFolder'
+                });
             }
 
             this.listenTo(this.model, 'change:isImportant', function () {
@@ -97,6 +113,16 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 } else {
                     this.hideActionItem('markAsNotImportant');
                     this.showActionItem('markAsImportant');
+                }
+            }, this);
+
+            this.listenTo(this.model, 'change:inTrash', function () {
+                if (this.model.get('inTrash')) {
+                    this.hideActionItem('moveToTrash');
+                    this.showActionItem('retrieveFromTrash');
+                } else {
+                    this.hideActionItem('retrieveFromTrash');
+                    this.showActionItem('moveToTrash');
                 }
             }, this);
 
@@ -128,8 +154,53 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             this.model.set('isImportant', false);
         },
 
+        actionMoveToTrash: function () {
+            $.ajax({
+                url: 'Email/action/moveToTrash',
+                type: 'POST',
+                data: JSON.stringify({
+                    id: this.model.id
+                })
+            }).then(function () {
+                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+            }.bind(this));
+            this.model.set('inTrash', true);
+        },
+
+        actionRetrieveFromTrash: function () {
+            $.ajax({
+                url: 'Email/action/retrieveFromTrash',
+                type: 'POST',
+                data: JSON.stringify({
+                    id: this.model.id
+                })
+            }).then(function () {
+                Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+            }.bind(this));
+            this.model.set('inTrash', false);
+        },
+
+        actionMoveToFolder: function () {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
+                view.render();
+                this.listenToOnce(view, 'select', function (folderId, folderName) {
+                    this.clearView('dialog');
+                    this.ajaxPostRequest('Email/action/moveToFolder', {
+                        id: this.model.id,
+                        folderId: folderId
+                    }).then(function () {
+                        if (folderId === 'inbox') {
+                            folderId = null;
+                        }
+                        this.model.set('folderId', folderId);
+                        Espo.Ui.success(this.translate('Done'));
+                    }.bind(this));
+                }, this);
+            }, this);
+        },
+
         actionShowBodyPlain: function () {
-            this.createView('bodyPlain', 'Email.Modals.BodyPlain', {
+            this.createView('bodyPlain', 'views/email/modals/body-plain', {
                 model: this.model
             }, function (view) {
                 view.render();

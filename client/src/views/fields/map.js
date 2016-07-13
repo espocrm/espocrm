@@ -44,8 +44,22 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
             this.provider = this.params.provider;
             this.height = this.params.height || this.height;
 
-            this.listenTo(this.model, 'sync', function () {
-                if (this.isRendered()) {
+            var addressAttributeList = Object.keys(this.getMetadata().get('fields.address.fields') || {}).map(
+                function (a) {
+                    return this.addressField + Espo.Utils.upperCaseFirst(a);
+                },
+                this
+            );
+
+            this.listenTo(this.model, 'sync', function (model) {
+                var isChanged = false;
+                addressAttributeList.forEach(function (attribute) {
+                    if (model.hasChanged(attribute)) {
+                        isChanged = true;
+                    }
+                }, this);
+
+                if (isChanged && this.isRendered()) {
                     this.reRender();
                 }
             }, this);
@@ -71,7 +85,6 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
             };
 
             if (this.hasAddress()) {
-
                 var methodName = 'afterRender' + this.provider.replace(/\s+/g, '');
                 if (typeof this[methodName] === 'function') {
                     this[methodName]();
@@ -87,6 +100,11 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     this.initMapGoogle();
                 }.bind(this);
                 var src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded';
+                var apiKey = this.getConfig().get('googleMapsApiKey');
+                if (apiKey) {
+                    src += '&key=' + apiKey;
+                }
+
                 var s = document.createElement('script');
                 s.setAttribute('async', 'async');
                 s.src = src;

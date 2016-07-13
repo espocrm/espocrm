@@ -29,11 +29,11 @@
 
 namespace Espo\Core\Repositories;
 
-use \Espo\Core\Entities\CategoryTreeItem as Entity;
+use \Espo\ORM\Entity;
 
 class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
 {
-	public function afterSave(Entity $entity, $options)
+	protected function afterSave(Entity $entity, array $options = array())
 	{
 		parent::afterSave($entity, $options);
 
@@ -86,7 +86,7 @@ class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
 		}
 	}
 
-	public function afterRemove(Entity $entity, $options)
+	protected function afterRemove(Entity $entity, array $options = array())
 	{
 		parent::afterRemove($entity, $options);
 

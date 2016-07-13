@@ -1,0 +1,10 @@
+{
+    "controller": "controllers/record",
+    "views": {
+        "list": "views/email-folder/list"
+    },
+    "recordViews": {
+        "list": "views/email-folder/record/list"
+    },
+    "searchPanelDisabled": true
+}

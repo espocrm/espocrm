@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "from": "Dari",
+    "to": "Untuk",
+    "subject": "Subyek",
+    "bodyContains": "Isi "
+  },
+  "labels": {
+    "Create EmailFilter": "Buat Email Filter"
+  },
+  "tooltips": {
+    "name": "Hanya nama filter.",
+    "subject": "Gunakan wildcard *:\n\nteks * - dimulai dengan teks,\n* Text * - berisi teks,\n* Text - berakhir dengan teks.",
+    "bodyContains": "Tubuh email mengandung salah satu dari kata-kata atau frasa tertentu.",
+    "from": "Email yang dikirim dari alamat yang ditentukan. Biarkan kosong jika tidak diperlukan. Anda dapat menggunakan wildcard *.",
+    "to": "Email yang dikirim ke alamat yang ditentukan. Biarkan kosong jika tidak diperlukan. Anda dapat menggunakan wildcard *.",
+    "parent": "Biarkan kosong untuk menerapkan filter ini secara global (untuk semua email yang masuk)."
+  }
+}

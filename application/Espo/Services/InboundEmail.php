@@ -31,7 +31,6 @@ namespace Espo\Services;
 
 use \Espo\ORM\Entity;
 use \Espo\Entities\Team;
-use \Espo\Entities\Email;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
@@ -188,6 +187,7 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
+            'action' => 'Skip',
             'OR' => [
                 [
                     'parentType' => $emailAccount->getEntityType(),
@@ -276,10 +276,10 @@ class InboundEmail extends \Espo\Services\Record
                     $lastUID = $storage->getUniqueId($id);
                 }
 
+                $fetchOnlyHeader = false;
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
-                        $k++;
-                        continue;
+                        $fetchOnlyHeader = true;
                     }
                 }
 
@@ -300,7 +300,7 @@ class InboundEmail extends \Espo\Services\Record
                     }
                     if (!$toSkip) {
                         try {
-                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection);
+                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader);
                         } catch (\Exception $e) {
                             $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
                         }
@@ -309,21 +309,27 @@ class InboundEmail extends \Espo\Services\Record
                     $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
-                if (!empty($email)) {
-                    if (!$emailAccount->get('createCase')) {
-                        if (!$email->isFetched()) {
-                            $this->noteAboutEmail($email);
+                try {
+                    if (!empty($email)) {
+                        if (!$emailAccount->get('createCase')) {
+                            if (!$email->isFetched()) {
+                                $this->noteAboutEmail($email);
+                            }
                         }
-                    }
 
-                    if ($emailAccount->get('createCase')) {
-                        $this->createCase($emailAccount, $email);
-                    } else {
-                        if ($emailAccount->get('reply')) {
-                            $user = $this->getEntityManager()->getEntity('User', $userId);
-                            $this->autoReply($emailAccount, $email, $user);
+                        $this->getEntityManager()->getRepository('InboundEmail')->relate($emailAccount, 'emails', $email);
+
+                        if ($emailAccount->get('createCase')) {
+                            $this->createCase($emailAccount, $email);
+                        } else {
+                            if ($emailAccount->get('reply')) {
+                                $user = $this->getEntityManager()->getEntity('User', $userId);
+                                $this->autoReply($emailAccount, $email, $user);
+                            }
                         }
                     }
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if ($k == count($ids) - 1) {
@@ -514,6 +520,15 @@ class InboundEmail extends \Espo\Services\Record
         ))->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
+        } else {
+            if (!$case->get('accountId')) {
+                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+                    'emailAddresses.id' => $email->get('fromEmailAddressId')
+                ))->findOne();
+                if ($lead) {
+                    $case->set('leadId', $lead->id);
+                }
+            }
         }
 
         $this->getEntityManager()->saveEntity($case);
@@ -526,7 +541,6 @@ class InboundEmail extends \Espo\Services\Record
 
         return $case;
     }
-
 
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {

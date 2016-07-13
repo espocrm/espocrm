@@ -107,7 +107,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "acceptanceStatus": {
             "type": "varchar",
@@ -115,7 +115,8 @@
             "disabled": true
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "campaign": {
             "type": "link",
@@ -196,6 +197,11 @@
             "foreign": "parent",
             "layoutRelationshipsDisabled": true
         },
+        "cases": {
+            "type": "hasMany",
+            "entity": "Case",
+            "foreign": "lead"
+        },
         "emails": {
             "type": "hasChildren",
             "entity": "Email",
@@ -231,6 +237,11 @@
         "targetLists": {
             "type": "hasMany",
             "entity": "TargetList",
+            "foreign": "leads"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "Document",
             "foreign": "leads"
         }
     },

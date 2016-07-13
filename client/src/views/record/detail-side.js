@@ -38,26 +38,27 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
-        panelList: [
-            {
-                name: 'default',
-                label: false,
-                view: 'views/record/panels/default-side',
-                options: {
-                    fieldList: [
-                        {
-                            name: 'assignedUser',
-                            view: 'views/fields/assigned-user'
-                        },
-                        {
-                            name: 'teams',
-                            view: 'views/fields/teams'
-                        }
-                    ],
-                    mode: 'detail',
-                }
+        defaultPanel: true,
+
+        panelList: [],
+
+        defaultPanelDefs: {
+            name: 'default',
+            label: false,
+            view: 'views/record/panels/default-side',
+            options: {
+                fieldList: [
+                    {
+                        name: 'assignedUser',
+                        view: 'views/fields/assigned-user'
+                    },
+                    {
+                        name: 'teams',
+                        view: 'views/fields/teams'
+                    }
+                ]
             }
-        ],
+        },
 
         data: function () {
             return {
@@ -107,6 +108,10 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 this.type = this.options.type;
             }
 
+            if (this.defaultPanel) {
+                this.setupDefaultPanel();
+            }
+
             this.setupPanels();
 
             var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
@@ -134,6 +139,29 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             }, this);
 
             this.setupPanelViews();
+        },
+
+        setupDefaultPanel: function () {
+            var met = false;
+            this.panelList.forEach(function (item) {
+                if (item.name === 'default') {
+                    met = true;
+                }
+            }, this);
+
+            if (met) return;
+
+            var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
+
+            if (defaultPanelDefs === false) return;
+
+            defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
+
+            if (!defaultPanelDefs) return;
+
+            defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
+
+            this.panelList.unshift(defaultPanelDefs);
         },
 
         setupPanelViews: function () {

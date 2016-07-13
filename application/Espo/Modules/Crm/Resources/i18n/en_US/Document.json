@@ -18,7 +18,8 @@
     "links": {
         "accounts": "Accounts",
         "opportunities": "Opportunities",
-        "folder": "Folder"
+        "folder": "Folder",
+        "leads": "Leads"
     },
     "options": {
         "status": {

@@ -36,14 +36,6 @@ use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
 {
-    protected $mergeLinkList = [
-        'tasks',
-        'meetings',
-        'calls',
-        'emails',
-        'targetLists'
-    ];
-
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(
@@ -54,16 +46,32 @@ class Lead extends \Espo\Services\Record
                 )
             )
         );
-        if ($entity->get('emailAddress')) {
-            $data['OR'][] = array(
-                'emailAddress' => $entity->get('emailAddress'),
-             );
+        if (
+            ($entity->get('emailAddress') || $entity->get('emailAddressData'))
+            &&
+            ($entity->isNew() || $entity->isFieldChanged('emailAddress') || $entity->isFieldChanged('emailAddressData'))
+        ) {
+            if ($entity->get('emailAddress')) {
+                $list = [$entity->get('emailAddress')];
+            }
+            if ($entity->get('emailAddressData')) {
+                foreach ($entity->get('emailAddressData') as $row) {
+                    if (!in_array($row->emailAddress, $list)) {
+                        $list[] = $row->emailAddress;
+                    }
+                }
+            }
+            foreach ($list as $emailAddress) {
+                $data['OR'][] = array(
+                    'emailAddress' => $emailAddress
+                );
+            }
         }
 
         return $data;
     }
 
-    public function afterCreate($entity, array $data = array())
+    public function afterCreate(Entity $entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
         if (!empty($data['emailId'])) {
@@ -176,6 +184,17 @@ class Lead extends \Espo\Services\Record
                     $email->set('parentId', $account->id);
                     $email->set('parentType', 'Account');
                     $entityManager->saveEntity($email);
+                }
+            }
+        }
+
+        if ($documents = $lead->get('documents')) {
+            foreach ($documents as $document) {
+                if (!empty($account)) {
+                    $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
+                }
+                if (!empty($opportunity)) {
+                    $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
                 }
             }
         }

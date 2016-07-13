@@ -77,7 +77,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             'Meeting': {
                 rows: [
                     [
-                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {name: 'ico', view: 'crm:views/fields/ico'},
                         {
                             name: 'name',
                             link: true,
@@ -92,7 +92,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             'Call': {
                 rows: [
                     [
-                        {name: 'ico', view: 'Crm:Fields.Ico'},
+                        {name: 'ico', view: 'crm:views/fields/ico'},
                         {
                             name: 'name',
                             link: true,
@@ -119,7 +119,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
                 this.listenToOnce(this.collection, 'sync', function () {
                     this.notify(false);
-                }.bind(this));
+                }, this);
                 this.notify('Loading...');
                 this.collection.fetch();
 
@@ -185,16 +185,15 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.collection.asc = this.asc;
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
-
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.$el.selector + ' > .list-container',
+                    el: this.getSelector() + ' > .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: this.rowActionsView,
                     checkboxes: false,
                     collection: this.collection,
-                    listLayout: this.listLayout,
+                    listLayout: this.listLayout
                 }, function (view) {
                     view.render();
                 });

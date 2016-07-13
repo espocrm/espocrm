@@ -42,11 +42,14 @@ class EmailFilter extends \Espo\Core\Acl\Base
             if (!$parentType || !$parentId) return;
 
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+
+            if ($parent->getEntityType() === 'User') {
+                return $parent->id === $user->id;
+            }
             if ($parent && $parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->id) {
                 return true;
             }
         }
-
         return;
     }
 }

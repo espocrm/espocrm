@@ -1,0 +1,5 @@
+[
+    {"name":"personStringData", "width":20, "notSortable": true, "customLabel": ""},
+    {"name":"subject", "link":true, "notSortable": true},
+    {"name":"dateSent", "view": "views/fields/datetime-short", "notSortable": true, "width": 16, "align": "right"}
+]

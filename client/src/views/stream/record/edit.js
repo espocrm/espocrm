@@ -176,6 +176,8 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.$el.find('.post-control').addClass('hidden');
             this.setConfirmLeaveOut(false);
             $('body').off('click.stream-create-post');
+
+            this.getView('post').$element.prop('rows', 1);
         },
 
         enablePostingMode: function () {
@@ -198,6 +200,16 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         afterRender: function () {
             this.$post = this.$el.find('button.post');
+
+            var postView = this.getFieldView('post');
+            if (postView) {
+                this.listenTo(postView, 'add-files', function (files) {
+                    this.enablePostingMode();
+                    var attachmentsView = this.getFieldView('attachments');
+                    if (!attachmentsView) return;
+                    attachmentsView.uploadFiles(files);
+                }, this);
+            }
         },
 
         validate: function () {

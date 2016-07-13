@@ -2,10 +2,10 @@
     {
         "label": "",
         "rows": [
-            [{"name":"name"}],
-            [{"name":"accounts"}],
-            [{"name":"emailAddress"}],
-            [{"name":"phoneNumber"}]
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"accounts", "fullWidth": true}],
+            [{"name":"emailAddress", "fullWidth": true}],
+            [{"name":"phoneNumber", "fullWidth": true}]
         ]
     }
 ]

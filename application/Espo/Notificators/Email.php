@@ -33,6 +33,8 @@ use \Espo\ORM\Entity;
 
 class Email extends \Espo\Core\Notificators\Base
 {
+    const DAYS_THRESHOLD = 2;
+
     protected function init()
     {
         $this->addDependency('serviceFactory');
@@ -69,6 +71,13 @@ class Email extends \Espo\Core\Notificators\Base
             }
         }
 
+        $dateSent = $entity->get('dateSent');
+        if (!$dateSent) return;
+        $dt = new \DateTime($dateSent);
+        if (!$dt) return;
+
+        if ($dt->diff(new \DateTime())->days > self::DAYS_THRESHOLD) return;
+
         $emailUserIdList = $entity->get('usersIds');
 
         if (is_null($emailUserIdList) || !is_array($emailUserIdList)) {
@@ -90,6 +99,8 @@ class Email extends \Espo\Core\Notificators\Base
         if (!$entity->has('from')) {
             $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
         }
+
+        $person = null;
 
         $from = $entity->get('from');
         if ($from) {
@@ -123,11 +134,27 @@ class Email extends \Espo\Core\Notificators\Base
         }
 
         foreach ($userIdList as $userId) {
-            if ($userIdFrom == $userId) {
-                continue;
+            if (!$userId) continue;
+            if ($userIdFrom === $userId) continue;
+            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
+
+            if ($entity->get('isBeingImported')) {
+                $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
+                if ($folderId) {
+                    if (
+                        $this->getEntityManager()->getRepository('EmailFolder')->where(array(
+                            'id' => $folderId,
+                            'skipNotifications' => true
+                        ))->count()
+                    ) {
+                        continue;
+                    }
+                }
             }
+
             $user = $this->getEntityManager()->getEntity('User', $userId);
             if (!$user) continue;
+            if ($user->get('isPortalUser')) continue;
             if (!$this->getAclManager()->checkScope($user, 'Email')) {
                 continue;
             }

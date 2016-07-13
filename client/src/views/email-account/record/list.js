@@ -36,7 +36,7 @@ Espo.define('views/email-account/record/list', 'views/record/list', function (De
 
         checkAllResultDisabled: true,
 
-        massActionList: ['remove'],
+        massActionList: ['remove', 'massUpdate'],
 
     });
 });

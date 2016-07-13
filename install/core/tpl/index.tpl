@@ -8,13 +8,12 @@
 
 		{if $isBuilt eq true}
 			<script type="text/javascript" src="../client/espo.min.js"></script>
-			<link href="../client/css/espo.css" rel="stylesheet">
 		{else}
-			<script type="text/javascript" src="../frontend/client/lib/jquery-2.1.4.min.js"></script>
-			<link href="../frontend/client/css/espo.css" rel="stylesheet">
+			<script type="text/javascript" src="../client/lib/jquery-2.1.4.min.js"></script>
 		{/if}
 
 		<script type="text/javascript" src="js/install.js"></script>
+		<link href="../client/css/espo.css" rel="stylesheet">
 		<link href="css/install.css" rel="stylesheet">
 	</head>
 	<body class='install-body'>

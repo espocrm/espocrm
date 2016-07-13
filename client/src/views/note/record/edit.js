@@ -49,6 +49,12 @@ Espo.define('views/note/record/edit', 'views/record/edit', function (Dep) {
             } else {
                 this.setFieldNotRequired('post');
             }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+
         }
 
     });

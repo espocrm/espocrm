@@ -1,7 +1,6 @@
 [
-    {"name":"personStringData","width":16,"notSortable": true, "customLabel": ""},
-    {"name":"subject","width":35,"link":true,"notSortable": true},
-    {"name":"status","notSortable": true, "width":10},
-    {"name":"parent","notSortable": true, "width": 16},
-    {"name":"dateSent","view": "views/fields/datetime-short", "notSortable": true, "width":10, "align": "right"}
+    {"name":"personStringData", "width":18, "notSortable": true, "customLabel": ""},
+    {"name":"subject", "link":true, "notSortable": true},
+    {"name":"parent", "notSortable": true, "width": 21},
+    {"name":"dateSent", "view": "views/fields/datetime-short", "notSortable": true, "width": 10, "align": "right"}
 ]

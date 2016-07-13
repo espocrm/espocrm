@@ -33,9 +33,6 @@ use \Espo\ORM\Entity;
 
 class Contact extends \Espo\Services\Record
 {
-    protected $mergeLinkList = [
-        'targetLists'
-    ];
 
     protected $readOnlyAttributeList = [
         'inboundEmailId',
@@ -52,16 +49,32 @@ class Contact extends \Espo\Services\Record
                 )
             )
         );
-        if ($entity->get('emailAddress')) {
-            $data['OR'][] = array(
-                'emailAddress' => $entity->get('emailAddress'),
-             );
+        if (
+            ($entity->get('emailAddress') || $entity->get('emailAddressData'))
+            &&
+            ($entity->isNew() || $entity->isFieldChanged('emailAddress') || $entity->isFieldChanged('emailAddressData'))
+        ) {
+            if ($entity->get('emailAddress')) {
+                $list = [$entity->get('emailAddress')];
+            }
+            if ($entity->get('emailAddressData')) {
+                foreach ($entity->get('emailAddressData') as $row) {
+                    if (!in_array($row->emailAddress, $list)) {
+                        $list[] = $row->emailAddress;
+                    }
+                }
+            }
+            foreach ($list as $emailAddress) {
+                $data['OR'][] = array(
+                    'emailAddress' => $emailAddress
+                );
+            }
         }
 
         return $data;
     }
 
-    public function afterCreate($entity, array $data = array())
+    public function afterCreate(Entity $entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
         if (!empty($data['emailId'])) {

@@ -24,5 +24,6 @@
    "filter": true,
    "fieldDefs":{
       "notStorable":true
-   }
+   },
+   "translatedOptions": true
 }

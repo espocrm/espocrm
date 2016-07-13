@@ -295,12 +295,12 @@ class Stream extends \Espo\Core\Services\Base
 
         $select = [
             'id', 'number', 'type', 'post', 'data', 'parentType', 'parentId', 'relatedType', 'relatedId',
-            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal'
+            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal', 'isInternal', 'createdByGender'
         ];
 
         $selectParamsList = [];
 
-        $selectParamsList[] = array(
+        $selectParamsSubscription = array(
             'select' => $select,
             'leftJoins' => ['createdBy'],
             'customJoin' => "
@@ -318,7 +318,15 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         );
 
-        $selectParamsList[] = array(
+        if ($user->get('isPortalUser')) {
+            $selectParamsSubscription['whereClause'][] = array(
+                'isInternal' => false
+            );
+        }
+
+        $selectParamsList[] = $selectParamsSubscription;
+
+        $selectParamsSubscriptionSuper = array(
             'select' => $select,
             'leftJoins' => ['createdBy'],
             'customJoin' => "
@@ -341,6 +349,14 @@ class Stream extends \Espo\Core\Services\Base
             'orderBy' => 'number',
             'order' => 'DESC'
         );
+
+        if ($user->get('isPortalUser')) {
+            $selectParamsSubscriptionSuper['whereClause'][] = array(
+                'isInternal' => false
+            );
+        }
+
+        $selectParamsList[] = $selectParamsSubscriptionSuper;
 
         $selectParamsList[] = array(
             'select' => $select,
@@ -592,6 +608,12 @@ class Stream extends \Espo\Core\Services\Base
                     'type!=' => ['EmailReceived', 'EmailSent']
                 );
             }
+        }
+
+        if ($this->getUser()->get('isPortalUser')) {
+            $where[] = array(
+                'isInternal' => false
+            );
         }
 
         $collection = $this->getEntityManager()->getRepository('Note')->find(array(
@@ -966,6 +988,34 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
 
+    public function getEntityFolowerIdList(Entity $entity)
+    {
+        $query = $this->getEntityManager()->getQuery();
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = $query->createSelectQuery('User', array(
+            'select' => ['id'],
+            'customJoin' => "
+                JOIN subscription AS `subscription` ON
+                    subscription.user_id = user.id AND
+                    subscription.entity_id = ".$query->quote($entity->id)." AND
+                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
+            ",
+            'whereClause' => array(
+                'isActive' => true
+            )
+        ));
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+
+        $idList = [];
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $idList[] = $row['id'];
+        }
+
+        return $idList;
+    }
+
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
         $query = $this->getEntityManager()->getQuery();
@@ -1017,13 +1067,46 @@ class Stream extends \Espo\Core\Services\Base
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', array());
         foreach ($scopes as $scope => $d) {
-            if (!$d['entity']) continue;
-            if (!$d['object']) continue;
+            if (empty($d['entity']) || !$d['entity']) continue;
+            if (empty($d['object']) || !$d['object']) continue;
             if (!$this->getAcl()->checkScope($scope)) {
                 $ignoreScopeList[] = $scope;
             }
         }
         return $ignoreScopeList;
+    }
+
+    public function controlFollowersJob($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+        if (empty($data['entityId']) || empty($data['entityType'])) {
+            return;
+        }
+        $entity = $this->getEntityManager()->getEntity($data['entityType'], $data['entityId']);
+        if (!$entity) return;
+
+        $idList = $this->getEntityFolowerIdList($entity);
+
+        $userList = $this->getEntityManager()->getRepository('User')->where(array(
+            'id' => $idList
+        ))->find();
+
+        foreach ($userList as $user) {
+            if (!$user->get('isActive')) {
+                $this->unfollowEntity($entity, $user->id);
+                continue;
+            }
+
+            if (!$user->get('isPortalUser')) {
+                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                    $this->unfollowEntity($entity, $user->id);
+                    continue;
+                }
+            }
+        }
+
     }
 }
 

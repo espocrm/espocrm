@@ -116,22 +116,12 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                         })
                     })
                 }).done(function () {
-                    model.once('sync', function () {
-                        this.notify('Merged', 'success');
-                        this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
-
-
-                    }, this);
-
-                    model.save(attributes, {
-                        patch: true,
-                        error: function () {
-                            self.notify('Error occured', 'error')
-                        },
-                    });
+                    this.notify('Merged', 'success');
+                    this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
+                    if (this.collection) {
+                        this.collection.fetch();
+                    }
                 }.bind(this));
-
-
             }
         },
 
@@ -150,7 +140,8 @@ Espo.define('views/record/merge', 'view', function (Dep) {
 
             for (var field in fieldsDefs) {
                 var type = fieldsDefs[field].type;
-                if (fieldManager.isMergable(type) && !this.models[0].isFieldReadOnly(field)) {
+                if (type === 'linkMultiple') continue;
+                if (fieldManager.isMergeable(type) && !this.models[0].isFieldReadOnly(field)) {
                     var actualFields = fieldManager.getActualAttributeList(type, field);
                     var differs = false;
                     actualFields.forEach(function (field) {

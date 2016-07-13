@@ -51,7 +51,31 @@ class Task extends \Espo\Core\SelectManagers\Base
     protected function filterActualNotDeferred(&$result)
     {
         $result['whereClause'][] = array(
-            'status!=' => ['Completed', 'Canceled', 'Deferred']
+            array(
+                'status!=' => ['Completed', 'Canceled', 'Deferred']
+            ),
+            array(
+                'OR' => array(
+                    array(
+                        'dateStart' => null
+                    ),
+                    array(
+                        'dateStart!=' => null,
+                        'OR' => array(
+                            $this->convertDateTimeWhere(array(
+                                'type' => 'past',
+                                'field' => 'dateStart',
+                                'timeZone' => $this->getUserTimeZone()
+                            )),
+                            $this->convertDateTimeWhere(array(
+                                'type' => 'today',
+                                'field' => 'dateStart',
+                                'timeZone' => $this->getUserTimeZone()
+                            ))
+                        )
+                    )
+                )
+            )
         );
     }
 
@@ -87,7 +111,7 @@ class Task extends \Espo\Core\SelectManagers\Base
         ));
     }
 
-    protected function convertDateTimeWhere($item)
+    public function convertDateTimeWhere($item)
     {
         $result = parent::convertDateTimeWhere($item);
 

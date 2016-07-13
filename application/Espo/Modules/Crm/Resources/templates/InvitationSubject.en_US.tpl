@@ -1,1 +1,0 @@
-Invitation to {eventType} '{name}'

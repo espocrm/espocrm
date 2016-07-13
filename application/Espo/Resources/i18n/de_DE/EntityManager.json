@@ -1,48 +1,49 @@
 {
-    "labels": {
-        "Fields": "Felder",
-        "Relationships": "Beziehungen"
+  "labels": {
+    "Fields": "Felder",
+    "Relationships": "Beziehungen"
+  },
+  "fields": {
+    "name": "Betreff",
+    "type": "Typ",
+    "labelSingular": "Bezeichnung Einzahl",
+    "labelPlural": "Bezeichnung Mehrzahl",
+    "stream": "Vorgänge",
+    "label": "Bezeichnung",
+    "linkType": "Relationstyp",
+    "entityForeign": "Fremdentität/-modul",
+    "linkForeign": "Fremdrelation/-modul",
+    "link": "Link",
+    "labelForeign": "Fremdbezeichnung",
+    "sortBy": "Standardsortierung (Feld)",
+    "sortDirection": "Standardsortierung (Richtung)",
+    "relationName": "Mittlerer Tabellenname",
+    "linkMultipleField": "Mehrere Felder verlinken",
+    "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
+    "disabled": "Inaktiv"
+  },
+  "options": {
+    "type": {
+      "": "Kein(e)",
+      "Base": "Basis",
+      "Person": "Person",
+      "CategoryTree": "Kategoriebaum"
     },
-    "fields": {
-        "name": "Name",
-        "type": "Typ",
-        "labelSingular": "Bezeichnung Einzahl",
-        "labelPlural": "Bezeichnung Mehrzahl",
-        "stream": "Vorgänge",
-        "label": "Bezeichnung",
-        "linkType": "Relationstyp",
-        "entityForeign": "Fremdentität\/-modul",
-        "linkForeign": "Fremdrelation\/-modul",
-        "link": "Link",
-        "labelForeign": "Fremdbezeichnung",
-        "sortBy": "Standardsortierung (Feld)",
-        "sortDirection": "Standardsortierung (Richtung)",
-        "relationName": "Mittlerer Tabellenname",
-        "linkMultipleField": "Mehrere Felder verlinken",
-        "linkMultipleFieldForeign": "Fremdlink mehrere Felder"
+    "linkType": {
+      "manyToMany": "Viele zu Viele",
+      "oneToMany": "Eins zu Viele",
+      "manyToOne": "Viele zu Eins",
+      "parentToChildren": "Vater zu KInd",
+      "childrenToParent": "Kind zu Vater"
     },
-    "options": {
-        "type": {
-            "": "Kein(e)",
-            "Base": "Basis",
-            "Person": "Person",
-            "CategoryTree": "Kategoriebaum"
-        },
-        "linkType": {
-            "manyToMany": "Viele zu Viele",
-            "oneToMany": "Eins zu Viele",
-            "manyToOne": "Viele zu Eins",
-            "parentToChildren": "Vater zu KInd",
-            "childrenToParent": "Kind zu Vater"
-        },
-        "sortDirection": {
-            "asc": "Aufsteigend",
-            "desc": "Absteigend"
-        }
-    },
-    "messages": {
-        "entityCreated": "Entität wurde erstellt",
-        "linkAlreadyExists": "Konflikt Name Relation",
-        "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
+    "sortDirection": {
+      "asc": "Aufsteigend",
+      "desc": "Absteigend"
     }
+  },
+  "messages": {
+    "entityCreated": "Entität wurde erstellt",
+    "linkAlreadyExists": "Konflikt Name Relation",
+    "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
+  }
 }

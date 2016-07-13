@@ -46,11 +46,19 @@ class Htmlizer
 
     protected $config;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number)
+    protected $acl;
+
+    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number, $acl = null)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
         $this->number = $number;
+        $this->acl = $acl;
+    }
+
+    protected function getAcl()
+    {
+        return $this->acl;
     }
 
     protected function formatNumber($value)
@@ -68,20 +76,25 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false)
     {
         $data = $entity->toArray();
-
-
 
         $fieldDefs = $entity->getFields();
         $fieldList = array_keys($fieldDefs);
 
+        $forbidenAttributeList = [];
+
+        if ($this->getAcl()) {
+            $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        }
+
         foreach ($fieldList as $field) {
-            $type = null;
-            if (!empty($fieldDefs[$field]['type'])) {
-                $type = $fieldDefs[$field]['type'];
-            }
+            if (in_array($field, $forbidenAttributeList)) continue;
+
+
+            $type = $entity->getAttributeType($field);
+
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$field])) {
                     $data[$field] = $this->dateTime->convertSystemDateTime($data[$field]);
@@ -116,6 +129,8 @@ class Htmlizer
                         $data[$field][$k] = $this->format($data[$field][$k]);
                     }
                 }
+            } else if ($type === Entity::PASSWORD) {
+                unset($data[$field]);
             }
 
             if (array_key_exists($field, $data)) {
@@ -123,19 +138,52 @@ class Htmlizer
             }
         }
 
+        if (!$skipLinks) {
+            $relationDefs = $entity->getRelations();
+            foreach ($entity->getRelationList() as $relation) {
+                if (
+                    !empty($relationDefs[$relation]['type'])
+                    &&
+                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
+                ) {
+                    $relatedEntity = $entity->get($relation);
+                    if (!$relatedEntity) continue;
+                    if ($this->getAcl()) {
+                        if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
+                    }
+
+                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                }
+            }
+        }
+
         return $data;
     }
 
-    public function render(Entity $entity, $template)
+    public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
     {
         $code = \LightnCandy::compile($template);
-        $id = uniqid('', true);
-        $fileName = 'data/cache/template-' . $id;
+
+        $toRemove = false;
+        if ($id === null) {
+            $id = uniqid('', true);
+            $toRemove = true;
+        }
+
+        $fileName = 'data/cache/templates/' . $id . '.php';
+
         $this->fileManager->putContents($fileName, $code);
         $renderer = include($fileName);
-        $this->fileManager->removeFile($fileName);
 
-        $data = $this->getDataFromEntity($entity);
+        if ($toRemove) {
+            $this->fileManager->removeFile($fileName);
+        }
+
+        $data = $this->getDataFromEntity($entity, $skipLinks);
+
+        foreach ($additionalData as $k => $value) {
+            $data[$k] = $value;
+        }
 
         $html = $renderer($data);
 

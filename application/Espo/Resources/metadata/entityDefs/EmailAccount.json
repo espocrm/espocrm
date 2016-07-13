@@ -10,7 +10,7 @@
             "required": true,
             "maxLength": 100,
             "trim": true,
-            "view": "EmailAccount.Fields.EmailAddress"
+            "view": "views/email-account/fields/email-address"
         },
         "status": {
             "type": "enum",
@@ -41,12 +41,12 @@
             "type": "varchar",
             "required": true,
             "default": "INBOX",
-            "view": "EmailAccount.Fields.Folders",
+            "view": "views/email-account/fields/folders",
             "tooltip": true
         },
         "sentFolder": {
             "type": "varchar",
-            "view": "EmailAccount.Fields.Folder"
+            "view": "views/email-account/fields/folder"
         },
         "storeSentEmails": {
             "type": "bool",
@@ -63,6 +63,10 @@
             "type": "jsonObject",
             "readOnly": true
         },
+        "emailFolder": {
+            "type": "link",
+            "view": "views/email-account/fields/email-folder"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -74,6 +78,33 @@
         "assignedUser": {
             "type": "link",
             "readOnly": true
+        },
+        "useSmtp": {
+            "type": "bool"
+        },
+        "smtpHost": {
+            "type": "varchar"
+        },
+        "smtpPort": {
+            "type": "int",
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": false
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true
+        },
+        "smtpPassword": {
+            "type": "password"
         },
         "createdBy": {
             "type": "link",
@@ -101,6 +132,15 @@
             "type": "hasChildren",
             "foreign": "parent",
             "entity": "EmailFilter"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "emailAccounts"
+        },
+        "emailFolder": {
+            "type": "belongsTo",
+            "entity": "EmailFolder"
         }
     },
     "collection": {

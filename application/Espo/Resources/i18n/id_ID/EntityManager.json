@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "Fields": "kolom",
+    "Relationships": "Hubungan"
+  },
+  "fields": {
+    "name": "Nama",
+    "type": "Tipe",
+    "labelSingular": "label Singular",
+    "labelPlural": "label Plural",
+    "stream": "Stream",
+    "label": "Label",
+    "linkType": "Jenis tautan",
+    "entityForeign": "Entitas asing",
+    "linkForeign": "Tautan Asing",
+    "link": "tautan",
+    "labelForeign": "Foreign label",
+    "sortBy": "Deafault Order (lapangan)",
+    "sortDirection": "Default Order (direction)",
+    "relationName": "Tabel Nama Tengah",
+    "linkMultipleField": "Link Beberapa Kolom",
+    "linkMultipleFieldForeign": "Tautan asing Beberapa Kolom",
+    "disabled": "Dinonaktifkan"
+  },
+  "options": {
+    "type": {
+      "": "None",
+      "Base": "Dasar",
+      "Person": "Orang",
+      "CategoryTree": "Category Tree"
+    },
+    "linkType": {
+      "manyToMany": "Banyak-ke-banyak",
+      "oneToMany": "Satu ke Banyak",
+      "manyToOne": "Banyak ke Satu",
+      "parentToChildren": "Parent-to-Children",
+      "childrenToParent": "Children-to-Parent"
+    },
+    "sortDirection": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entitas telah dibuat",
+    "linkAlreadyExists": "Menghubungkan konflik nama.",
+    "linkConflict": "Nama konflik: link atau kolom dengan nama yang sama sudah ada."
+  }
+}

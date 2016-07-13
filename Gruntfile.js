@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         'client/lib/jquery.autocomplete.js',
         'client/lib/bootstrap.min.js',
         'client/lib/bootstrap-datepicker.js',
-        'client/lib/bull.min.js',
+        'client/lib/bull.js',
         'client/src/namespace.js',
         'client/src/exceptions.js',
         'client/src/loader.js',
@@ -214,8 +214,10 @@ module.exports = function (grunt) {
                 },
                 src: [
                     'build/EspoCRM-<%= pkg.version %>/install',
+                    'build/EspoCRM-<%= pkg.version %>/portal',
                     'build/EspoCRM-<%= pkg.version %>/api',
                     'build/EspoCRM-<%= pkg.version %>/api/v1',
+                    'build/EspoCRM-<%= pkg.version %>/api/v1/portal-access',
                     'build/EspoCRM-<%= pkg.version %>',
                 ]
             }

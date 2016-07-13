@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "name": "Name",
-        "status": "Status",
-        "host": "Host",
-        "username": "Benutzername",
-        "password": "Passwort",
-        "port": "Port",
-        "monitoredFolders": "Überwachte Ordner",
-        "ssl": "SSL",
-        "fetchSince": "Holen seit",
-        "emailAddress": "E-Mail Adresse",
-        "sentFolder": "Gesendet Ordner",
-        "storeSentEmails": "Gesendete E-Mails speichern",
-        "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten"
-    },
-    "links": {
-        "filters": "Filter"
-    },
-    "options": {
-        "status": {
-            "Active": "Aktiv",
-            "Inactive": "Inaktiv"
-        }
-    },
-    "labels": {
-        "Create EmailAccount": "E-Mail Konto erstellen",
-        "IMAP": "IMAP",
-        "Main": "Hauptteil",
-        "Test Connection": "Verbindung überprüfen"
-    },
-    "messages": {
-        "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
-        "connectionIsOk": "Verbindung ist in Ordnung"
-    },
-    "tooltips": {
-        "monitoredFolders": "Sie können einen 'Gesendet' Ordner hinzufügen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
-        "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde."
+  "fields": {
+    "name": "Betreff",
+    "status": "Status",
+    "host": "Host",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "port": "Port",
+    "monitoredFolders": "Überwachte Ordner",
+    "ssl": "SSL",
+    "fetchSince": "Holen seit",
+    "emailAddress": "E-Mail Adresse",
+    "sentFolder": "Gesendet Ordner",
+    "storeSentEmails": "Gesendete E-Mails speichern",
+    "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten"
+  },
+  "links": {
+    "filters": "Filter"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
     }
+  },
+  "labels": {
+    "Create EmailAccount": "E-Mail Konto erstellen",
+    "IMAP": "IMAP",
+    "Main": "Hauptteil",
+    "Test Connection": "Verbindung überprüfen"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
+    "connectionIsOk": "Verbindung ist in Ordnung"
+  },
+  "tooltips": {
+    "monitoredFolders": "Sie können einen 'Gesendet' Ordner hinzufügen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
+    "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde."
+  }
 }

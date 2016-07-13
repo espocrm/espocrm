@@ -21,10 +21,6 @@
         "description": {
             "type": "text"
         },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
         "emailAddress": {
             "type": "email"
         },
@@ -53,6 +49,10 @@
         "addressPostalCode": {
             "type": "varchar"
         },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true
@@ -70,10 +70,11 @@
         "assignedUser": {
             "type": "link",
             "required": false,
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         }
     },
     "links": {

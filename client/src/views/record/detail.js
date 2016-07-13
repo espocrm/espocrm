@@ -108,7 +108,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         dependencyDefs: {},
 
-        duplicateAction: false,
+        duplicateAction: true,
 
         events: {
             'click .button-container .action': function (e) {
@@ -157,10 +157,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.duplicateAction) {
-                this.dropdownItemList.push({
-                    'label': 'Duplicate',
-                    'name': 'duplicate'
-                });
+                if (this.getAcl().check(this.scope, 'create')) {
+                    this.dropdownItemList.push({
+                        'label': 'Duplicate',
+                        'name': 'duplicate'
+                    });
+                }
             }
         },
 
@@ -397,17 +399,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.notify('Removing...');
 
+                var collection = this.model.collection;
+
                 var self = this;
                 this.model.destroy({
                     wait: true,
                     error: function () {
-                        self.notify('Error occured!', 'error');
-                    },
+                        this.notify('Error occured!', 'error');
+                    }.bind(this),
                     success: function () {
-                        self.notify('Removed', 'success');
-                        self.trigger('after:delete');
-                        self.exit('delete');
-                    },
+                        if (collection) {
+                            if (collection.total > 0) {
+                                collection.total--;
+                            }
+                        }
+
+                        this.notify('Removed', 'success');
+                        this.trigger('after:delete');
+                        this.exit('delete');
+                    }.bind(this),
                 });
             }
         },
@@ -416,13 +426,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var fields = {};
 
             if (this.hasView('middle')) {
-                _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+                if ('getFieldViews' in this.getView('middle')) {
+                    _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+                }
             }
             if (this.hasView('side')) {
-                _.extend(fields, this.getView('side').getFieldViews(withHidden));
+                if ('getFieldViews' in this.getView('side')) {
+                    _.extend(fields, this.getView('side').getFieldViews(withHidden));
+                }
             }
             if (this.hasView('bottom')) {
-                _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
+                if ('getFieldViews' in this.getView('bottom')) {
+                    _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
+                }
             }
             return fields;
         },
@@ -1016,6 +1032,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.getGridLayout(function (layout) {
                 this.createView('middle', this.middleView, {
                     model: this.model,
+                    type: this.type,
                     _layout: layout,
                     el: el + ' .middle',
                     layoutData: {
@@ -1034,6 +1051,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 el: el + ' .bottom',
                 notToRender: true,
                 readOnly: this.readOnly,
+                type: this.type,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper
             }, function (view) {

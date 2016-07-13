@@ -20,7 +20,8 @@
         "EmailFilter": "Email Filter",
         "Portal": "Portal",
         "PortalRole": "Portal Role",
-        "Attachment": "Attachment"
+        "Attachment": "Attachment",
+        "EmailFolder": "Email Folder"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -43,7 +44,8 @@
         "EmailFilter": "Email Filters",
         "Portal": "Portals",
         "PortalRole": "Portal Roles",
-        "Attachment": "Attachments"
+        "Attachment": "Attachments",
+        "EmailFolder": "Email Folders"
     },
     "labels": {
         "Misc": "Misc",
@@ -190,6 +192,7 @@
         "confirmLeaveOutMessage": "Are you sure you want to leave the form?",
         "notModified": "You have not modified the record",
         "duplicate": "The record you are creating seems to be a duplicate",
+        "dropToAttach": "Drop to attach",
         "fieldIsRequired": "{field} is required",
         "fieldShouldBeEmail": "{field} should be valid email",
         "fieldShouldBeFloat": "{field} should be valid float",
@@ -203,8 +206,6 @@
         "fieldShouldBeGreater": "{field} should be greater then {value}",
         "fieldBadPasswordConfirm": "{field} not confirmed properly",
         "resetPreferencesDone": "Preferences has been reset to defaults",
-        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-        "assignmentEmailNotificationBody": "{assignerUserName} has assigned {entityType} '{Entity.name}' to you.\n\n{recordUrl}",
         "confirmation": "Are you sure?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
         "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
@@ -221,10 +222,11 @@
         "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(link name)[url]",
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
-        "writeMessageToSelf": "Write a message to self",
+        "writeMessageToSelf": "Write a message on your stream",
         "typeAndPressEnter": "Type & press enter",
         "checkForNewNotifications": "Check for new notifications",
-        "checkForNewNotes": "Check for new Stream entries"
+        "checkForNewNotes": "Check for stream updates",
+        "internalPost": "Post will be seen only by internal users"
     },
     "boolFilters": {
         "onlyMy": "Only My",
@@ -278,7 +280,8 @@
         "children": "Children"
     },
     "dashlets": {
-        "Stream": "Stream"
+        "Stream": "Stream",
+        "Emails": "My Inbox"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
@@ -290,33 +293,47 @@
         "attach": "{user} attached on {entityType} {entity}",
         "status": "{user} updated {field} of {entityType} {entity}",
         "update": "{user} updated {entityType} {entity}",
+
         "postTargetTeam": "{user} posted to team {target}",
         "postTargetTeams": "{user} posted to teams {target}",
         "postTargetPortal": "{user} posted to portal {target}",
         "postTargetPortals": "{user} posted to portals {target}",
         "postTarget": "{user} posted to {target}",
-
         "postTargetYou": "{user} posted to you",
         "postTargetYouAndOthers": "{user} posted to {target} and you",
         "postTargetAll": "{user} posted to all",
-        "postTargetSelf": "{user} posted to self",
-        "postTargetSelfAndOthers": "{user} posted to {target} and self",
+        "postTargetSelf": "{user} self-posted",
+        "postTargetSelfAndOthers": "{user} posted to {target} and themself",
 
         "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
+
         "mentionYouInPost": "{user} mentioned you in {entityType} {entity}",
+
         "mentionInPostTarget": "{user} mentioned {mentioned} in post",
+
         "mentionYouInPostTarget": "{user} mentioned you in post to {target}",
+
         "mentionYouInPostTargetAll": "{user} mentioned you in post to all",
+
         "mentionYouInPostTargetNoTarget": "{user} mentioned you in post",
 
         "create": "{user} created {entityType} {entity}",
+
         "createThis": "{user} created this {entityType}",
 
-        "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
+        "createAssignedThis": "{user} created this {entity} assigned to {assignee}",
+
         "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
 
+        "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
+
         "assign": "{user} assigned {entityType} {entity} to {assignee}",
+
         "assignThis": "{user} assigned this {entityType} to {assignee}",
+        "assignYou": "{user} assigned {entityType} {entity} to you",
+
+        "assignThisSelf": "{user} self-assigned this {entityType}",
+        "assignSelf": "{user} self-assigned {entityType} {entity}",
 
         "postThis": "{user} posted",
         "attachThis": "{user} attached",
@@ -343,6 +360,12 @@
 
         "emailSent": "{by} sent email related to {entityType} {entity}",
         "emailSentThis": "{by} sent email"
+    },
+    "streamMessagesMale": {
+        "postTargetSelfAndOthers": "{user} posted to {target} and himself"
+    },
+    "streamMessagesFemale": {
+        "postTargetSelfAndOthers": "{user} posted to {target} and herself"
     },
     "lists": {
         "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],

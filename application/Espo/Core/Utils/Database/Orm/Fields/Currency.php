@@ -66,7 +66,9 @@ class Currency extends Base
                         "<" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate < {value}",
                         ">=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate >= {value}",
                         "<=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <= {value}",
-                        "<>" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <> {value}"
+                        "<>" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate <> {value}",
+                        "IS NULL" => Util::toUnderScore($entityName) . "." . $currencyColumnName . ' IS NULL',
+                        "IS NOT NULL" => Util::toUnderScore($entityName) . "." . $currencyColumnName . ' IS NOT NULL',
                 ),
                 'notStorable' => true,
                 'orderBy' => $converedFieldName . " {direction}"

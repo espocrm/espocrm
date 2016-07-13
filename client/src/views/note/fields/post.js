@@ -36,15 +36,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
 
         events: _.extend({
             'input textarea': function (e) {
-                var $text = $(e.currentTarget);
-                var numberOfLines = e.currentTarget.value.split("\n").length;
-                var numberOfRows = $text.prop('rows');
-
-                if (numberOfRows < numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                } else if (numberOfRows > numberOfLines) {
-                    $text.prop('rows', numberOfLines);
-                }
+                this.controlTextareaHeight();
             },
         }, Dep.prototype.events),
 
@@ -52,9 +44,50 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
             Dep.prototype.setup.call(this);
         },
 
+        controlTextareaHeight: function () {
+            var scrollHeight = this.$element.prop('scrollHeight');
+            var clientHeight = this.$element.prop('clientHeight');
+            if (this.$element.prop('scrollHeight') > clientHeight) {
+                this.$element.prop('rows', this.$element.prop('rows') + 1);
+                this.controlTextareaHeight();
+            }
+
+            if (this.$element.val().length === 0) {
+                this.$element.prop('rows', 1);
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.$element.attr('placeholder', this.translate('writeMessage', 'messages', 'Note'));
+
+            this.$textarea = this.$element;
+            var $textarea = this.$textarea;
+
+            $textarea.off('drop');
+            $textarea.off('dragover');
+            $textarea.off('dragleave');
+
+            this.$textarea.on('drop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var e = e.originalEvent;
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                    this.trigger('add-files', e.dataTransfer.files);
+                }
+                this.$textarea.attr('placeholder', originalPlaceholderText);
+            }.bind(this));
+
+            var originalPlaceholderText = this.$textarea.attr('placeholder');
+
+            this.$textarea.on('dragover', function (e) {
+                e.preventDefault();
+                this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
+            }.bind(this));
+            this.$textarea.on('dragleave', function (e) {
+                e.preventDefault();
+                this.$textarea.attr('placeholder', originalPlaceholderText);
+            }.bind(this));
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
 

@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class Email extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('emailFilterManager');
+    }
+
     protected function prepareAddressess(Entity $entity, $type, $addAssignedUser = false)
     {
         if (!$entity->has($type)) {
@@ -50,13 +56,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
             $idList = $eaRepositoty->getIdListFormAddressList($arr);
             foreach ($idList as $id) {
-                $this->setUsersIdsByEmailAddressId($entity, $id, $addAssignedUser);
+                $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
             }
         }
         $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
     }
 
-    protected function setUsersIdsByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
+    protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
         $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
         if ($user) {
@@ -116,7 +122,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         $entity->set('idHash', $idHash);
     }
 
-    protected function beforeSave(Entity $entity, array $options)
+    protected function beforeSave(Entity $entity, array $options = array())
     {
         $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
 
@@ -124,6 +130,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             $attachmentsIds = $entity->get('attachmentsIds');
             if (!empty($attachmentsIds)) {
                 $entity->set('hasAttachment', true);
+            }
+        }
+
+        if (!$entity->get('sentById')) {
+            if ($entity->get('from')) {
+                $from = trim($entity->get('from'));
+                $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
+
             }
         }
 
@@ -138,7 +152,15 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     $ids = $eaRepositoty->getIds(array($from));
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
-                        $this->setUsersIdsByEmailAddressId($entity, $ids[0], true);
+                        $this->addUserByEmailAddressId($entity, $ids[0], true);
+                        $entity->setLinkMultipleColumn('users', 'isRead', $ids[0], true);
+
+                        if (!$entity->get('sentById')) {
+                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User');
+                            if ($user) {
+                                $entity->set('sentById', $user->id);
+                            }
+                        }
                     }
                 } else {
                     $entity->set('fromEmailAddressId', null);
@@ -185,9 +207,26 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if ($entity->get('isBeingImported')) {
+            foreach ($entity->getLinkMultipleIdList('users') as $userId) {
+                $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
+                if ($filter) {
+                    $action = $filter->get('action');
+                    if ($action === 'Skip') {
+                        $entity->setLinkMultipleColumn('users', 'inTrash', $userId, true);
+                    } else if ($action === 'Move to Folder') {
+                        $folderId = $filter->get('emailFolderId');
+                        if ($folderId) {
+                            $entity->setLinkMultipleColumn('users', 'folderId', $userId, $folderId);
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    protected function afterSave(Entity $entity, array $options)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
         if (!$entity->isNew()) {
@@ -205,6 +244,29 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if (
+            ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent')
+            &&
+            ($entity->isAttributeChanged('status') || $entity->isNew())
+        ) {
+            if ($entity->get('repliedId')) {
+                $replied = $this->getEntityManager()->getEntity('Email', $entity->get('repliedId'));
+                if ($replied && $replied->id !== $entity->id && !$replied->get('isReplied')) {
+                    $replied->set('isReplied', true);
+                    $this->getEntityManager()->saveEntity($replied, array('silent' => true));
+                }
+            }
+        }
+
+        if ($entity->get('isBeingImportered')) {
+            $entity->set('isBeingImportered', false);
+        }
+    }
+
+    protected function getEmailFilterManager()
+    {
+        return $this->getInjection('emailFilterManager');
     }
 
 }

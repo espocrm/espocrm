@@ -5,6 +5,7 @@
             [{"name":"name", "fullWidth": true}],
             [{"name":"status"}, {"name":"language"}],
             [{"name":"categories"}, {"name":"portals"}],
+            [{"name":"order"}, false],
             [{"name":"body", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]
         ]

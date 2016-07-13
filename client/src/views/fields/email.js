@@ -307,7 +307,7 @@ Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
             }
 
             this.notify('Loading...');
-            this.createView('quickCreate', 'Modals.ComposeEmail', {
+            this.createView('quickCreate', 'views/modals/compose-email', {
                 attributes: attributes,
             }, function (view) {
                 view.render();

@@ -1,40 +1,80 @@
 {
-    "fields": {
-        "name": "Imię",
-        "emailAddress": "E-mail",
-        "website": "Strona Internetowa",
-        "phoneNumber": "Telefon",
-        "billingAddress": "Adres Firmy",
-        "shippingAddress": "Adres Dostawy",
-        "description": "Opis ",
-        "sicCode": "PKD",
-        "industry": "Branża",
-        "type": "Rodzaj",
-        "contactRole": "Rola"
+  "fields": {
+    "name": "Nazwa",
+    "emailAddress": "E-mail",
+    "website": "Strona Internetowa",
+    "phoneNumber": "Telefon",
+    "billingAddress": "Adres Firmy",
+    "shippingAddress": "Adres Dostawy",
+    "description": "Opis ",
+    "sicCode": "PKD",
+    "industry": "Branża",
+    "type": "Rodzaj",
+    "contactRole": "Rola",
+    "campaign": "Kampania",
+    "targetLists": "Listy docelowe",
+    "targetList": "Lista docelowa"
+  },
+  "links": {
+    "contacts": "Kontakty",
+    "opportunities": "Szanse sprzedaży",
+    "cases": "Sprawy",
+    "documents": "Dokumenty",
+    "meetingsPrimary": "Spotkania (rozwinięte)",
+    "callsPrimary": "Rozmowy (rozwinięte)",
+    "tasksPrimary": "Zadania (rozwinięte)",
+    "emailsPrimary": "Wiadomości (rozwinięte)",
+    "targetLists": "Listy docelowe",
+    "campaignLogRecords": "Log kampanii",
+    "campaign": "Kampania",
+    "portalUsers": "Portal Users"
+  },
+  "options": {
+    "type": {
+      "Customer": "Klient",
+      "Investor": "Inwestor",
+      "Partner": "Partner",
+      "Reseller": "Sprzedawca"
     },
-    "links": {
-        "contacts": "Kontakty",
-        "opportunities": "Szanse Sprzedaży",
-        "cases": "Zlecenia"
-    },
-    "options": {
-        "type": {
-            "Customer": "Klient",
-            "Investor": "Inwestor",
-            "Partner": "Partner",
-            "Reseller": "Sprzedawca"
-        },
-        "industry": {
-            "Apparel": "Odzież",
-            "Banking": "Bankowość",
-            "Computer Software": "Oprogramowanie Komputerowe",
-            "Education": "Edukacja",
-            "Electronics": "Elektronika",
-            "Finance": "Finanse",
-            "Insurance": "Ubezpieczenia"
-        }
-    },
-    "labels": {
-        "Create Account": "Utwórz Konto"
+    "industry": {
+      "Agriculture": "Agriculture",
+      "Advertising": "Reklamy",
+      "Apparel & Accessories": "Wystrój i akcesoria",
+      "Automotive": "Motoryzacja",
+      "Banking": "Bankowość",
+      "Biotechnology": "Biotechnologia",
+      "Building Materials & Equipment": "Materiały budowlane i wyposażenie",
+      "Chemical": "Chemia",
+      "Computer": "Komputery",
+      "Education": "Edukacja",
+      "Electronics": "Elektronika",
+      "Energy": "Energetyka",
+      "Entertainment & Leisure": "Rozrywka",
+      "Finance": "Finanse",
+      "Food & Beverage": "Jedzenie i napoje",
+      "Grocery": "Sklep spożywczy",
+      "Healthcare": "Opieka zdrowotna",
+      "Insurance": "Ubezpieczenia",
+      "Legal": "Legal",
+      "Manufacturing": "Manufacturing",
+      "Publishing": "Publishing",
+      "Real Estate": "Real Estate",
+      "Service": "Service",
+      "Sports": "Sport",
+      "Software": "Software",
+      "Technology": "Technologia",
+      "Telecommunications": "Telekomunikacja",
+      "Television": "Telewizja",
+      "Transportation": "Transport",
+      "Venture Capital": "Venture Capital"
     }
+  },
+  "labels": {
+    "Create Account": "Utwórz Konto",
+    "Copy Billing": "Copy Billing"
+  },
+  "presetFilters": {
+    "customers": "Klienci",
+    "partners": "Partnerzy"
+  }
 }

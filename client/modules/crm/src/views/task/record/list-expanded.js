@@ -30,9 +30,10 @@ Espo.define('crm:views/task/record/list-expanded', ['views/record/list-expanded'
 
     return Dep.extend({
 
-        rowActionsView: 'Crm:Task.Record.RowActions.Default',
+        rowActionsView: 'crm:views/task/record/row-actions/default',
 
         actionSetCompleted: function (data) {
+            console.log(1);
             List.prototype.actionSetCompleted.call(this, data);
         },
 

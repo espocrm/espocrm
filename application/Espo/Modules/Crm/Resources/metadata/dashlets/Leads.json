@@ -14,7 +14,7 @@
             },
             "displayRecords": {
                 "type": "enumInt",
-                "options": [3,4,5,10,15]
+                "options": [3,4,5,10,15,20,30]
             }
         },
         "defaults": {

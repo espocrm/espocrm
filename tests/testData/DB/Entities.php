@@ -223,3 +223,24 @@ class Note extends TEntity
 }
 
 
+class Article extends TEntity
+{
+    public $fields = array(
+        'id' => array(
+            'type' => Entity::ID
+        ),
+        'name' => array(
+            'type' => Entity::VARCHAR,
+            'len' => 50,
+        ),
+        'description' => array(
+            'type' => Entity::TEXT
+        ),
+        'deleted' => array(
+            'type' => Entity::BOOL,
+            'default' => 0
+        )
+    );
+}
+
+

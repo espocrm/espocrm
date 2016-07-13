@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 64,
+            "trim": true
+        },
+        "order": {
+            "type": "int"
+        },
+        "assignedUser": {
+            "type": "link",
+            "readOnly": true
+        },
+        "skipNotifications": {
+            "type": "bool"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "sortBy": "order",
+        "asc": true
+    }
+}

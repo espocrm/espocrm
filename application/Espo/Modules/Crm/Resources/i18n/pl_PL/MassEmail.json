@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "storeSentEmails": "Zapisz wysłane wiadomości",
+    "startAt": "Data rozpoczęcia",
+    "fromAddress": "Z adresu",
+    "fromName": "Od",
+    "replyToAddress": "Reply-to Address",
+    "replyToName": "Reply-to Name",
+    "campaign": "Kampania",
+    "emailTemplate": "Szablon wiadomości",
+    "inboundEmail": "Konto pocztowe",
+    "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Excluding Target Lists",
+    "optOutEntirely": "Wypisz się całkowicie"
+  },
+  "links": {
+    "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Excluding Target Lists",
+    "queueItems": "Elementy kolejki",
+    "campaign": "Kampania",
+    "emailTemplate": "Szablon wiadomości",
+    "inboundEmail": "Konto pocztowe"
+  },
+  "options": {
+    "status": {
+      "Draft": "Szkic",
+      "Pending": "Oczekiwanie",
+      "In Process": "W trakcie",
+      "Complete": "Gotowe",
+      "Canceled": "Anulowane",
+      "Failed": "Niepowodzenie"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Utwórz wiadomość masową",
+    "Send Test": "Wyślij test"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Wybierz przynajmniej jeden cel.",
+    "testSent": "Wiadomość testowa powinna być wysłana"
+  },
+  "tooltips": {
+    "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
+    "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",
+    "excludingTargetLists": "Adresaci, którzy nie powinni otrzymać wiadomości."
+  }
+}

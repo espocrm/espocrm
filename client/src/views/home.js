@@ -32,8 +32,6 @@ Espo.define('views/home', 'view', function (Dep) {
 
         template: 'home',
 
-        el: '#main',
-
         setup: function () {
             this.createView('dashboard', 'views/dashboard', {
                 el: this.options.el + ' > .home-content'

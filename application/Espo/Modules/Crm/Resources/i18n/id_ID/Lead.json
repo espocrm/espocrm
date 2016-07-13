@@ -1,0 +1,63 @@
+{
+  "labels": {
+    "Converted To": "Dikonversi ke",
+    "Create Lead": "Create Lead",
+    "Convert": "Ubah"
+  },
+  "fields": {
+    "name": "Nama",
+    "emailAddress": "E-mail",
+    "title": "Judul",
+    "website": "Situs web",
+    "phoneNumber": "Telepon",
+    "accountName": "Nama akun",
+    "doNotCall": "Jangan panggil",
+    "address": "Alamat",
+    "status": "Status",
+    "source": "Sumber",
+    "opportunityAmount": "peluang Jumlah",
+    "opportunityAmountConverted": "Peluang Jumlah (dikonversi)",
+    "description": "Deskripsi",
+    "createdAccount": "Rekening",
+    "createdContact": "Kontak",
+    "createdOpportunity": "Kesempatan",
+    "campaign": "Kampanye",
+    "targetLists": "Daftar Target",
+    "targetList": "Target Daftar"
+  },
+  "links": {
+    "targetLists": "Daftar Target",
+    "campaignLogRecords": "kampanye Log",
+    "campaign": "Kampanye",
+    "createdAccount": "Rekening",
+    "createdContact": "Kontak",
+    "createdOpportunity": "Kesempatan",
+    "cases": "kasus"
+  },
+  "options": {
+    "status": {
+      "New": "Baru",
+      "Assigned": "ditugaskan",
+      "In Process": "dalam Proses",
+      "Converted": "dikonversi",
+      "Recycled": "daur ulang",
+      "Dead": "Mati"
+    },
+    "source": {
+      "": "tak satupun",
+      "Call": "Panggilan",
+      "Email": "E-mail",
+      "Existing Customer": "Pelanggan yang ada",
+      "Partner": "Pasangan",
+      "Public Relations": "Hubungan Masyarakat",
+      "Web Site": "Situs web",
+      "Campaign": "Kampanye",
+      "Other": "Lain"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktif",
+    "actual": "Sebenarnya",
+    "converted": "dikonversi"
+  }
+}

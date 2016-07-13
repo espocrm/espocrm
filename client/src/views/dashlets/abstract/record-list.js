@@ -84,7 +84,7 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', viewName, {
                         collection: collection,
-                        el: this.$el.selector + ' .list-container',
+                        el: this.getSelector() + ' .list-container',
                         pagination: this.getOption('pagination') ? 'bottom' : false,
                         type: 'listDashlet',
                         rowActionsView: this.rowActionsView,

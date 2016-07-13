@@ -1,44 +1,44 @@
 {
-    "fields": {
-        "name": "Name",
-        "account": "Firma",
-        "stage": "Verkaufsphase",
-        "amount": "Betrag",
-        "probability": "Wahrscheinlichkeit (%)",
-        "leadSource": "Quelle",
-        "doNotCall": "Nicht anrufen",
-        "closeDate": "Abschlussdatum",
-        "contacts": "Kontakte",
-        "description": "Beschreibung",
-        "amountConverted": "Betrag (konvertiert)",
-        "amountWeightedConverted": "Betrag gewichtet",
-        "campaign": "Kampagne"
-    },
-    "links": {
-        "contacts": "Kontakte",
-        "documents": "Dokumente",
-        "campaign": "Kampagne"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Prospecting",
-            "Qualification": "Qualifikation",
-            "Needs Analysis": "Bedarfserhebung",
-            "Value Proposition": "Richtangebot",
-            "Id. Decision Makers": "Entscheider ident.",
-            "Perception Analysis": "Analyse Sichtweise",
-            "Proposal/Price Quote": "Preisangebot",
-            "Negotiation/Review": "Verhandlung\/Überarbeitung",
-            "Closed Won": "Gewonnen",
-            "Closed Lost": "Verloren"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Verkaufschance erstellen"
-    },
-    "presetFilters": {
-        "open": "Offen",
-        "won": "Gewonnen",
-        "lost": "Verloren"
+  "fields": {
+    "name": "Betreff",
+    "account": "Firma",
+    "stage": "Verkaufsphase",
+    "amount": "Betrag",
+    "probability": "Wahrscheinlichkeit (%)",
+    "leadSource": "Quelle",
+    "doNotCall": "Nicht anrufen",
+    "closeDate": "Abschlussdatum",
+    "contacts": "Kontakte",
+    "description": "Beschreibung",
+    "amountConverted": "Betrag (konvertiert)",
+    "amountWeightedConverted": "Betrag gewichtet",
+    "campaign": "Kampagne"
+  },
+  "links": {
+    "contacts": "Kontakte",
+    "documents": "Dokumente",
+    "campaign": "Kampagne"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospecting",
+      "Qualification": "Qualifikation",
+      "Needs Analysis": "Bedarfserhebung",
+      "Value Proposition": "Richtangebot",
+      "Id. Decision Makers": "Entscheider ident.",
+      "Perception Analysis": "Analyse Sichtweise",
+      "Proposal/Price Quote": "Preisangebot",
+      "Negotiation/Review": "Verhandlung/Überarbeitung",
+      "Closed Won": "Gewonnen",
+      "Closed Lost": "Verloren"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Verkaufschance erstellen"
+  },
+  "presetFilters": {
+    "open": "Offen",
+    "won": "Gewonnen",
+    "lost": "Verloren"
+  }
 }

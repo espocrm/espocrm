@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.Layouts.Grid', 'Views.Admin.Layouts.Base', function (Dep) {
+Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.layouts.grid',
+        template: 'admin/layouts/grid',
 
         dataAttributes: null,
 

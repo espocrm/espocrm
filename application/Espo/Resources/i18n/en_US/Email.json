@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Name (Subject)",
         "parent": "Parent",
         "status": "Status",
         "dateSent": "Date Sent",
@@ -26,12 +26,20 @@
         "isRead": "Is Read",
         "isNotRead": "Is Not Read",
         "isImportant": "Is Important",
+        "isReplied": "Is Replied",
+        "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
-        "inTrash": "In Trash"
+        "inTrash": "In Trash",
+        "sentBy": "Sent by (User)",
+        "folder": "Folder",
+        "inboundEmails": "Group Accounts",
+        "emailAccounts": "Personal Accounts"
     },
     "links": {
         "replied": "Replied",
-        "replies": "Replies"
+        "replies": "Replies",
+        "inboundEmails": "Group Accounts",
+        "emailAccounts": "Personal Accounts"
     },
     "options": {
         "status": {
@@ -66,7 +74,10 @@
         "Mark as Important": "Mark as Important",
         "Unmark Importance": "Unmark Importance",
         "Move to Trash": "Move to Trash",
-        "Retrieve from Trash": "Retrieve from Trash"
+        "Retrieve from Trash": "Retrieve from Trash",
+        "Move to Folder": "Move to Folder",
+        "Filters": "Filters",
+        "Folders": "Folders"
     },
     "messages": {
         "noSmtpSetup": "No SMTP setup. {link}.",
@@ -79,13 +90,15 @@
         "archived": "Archived",
         "inbox": "Inbox",
         "drafts": "Drafts",
-        "trash": "Trash"
+        "trash": "Trash",
+        "important": "Important"
     },
     "massActions": {
         "markAsRead": "Mark as Read",
         "markAsNotRead": "Mark as Not Read",
         "markAsImportant": "Mark as Important",
         "markAsNotImportant": "Unmark Importance",
-        "moveToTrash": "Move to Trash"
+        "moveToTrash": "Move to Trash",
+        "moveToFolder": "Move to Folder"
     }
 }

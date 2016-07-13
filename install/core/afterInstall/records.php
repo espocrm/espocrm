@@ -56,6 +56,12 @@ return array(
 			'scheduling' => '*/2 * * * *',
 		),
 		array(
+			'name' => 'Send Email Notifications',
+			'job' => 'SendEmailNotifications',
+			'status' => 'Active',
+			'scheduling' => '*/2 * * * *',
+		),
+		array(
 			'name' => 'Clean-up',
 			'job' => 'Cleanup',
 			'status' => 'Active',

@@ -186,12 +186,14 @@ class Import extends \Espo\Services\Record
                 }
             }
             else {
+                if (!array_key_exists($num, $o)) {
+                    $o[$num] = '';
+                }
                 if ($escesc) {
-                    $o[$num].= $CSV_ENCLOSURE;
+                    $o[$num] .= $CSV_ENCLOSURE;
                     $escesc = false;
                 }
-
-                $o[$num].= $s;
+                $o[$num] .= $s;
             }
 
             $i++;
@@ -406,7 +408,7 @@ class Import extends \Espo\Services\Record
         if (!empty($fieldsDefs['phoneNumber']) && !empty($fieldsDefs['phoneNumber']['type']) && $fieldsDefs['phoneNumber']['type'] == 'phone') {
             $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
             foreach ($typeList as $type) {
-                $attr = $field . str_replace(' ', '_', ucfirst($type));
+                $attr = str_replace(' ', '_', ucfirst($type));
                 $phoneFieldList[] = 'phoneNumber' . $attr;
             }
         }
@@ -488,9 +490,13 @@ class Import extends \Espo\Services\Record
         }
 
         foreach ($importFieldList as $i => $field) {
-            if (array_key_exists($field, $fieldsDefs) && $fieldsDefs[$field]['type'] == Entity::FOREIGN) {
+            if (!array_key_exists($field, $fieldsDefs)) continue;;
+            $defs = $fieldsDefs[$field];
+            $type = $fieldsDefs[$field]['type'];
+
+            if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign']) && $defs['foreign'] === 'name') {
                 if ($entity->has($field)) {
-                    $relation = $fieldsDefs[$field]['relation'];
+                    $relation = $defs['relation'];
                     if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
                         if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
                             $name = $entity->get($field);

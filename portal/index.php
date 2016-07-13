@@ -34,11 +34,26 @@ if (!$app->isInstalled()) {
     exit;
 }
 
-if (!empty($_GET['entryPoint'])) {
+$a = explode('?', $_SERVER['REQUEST_URI']);
+if (substr($a[0], -1) !== '/') {
+    $url = $a[0] . '/';
+    if (count($a) > 1) {
+        $url .= '?' . $a[1];
+    }
+    header("Location: " . $url);
+    exit();
+}
+
+$portalId = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
+if ($portalId) {
+    $app->setBasePath('../../');
+} else {
     $app->setBasePath('../');
+}
+
+if (!empty($_GET['entryPoint'])) {
     $app->runEntryPoint($_GET['entryPoint']);
     exit;
 }
 
-$app->setBasePath('../');
 $app->runEntryPoint('portal');

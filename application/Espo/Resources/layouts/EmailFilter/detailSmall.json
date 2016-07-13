@@ -5,6 +5,15 @@
                 {"name": "name"}
             ],
             [
+                {"name": "parent"}
+            ],
+            [
+                {"name": "action"}
+            ],
+            [
+                {"name": "emailFolder"}
+            ],
+            [
                 {"name": "from"}
             ],
             [

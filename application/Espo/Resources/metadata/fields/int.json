@@ -18,6 +18,10 @@
          "type":"int"
       },
       {
+         "name":"disableFormatting",
+         "type":"bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       }

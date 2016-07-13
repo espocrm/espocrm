@@ -84,7 +84,11 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.typeName = this.name + 'Type';
             this.idName = this.name + 'Id';
 
-            this.foreignScopeList = this.params.entityList || this.model.defs.links[this.name].entityList || [];
+            this.foreignScopeList = this.params.entityList || this.model.getLinkParam(this.name, 'entityList') || [];
+            this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(function (item) {
+                if (!this.getMetadata().get(['scopes', item, 'disabled'])) return true;
+            }, this);
+
 
             if (this.mode == 'edit' && this.foreignScopeList.length == 0) {
                 throw new Error('Bad parent link defenition. Model list is empty.');

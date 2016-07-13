@@ -96,6 +96,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             return value || '';
         },
 
+        getValueForEdit: function () {
+            var value = this.model.get(this.name) || '';
+            value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
+            return value;
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -143,8 +149,11 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
                     var processHeight = function () {
                         var $body = $iframe.contents().find('html body');
-
-                        var height = $body.height() + 30;
+                        var height = $body.height();
+                        if (height === 0) {
+                            height = $body.children(0).height() + 100;
+                        }
+                        height += 30;
                         iframe.style.height = height + 'px';
                     };
 
@@ -169,7 +178,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
-            var contents = this.model.get(this.name);
+            var contents = this.getValueForEdit();
 
             this.$summernote.html(contents);
 
@@ -236,6 +245,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         htmlToPlain: function (text) {
         	text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
+
+            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
             var $div = $('<div>').html(value);
             $div.find('style').remove();

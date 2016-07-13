@@ -43,7 +43,7 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
         return $this->getInjection('config');
     }
 
-    public function beforeSave(Entity $entity)
+    public function beforeSave(Entity $entity, array $options = array())
     {
         if (!$entity->has('executeTime')) {
             $entity->set('executeTime', date('Y-m-d H:i:s'));

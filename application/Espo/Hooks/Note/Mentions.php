@@ -65,7 +65,13 @@ class Mentions extends \Espo\Core\Hooks\Base
 
         $mentionCount = 0;
 
+
+
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
+            $parent = null;
+            if ($entity->get('parentId') && $entity->get('parentType')) {
+                $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+            }
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
                 $user = $this->getEntityManager()->getRepository('User')->where(array('userName' => $userName))->findOne();
@@ -85,7 +91,7 @@ class Mentions extends \Espo\Core\Hooks\Base
                         if ($user->id == $this->getUser()->id) {
                             continue;
                         }
-                        $this->notifyAboutMention($entity, $user);
+                        $this->notifyAboutMention($entity, $user, $parent);
                         $entity->addNotifiedUserId($user->id);
                     }
                 }
@@ -114,8 +120,12 @@ class Mentions extends \Espo\Core\Hooks\Base
         }
     }
 
-    protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user)
+    protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user, Entity $parent = null)
     {
+        if ($user->get('isPortalUser')) return;
+        if ($parent) {
+            if (!$this->getAclManager()->check($user, $parent, 'stream')) return;
+        }
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
     }
 
@@ -127,4 +137,3 @@ class Mentions extends \Espo\Core\Hooks\Base
         return $this->notificationService;
     }
 }
-

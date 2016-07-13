@@ -6,6 +6,7 @@
             [{"name":"status"}, {"name":"publishDate"}],
             [{"name":"categories"}, {"name":"expirationDate"}],
             [{"name":"portals"}, {"name":"language"}],
+            [{"name":"order"}, false],
             [{"name":"body", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]
         ]

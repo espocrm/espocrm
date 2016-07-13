@@ -189,8 +189,6 @@
         "fieldShouldBeGreater": "{field} moet groter zijn dan {value}",
         "fieldBadPasswordConfirm": "{field} onjuist bevestigd",
         "resetPreferencesDone": "Voorkeuren zijn naar standaard waarden terugezet",
-        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-        "assignmentEmailNotificationBody": "{assignerUserName} heeft {entityType} '{Entity.name}' toegewezen aan jou\n\n{recordUrl}",
         "confirmation": "Zeker?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
         "resetPreferencesConfirmation": "Weet u zeker dat u de voorkeuren naar standaard terug wil zetten?",

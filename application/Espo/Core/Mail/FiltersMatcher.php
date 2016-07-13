@@ -39,8 +39,14 @@ class FiltersMatcher
 
     }
 
-    public function match(Email $email, $filterList = [])
+    public function match(Email $email, $subject, $skipBody = false)
     {
+        if (is_array($subject) || $subject instanceof \Traversable) {
+            $filterList = $subject;
+        } else {
+            $filterList = [$subject];
+        }
+
         foreach ($filterList as $filter) {
             if ($filter->get('from')) {
                 if ($this->matchString(strtolower($filter->get('from')), strtolower($email->get('from')))) {
@@ -63,11 +69,24 @@ class FiltersMatcher
                 }
             }
         }
+
+        if (!$skipBody) {
+            if ($this->matchBody($email, $filterList)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    public function matchBody(Email $email, $filterList = [])
+    public function matchBody(Email $email, $subject)
     {
+        if (is_array($subject) || $subject instanceof \Traversable) {
+            $filterList = $subject;
+        } else {
+            $filterList = [$subject];
+        }
+
         foreach ($filterList as $filter) {
             if ($filter->get('bodyContains')) {
                 $phraseList = $filter->get('bodyContains');

@@ -40,11 +40,11 @@ Espo.define('ui', [], function () {
         this.height = false;
         this.buttons = [];
         this.removeOnClose = true;
-        this.graggable = false;
+        this.draggable = false;
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'graggable', 'container', 'onRemove'];
+        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'draggable', 'container', 'onRemove'];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -56,7 +56,7 @@ Espo.define('ui', [], function () {
         this.contents = '';
         if (this.header) {
             this.contents += '<header class="modal-header">' +
-                             ((this.closeButton) ? '<a href="javascript:" class="close" aria-hidden="true">&times;</a>' : '') +
+                             ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></a>' : '') +
                              '<h4 class="modal-title">' + this.header + '</h4>' +
                              '</header>';
         }
@@ -88,7 +88,7 @@ Espo.define('ui', [], function () {
         this.el = this.$el.get(0);
 
         this.$el.find('header a.close').on('click', function () {
-            this.close();
+            //this.close();
         }.bind(this));
 
         this.buttons.forEach(function (o) {
@@ -99,7 +99,7 @@ Espo.define('ui', [], function () {
             }
         }.bind(this));
 
-        if (this.graggable) {
+        if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
             this.$el.draggable({
                 handle: 'header',
@@ -123,7 +123,7 @@ Espo.define('ui', [], function () {
 
         $window = $(window);
 
-        this.$el.on('shown.bs.modal', function (event) {
+        this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
             if (this.fitHeight) {
                 var processResize = function () {
@@ -145,7 +145,7 @@ Espo.define('ui', [], function () {
                 processResize();
             }
         }.bind(this));
-        this.$el.on('hidden.bs.modal', function (event) {
+        this.$el.on('hidden.bs.modal', function (e) {
             if ($('.modal:visible').length > 0) {
                 setTimeout(function() {
                     $(document.body).addClass('modal-open');
@@ -159,6 +159,17 @@ Espo.define('ui', [], function () {
              backdrop: this.backdrop,
              keyboard: this.keyboard
         });
+        this.$el.find('.modal-content').removeClass('hidden');
+
+        this.$el.off('click.dismiss.bs.modal');
+        this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
+            this.close();
+        }.bind(this));
+        this.$el.on('click.dismiss.bs.modal', function (e) {
+            if (e.target === e.currentTarget) {
+                return this.backdrop == 'static' ? this.$el[0].focus() : this.close();
+            }
+        }.bind(this));
     };
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');

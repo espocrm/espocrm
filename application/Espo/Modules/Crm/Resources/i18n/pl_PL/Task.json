@@ -1,37 +1,45 @@
 {
-    "fields": {
-        "name": "Imię",
-        "parent": "Konto",
-        "status": "Status",
-        "dateStart": "Data Startu",
-        "dateEnd": "Data Zwrotu",
-        "priority": "Pryjorytet",
-        "description": "Opis ",
-        "isOverdue": "Przegrzany"
+  "fields": {
+    "name": "Nazwa",
+    "parent": "Rodzic",
+    "status": "Status",
+    "dateStart": "Data rozpoczęcia",
+    "dateEnd": "Data zwrotu",
+    "dateStartDate": "Data rozpoczęcia",
+    "dateEndDate": "Data zakończenia",
+    "priority": "Pryjorytet",
+    "description": "Opis ",
+    "isOverdue": "Przegrzany",
+    "account": "Klient",
+    "dateCompleted": "Data ukończenia",
+    "attachments": "Załączniki"
+  },
+  "links": {
+    "attachments": "Załączniki"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Nie Rozpoczęte",
+      "Started": "Rozpoczęte",
+      "Completed": "Ukończone",
+      "Canceled": "Anulowane",
+      "Deferred": "Opóźniony"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "Nie Rozpoczęte",
-            "Started": "Rozpoczęte",
-            "Completed": "Ukończone",
-            "Canceled": "Anulowane"
-        },
-        "priority" : {
-            "Low": "Niski",
-            "Normal": "Normalny",
-            "High": "Wysoki",
-            "Urgent": "Pilne"
-        }
-    },
-    "labels": {
-        "Create Task": "Utwórz Zadanie"
-    },
-    "presetFilters": {
-        "active": "Aktywny",
-        "completed": "Ukończone",
-        "todays": "Dzisiaj",
-        "overdue": "Przegrzane"
+    "priority": {
+      "Low": "Niski",
+      "Normal": "Normalny",
+      "High": "Wysoki",
+      "Urgent": "Pilne"
     }
+  },
+  "labels": {
+    "Create Task": "Utwórz zadanie",
+    "Complete": "Gotowe"
+  },
+  "presetFilters": {
+    "actual": "Bieżący",
+    "completed": "Ukończone",
+    "todays": "Dzisiaj",
+    "overdue": "Przegrzane"
+  }
 }

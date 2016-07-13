@@ -1,30 +1,36 @@
 {
-    "fields": {
-        "name": "Imię",
-        "status": "Status",
-        "job": "Zadanie",
-        "scheduling": "Scheduling (crontab notation)"
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "job": "Zadanie",
+    "scheduling": "Scheduling (crontab notation)"
+  },
+  "links": {
+    "log": "Log"
+  },
+  "labels": {
+    "Create ScheduledJob": "Utwórz zaplanowane działania"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Wyczyść",
+      "CheckInboundEmails": "Sprawdź pocztę przychodzącą",
+      "CheckEmailAccounts": "Sprawdź osobiste konta pocztowe",
+      "SendEmailReminders": "Wyślij przypomnienia",
+      "AuthTokenControl": "Kontrola tokenu autentykacji"
     },
-    "links": {
-        "log": "Log"
+    "cronSetup": {
+      "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
+      "mac": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
+      "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:",
+      "default": "Note: Add this command to Cron Job (Scheduled Task):"
     },
-    "labels": {
-        "Create ScheduledJob": "Utwórz zaplanowane działania"
-    },
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Sprawdź pocztę przychodzącą",
-            "Cleanup": "Wyczyść"
-        },
-        "cronSetup": {
-            "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
-            "mac": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
-            "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
-        },
-        "status": {
-            "Active": "Aktywny",
-            "Inactive": "Nie Aktywny"
-        }
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nie Aktywny"
     }
+  },
+  "tooltips": {
+    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+  }
 }

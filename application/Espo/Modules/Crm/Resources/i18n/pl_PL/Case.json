@@ -1,42 +1,57 @@
 {
-    "fields": {
-        "name": "Imię",
-        "number": "Numer",
-        "status": "Status",
-        "account": "Konto",
-        "contact": "Kontakty",
-        "priority": "Pryjorytet",
-        "type": "Rodzaj",
-        "description": "Opis "
+  "fields": {
+    "name": "Nazwa",
+    "number": "Numer",
+    "status": "Status",
+    "account": "Klient",
+    "contact": "Kontakty",
+    "contacts": "Kontakty",
+    "priority": "Priorytet",
+    "type": "Rodzaj",
+    "description": "Opis ",
+    "inboundEmail": "Wiadomość przychodząca"
+  },
+  "links": {
+    "inboundEmail": "Wiadomość przychodząca",
+    "account": "Klient",
+    "contact": "Contact (Primary)",
+    "Contacts": "Kontakty",
+    "meetings": "Spotkania",
+    "calls": "Rozmowy",
+    "tasks": "Zadania",
+    "emails": "Wiadomości",
+    "articles": "Artykuły bazy wiedzy"
+  },
+  "options": {
+    "status": {
+      "New": "Nowy",
+      "Assigned": "Przypisany",
+      "Pending": "Oczekiwanie",
+      "Closed": "Zamknięty",
+      "Rejected": "Odrzucony",
+      "Duplicate": "Powielony"
     },
-    "links": {
+    "priority": {
+      "Low": "Niski",
+      "Normal": "Normalny",
+      "High": "Wysoki",
+      "Urgent": "Pilne"
     },
-    "options": {
-        "status": {
-            "New": "Nowy",
-            "Assigned": "Przypisany",
-            "Pending": "Oczekuje",
-            "Closed": "Zamknięty",
-            "Rejected": "Odrzucony",
-            "Duplicate": "Powielony"
-        },
-        "priority" : {
-            "Low": "Niski",
-            "Normal": "Normalny",
-            "High": "Wysoki",
-            "Urgent": "Pilne"
-        },
-        "type": {
-            "Question": "Pytanie",
-            "Incident": "Zdarzenie",
-            "Problem": "Problem"
-        }
-    },
-    "labels": {
-        "Create Case": "Utwórz Sprawę"
-    },
-    "presetFilters": {
-        "open": "Otwórz",
-        "closed": "Zamknięty"
+    "type": {
+      "Question": "Pytanie",
+      "Incident": "Zdarzenie",
+      "Problem": "Problem"
     }
+  },
+  "labels": {
+    "Create Case": "Utwórz sprawę",
+    "Close": "Zamknij",
+    "Reject": "Odrzuć",
+    "Closed": "Zamknięty",
+    "Rejected": "Odrzucony"
+  },
+  "presetFilters": {
+    "open": "Otwórz",
+    "closed": "Zamknięty"
+  }
 }

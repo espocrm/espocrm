@@ -83,7 +83,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                         $usersColumns = new \StdClass();
                     }
                     if ($usersColumns instanceof \StdClass) {
-                        if (!($usersColumns->$currentUserId instanceof \StdClass)) {
+                        if (empty($usersColumns->$currentUserId) || !($usersColumns->$currentUserId instanceof \StdClass)) {
                             $usersColumns->$currentUserId = new \StdClass();
                         }
                         if (empty($usersColumns->$currentUserId->status)) {
@@ -93,21 +93,40 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
+
+        if (!$entity->isNew()) {
+            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
+                $dateEndPrevious = $entity->getFetched('dateEnd');
+                $dateStartPrevious = $entity->getFetched('dateStart');
+                if ($dateStartPrevious && $dateEndPrevious) {
+                    $dtStart = new \DateTime($dateStartPrevious);
+                    $dtEnd = new \DateTime($dateEndPrevious);
+                    $dt = new \DateTime($entity->get('dateStart'));
+
+                    if ($dtStart && $dtEnd && $dt) {
+                        $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
+                        $dt->modify('+' . $duration . ' seconds');
+                        $dateEnd = $dt->format('Y-m-d H:i:s');
+                        $entity->set('dateEnd', $dateEnd);
+                    }
+                }
+            }
+        }
     }
 
-    public function getEntityReminders(Entity $entity)
+    public function getEntityReminderList(Entity $entity)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        $reminders = array();
+        $reminderList = [];
 
         $sql = "
-            SELECT id, `seconds`, `type`
+            SELECT DISTINCT `seconds`, `type`
             FROM `reminder`
             WHERE
                 `entity_type` = ".$pdo->quote($entity->getEntityType())." AND
                 `entity_id` = ".$pdo->quote($entity->id)." AND
                 `deleted` = 0
-                ORDER BY `seconds` ASC
+            ORDER BY `seconds` ASC
         ";
 
         $sth = $pdo->prepare($sql);
@@ -118,19 +137,20 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             $o = new \StdClass();
             $o->seconds = intval($row['seconds']);
             $o->type = $row['type'];
-            $reminders[] = $o;
+            $reminderList[] = $o;
         }
 
-        return $reminders;
+        return $reminderList;
     }
 
-    protected function afterSave(Entity $entity, array $options)
+    protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 
         if (
             $entity->isNew() ||
             $entity->isFieldChanged('assignedUserId') ||
+            $entity->isFieldChanged('usersIds') ||
             $entity->isFieldChanged('dateStart') ||
             $entity->has('reminders')
         ) {
@@ -139,9 +159,9 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             $reminderTypeList = $this->getMetadata()->get('entityDefs.Reminder.fields.type.options');
 
             if (!$entity->has('reminders')) {
-                $reminders = $this->getEntityReminders($entity);
+                $reminderList = $this->getEntityReminderList($entity);
             } else {
-                $reminders = $entity->get('reminders');
+                $reminderList = $entity->get('reminders');
             }
 
             if (!$entity->isNew()) {
@@ -155,32 +175,28 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 $pdo->query($sql);
             }
 
-            if (empty($reminders) || !is_array($reminders)) return;
+            if (empty($reminderList) || !is_array($reminderList)) return;
 
             $entityType = $entity->getEntityName();
 
             $dateStart = $entity->get('dateStart');
-            $assignedUserId = $entity->get('assignedUserId');
 
-            if (!$dateStart || !$assignedUserId) {
+            if (!$dateStart) {
                 $e = $this->get($entity->id);
                 if ($e) {
                     $dateStart = $e->get('dateStart');
-                    $assignedUserId = $e->get('assignedUserId');
                 }
             }
 
-            if (!$dateStart || !$assignedUserId) {
-                return;
-            }
+            $userIdList = $entity->getLinkMultipleIdList('users');
 
+            if (!$dateStart) return;
+            if (empty($userIdList)) return;
 
             $dateStartObj = new \DateTime($dateStart);
-            if (!$dateStartObj) {
-                return;
-            }
+            if (!$dateStartObj) return;
 
-            foreach ($reminders as $item) {
+            foreach ($reminderList as $item) {
                 $remindAt = clone $dateStartObj;
                 $seconds = intval($item->seconds);
                 $type = $item->type;
@@ -189,25 +205,26 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
 
                 $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
 
-                $id = uniqid();
+                foreach ($userIdList as $userId) {
+                    $id = uniqid(true);
 
-                $sql = "
-                    INSERT
-                    INTO `reminder`
-                    (id, entity_id, entity_type, `type`, user_id, remind_at, start_at, `seconds`)
-                    VALUES (
-                        ".$pdo->quote($id).",
-                        ".$pdo->quote($entity->id).",
-                        ".$pdo->quote($entityType).",
-                        ".$pdo->quote($type).",
-                        ".$pdo->quote($assignedUserId).",
-                        ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
-                        ".$pdo->quote($dateStart).",
-                        ".$pdo->quote($seconds)."
-                    )
-                ";
-                $pdo->query($sql);
-
+                    $sql = "
+                        INSERT
+                        INTO `reminder`
+                        (id, entity_id, entity_type, `type`, user_id, remind_at, start_at, `seconds`)
+                        VALUES (
+                            ".$pdo->quote($id).",
+                            ".$pdo->quote($entity->id).",
+                            ".$pdo->quote($entityType).",
+                            ".$pdo->quote($type).",
+                            ".$pdo->quote($userId).",
+                            ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
+                            ".$pdo->quote($dateStart).",
+                            ".$pdo->quote($seconds)."
+                        )
+                    ";
+                    $pdo->query($sql);
+                }
             }
         }
     }

@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "pengguna"
+  },
+  "labels": {
+    "Access": "Akses",
+    "Create PortalRole": "Buat Portal Peran",
+    "Scope Level": "lingkup Tingkat",
+    "Field Level": "Tingkat Kolom"
+  }
+}

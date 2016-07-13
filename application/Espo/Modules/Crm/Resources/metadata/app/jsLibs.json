@@ -3,5 +3,9 @@
         "path": "client/modules/crm/lib/fullcalendar.min.js",
         "exportsTo": "$",
         "exportsAs": "fullCalendar"
+    },
+    "vis": {
+        "path": "client/modules/crm/lib/vis.min.js",
+        "exportsAs": "vis"
     }
 }

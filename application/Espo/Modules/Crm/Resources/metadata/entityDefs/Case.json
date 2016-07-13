@@ -38,6 +38,9 @@
         "account": {
             "type": "link"
         },
+        "lead": {
+            "type": "link"
+        },
         "contact": {
             "type": "link",
             "view": "crm:views/case/fields/contact"
@@ -70,10 +73,11 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         }
     },
     "links": {
@@ -102,6 +106,11 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account",
+            "foreign": "cases"
+        },
+        "lead": {
+            "type": "belongsTo",
+            "entity": "Lead",
             "foreign": "cases"
         },
         "contact": {

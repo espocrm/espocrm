@@ -61,10 +61,11 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/user"
+            "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
         },
         "accounts": {
             "type": "linkMultiple",
@@ -88,6 +89,11 @@
         "opportunities": {
             "type": "hasMany",
             "entity": "Opportunity",
+            "foreign": "documents"
+        },
+        "leads": {
+            "type": "hasMany",
+            "entity": "Lead",
             "foreign": "documents"
         },
         "createdBy": {

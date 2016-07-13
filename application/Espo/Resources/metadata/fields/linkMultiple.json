@@ -4,6 +4,12 @@
          "name":"required",
          "type":"bool",
          "default":false
+      },
+      {
+         "name": "sortable",
+         "type": "bool",
+         "default": false,
+         "hidden": true
       }
    ],
    "actualFields":[

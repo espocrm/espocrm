@@ -2,13 +2,16 @@
     {
         "rows": [
             [
-                {"name": "name"}, {"name": "parent"}
+                {"name": "name"}, {"name": "isGlobal"}
             ],
             [
-                {"name": "from"}, false
+                {"name": "from"}, {"name": "parent"}
             ],
             [
-                {"name": "to"}, false
+                {"name": "to"}, {"name": "action"}
+            ],
+            [
+                false, {"name": "emailFolder"}
             ],
             [
                 {"name": "subject", "fullWidth": true}

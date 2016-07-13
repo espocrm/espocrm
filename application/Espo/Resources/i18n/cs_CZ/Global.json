@@ -177,8 +177,6 @@
         "fieldShouldBeGreater": "{field} má být většá než {value}",
         "fieldBadPasswordConfirm": "{field} není správně potvrzeno",
         "resetPreferencesDone": "Předvolby byly resetovány na výchozí.",
-        "assignmentEmailNotificationSubject": "EspoCRM {entityType}: {Entity.name}",
-        "assignmentEmailNotificationBody": "{assignerUserName} Ti přiřadil {entityType} '{Entity.name}'.\n\n{recordUrl}",
         "confirmation": "Opravdu to chcete?",
         "unlinkAllConfirmation": "Opravdu chcete odlinkovat všechny související záznamy?",
         "resetPreferencesConfirmation": "Opravdu chcete resetovat předvolby na výchozí?",

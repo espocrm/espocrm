@@ -58,6 +58,8 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
 
         bottomView: 'views/record/edit-bottom',
 
+        duplicateAction: false,
+
         actionSave: function () {
             this.save();
         },

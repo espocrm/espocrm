@@ -45,7 +45,7 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
         $collection = $this->getEntityManager()->getRepository('Reminder')->where(array(
             'type' => 'Email',
             'remindAt<=' => $now,
-            'startAt>' => $nowShifted,
+            'startAt>' => $nowShifted
         ))->find();
 
         if (!empty($collection)) {
@@ -53,8 +53,11 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
                 $this->getEntityManager(),
                 $this->getContainer()->get('mailSender'),
                 $this->getConfig(),
+                $this->getContainer()->get('fileManager'),
                 $this->getContainer()->get('dateTime'),
+                $this->getContainer()->get('number'),
                 $this->getContainer()->get('language')
+
             );
             $pdo = $this->getEntityManager()->getPDO();
         }

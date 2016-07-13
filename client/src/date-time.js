@@ -64,6 +64,10 @@ Espo.define('date-time', [], function () {
             return this.dateFormat;
         },
 
+        getTimeFormat: function () {
+            return this.timeFormat;
+        },
+
         getDateTimeFormat: function () {
             return this.dateFormat + ' ' + this.timeFormat;
         },
@@ -85,6 +89,10 @@ Espo.define('date-time', [], function () {
                 return -1;
             }
             return m.format(this.internalDateFormat);
+        },
+
+        getTimeZone: function () {
+            return this.timeZone ? this.timeZone : 'UTC';
         },
 
         toDisplayDate: function (string) {

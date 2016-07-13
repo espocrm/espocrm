@@ -25,7 +25,9 @@
 
     <ul class="list-group list-group-tree list-group-no-border">
     {{#each rowList}}
+        <li data-id="{{./this}}" class="list-group-item">
         {{{var this ../this}}}
+        </li>
     {{/each}}
     {{#unless createDisabled}}
     <li class="list-group-item">

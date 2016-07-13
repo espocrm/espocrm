@@ -78,14 +78,20 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['sortDirection'])) {
             $params['asc'] = $data['sortDirection'] === 'asc';
         }
+        if (isset($data['textFilterFields']) && is_array($data['textFilterFields'])) {
+            $params['textFilterFields'] = $data['textFilterFields'];
+        }
 
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 
         if ($result) {
             $tabList = $this->getConfig()->get('tabList', []);
-            $tabList[] = $name;
-            $this->getConfig()->set('tabList', $tabList);
-            $this->getConfig()->save();
+
+            if (!in_array($name, $tabList)) {
+                $tabList[] = $name;
+                $this->getConfig()->set('tabList', $tabList);
+                $this->getConfig()->save();
+            }
 
             $this->getContainer()->get('dataManager')->rebuild();
         } else {

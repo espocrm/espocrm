@@ -53,35 +53,6 @@ abstract class Mapper implements IMapper
 
     protected $collectionClass = "\\Espo\\ORM\\EntityCollection";
 
-    protected static $sqlOperators = array(
-        'OR',
-        'AND',
-    );
-
-    protected static $comparisonOperators = array(
-        '!=' => '<>',
-        '*' => 'LIKE',
-        '>=' => '>=',
-        '<=' => '<=',
-        '>' => '>',
-        '<' => '<',
-        '=' => '=',
-    );
-
-    protected static $selectParamList = array(
-        'offset',
-        'limit',
-        'order',
-        'orderBy',
-        'customWhere',
-        'customJoin',
-        'joins',
-        'leftJoins',
-        'distinct',
-        'joinConditions',
-        'additionalColumnsConditions'
-    );
-
     public function __construct(PDO $pdo, \Espo\ORM\EntityFactory $entityFactory, Query\Base $query) {
         $this->pdo = $pdo;
         $this->query = $query;
@@ -117,12 +88,12 @@ abstract class Mapper implements IMapper
 
     public function max(IEntity $entity, $params = array(), $field, $deleted = false)
     {
-        return $this->aggregate($entity, $params, 'MAX', $field, true);
+        return $this->aggregate($entity, $params, 'MAX', $field, $deleted);
     }
 
     public function min(IEntity $entity, $params = array(), $field, $deleted = false)
     {
-        return $this->aggregate($entity, $params, 'MIN', $field, true);
+        return $this->aggregate($entity, $params, 'MIN', $field, $deleted);
     }
 
     public function sum(IEntity $entity, $params = array())
@@ -332,17 +303,18 @@ abstract class Mapper implements IMapper
         return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
     }
 
-    public function updateRelation(IEntity $entity, $relationName, $id = null, array $columnData)
+    public function updateRelation(IEntity $entity, $relationName, $id = null, $columnData)
     {
         if (empty($id) || empty($relationName)) {
             return false;
         }
 
+        if (empty($columnData)) return;
+
         $relOpt = $entity->relations[$relationName];
         $keySet = $this->query->getKeys($entity, $relationName);
 
         $relType = $relOpt['type'];
-
 
         switch ($relType) {
             case IEntity::MANY_MANY:
@@ -414,24 +386,29 @@ abstract class Mapper implements IMapper
 
                 $relTable = $this->toDb($relOpt['relationName']);
 
-
-                $params['select'] = array('id');
-                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
-
                 $fieldsPart = $this->toDb($nearKey);
                 $valuesPart = $this->pdo->quote($entity->id);
+
+                $valueList = [];
+                $valueList[] = $entity->id;
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     foreach ($relOpt['conditions'] as $f => $v) {
                         $fieldsPart .= ", " . $this->toDb($f);
                         $valuesPart .= ", " . $this->pdo->quote($v);
+                        $valueList[] = $v;
                     }
                 }
                 $fieldsPart .= ", " . $this->toDb($distantKey);
 
-                $subSql = substr($subSql, 7);
+                $params['select'] = [];
+                foreach ($valueList as $value) {
+                   $params['select'][] = ['VALUE:' . $value, $value];
+                }
 
-                $subSql = "SELECT " . $valuesPart . ", " . $subSql;
+                $params['select'][] = 'id';
+
+                $subSql = $this->query->createSelectQuery($foreignEntityType, $params);
 
                 $sql = "INSERT INTO `".$relTable."` (".$fieldsPart.") (".$subSql.") ON DUPLICATE KEY UPDATE deleted = '0'";
 
@@ -798,7 +775,7 @@ abstract class Mapper implements IMapper
         foreach ($entity->fields as $field => $fieldDefs) {
             if ($entity->has($field)) {
                 if ($onlyStorable) {
-                    if (!empty($fieldDefs['notStorable']) || isset($fieldDefs['source']) && $fieldDefs['source'] != 'db')
+                    if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['autoincrement']) || isset($fieldDefs['source']) && $fieldDefs['source'] != 'db')
                         continue;
                     if ($fieldDefs['type'] == IEntity::FOREIGN)
                         continue;

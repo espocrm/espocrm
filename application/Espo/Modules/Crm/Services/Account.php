@@ -41,21 +41,6 @@ class Account extends \Espo\Services\Record
         )
     );
 
-    protected $mergeLinkList = [
-        'opportunities',
-        'cases',
-        'documents',
-        'contacts',
-        'tasks',
-        'meetings',
-        'calls',
-        'emails',
-        'meetingsPrimary',
-        'callsPrimary',
-        'emailsPrimary',
-        'targetLists'
-    ];
-
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         return array(

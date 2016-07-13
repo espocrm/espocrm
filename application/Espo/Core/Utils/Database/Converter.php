@@ -82,14 +82,10 @@ class Converter
     */
     public function process()
     {
-        $GLOBALS['log']->debug('Orm\Converter - Start: orm convertation');
-
         $ormMeta = $this->getOrmConverter()->process();
 
         //save database meta to a file espoMetadata.php
         $result = $this->getMetadata()->setOrmMetadata($ormMeta);
-
-        $GLOBALS['log']->debug('Orm\Converter - End: orm convertation, result=['.$result.']');
 
         return $result;
     }

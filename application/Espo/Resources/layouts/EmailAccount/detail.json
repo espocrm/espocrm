@@ -25,10 +25,29 @@
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
             [
-                false,{"name":"keepFetchedEmailsUnread"}
+                {"name":"emailFolder"}, {"name":"keepFetchedEmailsUnread"}
             ],
             [
-                {"name": "testConnection", "customLabel": null, "view": "EmailAccount.Fields.TestConnection"}, false
+                false, {"name":"storeSentEmails"}
+            ],
+            [
+                false, {"name":"sentFolder"}
+            ],
+            [
+                {"name": "testConnection", "customLabel": null, "view": "views/email-account/fields/test-connection"}, false
+            ]
+        ]
+    },
+    {
+        "label":"SMTP",
+        "rows": [
+            [{"name": "useSmtp"}, false],
+            [{"name": "smtpHost"}, {"name": "smtpPort"}],
+            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
+            [{"name": "smtpUsername"}, false],
+            [{"name": "smtpPassword"}, false],
+            [
+                {"name": "smtpTestSend", "customLabel": null, "view": "views/email-account/fields/test-send"}, false
             ]
         ]
     }

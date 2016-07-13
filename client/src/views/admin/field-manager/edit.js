@@ -32,6 +32,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         template: 'admin/field-manager/edit',
 
+        entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
+
         data: function () {
             return {
                 scope: this.scope,
@@ -91,41 +93,60 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                 if (!this.isNew) {
                     this.type = model.getFieldType(this.field);
-                    this.defs = model.defs.fields[this.field];
                 }
 
-                this.params = [];
-                var params = this.getFieldManager().getParams(this.type) || [];
-                params.forEach(function (o) {
-                    var item = o.name;
-                    var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
-                    if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
-                        return;
+                Promise.race([
+                    new Promise(function (resolve) {
+                        if (this.isNew) {
+                            resolve();
+                        };
+                    }.bind(this)),
+                    new Promise(function (resolve) {
+                        if (this.isNew) return;
+                        this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field).then(function (data) {
+                            this.defs = data;
+                            resolve();
+                        }.bind(this));
+                    }.bind(this))
+                ]).then(function () {
+                    this.params = [];
+                    var params = this.getFieldManager().getParams(this.type) || [];
+                    params.forEach(function (o) {
+                        var item = o.name;
+                        var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                        if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
+                            return;
+                        }
+                        this.params.push(o);
+                    }, this);
+
+                    this.params.forEach(function (o) {
+                        this.model.defs.fields[o.name] = o;
+                    }, this);
+
+                    this.model.set(this.defs);
+
+                    if (this.isNew) {
+                        this.model.populateDefaults();
                     }
-                    this.params.push(o);
-                }, this);
 
-                this.params.forEach(function (o) {
-                    this.model.defs.fields[o.name] = o;
-                }, this);
+                    this.createFieldView('varchar', 'name', !this.isNew, {
+                        trim: true
+                    });
+                    this.createFieldView('varchar', 'label', null, {
+                        trim: true
+                    });
 
-                this.model.set(this.defs);
+                    this.params.forEach(function (o) {
+                        if (o.hidden) {
+                            return;
+                        }
+                        this.createFieldView(o.type, o.name, null, o);
+                    }, this);
 
-                if (this.isNew) {
-                    this.model.populateDefaults();
-                }
+                    this.wait(false);
 
-                this.createFieldView('varchar', 'name', !this.isNew);
-                this.createFieldView('varchar', 'label');
-
-                this.params.forEach(function (o) {
-                    if (o.hidden) {
-                        return;
-                    }
-                    this.createFieldView(o.type, o.name, null, o);
-                }, this);
-
-                this.wait(false);
+                }.bind(this));
             }.bind(this));
         },
 
@@ -181,6 +202,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }
 
             this.listenToOnce(this.model, 'sync', function () {
+                Espo.Ui.notify(false);
+
                 this.getMetadata().load(function () {
                     this.getMetadata().storeToCache();
                     this.trigger('after:save');
@@ -194,7 +217,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
 
 
-                    if (~['enum', 'phone'].indexOf(this.model.get('type')) && this.model.get('translatedOptions')) {
+                    if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {
                         langData[this.scope].options = langData[this.scope].options || {};
                         langData[this.scope]['options'][this.model.get('name')] = this.model.get('translatedOptions') || {};
                     }

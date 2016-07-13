@@ -1,0 +1,39 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "status"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "dateStart"
+                },
+                {
+                    "name": "dateEnd"
+                }
+            ],
+            [
+                {
+                    "name": "duration"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "description",
+                    "fullWidth": true
+                }
+            ]
+        ]
+    }
+]

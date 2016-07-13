@@ -143,8 +143,6 @@ class Image extends \Espo\Core\EntryPoints\Base
         if ($fileSize) {
             header('Content-Length: ' . $fileSize);
         }
-        ob_clean();
-        flush();
         readfile($filePath);
         exit;
     }

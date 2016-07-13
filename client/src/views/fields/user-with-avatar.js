@@ -36,7 +36,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         data: function () {
             var o = _.extend({}, Dep.prototype.data.call(this));
-            if (this.mode == 'detail' || this.mode == 'list') {
+            if (this.mode == 'detail') {
                 o.avatar = this.getAvatarHtml();
             }
             return o;

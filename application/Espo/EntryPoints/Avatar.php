@@ -40,7 +40,9 @@ class Avatar extends Image
 
     public static $notStrictAuth = true;
 
-    private $colorList = [
+    protected $systemColor = [212,114,155];
+
+    protected $colorList = [
         [111,168,214],
         [237,197,85],
         [212,114,155],
@@ -72,7 +74,6 @@ class Avatar extends Image
         }
 
         $userId = $_GET['id'];
-
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -106,9 +107,14 @@ class Avatar extends Image
                 header('Cache-Control: max-age=360000, must-revalidate');
                 header('Content-Type: image/png');
 
-                ob_clean();
-                flush();
-                echo $identicon->getImageData($userId, $width, $this->getColor($userId));
+                $hash = $userId;
+                $color = $this->getColor($userId);
+                if ($hash === 'system') {
+                    $color = $this->systemColor;
+                }
+
+                $imgContent = $identicon->getImageData($hash, $width, $color);
+                echo $imgContent;
                 exit;
             }
         }

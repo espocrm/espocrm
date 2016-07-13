@@ -181,9 +181,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.events = {};
             }
 
-            this.defs = this.options.defs;
-            this.name = this.options.name = this.options.defs.name;
-            this.params = this.options.params = this.options.defs.params || {};
+            this.defs = this.options.defs || {};
+            this.name = this.options.name || this.defs.name;
+            this.params = this.options.params || this.defs.params || {};
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
 
@@ -454,6 +454,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             selector = selector || '.main-element';
 
             var $el = this.$el.find(selector);
+            if (!$el.size() && this.$element) {
+                $el = this.$element;
+            }
             $el.popover({
                 placement: 'bottom',
                 container: 'body',

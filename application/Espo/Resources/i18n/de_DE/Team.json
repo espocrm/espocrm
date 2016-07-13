@@ -1,19 +1,19 @@
 {
-    "fields": {
-        "name": "Name",
-        "roles": "Rollen",
-        "positionList": "Stellungen"
-    },
-    "links": {
-        "users": "Benutzer",
-        "notes": "Notizen",
-        "roles": "Rollen"
-    },
-    "tooltips": {
-        "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen.",
-        "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
-    },
-    "labels": {
-        "Create Team": "Team erstellen"
-    }
+  "fields": {
+    "name": "Betreff",
+    "roles": "Rollen",
+    "positionList": "Stellungen"
+  },
+  "links": {
+    "users": "Benutzer",
+    "notes": "Notizen",
+    "roles": "Rollen"
+  },
+  "tooltips": {
+    "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen.",
+    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
+  },
+  "labels": {
+    "Create Team": "Team erstellen"
+  }
 }

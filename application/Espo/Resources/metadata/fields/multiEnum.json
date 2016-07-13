@@ -7,17 +7,23 @@
       },
       {
          "name":"options",
-         "type":"array"
+         "type":"array",
+         "view": "views/admin/field-manager/fields/options"
       },
       {
          "name":"translation",
          "type":"varchar",
          "hidden": true
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "filter": true,
    "notCreatable": false,
    "fieldDefs":{
       "type":"jsonArray"
-   }
+   },
+   "translatedOptions": true
 }

@@ -17,6 +17,9 @@
         "read": {
             "type": "bool"
         },
+        "emailIsProcessed": {
+            "type": "bool"
+        },
         "user": {
             "type": "link"
         },

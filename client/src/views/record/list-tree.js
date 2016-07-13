@@ -161,8 +161,9 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 var count = modelList.length;
                 var built = 0;
                 modelList.forEach(function (model, i) {
-                    this.rowList.push('row-' + i);
-                    this.createView('row-' + i, this.itemViewName, {
+                    var key = model.id;
+                    this.rowList.push(key);
+                    this.createView(key, this.itemViewName, {
                         model: model,
                         collection: this.collection,
                         el: this.options.el + ' ' + this.getRowSelector(model.id),
@@ -194,7 +195,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' li[data-id="' + model.id + '"] span.cell-' + item.name;
+            return this.options.el + ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
         },
 
         getCreateAttributes: function () {
