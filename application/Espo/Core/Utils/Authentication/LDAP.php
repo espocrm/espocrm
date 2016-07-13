@@ -45,12 +45,12 @@ class LDAP extends Base
      * @var array
      */
     private $fields = array(
-        'userName' => 'cn',
-        'firstName' => 'givenname',
-        'lastName' => 'sn',
-        'title' => 'title',
-        'emailAddress' => 'mail',
-        'phoneNumber' => 'telephonenumber',
+        'userName' => this.getConfig().get('ldapUserNameAttribute') // 'samaccountname',
+        'firstName' => this.getConfig().get('ldapUserFirstNameAttribute') // 'givenname',
+        'lastName' => this.getConfig().get('ldapUserLastNameAttribute') // 'sn',
+        'title' => this.getConfig().get('ldapUserTitleAttribute') // 'title',
+        'emailAddress' => this.getConfig().get('ldapUserEmailAddressAttribute') // 'mail',
+        'phoneNumber' => this.getConfig().get('ldapUserPhoneNumberAttribute') // 'telephonenumber',
     );
 
     public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
@@ -95,9 +95,13 @@ class LDAP extends Base
             $ldap->bind($username, $password);
 
             $dn = $ldap->getDn($username);
+            $GLOBALS['log']->debug('found DN for ['.$username.']: ['.$dn.']');
+
 
             $loginFilter = $this->getUtils()->getOption('userLoginFilter');
+            $GLOBALS['log']->debug('found loginFilter: ['.$loginFilter.']');
             $userData = $ldap->searchByLoginFilter($loginFilter, $dn, 3);
+            $GLOBALS['log']->debug('found userData ... ');
 
         } catch (\Zend\Ldap\Exception\LdapException $zle) {
 
@@ -186,9 +190,14 @@ class LDAP extends Base
      */
     protected function createUser(array $userData)
     {
+        $GLOBALS['log']->info('Creating new user ...');
         $data = array();
+        
+        // show full array of the LDAP user
+        $GLOBALS['log']->debug(print_R($userData,TRUE));
         foreach ($this->fields as $espo => $ldap) {
             if (isset($userData[$ldap][0])) {
+                $GLOBALS['log']->debug('    ['.$espo.']: ['.$userData[$ldap][0].']');
                 $data[$espo] = $userData[$ldap][0];
             }
         }
@@ -204,4 +213,3 @@ class LDAP extends Base
 
 
 }
-
