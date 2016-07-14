@@ -51,19 +51,6 @@ class LDAP extends Base
     {
         parent::__construct($config, $entityManager, $auth);
   
-/*  
-        
-        $this->fields = array(
-        'userName' => $parent.getConfig().get('ldapUserNameAttribute') ,
-        'firstName' => $parent.getConfig().get('ldapUserFirstNameAttribute'),
-        'lastName' => $parent.getConfig().get('ldapUserLastNameAttribute') ,
-        'title' => $parent.getConfig().get('ldapUserTitleAttribute') ,
-        'emailAddress' => $parent.getConfig().get('ldapUserEmailAddressAttribute') ,
-        'phoneNumber' => $parent.getConfig().get('ldapUserPhoneNumberAttribute') ,
-    );
-    
- */
-
         $this->zendLdap = new LDAP\LDAP();
         $this->utils = new LDAP\Utils($config);
     }
