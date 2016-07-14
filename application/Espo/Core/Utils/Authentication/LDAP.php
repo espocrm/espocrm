@@ -44,18 +44,25 @@ class LDAP extends Base
      *
      * @var array
      */
-    private $fields = array(
-        'userName' => this.getConfig().get('ldapUserNameAttribute') // 'samaccountname',
-        'firstName' => this.getConfig().get('ldapUserFirstNameAttribute') // 'givenname',
-        'lastName' => this.getConfig().get('ldapUserLastNameAttribute') // 'sn',
-        'title' => this.getConfig().get('ldapUserTitleAttribute') // 'title',
-        'emailAddress' => this.getConfig().get('ldapUserEmailAddressAttribute') // 'mail',
-        'phoneNumber' => this.getConfig().get('ldapUserPhoneNumberAttribute') // 'telephonenumber',
-    );
+    private $fields ;
+
 
     public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
     {
         parent::__construct($config, $entityManager, $auth);
+  
+/*  
+        
+        $this->fields = array(
+        'userName' => $parent.getConfig().get('ldapUserNameAttribute') ,
+        'firstName' => $parent.getConfig().get('ldapUserFirstNameAttribute'),
+        'lastName' => $parent.getConfig().get('ldapUserLastNameAttribute') ,
+        'title' => $parent.getConfig().get('ldapUserTitleAttribute') ,
+        'emailAddress' => $parent.getConfig().get('ldapUserEmailAddressAttribute') ,
+        'phoneNumber' => $parent.getConfig().get('ldapUserPhoneNumberAttribute') ,
+    );
+    
+ */
 
         $this->zendLdap = new LDAP\LDAP();
         $this->utils = new LDAP\Utils($config);
@@ -193,6 +200,15 @@ class LDAP extends Base
         $GLOBALS['log']->info('Creating new user ...');
         $data = array();
         
+        $this->fields = array(
+            'userName' => $this.getConfig().get('ldapUserNameAttribute') ,
+            'firstName' => $this.getConfig().get('ldapUserFirstNameAttribute'),
+            'lastName' => $this.getConfig().get('ldapUserLastNameAttribute') ,
+            'title' => $this.getConfig().get('ldapUserTitleAttribute') ,
+            'emailAddress' => $this.getConfig().get('ldapUserEmailAddressAttribute') ,
+            'phoneNumber' => $this.getConfig().get('ldapUserPhoneNumberAttribute') ,
+        );
+
         // show full array of the LDAP user
         $GLOBALS['log']->debug(print_R($userData,TRUE));
         foreach ($this->fields as $espo => $ldap) {
@@ -209,7 +225,5 @@ class LDAP extends Base
 
         return $user;
     }
-
-
 
 }
