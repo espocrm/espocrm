@@ -188,12 +188,12 @@ class LDAP extends Base
         $data = array();
         
         $this->fields = array(
-            'userName' => $this.getConfig().get('ldapUserNameAttribute') ,
-            'firstName' => $this.getConfig().get('ldapUserFirstNameAttribute'),
-            'lastName' => $this.getConfig().get('ldapUserLastNameAttribute') ,
-            'title' => $this.getConfig().get('ldapUserTitleAttribute') ,
-            'emailAddress' => $this.getConfig().get('ldapUserEmailAddressAttribute') ,
-            'phoneNumber' => $this.getConfig().get('ldapUserPhoneNumberAttribute') ,
+            'userName' => $this->getConfig()->get('ldapUserNameAttribute') ,
+            'firstName' => $this->getConfig()->get('ldapUserFirstNameAttribute'),
+            'lastName' => $this->getConfig()->get('ldapUserLastNameAttribute') ,
+            'title' => $this->getConfig()->get('ldapUserTitleAttribute') ,
+            'emailAddress' => $this->getConfig()->get('ldapUserEmailAddressAttribute') ,
+            'phoneNumber' => $this->getConfig()->get('ldapUserPhoneNumberAttribute') 
         );
 
         // show full array of the LDAP user
