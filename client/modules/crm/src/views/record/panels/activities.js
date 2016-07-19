@@ -196,7 +196,12 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     listLayout: this.listLayout
                 }, function (view) {
                     view.render();
-                });
+
+                    this.listenTo(view, 'after:save', function (m) {
+                        this.fetchActivities();
+                        this.fetchHistory();
+                    }, this);
+                }, this);
             }, this);
 
             if (!this.defs.hidden) {
@@ -205,16 +210,31 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
         },
 
         fetchHistory: function () {
-            if (this.name == 'history') return;
             var parentView = this.getParentView();
             if (parentView) {
                 if (parentView.hasView('history')) {
-                    var historyCollection = parentView.getView('history').collection;
-                    if (historyCollection) {
-                        historyCollection.fetch();
+                    var collection = parentView.getView('history').collection;
+                    if (collection) {
+                        collection.fetch();
                     }
                 }
             }
+        },
+
+        fetchActivities: function () {
+            var parentView = this.getParentView();
+            if (parentView) {
+                if (parentView.hasView('activities')) {
+                    var collection = parentView.getView('activities').collection;
+                    if (collection) {
+                        collection.fetch();
+                    }
+                }
+            }
+        },
+
+        fetchActivitiesAndHistory: function () {
+
         },
 
         getCreateActivityAttributes: function (data, callback) {

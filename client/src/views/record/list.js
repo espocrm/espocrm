@@ -946,6 +946,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.listenToOnce(view, 'after:edit-cancel', function () {
                         this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
+
+                    this.listenToOnce(view, 'after:save', function (model) {
+                        this.trigger('after:save', model);
+                    }, this);
                 }, this);
             } else {
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
@@ -1000,8 +1004,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (model) {
                             model.set(m.getClonedAttributes());
                         }
-                    }, this);
 
+                        this.trigger('after:save', m);
+                    }, this);
                 }, this);
             } else {
                 this.getRouter().dispatch(scope, 'edit', {
