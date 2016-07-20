@@ -114,6 +114,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 hideNotificationPanel = false;
             }
 
+            if (!this.getConfig().get('streamEmailNotifications') && !this.model.get('isPortalUser')) {
+                this.hideField('receiveStreamEmailNotifications');
+            } else if (!this.getConfig().get('portalStreamEmailNotifications') && this.model.get('isPortalUser')) {
+                this.hideField('receiveStreamEmailNotifications');
+            } else {
+                hideNotificationPanel = false;
+            }
+
             if (hideNotificationPanel) {
                 this.hidePanel('notifications');
             }

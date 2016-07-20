@@ -235,6 +235,19 @@
             "type": "bool",
             "default": false
         },
+        "streamEmailNotifications": {
+            "type": "bool",
+            "default": false
+        },
+        "portalStreamEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
+        "streamEmailNotificationsEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNamesPlural",
+            "view": "views/settings/fields/stream-email-notifications-entity-list"
+        },
         "b2cMode": {
             "type": "bool",
             "default": false

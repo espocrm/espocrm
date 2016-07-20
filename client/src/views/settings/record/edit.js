@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/ 
 
-Espo.define('Views.Settings.Record.Edit', 'Views.Record.Edit', function (Dep) {
+Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
         sideView: null,
-        
+
         layoutName: 'settings',
 
         buttons: [
@@ -45,10 +45,10 @@ Espo.define('Views.Settings.Record.Edit', 'Views.Record.Edit', function (Dep) {
                 label: 'Cancel',
             }
         ],
-        
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            
+
             this.listenTo(this.model, 'after:save', function () {
                 this.getConfig().set(this.model.toJSON());
                 this.getConfig().storeToCache();
@@ -57,7 +57,7 @@ Espo.define('Views.Settings.Record.Edit', 'Views.Record.Edit', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            
+
             var currencyListField = this.getFieldView('currencyList');
             var defaultCurrencyField = this.getFieldView('defaultCurrency');
             if (currencyListField && defaultCurrencyField) {

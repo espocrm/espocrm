@@ -316,6 +316,11 @@ class Config
 
         return true;
     }
+
+    public function getSiteUrl()
+    {
+        return rtrim($this->get('siteUrl'), '/');
+    }
 }
 
 ?>

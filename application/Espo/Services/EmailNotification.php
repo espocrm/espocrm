@@ -46,9 +46,12 @@ class EmailNotification extends \Espo\Core\Services\Base
             'language',
             'dateTime',
             'number',
-            'fileManager'
+            'fileManager',
+            'selectManagerFactory'
         ]);
     }
+
+    protected $noteNotificationTypeList = ['Post', 'Status'];
 
     protected function getMailSender()
     {
@@ -185,16 +188,19 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $fileName;
     }
 
-    protected function getMentionTemplate($name)
+    protected function getTemplate($type, $name, $entityType = null)
     {
-        $fileName = $this->getMentionTemplateFileName($name);
+        if ($entityType) {
+            $fileName = $this->getEntityTemplateFileName($entityType, $type, $name);
+        } else {
+            $fileName = $this->getTemplateFileName($type, $name);
+        }
         return file_get_contents($fileName);
     }
 
-    protected function getMentionTemplateFileName($name)
+    protected function getTemplateFileName($type, $name)
     {
         $language = $this->getConfig()->get('language');
-        $type = 'mention';
 
         $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
         if (file_exists($fileName)) return $fileName;
@@ -211,6 +217,48 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $fileName;
     }
 
+    protected function getEntityTemplateFileName($entityType, $type, $name)
+    {
+        $language = $this->getConfig()->get('language');
+        $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        if ($moduleName) {
+            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            if (file_exists($fileName)) return $fileName;
+        }
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $language = 'en_US';
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        if ($moduleName) {
+            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            if (file_exists($fileName)) return $fileName;
+        }
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        if (file_exists($fileName)) return $fileName;
+
+        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
+        return $fileName;
+    }
+
     public function process()
     {
         $dateTime = new \DateTime();
@@ -218,22 +266,38 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $mentionEmailNotifications = $this->getConfig()->get('mentionEmailNotifications');
 
+        $streamEmailNotifications = $this->getConfig()->get('streamEmailNotifications');
+        $portalStreamEmailNotifications = $this->getConfig()->get('portalStreamEmailNotifications');
+
         $typeList = [];
         if ($mentionEmailNotifications) {
             $typeList[] = 'MentionInPost';
         }
 
-        if (!$mentionEmailNotifications) return;
+        if ($streamEmailNotifications || $portalStreamEmailNotifications) {
+            $typeList[] = 'Note';
+        }
+
+        if (empty($typeList)) return;
 
         $where = array(
-            'createdAt' > $dateTime,
+            'createdAt>' => $dateTime->format('Y-m-d H:i:s'),
             'read' => false,
             'emailIsProcessed' => false
         );
 
-        $where['type'] = $typeList;
+        $sqlArr = [];
+        foreach ($typeList as $type) {
+            $methodName = 'getNotificationSelectParams' . $type;
+            $selectParams = $this->$methodName();
+            $selectParams['whereClause'][] = $where;
 
-        $notificationList = $this->getEntityManager()->getRepository('Notification')->where($where)->order('createdAt')->find();
+            $sqlArr[] = $this->getEntityManager()->getQuery()->createSelectQuery('Notification', $selectParams);
+        }
+
+        $sql = '' . implode(' UNION ', $sqlArr) . ' ORDER BY number';
+
+        $notificationList = $this->getEntityManager()->getRepository('Notification')->findByQuery($sql);
 
         foreach ($notificationList as $notification) {
             $notification->set('emailIsProcessed', true);
@@ -249,14 +313,57 @@ class EmailNotification extends \Espo\Core\Services\Base
         }
     }
 
-    public function processNotificationMentionInPost(Entity $notification)
+    protected function getNotificationSelectParamsMentionInPost()
     {
-        $userId = $notification->get('userId');
+        $selectManager = $this->getInjection('selectManagerFactory')->create('Notification');
 
+        $selectParams = $selectManager->getEmptySelectParams();
+
+        $selectParams['whereClause']['type'] = 'MentionInPost';
+
+        return $selectParams;
+    }
+
+    protected function getNotificationSelectParamsNote()
+    {
+        $selectManager = $this->getInjection('selectManagerFactory')->create('Notification');
+
+        $selectParams = $selectManager->getEmptySelectParams();
+
+        $selectParams['whereClause']['type'] = 'Note';
+        $selectParams['whereClause']['relatedType'] = 'Note';
+
+        $selectParams['customJoin'] .= ' JOIN note ON notification.related_id = note.id';
+
+        $selectParams['whereClause']['note.type'] = $this->noteNotificationTypeList;
+
+        $entityList = $this->getConfig()->get('streamEmailNotificationsEntityList');
+
+        if (empty($entityList)) {
+            $selectParams['whereClause']['relatedParentType'] = null;
+        } else {
+            $selectParams['whereClause']['relatedParentType'] = $entityList;
+        }
+
+        $forInternal = $this->getConfig()->get('streamEmailNotifications');
+        $forPortal = $this->getConfig()->get('portalStreamEmailNotifications');
+
+        if ($forInternal && !$forPortal) {
+            $selectParams['whereClause']['user.isPortalUser'] = false;
+        } else if (!$forInternal && $forPortal) {
+            $selectParams['whereClause']['user.isPortalUser'] = true;
+        }
+
+        return $selectParams;
+    }
+
+    protected function processNotificationMentionInPost(Entity $notification)
+    {
+        if (!$notification->get('userId')) return;
+        $userId = $notification->get('userId');
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         $emailAddress = $user->get('emailAddress');
-
         if (!$emailAddress) return;
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
@@ -278,24 +385,165 @@ class EmailNotification extends \Espo\Core\Services\Base
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!$parent) return;
 
-            $data['url'] = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $parentType . '/' . $parentId;
+            $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
         } else {
-            $data['url'] = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#Notification';
+            $data['url'] = $this->getConfig()->getSiteUrl() . '/#Notification';
         }
 
         $data['userName'] = $note->get('createdByName');
 
         $data['post'] = $note->get('post');
 
-        $subjectTpl = $this->getMentionTemplate('subject');
-        $bodyTpl = $this->getMentionTemplate('body');
+        $subjectTpl = $this->getTemplate('mention', 'subject');
+        $bodyTpl = $this->getTemplate('mention', 'body');
         $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        $email->set(array(
+            'subject' => $subject,
+            'body' => $body,
+            'isHtml' => true,
+            'to' => $emailAddress,
+            'isSystem' => true
+        ));
+        try {
+            $this->getMailSender()->send($email);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+    }
+
+    protected function processNotificationNote(Entity $notification)
+    {
+        if ($notification->get('relatedType') !== 'Note') return;
+        if (!$notification->get('relatedId')) return;
+
+        $note = $this->getEntityManager()->getEntity('Note', $notification->get('relatedId'));
+        if (!$note) return;
+        if (!in_array($note->get('type'), $this->noteNotificationTypeList)) return;
+
+        if (!$notification->get('userId')) return;
+        $userId = $notification->get('userId');
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        $emailAddress = $user->get('emailAddress');
+        if (!$emailAddress) return;
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (!$preferences) return;
+        if (!$preferences->get('receiveStreamEmailNotifications')) return;
+
+        $methodName = 'processNotificationNote' . $note->get('type');
+
+        if (!method_exists($this, $methodName)) return;
+
+        $this->$methodName($note, $user);
+    }
+
+    protected function processNotificationNotePost($note, $user)
+    {
+        $post = $note->get('post');
+        $parentId = $note->get('parentId');
+        $parentType = $note->get('parentType');
+
+        $emailAddress = $user->get('emailAddress');
+        if (!$emailAddress) return;
+
+        $data = array();
+
+        if (!$parentId || !$parentType) return;
+
+        $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+        if (!$parent) return;
+
+        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+        $data['parentName'] = $parent->get('name');
+        $data['parentType'] = $parentType;
+        $data['parentId'] = $parentId;
+
+        $data['name'] = $data['parentName'];
+
+        $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        $data['userName'] = $note->get('createdByName');
+
+        $data['post'] = $note->get('post');
+
+        $subjectTpl = $this->getTemplate('notePost', 'subject', $parentType);
+        $bodyTpl = $this->getTemplate('notePost', 'body', $parentType);
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
+        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        $email->set(array(
+            'subject' => $subject,
+            'body' => $body,
+            'isHtml' => true,
+            'to' => $emailAddress,
+            'isSystem' => true
+        ));
+        try {
+            $this->getMailSender()->send($email);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+    }
+
+    protected function processNotificationNoteStatus($note, $user)
+    {
+        $post = $note->get('post');
+        $parentId = $note->get('parentId');
+        $parentType = $note->get('parentType');
+
+        $emailAddress = $user->get('emailAddress');
+        if (!$emailAddress) return;
+
+        $data = array();
+
+        if (!$parentId || !$parentType) return;
+
+        $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+        if (!$parent) return;
+
+        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+        $data['parentName'] = $parent->get('name');
+        $data['parentType'] = $parentType;
+        $data['parentId'] = $parentId;
+
+        $data['name'] = $data['parentName'];
+
+        $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        $noteData = $note->get('data');
+        if (empty($noteData)) return;
+
+
+        $data['value'] = $noteData->value;
+        $data['field'] = $noteData->field;
+        $data['valueTranslated'] = $this->getLanguage()->translateOption($data['value'], $data['field'], $parentType);
+        $data['fieldTranslated'] = $this->getLanguage()->translate($data['field'], 'fields', $parentType);
+        $data['fieldTranslatedLowerCase'] = lcfirst($data['fieldTranslated']);
+
+        $data['userName'] = $note->get('createdByName');
+
+        $subjectTpl = $this->getTemplate('noteStatus', 'subject', $parentType);
+        $bodyTpl = $this->getTemplate('noteStatus', 'body', $parentType);
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-status-email-subject', $data, true);
+        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-status-email-body', $data, true);
 
         $email = $this->getEntityManager()->getEntity('Email');
 

@@ -102,6 +102,10 @@
             "type": "bool",
             "default": true
         },
+        "receiveStreamEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",
