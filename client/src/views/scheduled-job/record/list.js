@@ -34,6 +34,8 @@ Espo.define('views/scheduled-job/record/list', 'views/record/list', function (De
 
         quickEditDisabled: true,
 
+        massActionList: ['remove', 'massUpdate']
+
     });
 
 });
