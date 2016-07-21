@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('user');
+    }
+
     public function getIdListFormAddressList(array $arr = [])
     {
         return $this->getIds($arr);
@@ -117,6 +123,15 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             WHERE
                 entity_email_address.email_address_id = ".$pdo->quote($emailAddressId)." AND
                 entity_email_address.deleted = 0
+        ";
+
+        if ($entityType) {
+            $sql .= "
+                AND entity_email_address.entity_type = " . $pdo->quote($entityType) . "
+            ";
+        }
+
+        $sql .= "
             ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
         ";
 
@@ -124,11 +139,6 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
-                if (!empty($entityType)) {
-                    if ($entityType != $row['entityType']) {
-                        continue;
-                    }
-                }
                 $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
                 if ($entity) {
                     return $entity;
@@ -154,6 +164,12 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                 entity_email_address.deleted = 0
         ";
 
+        if ($entityType) {
+            $sql .= "
+                AND entity_email_address.entity_type = " . $pdo->quote($entityType) . "
+            ";
+        }
+
         $sql .= "
             ORDER BY FIELD(entity_email_address.entity_type, ".join(',', array_reverse($a)).") DESC, entity_email_address.primary DESC
         ";
@@ -162,11 +178,6 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
-                if (!empty($entityType)) {
-                    if ($entityType != $row['entityType']) {
-                        continue;
-                    }
-                }
                 $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
                 if ($entity) {
                     return $entity;
@@ -278,12 +289,20 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                 foreach ($toUpdate as $address) {
                     $emailAddress = $this->getByAddress($address);
                     if ($emailAddress) {
-                        $emailAddress->set(array(
-                            'optOut' => $hash[$address]['optOut'],
-                            'invalid' => $hash[$address]['invalid'],
-                            'name' => $hash[$address]['emailAddress']
-                        ));
-                        $this->save($emailAddress);
+                        $skipSave = false;
+                        if (!$this->getInjection('user')->isAdmin()) {
+                            if ($this->getEntityByAddressId($emailAddress->id, 'User')) {
+                                $skipSave = true;
+                            }
+                        }
+                        if (!$skipSave) {
+                            $emailAddress->set(array(
+                                'optOut' => $hash[$address]['optOut'],
+                                'invalid' => $hash[$address]['invalid'],
+                                'name' => $hash[$address]['emailAddress']
+                            ));
+                            $this->save($emailAddress);
+                        }
                     }
                 }
 

@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('user');
+    }
+
     public function getIds($arr = array())
     {
         $ids = array();
@@ -100,6 +106,39 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
     public function getByNumber($number)
     {
         return $this->where(array('name' => $number))->findOne();
+    }
+
+    public function getEntityByPhoneNumberId($phoneNumberId, $entityType = null)
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            SELECT entity_phone_number.entity_type AS 'entityType', entity_phone_number.entity_id AS 'entityId'
+            FROM entity_phone_number
+            WHERE
+                entity_phone_number.phone_number_id = ".$pdo->quote($phoneNumberId)." AND
+                entity_phone_number.deleted = 0
+        ";
+
+        if ($entityType) {
+            $sql .= "
+                AND entity_phone_number.entity_type = " . $pdo->quote($entityType) . "
+            ";
+        }
+
+        $sql .= "
+            ORDER BY entity_phone_number.primary DESC, FIELD(entity_phone_number.entity_type, 'User', 'Contact', 'Lead', 'Account')
+        ";
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        while ($row = $sth->fetch()) {
+            if (!empty($row['entityType']) && !empty($row['entityId'])) {
+                $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+                if ($entity) {
+                    return $entity;
+                }
+            }
+        }
     }
 
     public function storeEntityPhoneNumber(Entity $entity)
@@ -197,10 +236,18 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 foreach ($toUpdate as $number) {
                     $phoneNumber = $this->getByNumber($number);
                     if ($phoneNumber) {
-                        $phoneNumber->set(array(
-                            'type' => $hash[$number]['type'],
-                        ));
-                        $this->save($phoneNumber);
+                        $skipSave = false;
+                        if (!$this->getInjection('user')->isAdmin()) {
+                            if ($this->getEntityByPhoneNumberId($phoneNumber->id, 'User')) {
+                                $skipSave = true;
+                            }
+                        }
+                        if (!$skipSave) {
+                            $phoneNumber->set(array(
+                                'type' => $hash[$number]['type'],
+                            ));
+                            $this->save($phoneNumber);
+                        }
                     }
                 }
 
