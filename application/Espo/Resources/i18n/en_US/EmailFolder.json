@@ -4,6 +4,7 @@
     },
     "labels": {
         "Create EmailFolder": "Create Folder",
-        "Manage Folders": "Manage Folders"
+        "Manage Folders": "Manage Folders",
+        "Emails": "Emails"
     }
 }

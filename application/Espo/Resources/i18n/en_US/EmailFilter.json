@@ -9,7 +9,8 @@
         "emailFolder": "Folder"
     },
     "labels": {
-        "Create EmailFilter": "Create Email Filter"
+        "Create EmailFilter": "Create Email Filter",
+        "Emails": "Emails"
     },
     "options": {
         "action": {

@@ -10,5 +10,17 @@
         "detailQuick": "views/email-filter/record/detail-small"
     },
     "searchPanelDisabled": false,
+    "menu": {
+        "list": {
+            "buttons": [
+                {
+                    "label": "Emails",
+                    "link": "#Email",
+                    "style": "default",
+                    "aclScope": "Email"
+                }
+            ]
+        }
+    },
     "boolFilterList": ["onlyMy"]
 }
