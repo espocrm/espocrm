@@ -2,7 +2,9 @@
     "labels": {
         "Create KnowledgeBaseArticle": "Create Article",
         "Any": "Any",
-        "Send in Email": "Send in Email"
+        "Send in Email": "Send in Email",
+        "Move Up": "Move Up",
+        "Move Down": "Move Down"
     },
     "fields": {
         "name": "Name",

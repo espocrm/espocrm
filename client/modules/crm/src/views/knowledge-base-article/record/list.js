@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,47 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/knowledge-base-article/record/list', 'views/record/list', function (Dep) {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $id = $data['id'];
+    return Dep.extend({
 
-        return $this->getRecordService()->getCopiedAttachments($id);
-    }
+        rowActionsView: 'crm:views/knowledge-base-article/record/row-actions/default',
 
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $where = null;
-        if (!empty($data['where'])) {
-            $where = $data['where'];
-        }
+        actionMoveUp: function (data) {
+            var model = this.collection.get(data.id);
+            if (!model) return;
 
-        $this->getRecordService()->moveUp($data['id'], $where);
+            var index = this.collection.indexOf(model);
+            if (index === 0) return;
 
-        return true;
-    }
+            this.ajaxPostRequest('knowledgeBaseArticle/action/moveUp', {
+                id: model.id,
+                where: this.collection.getWhere()
+            }).then(function () {
+                this.collection.fetch();
+            }.bind(this));
+        },
 
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $where = null;
-        if (!empty($data['where'])) {
-            $where = $data['where'];
-        }
+        actionMoveDown: function (data) {
+            var model = this.collection.get(data.id);
+            if (!model) return;
 
-        $this->getRecordService()->moveDown($data['id'], $where);
+            var index = this.collection.indexOf(model);
+            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) return;
 
-        return true;
-    }
-}
+            this.ajaxPostRequest('knowledgeBaseArticle/action/moveDown', {
+                id: model.id,
+                where: this.collection.getWhere()
+            }).then(function () {
+                this.collection.fetch();
+            }.bind(this));
+        },
+
+    });
+});
+

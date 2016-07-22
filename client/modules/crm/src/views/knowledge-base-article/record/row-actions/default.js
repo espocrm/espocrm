@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,47 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
-class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
-{
-    public function postActionGetCopiedAttachments($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
+    return Dep.extend({
+
+        getActionList: function () {
+            var actionList = Dep.prototype.getActionList.call(this);
+
+            if (this.options.acl.edit && this.model.collection && this.model.collection.sortBy == 'order' && this.model.collection.asc) {
+                actionList.push({
+                    action: 'moveUp',
+                    label: 'Move Up',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                actionList.push({
+                    action: 'moveDown',
+                    label: 'Move Down',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+
+            return actionList;
         }
-        $id = $data['id'];
+    });
 
-        return $this->getRecordService()->getCopiedAttachments($id);
-    }
-
-    public function postActionMoveUp($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $where = null;
-        if (!empty($data['where'])) {
-            $where = $data['where'];
-        }
-
-        $this->getRecordService()->moveUp($data['id'], $where);
-
-        return true;
-    }
-
-    public function postActionMoveDown($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $where = null;
-        if (!empty($data['where'])) {
-            $where = $data['where'];
-        }
-
-        $this->getRecordService()->moveDown($data['id'], $where);
-
-        return true;
-    }
-}
+});

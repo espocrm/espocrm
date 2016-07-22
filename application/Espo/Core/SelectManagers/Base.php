@@ -122,7 +122,7 @@ class Base
         }
     }
 
-    protected function order($sortBy, $asc, &$result)
+    protected function order($sortBy, $desc = false, &$result)
     {
         if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
@@ -137,7 +137,7 @@ class Base
                     if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
                         $list = asort($list);
                     }
-                    if (!$asc) {
+                    if ($desc) {
                         $list = array_reverse($list);
                     }
                     $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
@@ -145,7 +145,7 @@ class Base
                 }
             }
         }
-        if ($asc) {
+        if (!$desc) {
             $result['order'] = 'ASC';
         } else {
             $result['order'] = 'DESC';
@@ -629,6 +629,11 @@ class Base
         return $result;
     }
 
+    public function buildSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    {
+        return $this->getSelectParams($params, $withAcl, $checkWherePermission);
+    }
+
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $result = array();
@@ -638,7 +643,7 @@ class Base
             if (!array_key_exists('asc', $params)) {
                 $params['asc'] = true;
             }
-            $this->order($params['sortBy'], $params['asc'], $result);
+            $this->order($params['sortBy'], !$params['asc'], $result);
         }
 
         if (!isset($params['offset'])) {
@@ -1056,10 +1061,10 @@ class Base
         return $part;
     }
 
-    public function applyOrder($sortBy, $asc, &$result)
+    public function applyOrder($sortBy, $desc, &$result)
     {
         $this->prepareResult($result);
-        $this->order($sortBy, $asc, $result);
+        $this->order($sortBy, $desc, $result);
     }
 
     public function applyLimit($offset, $maxSize, &$result)
