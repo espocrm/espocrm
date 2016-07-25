@@ -704,7 +704,9 @@ class Email extends Record
 
         if ($entity->isManuallyArchived()) return;
 
-        $attributList = $entity;
+        if ($entity->get('status') === 'Draft') return;
+
+        if ($entity->get('status') === 'Sending' && $entity->getFetched('status') === 'Draft') return;
 
         foreach ($entity->getAttributeList() as $attribute) {
             if (in_array($attribute, $this->allowedForUpdateAttributeList)) return;
