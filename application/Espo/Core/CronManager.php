@@ -274,12 +274,18 @@ class CronManager
         $createdJobIdList = array();
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob['scheduling'];
-            $cronExpression = \Cron\CronExpression::factory($scheduling);
+
+            try {
+                $cronExpression = \Cron\CronExpression::factory($scheduling);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob['id'].']): Scheduling string error - '. $e->getMessage() . '.');
+                continue;
+            }
 
             try {
                 $previousDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('CronManager: ScheduledJob ['.$scheduledJob['id'].']: CronExpression - Impossible CRON expression ['.$scheduling.']');
+                $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob['id'].']): Unsupported CRON expression ['.$scheduling.']');
                 continue;
             }
 
