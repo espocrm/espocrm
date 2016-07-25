@@ -223,6 +223,14 @@ class Email extends Record
         return $entity;
     }
 
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        if ($entity->get('status') == 'Sending') {
+            $messageId = \Espo\Core\Mail\Sender::generateMessageId($entity);
+            $entity->set('messageId', '<' . $messageId . '>');
+        }
+    }
+
     protected function afterUpdate(Entity $entity, array $data = array())
     {
         if ($entity && $entity->get('status') == 'Sending') {
