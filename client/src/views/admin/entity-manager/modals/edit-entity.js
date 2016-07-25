@@ -199,6 +199,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     if (!~['varchar', 'text', 'phoneNumber', 'email', 'personName'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
                         return false;
                     }
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) {
+                        return false;
+                    }
                     return true;
                 }, this);
 
