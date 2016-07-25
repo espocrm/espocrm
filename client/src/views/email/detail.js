@@ -191,6 +191,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             attributes.description = '(' + this.model.get('name') + ')[#Email/view/' + this.model.id + ']';
 
+            attributes.name = this.translate('Email', 'scopeNames') + ': ' + this.model.get('name');
+
             var viewName = this.getMetadata().get('clientDefs.Task.modalViews.detail') || 'Modals.Edit';
 
             this.notify('Loading...');
