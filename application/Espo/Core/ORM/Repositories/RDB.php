@@ -222,13 +222,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
 
             if ($entity->hasAttribute('createdAt')) {
-                $entity->set('createdAt', $nowString);
+                if (empty($options['import']) || !$entity->has('createdAt')) {
+                    $entity->set('createdAt', $nowString);
+                }
             }
             if ($entity->hasAttribute('modifiedAt')) {
                 $entity->set('modifiedAt', $nowString);
             }
             if ($entity->hasAttribute('createdById')) {
-                $entity->set('createdById', $this->entityManager->getUser()->id);
+                if (empty($options['import']) || !$entity->has('createdById')) {
+                    $entity->set('createdById', $this->entityManager->getUser()->id);
+                }
             }
 
             if ($entity->has('modifiedById')) {
@@ -249,13 +253,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
 
             if ($entity->has('createdById')) {
-                $restoreData['createdById'] = $entity->get('createdById');
+                if (empty($options['import'])) {
+                    $restoreData['createdById'] = $entity->get('createdById');
+                    $entity->clear('createdById');
+                }
             }
+
             if ($entity->has('createdAt')) {
-                $restoreData['createdAt'] = $entity->get('createdAt');
+                if (empty($options['import'])) {
+                    $restoreData['createdAt'] = $entity->get('createdAt');
+                    $entity->clear('createdAt');
+                }
             }
-            $entity->clear('createdById');
-            $entity->clear('createdAt');
         }
         $this->restoreData = $restoreData;
 

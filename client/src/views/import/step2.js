@@ -32,6 +32,8 @@ Espo.define('views/import/step2', 'view', function (Dep) {
 
         template: 'import/step-2',
 
+        allowedFieldList: ['createdAt', 'createdBy'],
+
         events: {
             'click button[data-action="back"]': function () {
                 this.back();
@@ -158,7 +160,8 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             var fieldList = [];
             for (var field in defs) {
                 var d = defs[field];
-                if (d.readOnly || d.disabled || d.importDisabled) {
+
+                if (!~this.allowedFieldList.indexOf(field) && (d.readOnly || d.disabled || d.importDisabled)) {
                     continue;
                 }
                 fieldList.push(field);
@@ -179,11 +182,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
 
             for (var field in fields) {
                 var d = fields[field];
-                if (d.readOnly || d.disabled || d.importDisabled) {
-                    continue;
-                }
-
-                if (~['modifiedBy', 'createdBy', 'modifiedAt', 'createdAt'].indexOf(field)) {
+                if (!~this.allowedFieldList.indexOf(field) && (d.readOnly || d.disabled || d.importDisabled)) {
                     continue;
                 }
 
