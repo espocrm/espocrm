@@ -341,6 +341,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var idList = [];
             var data = {};
+
             if (this.allResultIsChecked) {
                 data.where = this.collection.getWhere();
                 data.byWhere = true;
@@ -351,6 +352,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             for (var i in this.checkedList) {
                 idList.push(this.checkedList[i]);
             }
+
+            data.entityType = this.scope;
 
             var waitMessage = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
             Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
