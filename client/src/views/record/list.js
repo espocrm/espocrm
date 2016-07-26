@@ -361,7 +361,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
 
             this.ajaxPostRequest(url, data).then(function (result) {
-                var successMessage = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
+                var successMessage = result.successMessage || this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
 
                 this.collection.fetch().then(function () {
                     var message = this.translate(successMessage, 'messages', this.scope);
