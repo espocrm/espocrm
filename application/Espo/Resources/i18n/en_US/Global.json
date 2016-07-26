@@ -226,7 +226,8 @@
         "typeAndPressEnter": "Type & press enter",
         "checkForNewNotifications": "Check for new notifications",
         "checkForNewNotes": "Check for stream updates",
-        "internalPost": "Post will be seen only by internal users"
+        "internalPost": "Post will be seen only by internal users",
+        "done": "Done"
     },
     "boolFilters": {
         "onlyMy": "Only My",
