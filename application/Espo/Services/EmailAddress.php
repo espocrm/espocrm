@@ -90,6 +90,64 @@ class EmailAddress extends Record
         }
     }
 
+    protected function findInAddressBookUsers($query, $limit, &$result)
+    {
+        $whereClause = array(
+            'OR' => array(
+                array(
+                    'name*' => $query . '%'
+                ),
+                array(
+                    'emailAddress*' => $query . '%'
+                )
+            ),
+            array(
+                'emailAddress!=' => null
+            )
+        );
+
+        if ($this->getAcl()->get('portalPermission') === 'no') {
+            $whereClause['isPortalUser'] = false;
+        }
+
+        $searchParams = array(
+            'whereClause' => $whereClause,
+            'orderBy' => 'name',
+            'limit' => $limit
+        );
+
+        $selectManager = $this->getSelectManagerFactory()->create('User');
+
+        $selectManager->applyAccess($searchParams);
+
+        $collection = $this->getEntityManager()->getRepository('User')->find($searchParams);
+
+        foreach ($collection as $entity) {
+            $emailAddress = $entity->get('emailAddress');
+
+            $result[] = array(
+                'emailAddress' => $emailAddress,
+                'entityName' => $entity->get('name'),
+                'entityType' => 'User',
+                'entityId' => $entity->id
+            );
+
+            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
+            foreach ($emailAddressData as $d) {
+                if ($emailAddress != $d->emailAddress) {
+                    $emailAddress = $d->emailAddress;
+                    $result[] = array(
+                        'emailAddress' => $emailAddress,
+                        'entityName' => $entity->get('name'),
+                        'entityType' => 'User',
+                        'entityId' => $entity->id
+                    );
+                    break;
+                }
+            }
+        }
+    }
+
     protected function findInInboundEmail($query, $limit, &$result)
     {
         $pdo = $this->getEntityManager()->getPDO();
@@ -121,7 +179,7 @@ class EmailAddress extends Record
 
         $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
         $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
-        $this->findInAddressBookByEntityType($query, $limit, 'User', $result);
+        $this->findInAddressBookUsers($query, $limit, $result);
         $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
         $this->findInInboundEmail($query, $limit, $result);
 
