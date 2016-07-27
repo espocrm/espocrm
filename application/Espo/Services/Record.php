@@ -318,8 +318,11 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function getSelectManager($entityType)
+    protected function getSelectManager($entityType = null)
     {
+        if (!$entityType) {
+            $entityType = $this->getEntityType();
+        }
         return $this->getSelectManagerFactory()->create($entityType);
     }
 

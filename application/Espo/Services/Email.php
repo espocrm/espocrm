@@ -700,15 +700,34 @@ class Email extends Record
 
     protected function beforeUpdate(Entity $entity, array $data = array())
     {
-        if ($this->getUser()->isAdmin()) return;
+        $skipFilter = false;
 
-        if ($entity->isManuallyArchived()) return;
+        if ($this->getUser()->isAdmin()) {
+            $skipFilter = true;
+        }
 
-        $attributList = $entity;
+        if ($entity->isManuallyArchived()) {
+            $skipFilter = true;
+        }
 
-        foreach ($entity->getAttributeList() as $attribute) {
-            if (in_array($attribute, $this->allowedForUpdateAttributeList)) return;
-            $entity->clear($attribute);
+        if ($entity->get('status') === 'Draft') {
+            $skipFilter = true;
+        }
+
+        if ($entity->get('status') === 'Sending' && $entity->getFetched('status') === 'Draft') {
+            $skipFilter = true;
+        }
+
+        if (!$skipFilter) {
+            foreach ($entity->getAttributeList() as $attribute) {
+                if (in_array($attribute, $this->allowedForUpdateAttributeList)) continue;
+                $entity->clear($attribute);
+            }
+        }
+
+        if ($entity->get('status') == 'Sending') {
+            $messageId = \Espo\Core\Mail\Sender::generateMessageId($entity);
+            $entity->set('messageId', '<' . $messageId . '>');
         }
     }
 

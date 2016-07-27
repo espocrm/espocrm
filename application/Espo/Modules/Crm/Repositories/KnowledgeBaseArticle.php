@@ -93,11 +93,11 @@ class KnowledgeBaseArticle extends \Espo\Core\ORM\Repositories\RDB
         parent::beforeSave($entity, $options);
         $order = $entity->get('order');
         if (is_null($order)) {
-            $order = $this->max('order');
+            $order = $this->min('order');
             if (!$order) {
-                $order = 999;
+                $order = 9999;
             }
-            $order++;
+            $order--;
             $entity->set('order', $order);
         }
 
