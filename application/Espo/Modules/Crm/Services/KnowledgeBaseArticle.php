@@ -101,8 +101,13 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         if (!$where) {
             $where = array();
         }
+
+        $params = array(
+            'where' => $where
+        );
+
         $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($where, true, true);
+        $selectParams = $selectManager->buildSelectParams($params, true, true);
 
         $selectParams['whereClause'][] = array(
             'order<' => $currentIndex
@@ -134,8 +139,13 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         if (!$where) {
             $where = array();
         }
+
+        $params = array(
+            'where' => $where
+        );
+
         $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($where, true, true);
+        $selectParams = $selectManager->buildSelectParams($params, true, true);
 
         $selectParams['whereClause'][] = array(
             'order>' => $currentIndex

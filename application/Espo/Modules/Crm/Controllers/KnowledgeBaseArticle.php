@@ -49,6 +49,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
         if (!empty($data['where'])) {
             $where = $data['where'];
+            $where = json_decode(json_encode($where), true);
         }
 
         $this->getRecordService()->moveUp($data['id'], $where);
@@ -64,6 +65,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
         if (!empty($data['where'])) {
             $where = $data['where'];
+            $where = json_decode(json_encode($where), true);
         }
 
         $this->getRecordService()->moveDown($data['id'], $where);
