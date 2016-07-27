@@ -70,7 +70,23 @@ Espo.define('views/admin/authentication', 'views/settings/record/edit', function
                         fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
                     }
                 ]
-            }
+            },
+            'ldapCreateEspoUser': {
+                map: {
+                    true: [
+                        {
+                            action: 'show',
+                            fields: ['ldapUserNameAttribute', 'ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
+                        }
+                    ]
+                },
+                default: [
+                    {
+                        action: 'hide',
+                        fields: ['ldapUserNameAttribute', 'ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
+                    }
+                ]
+            },
         },
 
         setup: function () {

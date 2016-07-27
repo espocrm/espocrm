@@ -150,14 +150,12 @@ return array (
         ]
     ],
     "calendarEntityList" => ["Meeting", "Call", "Task"],
-    'ldapAccountDomainName' => 'MYCOMPANY.INTRA',
-    'ldapAccountDomainNameShort' => 'mycompany',
+    'isInstalled' => false,
     'ldapUserNameAttribute' => 'samaccountname',
     'ldapUserFirstNameAttribute' => 'givenname',
     'ldapUserLastNameAttribute' => 'sn',
     'ldapUserTitleAttribute' => 'title',
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephonenumber',
-    'isInstalled' => false
 );
 

@@ -155,7 +155,7 @@
         },
         "ldapPort": {
             "type": "int",
-            "max": 9999,
+            "max": 999999,
             "min": 0,
             "default": 389
         },
@@ -204,6 +204,24 @@
         "ldapCreateEspoUser": {
             "type": "bool",
             "default": true
+        },
+        "ldapUserNameAttribute": {
+            "type": "varchar"
+        },
+        "ldapUserFirstNameAttribute": {
+            "type": "varchar"
+        },
+        "ldapUserLastNameAttribute": {
+            "type": "varchar"
+        },
+        "ldapUserTitleAttribute": {
+            "type": "varchar"
+        },
+        "ldapUserEmailAddressAttribute": {
+            "type": "varchar"
+        },
+        "ldapUserPhoneNumberAttribute": {
+            "type": "varchar"
         },
         "exportDisabled": {
             "type": "bool",
