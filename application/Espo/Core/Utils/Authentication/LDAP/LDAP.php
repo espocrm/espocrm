@@ -28,10 +28,22 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication\LDAP;
+
 class LDAP extends \Zend\Ldap\Ldap
 {
-    protected $usernameAttribute = 'cn';
+    protected $userNameAttribute = 'CN';
 
+    /**
+     * Set user name attribute name
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    public function setUserNameAttributeName($name)
+    {
+        $this->userNameAttribute = $name;
+    }
 
     /**
      * Get DN depends on options, ex. "cn=test,ou=People,dc=maxcrc,dc=com"
@@ -57,12 +69,12 @@ class LDAP extends \Zend\Ldap\Ldap
             try {
                 return parent::getAccountDn($acctname);
             } catch (\Zend\Ldap\Exception\LdapException $zle) {
-                if ($zle->getCode() != \Zend\Ldap\Exception\LdapException::LDAP_NO_SUCH_OBJECT) {
+                /*if ($zle->getCode() != \Zend\Ldap\Exception\LdapException::LDAP_NO_SUCH_OBJECT) {
                     throw $zle;
-                }
+                }*/
             }
 
-            $acctname = $this->usernameAttribute . '=' . \Zend\Ldap\Filter\AbstractFilter::escapeValue($acctname) . ',' . $baseDn;
+            $acctname = $this->userNameAttribute . '=' . \Zend\Ldap\Filter\AbstractFilter::escapeValue($acctname) . ',' . $baseDn;
         }
 
         return parent::getAccountDn($acctname);

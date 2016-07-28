@@ -44,15 +44,28 @@ class LDAP extends Base
      *
      * @var array
      */
-    private $fields ;
-
+    private $fields;
 
     public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
     {
         parent::__construct($config, $entityManager, $auth);
-  
-        $this->zendLdap = new LDAP\LDAP();
+
+        $this->fields = array(
+            'userName' => $this->getConfig()->get('ldapUserNameAttribute'),
+            'firstName' => $this->getConfig()->get('ldapUserFirstNameAttribute'),
+            'lastName' => $this->getConfig()->get('ldapUserLastNameAttribute'),
+            'title' => $this->getConfig()->get('ldapUserTitleAttribute'),
+            'emailAddress' => $this->getConfig()->get('ldapUserEmailAddressAttribute'),
+            'phoneNumber' => $this->getConfig()->get('ldapUserPhoneNumberAttribute')
+        );
+
         $this->utils = new LDAP\Utils($config);
+
+        try {
+            $this->zendLdap = new LDAP\LDAP();
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('LDAP Authentication error: ' . $e->getMessage());
+        }
     }
 
     protected function getZendLdap()
@@ -64,7 +77,6 @@ class LDAP extends Base
     {
         return $this->utils;
     }
-
 
     /**
      * LDAP login
@@ -89,19 +101,19 @@ class LDAP extends Base
             $ldap->bind($username, $password);
 
             $dn = $ldap->getDn($username);
-            $GLOBALS['log']->debug('found DN for ['.$username.']: ['.$dn.']');
-
+            $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$dn.']');
 
             $loginFilter = $this->getUtils()->getOption('userLoginFilter');
-            $GLOBALS['log']->debug('found loginFilter: ['.$loginFilter.']');
+            $GLOBALS['log']->debug('Found loginFilter: ['.$loginFilter.']');
+
             $userData = $ldap->searchByLoginFilter($loginFilter, $dn, 3);
-            $GLOBALS['log']->debug('found userData ... ');
+            $GLOBALS['log']->debug('Found userData ... ');
 
         } catch (\Zend\Ldap\Exception\LdapException $zle) {
 
             $admin = $this->adminLogin($username, $password);
             if (!isset($admin)) {
-                $GLOBALS['log']->info('LDAP Authentication: ' . $zle->getMessage());
+                $GLOBALS['log']->error('LDAP Authentication: ' . $zle->getMessage());
                 return null;
             }
 
@@ -186,21 +198,13 @@ class LDAP extends Base
     {
         $GLOBALS['log']->info('Creating new user ...');
         $data = array();
-        
-        $this->fields = array(
-            'userName' => $this->getConfig()->get('ldapUserNameAttribute') ,
-            'firstName' => $this->getConfig()->get('ldapUserFirstNameAttribute'),
-            'lastName' => $this->getConfig()->get('ldapUserLastNameAttribute') ,
-            'title' => $this->getConfig()->get('ldapUserTitleAttribute') ,
-            'emailAddress' => $this->getConfig()->get('ldapUserEmailAddressAttribute') ,
-            'phoneNumber' => $this->getConfig()->get('ldapUserPhoneNumberAttribute') 
-        );
 
         // show full array of the LDAP user
-        $GLOBALS['log']->debug(print_R($userData,TRUE));
+        $GLOBALS['log']->debug(print_r($userData, true));
+
         foreach ($this->fields as $espo => $ldap) {
             if (isset($userData[$ldap][0])) {
-                $GLOBALS['log']->debug('    ['.$espo.']: ['.$userData[$ldap][0].']');
+                $GLOBALS['log']->debug('LDAP, createUser: ['.$espo.'] - ['.$userData[$ldap][0].']');
                 $data[$espo] = $userData[$ldap][0];
             }
         }

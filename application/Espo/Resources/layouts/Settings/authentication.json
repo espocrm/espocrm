@@ -19,7 +19,10 @@
             [{"name": "ldapAccountCanonicalForm"}, false],
             [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
             [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
-            [{"name": "ldapCreateEspoUser"}, false]
+            [{"name": "ldapCreateEspoUser"}, false],
+            [{"name": "ldapUserNameAttribute"}, {"name": "ldapUserTitleAttribute"}],
+            [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
+            [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}]
         ]
     }
 ]
