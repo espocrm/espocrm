@@ -1,0 +1,15 @@
+{
+    "fields": {
+    },
+    "links": {
+        "users": "Utenti"
+    },
+    "tooltips": {
+    },
+    "labels": {
+        "Access": "Accesso",
+        "Create PortalRole": "Create Portal Role",
+        "Scope Level": "Scope Level",
+        "Field Level": "Field Level"
+    }
+}

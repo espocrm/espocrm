@@ -1,0 +1,8 @@
+{
+    "options": {
+        "job": {
+            "ProcessMassEmail": "Send Mass Emails",
+            "ControlKnowledgeBaseArticleStatus": "Control Knowledge Base Article Status"
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "fields": {
+        "dateFormat": "Formato Data",
+        "timeFormat": "Formato Ora",
+        "timeZone": "Time Zone",
+        "weekStart": "Primo giorno della Settimana",
+        "thousandSeparator": "Separatore delle migliaia",
+        "decimalMark": "Decimal Mark",
+        "defaultCurrency": "Valuta di default",
+        "currencyList": "Lista delle Valute",
+        "language": "Lingua",
+        "smtpServer": "Server",
+        "smtpPort": "Porta",
+        "smtpAuth": "Auth",
+        "smtpSecurity": "Security",
+        "smtpUsername": "Username",
+        "emailAddress": "Email",
+        "smtpPassword": "Password",
+        "smtpEmailAddress": "Indirizzo Email",
+        "exportDelimiter": "Delimitatore esportazione",
+        "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
+        "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
+        "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
+        "autoFollowEntityTypeList": "Auto-Follow",
+        "signature": "Email Signature",
+        "dashboardTabList": "Lista delle schede",
+        "defaultReminders": "Default Reminders",
+        "theme": "Theme",
+        "useCustomTabList": "Custom Tab List",
+        "tabList": "Lista delle schede",
+        "emailReplyToAllByDefault": "Email Reply to All by Default",
+        "dashboardLayout": "Dashboard Layout",
+        "emailReplyForceHtml": "Email Reply in HTML"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Domenica",
+            "1": "Lunedi"
+        }
+    },
+    "labels": {
+        "Notifications": "Notifications",
+        "User Interface": "Interfaccia Utente",
+        "SMTP": "SMTP",
+        "Misc": "Varie",
+        "Locale": "Locale"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications."
+    }
+}

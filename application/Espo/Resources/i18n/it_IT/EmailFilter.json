@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "from": "From",
+        "to": "A",
+        "subject": "Soggetto",
+        "bodyContains": "Body Contains",
+        "action": "Azione",
+        "isGlobal": "Is Global",
+        "emailFolder": "Folder"
+    },
+    "labels": {
+        "Create EmailFilter": "Create Email Filter",
+        "Emails": "Emails"
+    },
+    "options": {
+        "action": {
+            "Skip": "Ignore",
+            "Move to Folder": "Put in Folder"
+        }
+    },
+    "tooltips": {
+        "name": "Just a name of the filter.",
+        "subject": "Use wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
+        "bodyContains": "Body of email contains any of specified words or phrases.",
+        "from": "Emails being sent from the specified address. Leave empty if not needed. You can use wildcard *.",
+        "to": "Emails being sent to the specified address. Leave empty if not needed. You can use wildcard *.",
+        "isGlobal": "Applies this filter to all emails incoming to system."
+    }
+}

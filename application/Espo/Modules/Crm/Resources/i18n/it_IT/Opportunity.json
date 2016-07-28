@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "name": "Nome",
+        "account": "Account",
+        "stage": "Stage",
+        "amount": "Amount",
+        "probability": "Probability, %",
+        "leadSource": "Lead Source",
+        "doNotCall": "Non chiamare",
+        "closeDate": "Close Date",
+        "contacts": "Contatti",
+        "description": "Descrizione",
+        "amountConverted": "Amount (converted)",
+        "amountWeightedConverted": "Amount Weighted",
+        "campaign": "Campaign"
+    },
+    "links": {
+        "contacts": "Contatti",
+        "documents": "Documents",
+        "campaign": "Campaign"
+    },
+    "options": {
+        "stage": {
+            "Prospecting": "Prospecting",
+            "Qualification": "Qualification",
+            "Needs Analysis": "Needs Analysis",
+            "Value Proposition": "Value Proposition",
+            "Id. Decision Makers": "Id. Decision Makers",
+            "Perception Analysis": "Perception Analysis",
+            "Proposal/Price Quote": "Proposal/Price Quote",
+            "Negotiation/Review": "Negotiation/Review",
+            "Closed Won": "Closed Won",
+            "Closed Lost": "Closed Lost"
+        }
+    },
+    "labels": {
+        "Create Opportunity": "Create Opportunity"
+    },
+    "presetFilters": {
+        "open": "Aperto",
+        "won": "Won",
+        "lost": "Lost"
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": "Nome",
+        "status": "Stato",
+        "host": "Host",
+        "username": "Username",
+        "password": "Password",
+        "port": "Porta",
+        "monitoredFolders": "Monitored Folders",
+        "ssl": "SSL",
+        "fetchSince": "Fetch Since",
+        "emailAddress": "Indirizzo Email",
+        "sentFolder": "Sent Folder",
+        "storeSentEmails": "Store Sent Emails",
+        "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
+        "emailFolder": "Put in Folder",
+        "useSmtp": "Use SMTP",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpAuth": "SMTP Auth",
+        "smtpSecurity": "SMTP Security",
+        "smtpUsername": "SMTP Username",
+        "smtpPassword": "SMTP Password"
+    },
+    "links": {
+        "filters": "Filters",
+        "emails": "Emails"
+    },
+    "options": {
+        "status": {
+            "Active": "Attivo",
+            "Inactive": "Non Attivo"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Create Email Account",
+        "IMAP": "IMAP",
+        "Main": "Main",
+        "Test Connection": "Test Connection",
+        "Send Test Email": "Send Test Email",
+        "SMTP": "SMTP"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Impossibile connettersi al server IMAP",
+        "connectionIsOk": "Connection is Ok"
+    },
+    "tooltips": {
+        "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
+        "storeSentEmails": "Sent emails will be stored on IMAP server. Email Address should much address an email is being sent from."
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "modes": {
+        "month": "Mese",
+        "week": "Settimana",
+        "day": "Giorno",
+        "agendaWeek": "Settimana",
+        "agendaDay": "Giorno",
+        "timeline": "Timeline"
+    },
+    "labels": {
+        "Today": "Oggi",
+        "Create": "Creare",
+        "Shared": "Shared",
+        "Add User": "Add User",
+        "current": "current",
+        "time": "time",
+        "User List": "User List",
+        "Manage Users": "Manage Users"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "fields": {
+        "name": "Nome",
+        "emailAddress": "Email",
+        "title": "Titolo",
+        "website": "Website",
+        "accountName": "Nome utente",
+        "phoneNumber": "Phone",
+        "doNotCall": "Non chiamare",
+        "address": "Indirizzi",
+        "description": "Descrizione"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Target": "Create Target",
+        "Convert to Lead": "Convert to Lead"
+    }
+}

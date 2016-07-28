@@ -1,0 +1,49 @@
+{
+    "fields": {
+        "name": "Nome",
+        "status": "Stato",
+        "storeSentEmails": "Store Sent Emails",
+        "startAt": "Data d'inizio",
+        "fromAddress": "Indirizzo mittente",
+        "fromName": "Dal nome",
+        "replyToAddress": "Reply-to Address",
+        "replyToName": "Reply-to Name",
+        "campaign": "Campaign",
+        "emailTemplate": "Modello Email",
+        "inboundEmail": "Email Account",
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "optOutEntirely": "Opt-Out Entirely"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "queueItems": "Queue Items",
+        "campaign": "Campaign",
+        "emailTemplate": "Modello Email",
+        "inboundEmail": "Email Account"
+    },
+    "options": {
+        "status": {
+            "Draft": "Bozza",
+            "Pending": "In attesa",
+            "In Process": "In corso",
+            "Complete": "Complete",
+            "Canceled": "Cancellato",
+            "Failed": "Failed"
+        }
+    },
+    "labels": {
+        "Create MassEmail": "Create Mass Email",
+        "Send Test": "Send Test"
+    },
+    "messages": {
+        "selectAtLeastOneTarget": "Select at least one target.",
+        "testSent": "Test email(s) supposed to be sent"
+    },
+    "tooltips": {
+        "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
+        "targetLists": "Targets that should receive messages.",
+        "excludingTargetLists": "Targets that should not receive messages."
+    }
+}

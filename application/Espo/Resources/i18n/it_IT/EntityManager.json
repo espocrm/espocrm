@@ -1,0 +1,51 @@
+{
+    "labels": {
+        "Fields": "Fields",
+        "Relationships": "Relazioni"
+    },
+    "fields": {
+        "name": "Nome",
+        "type": "Tipo",
+        "labelSingular": "Label Singular",
+        "labelPlural": "Label Plural",
+        "stream": "Stream",
+        "label": "Etichetta",
+        "linkType": "Link Type",
+        "entityForeign": "Foreign Entity",
+        "linkForeign": "Foreign Link",
+        "link": "Link",
+        "labelForeign": "Foreign Label",
+        "sortBy": "Default Order (field)",
+        "sortDirection": "Default Order (direction)",
+        "relationName": "Middle Table Name",
+        "linkMultipleField": "Link Multiple Field",
+        "linkMultipleFieldForeign": "Foreign Link Multiple Field",
+        "disabled": "Disabilitato",
+        "textFilterFields": "Text Filter Fields"
+    },
+    "options": {
+        "type": {
+            "": "Nessun",
+            "Base": "Base",
+            "Person": "Persone",
+            "CategoryTree": "Category Tree",
+            "Event": "Event"
+        },
+        "linkType": {
+            "manyToMany": "Many-to-Many",
+            "oneToMany": "One-to-Many",
+            "manyToOne": "Many-to-One",
+            "parentToChildren": "Parent-to-Children",
+            "childrenToParent": "Children-to-Parent"
+        },
+        "sortDirection": {
+            "asc": "Ascending",
+            "desc": "Descending"
+        }
+    },
+    "messages": {
+        "entityCreated": "Entity has been created",
+        "linkAlreadyExists": "Link name conflict.",
+        "linkConflict": "Name conflict: link or field with the same name already exists."
+    }
+}

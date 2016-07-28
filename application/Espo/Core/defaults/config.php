@@ -69,6 +69,7 @@ return array (
         'es_ES',
         'fr_FR',
         'id_ID',
+        'it_IT',
         'nl_NL',
         'tr_TR',
         'ro_RO',

@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": "Nome",
+        "parent": "Genitore",
+        "status": "Stato",
+        "dateStart": "Data d'inizio",
+        "dateEnd": "Data di fine",
+        "direction": "Direzione",
+        "duration": "Durata",
+        "description": "Descrizione",
+        "users": "Utenti",
+        "contacts": "Contatti",
+        "leads": "Comando",
+        "reminders": "Reminders",
+        "account": "Account"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Planned": "Pianificato",
+            "Held": "Held",
+            "Not Held": "Not Held"
+        },
+        "direction": {
+            "Outbound": "in Uscita",
+            "Inbound": "in Ingresso"
+        },
+        "acceptanceStatus": {
+            "None": "Nessun",
+            "Accepted": "Accepted",
+            "Declined": "Declined",
+            "Tentative": "Tentative"
+        }
+    },
+    "massActions": {
+        "setHeld": "Trattenuto",
+        "setNotHeld": "Non Trattenuto"
+    },
+    "labels": {
+        "Create Call": "Creare delle chiamate",
+        "Set Held": "Trattenuto",
+        "Set Not Held": "Non Trattenuto",
+        "Send Invitations": "Inviare inviti"
+    },
+    "presetFilters": {
+        "planned": "Pianificato",
+        "held": "Held",
+        "todays": "Today's"
+    }
+}
