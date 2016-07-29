@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "1556ffa1c5fec26b0154c84bd3143617",
-    "content-hash": "2c54a1b2494e5e9c2ee32c9aedee8cc7",
     "packages": [
         {
             "name": "composer/semver",
@@ -569,16 +568,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.17.2",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
+                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/55841909e2bcde01b5318c35f2b74f8ecc86e037",
+                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037",
                 "shasum": ""
             },
             "require": {
@@ -593,13 +592,13 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
                 "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
-                "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "sentry/sentry": "^0.13",
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -607,16 +606,17 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
-                "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "sentry/sentry": "Allow sending log messages to a Sentry server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.16.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -642,7 +642,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-10-14 12:51:02"
+            "time": "2016-07-02 14:02:10"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -830,7 +830,6 @@
                 "pdf417",
                 "qrcode"
             ],
-            "abandoned": "tecnickcom/tcpdf",
             "time": "2015-06-18 09:12:38"
         },
         {
@@ -936,28 +935,29 @@
         },
         {
             "name": "zendframework/zend-ldap",
-            "version": "2.5.1",
+            "version": "2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-ldap.git",
-                "reference": "c647a86224030543401634dbafd514074b49b2b6"
+                "reference": "14c5b862899ad8bb6cd02c567f394ec5dadc039d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-ldap/zipball/c647a86224030543401634dbafd514074b49b2b6",
-                "reference": "c647a86224030543401634dbafd514074b49b2b6",
+                "url": "https://api.github.com/repos/zendframework/zend-ldap/zipball/14c5b862899ad8bb6cd02c567f394ec5dadc039d",
+                "reference": "14c5b862899ad8bb6cd02c567f394ec5dadc039d",
                 "shasum": ""
             },
             "require": {
                 "ext-ldap": "*",
-                "php": ">=5.3.23",
-                "zendframework/zend-stdlib": "~2.5"
+                "php": "^5.5 || ^7.0"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
-                "zendframework/zend-config": "~2.5",
-                "zendframework/zend-eventmanager": "~2.5"
+                "php-mock/php-mock-phpunit": "~0.3",
+                "phpunit/phpunit": "^4.5",
+                "zendframework/zend-config": "^2.5",
+                "zendframework/zend-eventmanager": "^2.6.3 || ^3.0.1",
+                "zendframework/zend-stdlib": "^2.7 || ^3.0"
             },
             "suggest": {
                 "zendframework/zend-eventmanager": "Zend\\EventManager component"
@@ -984,7 +984,7 @@
                 "ldap",
                 "zf2"
             ],
-            "time": "2015-06-03 15:32:02"
+            "time": "2016-05-23 19:03:38"
         },
         {
             "name": "zendframework/zend-loader",

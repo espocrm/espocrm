@@ -1,24 +1,24 @@
 {
     "fields": {
-        "name": "Name",
+        "name": "Nome",
         "emailAddress": "Email",
         "website": "Website",
         "phoneNumber": "Phone",
-        "billingAddress": "Billing Address",
-        "shippingAddress": "Shipping Address",
-        "description": "Description",
+        "billingAddress": "Indirizzo di Fatturazione",
+        "shippingAddress": "Indirizzo di Spedizione",
+        "description": "Descrizione",
         "sicCode": "Sic Code",
-        "industry": "Industry",
-        "type": "Type",
-        "contactRole": "Title",
+        "industry": "Azienda",
+        "type": "Tipo",
+        "contactRole": "Titolo",
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List"
     },
     "links": {
-        "contacts": "Contacts",
-        "opportunities": "Opportunities",
-        "cases": "Cases",
+        "contacts": "Contatti",
+        "opportunities": "Opportunita'",
+        "cases": "Casi",
         "documents": "Documents",
         "meetingsPrimary": "Meetings (expanded)",
         "callsPrimary": "Calls (expanded)",
@@ -31,30 +31,30 @@
     },
     "options": {
         "type": {
-            "Customer": "Customer",
-            "Investor": "Investor",
+            "Customer": "Cliente",
+            "Investor": "Invetitore",
             "Partner": "Partner",
-            "Reseller": "Reseller"
+            "Reseller": "Rivenditore"
         },
         "industry": {
             "Agriculture": "Agriculture",
             "Advertising": "Advertising",
             "Apparel & Accessories": "Apparel & Accessories",
             "Automotive": "Automotive",
-            "Banking": "Banking",
+            "Banking": "Bancario",
             "Biotechnology": "Biotechnology",
             "Building Materials & Equipment": "Building Materials & Equipment",
             "Chemical": "Chemical",
             "Computer": "Computer",
-            "Education": "Education",
+            "Education": "Insegnante",
             "Electronics": "Electronics",
             "Energy": "Energy",
             "Entertainment & Leisure": "Entertainment & Leisure",
-            "Finance": "Finance",
+            "Finance": "Finanza",
             "Food & Beverage": "Food & Beverage",
             "Grocery": "Grocery",
             "Healthcare": "Healthcare",
-            "Insurance": "Insurance",
+            "Insurance": "Assicurazioni",
             "Legal": "Legal",
             "Manufacturing": "Manufacturing",
             "Publishing": "Publishing",
@@ -70,12 +70,11 @@
         }
     },
     "labels": {
-        "Create Account": "Create Account",
+        "Create Account": "Crea Account",
         "Copy Billing": "Copy Billing"
     },
     "presetFilters": {
         "customers": "Customers",
-        "partners": "Partners",
-        "recentlyCreated": "Recently Created"
+        "partners": "Partners"
     }
 }

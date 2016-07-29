@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "width": "Width (%)",
+        "link": "Link",
+        "notSortable": "Not Sortable",
+        "align": "Align"
+    },
+    "options": {
+        "align": {
+            "left": "Left",
+            "right": "Right"
+        }
+    }
+}

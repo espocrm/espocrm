@@ -52,6 +52,16 @@ class Account extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterRecentlyCreated(&$result)
+    {
+        $dt = new \DateTime('now');
+        $dt->modify('-7 days');
+
+        $result['whereClause'][] = array(
+            'createdAt>=' => $dt->format('Y-m-d H:i:s')
+        );
+    }
+
     protected function accessPortalOnlyAccount(&$result)
     {
         $d = array();

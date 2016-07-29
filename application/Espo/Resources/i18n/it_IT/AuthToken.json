@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "user": "Utente",
+        "ipAddress": "indirizzi IP",
+        "lastAccess": "Data ultimo acesso",
+        "createdAt": "Data Accesso"
+
+    }
+}

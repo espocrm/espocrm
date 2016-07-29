@@ -61,19 +61,23 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
         }
 
         $assignedUserId = $entity->get('assignedUserId');
-        if ($assignedUserId && $entity->has('usersIds')) {
-            $usersIds = $entity->get('usersIds');
-            if (!is_array($usersIds)) {
-                $usersIds = array();
-            }
-            if (!in_array($assignedUserId, $usersIds)) {
-                $usersIds[] = $assignedUserId;
-                $entity->set('usersIds', $usersIds);
-                $hash = $entity->get('usersNames');
-                if ($hash instanceof \StdClass) {
-                    $hash->$assignedUserId = $entity->get('assignedUserName');
-                    $entity->set('usersNames', $hash);
+        if ($assignedUserId) {
+            if ($entity->has('usersIds')) {
+                $usersIds = $entity->get('usersIds');
+                if (!is_array($usersIds)) {
+                    $usersIds = [];
                 }
+                if (!in_array($assignedUserId, $usersIds)) {
+                    $usersIds[] = $assignedUserId;
+                    $entity->set('usersIds', $usersIds);
+                    $hash = $entity->get('usersNames');
+                    if ($hash instanceof \StdClass) {
+                        $hash->$assignedUserId = $entity->get('assignedUserName');
+                        $entity->set('usersNames', $hash);
+                    }
+                }
+            } else {
+                $entity->addLinkMultipleId('users', $assignedUserId);
             }
             if ($entity->isNew()) {
                 $currentUserId = $this->getEntityManager()->getUser()->id;

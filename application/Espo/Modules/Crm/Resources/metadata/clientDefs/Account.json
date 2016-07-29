@@ -39,6 +39,11 @@
         "create": false
       }
    },
+   "filterList": [
+      {
+         "name":"recentlyCreated"
+      }
+   ],
    "boolFilterList": ["onlyMy"],
    "additionalLayouts": {
       "detailConvert": {

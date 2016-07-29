@@ -391,8 +391,8 @@ class Record extends \Espo\Core\Services\Base
                     return false;
                 }
             } else if ($assignmentPermission == 'team') {
-                $teamIds = $this->getUser()->get('teamsIds');
-                if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($assignedUserId, $teamIds)) {
+                $teamIdList = $this->getUser()->get('teamsIds');
+                if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)) {
                     return false;
                 }
             }

@@ -1,0 +1,64 @@
+{
+    "labels": {
+        "Converted To": "Convertito in",
+        "Create Lead": "Create Lead",
+        "Convert": "Convert"
+    },
+    "fields": {
+        "name": "Nome",
+        "emailAddress": "Email",
+        "title": "Titolo",
+        "website": "Website",
+        "phoneNumber": "Phone",
+        "accountName": "Nome utente",
+        "doNotCall": "Non chiamare",
+        "address": "Indirizzi",
+        "status": "Stato",
+        "source": "Force",
+        "opportunityAmount": "Opportunity Amount",
+        "opportunityAmountConverted": "Opportunity Amount (converted)",
+        "description": "Descrizione",
+        "createdAccount": "Account",
+        "createdContact": "Contatti",
+        "createdOpportunity": "Opportunità",
+        "campaign": "Campaign",
+        "targetLists": "Target Lists",
+        "targetList": "Target List"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign",
+        "createdAccount": "Account",
+        "createdContact": "Contatti",
+        "createdOpportunity": "Opportunità",
+        "cases": "Casi",
+        "documents": "Documents"
+    },
+    "options": {
+        "status": {
+            "New": "Nuovo",
+            "Assigned": "Assegnato",
+            "In Process": "In corso",
+            "Converted": "Convertito",
+            "Recycled": "Recycled",
+            "Dead": "Dead"
+        },
+        "source": {
+            "": "Nessun",
+            "Call": "Chiamata",
+            "Email": "Email",
+            "Existing Customer": "Existing Customer",
+            "Partner": "Partner",
+            "Public Relations": "Public Relations",
+            "Web Site": "Web Site",
+            "Campaign": "Campaign",
+            "Other": "Other"
+        }
+    },
+    "presetFilters": {
+        "active": "Attivo",
+        "actual": "Actual",
+        "converted": "Convertito"
+    }
+}

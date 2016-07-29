@@ -1,0 +1,71 @@
+{
+    "fields": {
+        "name": "Nome",
+        "description": "Descrizione",
+        "status": "Stato",
+        "type": "Tipo",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "sentCount": "Inviato",
+        "openedCount": "Opened",
+        "clickedCount": "Clicked",
+        "optedOutCount": "Rinuncia",
+        "bouncedCount": "Bounced",
+        "hardBouncedCount": "Hard Bounced",
+        "softBouncedCount": "Soft Bounced",
+        "leadCreatedCount": "Leads Created",
+        "revenue": "Revenue",
+        "revenueConverted": "Revenue (converted)",
+        "budget": "Budget",
+        "budgetConverted": "Budget (converted)"
+    },
+    "links": {
+        "targetLists": "Target Lists",
+        "excludingTargetLists": "Excluding Target Lists",
+        "accounts": "Accounts",
+        "contacts": "Contatti",
+        "leads": "Comando",
+        "opportunities": "Opportunita'",
+        "campaignLogRecords": "Log",
+        "massEmails": "Mass Emails",
+        "trackingUrls": "Tracking URLs"
+    },
+    "options": {
+        "type": {
+            "Email": "Email",
+            "Web": "Web",
+            "Television": "Television",
+            "Radio": "Radio",
+            "Newsletter": "Newsletter",
+            "Mail": "Mail"
+        },
+        "status": {
+            "Planning": "Planning",
+            "Active": "Attivo",
+            "Inactive": "Non Attivo",
+            "Complete": "Complete"
+        }
+    },
+    "labels": {
+        "Create Campaign": "Create Campaign",
+        "Target Lists": "Target Lists",
+        "Statistics": "Statistics",
+        "hard": "hard",
+        "soft": "soft",
+        "Unsubscribe": "Unsubscribe",
+        "Mass Emails": "Mass Emails",
+        "Email Templates": "Email Templates"
+    },
+    "presetFilters": {
+        "active": "Attivo"
+    },
+    "messages": {
+        "unsubscribed": "You have been unsubscribed from our mailing list."
+    },
+    "tooltips": {
+        "targetLists": "Targets that should receive messages.",
+        "excludingTargetLists": "Targets that should not receive messages."
+    }
+}

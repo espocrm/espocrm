@@ -118,5 +118,15 @@ class Acl
     {
         return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
     }
+
+    public function checkUserPermission($target, $permissionType = 'userPermission')
+    {
+        return $this->getAclManager()->checkUserPermission($this->getUser(), $target, $permissionType);
+    }
+
+    public function checkAssignmentPermission($target)
+    {
+        return $this->getAclManager()->checkAssignmentPermission($this->getUser(), $target);
+    }
 }
 

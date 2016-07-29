@@ -1,0 +1,46 @@
+{
+    "fields": {
+        "name": "Nome",
+        "emailAddress": "Email",
+        "title": "Titolo",
+        "account": "Account",
+        "accounts": "Accounts",
+        "phoneNumber": "Phone",
+        "accountType": "Account Type",
+        "doNotCall": "Non chiamare",
+        "address": "Indirizzi",
+        "opportunityRole": "Opportunity Role",
+        "accountRole": "Titolo",
+        "description": "Descrizione",
+        "campaign": "Campaign",
+        "targetLists": "Target Lists",
+        "targetList": "Target List",
+        "portalUser": "Portal User"
+    },
+    "links": {
+        "opportunities": "Opportunita'",
+        "cases": "Casi",
+        "targetLists": "Target Lists",
+        "campaignLogRecords": "Campaign Log",
+        "campaign": "Campaign",
+        "account": "Account (Primary)",
+        "accounts": "Accounts",
+        "casesPrimary": "Cases (Primary)",
+        "portalUser": "Portal User"
+    },
+    "labels": {
+        "Create Contact": "Crea Contatto"
+    },
+    "options": {
+        "opportunityRole": {
+            "": "--None--",
+            "Decision Maker": "Decision Maker",
+            "Evaluator": "Evaluator",
+            "Influencer": "Influencer"
+        }
+    },
+    "presetFilters": {
+        "portalUsers": "Portal Users",
+        "notPortalUsers": "Not Portal Users"
+    }
+}

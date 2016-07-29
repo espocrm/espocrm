@@ -1,0 +1,27 @@
+{
+    "fields": {
+        "post": "Post",
+        "attachments": "Allegato",
+        "targetType": "Target",
+        "teams": "Teams",
+        "users": "Utenti",
+        "portals": "Portals"
+    },
+    "filters": {
+        "all": "Tutti",
+        "posts": "Posts",
+        "updates": "Updates"
+    },
+    "options": {
+        "targetType": {
+            "self": "to myself",
+            "users": "to particular user(s)",
+            "teams": "to particular team(s)",
+            "all": "to all internal users",
+            "portals": "to portal users"
+        }
+    },
+    "messages": {
+        "writeMessage": "Write your message here"
+    }
+}

@@ -1,0 +1,95 @@
+{
+    "fields": {
+        "name": "Nome",
+        "userName": "Nome Utente",
+        "title": "Titolo",
+        "isAdmin": "Is Admin",
+        "defaultTeam": "Default Team",
+        "emailAddress": "Email",
+        "phoneNumber": "Phone",
+        "roles": "Ruoli",
+        "portals": "Portals",
+        "portalRoles": "Portal Roles",
+        "teamRole": "Position",
+        "password": "Password",
+        "currentPassword": "Current Password",
+        "passwordConfirm": "Conferma Password",
+        "newPassword": "Nuova Password",
+        "newPasswordConfirm": "Confirm New Password",
+        "avatar": "Avatar",
+        "isActive": "Is Active",
+        "isPortalUser": "Is Portal User",
+        "contact": "Contatti",
+        "accounts": "Accounts",
+        "account": "Account (Primary)",
+        "sendAccessInfo": "Send Email with Access Info to User",
+        "portal": "Portal",
+        "gender": "Gender"
+    },
+    "links": {
+        "teams": "Teams",
+        "roles": "Ruoli",
+        "notes": "Notes",
+        "portals": "Portals",
+        "portalRoles": "Portal Roles",
+        "contact": "Contatti",
+        "accounts": "Accounts",
+        "account": "Account (Primary)"
+    },
+    "labels": {
+        "Create User": "Crea Utente",
+        "Generate": "Generare",
+        "Access": "Accesso",
+        "Preferences": "Preferenze",
+        "Change Password": "Cambia Password",
+        "Teams and Access Control": "Teams and Access Control",
+        "Forgot Password?": "Forgot Password?",
+        "Password Change Request": "Password Change Request",
+        "Email Address": "Indirizzo Email",
+        "External Accounts": "External Accounts",
+        "Email Accounts": "Email Accounts",
+        "Portal": "Portal",
+        "Create Portal User": "Create Portal User"
+    },
+    "tooltips": {
+        "defaultTeam": "All records created by this user will be related to this team by default.",
+        "userName": "Letters a-z, numbers 0-9, dots, hyphens, @-signs and underscores are allowed.",
+        "isAdmin": "Admin user can access everything.",
+        "isActive": "If unchecked then user won't be able to login.",
+        "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
+        "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
+        "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
+        "portals": "Portals which this user has access to."
+    },
+    "messages": {
+        "passwordWillBeSent": "La Password verrà inviata all'indirizzo e-mail dell'utente.",
+        "accountInfoEmailSubject": "EspoCRM User Access Info",
+        "accountInfoEmailBody": "Your access information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+        "passwordChangeLinkEmailSubject": "Change Password Request",
+        "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be exprired soon.",
+        "passwordChanged": "La password è stata modificata",
+        "userCantBeEmpty": "Username can not be empty",
+        "wrongUsernamePasword": "username/password Errato",
+        "emailAddressCantBeEmpty": "Email Address can not be empty",
+        "userNameEmailAddressNotFound": "Username/Email Address not found",
+        "forbidden": "Forbidden, please try later",
+        "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
+        "passwordChangedByRequest": "Password has been changed.",
+        "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
+    },
+    "options": {
+        "gender": {
+            "": "Not Set",
+            "Male": "Male",
+            "Female": "Female",
+            "Neutral": "Neutral"
+        }
+    },
+    "boolFilters": {
+        "onlyMyTeam": "Only My Team"
+    },
+    "presetFilters": {
+        "active": "Attivo",
+        "activePortal": "Portal Active"
+    }
+}
