@@ -75,6 +75,7 @@
     },
     "presetFilters": {
         "customers": "Customers",
-        "partners": "Partners"
+        "partners": "Partners",
+        "recentlyCreated": "Recently Created"
     }
 }
