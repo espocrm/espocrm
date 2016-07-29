@@ -76,6 +76,39 @@ class Meeting extends \Espo\Services\Record
         return $this->getInjection('dateTime');
     }
 
+    public function checkAssignment(Entity $entity)
+    {
+        $result = parent::checkAssignment($entity);
+        if (!$result) return false;
+
+        $userIdList = $entity->get('usersIds');
+        if (!is_array($userIdList)) {
+            $userIdList = [];
+        }
+
+        $newIdList = [];
+        if (!$entity->isNew()) {
+            $existingIdList = [];
+            foreach ($entity->get('users') as $user) {
+                $existingIdList[] = $user->id;
+            }
+            foreach ($userIdList as $id) {
+                if (!in_array($id, $existingIdList)) {
+                    $newIdList[] = $id;
+                }
+            }
+        } else {
+            $newIdList = $userIdList;
+        }
+
+        foreach ($newIdList as $userId) {
+            if (!$this->getAcl()->checkAssignmentPermission($userId)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     protected function getInvitationManager()
     {
