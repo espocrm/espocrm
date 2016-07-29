@@ -28,16 +28,18 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Authentication;
-use Espo\Core\Exceptions\Error,
-    Espo\Core\Utils\Config,
-    Espo\Core\ORM\EntityManager,
-    Espo\Core\Utils\Auth;
+
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Auth;
+use Zend\Ldap\Ldap as LdapClient;
 
 class LDAP extends Base
 {
     private $utils;
 
-    private $zendLdap;
+    private $ldapClient;
 
     /**
      * Espo => LDAP name
@@ -50,32 +52,37 @@ class LDAP extends Base
     {
         parent::__construct($config, $entityManager, $auth);
 
-        $this->fields = array(
-            'userName' => $this->getConfig()->get('ldapUserNameAttribute'),
-            'firstName' => $this->getConfig()->get('ldapUserFirstNameAttribute'),
-            'lastName' => $this->getConfig()->get('ldapUserLastNameAttribute'),
-            'title' => $this->getConfig()->get('ldapUserTitleAttribute'),
-            'emailAddress' => $this->getConfig()->get('ldapUserEmailAddressAttribute'),
-            'phoneNumber' => $this->getConfig()->get('ldapUserPhoneNumberAttribute')
-        );
-
         $this->utils = new LDAP\Utils($config);
 
-        try {
-            $this->zendLdap = new LDAP\LDAP();
-        } catch (\Exception $e) {
-            $GLOBALS['log']->error('LDAP Authentication error: ' . $e->getMessage());
-        }
-    }
-
-    protected function getZendLdap()
-    {
-        return $this->zendLdap;
+        $options = $this->getUtils()->getOptions();
+        $this->fields = array(
+            'userName' => $options['userNameAttribute'],
+            'firstName' => $options['userTitleAttribute'],
+            'lastName' => $options['userFirstNameAttribute'],
+            'title' => $options['userLastNameAttribute'],
+            'emailAddress' => $options['userEmailAddressAttribute'],
+            'phoneNumber' => $options['userPhoneNumberAttribute']
+        );
     }
 
     protected function getUtils()
     {
         return $this->utils;
+    }
+
+    protected function getLdapClient()
+    {
+        if (!isset($this->ldapClient)) {
+            $options = $this->getUtils()->getLdapClientOptions();
+
+            try {
+                $this->ldapClient = new LdapClient($options);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('LDAP error: ' . $e->getMessage());
+            }
+        }
+
+        return $this->ldapClient;
     }
 
     /**
@@ -92,32 +99,35 @@ class LDAP extends Base
             return $this->loginByToken($username, $authToken);
         }
 
-        $options = $this->getUtils()->getZendOptions();
+        $ldapClient = $this->getLdapClient();
 
-        $ldap = $this->getZendLdap();
-        $ldap = $ldap->setOptions($options);
+        //login LDAP admin user (ldapUsername, ldapPassword)
+        try {
+            $ldapClient->bind();
+        } catch (\Exception $e) {
+            $options = $this->getUtils()->getLdapClientOptions();
+            $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$options['username'].'], details: ' . $e->getMessage());
+            return;
+        }
+
+        $userDn = $this->findLdapUserDnByUsername($username);
+        $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$userDn.'].');
+        if (!isset($userDn)) {
+            $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: user is not found.');
+            return;
+        }
 
         try {
-            $ldap->bind($username, $password);
-
-            $dn = $ldap->getDn($username);
-            $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$dn.']');
-
-            $loginFilter = $this->getUtils()->getOption('userLoginFilter');
-            $GLOBALS['log']->debug('Found loginFilter: ['.$loginFilter.']');
-
-            $userData = $ldap->searchByLoginFilter($loginFilter, $dn, 3);
-            $GLOBALS['log']->debug('Found userData ... ');
-
-        } catch (\Zend\Ldap\Exception\LdapException $zle) {
+            $ldapClient->bind($userDn, $password);
+        } catch (\Exception $e) {
 
             $admin = $this->adminLogin($username, $password);
             if (!isset($admin)) {
-                $GLOBALS['log']->error('LDAP Authentication: ' . $zle->getMessage());
+                $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: ' . $e->getMessage());
                 return null;
             }
 
-            $GLOBALS['log']->info('LDAP Authentication: Administrator login by username ['.$username.']');
+            $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
         }
 
         $user = $this->getEntityManager()->getRepository('User')->findOne(array(
@@ -129,6 +139,8 @@ class LDAP extends Base
         $isCreateUser = $this->getUtils()->getOption('createEspoUser');
         if (!isset($user) && $isCreateUser) {
             $this->getAuth()->useNoAuth(); /** Required to fix Acl "isFetched()" error */
+
+            $userData = $ldapClient->getEntry($userDn);
             $user = $this->createUser($userData);
         }
 
@@ -200,11 +212,12 @@ class LDAP extends Base
         $data = array();
 
         // show full array of the LDAP user
-        $GLOBALS['log']->debug(print_r($userData, true));
+        $GLOBALS['log']->debug('LDAP: user data: ' .print_r($userData, true));
 
         foreach ($this->fields as $espo => $ldap) {
+            $ldap = strtolower($ldap);
             if (isset($userData[$ldap][0])) {
-                $GLOBALS['log']->debug('LDAP, createUser: ['.$espo.'] - ['.$userData[$ldap][0].']');
+                $GLOBALS['log']->debug('LDAP: Create a user wtih ['.$espo.'] = ['.$userData[$ldap][0].'].');
                 $data[$espo] = $userData[$ldap][0];
             }
         }
@@ -215,6 +228,25 @@ class LDAP extends Base
         $this->getEntityManager()->saveEntity($user);
 
         return $user;
+    }
+
+    /**
+     * Find LDAP user DN by his username
+     *
+     * @param  string $username
+     *
+     * @return string | null
+     */
+    protected function findLdapUserDnByUsername($username)
+    {
+        $ldapClient = $this->getLdapClient();
+        $options = $this->getUtils()->getOptions();
+
+        $result = $ldapClient->search('(&(objectClass=user)('.$options['userNameAttribute'].'='.$username.'))', null, LdapClient::SEARCH_SCOPE_ONE);
+
+        foreach ($result as $item) {
+            return $item["dn"];
+        }
     }
 
 }

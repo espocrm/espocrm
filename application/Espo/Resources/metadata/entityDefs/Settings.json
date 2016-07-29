@@ -154,9 +154,7 @@
             "required": true
         },
         "ldapPort": {
-            "type": "int",
-            "max": 999999,
-            "min": 0,
+            "type": "varchar",
             "default": 389
         },
         "ldapSecurity": {
@@ -177,9 +175,6 @@
             "type": "bool"
         },
         "ldapBaseDn": {
-            "type": "varchar"
-        },
-        "ldapUserLoginFilter": {
             "type": "varchar"
         },
         "ldapAccountCanonicalForm": {
@@ -206,22 +201,28 @@
             "default": true
         },
         "ldapUserNameAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "ldapUserFirstNameAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "ldapUserLastNameAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "ldapUserTitleAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "ldapUserEmailAddressAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "ldapUserPhoneNumberAttribute": {
-            "type": "varchar"
+            "type": "varchar",
+            "required": true
         },
         "exportDisabled": {
             "type": "bool",
