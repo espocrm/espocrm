@@ -162,24 +162,34 @@
             "options": ["", "SSL", "TLS"]
         },
         "ldapAuth": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "ldapUsername": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapPassword": {
-            "type": "password"
+            "type": "password",
+            "tooltip": true
         },
         "ldapBindRequiresDn": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
+        },
+        "ldapUserLoginFilter": {
+            "type": "varchar",
+            "tooltip": true
         },
         "ldapBaseDn": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "ldapAccountCanonicalForm": {
             "type": "enum",
-            "options": ["Dn", "Username", "Backslash", "Principal"]
+            "options": ["Dn", "Username", "Backslash", "Principal"],
+            "tooltip": true
         },
         "ldapAccountDomainName": {
             "type": "varchar"
@@ -191,38 +201,47 @@
             "type": "varchar"
         },
         "ldapTryUsernameSplit": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "ldapOptReferrals": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "ldapCreateEspoUser": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "tooltip": true
         },
         "ldapUserNameAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapUserFirstNameAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapUserLastNameAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapUserTitleAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapUserEmailAddressAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "ldapUserPhoneNumberAttribute": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "exportDisabled": {
             "type": "bool",

@@ -242,11 +242,36 @@ class LDAP extends Base
         $ldapClient = $this->getLdapClient();
         $options = $this->getUtils()->getOptions();
 
-        $result = $ldapClient->search('(&(objectClass=user)('.$options['userNameAttribute'].'='.$username.'))', null, LdapClient::SEARCH_SCOPE_ONE);
+        $loginFilterString = '';
+        if (!empty($options['userLoginFilter'])) {
+            $loginFilterString = $this->convertToFilterFormat($options['userLoginFilter']);
+        }
+
+        $searchString = '(&(objectClass=user)('.$options['userNameAttribute'].'='.$username.')'.$loginFilterString.')';
+        $result = $ldapClient->search($searchString, null, LdapClient::SEARCH_SCOPE_ONE);
+        $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
         foreach ($result as $item) {
             return $item["dn"];
         }
     }
 
+    /**
+     * Check and convert filter item into LDAP format
+     *
+     * @param  string $filter E.g. "memberof=CN=externalTesters,OU=groups,DC=espo,DC=local"
+     *
+     * @return string
+     */
+    protected function convertToFilterFormat($filter)
+    {
+        $filter = trim($filter);
+        if (substr($filter, 0, 1) != '(') {
+            $filter = '(' . $filter;
+        }
+        if (substr($filter, -1) != ')') {
+            $filter = $filter . ')';
+        }
+        return $filter;
+    }
 }
