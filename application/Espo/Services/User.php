@@ -349,7 +349,7 @@ class User extends Record
         $body = str_replace('{userName}', $user->get('userName'), $body);
         $body = str_replace('{password}', $password, $body);
 
-        $siteUrl = $this->getConfig()->get('siteUrl');
+        $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
         if ($user->get('isPortalUser')) {
             $urlList = [];
@@ -361,9 +361,13 @@ class User extends Record
                 if ($portal->get('customUrl')) {
                     $urlList[] = $portal->get('customUrl');
                 } else {
-                    $url = $siteUrl . '?entryPoint=portal';
+                    $url = $siteUrl . 'portal/';
                     if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
-                        $url .= '&id=' . $portal->id;
+                        if ($portal->get('customId')) {
+                            $url .= $portal->get('customId');
+                        } else {
+                            $url .= $portal->id;
+                        }
                     }
                     $urlList[] = $url;
                 }
