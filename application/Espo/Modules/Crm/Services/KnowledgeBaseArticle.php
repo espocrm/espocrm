@@ -37,6 +37,8 @@ use \Espo\Core\Exceptions\Error;
 
 class KnowledgeBaseArticle extends \Espo\Services\Record
 {
+    protected $readOnlyAttributeList = ['order'];
+
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
         $ids = array();
