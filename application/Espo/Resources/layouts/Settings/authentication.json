@@ -12,16 +12,16 @@
         "rows": [
             [{"name": "ldapHost"}, {"name": "ldapPort"}],
             [{"name": "ldapAuth"}, {"name": "ldapSecurity"}],
-            [{"name": "ldapUsername"}, false],
+            [{"name": "ldapUsername", "fullWidth": true}],
             [{"name": "ldapPassword"}, false],
-            [{"name": "ldapBindRequiresDn"}, {"name": "ldapUserLoginFilter"}],
-            [{"name": "ldapBaseDn"}, false],
-            [{"name": "ldapAccountCanonicalForm"}, false],
+            [{"name": "ldapUserNameAttribute"}, false],
+            [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
+            [{"name": "ldapBaseDn", "fullWidth": true}],
             [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
             [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
             [{"name": "ldapCreateEspoUser"}, false],
-            [{"name": "ldapUserNameAttribute"}, {"name": "ldapUserTitleAttribute"}],
             [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
+            [{"name": "ldapUserTitleAttribute"}, false],
             [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}]
         ]
     }

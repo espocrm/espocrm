@@ -76,14 +76,14 @@ Espo.define('views/admin/authentication', 'views/settings/record/edit', function
                     true: [
                         {
                             action: 'show',
-                            fields: ['ldapUserNameAttribute', 'ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
+                            fields: ['ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['ldapUserNameAttribute', 'ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
+                        fields: ['ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute']
                     }
                 ]
             },

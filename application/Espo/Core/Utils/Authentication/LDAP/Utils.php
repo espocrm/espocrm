@@ -57,7 +57,12 @@ class Utils
         'tryUsernameSplit' => 'ldapTryUsernameSplit',
         'networkTimeout' => 'ldapNetworkTimeout',
         'createEspoUser' => 'ldapCreateEspoUser',
-        'userLoginFilter' => 'ldapUserLoginFilter',
+        'userNameAttribute' => 'ldapUserNameAttribute',
+        'userTitleAttribute' => 'ldapUserTitleAttribute',
+        'userFirstNameAttribute' => 'ldapUserFirstNameAttribute',
+        'userLastNameAttribute' => 'ldapUserLastNameAttribute',
+        'userEmailAddressAttribute' => 'ldapUserEmailAddressAttribute',
+        'userPhoneNumberAttribute' => 'ldapUserPhoneNumberAttribute',
     );
 
     /**
@@ -66,8 +71,13 @@ class Utils
      * @var array
      */
     protected $permittedEspoOptions = array(
-        'createEspoUser' => false,
-        'userLoginFilter' => null,
+        'createEspoUser',
+        'userNameAttribute',
+        'userTitleAttribute',
+        'userFirstNameAttribute',
+        'userLastNameAttribute',
+        'userEmailAddressAttribute',
+        'userPhoneNumberAttribute',
     );
 
     /**
@@ -148,12 +158,10 @@ class Utils
      *
      * @return array
      */
-    public function getZendOptions()
+    public function getLdapClientOptions()
     {
         $options = $this->getOptions();
-        $espoOptions = array_keys($this->permittedEspoOptions);
-
-        $zendOptions = array_diff_key($options, array_flip($espoOptions));
+        $zendOptions = array_diff_key($options, array_flip($this->permittedEspoOptions));
 
         return $zendOptions;
     }

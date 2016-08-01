@@ -139,5 +139,11 @@ return array (    'defaultPermissions' =>
         'authTokenMaxIdleTime'
     ),
     'isInstalled' => false,
+    'ldapUserNameAttribute' => 'sAMAccountName',
+    'ldapUserFirstNameAttribute' => 'givenName',
+    'ldapUserLastNameAttribute' => 'sn',
+    'ldapUserTitleAttribute' => 'title',
+    'ldapUserEmailAddressAttribute' => 'mail',
+    'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
 );
 
