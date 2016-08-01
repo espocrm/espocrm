@@ -152,11 +152,5 @@ return array (
     ],
     "calendarEntityList" => ["Meeting", "Call", "Task"],
     'isInstalled' => false,
-    'ldapUserNameAttribute' => 'userPrincipalName',
-    'ldapUserFirstNameAttribute' => 'givenName',
-    'ldapUserLastNameAttribute' => 'sn',
-    'ldapUserTitleAttribute' => 'title',
-    'ldapUserEmailAddressAttribute' => 'mail',
-    'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
 );
 
