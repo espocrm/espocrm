@@ -63,6 +63,7 @@ class Utils
         'userLastNameAttribute' => 'ldapUserLastNameAttribute',
         'userEmailAddressAttribute' => 'ldapUserEmailAddressAttribute',
         'userPhoneNumberAttribute' => 'ldapUserPhoneNumberAttribute',
+        'userLoginFilter' => 'ldapUserLoginFilter',
     );
 
     /**
@@ -78,6 +79,7 @@ class Utils
         'userLastNameAttribute',
         'userEmailAddressAttribute',
         'userPhoneNumberAttribute',
+        'userLoginFilter',
     );
 
     /**

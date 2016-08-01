@@ -17,6 +17,7 @@
             [{"name": "ldapUserNameAttribute"}, false],
             [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
             [{"name": "ldapBaseDn", "fullWidth": true}],
+            [{"name": "ldapUserLoginFilter", "fullWidth": true}],
             [{"name": "ldapAccountDomainName"}, {"name": "ldapAccountDomainNameShort"}],
             [{"name": "ldapTryUsernameSplit"}, {"name": "ldapOptReferrals"}],
             [{"name": "ldapCreateEspoUser"}, false],
