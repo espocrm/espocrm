@@ -116,5 +116,7 @@ class ImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('<br>Admin Test', $email->get('body'));
         $this->assertContains('Admin Test', $email->get('bodyPlain'));
 
+        $this->assertEquals('<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>', $email->get('messageId'));
+
     }
 }
