@@ -38,16 +38,13 @@ class Importer
 {
     private $entityManager;
 
-    private $fileManager;
-
     private $config;
 
     private $filtersMatcher;
 
-    public function __construct($entityManager, $fileManager, $config)
+    public function __construct($entityManager, $config)
     {
         $this->entityManager = $entityManager;
-        $this->fileManager = $fileManager;
         $this->config = $config;
         $this->filtersMatcher = new FiltersMatcher();
     }
@@ -60,11 +57,6 @@ class Importer
     protected function getConfig()
     {
         return $this->config;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
     }
 
     protected function getFiltersMatcher()
@@ -475,12 +467,9 @@ class Importer
                     $content = base64_decode($content);
                 }
 
-                $attachment->set('size', strlen($content));
+                $attachment->set('contents', $content);
 
                 $this->getEntityManager()->saveEntity($attachment);
-
-                $path = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-                $this->getFileManager()->putContents($path, $content);
 
                 if ($disposition == 'attachment') {
                     $attachmentsIds = $email->get('attachmentsIds');

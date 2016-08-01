@@ -70,14 +70,8 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function init()
     {
-        $this->dependencies[] = 'fileManager';
         $this->dependencies[] = 'mailSender';
         $this->dependencies[] = 'crypt';
-    }
-
-    protected function getFileManager()
-    {
-        return $this->injections['fileManager'];
     }
 
     protected function getMailSender()
@@ -158,7 +152,7 @@ class InboundEmail extends \Espo\Services\Record
             throw new Error();
         }
 
-        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getFileManager(), $this->getConfig());
+        $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig());
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
