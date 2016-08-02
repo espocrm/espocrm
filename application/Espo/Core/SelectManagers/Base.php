@@ -710,8 +710,12 @@ class Base
     {
         if (empty($this->userTimeZone)) {
             $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
-            $timeZone = $preferences->get('timeZone');
-            $this->userTimeZone = $timeZone;
+            if ($preferences) {
+                $timeZone = $preferences->get('timeZone');
+                $this->userTimeZone = $timeZone;
+            } else {
+                $this->userTimeZone = 'UTC';
+            }
         }
 
         return $this->userTimeZone;
@@ -1106,12 +1110,36 @@ class Base
 
     public function hasJoin($join, &$result)
     {
-        return in_array($join, $result['joins']);
+        if (in_array($join, $result['joins'])) {
+            return true;
+        }
+
+        foreach ($result['joins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[1] == $join) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function hasLeftJoin($leftJoin, &$result)
     {
-        return in_array($leftJoin, $result['leftJoins']);
+        if (in_array($leftJoin, $result['leftJoins'])) {
+            return true;
+        }
+
+        foreach ($result['leftJoins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[1] == $leftJoin) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function addJoin($join, &$result)
