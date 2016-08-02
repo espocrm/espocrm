@@ -173,7 +173,7 @@ class Htmlizer
         $fileName = 'data/cache/templates/' . $id . '.php';
 
         $this->fileManager->putContents($fileName, $code);
-        $renderer = include($fileName);
+        $renderer = $this->fileManager->getPhpContents($fileName);
 
         if ($toRemove) {
             $this->fileManager->removeFile($fileName);
