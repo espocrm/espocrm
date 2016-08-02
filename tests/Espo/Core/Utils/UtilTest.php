@@ -120,6 +120,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
           )
         );
         $expected = array(
+            'test' => [],
             'hello' => 'world',
             'man' => array(
               'test' => [
@@ -129,7 +130,8 @@ class UtilTest extends \PHPUnit_Framework_TestCase
               ]
             )
         );
-        $result = Util::merge($d3, Util::merge($d2, $d1));
+
+        $result = Util::merge(Util::merge($d2, $d1), $d3);
         $this->assertEquals($expected, $result);
     }
 
@@ -1379,6 +1381,46 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
         $this->assertNotEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
+    }
+
+    public function testGetValueByKey2()
+    {
+        $inputArray = array(
+            'fields' => array(
+                'varchar' => array (
+                      'params' =>
+                      array (
+                        array (
+                          'name' => 'required',
+                          'type' => 'bool',
+                          'default' => false,
+                        ),
+                        array (
+                          'name' => 'default',
+                          'type' => 'varchar',
+                        ),
+                        array (
+                          'name' => 'maxLength',
+                          'type' => 'int',
+                        ),
+                        array (
+                          'name' => 'trim',
+                          'type' => 'bool',
+                          'default' => true,
+                        ),
+                        array (
+                          'name' => 'audited',
+                          'type' => 'bool',
+                        ),
+                      ),
+                      'filter' => true,
+                ),
+            )
+        );
+
+        $this->assertNull(Util::getValueByKey($inputArray, 'fields.varchar.hookClassName'));
+        $this->assertNull(Util::getValueByKey($inputArray, ['fields', 'varchar', 'hookClassName']));
+        $this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
     }
 
     public function testUnsetInArrayByValue()

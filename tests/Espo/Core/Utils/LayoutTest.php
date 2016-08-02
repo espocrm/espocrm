@@ -46,8 +46,9 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['user'] = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata']);
+        $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata'], $this->objects['user']);
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('params', array(

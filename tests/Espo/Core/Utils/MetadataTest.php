@@ -51,9 +51,12 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
             copy($this->defaultCacheFile, $this->cacheFile);
         }
 
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
-        $this->objects['Unifier'] = $this->getMockBuilder('\Espo\Core\Utils\File\Unifier')->disableOriginalConstructor()->getMock();
+        $this->objects['Unifier'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Unifier')->disableOriginalConstructor()->getMock();
+
+        $this->objects['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+        $GLOBALS['log'] = $this->objects['log'];
 
         //set to use cache
         $this->objects['config']

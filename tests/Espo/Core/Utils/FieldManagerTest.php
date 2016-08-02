@@ -91,10 +91,17 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "label" => "Name",
         );
 
+        $map = array(
+            ['entityDefs.Account.fields.name', null, $data],
+            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
+            ['fields.varchar', null, null],
+            [['fields', 'varchar', 'hookClassName'], null, null],
+        );
+
         $this->objects['metadata']
-            ->expects($this->exactly(6))
+            ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($data));
+            ->will($this->returnValueMap($map));
 
         $this->object->update('name', $data, 'Account');
     }
@@ -107,10 +114,18 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "isCustom" => true,
         );
 
+        $map = array(
+            ['entityDefs.CustomEntity.fields.varName', null, $data],
+            ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
+            [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
+            ['fields.varchar', null, null],
+            [['fields', 'varchar', 'hookClassName'], null, null],
+        );
+
         $this->objects['metadata']
-            ->expects($this->exactly(3))
+            ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($data));
+            ->will($this->returnValueMap($map));
 
         $this->objects['metadata']
             ->expects($this->never())
@@ -128,10 +143,18 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "isCustom" => true,
         );
 
+        $map = array(
+            ['entityDefs.CustomEntity.fields.varName', null, $data],
+            ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
+            [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
+            ['fields.varchar', null, null],
+            [['fields', 'varchar', 'hookClassName'], null, null],
+        );
+
         $this->objects['metadata']
-            ->expects($this->exactly(6))
+            ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($data));
+            ->will($this->returnValueMap($map));
 
         $this->objects['metadata']
             ->expects($this->once())
