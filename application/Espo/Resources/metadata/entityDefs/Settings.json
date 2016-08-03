@@ -243,6 +243,14 @@
             "required": true,
             "tooltip": true
         },
+        "ldapUserDefaultTeam": {
+            "type": "link",
+            "tooltip": true
+        },
+        "ldapUserTeams": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
         "exportDisabled": {
             "type": "bool",
             "default": false
@@ -380,6 +388,24 @@
         },
         "googleMapsApiKey": {
             "type": "varchar"
+        }
+    },
+    "links": {
+        "ldapUserDefaultTeam": {
+            "type": "belongsTo",
+            "entity": "Team"
+        },
+        "ldapUserTeams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "users",
+            "additionalColumns": {
+                "role": {
+                    "type": "varchar",
+                    "len": 100
+                }
+            },
+            "layoutRelationshipsDisabled": true
         }
     }
 }

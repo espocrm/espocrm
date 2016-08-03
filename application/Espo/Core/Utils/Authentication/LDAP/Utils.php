@@ -64,6 +64,8 @@ class Utils
         'userEmailAddressAttribute' => 'ldapUserEmailAddressAttribute',
         'userPhoneNumberAttribute' => 'ldapUserPhoneNumberAttribute',
         'userLoginFilter' => 'ldapUserLoginFilter',
+        'userTeamsIds' => 'ldapUserTeamsIds',
+        'userDefaultTeamId' => 'ldapUserDefaultTeamId',
     );
 
     /**
@@ -80,6 +82,8 @@ class Utils
         'userEmailAddressAttribute',
         'userPhoneNumberAttribute',
         'userLoginFilter',
+        'userTeamsIds',
+        'userDefaultTeamId',
     );
 
     /**

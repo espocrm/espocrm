@@ -51,6 +51,9 @@
         "ldapUserLastNameAttribute": "User Last Name Attribute",
         "ldapUserEmailAddressAttribute": "User Email Address Attribute",
         "ldapUserPhoneNumberAttribute": "User Phone Number Attribute",
+        "ldapUserTeams": "User Teams",
+        "ldapUserDefaultTeam": "User Default Team",
+        "ldapUserPhoneNumberAttribute": "User Phone Number Attribute",
         "exportDisabled": "Disable Export (only admin is allowed)",
         "assignmentNotificationsEntityList": "Entities to notify about upon assignment",
         "assignmentEmailNotifications": "Notifications upon assignment",
@@ -110,7 +113,9 @@
         "ldapUserTitleAttribute": "LDAP attribute which is used to determine the user title. E.g. \"title\".",
         "ldapUserEmailAddressAttribute": "LDAP attribute which is used to determine the user email address. E.g. \"mail\".",
         "ldapUserPhoneNumberAttribute": "LDAP attribute which is used to determine the user phone number. E.g. \"telephoneNumber\".",
-        "ldapUserLoginFilter": "The filter which allows to restrict users who able to use EspoCRM. E.g. \"memberOf=CN=espoGroup, OU=groups,OU=espocrm, DC=test,DC=lan\"."
+        "ldapUserLoginFilter": "The filter which allows to restrict users who able to use EspoCRM. E.g. \"memberOf=CN=espoGroup, OU=groups,OU=espocrm, DC=test,DC=lan\".",
+        "ldapUserTeams": "Teams for created user. For more, see user profile.",
+        "ldapUserDefaultTeam": "Default team for created user. For more, see user profile."
     },
     "labels": {
         "System": "System",
