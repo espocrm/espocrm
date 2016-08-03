@@ -64,6 +64,8 @@ class Utils
         'userEmailAddressAttribute' => 'ldapUserEmailAddressAttribute',
         'userPhoneNumberAttribute' => 'ldapUserPhoneNumberAttribute',
         'userLoginFilter' => 'ldapUserLoginFilter',
+        'userTeamsIds' => 'ldapUserTeamsIds',
+        'userDefaultTeamId' => 'ldapUserDefaultTeamId',
     );
 
     /**
@@ -80,6 +82,8 @@ class Utils
         'userEmailAddressAttribute',
         'userPhoneNumberAttribute',
         'userLoginFilter',
+        'userTeamsIds',
+        'userDefaultTeamId',
     );
 
     /**
@@ -95,9 +99,11 @@ class Utils
     );
 
 
-    public function __construct(Config $config)
+    public function __construct(Config $config = null)
     {
-        $this->config = $config;
+        if (isset($config)) {
+            $this->config = $config;
+        }
     }
 
     protected function getConfig()
@@ -125,14 +131,25 @@ class Utils
             }
         }
 
-        /** peculiar fields */
+        $this->options = $this->normalizeOptions($options);
+
+        return $this->options;
+    }
+
+    /**
+     * Normalize options to LDAP client format
+     *
+     * @param  array  $options
+     *
+     * @return array
+     */
+    public function normalizeOptions(array $options)
+    {
         $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
         $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
         $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
 
-        $this->options = $options;
-
-        return $this->options;
+        return $options;
     }
 
     /**

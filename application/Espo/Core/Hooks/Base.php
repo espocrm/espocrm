@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Hooks;
 
-use \Espo\Core\Interfaces\Injectable;
+use Espo\Core\Interfaces\Injectable;
 
 abstract class Base implements Injectable
 {
     protected $dependencies = array(
+        'container',
         'entityManager',
         'config',
         'metadata',
-        'acl',
         'aclManager',
         'user',
     );
@@ -82,6 +82,11 @@ abstract class Base implements Injectable
         $this->injections[$name] = $object;
     }
 
+    protected function getContainer()
+    {
+        return $this->getInjection('container');
+    }
+
     protected function getEntityManager()
     {
         return $this->getInjection('entityManager');
@@ -94,7 +99,7 @@ abstract class Base implements Injectable
 
     protected function getAcl()
     {
-        return $this->getInjection('acl');
+        return $this->getContainer()->get('acl');
     }
 
     protected function getAclManager()
