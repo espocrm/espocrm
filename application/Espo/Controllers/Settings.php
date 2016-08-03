@@ -90,4 +90,19 @@ class Settings extends \Espo\Core\Controllers\Base
 
         return $this->getConfigData();
     }
+
+    public function actionTestLdapConnection($params, $data)
+    {
+        if (!isset($data['password'])) {
+            $data['password'] = $this->getConfig()->get('ldapPassword');
+        }
+
+        $ldapUtils = new \Espo\Core\Utils\Authentication\LDAP\Utils();
+        $options = $ldapUtils->normalizeOptions($data);
+
+        $ldapClient = new \Espo\Core\Utils\Authentication\LDAP\Client($options);
+        $ldapClient->bind(); //an exception if no connection
+
+        return true;
+    }
 }

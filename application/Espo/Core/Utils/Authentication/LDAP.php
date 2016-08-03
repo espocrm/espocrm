@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Auth;
-use Zend\Ldap\Ldap as LdapClient;
 
 class LDAP extends Base
 {
@@ -83,7 +82,7 @@ class LDAP extends Base
             $options = $this->getUtils()->getLdapClientOptions();
 
             try {
-                $this->ldapClient = new LdapClient($options);
+                $this->ldapClient = new LDAP\Client($options);
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('LDAP error: ' . $e->getMessage());
             }
@@ -146,8 +145,6 @@ class LDAP extends Base
 
         $isCreateUser = $this->getUtils()->getOption('createEspoUser');
         if (!isset($user) && $isCreateUser) {
-            $this->getAuth()->useNoAuth(); /** Required to fix Acl "isFetched()" error */
-
             $userData = $ldapClient->getEntry($userDn);
             $user = $this->createUser($userData);
         }
@@ -266,7 +263,7 @@ class LDAP extends Base
         }
 
         $searchString = '(&(objectClass=user)('.$options['userNameAttribute'].'='.$username.')'.$loginFilterString.')';
-        $result = $ldapClient->search($searchString, null, LdapClient::SEARCH_SCOPE_ONE);
+        $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_ONE);
         $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
         foreach ($result as $item) {

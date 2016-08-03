@@ -13,7 +13,7 @@
             [{"name": "ldapHost"}, {"name": "ldapPort"}],
             [{"name": "ldapAuth"}, {"name": "ldapSecurity"}],
             [{"name": "ldapUsername", "fullWidth": true}],
-            [{"name": "ldapPassword"}, false],
+            [{"name": "ldapPassword"}, {"name": "testConnection", "customLabel": null, "view": "views/admin/authentication/fields/test-connection"}],
             [{"name": "ldapUserNameAttribute"}, false],
             [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
             [{"name": "ldapBaseDn", "fullWidth": true}],
@@ -23,7 +23,8 @@
             [{"name": "ldapCreateEspoUser"}, false],
             [{"name": "ldapUserFirstNameAttribute"}, {"name": "ldapUserLastNameAttribute"}],
             [{"name": "ldapUserTitleAttribute"}, false],
-            [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}]
+            [{"name": "ldapUserEmailAddressAttribute"}, {"name": "ldapUserPhoneNumberAttribute"}],
+            [{"name": "ldapUserTeams"}, {"name": "ldapUserDefaultTeam"}]
         ]
     }
 ]
