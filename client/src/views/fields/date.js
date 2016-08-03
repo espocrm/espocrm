@@ -75,10 +75,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     return this.getDateTime().toDisplayDate(value);
                 }
 
-                var d = moment.utc(value, this.getDateTime().internalDateFormat);
+                var d = moment.tz(value + ' OO:OO:00', this.getDateTime().internalDateTimeFormat, this.getDateTime().getTimeZone());
 
-
-                var today = moment().tz('UTC').startOf('day');
+                var today = moment().tz(this.getDateTime().getTimeZone()).startOf('day');
                 var dt = today.clone();
 
                 var ranges = {
