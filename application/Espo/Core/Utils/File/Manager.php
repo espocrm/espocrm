@@ -188,9 +188,7 @@ class Manager
 
         if (file_exists($fullPath) && strtolower(substr($fullPath, -4)) == '.php') {
             $phpContents = include($fullPath);
-            if (is_array($phpContents)) {
-                return $phpContents;
-            }
+            return $phpContents;
         }
 
         return false;

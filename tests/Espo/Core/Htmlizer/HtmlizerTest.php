@@ -46,22 +46,28 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
     {
         date_default_timezone_set('UTC');
 
+        $obj = new \StdClass();
+
         $this->fileManager = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->fileManager
                     ->expects($this->any())
                     ->method('putContents')
-                    ->will($this->returnCallback(function($fileName, $contents) {
-                        file_put_contents($fileName, $contents);
+                    ->will($this->returnCallback(function($fileName, $contents) use ($obj) {
+                        $obj->contents = $contents;
+                    }));
+
+        $this->fileManager
+                    ->expects($this->any())
+                    ->method('getPhpContents')
+                    ->will($this->returnCallback(function($fileName) use ($obj) {
+                        $data = eval('?>' . $obj->contents . '<?php');
+                        return $data;
                     }));
 
 
         $this->fileManager
                     ->expects($this->any())
-                    ->method('unlink')
-                    ->will($this->returnCallback(function($fileName, $contents) {
-                        unlink($fileName);
-                    }));
-
+                    ->method('unlink');
 
 
         $this->dateTime = new \Espo\Core\Utils\DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
