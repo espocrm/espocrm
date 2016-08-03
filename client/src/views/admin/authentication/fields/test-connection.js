@@ -42,24 +42,6 @@ Espo.define('views/admin/authentication/fields/test-connection', 'views/fields/b
             return {};
         },
 
-        /*checkAvailability: function () {
-            if (this.model.get('ldapPassword')) {
-                this.$el.find('button').removeClass('hidden');
-            } else {
-                this.$el.find('button').addClass('hidden');
-            }
-        },
-
-        afterRender: function () {
-            this.checkAvailability();
-
-            this.stopListening(this.model, 'change:ldapPassword');
-
-            this.listenTo(this.model, 'change:ldapPassword', function () {
-                this.checkAvailability();
-            }, this);
-        },*/
-
         getConnectionData: function () {
             var data = {
                 'host': this.model.get('ldapHost'),

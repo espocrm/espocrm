@@ -192,10 +192,12 @@
             "tooltip": true
         },
         "ldapAccountDomainName": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "ldapAccountDomainNameShort": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "ldapAccountFilterFormat": {
             "type": "varchar"

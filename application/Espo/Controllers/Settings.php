@@ -91,8 +91,12 @@ class Settings extends \Espo\Core\Controllers\Base
         return $this->getConfigData();
     }
 
-    public function actionTestLdapConnection($params, $data)
+    public function postActionTestLdapConnection($params, $data)
     {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         if (!isset($data['password'])) {
             $data['password'] = $this->getConfig()->get('ldapPassword');
         }
