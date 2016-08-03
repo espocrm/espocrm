@@ -53,18 +53,15 @@ class RDB extends \Espo\ORM\Repository
      */
     protected $listParams = array();
 
-    public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
+    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
-        $this->entityName = $entityName;
+        $this->entityType = $entityType;
+        $this->entityName = $entityType;
+
         $this->entityFactory = $entityFactory;
-        $this->seed = $this->entityFactory->create($entityName);
+        $this->seed = $this->entityFactory->create($entityType);
         $this->entityClassName = get_class($this->seed);
         $this->entityManager = $entityManager;
-        $this->init();
-    }
-
-    protected function init()
-    {
     }
 
     protected function getMapper()
@@ -97,7 +94,7 @@ class RDB extends \Espo\ORM\Repository
 
     protected function getNewEntity()
     {
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->entityFactory->create($this->entityType);
         if ($entity) {
             $entity->setIsNew(true);
             $entity->populateDefaults();
@@ -110,7 +107,7 @@ class RDB extends \Espo\ORM\Repository
         $params = array();
         $this->handleSelectParams($params);
 
-        $entity = $this->entityFactory->create($this->entityName);
+        $entity = $this->entityFactory->create($this->entityType);
         if ($entity) {
             if ($this->getMapper()->selectById($entity, $id, $params)) {
                 $entity->setAsFetched();
@@ -178,7 +175,7 @@ class RDB extends \Espo\ORM\Repository
 
     public function deleteFromDb($id)
     {
-        return $this->getMapper()->deleteFromDb($this->entityName, $id);
+        return $this->getMapper()->deleteFromDb($this->entityType, $id);
     }
 
     public function find(array $params = array())
@@ -188,7 +185,7 @@ class RDB extends \Espo\ORM\Repository
 
         $dataArr = $this->getMapper()->select($this->seed, $params);
 
-        $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
         $this->reset();
 
         return $collection;
@@ -207,7 +204,7 @@ class RDB extends \Espo\ORM\Repository
     {
         $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
 
-        $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
         $this->reset();
 
         return $collection;
@@ -218,13 +215,13 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return [];
         }
-        $entityName = $entity->relations[$relationName]['entity'];
-        $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
+        $entityType = $entity->relations[$relationName]['entity'];
+        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
         if (is_array($result)) {
 
-            $collection = new EntityCollection($result, $entityName, $this->entityFactory);
+            $collection = new EntityCollection($result, $entityType, $this->entityFactory);
 
             return $collection;
         } else {
@@ -237,8 +234,8 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return;
         }
-        $entityName = $entity->relations[$relationName]['entity'];
-        $this->getEntityManager()->getRepository($entityName)->handleSelectParams($params);
+        $entityType = $entity->relations[$relationName]['entity'];
+        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
 
         return intval($this->getMapper()->countRelated($entity, $relationName, $params));
     }

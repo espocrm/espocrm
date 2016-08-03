@@ -47,8 +47,9 @@ class MassEmail extends \Espo\Services\Record
 
     protected function init()
     {
-        $this->dependencies[] = 'container';
-        $this->dependencies[] = 'language';
+        parent::init();
+        $this->addDependency('container');
+        $this->addDependency('language');
     }
 
     protected function getMailSender()

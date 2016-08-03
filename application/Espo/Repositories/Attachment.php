@@ -35,7 +35,8 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function init()
     {
-        $this->dependencies[] = 'fileManager';
+        parent::init();
+        $this->addDependency('fileManager');
     }
 
     protected function getFileManager()

@@ -40,15 +40,19 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $statusFields = null;
 
-    protected $dependencies = array(
-        'entityManager',
-        'config',
-        'user',
-        'metadata',
-        'acl',
-        'aclManager',
-        'container',
-    );
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'entityManager',
+            'config',
+            'user',
+            'metadata',
+            'acl',
+            'aclManager',
+            'container'
+        ]);
+    }
 
     protected $emailsWithContentEntityList = ['Case'];
 

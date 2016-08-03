@@ -79,6 +79,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $this->getInjection('metadata');
     }
 
+    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    {
+        parent::__construct($entityType, $entityManager, $entityFactory);
+        $this->init();
+    }
+
+    protected function init()
+    {
+    }
+
     public function handleSelectParams(&$params)
     {
         $this->handleEmailAddressParams($params);
@@ -88,7 +98,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleCurrencyParams(&$params)
     {
-        $entityName = $this->entityName;
+        $entityType = $this->entityType;
 
         $metadata = $this->getMetadata();
 
@@ -96,7 +106,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $defs = $metadata->get('entityDefs.' . $entityName);
+        $defs = $metadata->get('entityDefs.' . $entityType);
 
         foreach ($defs['fields'] as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
@@ -108,7 +118,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
                 $alias = Util::toUnderScore($field) . "_currency_alias";
                 $params['customJoin'] .= "
-                    LEFT JOIN currency AS `{$alias}` ON {$alias}.id = ".Util::toUnderScore($entityName).".".Util::toUnderScore($field)."_currency
+                    LEFT JOIN currency AS `{$alias}` ON {$alias}.id = ".Util::toUnderScore($entityType).".".Util::toUnderScore($field)."_currency
                 ";
             }
         }
@@ -117,9 +127,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handleEmailAddressParams(&$params)
     {
-        $entityName = $this->entityName;
+        $entityType = $this->entityType;
 
-        $defs = $this->getEntityManager()->getMetadata()->get($entityName);
+        $defs = $this->getEntityManager()->getMetadata()->get($entityType);
         if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
             if (empty($params['leftJoins'])) {
                 $params['leftJoins'] = array();
@@ -139,9 +149,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function handlePhoneNumberParams(&$params)
     {
-        $entityName = $this->entityName;
+        $entityType = $this->entityType;
 
-        $defs = $this->getEntityManager()->getMetadata()->get($entityName);
+        $defs = $this->getEntityManager()->getMetadata()->get($entityType);
         if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
             if (empty($params['leftJoins'])) {
                 $params['leftJoins'] = array();
@@ -162,7 +172,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function beforeRemove(Entity $entity, array $options = array())
     {
         parent::beforeRemove($entity, $options);
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeRemove', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRemove', $entity, $options);
 
         $nowString = date('Y-m-d H:i:s', time());
         if ($entity->hasAttribute('modifiedAt')) {
@@ -176,14 +186,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
     }
 
     public function remove(Entity $entity, array $options = array())
     {
         $result = parent::remove($entity, $options);
         if ($result) {
-            $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterRemove', $entity, $options);
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
         }
         return $result;
     }
@@ -192,7 +202,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'beforeSave', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -208,7 +218,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->processSpecifiedRelationsSave($entity);
         $this->processFileFieldsSave($entity);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityName, 'afterSave', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
     }
 
     public function save(Entity $entity, array $options = array())

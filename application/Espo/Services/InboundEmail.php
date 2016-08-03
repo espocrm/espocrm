@@ -70,8 +70,10 @@ class InboundEmail extends \Espo\Services\Record
 
     protected function init()
     {
-        $this->dependencies[] = 'mailSender';
-        $this->dependencies[] = 'crypt';
+        parent::init();
+
+        $this->addDependency('mailSender');
+        $this->addDependency('crypt');
     }
 
     protected function getMailSender()

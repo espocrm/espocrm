@@ -45,12 +45,13 @@ class EmailAccount extends Record
 
     protected function init()
     {
-        $this->dependencies[] = 'crypt';
+        parent::init();
+        $this->addDependency('crypt');
     }
 
     protected function getCrypt()
     {
-        return $this->injections['crypt'];
+        return $this->getInjection('crypt');
     }
 
     protected function handleInput(&$data)

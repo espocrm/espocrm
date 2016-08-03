@@ -54,7 +54,7 @@ abstract class Repository
     /**
      * @var string Model Name of aggregate root.
      */
-    protected $entityName;
+    protected $entityType;
 
     public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
     {

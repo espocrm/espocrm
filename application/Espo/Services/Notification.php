@@ -38,26 +38,6 @@ use Espo\Core\Utils\Json;
 
 class Notification extends \Espo\Services\Record
 {
-    protected function getEntityManager()
-    {
-        return $this->injections['entityManager'];
-    }
-
-    protected function getUser()
-    {
-        return $this->injections['user'];
-    }
-
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-
-    protected function getAclManager()
-    {
-        return $this->getInjection('aclManager');
-    }
-
     public function notifyAboutMentionInPost($userId, $noteId)
     {
         $notification = $this->getEntityManager()->getEntity('Notification');

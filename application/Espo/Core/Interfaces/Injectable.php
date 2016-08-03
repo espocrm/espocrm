@@ -25,14 +25,14 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Interfaces;
 
 interface Injectable
 {
     public function getDependencyList();
-    
+
     public function inject($name, $object);
 }
 

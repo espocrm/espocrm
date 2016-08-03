@@ -39,7 +39,7 @@ class Mentions extends \Espo\Core\Hooks\Base
 
     protected function init()
     {
-        $this->dependencies[] = 'serviceFactory';
+        $this->addDependency('serviceFactory');
     }
 
     protected function getServiceFactory()

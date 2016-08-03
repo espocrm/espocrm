@@ -41,7 +41,6 @@ class NextNumber extends \Espo\Core\Hooks\Base
         $this->addDependency('metadata');
     }
 
-
     protected function getMetadata()
     {
         return $this->getInjection('metadata');

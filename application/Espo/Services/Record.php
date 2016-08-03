@@ -121,7 +121,12 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getAcl()
     {
-        return $this->injections['acl'];
+        return $this->getInjection('acl');
+    }
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
     }
 
     protected function getFileManager()

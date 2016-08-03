@@ -40,27 +40,11 @@ class Notifications extends \Espo\Core\Hooks\Base
 
     private $streamService;
 
-    protected function init()
-    {
-        $this->dependencies[] = 'container';
-        $this->dependencies[] = 'metadata';
-    }
-
     private $hasStreamCache = array();
-
-    protected function getContainer()
-    {
-        return $this->getInjection('container');
-    }
 
     protected function getServiceFactory()
     {
         return $this->getContainer()->get('serviceFactory');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
     }
 
     protected function checkHasStream($entityType)

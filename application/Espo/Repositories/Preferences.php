@@ -34,13 +34,6 @@ use Espo\Core\Utils\Json;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
-    protected $dependencies = array(
-        'fileManager',
-        'metadata',
-        'config',
-        'entityManager'
-    );
-
     protected $defaultAttributeListFromSettings = array(
         'decimalMark',
         'thousandSeparator',
@@ -49,7 +42,18 @@ class Preferences extends \Espo\Core\ORM\Repository
 
     protected $data = array();
 
-    protected $entityName = 'Preferences';
+    protected $entityType = 'Preferences';
+
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'fileManager',
+            'metadata',
+            'config',
+            'entityManager'
+        ]);
+    }
 
     protected function getFileManager()
     {

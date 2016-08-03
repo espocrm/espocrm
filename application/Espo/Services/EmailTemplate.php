@@ -41,9 +41,11 @@ class EmailTemplate extends Record
 
     protected function init()
     {
-        $this->dependencies[] = 'fileManager';
-        $this->dependencies[] = 'dateTime';
-        $this->dependencies[] = 'language';
+        parent::init();
+
+        $this->addDependency('fileManager');
+        $this->addDependency('dateTime');
+        $this->addDependency('language');
     }
 
     protected function getFileManager()

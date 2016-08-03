@@ -35,7 +35,8 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function init()
     {
-        $this->dependencies[] = 'config';
+        parent::init();
+        $this->addDependency('config');
     }
 
     protected function getConfig()

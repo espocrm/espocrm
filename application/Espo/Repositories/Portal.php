@@ -37,6 +37,7 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function init()
     {
+        parent::init();
         $this->addDependency('config');
     }
 

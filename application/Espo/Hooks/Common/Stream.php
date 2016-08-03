@@ -47,7 +47,8 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected function init()
     {
-        $this->dependencies[] = 'serviceFactory';
+        parent::init();
+        $this->addDependency('serviceFactory');
     }
 
     protected function getServiceFactory()

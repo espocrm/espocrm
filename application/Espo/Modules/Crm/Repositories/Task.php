@@ -35,8 +35,9 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
 {
     protected function init()
     {
-        $this->dependencies[] = 'dateTime';
-        $this->dependencies[] = 'config';
+        parent::init();
+        $this->addDependency('dateTime');
+        $this->addDependency('config');
     }
 
     protected function getConfig()

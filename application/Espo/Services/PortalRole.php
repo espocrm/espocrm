@@ -35,7 +35,8 @@ class PortalRole extends Record
 {
     protected function init()
     {
-        $this->dependencies[] = 'fileManager';
+        parent::init();
+        $this->addDependency('fileManager');
     }
 
     public function afterCreate(Entity $entity, array $data = array())

@@ -41,7 +41,9 @@ class User extends Record
 
     protected function init()
     {
-        $this->dependencies[] = 'container';
+        parent::init();
+
+        $this->addDependency('container');
     }
 
     protected $internalAttributeList = ['password'];

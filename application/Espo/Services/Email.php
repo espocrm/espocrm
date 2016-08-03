@@ -42,11 +42,14 @@ class Email extends Record
 {
     protected function init()
     {
-        $this->dependencies[] = 'container';
-        $this->dependencies[] = 'preferences';
-        $this->dependencies[] = 'fileManager';
-        $this->dependencies[] = 'crypt';
-        $this->dependencies[] = 'serviceFactory';
+        parent::init();
+        $this->addDependencyList([
+            'container',
+            'preferences',
+            'fileManager',
+            'crypt',
+            'serviceFactory'
+        ]);
     }
 
     private $streamService = null;

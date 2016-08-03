@@ -36,14 +36,18 @@ use Espo\ORM\Entity;
 
 class GlobalSearch extends \Espo\Core\Services\Base
 {
-    protected $dependencies = array(
-        'entityManager',
-        'user',
-        'metadata',
-        'acl',
-        'selectManagerFactory',
-        'config',
-    );
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'entityManager',
+            'user',
+            'metadata',
+            'acl',
+            'selectManagerFactory',
+            'config'
+        ]);
+    }
 
     protected function getSelectManagerFactory()
     {

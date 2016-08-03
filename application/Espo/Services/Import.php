@@ -40,9 +40,11 @@ class Import extends \Espo\Services\Record
 {
     protected function init()
     {
-        $this->dependencies[] = 'serviceFactory';
-        $this->dependencies[] = 'fileManager';
-        $this->dependencies[] = 'selectManagerFactory';
+        parent::init();
+
+        $this->addDependency('serviceFactory');
+        $this->addDependency('fileManager');
+        $this->addDependency('selectManagerFactory');
     }
 
     protected $dateFormatsMap = array(
