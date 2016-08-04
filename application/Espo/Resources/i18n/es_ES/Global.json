@@ -192,10 +192,8 @@
         "fieldShouldBeLess": "{field} debe ser menor que {value}",
         "fieldShouldBeGreater": "{field} debe ser mayor que {value}",
         "fieldBadPasswordConfirm": "{field} confirmado de forma incorrecta",
-        "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "¿Está seguro?",
         "unlinkAllConfirmation": "¿Seguro que deseas desvincular todos los registros relacionados?",
-        "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
         "removeRecordConfirmation": "¿Está seguro que quiere eliminar registros?",
         "unlinkRecordConfirmation": "¿Está seguro que quiere desenlazar relación?",
         "removeSelectedRecordsConfirmation": "¿Está seguro que quiere eliminar los registros seleccionados?",
@@ -206,7 +204,6 @@
         "massRemoveResultSingle": "{count} record has been removed",
         "noRecordsRemoved": "No records were removed",
         "clickToRefresh": "Clic para actualizar",
-        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
         "writeYourCommentHere": "Escriba su comentario aquí",
         "writeMessageToUser": "Escribir un mensaje a {user}",
         "writeMessageToSelf": "Escribir un mensaje a uno mismo"
@@ -307,14 +304,9 @@
         "emailReceivedFromThis": "Correo recibido de {from}",
         "emailReceivedInitialFromThis": "Correo recibido de {from}, esta {entityType} creada",
 
-        "emailReceivedThis": "Email {email} has been received",
-        "emailReceivedInitialThis": "Email {email} has been received and created this {entityType}",
-
         "emailReceivedFrom": "Correo recibido de {from}, relacionado a {entityType} {entity}",
         "emailReceivedFromInitial": "Correo recibido de {from}, {entityType} {entity} creada",
 
-        "emailReceived": "Email {email} has been received for {entityType} {entity}",
-        "emailReceivedInitial": "Email {email} has been received and created {entityType} {entity}",
         "emailReceivedInitialFrom": "Correo recibido de {from}, {entityType} {entity} creada",
 
         "emailSent": "{by} envió un correo relacionado a {entityType} {entity}",
