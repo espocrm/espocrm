@@ -293,6 +293,9 @@ class CronManager
                 $previousDate = date('Y-m-d H:i:s');
             }
 
+            $existingJob = $this->getCronJob()->getJobByScheduledJob($scheduledJob['id'], $previousDate);
+            if ($existingJob) continue;
+
             $className = $this->getScheduledJobUtil()->get($scheduledJob['job']);
             if ($className) {
                 if (method_exists($className, 'prepare')) {
@@ -305,9 +308,6 @@ class CronManager
             if (in_array($scheduledJob['id'], $runningScheduledJobIdList)) {
                 continue;
             }
-
-            $existingJob = $this->getCronJob()->getJobByScheduledJob($scheduledJob['id'], $previousDate);
-            if ($existingJob) continue;
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set(array(
