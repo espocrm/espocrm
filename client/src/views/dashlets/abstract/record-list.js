@@ -106,7 +106,8 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 this.actionList.unshift({
                     name: 'create',
                     html: this.translate('Create ' + this.scope, 'labels', this.scope),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                    url: '#'+this.scope+'/create'
                 });
             }
         },

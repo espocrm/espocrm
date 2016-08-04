@@ -64,7 +64,8 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
             this.actionList.unshift({
                 name: 'viewList',
                 html: this.translate('View List'),
-                iconHtml: '<span class="glyphicon glyphicon glyphicon-th-list"></span>'
+                iconHtml: '<span class="glyphicon glyphicon glyphicon-th-list"></span>',
+                url: '#Stream'
             });
             this.actionList.unshift({
                 name: 'create',

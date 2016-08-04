@@ -86,14 +86,16 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
                 this.actionList.unshift({
                     name: 'createCall',
                     html: this.translate('Create Call', 'labels', 'Call'),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                    url: '#Call/create'
                 });
             }
             if (this.getAcl().checkScope('Meeting', 'create')) {
                 this.actionList.unshift({
                     name: 'createMeeting',
                     html: this.translate('Create Meeting', 'labels', 'Meeting'),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>'
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                    url: '#Meeting/create'
                 });
             }
         },
