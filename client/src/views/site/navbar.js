@@ -153,17 +153,19 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         adjust: function () {
             var $window = $(window);
 
+            var navbarHeight = this.getThemeManager().getParam('navbarHeight');
             var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
             var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
 
             var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
 
+            var $tabs = this.$el.find('ul.tabs');
+
             if (!navbarIsVertical) {
-                var $tabs = this.$el.find('ul.tabs');
                 var $moreDropdown = $tabs.find('li.more');
                 var $more = $tabs.find('li.more > ul');
 
-                $window.on('resize.navbar', function() {
+                $window.on('resize.navbar', function () {
                     updateWidth();
                 });
 
@@ -181,13 +183,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = 45;
+                var navbarNeededHeight = navbarHeight + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
 
 
                 var updateWidth = function () {
-                    var windowWidth = $(window.document).width();
                     var windowWidth = window.innerWidth;
                     var moreWidth = $moreDd.width();
 
@@ -224,29 +225,14 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 }.bind(this);
 
-                var processUpdateWidth = function () {
-                    if ($navbar.height() > navbarNeededHeight) {
-                        updateWidth();
-                        setTimeout(function () {
-                            processUpdateWidth();
-                        }, 200);
-                    } else {
-                        setTimeout(function () {
-                            processUpdateWidth();
-                        }, 1000);
-                    }
-                };
 
                 if ($navbar.height() <= navbarNeededHeight) {
                     $more.parent().addClass('hidden');
+                } else {
+                    updateWidth();
                 }
 
-                processUpdateWidth();
-
-
             } else {
-                var $tabs = this.$el.find('ul.tabs');
-
                 var minHeight = $tabs.height() + navbarStaticItemsHeight;
                 $('body').css('minHeight', minHeight + 'px');
                 $window.on('scroll.navbar', function () {
@@ -265,7 +251,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                 }.bind(this);
 
-                $(window).on('resize.navbar', function() {
+                $(window).on('resize.navbar', function () {
                     updateHeight();
                 });
                 updateHeight();
@@ -379,7 +365,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             Espo.Ui.notify(this.translate('Loading...'));
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
-            this.createView('quickCreate', viewName , {scope: scope}, function (view) {
+            this.createView('quickCreate', viewName, {scope: scope}, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
                 });
@@ -389,5 +375,3 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
     });
 
 });
-
-
