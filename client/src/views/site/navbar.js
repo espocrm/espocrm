@@ -181,10 +181,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = 45;
+                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 44) + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
 
+                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 546;
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
@@ -203,7 +204,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                     var headerWidth = this.$el.width();
 
-                    var maxWidth = headerWidth - 546 - moreWidth;
+                    var maxWidth = headerWidth - navbarBaseWidth - moreWidth;
                     var width = $tabs.width();
 
                     var i = 0;

@@ -1,5 +1,6 @@
 {
     "stylesheet": "client/css/violet.css",
     "dashboardCellHeight": 155,
-    "dashboardCellMargin": 19
+    "dashboardCellMargin": 19,
+    "navbarHeight": 44
 }
