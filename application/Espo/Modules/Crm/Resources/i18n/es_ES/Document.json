@@ -1,42 +1,43 @@
 {
-    "labels": {
-        "Create Document": "Crear Documento",
-        "Details": "Detalles"
+  "labels": {
+    "Create Document": "Crear Documento",
+    "Details": "Detalles"
+  },
+  "fields": {
+    "name": "Nombre",
+    "status": "Estado",
+    "file": "Archivo",
+    "type": "Tipo",
+    "source": "Fuente",
+    "publishDate": "Publicar Fecha",
+    "expirationDate": "Fecha de Expiración",
+    "description": "Descripción",
+    "accounts": "Cuentas",
+    "folder": "Carpeta"
+  },
+  "links": {
+    "accounts": "Cuentas",
+    "opportunities": "Oportunidades",
+    "folder": "Carpeta",
+    "leads": "Leads"
+  },
+  "options": {
+    "status": {
+      "Active": "Activo",
+      "Draft": "Borrador",
+      "Expired": "Expirado",
+      "Canceled": "Cancelado"
     },
-    "fields": {
-        "name": "Nombre",
-        "status": "Estado",
-        "file": "Archivo",
-        "type": "Tipo",
-        "source": "Fuente",
-        "publishDate": "Publicar Fecha",
-        "expirationDate": "Fecha de Expiración",
-        "description": "Descripción",
-        "accounts": "Cuentas",
-        "folder": "Carpeta"
-    },
-    "links": {
-        "accounts": "Cuentas",
-        "opportunities": "Oportunidades",
-        "folder": "Carpeta"
-    },
-    "options": {
-        "status": {
-            "Active": "Activo",
-            "Draft": "Borrador",
-            "Expired": "Expirado",
-            "Canceled": "Cancelado"
-        },
-        "type": {
-            "": "Ninguno",
-            "Contract": "Contrato",
-            "NDA": "NDA",
-            "EULA": "EULA",
-            "License Agreement": "Contrato de licencia"
-        }
-    },
-    "presetFilters": {
-        "active": "Activo",
-        "draft": "Borrador"
+    "type": {
+      "": "Ninguno",
+      "Contract": "Contrato",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "Contrato de licencia"
     }
+  },
+  "presetFilters": {
+    "active": "Activo",
+    "draft": "Borrador"
+  }
 }

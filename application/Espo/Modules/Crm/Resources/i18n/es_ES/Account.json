@@ -1,79 +1,81 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "emailAddress": "Correo electrónico",
-        "website": "Sito Web",
-        "phoneNumber": "Teléfono",
-        "billingAddress": "Dirección de Facturación",
-        "shippingAddress": "Dirección de Envío",
-        "description": "Descripción",
-        "sicCode": "Sic Code",
-        "industry": "Industria",
-        "type": "Tipo",
-        "contactRole": "Título",
-        "campaign": "Campaña",
-        "targetLists": "Lista de Objetivos",
-        "targetList": "Lista de Objetivos"
+  "fields": {
+    "name": "Nombre",
+    "emailAddress": "Correo electrónico",
+    "website": "Sito Web",
+    "phoneNumber": "Teléfono",
+    "billingAddress": "Dirección de Facturación",
+    "shippingAddress": "Dirección de Envío",
+    "description": "Descripción",
+    "sicCode": "Sic Code",
+    "industry": "Industria",
+    "type": "Tipo",
+    "contactRole": "Título",
+    "campaign": "Campaña",
+    "targetLists": "Lista de Objetivos",
+    "targetList": "Lista de Objetivos"
+  },
+  "links": {
+    "contacts": "Contactos",
+    "opportunities": "Oportunidades",
+    "cases": "Casos",
+    "documents": "Documentos",
+    "meetingsPrimary": "Reuniones (ampliado)",
+    "callsPrimary": "Llamadas (ampliado)",
+    "tasksPrimary": "Tareas (ampliado)",
+    "emailsPrimary": "Correos (ampliado)",
+    "targetLists": "Lista de Objetivos",
+    "campaignLogRecords": "Registro de Campaña",
+    "campaign": "Campaña",
+    "portalUsers": "Usuarios del portal"
+  },
+  "options": {
+    "type": {
+      "Customer": "Cliente",
+      "Investor": "Inversor",
+      "Partner": "Socio",
+      "Reseller": "Revendedor"
     },
-    "links": {
-        "contacts": "Contactos",
-        "opportunities": "Oportunidades",
-        "cases": "Casos",
-        "documents": "Documentos",
-        "meetingsPrimary": "Reuniones (ampliado)",
-        "callsPrimary": "Llamadas (ampliado)",
-        "tasksPrimary": "Tareas (ampliado)",
-        "emailsPrimary": "Correos (ampliado)",
-        "targetLists": "Lista de Objetivos",
-        "campaignLogRecords": "Registro de Campaña",
-        "campaign": "Campaña"
-    },
-    "options": {
-        "type": {
-            "Customer": "Cliente",
-            "Investor": "Inversor",
-            "Partner": "Socio",
-            "Reseller": "Revendedor"
-        },
-        "industry": {
-            "Agriculture": "Agricultura",
-            "Advertising": "Publicidad",
-            "Apparel & Accessories": "Ropa y Accesorios",
-            "Automotive": "Automotriz",
-            "Banking": "Banca",
-            "Biotechnology": "Biotecnolodía",
-            "Building Materials & Equipment": "Materiales de construcción y equipamiento",
-            "Chemical": "Química",
-            "Computer": "Computación",
-            "Education": "Educación",
-            "Electronics": "Electrónicos",
-            "Energy": "Energía",
-            "Entertainment & Leisure": "Entretenimiento y Ocio",
-            "Finance": "Finanzas",
-            "Food & Beverage": "Alimentación y bebidas",
-            "Grocery": "Comestibles",
-            "Healthcare": "Cuidado de la Salud",
-            "Insurance": "Seguros",
-            "Legal": "Jurídico",
-            "Manufacturing": "Fabricación",
-            "Publishing": "Publicaciones",
-            "Real Estate": "Bienes Raices",
-            "Service": "Servicio",
-            "Sports": "Deportes",
-            "Software": "Software",
-            "Technology": "Tecnología",
-            "Telecommunications": "Telecomunicaciones",
-            "Television": "Televisión",
-            "Transportation": "Transporte",
-            "Venture Capital": "Capital de Riesgo"
-        }
-    },
-    "labels": {
-        "Create Account": "Crear Cuenta",
-        "Copy Billing": "Copia Facturación"
-    },
-    "presetFilters": {
-        "customers": "Clientes",
-        "partners": "Socios"
+    "industry": {
+      "Agriculture": "Agricultura",
+      "Advertising": "Publicidad",
+      "Apparel & Accessories": "Ropa y Accesorios",
+      "Automotive": "Automotriz",
+      "Banking": "Banca",
+      "Biotechnology": "Biotecnolodía",
+      "Building Materials & Equipment": "Materiales de construcción y equipamiento",
+      "Chemical": "Química",
+      "Computer": "Computación",
+      "Education": "Educación",
+      "Electronics": "Electrónicos",
+      "Energy": "Energía",
+      "Entertainment & Leisure": "Entretenimiento y Ocio",
+      "Finance": "Finanzas",
+      "Food & Beverage": "Alimentación y bebidas",
+      "Grocery": "Comestibles",
+      "Healthcare": "Cuidado de la Salud",
+      "Insurance": "Seguros",
+      "Legal": "Jurídico",
+      "Manufacturing": "Fabricación",
+      "Publishing": "Publicaciones",
+      "Real Estate": "Bienes Raices",
+      "Service": "Servicio",
+      "Sports": "Deportes",
+      "Software": "Software",
+      "Technology": "Tecnología",
+      "Telecommunications": "Telecomunicaciones",
+      "Television": "Televisión",
+      "Transportation": "Transporte",
+      "Venture Capital": "Capital de Riesgo"
     }
+  },
+  "labels": {
+    "Create Account": "Crear Cuenta",
+    "Copy Billing": "Copia Facturación"
+  },
+  "presetFilters": {
+    "customers": "Clientes",
+    "partners": "Socios",
+    "recentlyCreated": "Creado recientemente"
+  }
 }

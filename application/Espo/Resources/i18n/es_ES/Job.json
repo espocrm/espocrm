@@ -1,20 +1,20 @@
 {
-    "fields": {
-        "status": "Estado",
-        "executeTime": "Ejecutar a",
-        "attempts": "Intentos Izquierda",
-        "failedAttempts": "Intentos Fallidos",
-        "serviceName": "Servicio",
-        "method": "Método",
-        "scheduledJob": "Tarea Programada",
-        "data": "Datos"
-    },
-    "options": {
-        "status": {
-            "Pending": "Pendiente",
-            "Success": "Exitoso",
-            "Running": "Corriendo",
-            "Failed": "Falló"
-        }
+  "fields": {
+    "status": "Estado",
+    "executeTime": "Ejecutar a",
+    "attempts": "Intentos Izquierda",
+    "failedAttempts": "Intentos Fallidos",
+    "serviceName": "Servicio",
+    "method": "Método",
+    "scheduledJob": "Tarea Programada",
+    "data": "Datos"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendiente",
+      "Success": "Exitoso",
+      "Running": "Corriendo",
+      "Failed": "Falló"
     }
+  }
 }

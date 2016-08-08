@@ -1,19 +1,23 @@
 {
-    "fields": {
-        "title": "Título",
-        "dateFrom": "Fecha desde",
-        "dateTo": "Fecha hasta",
-        "autorefreshInterval": "Actualizar cada:",
-        "displayRecords": "Mostrar Registros",
-        "isDoubleHeight": "Altitud 2x",
-        "mode": "Modo",
-        "enabledScopeList": "Qué mostrar"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Semana (orden del día)",
-    		"basicWeek": "Semana",
-    		"month": "Mes"
-    	}
+  "fields": {
+    "title": "Título",
+    "dateFrom": "Fecha desde",
+    "dateTo": "Fecha hasta",
+    "autorefreshInterval": "Actualizar cada:",
+    "displayRecords": "Mostrar Registros",
+    "isDoubleHeight": "Altitud 2x",
+    "mode": "Modo",
+    "enabledScopeList": "Qué mostrar",
+    "users": "Usuarios"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Semana (orden del día)",
+      "basicWeek": "Semana",
+      "month": "Mes",
+      "basicDay": "Día",
+      "agendaDay": "Día (agenda)",
+      "timeline": "Línea de tiempo"
     }
+  }
 }

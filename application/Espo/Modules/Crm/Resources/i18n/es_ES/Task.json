@@ -1,45 +1,45 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "parent": "Padre",
-        "status": "Estado",
-        "dateStart": "Fecha de Comienzo",
-        "dateEnd": "Fecha de vencimiento",
-        "dateStartDate": "Fecha de Inicio (todo el día)",
-        "dateEndDate": "Fecha de fin (todo el día)",
-        "priority": "Prioridad",
-        "description": "Descripción",
-        "isOverdue": "Atrasado",
-        "account": "Cuenta",
-        "dateCompleted": "Fecha de completado",
-        "attachments": "Adjuntos"
+  "fields": {
+    "name": "Nombre",
+    "parent": "Padre",
+    "status": "Estado",
+    "dateStart": "Fecha de Comienzo",
+    "dateEnd": "Fecha de vencimiento",
+    "dateStartDate": "Fecha de Inicio (todo el día)",
+    "dateEndDate": "Fecha de fin (todo el día)",
+    "priority": "Prioridad",
+    "description": "Descripción",
+    "isOverdue": "Atrasado",
+    "account": "Cuenta",
+    "dateCompleted": "Fecha de completado",
+    "attachments": "Adjuntos"
+  },
+  "links": {
+    "attachments": "Adjuntos"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Sin Empezar",
+      "Started": "Comenzado",
+      "Completed": "Completado",
+      "Canceled": "Cancelado",
+      "Deferred": "Diferido"
     },
-    "links": {
-        "attachments": "Adjuntos"
-    },
-    "options": {
-        "status": {
-            "Not Started": "Sin Empezar",
-            "Started": "Comenzado",
-            "Completed": "Completado",
-            "Canceled": "Cancelado",
-            "Deferred": "Diferido"
-        },
-        "priority" : {
-            "Low": "Baja",
-            "Normal": "Normal",
-            "High": "Alta",
-            "Urgent": "Urgente"
-        }
-    },
-    "labels": {
-        "Create Task": "Crear Tarea",
-        "Complete": "Completada"
-    },
-    "presetFilters": {
-        "actual": "Actuales",
-        "completed": "Completado",
-        "todays": "De Hoy",
-        "overdue": "Atrazadas"
+    "priority": {
+      "Low": "Baja",
+      "Normal": "Normal",
+      "High": "Alta",
+      "Urgent": "Urgente"
     }
+  },
+  "labels": {
+    "Create Task": "Crear Tarea",
+    "Complete": "Completada"
+  },
+  "presetFilters": {
+    "actual": "Actuales",
+    "completed": "Completado",
+    "todays": "De Hoy",
+    "overdue": "Atrazadas"
+  }
 }

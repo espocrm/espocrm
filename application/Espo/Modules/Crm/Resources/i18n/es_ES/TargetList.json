@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "description": "Descripción",
-        "entryCount": "Contador de entrada",
-        "campaigns": "Campañas",
-        "endDate": "Fecha de Fin",
-        "targetLists": "Lista de Objetivos"
-    },
-    "links": {
-        "accounts": "Cuentas",
-        "contacts": "Contactos",
-        "leads": "Potenciales",
-        "campaigns": "Campañas",
-        "massEmails": "Emails Masivos"
-    },
-    "options": {
-        "type": {
-            "Email": "Correo electrónico",
-            "Web": "Web",
-            "Television": "Televisión",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter"
-        }
-    },
-    "labels": {
-        "Create TargetList": "Crear un objetivo de lista",
-        "Opted Out": "optado por no",
-        "Cancel Opt-Out": "Cancelar Opt-Out",
-        "Opt-Out": "Opt-Out"
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "entryCount": "Contador de entrada",
+    "campaigns": "Campañas",
+    "endDate": "Fecha de Fin",
+    "targetLists": "Lista de Objetivos"
+  },
+  "links": {
+    "accounts": "Cuentas",
+    "contacts": "Contactos",
+    "leads": "Potenciales",
+    "campaigns": "Campañas",
+    "massEmails": "Correos Masivos"
+  },
+  "options": {
+    "type": {
+      "Email": "Correo electrónico",
+      "Web": "Web",
+      "Television": "Televisión",
+      "Radio": "Radio",
+      "Newsletter": "Boletín de noticias"
     }
+  },
+  "labels": {
+    "Create TargetList": "Crear un objetivo de lista",
+    "Opted Out": "optado por no",
+    "Cancel Opt-Out": "Cancelar Opt-Out",
+    "Opt-Out": "Opt-Out"
+  }
 }

@@ -1,62 +1,64 @@
 {
-    "labels": {
-        "Converted To": "Convertido a",
-        "Create Lead": "Crear Potencial",
-        "Convert": "Convertir"
+  "labels": {
+    "Converted To": "Convertido a",
+    "Create Lead": "Crear Potencial",
+    "Convert": "Convertir"
+  },
+  "fields": {
+    "name": "Nombre",
+    "emailAddress": "Correo electrónico",
+    "title": "Título",
+    "website": "Sito Web",
+    "phoneNumber": "Teléfono",
+    "accountName": "Nombre de Cuenta",
+    "doNotCall": "No Llamar",
+    "address": "Dirección",
+    "status": "Estado",
+    "source": "Fuente",
+    "opportunityAmount": "Costo de Oportunidad",
+    "opportunityAmountConverted": "Costo de Oportunidad (convertido)",
+    "description": "Descripción",
+    "createdAccount": "Cuenta",
+    "createdContact": "Contacto",
+    "createdOpportunity": "Oportunidad",
+    "campaign": "Campaña",
+    "targetLists": "Lista de Objetivos",
+    "targetList": "Lista de Objetivos"
+  },
+  "links": {
+    "targetLists": "Lista de Objetivos",
+    "campaignLogRecords": "Registro de Campaña",
+    "campaign": "Campaña",
+    "createdAccount": "Cuenta",
+    "createdContact": "Contacto",
+    "createdOpportunity": "Oportunidad",
+    "cases": "Casos",
+    "documents": "Documentos"
+  },
+  "options": {
+    "status": {
+      "New": "Nuevo",
+      "Assigned": "Asignado",
+      "In Process": "En Proceso",
+      "Converted": "Convertidos",
+      "Recycled": "Reciclado",
+      "Dead": "Muerto"
     },
-    "fields": {
-        "name": "Nombre",
-        "emailAddress": "Correo electrónico",
-        "title": "Título",
-        "website": "Sito Web",
-        "phoneNumber": "Teléfono",
-        "accountName": "Nombre de Cuenta",
-        "doNotCall": "No Llamar",
-        "address": "Dirección",
-        "status": "Estado",
-        "source": "Fuente",
-        "opportunityAmount": "Costo de Oportunidad",
-        "opportunityAmountConverted": "Costo de Oportunidad (convertido)",
-        "description": "Descripción",
-        "createdAccount": "Cuenta",
-        "createdContact": "Contacto",
-        "createdOpportunity": "Oportunidad",
-        "campaign": "Campaña",
-        "targetLists": "Lista de Objetivos",
-        "targetList": "Lista de Objetivos"
-    },
-    "links": {
-        "targetLists": "Lista de Objetivos",
-        "campaignLogRecords": "Registro de Campaña",
-        "campaign": "Campaña",
-        "createdAccount": "Cuenta",
-        "createdContact": "Contacto",
-        "createdOpportunity": "Oportunidad"
-    },
-    "options": {
-        "status": {
-            "New": "Nuevo",
-            "Assigned": "Asignado",
-            "In Process": "En Proceso",
-            "Converted": "Convertidos",
-            "Recycled": "Reciclado",
-            "Dead": "Muerto"
-        },
-        "source": {
-            "": "Ninguno",
-            "Call": "Llamada",
-            "Email": "Correo electrónico",
-            "Existing Customer": "Cliente Existente",
-            "Partner": "Socio",
-            "Public Relations": "Relaciones Públicas",
-            "Web Site": "Sitio Web",
-            "Campaign": "Campaña",
-            "Other": "Otro"
-        }
-    },
-    "presetFilters": {
-        "active": "Activo",
-        "actual": "Actuales",
-        "converted": "Convertidos"
+    "source": {
+      "": "Ninguno",
+      "Call": "Llamada",
+      "Email": "Correo electrónico",
+      "Existing Customer": "Cliente Existente",
+      "Partner": "Socio",
+      "Public Relations": "Relaciones Públicas",
+      "Web Site": "Sitio Web",
+      "Campaign": "Campaña",
+      "Other": "Otro"
     }
+  },
+  "presetFilters": {
+    "active": "Activo",
+    "actual": "Actuales",
+    "converted": "Convertidos"
+  }
 }

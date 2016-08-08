@@ -1,68 +1,71 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "description": "Descripción",
-        "status": "Estado",
-        "type": "Tipo",
-        "startDate": "Fecha de Inicio",
-        "endDate": "Fecha de Fin",
-        "targetLists": "Lista de Objetivos",
-        "excludingTargetLists": "Lista de Objetivos Excluídos",
-        "sentCount": "Enviado",
-        "openedCount": "Abierto",
-        "clickedCount": "Cliqueados",
-        "optedOutCount": "optado por no",
-        "bouncedCount": "Rebotados",
-        "hardBouncedCount": "Rebotados Duro",
-        "softBouncedCount": "Rebotado Suave",
-        "leadCreatedCount": "Potenciales Creados",
-        "revenue": "Ingresos",
-        "revenueConverted": "ingresos (convertido)",
-        "budget": "Presupuesto"
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "status": "Estado",
+    "type": "Tipo",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "targetLists": "Lista de Objetivos",
+    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "sentCount": "Enviado",
+    "openedCount": "Abierto",
+    "clickedCount": "Cliqueados",
+    "optedOutCount": "optado por no",
+    "bouncedCount": "Rebotados",
+    "hardBouncedCount": "Rebotados Duro",
+    "softBouncedCount": "Rebotado Suave",
+    "leadCreatedCount": "Potenciales Creados",
+    "revenue": "Ingresos",
+    "revenueConverted": "ingresos (convertido)",
+    "budget": "Presupuesto",
+    "budgetConverted": "Presupuesto (convertido)"
+  },
+  "links": {
+    "targetLists": "Lista de Objetivos",
+    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "accounts": "Cuentas",
+    "contacts": "Contactos",
+    "leads": "Potenciales",
+    "opportunities": "Oportunidades",
+    "campaignLogRecords": "Registro de Log",
+    "massEmails": "Emails Masivos",
+    "trackingUrls": "URLs de Seguimiento"
+  },
+  "options": {
+    "type": {
+      "Email": "Correo electrónico",
+      "Web": "Web",
+      "Television": "Televisión",
+      "Radio": "Radio",
+      "Newsletter": "Newsletter",
+      "Mail": "Correo"
     },
-    "links": {
-        "targetLists": "Lista de Objetivos",
-        "excludingTargetLists": "Lista de Objetivos Excluídos",
-        "accounts": "Cuentas",
-        "contacts": "Contactos",
-        "leads": "Potenciales",
-        "opportunities": "Oportunidades",
-        "campaignLogRecords": "Registro de Log",
-        "massEmails": "Emails Masivos",
-        "trackingUrls": "URLs de Seguimiento"
-    },
-    "options": {
-        "type": {
-            "Email": "Correo electrónico",
-            "Web": "Web",
-            "Television": "Televisión",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter",
-            "Mail": "Correo"
-        },
-        "status": {
-            "Planning": "Planificación",
-            "Active": "Activo",
-            "Inactive": "Inactivo",
-            "Complete": "Completada"
-        }
-    },
-    "labels": {
-        "Create Campaign": "Crear Campaña",
-        "Target Lists": "Lista de Objetivos",
-        "Statistics": "Estadísticas",
-        "hard": "duro",
-        "soft": "suave",
-        "Unsubscribe": "Desuscribirse"
-    },
-    "presetFilters": {
-        "active": "Activo"
-    },
-    "messages": {
-        "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
-    },
-    "tooltips": {
-        "targetLists": "Los objetivos que deben recibir los mensajes.",
-        "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "status": {
+      "Planning": "Planificación",
+      "Active": "Activo",
+      "Inactive": "Inactivo",
+      "Complete": "Completada"
     }
+  },
+  "labels": {
+    "Create Campaign": "Crear Campaña",
+    "Target Lists": "Lista de Objetivos",
+    "Statistics": "Estadísticas",
+    "hard": "duro",
+    "soft": "suave",
+    "Unsubscribe": "Desuscribirse",
+    "Mass Emails": "Correos electrónicos masivos",
+    "Email Templates": "Plantillas de correos"
+  },
+  "presetFilters": {
+    "active": "Activo"
+  },
+  "messages": {
+    "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
+  },
+  "tooltips": {
+    "targetLists": "Los objetivos que deben recibir los mensajes.",
+    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+  }
 }

@@ -1,48 +1,51 @@
 {
-    "labels": {
-        "Fields": "Campos",
-        "Relationships": "Relaciones"
+  "labels": {
+    "Fields": "Campos",
+    "Relationships": "Relaciones"
+  },
+  "fields": {
+    "name": "Nombre",
+    "type": "Tipo",
+    "labelSingular": "Etiqueta en Singular",
+    "labelPlural": "Etiqueta en Plural",
+    "stream": "Actividad",
+    "label": "Etiqueta",
+    "linkType": "Tipo de enlace",
+    "entityForeign": "Entidad Foránea",
+    "linkForeign": "Enlace Foráneo",
+    "link": "Enlace",
+    "labelForeign": "Etiqueta Foránea",
+    "sortBy": "Orden por defecto (campo)",
+    "sortDirection": "Orden por defecto (dirección)",
+    "relationName": "Nombre de la Tabla Intermedia",
+    "linkMultipleField": "Enlaza Múltiples Campos",
+    "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos",
+    "disabled": "Deshabilitar",
+    "textFilterFields": "Los campos de filtro de texto"
+  },
+  "options": {
+    "type": {
+      "": "Ninguno",
+      "Base": "Base",
+      "Person": "Persona",
+      "CategoryTree": "Árbol de Categorías",
+      "Event": "Evento"
     },
-    "fields": {
-        "name": "Nombre",
-        "type": "Tipo",
-        "labelSingular": "Etiqueta en Singular",
-        "labelPlural": "Etiqueta en Plural",
-        "stream": "Actividad",
-        "label": "Etiqueta",
-        "linkType": "Tipo de enlace",
-        "entityForeign": "Entidad Foránea",
-        "linkForeign": "Enlace Foráneo",
-        "link": "Enlace",
-        "labelForeign": "Etiqueta Foránea",
-        "sortBy": "Orden por defecto (campo)",
-        "sortDirection": "Orden por defecto (dirección)",
-        "relationName": "Nombre de la Tabla Intermedia",
-        "linkMultipleField": "Enlaza Múltiples Campos",
-        "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos"
+    "linkType": {
+      "manyToMany": "Mucho-a-Muchos",
+      "oneToMany": "Uno-a-Muchos",
+      "manyToOne": "Muchos-a-uno",
+      "parentToChildren": "Padres-a-Hijos",
+      "childrenToParent": "Hijos-a-Padres"
     },
-    "options": {
-        "type": {
-            "": "Ninguno",
-            "Base": "Base",
-            "Person": "Persona",
-            "CategoryTree": "Árbol de Categorías"
-        },
-        "linkType": {
-            "manyToMany": "Mucho-a-Muchos",
-            "oneToMany": "Uno-a-Muchos",
-            "manyToOne": "Muchos-a-uno",
-            "parentToChildren": "Padres-a-Hijos",
-            "childrenToParent": "Hijos-a-Padres"
-        },
-        "sortDirection": {
-            "asc": "Ascendente",
-            "desc": "Descendente"
-        }
-    },
-    "messages": {
-        "entityCreated": "La entidad ha sido creada",
-        "linkAlreadyExists": "Conflicto de nombres en el enlace.",
-        "linkConflict": "Un enlace con el mismo nombra ya existe."
+    "sortDirection": {
+      "asc": "Ascendente",
+      "desc": "Descendente"
     }
+  },
+  "messages": {
+    "entityCreated": "La entidad ha sido creada",
+    "linkAlreadyExists": "Conflicto de nombres en el enlace.",
+    "linkConflict": "Un enlace con el mismo nombra ya existe."
+  }
 }

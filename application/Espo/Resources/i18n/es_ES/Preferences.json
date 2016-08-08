@@ -1,48 +1,51 @@
 {
-    "fields": {
-        "dateFormat": "Formato de fecha",
-        "timeFormat": "Formato de tiempo",
-        "timeZone": "Zona Horaria",
-        "weekStart": "Primer día de la semana",
-        "thousandSeparator": "Separador de miles",
-        "decimalMark": "Separador decimal",
-        "defaultCurrency": "Moneda por Defecto",
-        "currencyList": "Lista de Moneda",
-        "language": "Idioma",
-        "smtpServer": "Servidor",
-        "smtpPort": "Puerto",
-        "smtpAuth": "Autenticar",
-        "smtpSecurity": "Seguridad",
-        "smtpUsername": "Nombre de Usuario",
-        "emailAddress": "Correo electrónico",
-        "smtpPassword": "Contraseña",
-        "smtpEmailAddress": "Correo Electrónico",
-        "exportDelimiter": "Exportar Delimitador",
-        "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
-        "autoFollowEntityTypeList": "Seguir automaticamente",
-        "signature": "Firma de correo",
-        "dashboardTabList": "Lista de Pestañas",
-        "defaultReminders": "Recordatorios por defecto",
-        "theme": "Tema",
-        "useCustomTabList": "Lista de Pestañas Personalizada",
-        "tabList": "Lista de Pestañas"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Domingo",
-            "1": "Lunes"
-        }
-    },
-    "labels": {
-        "Notifications": "Notificaciones",
-        "User Interface": "Interfaz de Usuario",
-        "SMTP": "SMTP",
-        "Misc": "Misceláneos",
-        "Locale": "Localización"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en las actividades y recibirá notificaciones."
+  "fields": {
+    "dateFormat": "Formato de fecha",
+    "timeFormat": "Formato de tiempo",
+    "timeZone": "Zona Horaria",
+    "weekStart": "Primer día de la semana",
+    "thousandSeparator": "Separador de miles",
+    "decimalMark": "Separador decimal",
+    "defaultCurrency": "Moneda por Defecto",
+    "currencyList": "Lista de Moneda",
+    "language": "Idioma",
+    "smtpServer": "Servidor",
+    "smtpPort": "Puerto",
+    "smtpAuth": "Autenticar",
+    "smtpSecurity": "Seguridad",
+    "smtpUsername": "Nombre de Usuario",
+    "emailAddress": "Correo electrónico",
+    "smtpPassword": "Contraseña",
+    "smtpEmailAddress": "Correo Electrónico",
+    "exportDelimiter": "Exportar Delimitador",
+    "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
+    "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
+    "receiveStreamEmailNotifications": "notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
+    "autoFollowEntityTypeList": "Seguir automaticamente",
+    "signature": "Firma de correo",
+    "dashboardTabList": "Lista de Pestañas",
+    "tabList": "Lista de Pestañas",
+    "defaultReminders": "Recordatorios por defecto",
+    "theme": "Tema",
+    "useCustomTabList": "Lista de Pestañas Personalizadas",
+    "emailReplyToAllByDefault": "Correo electrónico responder a todos por defecto",
+    "dashboardLayout": "Distribución del Panel de control",
+    "emailReplyForceHtml": "Responder correo electrónico en formato HTML"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Domingo",
+      "1": "Lunes"
     }
+  },
+  "labels": {
+    "Notifications": "Notificaciones",
+    "User Interface": "Interfaz de Usuario",
+    "SMTP": "SMTP",
+    "Misc": "Misceláneos",
+    "Locale": "Localización"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en las actividades y recibirá notificaciones."
+  }
 }

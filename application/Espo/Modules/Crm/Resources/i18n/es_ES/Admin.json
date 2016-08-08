@@ -1,6 +1,6 @@
 {
-    "layouts": {
-        "detailConvert": "Convertir Potencial",
-        "listForAccount": "Listado (por Cuentas)"
-    }
+  "layouts": {
+    "detailConvert": "Convertir Potencial",
+    "listForAccount": "Listado (por Cuentas)"
+  }
 }

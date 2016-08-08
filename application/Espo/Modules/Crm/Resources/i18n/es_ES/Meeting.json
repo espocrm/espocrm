@@ -1,48 +1,46 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "parent": "Padre",
-        "status": "Estado",
-        "dateStart": "Fecha de Comienzo",
-        "dateEnd": "Fecha de Finalización",
-        "duration": "Duración",
-        "description": "Descripción",
-        "users": "Usuarios",
-        "contacts": "Contactos",
-        "leads": "Potenciales",
-        "reminders": "Recordatorios",
-        "account": "Cuenta"
+  "fields": {
+    "name": "Nombre",
+    "parent": "Padre",
+    "status": "Estado",
+    "dateStart": "Fecha de Comienzo",
+    "dateEnd": "Fecha de Finalización",
+    "duration": "Duración",
+    "description": "Descripción",
+    "users": "Usuarios",
+    "contacts": "Contactos",
+    "leads": "Potenciales",
+    "reminders": "Recordatorios",
+    "account": "Cuenta"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planeadas",
+      "Held": "Celebradas",
+      "Not Held": "Sin Celebrar"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Planeadas",
-            "Held": "Celebradas",
-            "Not Held": "Sin Celebrar"
-        },
-        "acceptanceStatus": {
-            "None": "Ninguno",
-            "Accepted": "Aceptado",
-            "Declined": "Rechazado",
-            "Tentative": "Tentativa"
-        }
-    },
-    "massActions": {
-        "setHeld": "Marcar como Celebrada",
-        "setNotHeld": "Marcar como No Celebrada"
-    },
-    "labels": {
-        "Create Meeting": "Crear Reunión",
-        "Set Held": "Marcar como Celebrada",
-        "Set Not Held": "Marcar como No Celebrada",
-        "Send Invitations": "Enviar Invitaciones",
-        "on time": "a tiempo",
-        "before": "antes"
-    },
-    "presetFilters": {
-        "planned": "Planeadas",
-        "held": "Celebradas",
-        "todays": "De Hoy"
+    "acceptanceStatus": {
+      "None": "Ninguno",
+      "Accepted": "Aceptado",
+      "Declined": "Rechazado",
+      "Tentative": "Tentativa"
     }
+  },
+  "massActions": {
+    "setHeld": "Marcar como Celebrada",
+    "setNotHeld": "Marcar como No Celebrada"
+  },
+  "labels": {
+    "Create Meeting": "Crear Reunión",
+    "Set Held": "Marcar como Celebrada",
+    "Set Not Held": "Marcar como No Celebrada",
+    "Send Invitations": "Enviar Invitaciones",
+    "on time": "a tiempo",
+    "before": "antes"
+  },
+  "presetFilters": {
+    "planned": "Planeadas",
+    "held": "Celebradas",
+    "todays": "De Hoy"
+  }
 }

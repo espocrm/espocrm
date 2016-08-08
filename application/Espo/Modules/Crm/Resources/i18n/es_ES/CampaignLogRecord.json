@@ -1,33 +1,40 @@
 {
-    "fields": {
-        "action": "Acción",
-        "actionDate": "Fecha",
-        "data": "Datos",
-        "campaign": "Campaña",
-        "parent": "Objetivo",
-        "object": "Objeto",
-        "application": "Aplicacion",
-        "queueItem": "Item de Cola"
-    },
-    "options": {
-    	"action": {
-            "Sent": "Enviado",
-            "Opened": "Abierto",
-            "Opted Out": "optado por no",
-            "Bounced": "Rebotados",
-            "Clicked": "Cliqueados",
-            "Lead Created": "Potencial Creado"
-    	}
-    },
-    "labels": {
-        "All": "Todos"
-    },
-    "presetFilters": {
-        "sent": "Enviado",
-        "opened": "Abierto",
-        "optedOut": "optado por no",
-        "bounced": "Rebotados",
-        "clicked": "Cliqueados",
-        "leadCreated": "Potencial Creado"
+  "fields": {
+    "action": "Acción",
+    "actionDate": "Fecha",
+    "data": "Datos",
+    "campaign": "Campaña",
+    "parent": "Objetivo",
+    "object": "Objeto",
+    "application": "Aplicacion",
+    "queueItem": "Item de Cola",
+    "stringData": "Cadena de datos",
+    "stringAdditionalData": "Cadena de datos adicional"
+  },
+  "links": {
+    "queueItem": "Cola de artículos",
+    "parent": "Padre",
+    "object": "Objeto"
+  },
+  "options": {
+    "action": {
+      "Sent": "Enviado",
+      "Opened": "Abierto",
+      "Opted Out": "optado por no",
+      "Bounced": "Rebotados",
+      "Clicked": "Cliqueados",
+      "Lead Created": "Potencial Creado"
     }
+  },
+  "labels": {
+    "All": "Todos"
+  },
+  "presetFilters": {
+    "sent": "Enviado",
+    "opened": "Abierto",
+    "optedOut": "optado por no",
+    "bounced": "Rebotados",
+    "clicked": "Cliqueados",
+    "leadCreated": "Potencial Creado"
+  }
 }

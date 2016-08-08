@@ -1,42 +1,51 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "roles": "Roles",
-        "assignmentPermission": "Asignación de permisos",
-        "userPermission": "Permisos de Usuario"
+  "fields": {
+    "name": "Nombre",
+    "roles": "Roles",
+    "assignmentPermission": "Asignación de permisos",
+    "userPermission": "Permisos de Usuario",
+    "portalPermission": "Permisos del portal"
+  },
+  "links": {
+    "users": "Usuarios",
+    "teams": "Equipos"
+  },
+  "tooltips": {
+    "assignmentPermission": "Permite restringir la capacidad de los usuarios para asignar registros a otros usuarios.\n\nall - Sin restricción\n\nteam - puede asignar a los usuarios de equipos propios\n\nno - puede asignar sólo a la libre",
+    "userPermission": "Permite restringir la capacidad de los usuarios para ver las actividades, calendario y secuencia de otros usuarios.\n\nall - puede ver todo\n\nequipo - pueden ver las actividades de los compañeros de equipo sólo se\n\nno - no puede ver",
+    "portalPermission": "Define un portal de acceso a la información, la capacidad de convertir los contactos a los usuarios del portal y enviar mensajes a los usuarios del portal."
+  },
+  "labels": {
+    "Access": "Acceso",
+    "Create Role": "Crear Rol",
+    "Scope Level": "Nivel alcance",
+    "Field Level": "Nivel de campo"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "sin establecer",
+      "enabled": "activado",
+      "disabled": "desactivado"
     },
-    "links": {
-        "users": "Usuarios",
-        "teams": "Equipos"
-    },
-    "tooltips": {
-        "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
-        "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view"
-    },
-    "labels": {
-        "Access": "Acceso",
-        "Create Role": "Crear Rol"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "sin establecer",
-            "enabled": "activado",
-            "disabled": "desactivado"
-        },
-        "levelList": {
-            "all": "todos",
-            "team": "equipo",
-            "own": "propio",
-            "no": "no",
-            "not-set": "sin establecer"
-        }
-    },
-    "actions": {
-        "read": "Leer",
-        "edit": "Editar",
-        "delete": "Borrar"
-    },
-    "messages": {
-        "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
+    "levelList": {
+      "all": "todos",
+      "team": "equipo",
+      "account": "cuenta",
+      "contact": "contacto",
+      "own": "propio",
+      "no": "no",
+      "yes": "si",
+      "not-set": "sin establecer"
     }
+  },
+  "actions": {
+    "read": "Leer",
+    "edit": "Editar",
+    "delete": "Borrar",
+    "stream": "Corriente",
+    "create": "Crear"
+  },
+  "messages": {
+    "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
+  }
 }

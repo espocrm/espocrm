@@ -1,56 +1,59 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "number": "Número",
-        "status": "Estado",
-        "account": "Cuenta",
-        "contact": "Contacto",
-        "contacts": "Contactos",
-        "priority": "Prioridad",
-        "type": "Tipo",
-        "description": "Descripción",
-        "inboundEmail": "Cuenta de Correo"
+  "fields": {
+    "name": "Nombre",
+    "number": "Número",
+    "status": "Estado",
+    "account": "Cuenta",
+    "contact": "Contacto",
+    "contacts": "Contactos",
+    "priority": "Prioridad",
+    "type": "Tipo",
+    "description": "Descripción",
+    "inboundEmail": "Cuenta de Correo",
+    "lead": "Dirigir"
+  },
+  "links": {
+    "inboundEmail": "Cuenta de Correo",
+    "account": "Cuenta",
+    "contact": "Contratos (Primaria)",
+    "Contacts": "Contactos",
+    "meetings": "Reuniones",
+    "calls": "Llamadas",
+    "tasks": "Tareas",
+    "emails": "Correos",
+    "articles": "Artículas de ayuda",
+    "lead": "Dirigir"
+  },
+  "options": {
+    "status": {
+      "New": "Nuevo",
+      "Assigned": "Asignado",
+      "Pending": "Pendiente",
+      "Closed": "Cerrados",
+      "Rejected": "Rechazado",
+      "Duplicate": "Duplicar"
     },
-    "links": {
-        "inboundEmail": "Cuenta de Correo",
-        "account": "Cuenta",
-        "contact": "Contratos (Primaria)",
-        "Contacts": "Contactos",
-        "meetings": "Reuniones",
-        "calls": "Llamadas",
-        "tasks": "Tareas",
-        "emails": "Correos"
+    "priority": {
+      "Low": "Baja",
+      "Normal": "Normal",
+      "High": "Alta",
+      "Urgent": "Urgente"
     },
-    "options": {
-        "status": {
-            "New": "Nuevo",
-            "Assigned": "Asignado",
-            "Pending": "Pendiente",
-            "Closed": "Cerrados",
-            "Rejected": "Rechazado",
-            "Duplicate": "Duplicar"
-        },
-        "priority" : {
-            "Low": "Baja",
-            "Normal": "Normal",
-            "High": "Alta",
-            "Urgent": "Urgente"
-        },
-        "type": {
-            "Question": "Pregunta",
-            "Incident": "Incidente",
-            "Problem": "Problema"
-        }
-    },
-    "labels": {
-        "Create Case": "Crear Caso",
-        "Close": "Cerrar",
-        "Reject": "Rechazar",
-        "Closed": "Cerrados",
-        "Rejected": "Rechazado"
-    },
-    "presetFilters": {
-        "open": "Abiertos",
-        "closed": "Cerrados"
+    "type": {
+      "Question": "Pregunta",
+      "Incident": "Incidente",
+      "Problem": "Problema"
     }
+  },
+  "labels": {
+    "Create Case": "Crear Caso",
+    "Close": "Cerrar",
+    "Reject": "Rechazar",
+    "Closed": "Cerrados",
+    "Rejected": "Rechazado"
+  },
+  "presetFilters": {
+    "open": "Abiertos",
+    "closed": "Cerrados"
+  }
 }

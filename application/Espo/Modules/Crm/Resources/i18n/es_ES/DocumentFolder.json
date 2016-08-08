@@ -1,10 +1,10 @@
 {
-    "labels": {
-        "Create DocumentFolder": "Crear Carpeta de Documentos",
-        "Manage Categories": "Administrar Carpetas",
-        "Documents": "Documentos"
-    },
-    "links": {
-        "documents": "Documentos"
-    }
+  "labels": {
+    "Create DocumentFolder": "Crear Carpeta de Documentos",
+    "Manage Categories": "Administrar Carpetas",
+    "Documents": "Documentos"
+  },
+  "links": {
+    "documents": "Documentos"
+  }
 }

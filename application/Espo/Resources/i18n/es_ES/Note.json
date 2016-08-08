@@ -1,25 +1,27 @@
 {
-    "fields": {
-        "post": "Entrada",
-        "attachments": "Adjuntos",
-        "targetType": "Objetivo",
-        "teams": "Equipos",
-        "users": "Usuarios"
-    },
-    "filters": {
-        "all": "Todos",
-        "posts": "Entradas",
-        "updates": "Actualizaciones"
-    },
-    "options": {
-        "targetType": {
-            "self": "Para mí",
-            "users": "Para determinado/s usuario/s",
-            "teams": "Para determinado/s equipo/s",
-            "all": "A todos los usuarios"
-        }
-    },
-    "messages": {
-        "writeMessage": "Escriba su mensaje aquí"
+  "fields": {
+    "post": "Entrada",
+    "attachments": "Adjuntos",
+    "targetType": "Objetivo",
+    "teams": "Equipos",
+    "users": "Usuarios",
+    "portals": "Portales"
+  },
+  "filters": {
+    "all": "Todos",
+    "posts": "Entradas",
+    "updates": "Actualizaciones"
+  },
+  "options": {
+    "targetType": {
+      "self": "Para mí",
+      "users": "Para determinado/s usuario/s",
+      "teams": "Para determinado/s equipo/s",
+      "all": "A todos los usuarios",
+      "portals": "A los usuarios del portal"
     }
+  },
+  "messages": {
+    "writeMessage": "Escriba su mensaje aquí"
+  }
 }

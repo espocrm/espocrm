@@ -1,27 +1,25 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "status": "Estado",
-        "isHtml": "Es Html",
-        "body": "Cuerpo",
-        "subject": "Asunto",
-        "attachments": "Adjuntos",
-        "insertField": "Insertar Campo",
-        "oneOff": "Único"
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Crear Plantilla de Correo",
-        "Info": "Información"
-    },
-    "messages": {
-        "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
-    },
-    "tooltips": {
-        "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
-    },
-    "presetFilters": {
-        "actual": "Actuales"
-    }
+  "fields": {
+    "name": "Nombre",
+    "status": "Estado",
+    "isHtml": "Es Html",
+    "body": "Cuerpo",
+    "subject": "Asunto",
+    "attachments": "Adjuntos",
+    "insertField": "Insertar Campo",
+    "oneOff": "Único"
+  },
+  "labels": {
+    "Create EmailTemplate": "Crear Plantilla de Correo",
+    "Info": "Información"
+  },
+  "messages": {
+    "infoText": "Las variables disponibles:\n\n{optOutUrl} &#8211; URL de un enlace de baja};\n\n{optOutLink} &#8211; un enlace para anular."
+  },
+  "tooltips": {
+    "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
+  },
+  "presetFilters": {
+    "actual": "Actuales"
+  }
 }

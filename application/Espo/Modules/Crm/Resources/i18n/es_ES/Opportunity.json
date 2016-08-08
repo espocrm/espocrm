@@ -1,44 +1,44 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "account": "Cuenta",
-        "stage": "Etapa",
-        "amount": "Cantidad",
-        "probability": "Probabilidad, %",
-        "leadSource": "Fuente Principal",
-        "doNotCall": "No Llamar",
-        "closeDate": "Fecha de cierre",
-        "contacts": "Contactos",
-        "description": "Descripción",
-        "amountConverted": "Cantidad (convertido)",
-        "amountWeightedConverted": "Cantidad Ponderada",
-        "campaign": "Campaña"
-    },
-    "links": {
-        "contacts": "Contactos",
-        "documents": "Documentos",
-        "campaign": "Campaña"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Prospección",
-            "Qualification": "Calificación",
-            "Needs Analysis": "Análisis de Necesidades",
-            "Value Proposition": "Valor de la Propuesta",
-            "Id. Decision Makers": "Id. Tomadores de Decisiones",
-            "Perception Analysis": "Análisis de la Percepción",
-            "Proposal/Price Quote": "Propuesta/precio Presupuesto",
-            "Negotiation/Review": "Negociación/Revisión",
-            "Closed Won": "Cerrado Ganado",
-            "Closed Lost": "Cerrado Perdido"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Crear Oportunidad"
-    },
-    "presetFilters": {
-        "open": "Abiertos",
-        "won": "Ganados",
-        "lost": "Perdido"
+  "fields": {
+    "name": "Nombre",
+    "account": "Cuenta",
+    "stage": "Etapa",
+    "amount": "Cantidad",
+    "probability": "Probabilidad, %",
+    "leadSource": "Fuente Principal",
+    "doNotCall": "No Llamar",
+    "closeDate": "Fecha de cierre",
+    "contacts": "Contactos",
+    "description": "Descripción",
+    "amountConverted": "Cantidad (convertido)",
+    "amountWeightedConverted": "Cantidad Ponderada",
+    "campaign": "Campaña"
+  },
+  "links": {
+    "contacts": "Contactos",
+    "documents": "Documentos",
+    "campaign": "Campaña"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospección",
+      "Qualification": "Calificación",
+      "Needs Analysis": "Análisis de Necesidades",
+      "Value Proposition": "Valor de la Propuesta",
+      "Id. Decision Makers": "Id. Tomadores de Decisiones",
+      "Perception Analysis": "Análisis de la Percepción",
+      "Proposal/Price Quote": "Propuesta/precio Presupuesto",
+      "Negotiation/Review": "Negociación/Revisión",
+      "Closed Won": "Cerrado Ganado",
+      "Closed Lost": "Cerrado Perdido"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Crear Oportunidad"
+  },
+  "presetFilters": {
+    "open": "Abiertos",
+    "won": "Ganados",
+    "lost": "Perdido"
+  }
 }

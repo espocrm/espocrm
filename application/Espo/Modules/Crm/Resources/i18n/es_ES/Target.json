@@ -1,19 +1,17 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "emailAddress": "Correo electrónico",
-        "title": "Título",
-        "website": "Sito Web",
-        "accountName": "Nombre de Cuenta",
-        "phoneNumber": "Teléfono",
-        "doNotCall": "No Llamar",
-        "address": "Dirección",
-        "description": "Descripción"
-    },
-    "links": {
-    },
-    "labels": {
-        "Create Target": "Crear Objetivo",
-        "Convert to Lead": "Convertir en Lider"
-    }
+  "fields": {
+    "name": "Nombre",
+    "emailAddress": "Correo electrónico",
+    "title": "Título",
+    "website": "Sito Web",
+    "accountName": "Nombre de Cuenta",
+    "phoneNumber": "Teléfono",
+    "doNotCall": "No Llamar",
+    "address": "Dirección",
+    "description": "Descripción"
+  },
+  "labels": {
+    "Create Target": "Crear Objetivo",
+    "Convert to Lead": "Convertir en Lider"
+  }
 }

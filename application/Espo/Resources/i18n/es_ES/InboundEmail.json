@@ -1,59 +1,61 @@
 {
-    "fields": {
-        "name": "Nombre",
-        "emailAddress": "Correo Electrónico",
-        "team": "Equipo",
-        "status": "Estado",
-        "assignToUser": "Asignar al Usuario",
-        "host": "Host",
-        "username": "Nombre de Usuario",
-        "password": "Contraseña",
-        "port": "Puerto",
-        "monitoredFolders": "Carpetas supervisadas",
-        "trashFolder": "Carpeta de Papelera",
-        "ssl": "SSL",
-        "createCase": "Crear Caso",
-        "reply": "Respuesta Automática",
-        "caseDistribution": "Distribución de Caso",
-        "replyEmailTemplate": "Plantilla de Respuesta de Correo",
-        "replyFromAddress": "Respuesta de la Dirección",
-        "replyToAddress": "Responder a la Dirección",
-        "replyFromName": "Respuesta de Nombre",
-        "targetUserPosition": "Objetivo Posición Usuario",
-        "fetchSince": "Traer Desde",
-        "addAllTeamUsers": "Para todos los usuarios del equipo"
+  "fields": {
+    "name": "Nombre",
+    "emailAddress": "Correo Electrónico",
+    "team": "Equipo",
+    "status": "Estado",
+    "assignToUser": "Asignar al Usuario",
+    "host": "Host",
+    "username": "Nombre de Usuario",
+    "password": "Contraseña",
+    "port": "Puerto",
+    "monitoredFolders": "Carpetas supervisadas",
+    "trashFolder": "Carpeta de Papelera",
+    "ssl": "SSL",
+    "createCase": "Crear Caso",
+    "reply": "Respuesta Automática",
+    "caseDistribution": "Distribución de Caso",
+    "replyEmailTemplate": "Plantilla de Respuesta de Correo",
+    "replyFromAddress": "Respuesta de la Dirección",
+    "replyToAddress": "Responder a la Dirección",
+    "replyFromName": "Respuesta de Nombre",
+    "targetUserPosition": "Objetivo Posición Usuario",
+    "fetchSince": "Traer Desde",
+    "addAllTeamUsers": "Para todos los usuarios del equipo"
+  },
+  "tooltips": {
+    "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
+    "createCase": "Automaticamente crear un Caso de los correos entrantes.",
+    "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
+    "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
+    "assignToUser": "Correos de usuarios/Casos serán asignados a.",
+    "team": "Correo del equipo/Casos relacionados con.",
+    "targetUserPosition": "Definir la posición de los usuarios que se distribuirán con los casos.",
+    "addAllTeamUsers": "Los correos van a aparecer en la Bandeja de Entrada de todos los usuarios de un equipo específico."
+  },
+  "links": {
+    "filters": "Filtros",
+    "emails": "Los correos electrónicos"
+  },
+  "options": {
+    "status": {
+      "Active": "Activo",
+      "Inactive": "Inactivo"
     },
-    "tooltips": {
-        "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
-        "createCase": "Automaticamente crear un Caso de los correos entrantes.",
-        "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
-        "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
-        "assignToUser": "Correos de usuarios/Casos serán asignados a.",
-        "team": "Correo del equipo/Casos relacionados con.",
-        "targetUserPosition": "Definir la posición de los usuarios que se distribuirán con los casos.",
-        "addAllTeamUsers": "Los correos van a aparecer en la Bandeja de Entrada de todos los usuarios de un equipo específico."
-    },
-    "links": {
-        "filters": "Filtros"
-    },
-    "options": {
-        "status": {
-            "Active": "Activo",
-            "Inactive": "Inactivo"
-        },
-        "caseDistribution": {
-            "Direct-Assignment": "Asignación directa",
-            "Round-Robin": "Round-Robin",
-            "Least-Busy": "Menos Ocupado"
-        }
-    },
-    "labels": {
-        "Create InboundEmail": "Crear Cuenta de Correo Electrónico",
-        "IMAP": "IMAP",
-        "Actions": "Acciones",
-        "Main": "Principal"
-    },
-    "messages": {
-        "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+    "caseDistribution": {
+      "": "Ninguna",
+      "Direct-Assignment": "Asignación directa",
+      "Round-Robin": "Round-Robin",
+      "Least-Busy": "Menos Ocupado"
     }
+  },
+  "labels": {
+    "Create InboundEmail": "Crear Cuenta de Correo Electrónico",
+    "IMAP": "IMAP",
+    "Actions": "Acciones",
+    "Main": "Principal"
+  },
+  "messages": {
+    "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+  }
 }
