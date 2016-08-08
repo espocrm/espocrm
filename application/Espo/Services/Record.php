@@ -980,7 +980,7 @@ class Record extends \Espo\Core\Services\Base
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'remove')) {
+                if ($entity && $this->getAcl()->check($entity, 'delete')) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;
@@ -998,7 +998,7 @@ class Record extends \Espo\Core\Services\Base
             $collection = $repository->find($selectParams);
 
             foreach ($collection as $entity) {
-                if ($this->getAcl()->check($entity, 'remove')) {
+                if ($this->getAcl()->check($entity, 'delete')) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;
