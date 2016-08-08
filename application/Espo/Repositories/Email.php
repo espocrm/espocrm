@@ -133,14 +133,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        if (!$entity->get('sentById')) {
-            if ($entity->get('from')) {
-                $from = trim($entity->get('from'));
-                $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
-
-            }
-        }
-
         if ($entity->has('from') || $entity->has('to') || $entity->has('cc') || $entity->has('bcc') || $entity->has('replyTo')) {
             if (!$entity->has('usersIds')) {
                 $entity->loadLinkMultipleField('users');
