@@ -29,12 +29,12 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User;
+use \Espo\Entities\User as EntityUser;
 use \Espo\ORM\Entity;
 
 class EmailFilter extends \Espo\Core\Acl\Base
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    public function checkIsOwner(EntityUser $user, Entity $entity)
     {
         if ($entity->has('parentId') && $entity->has('parentType')) {
             $parentType = $entity->get('parentType');

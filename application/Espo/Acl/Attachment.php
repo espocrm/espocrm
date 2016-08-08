@@ -29,12 +29,12 @@
 
 namespace Espo\Acl;
 
-use \Espo\Entities\User;
+use \Espo\Entities\User as EntityUser;
 use \Espo\ORM\Entity;
 
 class Attachment extends \Espo\Core\Acl\Base
 {
-    public function checkEntityRead(User $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
     {
         if ($user->isAdmin()) {
             return true;
@@ -82,7 +82,7 @@ class Attachment extends \Espo\Core\Acl\Base
         return false;
     }
 
-    public function checkIsOwner(User $user, Entity $entity)
+    public function checkIsOwner(EntityUser $user, Entity $entity)
     {
         if ($user->id === $entity->get('createdById')) {
             return true;
