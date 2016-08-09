@@ -72,7 +72,7 @@ class Importer
             $email->set('isBeingImported', true);
 
             $subject = $message->subject;
-            if ($subject !== '0' && empty($subject)) {
+            if ($subject !== '0' && empty(trim($subject))) {
                 $subject = '(No Subject)';
             }
 
