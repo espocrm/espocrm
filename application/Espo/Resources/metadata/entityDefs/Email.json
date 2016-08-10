@@ -131,8 +131,7 @@
         "messageIdInternal": {
             "type": "varchar",
             "maxLength": 300,
-            "readOnly": true,
-            "index": true
+            "readOnly": true
         },
         "emailAddress": {
             "type": "base",
