@@ -36,7 +36,7 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
             var currencyRates = this.model.get('currencyRates') || {};
 
             var rateValues = {};
-            this.model.get('currencyList').forEach(function (currency) {
+            (this.model.get('currencyList') || []).forEach(function (currency) {
                 if (currency != baseCurrency) {
                     rateValues[currency] = currencyRates[currency] || 1.00;
                 }
