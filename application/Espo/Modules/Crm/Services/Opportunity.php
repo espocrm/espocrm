@@ -146,7 +146,7 @@ class Opportunity extends \Espo\Services\Record
                 opportunity.stage = 'Closed Won'
 
             GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
-            ORDER BY opportunity.close_date
+            ORDER BY `month`
         ";
 
         $sth = $pdo->prepare($sql);
