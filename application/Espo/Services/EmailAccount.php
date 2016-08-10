@@ -248,7 +248,11 @@ class EmailAccount extends Record
             if (!empty($lastUID)) {
                 $ids = $storage->getIdsFromUID($lastUID);
             } else {
-                $dt = new \DateTime($emailAccount->get('fetchSince'));
+                $dt = null;
+                try {
+                    $dt = new \DateTime($emailAccount->get('fetchSince'));
+                } catch (\Exception $e) {}
+
                 if ($dt) {
                     $ids = $storage->getIdsFromDate($dt->format('d-M-Y'));
                 } else {
@@ -315,7 +319,11 @@ class EmailAccount extends Record
                     $lastUID = $storage->getUniqueId($id);
 
                     if ($message && isset($message->date)) {
-                        $dt = new \DateTime($message->date);
+                        $dt = null;
+                        try {
+                            $dt = new \DateTime($message->date);
+                        } catch (\Exception $e) {}
+
                         if ($dt) {
                             $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                             $lastDate = $dateSent;
