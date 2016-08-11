@@ -117,14 +117,18 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
 
             var geocoder = new google.maps.Geocoder();
 
-            var map = new google.maps.Map(this.$el.find('.map').get(0), {
-                zoom: 15,
-                center: {lat: 0, lng: 0},
-                scrollwheel: false
-            });
+            try {
+                var map = new google.maps.Map(this.$el.find('.map').get(0), {
+                    zoom: 15,
+                    center: {lat: 0, lng: 0},
+                    scrollwheel: false
+                });
+            } catch (e) {
+                console.error(e.message);
+                return;
+            }
 
             var address = '';
-
 
             if (this.addressData.street) {
                 address += this.addressData.street;
