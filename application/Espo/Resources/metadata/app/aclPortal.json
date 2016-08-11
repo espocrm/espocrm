@@ -91,10 +91,7 @@
                 "read": "yes",
                 "edit": "no"
             },
-            "teams": {
-                "read": "yes",
-                "edit": "no"
-            }
+            "teams": false
         },
         "scopeFieldLevel": {
             "Call": {
