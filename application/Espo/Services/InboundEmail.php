@@ -39,6 +39,8 @@ class InboundEmail extends \Espo\Services\Record
 {
     protected $internalAttributeList = ['password'];
 
+    protected $readOnlyAttributeList= ['fetchData'];
+
     private $campaignService = null;
 
     const PORTION_LIMIT = 20;
