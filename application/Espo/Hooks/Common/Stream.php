@@ -177,7 +177,11 @@ class Stream extends \Espo\Core\Hooks\Base
                 $assignedUserId = $entity->get('assignedUserId');
                 $createdById = $entity->get('createdById');
 
-                if ($this->getConfig()->get('followCreatedEntities') && !empty($createdById)) {
+                if (
+                    ($this->getConfig()->get('followCreatedEntities') || $this->getUser()->get('isPortalUser'))
+                    &&
+                    !empty($createdById)
+                ) {
                     $userIdList[] = $createdById;
                 }
                 if (!empty($assignedUserId) && !in_array($assignedUserId, $userIdList)) {
