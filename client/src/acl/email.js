@@ -73,6 +73,31 @@ Espo.define('acl/email', 'acl', function (Dep) {
             }
 
             return false;
+        },
+
+        checkModelDelete: function (model, data, precise) {
+            var result = this.checkModel(model, data, 'delete', precise);
+
+            if (result) {
+                return true;
+            }
+
+            if (data === false) {
+                return false;
+            }
+
+            var d = data || {};
+            if (d.read === 'no') {
+                return false;
+            }
+
+            if (model.get('createdById') === this.getUser().id) {
+                if (model.get('status') !== 'Sent' && model.get('status') !== 'Archived') {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     });
