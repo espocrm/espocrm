@@ -73,7 +73,11 @@ class Email extends \Espo\Core\Notificators\Base
 
         $dateSent = $entity->get('dateSent');
         if (!$dateSent) return;
-        $dt = new \DateTime($dateSent);
+
+        $dt = null;
+        try {
+            $dt = new \DateTime($dateSent);
+        } catch (\Exception $e) {}
         if (!$dt) return;
 
         if ($dt->diff(new \DateTime())->days > self::DAYS_THRESHOLD) return;
