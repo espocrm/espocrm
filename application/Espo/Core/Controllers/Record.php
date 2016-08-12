@@ -423,5 +423,21 @@ class Record extends Base
 
         return $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
     }
+
+    public function postActionGetDuplicateAttributes($params, $data, $request)
+    {
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getDuplicateAttributes($data['id']);
+    }
 }
 

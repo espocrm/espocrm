@@ -311,15 +311,20 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         actionDuplicate: function () {
-            var attributes = Espo.Utils.cloneDeep(this.model.attributes);
-            delete attributes.id;
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest(this.scope + '/action/getDuplicateAttributes', {
+                id: this.model.id
+            }).then(function (attributes) {
+                Espo.Ui.notify(false);
+                var url = '#' + this.scope + '/create';
 
-            var url = '#' + this.scope + '/create';
+                this.getRouter().dispatch(this.scope, 'create', {
+                    attributes: attributes,
+                });
+                this.getRouter().navigate(url, {trigger: false});
+            }.bind(this));
 
-            this.getRouter().dispatch(this.scope, 'create', {
-                attributes: attributes,
-            });
-            this.getRouter().navigate(url, {trigger: false});
+
         },
 
     });

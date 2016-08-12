@@ -273,7 +273,7 @@ class Stream extends \Espo\Core\Services\Base
         $sql = "
             DELETE FROM subscription
             WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . "
+                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . "
         ";
         $sth = $pdo->prepare($sql)->execute();
     }

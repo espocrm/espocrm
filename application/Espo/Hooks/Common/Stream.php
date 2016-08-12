@@ -58,11 +58,11 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected function checkHasStream(Entity $entity)
     {
-        $entityName = $entity->getEntityName();
-        if (!array_key_exists($entityName, $this->hasStreamCache)) {
-            $this->hasStreamCache[$entityName] = $this->getMetadata()->get("scopes.{$entityName}.stream");
+        $entityType = $entity->getEntityType();
+        if (!array_key_exists($entityType, $this->hasStreamCache)) {
+            $this->hasStreamCache[$entityType] = $this->getMetadata()->get("scopes.{$entityType}.stream");
         }
-        return $this->hasStreamCache[$entityName];
+        return $this->hasStreamCache[$entityType];
     }
 
     protected function isLinkObservableInStream($scope, $link)
@@ -80,6 +80,8 @@ class Stream extends \Espo\Core\Hooks\Base
     {
         if ($this->checkHasStream($entity)) {
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
+            echo "---";
+            die;
         }
         $query = $this->getEntityManager()->getQuery();
         $sql = "

@@ -1422,5 +1422,59 @@ class Record extends \Espo\Core\Services\Base
             'list' => $list
         );
     }
+
+    public function getDuplicateAttributes($id)
+    {
+        if (empty($id)) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        $attributes = $entity->getValues();
+        unset($attributes['id']);
+
+        $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], array());
+
+        foreach ($fields as $field => $item) {
+            if (empty($item['type'])) continue;
+            $type = $item['type'];
+
+            if (in_array($type, ['file', 'image'])) {
+                $attachment = $entity->get($field);
+                if ($attachment) {
+                    $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                    $idAttribute = $field . 'Id';
+                    if ($attachment) {
+                        $attributes[$idAttribute] = $attachment->id;
+                    }
+                }
+            } else if (in_array($type, ['attachmentMultiple'])) {
+                $attachmentList = $entity->get($field);
+                if (count($attachmentList)) {
+                    $idList = [];
+                    $nameHash = (object) [];
+                    $typeHash = (object) [];
+                    foreach ($attachmentList as $attachment) {
+                        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                        if ($attachment) {
+                            $idList[] = $attachment->id;
+                            $nameHash->{$attachment->id} = $attachment->get('name');
+                            $typeHash->{$attachment->id} = $attachment->get('type');
+                        }
+                    }
+                    $attributes[$field . 'Ids'] = $idList;
+                    $attributes[$field . 'Names'] = $nameHash;
+                    $attributes[$field . 'Types'] = $typeHash;
+                }
+            }
+        }
+
+        return $attributes;
+    }
 }
 
