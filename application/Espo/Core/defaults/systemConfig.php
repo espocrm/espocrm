@@ -131,6 +131,7 @@ return array (    'defaultPermissions' =>
         'ldapUserTitleAttribute',
         'ldapUserEmailAddressAttribute',
         'ldapUserPhoneNumberAttribute',
+        'ldapUserObjectClass',
         'maxEmailAccountCount',
         'massEmailMaxPerHourCount',
         'personalEmailMaxPortionSize',
@@ -145,5 +146,6 @@ return array (    'defaultPermissions' =>
     'ldapUserTitleAttribute' => 'title',
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
+    'ldapUserObjectClass' => 'user',
 );
 
