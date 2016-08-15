@@ -373,7 +373,7 @@ class Permission
     protected function chmodReal($filename, $mode)
     {
         try {
-            $result = chmod($filename, $mode);
+            $result = @chmod($filename, $mode);
         } catch (\Exception $e) {
             $result = false;
         }
@@ -383,7 +383,7 @@ class Permission
             $this->chgrp($filename, $this->getDefaultGroup(true));
 
             try {
-                $result = chmod($filename, $mode);
+                $result = @chmod($filename, $mode);
             } catch (\Exception $e) {
                 throw new Error($e->getMessage());
             }
@@ -395,7 +395,7 @@ class Permission
     protected function chownReal($path, $user)
     {
         try {
-            $result = chown($path, $user);
+            $result = @chown($path, $user);
         } catch (\Exception $e) {
             throw new Error($e->getMessage());
         }
@@ -406,7 +406,7 @@ class Permission
     protected function chgrpReal($path, $group)
     {
         try {
-            $result = chgrp($path, $group);
+            $result = @chgrp($path, $group);
         } catch (\Exception $e) {
             throw new Error($e->getMessage());
         }
