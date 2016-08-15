@@ -200,7 +200,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
                     string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
                 } else {
-                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'">' + name + '</a>';
+                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' + name + '</a>';
                 }
                 return string;
             }

@@ -419,7 +419,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
-                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '">' + name + '</a></div>';
+                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + name + '</a></div>';
                     names.push(line);
                 }
                 var string = previews.join('') + names.join('');
