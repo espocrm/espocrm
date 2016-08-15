@@ -66,6 +66,7 @@ class Utils
         'userLoginFilter' => 'ldapUserLoginFilter',
         'userTeamsIds' => 'ldapUserTeamsIds',
         'userDefaultTeamId' => 'ldapUserDefaultTeamId',
+        'userObjectClass' => 'ldapUserObjectClass',
     );
 
     /**
@@ -76,6 +77,7 @@ class Utils
     protected $permittedEspoOptions = array(
         'createEspoUser',
         'userNameAttribute',
+        'userObjectClass',
         'userTitleAttribute',
         'userFirstNameAttribute',
         'userLastNameAttribute',

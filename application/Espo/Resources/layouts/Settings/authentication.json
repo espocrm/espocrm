@@ -14,7 +14,7 @@
             [{"name": "ldapAuth"}, {"name": "ldapSecurity"}],
             [{"name": "ldapUsername", "fullWidth": true}],
             [{"name": "ldapPassword"}, {"name": "testConnection", "customLabel": null, "view": "views/admin/authentication/fields/test-connection"}],
-            [{"name": "ldapUserNameAttribute"}, false],
+            [{"name": "ldapUserNameAttribute"}, {"name": "ldapUserObjectClass"}],
             [{"name": "ldapAccountCanonicalForm"}, {"name": "ldapBindRequiresDn"}],
             [{"name": "ldapBaseDn", "fullWidth": true}],
             [{"name": "ldapUserLoginFilter", "fullWidth": true}],

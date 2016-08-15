@@ -220,6 +220,11 @@
             "required": true,
             "tooltip": true
         },
+        "ldapUserObjectClass": {
+            "type": "varchar",
+            "required": true,
+            "tooltip": true
+        },
         "ldapUserFirstNameAttribute": {
             "type": "varchar",
             "required": true,
