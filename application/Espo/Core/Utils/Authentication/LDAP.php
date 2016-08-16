@@ -263,7 +263,7 @@ class LDAP extends Base
         }
 
         $searchString = '(&(objectClass='.$options['userObjectClass'].')('.$options['userNameAttribute'].'='.$username.')'.$loginFilterString.')';
-        $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_ONE);
+        $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_SUB);
         $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
         foreach ($result as $item) {
