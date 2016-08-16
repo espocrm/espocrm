@@ -47,9 +47,9 @@ class LDAP extends Base
      */
     protected $ldapFieldMap = array(
         'userName' => 'userNameAttribute',
-        'firstName' => 'userTitleAttribute',
-        'lastName' => 'userFirstNameAttribute',
-        'title' => 'userLastNameAttribute',
+        'firstName' => 'userFirstNameAttribute',
+        'lastName' => 'userLastNameAttribute',
+        'title' => 'userTitleAttribute',
         'emailAddress' => 'userEmailAddressAttribute',
         'phoneNumber' => 'userPhoneNumberAttribute',
     );
