@@ -12,11 +12,11 @@
     "publishDate": "Publicar Fecha",
     "expirationDate": "Fecha de Expiración",
     "description": "Descripción",
-    "accounts": "Cuentas",
+    "accounts": "Empresas",
     "folder": "Carpeta"
   },
   "links": {
-    "accounts": "Cuentas",
+    "accounts": "Empresas",
     "opportunities": "Oportunidades",
     "folder": "Carpeta",
     "leads": "Leads"

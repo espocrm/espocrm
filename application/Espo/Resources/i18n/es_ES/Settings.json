@@ -100,7 +100,6 @@
     "ldapUsername": "El sistema de usuario DN completo que permite a los usuarios buscar otros. E.g. \"CN=LDAP usuario del sistema,OU=users,OU=espocrm, DC=test,DC=lan\".",
     "ldapPassword": "La contraseña para acceder al servidor LDAP.",
     "ldapAuth": "Credenciales de acceso para el servidor LDAP.",
-    "ldapUserNameAttribute": "El atributo para identificar al usuario. Para Active Directory puede ser \"userPrincipalName\" o \"sAMAccountName\".",
     "ldapBindRequiresDn": "La opción para formatear el nombre de usuario en el formulario de DN.",
     "ldapBaseDn": "La base DN predeterminado utilizado para la búsqueda de los usuarios. E.g. \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "La opción de dividir un nombre de usuario con el dominio.",
