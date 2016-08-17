@@ -146,6 +146,6 @@ return array (    'defaultPermissions' =>
     'ldapUserTitleAttribute' => 'title',
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
-    'ldapUserObjectClass' => 'user',
+    'ldapUserObjectClass' => 'person',
 );
 
