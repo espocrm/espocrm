@@ -108,33 +108,34 @@ class LDAP extends Base
 
         $ldapClient = $this->getLdapClient();
 
-        //login LDAP admin user (ldapUsername, ldapPassword)
+        //login LDAP system user (ldapUsername, ldapPassword)
         try {
             $ldapClient->bind();
         } catch (\Exception $e) {
             $options = $this->getUtils()->getLdapClientOptions();
-            $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$options['username'].'], details: ' . $e->getMessage());
-            return;
+            $GLOBALS['log']->error('LDAP: Could not connect to LDAP server ['.$options['host'].'], details: ' . $e->getMessage());
+
+            $adminUser = $this->adminLogin($username, $password);
+            if (!isset($adminUser)) {
+                return null;
+            }
+            $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
         }
 
-        $userDn = $this->findLdapUserDnByUsername($username);
-        $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$userDn.'].');
-        if (!isset($userDn)) {
-            $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: user is not found.');
-            return;
-        }
+        if (!isset($adminUser)) {
+            $userDn = $this->findLdapUserDnByUsername($username);
+            $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$userDn.'].');
+            if (!isset($userDn)) {
+                $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: user is not found.');
+                return;
+            }
 
-        try {
-            $ldapClient->bind($userDn, $password);
-        } catch (\Exception $e) {
-
-            $admin = $this->adminLogin($username, $password);
-            if (!isset($admin)) {
+            try {
+                $ldapClient->bind($userDn, $password);
+            } catch (\Exception $e) {
                 $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: ' . $e->getMessage());
                 return null;
             }
-
-            $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
         }
 
         $user = $this->getEntityManager()->getRepository('User')->findOne(array(
