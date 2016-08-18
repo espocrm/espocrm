@@ -731,8 +731,22 @@ class Activities extends \Espo\Core\Services\Base
             'leftJoins' => ['users'],
             'whereClause' => array(
                 'usersMiddle.userId' => $userId,
-                'dateStart>=' => $from,
-                'dateStart<' => $to,
+                array(
+                    'OR' => array(
+                        array(
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to
+                        ),
+                        array(
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to
+                        ),
+                        array(
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to
+                        )
+                    )
+                ),
                 'usersMiddle.status!=' => 'Declined'
             ),
             'customJoin' => ''
@@ -762,8 +776,22 @@ class Activities extends \Espo\Core\Services\Base
             'leftJoins' => ['users'],
             'whereClause' => array(
                 'usersMiddle.userId' => $userId,
-                'dateStart>=' => $from,
-                'dateStart<' => $to,
+                array(
+                    'OR' => array(
+                        array(
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to
+                        ),
+                        array(
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to
+                        ),
+                        array(
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to
+                        )
+                    )
+                ),
                 'usersMiddle.status!=' => 'Declined'
             ),
             'customJoin' => ''
@@ -863,6 +891,10 @@ class Activities extends \Espo\Core\Services\Base
                         array(
                             'dateEnd>=' => $from,
                             'dateEnd<' => $to,
+                        ),
+                        array(
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to
                         ),
                         array(
                             'dateEndDate!=' => null,
