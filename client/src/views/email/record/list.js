@@ -151,7 +151,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
 
             ids.forEach(function (id) {
                 this.removeRecordFromList(id);
-                this.collection.trigger('moving-to-trash', model);
+                this.collection.trigger('moving-to-trash', id);
             }, this);
         },
 
