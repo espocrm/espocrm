@@ -83,12 +83,19 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     public function notifyAboutAssignmentJob($data)
     {
+        if (empty($data['userId'])) return;
+        if (empty($data['assignerUserId'])) return;
+        if (empty($data['entityId'])) return;
+        if (empty($data['entityType'])) return;
+
         $userId = $data['userId'];
         $assignerUserId = $data['assignerUserId'];
         $entityId = $data['entityId'];
         $entityType = $data['entityType'];
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        if (!$user) return;
 
         if ($user->get('isPortalUser')) return;
 
@@ -99,7 +106,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
 
-        if ($user && $entity && $assignerUser && $entity->get('assignedUserId') == $userId) {
+        if ($entity && $assignerUser && $entity->get('assignedUserId') == $userId) {
             $emailAddress = $user->get('emailAddress');
             if (!empty($emailAddress)) {
                 $email = $this->getEntityManager()->getEntity('Email');
