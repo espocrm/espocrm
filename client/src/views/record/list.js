@@ -303,6 +303,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var data = {};
             if (this.allResultIsChecked) {
             	data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
             	data.byWhere = true;
             } else {
             	data.ids = this.checkedList;
@@ -344,6 +345,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (this.allResultIsChecked) {
                 data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
                 data.byWhere = true;
             } else {
                 data.idList = idList;
@@ -391,6 +393,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var data = {};
                 if (this.allResultIsChecked) {
                 	data.where = this.collection.getWhere();
+                    data.selectData = this.collection.data || {};
                 	data.byWhere = true;
                 } else {
                 	data.ids = ids;
@@ -486,6 +489,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.scope,
                 ids: ids,
                 where: this.collection.getWhere(),
+                selectData: this.collection.data,
                 byWhere: this.allResultIsChecked
             }, function (view) {
                 view.render();

@@ -74,6 +74,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.scope = this.options.scope;
             this.ids = this.options.ids;
             this.where = this.options.where;
+            this.selectData = this.options.selectData;
             this.byWhere = this.options.byWhere;
 
             this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
@@ -153,6 +154,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         attributes: attributes,
                         ids: self.ids || null,
                         where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
+                        selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
                         byWhere: this.byWhere
                     }),
                     success: function (result) {

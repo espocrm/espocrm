@@ -86,9 +86,9 @@ class Team extends Record
         return $result;
     }
 
-    public function linkEntityMass($id, $link, $where)
+    public function linkEntityMass($id, $link, $where, $selectData = null)
     {
-        $result = parent::linkEntityMass($id, $link, $where);
+        $result = parent::linkEntityMass($id, $link, $where, $selectData);
 
         if ($link === 'users') {
             $this->getFileManager()->removeInDir('data/cache/application/acl');

@@ -237,9 +237,11 @@ class Record extends Base
         $ids = $request->get('ids');
         $where = $request->get('where');
         $byWhere = $request->get('byWhere');
+        $selectData = $request->get('selectData');
 
         $params = array();
         if ($byWhere) {
+            $params['selectData'] = $selectData;
             $params['where'] = $where;
         } else {
             $params['ids'] = $ids;
@@ -266,6 +268,9 @@ class Record extends Base
         $params = array();
         if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
             $params['where'] = json_decode(json_encode($data['where']), true);
+            if (array_key_exists('selectData', $data)) {
+                $params['selectData'] = json_decode(json_encode($data['selectData']), true);
+            }
         } else if (array_key_exists('ids', $data)) {
             $params['ids'] = $data['ids'];
         }
@@ -290,6 +295,9 @@ class Record extends Base
         if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
             $where = json_decode(json_encode($data['where']), true);
             $params['where'] = $where;
+            if (array_key_exists('selectData', $data)) {
+                $params['selectData'] = json_decode(json_encode($data['selectData']), true);
+            }
         }
         if (array_key_exists('ids', $data)) {
             $params['ids'] = $data['ids'];
@@ -318,7 +326,13 @@ class Record extends Base
                 throw new BadRequest();
             }
             $where = json_decode(json_encode($data['where']), true);
-            return $this->getRecordService()->linkEntityMass($id, $link, $where);
+
+            $selectData = null;
+            if (isset($data['selectData']) && is_array($data['selectData'])) {
+                $selectData = json_decode(json_encode($data['selectData']), true);
+            }
+
+            return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
         } else {
             $foreignIdList = array();
             if (isset($data['id'])) {

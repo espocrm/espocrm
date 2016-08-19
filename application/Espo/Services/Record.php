@@ -853,7 +853,7 @@ class Record extends \Espo\Core\Services\Base
         return true;
     }
 
-    public function linkEntityMass($id, $link, $where)
+    public function linkEntityMass($id, $link, $where, $selectData = null)
     {
         if (empty($id) || empty($link)) {
             throw new BadRequest;
@@ -887,6 +887,12 @@ class Record extends \Espo\Core\Services\Base
             $where = array();
         }
         $params['where'] = $where;
+
+        if (is_array($selectData)) {
+            foreach ($selectData as $k => $v) {
+                $params[$k] = $v;
+            }
+        }
 
         $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
 
@@ -938,6 +944,13 @@ class Record extends \Espo\Core\Services\Base
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
+
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+
             $selectParams = $this->getSelectParams($p);
 
             $collection = $repository->find($selectParams);
@@ -993,6 +1006,13 @@ class Record extends \Espo\Core\Services\Base
             $where = $params['where'];
             $p = array();
             $p['where'] = $where;
+
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+
             $selectParams = $this->getSelectParams($p);
             $skipTextColumns['skipTextColumns'] = true;
             $collection = $repository->find($selectParams);
@@ -1078,6 +1098,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function export(array $params)
     {
+
+
         if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             $where = array(
@@ -1087,12 +1109,17 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams(array('where' => $where), true, true);
+            $selectParams = $this->getSelectManager($this->getEntityType())->getSelectParams(array('where' => $where), true, true);
         } else if (array_key_exists('where', $params)) {
             $where = $params['where'];
 
             $p = array();
             $p['where'] = $where;
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    //$p[$k] = $v;
+                }
+            }
             $selectParams = $this->getSelectParams($p);
         } else {
             throw new BadRequest();
@@ -1137,9 +1164,9 @@ class Record extends \Espo\Core\Services\Base
                     } else {
                         if (in_array($defs['type'], ['email', 'phone'])) {
                             $fieldList[] = $field;
-                        } else if ($defs['name'] == 'name') {
+                        } /*else if ($defs['name'] == 'name') {
                             $fieldList[] = $field;
-                        }
+                        }*/
                     }
                 }
                 foreach ($this->exportAdditionalAttributeList as $field) {
