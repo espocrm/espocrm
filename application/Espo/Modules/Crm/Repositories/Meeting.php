@@ -81,7 +81,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             }
             if ($entity->isNew()) {
                 $currentUserId = $this->getEntityManager()->getUser()->id;
-                if (in_array($currentUserId, $usersIds)) {
+                if (isset($usersIds) && in_array($currentUserId, $usersIds)) {
                     $usersColumns = $entity->get('usersColumns');
                     if (empty($usersColumns)) {
                         $usersColumns = new \StdClass();
