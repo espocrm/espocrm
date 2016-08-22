@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Temat",
-    "parent": "Rodzic",
+    "parent": "Powiązanie",
     "status": "Status",
     "dateSent": "Data wysłania",
     "from": "Od",
@@ -23,14 +23,14 @@
     "users": "Użytkownicy",
     "replied": "Odpowiedziane",
     "replies": "Odpowiedzi",
-    "isRead": "Jest przeczytany",
-    "isNotRead": "Nie jest przeczytany",
-    "isImportant": "Jest ważny",
-    "isUsers": "Jest użytkownika",
+    "isRead": "Przeczytany",
+    "isNotRead": "Nieprzeczytany",
+    "isImportant": "Ważne",
+    "isUsers": "Należy do użytkownika",
     "inTrash": "W koszu"
   },
   "links": {
-    "replied": "Odpowiedziany",
+    "replied": "Odpowiedziano",
     "replies": "Odpowiedzi"
   },
   "options": {
@@ -48,10 +48,10 @@
     "Archive Email": "Archiwizuj e-mail",
     "Compose": "Utwórz",
     "Reply": "Odpowiedz",
-    "Reply to All": "Reply to All",
-    "Forward": "Forward",
-    "Original message": "Original message",
-    "Forwarded message": "Forwarded message",
+    "Reply to All": "Odpowiedz wszystkim",
+    "Forward": "Przekaż",
+    "Original message": "Oryginalna wiadomość",
+    "Forwarded message": "Przekazana wiadomość",
     "Email Accounts": "Osobiste konta pocztowe",
     "Inbound Emails": "Grupowe konta pocztowe",
     "Email Templates": "Szablony wiadomości",
@@ -64,7 +64,7 @@
     "Mark all as read": "Oznacz wszystkie jako przeczytane",
     "Show Plain Text": "Pokaż tylko tekst",
     "Mark as Important": "Oznacz jako ważne",
-    "Unmark Importance": "Odznacz ważność",
+    "Unmark Importance": "Oznacz jako normalne",
     "Move to Trash": "Przenieś do kosza",
     "Retrieve from Trash": "Przywróć z kosza"
   },
@@ -85,7 +85,7 @@
     "markAsRead": "Oznacz jako przeczytane",
     "markAsNotRead": "Oznacz jako nieprzeczytane",
     "markAsImportant": "Oznacz jako ważne",
-    "markAsNotImportant": "Odznacz ważność",
+    "markAsNotImportant": "Oznacz jako normalne",
     "moveToTrash": "Przenieś do kosza"
   }
 }
