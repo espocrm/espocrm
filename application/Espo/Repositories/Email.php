@@ -124,7 +124,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function beforeSave(Entity $entity, array $options = array())
     {
-        $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
+        $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
 
         if ($entity->has('attachmentsIds')) {
             $attachmentsIds = $entity->get('attachmentsIds');
@@ -141,7 +141,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             if ($entity->has('from')) {
                 $from = trim($entity->get('from'));
                 if (!empty($from)) {
-                    $ids = $eaRepositoty->getIds(array($from));
+                    $ids = $eaRepository->getIds(array($from));
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
