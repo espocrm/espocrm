@@ -45,7 +45,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             return;
         }
 
-        $eaRepositoty = $this->getEntityManager()->getRepository('EmailAddress');
+        $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
 
         $address = $entity->get($type);
         $idList = [];
@@ -54,7 +54,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                 return trim($e);
             }, explode(';', $address));
 
-            $idList = $eaRepositoty->getIdListFormAddressList($arr);
+            $idList = $eaRepository->getIdListFormAddressList($arr);
             foreach ($idList as $id) {
                 $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
             }
