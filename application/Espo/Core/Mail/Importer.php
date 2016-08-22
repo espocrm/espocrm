@@ -233,6 +233,7 @@ class Importer
                 $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
                 $parentType = $parentId = null;
                 $emailSent = PHP_INT_MAX;
+                $number = null;
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
                 if ($n == 4 && $emailSent < time()) {
                     if (!empty($parentType) && !empty($parentId)) {
