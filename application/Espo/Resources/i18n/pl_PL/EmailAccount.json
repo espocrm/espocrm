@@ -8,9 +8,9 @@
     "port": "Port",
     "monitoredFolders": "Monitorowane katalogi",
     "ssl": "SSL",
-    "fetchSince": "Fetch Since",
+    "fetchSince": "Od dnia",
     "emailAddress": "Adres e-mail",
-    "sentFolder": "Sent Folder",
+    "sentFolder": "Folder wysłanych",
     "storeSentEmails": "Zapisz wysłane wiadomości",
     "keepFetchedEmailsUnread": "Pozostaw pobrane wiadomości jako nieprzeczytane"
   },
