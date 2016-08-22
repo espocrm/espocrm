@@ -150,8 +150,8 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             });
 
             ids.forEach(function (id) {
+                this.collection.trigger('moving-to-trash', id);
                 this.removeRecordFromList(id);
-                this.collection.trigger('moving-to-trash', model);
             }, this);
         },
 

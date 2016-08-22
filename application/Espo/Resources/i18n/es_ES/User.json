@@ -18,9 +18,9 @@
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
     "avatar": "Avatar",
     "isActive": "Está Activo",
-    "isPortalUser": "Is un usuario del portal",
+    "isPortalUser": "Es un usuario del portal",
     "contact": "Contacto",
-    "accounts": "Cuentas",
+    "accounts": "Empresas",
     "account": "Cuenta (Primaria)",
     "sendAccessInfo": "Enviar correo electrónico con los accesos a la información del usuario",
     "portal": "Portal",
@@ -33,7 +33,7 @@
     "portals": "Portales",
     "portalRoles": "Roles del portal",
     "contact": "Contacto",
-    "accounts": "Cuentas",
+    "accounts": "Empresas",
     "account": "Cuenta (Primaria)"
   },
   "labels": {
@@ -58,8 +58,8 @@
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso sólo para este usuario.",
-    "portalRoles": "Los roles de portal adicionales. Lo utilizan para extender el nivel de control de acceso exclusivo para este usuario.",
-    "portals": "Portales donde el usuario tiene acceso a."
+    "portalRoles": "Los roles del portal se utilizan para extender el nivel de control de acceso exclusivo para este usuario.",
+    "portals": "El usuario tiene accesos a los siguientes portales."
   },
   "messages": {
     "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
