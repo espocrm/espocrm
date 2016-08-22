@@ -6,5 +6,6 @@
     "aclPortal": "recordAllAccountContactOwnNo",
     "notifications": true,
     "object": true,
-    "customizable": true
+    "customizable": true,
+    "activity": true
 }

@@ -668,6 +668,12 @@ class Activities extends \Espo\Core\Services\Base
 
         $fetchAll = empty($params['scope']);
 
+        if (!$fetchAll) {
+            if (!$this->getMetadata()->get(['scopes', $params['scope'], 'activity'])) {
+                throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
+            }
+        }
+
         $parts = array();
         if ($this->getAcl()->checkScope('Meeting')) {
             $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
@@ -675,6 +681,7 @@ class Activities extends \Espo\Core\Services\Base
         if ($this->getAcl()->checkScope('Call')) {
             $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
         }
+
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
     }
 
@@ -688,6 +695,12 @@ class Activities extends \Espo\Core\Services\Base
         $this->accessCheck($entity);
 
         $fetchAll = empty($params['scope']);
+
+        if (!$fetchAll) {
+            if (!$this->getMetadata()->get(['scopes', $params['scope'], 'activity'])) {
+                throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
+            }
+        }
 
         $parts = array();
         if ($this->getAcl()->checkScope('Meeting')) {

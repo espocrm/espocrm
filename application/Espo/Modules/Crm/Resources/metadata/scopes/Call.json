@@ -9,5 +9,6 @@
     "importable": true,
     "notifications": true,
     "calendar": true,
+    "activity": true,
     "object": true
 }
