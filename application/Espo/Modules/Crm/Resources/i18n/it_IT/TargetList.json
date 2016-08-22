@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "name": "Nome",
-        "description": "Descrizione",
-        "entryCount": "Entry Count",
-        "campaigns": "Campaigns",
-        "endDate": "End Date",
-        "targetLists": "Target Lists"
-    },
-    "links": {
-        "accounts": "Accounts",
-        "contacts": "Contatti",
-        "leads": "Comando",
-        "campaigns": "Campaigns",
-        "massEmails": "Mass Emails"
-    },
-    "options": {
-        "type": {
-            "Email": "Email",
-            "Web": "Web",
-            "Television": "Television",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter"
-        }
-    },
-    "labels": {
-        "Create TargetList": "Create Target List",
-        "Opted Out": "Rinuncia",
-        "Cancel Opt-Out": "Cancel Opt-Out",
-        "Opt-Out": "Opt-Out"
+  "fields": {
+    "name": "Nome",
+    "description": "Descrizione",
+    "entryCount": "Contatore iniziale",
+    "campaigns": "Campagne",
+    "endDate": "Data di finee",
+    "targetLists": "Lista di destinazione"
+  },
+  "links": {
+    "accounts": "Account",
+    "contacts": "Contatti",
+    "leads": "Comando",
+    "campaigns": "Campagne",
+    "massEmails": "Email Massive"
+  },
+  "options": {
+    "type": {
+      "Email": "Email",
+      "Web": "Web",
+      "Television": "Televisione",
+      "Radio": "Radio",
+      "Newsletter": "Newsletter"
     }
+  },
+  "labels": {
+    "Create TargetList": "Crea lista di destinazione",
+    "Opted Out": "Rinuncia",
+    "Cancel Opt-Out": "Cancella Opt-Out",
+    "Opt-Out": "Opt-Out"
+  }
 }

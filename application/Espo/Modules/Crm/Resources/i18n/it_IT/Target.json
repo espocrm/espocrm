@@ -1,19 +1,17 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "Email",
-        "title": "Titolo",
-        "website": "Website",
-        "accountName": "Nome utente",
-        "phoneNumber": "Phone",
-        "doNotCall": "Non chiamare",
-        "address": "Indirizzi",
-        "description": "Descrizione"
-    },
-    "links": {
-    },
-    "labels": {
-        "Create Target": "Create Target",
-        "Convert to Lead": "Convert to Lead"
-    }
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Email",
+    "title": "Titolo",
+    "website": "Sito Wev",
+    "accountName": "Nome utente",
+    "phoneNumber": "Telefono",
+    "doNotCall": "Non chiamare",
+    "address": "Indirizzi",
+    "description": "Descrizione"
+  },
+  "labels": {
+    "Create Target": "Crea Target",
+    "Convert to Lead": "Conversione in Guida"
+  }
 }

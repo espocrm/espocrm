@@ -1,51 +1,51 @@
 {
-    "labels": {
-        "Fields": "Fields",
-        "Relationships": "Relazioni"
+  "labels": {
+    "Fields": "Campi",
+    "Relationships": "Relazioni"
+  },
+  "fields": {
+    "name": "Nome",
+    "type": "Tipo",
+    "labelSingular": "Etichetta Singola",
+    "labelPlural": "Etichetta Multipla",
+    "stream": "Stream",
+    "label": "Etichetta",
+    "linkType": "Link Type",
+    "entityForeign": "Entità Esterna",
+    "linkForeign": "Collegamento Esterno",
+    "link": "Link",
+    "labelForeign": "Label Esterna",
+    "sortBy": "Impostazione predefinita ( campo)",
+    "sortDirection": "Impostazione predefinita ( indirizzo)",
+    "relationName": "Tab Secono Nome",
+    "linkMultipleField": "Collegamento Multiplo ai Campi",
+    "linkMultipleFieldForeign": "Collegamento Esterno Link Multiplo ai Campi",
+    "disabled": "Disabilitato",
+    "textFilterFields": "Filtro testuale Campi"
+  },
+  "options": {
+    "type": {
+      "": "Nessun",
+      "Base": "Base",
+      "Person": "Persone",
+      "CategoryTree": "Albero delle Categorie",
+      "Event": "Evento"
     },
-    "fields": {
-        "name": "Nome",
-        "type": "Tipo",
-        "labelSingular": "Label Singular",
-        "labelPlural": "Label Plural",
-        "stream": "Stream",
-        "label": "Etichetta",
-        "linkType": "Link Type",
-        "entityForeign": "Foreign Entity",
-        "linkForeign": "Foreign Link",
-        "link": "Link",
-        "labelForeign": "Foreign Label",
-        "sortBy": "Default Order (field)",
-        "sortDirection": "Default Order (direction)",
-        "relationName": "Middle Table Name",
-        "linkMultipleField": "Link Multiple Field",
-        "linkMultipleFieldForeign": "Foreign Link Multiple Field",
-        "disabled": "Disabilitato",
-        "textFilterFields": "Text Filter Fields"
+    "linkType": {
+      "manyToMany": "Molti-a-Molti",
+      "oneToMany": "Uno-a-Molti",
+      "manyToOne": "Molti-a-Uno",
+      "parentToChildren": "Padre-a-Figlio",
+      "childrenToParent": "Figlio-a-Padre"
     },
-    "options": {
-        "type": {
-            "": "Nessun",
-            "Base": "Base",
-            "Person": "Persone",
-            "CategoryTree": "Category Tree",
-            "Event": "Event"
-        },
-        "linkType": {
-            "manyToMany": "Many-to-Many",
-            "oneToMany": "One-to-Many",
-            "manyToOne": "Many-to-One",
-            "parentToChildren": "Parent-to-Children",
-            "childrenToParent": "Children-to-Parent"
-        },
-        "sortDirection": {
-            "asc": "Ascending",
-            "desc": "Descending"
-        }
-    },
-    "messages": {
-        "entityCreated": "Entity has been created",
-        "linkAlreadyExists": "Link name conflict.",
-        "linkConflict": "Name conflict: link or field with the same name already exists."
+    "sortDirection": {
+      "asc": "Ascendente",
+      "desc": "Discendente"
     }
+  },
+  "messages": {
+    "entityCreated": "L'Entità è stata creata",
+    "linkAlreadyExists": "Nome del link errato.",
+    "linkConflict": "Nome conflitto : link o campo con lo stesso nome già esistente"
+  }
 }

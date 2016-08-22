@@ -1,8 +1,8 @@
 {
-    "labels": {
-        "Create Lead": "Create Lead",
-        "Create Contact": "Crea Contatto",
-        "Create Task": "Create Task",
-        "Create Case": "Crea Caso"
-    }
+  "labels": {
+    "Create Lead": "Crea Guida",
+    "Create Contact": "Crea Contatto",
+    "Create Task": "Create Task",
+    "Create Case": "Crea Caso"
+  }
 }

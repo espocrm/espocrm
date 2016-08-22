@@ -1,48 +1,46 @@
 {
-    "fields": {
-        "name": "Nome",
-        "parent": "Genitore",
-        "status": "Stato",
-        "dateStart": "Data d'inizio",
-        "dateEnd": "Data di fine",
-        "duration": "Durata",
-        "description": "Descrizione",
-        "users": "Utenti",
-        "contacts": "Contatti",
-        "leads": "Comando",
-        "reminders": "Reminders",
-        "account": "Account"
+  "fields": {
+    "name": "Nome",
+    "parent": "Genitore",
+    "status": "Stato",
+    "dateStart": "Data d'inizio",
+    "dateEnd": "Data di fine",
+    "duration": "Durata",
+    "description": "Descrizione",
+    "users": "Utenti",
+    "contacts": "Contatti",
+    "leads": "Comando",
+    "reminders": "Promemoria",
+    "account": "Account"
+  },
+  "options": {
+    "status": {
+      "Planned": "Pianificato",
+      "Held": "Held",
+      "Not Held": "Not Held"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Pianificato",
-            "Held": "Held",
-            "Not Held": "Not Held"
-        },
-        "acceptanceStatus": {
-            "None": "Nessun",
-            "Accepted": "Accepted",
-            "Declined": "Declined",
-            "Tentative": "Tentative"
-        }
-    },
-    "massActions": {
-        "setHeld": "Trattenuto",
-        "setNotHeld": "Non Trattenuto"
-    },
-    "labels": {
-        "Create Meeting": "Create Meeting",
-        "Set Held": "Trattenuto",
-        "Set Not Held": "Non Trattenuto",
-        "Send Invitations": "Inviare inviti",
-        "on time": "on time",
-        "before": "before"
-    },
-    "presetFilters": {
-        "planned": "Pianificato",
-        "held": "Held",
-        "todays": "Today's"
+    "acceptanceStatus": {
+      "None": "Nessun",
+      "Accepted": "Accettato",
+      "Declined": "Declinato",
+      "Tentative": "Tentativo"
     }
+  },
+  "massActions": {
+    "setHeld": "Trattenuto",
+    "setNotHeld": "Non Trattenuto"
+  },
+  "labels": {
+    "Create Meeting": "Create Meeting",
+    "Set Held": "Trattenuto",
+    "Set Not Held": "Non Trattenuto",
+    "Send Invitations": "Inviare inviti",
+    "on time": "puntuale",
+    "before": "prima"
+  },
+  "presetFilters": {
+    "planned": "Pianificato",
+    "held": "Held",
+    "todays": "Di Oggi"
+  }
 }

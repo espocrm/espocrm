@@ -1,45 +1,45 @@
 {
-    "fields": {
-        "name": "Nome",
-        "parent": "Genitore",
-        "status": "Stato",
-        "dateStart": "Data d'inizio",
-        "dateEnd": "Data di scadenza",
-        "dateStartDate": "Date Start (all day)",
-        "dateEndDate": "Date End (all day)",
-        "priority": "Priorita'",
-        "description": "Descrizione",
-        "isOverdue": "In ritardo",
-        "account": "Account",
-        "dateCompleted": "Date Completed",
-        "attachments": "Allegato"
+  "fields": {
+    "name": "Nome",
+    "parent": "Genitore",
+    "status": "Stato",
+    "dateStart": "Data d'inizio",
+    "dateEnd": "Data di scadenza",
+    "dateStartDate": "Data d'Inizio (tutto il giorno)",
+    "dateEndDate": "Data di Fine (tutto il giorno)",
+    "priority": "Priorita'",
+    "description": "Descrizione",
+    "isOverdue": "In ritardo",
+    "account": "Account",
+    "dateCompleted": "Data completata",
+    "attachments": "Allegato"
+  },
+  "links": {
+    "attachments": "Allegato"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Non iniziato",
+      "Started": "Iniziato",
+      "Completed": "Completato",
+      "Canceled": "Cancellato",
+      "Deferred": "Prorogare"
     },
-    "links": {
-        "attachments": "Allegato"
-    },
-    "options": {
-        "status": {
-            "Not Started": "Non iniziato",
-            "Started": "Iniziato",
-            "Completed": "Completato",
-            "Canceled": "Cancellato",
-            "Deferred": "Deferred"
-        },
-        "priority" : {
-            "Low": "Basso",
-            "Normal": "Normale",
-            "High": "Alto",
-            "Urgent": "Urgente"
-        }
-    },
-    "labels": {
-        "Create Task": "Create Task",
-        "Complete": "Complete"
-    },
-    "presetFilters": {
-        "actual": "Actual",
-        "completed": "Completato",
-        "todays": "Today's",
-        "overdue": "Overdue"
+    "priority": {
+      "Low": "Basso",
+      "Normal": "Normale",
+      "High": "Alto",
+      "Urgent": "Urgente"
     }
+  },
+  "labels": {
+    "Create Task": "Crea Task",
+    "Complete": "Completo"
+  },
+  "presetFilters": {
+    "actual": "Attuale",
+    "completed": "Completato",
+    "todays": "Di Oggi",
+    "overdue": "In RItardo"
+  }
 }

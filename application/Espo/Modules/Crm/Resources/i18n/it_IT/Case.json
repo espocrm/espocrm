@@ -1,59 +1,59 @@
 {
-    "fields": {
-        "name": "Nome",
-        "number": "Numero",
-        "status": "Stato",
-        "account": "Account",
-        "contact": "Contatti",
-        "contacts": "Contatti",
-        "priority": "Priorita'",
-        "type": "Tipo",
-        "description": "Descrizione",
-        "inboundEmail": "Email in entrata",
-        "lead": "Lead"
+  "fields": {
+    "name": "Nome",
+    "number": "Numero",
+    "status": "Stato",
+    "account": "Account",
+    "contact": "Contatti",
+    "contacts": "Contatti",
+    "priority": "Priorita'",
+    "type": "Tipo",
+    "description": "Descrizione",
+    "inboundEmail": "Email in entrata",
+    "lead": "Lead"
+  },
+  "links": {
+    "inboundEmail": "Email in entrata",
+    "account": "Account",
+    "contact": "Contatto (Primario)",
+    "Contacts": "Contatti",
+    "meetings": "Meetings",
+    "calls": "Chiamate",
+    "tasks": "Tasks",
+    "emails": "Email",
+    "articles": "Knowledge Base Articles",
+    "lead": "Lead"
+  },
+  "options": {
+    "status": {
+      "New": "Nuovo",
+      "Assigned": "Assegnato",
+      "Pending": "In attesa",
+      "Closed": "Chiuso",
+      "Rejected": "Rigettato",
+      "Duplicate": "Duplicato"
     },
-    "links": {
-        "inboundEmail": "Email in entrata",
-        "account": "Account",
-        "contact": "Contact (Primary)",
-        "Contacts": "Contatti",
-        "meetings": "Meetings",
-        "calls": "Calls",
-        "tasks": "Tasks",
-        "emails": "Emails",
-        "articles": "Knowledge Base Articles",
-        "lead": "Lead"
+    "priority": {
+      "Low": "Basso",
+      "Normal": "Normale",
+      "High": "Alto",
+      "Urgent": "Urgente"
     },
-    "options": {
-        "status": {
-            "New": "Nuovo",
-            "Assigned": "Assegnato",
-            "Pending": "In attesa",
-            "Closed": "Chiuso",
-            "Rejected": "Rigettato",
-            "Duplicate": "Duplicato"
-        },
-        "priority" : {
-            "Low": "Basso",
-            "Normal": "Normale",
-            "High": "Alto",
-            "Urgent": "Urgente"
-        },
-        "type": {
-            "Question": "Domande",
-            "Incident": "Incidente",
-            "Problem": "Problema"
-        }
-    },
-    "labels": {
-        "Create Case": "Crea Caso",
-        "Close": "Chiuso",
-        "Reject": "Reject",
-        "Closed": "Chiuso",
-        "Rejected": "Rigettato"
-    },
-    "presetFilters": {
-        "open": "Aperto",
-        "closed": "Chiuso"
+    "type": {
+      "Question": "Domande",
+      "Incident": "Incidente",
+      "Problem": "Problema"
     }
+  },
+  "labels": {
+    "Create Case": "Crea Caso",
+    "Close": "Chiuso",
+    "Reject": "Rigettato",
+    "Closed": "Chiuso",
+    "Rejected": "Rigettato"
+  },
+  "presetFilters": {
+    "open": "Aperto",
+    "closed": "Chiuso"
+  }
 }

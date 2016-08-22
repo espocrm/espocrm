@@ -1,19 +1,19 @@
 {
-    "fields": {
-        "name": "Nome",
-        "roles": "Ruoli",
-        "positionList": "Position List"
-    },
-    "links": {
-        "users": "Utenti",
-        "notes": "Notes",
-        "roles": "Ruoli"
-    },
-    "tooltips": {
-        "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
-        "positionList": "Available positions in this team. E.g. Salesperson, Manager."
-    },
-    "labels": {
-        "Create Team": "Crea Team"
-    }
+  "fields": {
+    "name": "Nome",
+    "roles": "Ruoli",
+    "positionList": "Lista Posizione"
+  },
+  "links": {
+    "users": "Utenti",
+    "notes": "Note",
+    "roles": "Ruoli"
+  },
+  "tooltips": {
+    "roles": "Ruoli di accesso . Gli utenti di questo team hanno ottenuto il livello di controllo per i ruoli selezionati .",
+    "positionList": "Posizioni disponibili in questa squadra. E.g. Venditore, Manager."
+  },
+  "labels": {
+    "Create Team": "Crea Team"
+  }
 }
