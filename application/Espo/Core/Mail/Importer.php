@@ -151,7 +151,7 @@ class Importer
 
                 $duplicate->set('isBeingImported', true);
 
-            	$this->getEntityManager()->saveEntity($duplicate);
+                $this->getEntityManager()->saveEntity($duplicate);
 
                 if (!empty($teamsIdList)) {
                     foreach ($teamsIdList as $teamId) {
@@ -168,8 +168,8 @@ class Importer
                     $email->set('dateSent', $dateSent);
                 }
             } else {
-				$email->set('dateSent', date('Y-m-d H:i:s'));
-			}
+                $email->set('dateSent', date('Y-m-d H:i:s'));
+            }
             if (isset($message->deliveryDate)) {
                 $dt = new \DateTime($message->deliveryDate);
                 if ($dt) {
@@ -325,15 +325,15 @@ class Importer
                 $email->set('parentId', $account->id);
                 return true;
             } else {
-	            $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
-	                'emailAddress' => $emailAddress
-	            ))->findOne();
-	            if ($lead) {
-	                $email->set('parentType', 'Lead');
-	                $email->set('parentId', $lead->id);
-	                return true;
-	            }
-	       	}
+                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+                    'emailAddress' => $emailAddress
+                ))->findOne();
+                if ($lead) {
+                    $email->set('parentType', 'Lead');
+                    $email->set('parentId', $lead->id);
+                    return true;
+                }
+            }
         }
     }
 
