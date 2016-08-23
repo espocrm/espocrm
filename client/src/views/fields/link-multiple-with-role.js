@@ -117,7 +117,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         },
 
         getJQSelect: function (id, roleValue) {
-            $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
+            var $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
             this.roleList.forEach(function (role) {
                 var selectedHtml = (role == roleValue) ? 'selected': '';
                 option = '<option value="'+role+'" '+selectedHtml+'>' + this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) + '</option>';
@@ -155,7 +155,9 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 'width': '92%',
                 'display': 'inline-block'
             });
-            $left.append($role);
+            if ($role) {
+                $left.append($role);
+            }
             $left.append(nameHtml);
             $el.append($left);
 
@@ -171,19 +173,22 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
             $container.append($el);
 
             if (this.mode == 'edit') {
-                var fetch = function ($target) {
-                    var value = $target.val().toString().trim();
-                    var id = $target.data('id');
-                    this.columns[id] = this.columns[id] || {};
-                    this.columns[id][this.columnName] = value;
-                }.bind(this);
-                $role.on('change', function (e) {
-                    var $target = $(e.currentTarget);
-                    fetch($target);
-                    this.trigger('change');
-                }.bind(this));
-                fetch($role);
+                if ($role) {
+                    var fetch = function ($target) {
+                        if (!$target || !$target.size()) return;
 
+                        var value = $target.val().toString().trim();
+                        var id = $target.data('id');
+                        this.columns[id] = this.columns[id] || {};
+                        this.columns[id][this.columnName] = value;
+                    }.bind(this);
+                    $role.on('change', function (e) {
+                        var $target = $(e.currentTarget);
+                        fetch($target);
+                        this.trigger('change');
+                    }.bind(this));
+                    fetch($role);
+                }
             }
             return $el;
         },
