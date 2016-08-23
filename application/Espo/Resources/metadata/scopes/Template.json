@@ -1,8 +1,8 @@
 {
-    "entity": false,
+    "entity": true,
     "layouts": false,
     "tab": false,
     "acl": "recordAllTeamNo",
-    "customizable": false,
+    "customizable": true,
     "disabled": true
 }
