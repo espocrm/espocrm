@@ -13,7 +13,7 @@
         },
         "phoneNumber": {
             "type": "phone",
-            "typeList": ["Office", "Fax", "Other"],
+            "typeList": ["Office", "Mobile", "Fax", "Other"],
             "defaultType": "Office"
         },
         "type": {
