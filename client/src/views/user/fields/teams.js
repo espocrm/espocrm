@@ -37,8 +37,8 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
 
             this.loadRoleList(function () {
                 if (this.mode == 'edit') {
-                    if (this.isRendered()) {
-                        this.render();
+                    if (this.isRendered() || this.isBeingRendered()) {
+                        this.reRender();
                     }
                 }
             }, this);
@@ -53,7 +53,7 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
                 }, this);
                 if (toLoad) {
                     this.loadRoleList(function () {
-                        this.render();
+                        this.reRender();
                     }, this);
                 }
             }, this);
@@ -99,7 +99,15 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
         },
 
         getJQSelect: function (id, roleValue) {
+
+
             var roleList = Espo.Utils.clone((this.roleListMap[id] || []));
+
+            if (!roleList.length) {
+                return;
+            };
+
+
             if (roleList.length || roleValue) {
                 $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
 
