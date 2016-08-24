@@ -51,7 +51,6 @@
         "ldapUserFirstNameAttribute": "User First Name Attribute",
         "ldapUserLastNameAttribute": "User Last Name Attribute",
         "ldapUserEmailAddressAttribute": "User Email Address Attribute",
-        "ldapUserPhoneNumberAttribute": "User Phone Number Attribute",
         "ldapUserTeams": "User Teams",
         "ldapUserDefaultTeam": "User Default Team",
         "ldapUserPhoneNumberAttribute": "User Phone Number Attribute",
