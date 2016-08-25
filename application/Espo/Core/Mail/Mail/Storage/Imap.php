@@ -31,7 +31,7 @@ namespace Espo\Core\Mail\Mail\Storage;
 
 class Imap extends \Zend\Mail\Storage\Imap
 {
-	protected $messageClass = '\\Espo\\Core\\Mail\\Mail\\Storage\\Message';
+	//protected $messageClass = '\\Espo\\Core\\Mail\\Mail\\Storage\\Message';
 
     public function getIdsFromUID($uid)
     {
