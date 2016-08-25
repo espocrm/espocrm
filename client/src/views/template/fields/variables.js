@@ -69,6 +69,13 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             var entityType = this.model.get('entityType');
 
             var attributeList = this.getFieldManager().getEntityAttributes(entityType) || [];
+
+            var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(entityType);
+            attributeList = attributeList.filter(function (item) {
+                if (~forbiddenList.indexOf(item)) return;
+                return true;
+            }, this);
+
             attributeList.push('id');
             if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') == 'personName') {
                 attributeList.unshift('name');
@@ -99,6 +106,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 if (!scope) return;
 
                 var attributeList = this.getFieldManager().getEntityAttributes(scope) || [];
+
+                var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(scope);
+                attributeList = attributeList.filter(function (item) {
+                    if (~forbiddenList.indexOf(item)) return;
+                    return true;
+                }, this);
 
                 attributeList.push('id');
                 if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {

@@ -61,6 +61,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             this.implementationHash = {};
             this.forbiddenFieldsCache = {};
             this.implementationClassMap = {};
+            this.forbiddenAttributesCache = {};
         },
 
         getImplementation: function (scope) {
@@ -220,6 +221,37 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             this.forbiddenFieldsCache[key] = fieldList;
 
             return fieldList;
+        },
+
+        getScopeForbiddenAttributeList: function (scope, action, thresholdLevel) {
+            action = action || 'read';
+            thresholdLevel = thresholdLevel || 'no';
+
+            var key = scope + '_' + action + '_' + thresholdLevel;
+            if (key in this.forbiddenAttributesCache) {
+                return this.forbiddenAttributesCache[key];
+            }
+
+            var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+
+            var fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+            var scopeData = fieldTableQuickAccess[scope] || {};
+
+            var attributesData = scopeData.attributes || {};
+            var actionData = attributesData[action] || {};
+
+            var attributeList = [];
+            levelList.forEach(function (level) {
+                var list = actionData[level] || [];
+                list.forEach(function (attribute) {
+                    if (~attributeList.indexOf(attribute)) return;
+                    attributeList.push(attribute);
+                }, this);
+            }, this);
+
+            this.forbiddenAttributesCache[key] = attributeList;
+
+            return attributeList;
         }
 
     });

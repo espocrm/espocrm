@@ -165,10 +165,15 @@ class EmailTemplate extends Record
         return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
-    protected function parseText($type, Entity $entity, $text)
+    protected function parseText($type, Entity $entity, $text, $skipLinks = false, $prefixLink = null)
     {
-        $fieldList = array_keys($entity->getFields());
+        $fieldList = array_keys($entity->getAttributes());
+
+        $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+
         foreach ($fieldList as $field) {
+            if (in_array($field, $forbidenAttributeList)) continue;
+
             $value = $entity->get($field);
             if (is_object($value)) {
                 continue;
@@ -195,9 +200,34 @@ class EmailTemplate extends Record
                 }
             }
             if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                $text = str_replace('{' . $type . '.' . $field . '}', $value, $text);
+                $variableName = $field;
+                if (!is_null($prefixLink)) {
+                    $variableName = $prefixLink . '.' . $field;
+                }
+                $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
             }
         }
+
+        if (!$skipLinks) {
+            $relationDefs = $entity->getRelations();
+            foreach ($entity->getRelationList() as $relation) {
+                if (
+                    !empty($relationDefs[$relation]['type'])
+                    &&
+                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
+                ) {
+                    $relatedEntity = $entity->get($relation);
+                    if (!$relatedEntity) continue;
+                    if ($this->getAcl()) {
+                        if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
+                    }
+
+                    $text = $this->parseText($type, $relatedEntity, $text, true, $relation);
+                }
+            }
+        }
+
+
         return $text;
     }
 }
