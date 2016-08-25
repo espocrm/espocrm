@@ -71,7 +71,10 @@ class Importer
 
             $email->set('isBeingImported', true);
 
-            $subject = $message->subject;
+            $subject = '';
+            if (isset($message->subject)) {
+                $subject = $message->subject;
+            }
             if (!empty($subject) && is_string($subject)) {
                 $subject = trim($subject);
             }
