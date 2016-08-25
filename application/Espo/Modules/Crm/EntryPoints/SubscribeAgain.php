@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Error;
 
-class Unsubscribe extends \Espo\Core\EntryPoints\Base
+class SubscribeAgain extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
@@ -76,7 +76,7 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                         if ($emailAddress) {
                             $ea = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
                             if ($ea) {
-                                $ea->set('optOut', true);
+                                $ea->set('optOut', false);
                                 $this->getEntityManager()->saveEntity($ea);
                             }
                         }
@@ -97,21 +97,17 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
 
                         foreach ($targetListList as $targetList) {
                             $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
-                                'optedOut' => true
+                                'optedOut' => false
                             ));
                         }
-                        echo $this->getLanguage()->translate('unsubscribed', 'messages', 'Campaign');
+                        echo $this->getLanguage()->translate('subscribedAgain', 'messages', 'Campaign');
                         echo '<br><br>';
-                        echo '<a href="?entiyPoint=subscribeAgain&id='.$queueItemId.'">' . $this->getLanguage()->translate('Subscribe again', 'labels', 'Campaign') . '</a>';
+                        echo '<a href="?entiyPoint=unbscribe&id='.$queueItemId.'">' . $this->getLanguage()->translate('Unsubscribe again', 'labels', 'Campaign') . '</a>';
                     }
                 }
             }
         }
 
-        if ($campaign && $target) {
-            $campaignService = $this->getServiceFactory()->create('Campaign');
-            $campaignService->logOptedOut($campaignId, $queueItemId, $target, $queueItem->get('emailAddress'), null, $queueItem->get('isTest'));
-        }
     }
 }
 

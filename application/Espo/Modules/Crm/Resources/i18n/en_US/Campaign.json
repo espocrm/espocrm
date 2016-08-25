@@ -56,13 +56,16 @@
         "soft": "soft",
         "Unsubscribe": "Unsubscribe",
         "Mass Emails": "Mass Emails",
-        "Email Templates": "Email Templates"
+        "Email Templates": "Email Templates",
+        "Unsubscribe again": "Unsubscribe again",
+        "Subscribe again": "Subscribe again"
     },
     "presetFilters": {
         "active": "Active"
     },
     "messages": {
-        "unsubscribed": "You have been unsubscribed from our mailing list."
+        "unsubscribed": "You have been unsubscribed from our mailing list.",
+        "subscribedAgain": "You are subscribed again."
     },
     "tooltips": {
         "targetLists": "Targets that should receive messages.",
