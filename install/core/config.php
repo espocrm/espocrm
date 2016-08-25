@@ -32,7 +32,7 @@ return array(
 	'apiPath' => '/api/v1',
 
 	'requirements' => array(
-		'phpVersion' => '5.4',
+		'phpVersion' => '5.5',
 
 		'phpRequires' => array(
 			'JSON',

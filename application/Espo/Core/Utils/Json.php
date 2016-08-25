@@ -40,21 +40,7 @@ class Json
      */
     public static function encode($value, $options = 0, $depth = 512)
     {
-        if (version_compare(phpversion(), '5.5.0', '>=')) {
-            $json = json_encode($value, $options, $depth);
-        }
-        elseif (version_compare(phpversion(), '5.3.0', '>=')) {
-            /*Check if options are supported for this version of PHP*/
-            if (is_int($options)) {
-                $json = json_encode($value, $options);
-            }
-            else {
-                $json = json_encode($value);
-            }
-        }
-        else {
-            $json = json_encode($value);
-        }
+        $json = json_encode($value, $options, $depth);
 
         $error = self::getLastError();
         if ($json === null || !empty($error)) {
@@ -84,15 +70,7 @@ class Json
             return false;
         }
 
-        if(version_compare(phpversion(), '5.4.0', '>=')) {
-            $json = json_decode($json, $assoc, $depth, $options);
-        }
-        elseif(version_compare(phpversion(), '5.3.0', '>=')) {
-            $json = json_decode($json, $assoc, $depth);
-        }
-        else {
-            $json = json_decode($json, $assoc);
-        }
+        $json = json_decode($json, $assoc, $depth, $options);
 
         $error = self::getLastError();
         if ($error) {
