@@ -1,15 +1,11 @@
 {
-    "fields": {
-    },
-    "links": {
-        "users": "Utenti"
-    },
-    "tooltips": {
-    },
-    "labels": {
-        "Access": "Accesso",
-        "Create PortalRole": "Create Portal Role",
-        "Scope Level": "Scope Level",
-        "Field Level": "Field Level"
-    }
+  "links": {
+    "users": "Utenti"
+  },
+  "labels": {
+    "Access": "Accesso",
+    "Create PortalRole": "Crea Ruolo",
+    "Scope Level": "Livello dell' Ambito",
+    "Field Level": "Livello del Campo"
+  }
 }

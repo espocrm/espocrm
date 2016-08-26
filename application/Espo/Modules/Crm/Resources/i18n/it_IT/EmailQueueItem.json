@@ -1,28 +1,28 @@
 {
-    "fields": {
-        "name": "Nome",
-        "status": "Stato",
-        "target": "Target",
-        "sentAt": "Data invio",
-        "attemptCount": "Attempts",
-        "emailAddress": "Indirizzo Email",
-        "massEmail": "Mass Email",
-        "isTest": "Is Test"
-    },
-    "links": {
-        "target": "Target",
-        "massEmail": "Mass Email"
-    },
-    "options": {
-        "status": {
-            "Pending": "In attesa",
-            "Sent": "Inviato",
-            "Failed": "Failed"
-        }
-    },
-    "presetFilters": {
-        "pending": "In attesa",
-        "sent": "Inviato",
-        "failed": "Failed"
+  "fields": {
+    "name": "Nome",
+    "status": "Stato",
+    "target": "Target",
+    "sentAt": "Data invio",
+    "attemptCount": "Prove",
+    "emailAddress": "Indirizzo Email",
+    "massEmail": "Email Massiva",
+    "isTest": "è un test"
+  },
+  "links": {
+    "target": "Target",
+    "massEmail": "Email Massiva"
+  },
+  "options": {
+    "status": {
+      "Pending": "In attesa",
+      "Sent": "Inviato",
+      "Failed": "Fallito"
     }
+  },
+  "presetFilters": {
+    "pending": "In attesa",
+    "sent": "Inviato",
+    "failed": "Fallito"
+  }
 }

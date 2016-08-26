@@ -1,46 +1,46 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "Email",
-        "title": "Titolo",
-        "account": "Account",
-        "accounts": "Accounts",
-        "phoneNumber": "Phone",
-        "accountType": "Account Type",
-        "doNotCall": "Non chiamare",
-        "address": "Indirizzi",
-        "opportunityRole": "Opportunity Role",
-        "accountRole": "Titolo",
-        "description": "Descrizione",
-        "campaign": "Campaign",
-        "targetLists": "Target Lists",
-        "targetList": "Target List",
-        "portalUser": "Portal User"
-    },
-    "links": {
-        "opportunities": "Opportunita'",
-        "cases": "Casi",
-        "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign",
-        "account": "Account (Primary)",
-        "accounts": "Accounts",
-        "casesPrimary": "Cases (Primary)",
-        "portalUser": "Portal User"
-    },
-    "labels": {
-        "Create Contact": "Crea Contatto"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--None--",
-            "Decision Maker": "Decision Maker",
-            "Evaluator": "Evaluator",
-            "Influencer": "Influencer"
-        }
-    },
-    "presetFilters": {
-        "portalUsers": "Portal Users",
-        "notPortalUsers": "Not Portal Users"
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Email",
+    "title": "Titolo",
+    "accountRole": "Titolo",
+    "account": "Account",
+    "accounts": "Account",
+    "phoneNumber": "Telefono",
+    "accountType": "Tipo di Account",
+    "doNotCall": "Non chiamare",
+    "address": "Indirizzi",
+    "opportunityRole": "Opportunity Role",
+    "description": "Descrizione",
+    "campaign": "Campaign",
+    "targetLists": "Liste di destinazione",
+    "targetList": "Lista di destinazione",
+    "portalUser": "Portal User"
+  },
+  "links": {
+    "opportunities": "Opportunita'",
+    "cases": "Casi",
+    "targetLists": "Liste di destinazione",
+    "campaignLogRecords": "Log Campagna",
+    "campaign": "Campagna",
+    "account": "Account (Primario)",
+    "accounts": "Account",
+    "casesPrimary": "Casi (Primario)",
+    "portalUser": "Portale Utente"
+  },
+  "labels": {
+    "Create Contact": "Crea Contatto"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Nessun--",
+      "Decision Maker": "Responsabile",
+      "Evaluator": "Valutatore",
+      "Influencer": "Influencer"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Portale Utenti",
+    "notPortalUsers": "Nessun Portale Utenti"
+  }
 }

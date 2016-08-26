@@ -71,7 +71,10 @@ class Importer
 
             $email->set('isBeingImported', true);
 
-            $subject = $message->subject;
+            $subject = '';
+            if (isset($message->subject)) {
+                $subject = $message->subject;
+            }
             if (!empty($subject) && is_string($subject)) {
                 $subject = trim($subject);
             }
@@ -151,7 +154,7 @@ class Importer
 
                 $duplicate->set('isBeingImported', true);
 
-            	$this->getEntityManager()->saveEntity($duplicate);
+                $this->getEntityManager()->saveEntity($duplicate);
 
                 if (!empty($teamsIdList)) {
                     foreach ($teamsIdList as $teamId) {
@@ -168,8 +171,8 @@ class Importer
                     $email->set('dateSent', $dateSent);
                 }
             } else {
-				$email->set('dateSent', date('Y-m-d H:i:s'));
-			}
+                $email->set('dateSent', date('Y-m-d H:i:s'));
+            }
             if (isset($message->deliveryDate)) {
                 $dt = new \DateTime($message->deliveryDate);
                 if ($dt) {
@@ -233,6 +236,7 @@ class Importer
                 $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
                 $parentType = $parentId = null;
                 $emailSent = PHP_INT_MAX;
+                $number = null;
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
                 if ($n == 4 && $emailSent < time()) {
                     if (!empty($parentType) && !empty($parentId)) {
@@ -324,15 +328,15 @@ class Importer
                 $email->set('parentId', $account->id);
                 return true;
             } else {
-	            $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
-	                'emailAddress' => $emailAddress
-	            ))->findOne();
-	            if ($lead) {
-	                $email->set('parentType', 'Lead');
-	                $email->set('parentId', $lead->id);
-	                return true;
-	            }
-	       	}
+                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
+                    'emailAddress' => $emailAddress
+                ))->findOne();
+                if ($lead) {
+                    $email->set('parentType', 'Lead');
+                    $email->set('parentId', $lead->id);
+                    return true;
+                }
+            }
         }
     }
 

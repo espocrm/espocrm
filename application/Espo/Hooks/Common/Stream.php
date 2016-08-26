@@ -80,8 +80,6 @@ class Stream extends \Espo\Core\Hooks\Base
     {
         if ($this->checkHasStream($entity)) {
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
-            echo "---";
-            die;
         }
         $query = $this->getEntityManager()->getQuery();
         $sql = "

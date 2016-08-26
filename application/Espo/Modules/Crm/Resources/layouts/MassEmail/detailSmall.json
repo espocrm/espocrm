@@ -3,7 +3,9 @@
         "label": "",
         "rows": [
             [
-                {"name": "name"},
+                {"name": "name"}
+            ],
+            [
                 {"name": "status"}
             ],
             [

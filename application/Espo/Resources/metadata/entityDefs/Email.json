@@ -140,7 +140,7 @@
         },
         "fromEmailAddress": {
             "type": "link",
-            "view": "views/fields/from-email-address"
+            "view": "views/email/fields/from-email-address"
         },
         "toEmailAddresses": {
             "type": "linkMultiple"

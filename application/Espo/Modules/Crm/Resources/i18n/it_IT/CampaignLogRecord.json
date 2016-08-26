@@ -1,40 +1,40 @@
 {
-    "fields": {
-        "action": "Azione",
-        "actionDate": "Date",
-        "data": "Data",
-        "campaign": "Campaign",
-        "parent": "Target",
-        "object": "Object",
-        "application": "Application",
-        "queueItem": "Queue Item",
-        "stringData": "String Data",
-        "stringAdditionalData": "String Additional Data"
-    },
-    "links": {
-        "queueItem": "Queue Item",
-        "parent": "Genitore",
-        "object": "Object"
-    },
-    "options": {
-    	"action": {
-            "Sent": "Inviato",
-            "Opened": "Opened",
-            "Opted Out": "Rinuncia",
-            "Bounced": "Bounced",
-            "Clicked": "Clicked",
-            "Lead Created": "Lead Created"
-    	}
-    },
-    "labels": {
-        "All": "Tutti"
-    },
-    "presetFilters": {
-        "sent": "Inviato",
-        "opened": "Opened",
-        "optedOut": "Rinuncia",
-        "bounced": "Bounced",
-        "clicked": "Clicked",
-        "leadCreated": "Lead Created"
+  "fields": {
+    "action": "Azione",
+    "actionDate": "Data",
+    "data": "Data",
+    "campaign": "Campagnia",
+    "parent": "Target",
+    "object": "Oggetto",
+    "application": "Applicazione",
+    "queueItem": "Queue Item",
+    "stringData": "String Data",
+    "stringAdditionalData": "String Additional Data"
+  },
+  "links": {
+    "queueItem": "Queue Item",
+    "parent": "Genitore",
+    "object": "Object"
+  },
+  "options": {
+    "action": {
+      "Sent": "Inviato",
+      "Opened": "Aperto",
+      "Opted Out": "Rinuncia",
+      "Bounced": "Bounced",
+      "Clicked": "Cliccato",
+      "Lead Created": "Lead Created"
     }
+  },
+  "labels": {
+    "All": "Tutti"
+  },
+  "presetFilters": {
+    "sent": "Inviato",
+    "opened": "Aperto",
+    "optedOut": "Rinuncia",
+    "bounced": "Bounced",
+    "clicked": "Clicked",
+    "leadCreated": "Lead Created"
+  }
 }

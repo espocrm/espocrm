@@ -1117,7 +1117,7 @@ class Record extends \Espo\Core\Services\Base
             $p['where'] = $where;
             if (!empty($params['selectData']) && is_array($params['selectData'])) {
                 foreach ($params['selectData'] as $k => $v) {
-                    //$p[$k] = $v;
+                    $p[$k] = $v;
                 }
             }
             $selectParams = $this->getSelectParams($p);

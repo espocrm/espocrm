@@ -61,7 +61,7 @@ $config = include('core/config.php');
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
-if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+if (version_compare(PHP_VERSION, '5.5.0', '<')) {
     die(str_replace('{minVersion}', $config['requirements']['phpVersion'], $langs['messages']['phpVersion']) . '.');
 }
 

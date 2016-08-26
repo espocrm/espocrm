@@ -1,45 +1,45 @@
 {
-    "labels": {
-        "Create KnowledgeBaseArticle": "Create Article",
-        "Any": "Any",
-        "Send in Email": "Send in Email",
-        "Move Up": "Move Up",
-        "Move Down": "Move Down"
+  "labels": {
+    "Create KnowledgeBaseArticle": "Crea Articolo",
+    "Any": "Tutto",
+    "Send in Email": "Spedisci via Email",
+    "Move Up": "Sposta in Alto",
+    "Move Down": "Sposta in Basso"
+  },
+  "fields": {
+    "name": "Nome",
+    "status": "Stato",
+    "type": "Tipo",
+    "attachments": "Allegato",
+    "publishDate": "Data di pubblicazione",
+    "expirationDate": "Data di Scadenza",
+    "description": "Descrizione",
+    "body": "Corpo",
+    "categories": "Categorie",
+    "language": "Lingua",
+    "portals": "Portali"
+  },
+  "links": {
+    "cases": "Casi",
+    "opportunities": "Opportunita'",
+    "categories": "Categorie",
+    "portals": "Portali"
+  },
+  "options": {
+    "status": {
+      "In Review": "In Revisione",
+      "Draft": "Bozza",
+      "Archived": "Archiviato",
+      "Published": "Pubblicato"
     },
-    "fields": {
-        "name": "Nome",
-        "status": "Stato",
-        "type": "Tipo",
-        "attachments": "Allegato",
-        "publishDate": "Publish Date",
-        "expirationDate": "Expiration Date",
-        "description": "Descrizione",
-        "body": "Corpo",
-        "categories": "Categories",
-        "language": "Lingua",
-        "portals": "Portals"
-    },
-    "links": {
-        "cases": "Casi",
-        "opportunities": "Opportunita'",
-        "categories": "Categories",
-        "portals": "Portals"
-    },
-    "options": {
-        "status": {
-            "In Review": "In Review",
-            "Draft": "Bozza",
-            "Archived": "Archiviato",
-            "Published": "Published"
-        },
-        "type": {
-            "Article": "Article"
-        }
-    },
-    "tooltips": {
-        "portals": "If not empty then this article will be available only in specified portals. If empty then it will available in all portals."
-    },
-    "presetFilters": {
-        "published": "Published"
+    "type": {
+      "Article": "Articolo"
     }
+  },
+  "tooltips": {
+    "portals": "Se non è vuoto allora questo articolo sarà disponibile solo nei portali specifici. Se vuoto, allora sarà disponibile in tutti i portali ."
+  },
+  "presetFilters": {
+    "published": "Pubblicato"
+  }
 }

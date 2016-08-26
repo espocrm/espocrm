@@ -1,23 +1,23 @@
 {
-    "fields": {
-        "title": "Titolo",
-        "dateFrom": "Data da",
-        "dateTo": "Data a",
-        "autorefreshInterval": "Intervallo di Aggiornamento automatico",
-        "displayRecords": "Visualizzare i record",
-        "isDoubleHeight": "Height 2x",
-        "mode": "Mode",
-        "enabledScopeList": "What to display",
-        "users": "Utenti"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Week (agenda)",
-    		"basicWeek": "Settimana",
-    		"month": "Mese",
-            "basicDay": "Giorno",
-            "agendaDay": "Day (agenda)",
-            "timeline": "Timeline"
-    	}
+  "fields": {
+    "title": "Titolo",
+    "dateFrom": "Data da",
+    "dateTo": "Data a",
+    "autorefreshInterval": "Intervallo di Aggiornamento automatico",
+    "displayRecords": "Visualizzare i record",
+    "isDoubleHeight": "Altezza 2x",
+    "mode": "Modo",
+    "enabledScopeList": "Cose da visualizzare",
+    "users": "Utenti"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Settimana (agenda)",
+      "basicWeek": "Settimana",
+      "month": "Mese",
+      "basicDay": "Giorno",
+      "agendaDay": "Giorno (agenda)",
+      "timeline": "Sequenza Temporale"
     }
+  }
 }

@@ -1,80 +1,80 @@
 {
-    "fields": {
-        "name": "Nome",
-        "emailAddress": "Email",
-        "website": "Website",
-        "phoneNumber": "Phone",
-        "billingAddress": "Indirizzo di Fatturazione",
-        "shippingAddress": "Indirizzo di Spedizione",
-        "description": "Descrizione",
-        "sicCode": "Sic Code",
-        "industry": "Azienda",
-        "type": "Tipo",
-        "contactRole": "Titolo",
-        "campaign": "Campaign",
-        "targetLists": "Target Lists",
-        "targetList": "Target List"
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Email",
+    "website": "Sito Web",
+    "phoneNumber": "Telefono",
+    "billingAddress": "Indirizzo di Fatturazione",
+    "shippingAddress": "Indirizzo di Spedizione",
+    "description": "Descrizione",
+    "sicCode": "Sic Code",
+    "industry": "Azienda",
+    "type": "Tipo",
+    "contactRole": "Titolo",
+    "campaign": "Campagna",
+    "targetLists": "Liste di Destinazione",
+    "targetList": "Lista di Destinazione"
+  },
+  "links": {
+    "contacts": "Contatti",
+    "opportunities": "Opportunita'",
+    "cases": "Casi",
+    "documents": "Documenti",
+    "meetingsPrimary": "Meeting (ampliato)",
+    "callsPrimary": "Chiamate (ampliato)",
+    "tasksPrimary": "Task (ampliato)",
+    "emailsPrimary": "Email (ampliato)",
+    "targetLists": "Liste di Destinazione",
+    "campaignLogRecords": "Log Campagna",
+    "campaign": "Campagna",
+    "portalUsers": "Utenti portale"
+  },
+  "options": {
+    "type": {
+      "Customer": "Cliente",
+      "Investor": "Invetitore",
+      "Partner": "Partner",
+      "Reseller": "Rivenditore"
     },
-    "links": {
-        "contacts": "Contatti",
-        "opportunities": "Opportunita'",
-        "cases": "Casi",
-        "documents": "Documents",
-        "meetingsPrimary": "Meetings (expanded)",
-        "callsPrimary": "Calls (expanded)",
-        "tasksPrimary": "Tasks (expanded)",
-        "emailsPrimary": "Emails (expanded)",
-        "targetLists": "Target Lists",
-        "campaignLogRecords": "Campaign Log",
-        "campaign": "Campaign",
-        "portalUsers": "Portal Users"
-    },
-    "options": {
-        "type": {
-            "Customer": "Cliente",
-            "Investor": "Invetitore",
-            "Partner": "Partner",
-            "Reseller": "Rivenditore"
-        },
-        "industry": {
-            "Agriculture": "Agriculture",
-            "Advertising": "Advertising",
-            "Apparel & Accessories": "Apparel & Accessories",
-            "Automotive": "Automotive",
-            "Banking": "Bancario",
-            "Biotechnology": "Biotechnology",
-            "Building Materials & Equipment": "Building Materials & Equipment",
-            "Chemical": "Chemical",
-            "Computer": "Computer",
-            "Education": "Insegnante",
-            "Electronics": "Electronics",
-            "Energy": "Energy",
-            "Entertainment & Leisure": "Entertainment & Leisure",
-            "Finance": "Finanza",
-            "Food & Beverage": "Food & Beverage",
-            "Grocery": "Grocery",
-            "Healthcare": "Healthcare",
-            "Insurance": "Assicurazioni",
-            "Legal": "Legal",
-            "Manufacturing": "Manufacturing",
-            "Publishing": "Publishing",
-            "Real Estate": "Real Estate",
-            "Service": "Service",
-            "Sports": "Sports",
-            "Software": "Software",
-            "Technology": "Technology",
-            "Telecommunications": "Telecommunications",
-            "Television": "Television",
-            "Transportation": "Transportation",
-            "Venture Capital": "Venture Capital"
-        }
-    },
-    "labels": {
-        "Create Account": "Crea Account",
-        "Copy Billing": "Copy Billing"
-    },
-    "presetFilters": {
-        "customers": "Customers",
-        "partners": "Partners"
+    "industry": {
+      "Agriculture": "Agricultura",
+      "Advertising": "Pubblicità",
+      "Apparel & Accessories": "Abbigliamento e Accessori",
+      "Automotive": "Settore Automobilistico",
+      "Banking": "Bancario",
+      "Biotechnology": "Biotecnologie",
+      "Building Materials & Equipment": "Materiali da costruzione e attrezzature",
+      "Chemical": "Chimico",
+      "Computer": "Computer",
+      "Education": "Insegnante",
+      "Electronics": "Elettronica",
+      "Energy": "Energia",
+      "Entertainment & Leisure": "Intrattenimento e tempo libero",
+      "Finance": "Finanza",
+      "Food & Beverage": "Prodotti alimentari e bevande",
+      "Grocery": "Drogheria",
+      "Healthcare": "Assistenza sanitaria",
+      "Insurance": "Assicurazioni",
+      "Legal": "Legale",
+      "Manufacturing": "Manifatturiero",
+      "Publishing": "Editoriale",
+      "Real Estate": "Immobiliare",
+      "Service": "Servizi",
+      "Sports": "Sport",
+      "Software": "Software",
+      "Technology": "Technologia",
+      "Telecommunications": "Telecommunicazioni",
+      "Television": "Televisione",
+      "Transportation": "Trasporti",
+      "Venture Capital": "Capitale di rischio"
     }
+  },
+  "labels": {
+    "Create Account": "Crea Account",
+    "Copy Billing": "Copia di Fatturazione"
+  },
+  "presetFilters": {
+    "customers": "Clienti",
+    "partners": "Partner"
+  }
 }

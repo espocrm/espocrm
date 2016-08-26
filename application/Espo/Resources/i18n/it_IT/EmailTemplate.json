@@ -1,27 +1,25 @@
 {
-    "fields": {
-        "name": "Nome",
-        "status": "Stato",
-        "isHtml": "Is Html",
-        "body": "Corpo",
-        "subject": "Soggetto",
-        "attachments": "Allegato",
-        "insertField": "Insert Field",
-        "oneOff": "One-off"
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Crea Modello Email",
-        "Info": "Info"
-    },
-    "messages": {
-        "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link};\n\n{optOutLink} &#8211; an unsubscribe link."
-    },
-    "tooltips": {
-        "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
-    },
-    "presetFilters": {
-        "actual": "Actual"
-    }
+  "fields": {
+    "name": "Nome",
+    "status": "Stato",
+    "isHtml": "Is Html",
+    "body": "Corpo",
+    "subject": "Soggetto",
+    "attachments": "Allegato",
+    "insertField": "Inserisci Campo",
+    "oneOff": "One-off"
+  },
+  "labels": {
+    "Create EmailTemplate": "Crea Modello Email",
+    "Info": "Info"
+  },
+  "messages": {
+    "infoText": "Le variabili disponibili :\n\n{optOutUrl} &#8211; URL per un collegamento unsubsbribe};\n\n{optOutLink} &#8211; un link di cancellazione."
+  },
+  "tooltips": {
+    "oneOff": "Controllare se avete intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
+  },
+  "presetFilters": {
+    "actual": "Attuale"
+  }
 }

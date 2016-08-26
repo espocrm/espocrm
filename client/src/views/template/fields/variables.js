@@ -55,20 +55,27 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         },
 
         setup: function () {
-            this.setupFieldList();
+            this.setupAttributeList();
+            this.setupTranslatedOptions();
 
             this.listenTo(this.model, 'change:entityType', function () {
-                this.setupFieldList();
-                if (this.isRendered()) {
-                    this.reRender();
-                }
+                this.setupAttributeList();
+                this.setupTranslatedOptions();
+                this.reRender();
             }, this);
         },
 
-        setupFieldList: function () {
+        setupAttributeList: function () {
             var entityType = this.model.get('entityType');
 
             var attributeList = this.getFieldManager().getEntityAttributes(entityType) || [];
+
+            var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(entityType);
+            attributeList = attributeList.filter(function (item) {
+                if (~forbiddenList.indexOf(item)) return;
+                return true;
+            }, this);
+
             attributeList.push('id');
             if (this.getMetadata().get('entityDefs.' + entityType + '.fields.name.type') == 'personName') {
                 attributeList.unshift('name');
@@ -84,6 +91,63 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             this.translatedOptions = {};
             attributeList.forEach(function (item) {
                 this.translatedOptions[item] = this.translate(item, 'fields', entityType);
+            }, this);
+
+            var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
+
+            var linkList = Object.keys(links).sort(function (v1, v2) {
+                return this.translate(v1, 'links', entityType).localeCompare(this.translate(v2, 'links', entityType));
+            }.bind(this));
+
+            linkList.forEach(function (link) {
+                var type = links[link].type
+                if (type != 'belongsTo') return;
+                var scope = links[link].entity;
+                if (!scope) return;
+
+                var attributeList = this.getFieldManager().getEntityAttributes(scope) || [];
+
+                var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(scope);
+                attributeList = attributeList.filter(function (item) {
+                    if (~forbiddenList.indexOf(item)) return;
+                    return true;
+                }, this);
+
+                attributeList.push('id');
+                if (this.getMetadata().get('entityDefs.' + scope + '.fields.name.type') == 'personName') {
+                    attributeList.unshift('name');
+                };
+
+                attributeList.sort(function (v1, v2) {
+                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                }.bind(this));
+
+                attributeList.forEach(function (item) {
+                    this.attributeList.push(link + '.' + item);
+                }, this);
+            }, this);
+
+            return this.attributeList;
+        },
+
+        setupTranslatedOptions: function () {
+            this.translatedOptions = {};
+
+            var entityType = this.model.get('entityType');
+            this.attributeList.forEach(function (item) {
+                var field = item;
+                var scope = entityType;
+                var isForeign = false;
+                if (~item.indexOf('.')) {
+                    isForeign = true;
+                    field = item.split('.')[1];
+                    var link = item.split('.')[0];
+                    scope = this.getMetadata().get('entityDefs.' + entityType + '.links.' + link + '.entity');
+                }
+                this.translatedOptions[item] = this.translate(field, 'fields', scope);
+                if (isForeign) {
+                    this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' + this.translatedOptions[item];
+                }
             }, this);
         },
 
