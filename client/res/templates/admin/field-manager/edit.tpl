@@ -18,7 +18,7 @@
             <label class="control-label" data-name="label">{{translate 'label' scope='Admin' category='fields'}}</label>
             <div class="field" data-name="label">{{{label}}}</div>
         </div>
-        {{#each params}}
+        {{#each paramList}}
             {{#unless hidden}}
             <div class="cell form-group" data-name="{{../name}}">
                 <label class="control-label" data-name="{{../name}}">{{translate ../name scope='Admin' category='fields'}}</label>

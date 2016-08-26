@@ -39,7 +39,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 scope: this.scope,
                 field: this.field,
                 defs: this.defs,
-                params: this.params,
+                paramList: this.paramList,
                 type: this.type,
                 fieldList: this.fieldList,
             };
@@ -109,18 +109,18 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         }.bind(this));
                     }.bind(this))
                 ]).then(function () {
-                    this.params = [];
-                    var params = this.getFieldManager().getParams(this.type) || [];
-                    params.forEach(function (o) {
+                    this.paramList = [];
+                    var paramList = this.getFieldManager().getParams(this.type) || [];
+                    paramList.forEach(function (o) {
                         var item = o.name;
                         var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
                         if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
                             return;
                         }
-                        this.params.push(o);
+                        this.paramList.push(o);
                     }, this);
 
-                    this.params.forEach(function (o) {
+                    this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
 
@@ -137,7 +137,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         trim: true
                     });
 
-                    this.params.forEach(function (o) {
+                    this.paramList.forEach(function (o) {
                         if (o.hidden) {
                             return;
                         }
