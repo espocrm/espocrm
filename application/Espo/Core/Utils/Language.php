@@ -36,11 +36,7 @@ class Language
 {
     private $fileManager;
 
-    private $config;
-
     private $metadata;
-
-    private $preferences;
 
     private $unifier;
 
@@ -63,6 +59,8 @@ class Language
 
     protected $defaultLanguage = 'en_US';
 
+    protected $useCache = false;
+
     /**
      * @var array
      */
@@ -73,12 +71,18 @@ class Language
     );
 
 
-    public function __construct(File\Manager $fileManager, Config $config, Metadata $metadata, \Espo\Entities\Preferences $preferences = null)
+    public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false)
     {
+        if ($language) {
+            $this->currentLanguage = $language;
+        } else {
+            $this->currentLanguage = $this->defaultLanguage;
+        }
+
         $this->fileManager = $fileManager;
-        $this->config = $config;
         $this->metadata = $metadata;
-        $this->preferences = $preferences;
+
+        $this->useCache = $useCache;
 
         $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this->metadata);
     }
@@ -88,19 +92,9 @@ class Language
         return $this->fileManager;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     protected function getMetadata()
     {
         return $this->metadata;
-    }
-
-    protected function getPreferences()
-    {
-        return $this->preferences;
     }
 
     protected function getUnifier()
@@ -108,16 +102,24 @@ class Language
         return $this->unifier;
     }
 
+    public function getDefaultLanguage()
+    {
+        return $this->defaultLanguage;
+    }
+
+    public static function detectLanguage($config, $preferences = null) {
+        $language = null;
+        if ($preferences) {
+            $language = $preferences->get('language');
+        }
+        if (!$language) {
+            $language = $config->get('language');
+        }
+        return $language;
+    }
+
     public function getLanguage()
     {
-        if (!isset($this->currentLanguage) && isset($this->preferences)) {
-            $this->currentLanguage = $this->getPreferences()->get('language');
-        }
-
-        if (empty($this->currentLanguage)) {
-            $this->currentLanguage = $this->getConfig()->get('language');
-        }
-
         return $this->currentLanguage;
     }
 
@@ -232,10 +234,6 @@ class Language
             }
         }
 
-        if ($result == false) {
-            throw new Error("Error saving languages. See log file for details.");
-        }
-
         $this->clearChanges();
 
         return (bool) $result;
@@ -345,7 +343,7 @@ class Language
 
     protected function init($reload = false)
     {
-        if ($reload || !file_exists($this->getLangCacheFile()) || !$this->getConfig()->get('useCache')) {
+        if ($reload || !file_exists($this->getLangCacheFile()) || !$this->useCache) {
             $fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
 
             $result = true;
@@ -357,7 +355,7 @@ class Language
 
                 $this->data[$i18nName] = $i18nData;
 
-                if ($this->getConfig()->get('useCache')) {
+                if ($this->useCache) {
                     $i18nCacheFile = str_replace('{*}', $i18nName, $this->cacheFile);
                     $result &= $this->getFileManager()->putPhpContents($i18nCacheFile, $i18nData);
                 }

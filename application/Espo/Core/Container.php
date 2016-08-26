@@ -263,10 +263,20 @@ class Container
     protected function loadLanguage()
     {
         return new \Espo\Core\Utils\Language(
+            \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
             $this->get('fileManager'),
-            $this->get('config'),
             $this->get('metadata'),
-            $this->get('preferences')
+            $this->get('useCache')
+        );
+    }
+
+    protected function loadDefaultLanguage()
+    {
+        return new \Espo\Core\Utils\Language(
+            null,
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('useCache')
         );
     }
 

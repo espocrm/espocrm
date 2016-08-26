@@ -73,6 +73,11 @@ class FieldManager
         return $this->metadataHelper;
     }
 
+    protected function getDefaultLanguage()
+    {
+        return $this->container->get('defaultLanguage');
+    }
+
     public function read($name, $scope)
     {
         $fieldDefs = $this->getFieldDefs($name, $scope);
@@ -127,6 +132,10 @@ class FieldManager
         ) {
             $res &= $this->getLanguage()->save();
 
+            if (isset($fieldDefs['tooltipText'])) {
+                $this->getDefaultLanguage()->save();
+            }
+
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs);
         }
 
@@ -177,8 +186,10 @@ class FieldManager
         $this->getLanguage()->delete($scope, 'fields', $name);
         $this->getLanguage()->delete($scope, 'options', $name);
         $this->getLanguage()->delete($scope, 'tooltips', $name);
+        $this->getDefaultLanguage()->delete($scope, 'tooltips', $name);
 
         $this->getLanguage()->save();
+        $this->getDefaultLanguage()->save();
     }
 
     protected function setEntityDefs($name, $fieldDefs, $scope)
@@ -193,7 +204,7 @@ class FieldManager
 
     protected function setTranslatedOptions($name, $value, $scope)
     {
-        return $this->getLanguage()->set($scope, 'options', $name, $value);
+        $this->getLanguage()->set($scope, 'options', $name, $value);
     }
 
     protected function setLabel($name, $value, $scope)
@@ -203,7 +214,13 @@ class FieldManager
 
     protected function setTooltipText($name, $value, $scope)
     {
-        return $this->getLanguage()->set($scope, 'tooltips', $name, $value);
+        if ($value && $value !== '') {
+            $this->getLanguage()->set($scope, 'tooltips', $name, $value);
+            $this->getDefaultLanguage()->set($scope, 'tooltips', $name, $value);
+        } else {
+            $this->getLanguage()->delete($scope, 'tooltips', $name);
+            $this->getDefaultLanguage()->delete($scope, 'tooltips', $name);
+        }
     }
 
     protected function deleteLabel($name, $scope)
@@ -211,7 +228,10 @@ class FieldManager
         $this->getLanguage()->delete($scope, 'fields', $name);
         $this->getLanguage()->delete($scope, 'tooltips', $name);
         $this->getLanguage()->delete($scope, 'options', $name);
-        return $this->getLanguage()->save();
+        $this->getDefaultLanguage()->delete($scope, 'tooltips', $name);
+
+        $this->getLanguage()->save();
+        $this->getDefaultLanguage()->save();
     }
 
     protected function getFieldDefs($name, $scope)

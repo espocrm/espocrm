@@ -91,10 +91,10 @@ class Container extends \Espo\Core\Container
     protected function loadLanguage()
     {
         $language = new \Espo\Core\Portal\Utils\Language(
+            \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
             $this->get('fileManager'),
-            $this->get('config'),
             $this->get('metadata'),
-            $this->get('preferences')
+            $this->get('useCache')
         );
         $language->setPortal($this->get('portal'));
         return $language;

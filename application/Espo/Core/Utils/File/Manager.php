@@ -335,7 +335,6 @@ class Manager
     {
         $currentData = $this->getContents($path);
         if (!isset($currentData) || !$currentData) {
-            $GLOBALS['log']->notice('FileManager::unsetContents: File ['.$this->concatPaths($path).'] does not exist.');
             return false;
         }
 
