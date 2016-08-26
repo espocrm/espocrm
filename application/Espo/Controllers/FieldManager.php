@@ -107,5 +107,18 @@ class FieldManager extends \Espo\Core\Controllers\Base
 
         return $res;
     }
+
+    public function postActionResetToDefault($params, $data)
+    {
+        if (empty($data['scope']) || empty($data['name'])) {
+            throw new BadRequest();
+        }
+
+        $this->getContainer()->get('fieldManager')->resetToDefault($data['name'], $data['scope']);
+
+        $this->getContainer()->get('dataManager')->rebuildMetadata();
+
+        return true;
+    }
 }
 

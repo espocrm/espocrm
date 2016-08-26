@@ -156,6 +156,23 @@ class FieldManager
         return (bool) $res;
     }
 
+    public function resetToDefault($name, $scope)
+    {
+        if (!$this->isCore($name, $scope)) {
+            throw new Error('Cannot reset to default custom field ['.$name.'] in '.$scope);
+        }
+
+        if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name])) {
+            throw new Error('Not found field ['.$name.'] in '.$scope);
+        }
+
+        $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name]);
+        $this->getMetadata()->save();
+
+        $this->getLanguage()->delete($scope, 'fields', $name);
+        $this->getLanguage()->save();
+    }
+
     protected function setEntityDefs($name, $fieldDefs, $scope)
     {
         $fieldDefs = $this->normalizeDefs($name, $fieldDefs, $scope);
