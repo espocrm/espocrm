@@ -31,7 +31,8 @@ namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Error,
     \Espo\Core\Exceptions\Forbidden,
-    \Espo\Core\Exceptions\NotFound;
+    \Espo\Core\Exceptions\NotFound,
+    \Espo\Core\Exceptions\BadRequest;
 
 class FieldManager extends \Espo\Core\Controllers\Base
 {
@@ -44,19 +45,23 @@ class FieldManager extends \Espo\Core\Controllers\Base
 
     public function actionRead($params, $data)
     {
+        if (empty($params['scope']) || empty($params['name'])) {
+            throw new BadRequest();
+        }
+
         $data = $this->getContainer()->get('fieldManager')->read($params['name'], $params['scope']);
 
         if (!isset($data)) {
-            throw new NotFound();
+            throw new BadRequest();
         }
 
         return $data;
     }
 
-    public function actionCreate($params, $data)
+    public function postActionCreate($params, $data)
     {
-        if (empty($data['name'])) {
-            throw new Error("Field 'name' cannnot be empty");
+        if (empty($params['scope']) || empty($data['name'])) {
+            throw new BadRequest();
         }
 
         $fieldManager = $this->getContainer()->get('fieldManager');
@@ -72,8 +77,12 @@ class FieldManager extends \Espo\Core\Controllers\Base
         return $fieldManager->read($data['name'], $params['scope']);
     }
 
-    public function actionUpdate($params, $data)
+    public function putActionUpdate($params, $data)
     {
+        if (empty($params['scope']) || empty($params['name'])) {
+            throw new BadRequest();
+        }
+
         $fieldManager = $this->getContainer()->get('fieldManager');
         $fieldManager->update($params['name'], $data, $params['scope']);
 
@@ -86,14 +95,17 @@ class FieldManager extends \Espo\Core\Controllers\Base
         return $fieldManager->read($params['name'], $params['scope']);
     }
 
-    public function actionDelete($params, $data)
+    public function deleteActionDelete($params, $data)
     {
+        if (empty($params['scope']) || empty($params['name'])) {
+            throw new BadRequest();
+        }
+
         $res = $this->getContainer()->get('fieldManager')->delete($params['name'], $params['scope']);
 
         $this->getContainer()->get('dataManager')->rebuildMetadata();
 
         return $res;
     }
-
 }
 
