@@ -63,7 +63,6 @@ class HookManager
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->loadHooks();
     }
 
     protected function getConfig()
@@ -85,14 +84,16 @@ class HookManager
 
         $metadata = $this->container->get('metadata');
 
-        $this->data = $this->getHookData($this->paths['corePath']);
+        $data = $this->getHookData($this->paths['customPath']);
 
         foreach ($metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-            $this->data = array_merge_recursive($this->data, $this->getHookData($modulePath));
+            $data = $this->getHookData($modulePath, $data);
         }
 
-        $this->data = array_merge_recursive($this->data, $this->getHookData($this->paths['customPath']));
+        $data = $this->getHookData($this->paths['corePath'], $data);
+
+        $this->data = $this->sortHooks($data);
 
         if ($this->getConfig()->get('useCache')) {
             $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
@@ -101,6 +102,10 @@ class HookManager
 
     public function process($scope, $hookName, $injection = null, array $options = array())
     {
+        if (!isset($this->data)) {
+            $this->loadHooks();
+        }
+
         if ($scope != 'Common') {
             $this->process('Common', $hookName, $injection, $options);
         }
@@ -131,6 +136,7 @@ class HookManager
             }
             return $hook;
         }
+
         $GLOBALS['log']->error("Hook class '{$className}' does not exist.");
     }
 
@@ -141,13 +147,11 @@ class HookManager
      *
      * @return array
      */
-    protected function getHookData($hookDirs)
+    protected function getHookData($hookDirs, array $hookData = array())
     {
         if (is_string($hookDirs)) {
             $hookDirs = (array) $hookDirs;
         }
-
-        $hooks = array();
 
         foreach ($hookDirs as $hookDir) {
 
@@ -157,6 +161,7 @@ class HookManager
                 foreach ($fileList as $scopeName => $hookFiles) {
 
                     $hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
+                    $normalizedScopeName = Util::normilizeScopeName($scopeName);
 
                     $scopeHooks = array();
                     foreach($hookFiles as $hookFile) {
@@ -164,32 +169,70 @@ class HookManager
                         $className = Util::getClassName($hookFilePath);
 
                         foreach($this->hookList as $hookName) {
-                            if (method_exists($className, $hookName)) {
-                                $scopeHooks[$hookName][$className::$order][] = $className;
+                            $entityHookData = isset($hookData[$scopeName][$hookName]) ? $hookData[$scopeName][$hookName] : array();
+                            if (method_exists($className, $hookName) && !$this->isHookExists($className, $entityHookData)) {
+                                $hookData[$normalizedScopeName][$hookName][$className::$order][] = $className;
                             }
                         }
-                    }
-
-                    //sort hooks by order
-                    foreach ($scopeHooks as $hookName => $hookList) {
-                        ksort($hookList);
-
-                        $sortedHookList = array();
-                        foreach($hookList as $hookDetails) {
-                            $sortedHookList = array_merge($sortedHookList, $hookDetails);
-                        }
-
-                        $normalizedScopeName = Util::normilizeScopeName($scopeName);
-
-                        $hooks[$normalizedScopeName][$hookName] = isset($hooks[$normalizedScopeName][$hookName]) ? array_merge($hooks[$normalizedScopeName][$hookName], $sortedHookList) : $sortedHookList;
                     }
                 }
             }
 
         }
 
+        return $hookData;
+    }
+
+    /**
+     * Sort hooks by an order
+     *
+     * @param  array  $scopeHooks
+     *
+     * @return array
+     */
+    protected function sortHooks(array $unsortedHooks)
+    {
+        $hooks = array();
+
+        foreach ($unsortedHooks as $scopeName => $scopeHooks) {
+            foreach ($scopeHooks as $hookName => $hookList) {
+                ksort($hookList);
+
+                $sortedHookList = array();
+                foreach($hookList as $hookDetails) {
+                    $sortedHookList = array_merge($sortedHookList, $hookDetails);
+                }
+
+                $normalizedScopeName = Util::normilizeScopeName($scopeName);
+
+                $hooks[$normalizedScopeName][$hookName] = isset($hooks[$normalizedScopeName][$hookName]) ? array_merge($hooks[$normalizedScopeName][$hookName], $sortedHookList) : $sortedHookList;
+            }
+        }
+
         return $hooks;
     }
 
+    /**
+     * Check if hook exists in the list
+     *
+     * @param  string  $className
+     * @param  array  $hookData
+     *
+     * @return boolean
+     */
+    protected function isHookExists($className, array $hookData)
+    {
+        $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
+
+        foreach ($hookData as $key => $hookList) {
+            foreach ($hookList as $rowHookName) {
+                if (preg_match('/\\'.$class.'$/', $rowHookName)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
