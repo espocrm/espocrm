@@ -108,6 +108,9 @@ class FieldManager
         if (isset($fieldDefs['label'])) {
             $this->setLabel($name, $fieldDefs['label'], $scope);
         }
+        if (isset($fieldDefs['tooltipText'])) {
+            $this->setTooltipText($name, $fieldDefs['tooltipText'], $scope);
+        }
 
         $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
@@ -119,7 +122,9 @@ class FieldManager
             }
         }
 
-        if (isset($fieldDefs['label']) || isset($fieldDefs['translatedOptions'])) {
+        if (
+            isset($fieldDefs['label']) || isset($fieldDefs['translatedOptions']) || isset($fieldDefs['tooltipText'])
+        ) {
             $res &= $this->getLanguage()->save();
 
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs);
@@ -170,6 +175,9 @@ class FieldManager
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete($scope, 'fields', $name);
+        $this->getLanguage()->delete($scope, 'options', $name);
+        $this->getLanguage()->delete($scope, 'tooltips', $name);
+
         $this->getLanguage()->save();
     }
 
@@ -193,9 +201,15 @@ class FieldManager
         return $this->getLanguage()->set($scope, 'fields', $name, $value);
     }
 
+    protected function setTooltipText($name, $value, $scope)
+    {
+        return $this->getLanguage()->set($scope, 'tooltips', $name, $value);
+    }
+
     protected function deleteLabel($name, $scope)
     {
         $this->getLanguage()->delete($scope, 'fields', $name);
+        $this->getLanguage()->delete($scope, 'tooltips', $name);
         $this->getLanguage()->delete($scope, 'options', $name);
         return $this->getLanguage()->save();
     }

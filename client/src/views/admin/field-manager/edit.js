@@ -70,7 +70,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             this.model.defs = {
                 fields: {
                     name: {required: true},
-                    label: {required: true}
+                    label: {required: true},
+                    tooltipText: {}
                 }
             };
 
@@ -79,6 +80,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.scope = this.scope;
                 this.model.set('name', this.field);
                 this.model.set('label', this.getLanguage().translate(this.field, 'fields', this.scope));
+
+                if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
+                    this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
+                }
             } else {
                 this.model.set('type', this.type);
             }
@@ -128,6 +133,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     });
                     this.createFieldView('varchar', 'label', null, {
                         trim: true
+                    });
+
+                    this.createFieldView('text', 'tooltipText', null, {
+                        trim: true,
+                        rows: 1
                     });
 
                     this.paramList.forEach(function (o) {
@@ -210,6 +220,12 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 return;
             }
 
+            if (this.model.get('tooltipText') && this.model.get('tooltipText') !== '') {
+                this.model.set('tooltip', true);
+            } else {
+                this.model.set('tooltip', false);
+            }
+
             this.listenToOnce(this.model, 'sync', function () {
                 Espo.Ui.notify(false);
 
@@ -233,6 +249,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['fields'] = {};
                 }
                 langData[this.scope]['fields'][this.model.get('name')] = this.model.get('label');
+
+                if (!('tooltips' in langData[this.scope])) {
+                    langData[this.scope]['tooltips'] = {};
+                }
+                langData[this.scope]['tooltips'][this.model.get('name')] = this.model.get('tooltipText');
 
                 if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {
                     langData[this.scope].options = langData[this.scope].options || {};

@@ -26,6 +26,10 @@
             </div>
             {{/unless}}
         {{/each}}
+        <div class="cell form-group" data-name="tooltipText">
+            <label class="control-label" data-name="tooltipText">{{translate 'tooltipText' scope='Admin' category='fields'}}</label>
+            <div class="field" data-name="tooltipText">{{{tooltipText}}}</div>
+        </div>
     </div>
     </div>
     </div>
