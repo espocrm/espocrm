@@ -349,7 +349,16 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (empty($entityList)) {
             $selectParams['whereClause']['relatedParentType'] = null;
         } else {
-            $selectParams['whereClause']['relatedParentType'] = $entityList;
+            $selectParams['whereClause'][] = array(
+                'OR' => array(
+                    array(
+                        'relatedParentType' => $entityList
+                    ),
+                    array(
+                        'relatedParentType' => null
+                    )
+                )
+            );
         }
 
         $forInternal = $this->getConfig()->get('streamEmailNotifications');
@@ -465,31 +474,39 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $data = array();
 
-        if (!$parentId || !$parentType) return;
-
-        $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-        if (!$parent) return;
-
-        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
-        $data['parentName'] = $parent->get('name');
-        $data['parentType'] = $parentType;
-        $data['parentId'] = $parentId;
-
-        $data['name'] = $data['parentName'];
-
-        $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
-        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
-
         $data['userName'] = $note->get('createdByName');
-
         $data['post'] = $note->get('post');
 
-        $subjectTpl = $this->getTemplate('notePost', 'subject', $parentType);
-        $bodyTpl = $this->getTemplate('notePost', 'body', $parentType);
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+        if ($parentId && $parentType) {
+            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            if (!$parent) return;
 
-        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
-        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
+            $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+            $data['parentName'] = $parent->get('name');
+            $data['parentType'] = $parentType;
+            $data['parentId'] = $parentId;
+
+            $data['name'] = $data['parentName'];
+
+            $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
+            $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+            $subjectTpl = $this->getTemplate('notePost', 'subject', $parentType);
+            $bodyTpl = $this->getTemplate('notePost', 'body', $parentType);
+            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+            $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject-' . $parentType, $data, true);
+            $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body-' . $parentType, $data, true);
+        } else {
+            $data['url'] = $this->getConfig()->getSiteUrl() . '/#Notification';
+
+            $subjectTpl = $this->getTemplate('notePostNoParent', 'subject');
+            $bodyTpl = $this->getTemplate('notePostNoParent', 'body');
+            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+            $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
+            $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
+        }
 
         $email = $this->getEntityManager()->getEntity('Email');
 
