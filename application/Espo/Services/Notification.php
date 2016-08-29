@@ -59,6 +59,8 @@ class Notification extends \Espo\Services\Record
         $now = date('Y-m-d H:i:s');
         $pdo = $this->getEntityManager()->getPDO();
 
+        $query = $this->getEntityManager()->getQuery();
+
         $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
         $arr = [];
 
@@ -71,7 +73,7 @@ class Notification extends \Espo\Services\Record
             if (!$this->checkUserNoteAccess($user, $note)) continue;
             if ($note->get('createdById') === $user->id) continue;
             $id = uniqid();
-            $arr[] = "(".$pdo->quote($id).", ".$pdo->quote($encodedData).", ".$pdo->quote('Note').", ".$pdo->quote($userId).", ".$pdo->quote($now).", ".$pdo->quote($note->id).", ".$pdo->quote('Note').", ".$pdo->quote($note->get('parentId')).", ".$pdo->quote($note->get('parentType')).")";
+            $arr[] = "(".$query->quote($id).", ".$query->quote($encodedData).", ".$query->quote('Note').", ".$query->quote($userId).", ".$query->quote($now).", ".$query->quote($note->id).", ".$query->quote('Note').", ".$query->quote($note->get('parentId')).", ".$query->quote($note->get('parentType')).")";
         }
 
         if (empty($arr)) {
