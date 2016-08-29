@@ -213,7 +213,17 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
             this.wait(true);
 
-            var proceed = function () {
+            Promise.all([
+                new Promise(function (resolve) {
+                    if (this.relationshipPanels) {
+                        this.loadRelationshipsLayout(function () {
+                            resolve();
+                        });
+                    } else {
+                        resolve();
+                    }
+                }.bind(this))
+            ]).then(function () {
                 this.panelList = this.panelList.filter(function (p) {
                     if (p.aclScope) {
                         if (!this.getAcl().checkScope(p.aclScope)) {
@@ -229,16 +239,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
                 this.setupPanelViews();
                 this.wait(false);
-            }.bind(this);
 
-
-            if (this.relationshipPanels) {
-                this.loadRelationshipsLayout(function () {
-                    proceed();
-                });
-            } else {
-                proceed();
-            }
+            }.bind(this));
         },
 
         loadRelationshipsLayout: function (callback) {

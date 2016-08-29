@@ -138,7 +138,29 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 return item;
             }, this);
 
-            this.setupPanelViews();
+
+            this.wait(true);
+            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.mode), function (layoutData) {
+                if (layoutData) {
+                    this.filterPanels(layoutData);
+                }
+                this.setupPanelViews();
+                this.wait(false);
+            }.bind(this));
+        },
+
+        filterPanels: function (layoutData) {
+            layoutData = layoutData || {};
+
+            var newList = [];
+            this.panelList.forEach(function (item) {
+                if (item.name && (layoutData[item.name] || {}).disabled) {
+                    return;
+                }
+                newList.push(item);
+            }, this);
+
+            this.panelList = newList;
         },
 
         setupDefaultPanel: function () {

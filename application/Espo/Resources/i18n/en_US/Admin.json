@@ -62,7 +62,9 @@
         "detailSmall": "Detail (Small)",
         "filters": "Search Filters",
         "massUpdate": "Mass Update",
-        "relationships": "Relationships"
+        "relationships": "Relationship Panels",
+        "sidePanelsDetail": "Side Panels (Detail)",
+        "sidePanelsEdit": "Side Panels (Edit)"
     },
     "fieldTypes": {
         "address": "Address",
