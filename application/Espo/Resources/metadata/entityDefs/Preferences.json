@@ -115,7 +115,7 @@
         },
         "signature": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "views/fields/wysiwyg"
         },
         "defaultReminders": {
             "type": "jsonArray",
