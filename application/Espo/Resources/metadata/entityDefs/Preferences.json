@@ -146,6 +146,9 @@
         "isPortalUser": {
             "type": "bool",
             "notStorable": true
+        },
+        "doNotFillAssignedUserIfNotRequired": {
+            "type": "bool"
         }
     }
 }

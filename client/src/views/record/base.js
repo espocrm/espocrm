@@ -460,8 +460,17 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             if (!this.getUser().get('portalId')) {
                 if (this.model.hasField('assignedUser')) {
-                    defaultHash['assignedUserId'] = this.getUser().id;
-                    defaultHash['assignedUserName'] = this.getUser().get('name');
+                    var fillAssignedUser = true;
+                    if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
+                        fillAssignedUser = false;
+                        if (this.model.getFieldParam('assignedUser', 'required')) {
+                            fillAssignedUser = true;
+                        }
+                    }
+                    if (fillAssignedUser) {
+                        defaultHash['assignedUserId'] = this.getUser().id;
+                        defaultHash['assignedUserName'] = this.getUser().get('name');
+                    }
                 }
                 var defaultTeamId = this.getUser().get('defaultTeamId');
                 if (defaultTeamId) {

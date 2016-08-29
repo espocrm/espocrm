@@ -30,7 +30,8 @@
         "tabList": "Tab List",
         "emailReplyToAllByDefault": "Email Reply to All by Default",
         "dashboardLayout": "Dashboard Layout",
-        "emailReplyForceHtml": "Email Reply in HTML"
+        "emailReplyForceHtml": "Email Reply in HTML",
+        "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required"
     },
     "links": {
     },

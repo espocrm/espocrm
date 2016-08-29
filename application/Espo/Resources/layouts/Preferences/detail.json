@@ -48,7 +48,9 @@
                 {
                     "name": "emailReplyToAllByDefault"
                 },
-                false
+                {
+                    "name": "doNotFillAssignedUserIfNotRequired"
+                }
             ],
             [
                 {
