@@ -24,7 +24,8 @@
         "account": "Account (Primary)",
         "sendAccessInfo": "Send Email with Access Info to User",
         "portal": "Portal",
-        "gender": "Gender"
+        "gender": "Gender",
+        "position": "Position in Team"
     },
     "links": {
         "teams": "Teams",

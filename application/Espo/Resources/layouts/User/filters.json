@@ -5,6 +5,7 @@
     "title",
     "isAdmin",
     "isActive",
+    "position",
     "portals",
     "accounts",
     "contact"

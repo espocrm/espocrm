@@ -61,6 +61,41 @@
             "maxLength": 100,
             "trim": true
         },
+        "position": {
+            "type": "varchar",
+            "maxLength": 100,
+            "notStorable": true,
+            "where": {
+                "LIKE": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role LIKE {value}",
+                    "distinct": true
+                },
+                "=": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role = {value}",
+                    "distinct": true
+                },
+                "<>": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role <> {value}",
+                    "distinct": true
+                },
+                "IS NULL": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role IS NOT NULL",
+                    "distinct": true
+                }
+            },
+            "trim": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true
+        },
         "emailAddress": {
             "type": "email",
             "required": false
