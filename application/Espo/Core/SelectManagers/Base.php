@@ -919,7 +919,7 @@ class Base
                     $part[$item['field'] . '*'] = $item['value'] . '%';
                     break;
                 case 'endsWith':
-                    $part[$item['field'] . '*'] = $item['value'] . '%';
+                    $part[$item['field'] . '*'] = '%' . $item['value'];
                     break;
                 case 'contains':
                     $part[$item['field'] . '*'] = '%' . $item['value'] . '%';
