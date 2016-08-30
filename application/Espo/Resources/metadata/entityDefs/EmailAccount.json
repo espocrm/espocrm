@@ -83,7 +83,8 @@
             "type": "bool"
         },
         "smtpHost": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "smtpPort": {
             "type": "int",
@@ -101,7 +102,8 @@
         },
         "smtpUsername": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "smtpPassword": {
             "type": "password"

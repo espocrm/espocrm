@@ -57,10 +57,12 @@
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
-            "view": "views/preferences/fields/smtp-email-address"
+            "view": "views/preferences/fields/smtp-email-address",
+            "trim": true
         },
         "smtpServer": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "smtpPort": {
             "type": "int",
@@ -78,7 +80,8 @@
         },
         "smtpUsername": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "trim": true
         },
         "smtpPassword": {
             "type": "password"
