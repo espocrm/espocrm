@@ -640,8 +640,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this.initDependancy();
 
-            this.setupFieldLevelSecurity();
+            this.dynamicLogicDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.dynamicLogic') || {}, this.dynamicLogicDefs);
+            this.initDynamicLogic();
 
+            this.setupFieldLevelSecurity();
             this.build();
         },
 

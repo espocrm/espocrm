@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, ViewRecordHelper) {
+Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
 
     return Dep.extend({
 
@@ -39,6 +39,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
         isNew: false,
 
         dependencyDefs: {},
+
+        dynamicLogicDefs: {},
 
         fieldList: null,
 
@@ -261,10 +263,24 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             }
 
             this.initDependancy();
+            this.initDynamicLogic();
         },
 
         checkAttributeIsChanged: function (name) {
             return !_.isEqual(this.attributes[name], this.model.get(name));
+        },
+
+        initDynamicLogic: function () {
+            if (!Object.keys(this.dynamicLogicDefs || {}).length) return;
+
+            this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
+
+            this.listenTo(this.model, 'change', this.processDynamicLogic, this);
+            this.processDynamicLogic();
+        },
+
+        processDynamicLogic: function () {
+            this.dynamicLogic.process();
         },
 
         applyDependancy: function () {

@@ -8,22 +8,19 @@
       "list": "crm:views/task/list",
       "detail": "crm:views/task/detail"
    },
-   "formDependency": {
-      "status": {
-         "map": {
-            "Completed": [
-               {
-                  "action": "show",
-                  "fields": ["dateCompleted"]
-               }
-            ]
-         },
-         "default": [
-            {
-               "action": "hide",
-               "fields": ["dateCompleted"]
+   "dynamicLogic": {
+      "fields": {
+         "dateCompleted": {
+            "visible": {
+               "conditionGroup": [
+                  {
+                     "attribute": "status",
+                     "type": "equals",
+                     "value": "Completed"
+                  }
+               ]
             }
-         ]
+         }
       }
    },
    "filterList": [
