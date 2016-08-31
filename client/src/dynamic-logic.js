@@ -131,14 +131,48 @@ Espo.define('dynamic-logic', [], function () {
                 return this.checkConditionGroup(defs.value, type);
             }
 
+            var attribute = defs.attribute;
+            var value = defs.value;
+
+            if (!attribute) return;
+
+            var setValue = this.recordView.model.get(attribute);
+
             if (type === 'equals') {
-                var attribute = defs.attribute;
-                var value = defs.value;
-                if (!attribute) return;
                 if (!value) return;
-                if (this.recordView.model.get(attribute) === value) {
-                    return true;
+                return setValue === value;
+            } else if (type === 'notEquals') {
+                if (!value) return;
+                return setValue !== value;
+            } else if (type === 'isEmpty') {
+                return setValue === null || (setValue === '');
+            } else if (type === 'isNotEmpty') {
+                return setValue !== null && (setValue !== '');
+            } else if (type === 'greaterThan') {
+                return setValue > value;
+            } else if (type === 'lessThan') {
+                return setValue < value;
+            } else if (type === 'greaterThanOrEquals') {
+                return setValue >= value;
+            } else if (type === 'lessThanOrEquals') {
+                return setValue <= value;
+            } else if (type === 'in') {
+                return ~value.indexOf(setValue);
+            } else if (type === 'notIn') {
+                return !~value.indexOf(setValue);
+            } else if (type === 'isToday') {
+                var dateTime = this.recordView.getDateTime();
+                if (setValue) {
+                    if (setValue.length > 10) {
+                        return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
+                    } else {
+                        return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
+                    }
                 }
+            } else if (type === 'isFuture') {
+
+            } else if (type === 'isPast') {
+
             }
             return false;
         },
