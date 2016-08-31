@@ -61,15 +61,12 @@ class Htmlizer
         return $this->acl;
     }
 
-    protected function formatNumber($value)
-    {
-        return $this->number->format($value);
-    }
-
     protected function format($value)
     {
-        if (is_float($value) || is_int($value)) {
-            $value = $this->formatNumber($value);
+        if (is_float($value)) {
+            $value = $this->number->format($value, 2);
+        } else if (is_int($value)) {
+            $value = $this->number->format($value);
         } else if (is_string($value)) {
             $value = nl2br($value);
         }
