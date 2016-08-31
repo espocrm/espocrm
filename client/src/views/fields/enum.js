@@ -104,9 +104,47 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
                 }.bind(this));
             }
+
+            if (this.options.customOptionList) {
+                this.setOptionList(this.options.customOptionList);
+            }
         },
 
         setupOptions: function () {
+        },
+
+        setOptionList: function (optionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options;
+            }
+            this.params.options = Espo.Utils.clone(optionList);
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                    if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
+                        this.trigger('change');
+                    }
+                } else {
+                    this.once('after:render', function () {
+                        if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
+                            this.trigger('change');
+                        }
+                    }, this);
+                }
+            }
+        },
+
+        resetOptionList: function () {
+            if (this.originalOptionList) {
+                this.params.options = Espo.Utils.clone(this.originalOptionList);
+            }
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }
         },
 
         afterRender: function () {

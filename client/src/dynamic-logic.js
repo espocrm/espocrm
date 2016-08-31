@@ -34,6 +34,9 @@ Espo.define('dynamic-logic', [], function () {
 
         this.fieldTypeList = ['visible', 'hidden', 'required', 'notRequired', 'readOnly', 'notReadOnly'];
         this.panelTypeList = ['visible', 'hidden'];
+
+        this.optionsDirtyMap = {};
+        this.originalOptions = {};
     }
 
     _.extend(DynamicLogic.prototype, {
@@ -54,7 +57,6 @@ Espo.define('dynamic-logic', [], function () {
                     }
                     this[methodName](field);
                 }, this);
-
             }, this);
 
             var panels = this.defs.panels || {};
@@ -72,7 +74,23 @@ Espo.define('dynamic-logic', [], function () {
                     }
                     this[methodName](panel);
                 }, this);
+            }, this);
 
+            var options = this.defs.options || {};
+            Object.keys(options).forEach(function (field) {
+                var itemList = options[field] || [];
+                var isMet = false;
+                for (var i in itemList) {
+                    var item = itemList[i];
+                    if (this.checkConditionGroup(item.conditionGroup)) {
+                        this.setOptionList(field, item.optionList || []);
+                        isMet = true;
+                        break;
+                    }
+                }
+                if (!isMet) {
+                    this.resetOptionList(field);
+                }
             }, this);
         },
 
@@ -92,7 +110,7 @@ Espo.define('dynamic-logic', [], function () {
                 }
             } else if (type === 'or') {
                 for (var i in list) {
-                    if (!this.checkCondition(list[i])) {
+                    if (this.checkCondition(list[i])) {
                         result = true;
                         break;
                     }
@@ -123,6 +141,14 @@ Espo.define('dynamic-logic', [], function () {
                 }
             }
             return false;
+        },
+
+        setOptionList: function (field, optionList) {
+            this.recordView.setFieldOptionList(field, optionList);
+        },
+
+        resetOptionList: function (field) {
+            this.recordView.resetFieldOptionList(field);
         },
 
         makeFieldVisibleTrue: function (field) {

@@ -39,6 +39,8 @@ Espo.define('view-record-helper', [], function () {
 
         this.hiddenFields = {};
         this.hiddenPanels = {};
+
+        this.fieldOptionListMap = {};
     };
 
     _.extend(ViewRecordHelper.prototype, {
@@ -105,6 +107,22 @@ Espo.define('view-record-helper', [], function () {
                 return this.defaultPanelStates[name];
             }
             return null;
+        },
+
+        setFieldOptionList: function (field, list) {
+            this.fieldOptionListMap[field] = list;
+        },
+
+        clearFieldOptionList: function (field) {
+            delete this.fieldOptionListMap[field];
+        },
+
+        getFieldOptionList: function (field) {
+            return this.fieldOptionListMap[field] || null;
+        },
+
+        hasFieldOptionList: function (field) {
+            return (field in this.fieldOptionListMap);
         }
 
     });

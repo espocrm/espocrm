@@ -172,6 +172,28 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
         },
 
+        setFieldOptionList: function (name, list) {
+            this.recordHelper.setFieldOptionList(name, list);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if ('setOptionList' in view) {
+                    view.setOptionList(list);
+                }
+            }
+        },
+
+        resetFieldOptionList: function (name) {
+            this.recordHelper.clearFieldOptionList(name);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if ('resetOptionList' in view) {
+                    view.resetOptionList();
+                }
+            }
+        },
+
         showPanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
             if (this.isRendered()) {

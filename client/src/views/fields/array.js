@@ -128,10 +128,44 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     this.translatedOptions = translatedOptions;
                 }
             }
+
+            if (this.options.customOptionList) {
+                this.setOptionList(this.options.customOptionList);
+            }
         },
 
         setupOptions: function () {
 
+        },
+
+        setOptionList: function (optionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options;
+            }
+            this.params.options = Espo.Utils.clone(optionList);
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                    this.trigger('change');
+                } else {
+                    this.once('after:render', function () {
+                        this.trigger('change');
+                    }, this);
+                }
+            }
+        },
+
+        resetOptionList: function () {
+            if (this.originalOptionList) {
+                this.params.options = Espo.Utils.clone(this.originalOptionList);
+            }
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                }
+            }
         },
 
         afterRender: function () {

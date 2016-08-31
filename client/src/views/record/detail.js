@@ -966,6 +966,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             o.defs.params = o.defs.params || {};
                             o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
                         }
+                        if (this.recordHelper.hasFieldOptionList(name)) {
+                            o.customOptionList = this.recordHelper.getFieldOptionList(name);
+                        }
 
                         var cell = {
                             name: name,

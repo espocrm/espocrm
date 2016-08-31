@@ -170,6 +170,10 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 o.readOnlyLocked = readOnlyLocked;
             }
 
+            if (this.recordHelper.hasFieldOptionList(field)) {
+                o.customOptionList = this.recordHelper.getFieldOptionList(field);
+            }
+
             this.createView(field, viewName, o);
         },
 
