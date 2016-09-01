@@ -14,8 +14,8 @@
             "visible": {
                "conditionGroup": [
                   {
-                     "attribute": "status",
                      "type": "equals",
+                     "attribute": "status",
                      "value": "Completed"
                   }
                ]
