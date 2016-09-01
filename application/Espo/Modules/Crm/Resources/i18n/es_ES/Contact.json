@@ -19,13 +19,13 @@
   },
   "links": {
     "opportunities": "Oportunidades",
-    "cases": "Casos",
+    "cases": "Tickets",
     "targetLists": "Lista de Objetivos",
     "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
     "account": "Cuentas (Primaria)",
     "accounts": "Cuentas",
-    "casesPrimary": "Casos (Primaria)",
+    "casesPrimary": "Tickets (Primaria)",
     "portalUser": "Usuarios de portal"
   },
   "labels": {
