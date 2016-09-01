@@ -3,13 +3,13 @@
     "name": "Nombre",
     "status": "Estado",
     "job": "Trabajo",
-    "scheduling": "Programación (crontab anotación)"
+    "scheduling": "Programación\n(notación CRONTab)"
   },
   "links": {
     "log": "Registro de Log"
   },
   "labels": {
-    "Create ScheduledJob": "Crear Tarea programado"
+    "Create ScheduledJob": "Crear Tarea Programada"
   },
   "options": {
     "job": {

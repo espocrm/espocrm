@@ -19,7 +19,7 @@
     }
   },
   "tooltips": {
-    "name": "Sólo un nombre del filtro",
+    "name": "Solo un nombre del filtro",
     "subject": "El uso de comodines *:\n\ntext* - comienza con el texto,\n*text* - contiene el texto,\n*text - termina con el texto.",
     "bodyContains": "El cuerpo del mensaje contiene cualquiera de las palabras o frases especificadas",
     "from": "Los correos enviados desde la dirección especificada. Dejar en blanco si no es necesario.",

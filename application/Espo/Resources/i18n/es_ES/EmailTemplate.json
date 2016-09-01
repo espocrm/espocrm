@@ -17,7 +17,7 @@
     "infoText": "Variables disponibles:\n\n{optOutUrl} &#8211; URL del enlace de baja.\n\n{optOutLink} &#8211;  Enlace de baja."
   },
   "tooltips": {
-    "oneOff": "Marque la casilla si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
+    "oneOff": "Marque la casilla si usted va a utilizar esta plantilla solo una vez. Por ejemplo: para Correo Masivo."
   },
   "presetFilters": {
     "actual": "Actuales"

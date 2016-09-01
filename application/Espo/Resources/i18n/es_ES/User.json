@@ -58,7 +58,7 @@
     "isAdmin": "El usuario administrador puede tener acceso a todo.",
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
-    "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso sólo para este usuario.",
+    "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
     "portalRoles": "Los roles del portal se utilizan para extender el nivel de control de acceso exclusivo para este usuario.",
     "portals": "El usuario tiene accesos a los siguientes portales."
   },
@@ -87,7 +87,7 @@
     }
   },
   "boolFilters": {
-    "onlyMyTeam": "Sólo mi equipo"
+    "onlyMyTeam": "Solo mi equipo"
   },
   "presetFilters": {
     "active": "Activo",

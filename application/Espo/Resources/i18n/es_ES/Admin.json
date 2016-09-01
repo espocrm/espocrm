@@ -150,10 +150,10 @@
     "thousandSeparatorEqualsDecimalMark": "El separador de miles no puede ser el mismo que la marca decimal",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
-    "selectUpgradePackage": "Seleccione Actualizar Paquete",
-    "downloadUpgradePackage": "La descarga necesita paquete(s) actualizados de <a href=\"{url}\">acá</a>.",
+    "selectUpgradePackage": "Seleccione el paquete para actualizar",
+    "downloadUpgradePackage": "Si necesita paquetes de actualización puede descargarlos desde <a href=\"{url}\">acá</a>.",
     "selectLayout": "Seleccione el diseño necesario en el menú de la izquierda y editelo.",
-    "selectExtensionPackage": "Seleccionar extensión del paquete",
+    "selectExtensionPackage": "Seleccionar el paquete de la extensión",
     "extensionInstalled": "La Extensión {name} {version} ha sido instalada",
     "installExtension": "La Extensión {name} {version} está lista para ser instalada.",
     "uninstallConfirmation": "¿Realmente desea desinstalar la extensión?"

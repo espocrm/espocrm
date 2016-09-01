@@ -37,7 +37,7 @@
     }
   },
   "tooltips": {
-    "portals": "Si no está vacía, entonces este artículo estará disponible sólo en portales específicos. Si está vacío, entonces estará disponible en todos los portales."
+    "portals": "Si no está vacía, entonces este artículo estará disponible solo en portales específicos. Si está vacío, entonces estará disponible en todos los portales.\t"
   },
   "presetFilters": {
     "published": "Publicado"
