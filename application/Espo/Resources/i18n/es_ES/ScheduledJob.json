@@ -14,7 +14,7 @@
   "options": {
     "job": {
       "Cleanup": "Limpiar",
-      "CheckInboundEmails": "Comprobar Correos Entrantes",
+      "CheckInboundEmails": "Comprobar Correos de Correo Grupales",
       "CheckEmailAccounts": "Compruebe cuentas de correo personales",
       "SendEmailReminders": "Enviar Recordatorios por Email",
       "AuthTokenControl": "Control del Token de Autenticación",

@@ -23,10 +23,10 @@
     "Portals": "Portales",
     "Portal Roles": "Roles del Portal",
     "Outbound Emails": "Correo Saliente",
-    "Group Email Accounts": "Grupo de Cuentas de Correo",
-    "Personal Email Accounts": "Cuentas de correo electrónico personales",
+    "Group Email Accounts": "Cuentas Grupales",
+    "Personal Email Accounts": "Cuentas Personales",
     "Inbound Emails": "Correo Entrante",
-    "Email Templates": "Plantillas de Correo",
+    "Email Templates": "Plantillas",
     "Import": "Importar",
     "Layout Manager": "Administrador de Diseño",
     "User Interface": "Interfaz de Usuario",
@@ -53,7 +53,7 @@
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
     "Reset to Default": "Aplicar a valores por defecto",
-    "Email Filters": "Filtros de Correo"
+    "Email Filters": "Filtros"
   },
   "layouts": {
     "list": "Lista",
