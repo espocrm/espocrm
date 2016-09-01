@@ -32,8 +32,8 @@ Espo.define('dynamic-logic', [], function () {
         this.defs = defs || {};
         this.recordView = recordView;
 
-        this.fieldTypeList = ['visible', 'hidden', 'required', 'notRequired', 'readOnly', 'notReadOnly'];
-        this.panelTypeList = ['visible', 'hidden'];
+        this.fieldTypeList = ['visible', 'required', 'readOnly'];
+        this.panelTypeList = ['visible'];
 
         this.optionsDirtyMap = {};
         this.originalOptions = {};
@@ -47,10 +47,13 @@ Espo.define('dynamic-logic', [], function () {
                 var item = (fields[field] || {});
                 this.fieldTypeList.forEach(function (type) {
                     if (!(type in item)) return;
+                    var typeItem = (item[type] || {});
+                    var conditionGroup = typeItem.conditionGroup;
                     var conditionGroup = (item[type] || {}).conditionGroup;
-                    if (!conditionGroup) return;
+                    if (!typeItem.conditionGroup) return;
+                    var result = this.checkConditionGroup(typeItem.conditionGroup);
                     var methodName;
-                    if (this.checkConditionGroup(conditionGroup)) {
+                    if (result) {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
                     } else {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
@@ -64,10 +67,13 @@ Espo.define('dynamic-logic', [], function () {
                 var item = (panels[panel] || {});
                 this.panelTypeList.forEach(function (type) {
                     if (!(type in item)) return;
+                    var typeItem = (item[type] || {});
+                    var conditionGroup = typeItem.conditionGroup;
                     var conditionGroup = (item[type] || {}).conditionGroup;
-                    if (!conditionGroup) return;
+                    if (!typeItem.conditionGroup) return;
+                    var result = this.checkConditionGroup(typeItem.conditionGroup);
                     var methodName;
-                    if (this.checkConditionGroup(conditionGroup)) {
+                    if (result) {
                         methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
                     } else {
                         methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
@@ -94,13 +100,14 @@ Espo.define('dynamic-logic', [], function () {
             }, this);
         },
 
-        checkConditionGroup: function (list, type) {
+        checkConditionGroup: function (data, type) {
             type = type || 'and';
 
-            list = list || [];
+            var list;
 
             var result = false;
             if (type === 'and') {
+                list =  data || [];
                 result = true;
                 for (var i in list) {
                     if (!this.checkCondition(list[i])) {
@@ -109,6 +116,7 @@ Espo.define('dynamic-logic', [], function () {
                     }
                 }
             } else if (type === 'or') {
+                list =  data || [];
                 for (var i in list) {
                     if (this.checkCondition(list[i])) {
                         result = true;
@@ -116,8 +124,8 @@ Espo.define('dynamic-logic', [], function () {
                     }
                 }
             } else if (type === 'not') {
-                if (list.length) {
-                    result = !this.checkCondition(list[0]);
+                if (data) {
+                    result = !this.checkCondition(data);
                 }
             }
             return result;
@@ -127,18 +135,52 @@ Espo.define('dynamic-logic', [], function () {
             defs = defs || {};
             var type = defs.type || 'equals';
 
-            if (~['or', 'and', 'or'].indexOf(type)) {
+            if (~['or', 'and', 'not'].indexOf(type)) {
                 return this.checkConditionGroup(defs.value, type);
             }
 
+            var attribute = defs.attribute;
+            var value = defs.value;
+
+            if (!attribute) return;
+
+            var setValue = this.recordView.model.get(attribute);
+
             if (type === 'equals') {
-                var attribute = defs.attribute;
-                var value = defs.value;
-                if (!attribute) return;
                 if (!value) return;
-                if (this.recordView.model.get(attribute) === value) {
-                    return true;
+                return setValue === value;
+            } else if (type === 'notEquals') {
+                if (!value) return;
+                return setValue !== value;
+            } else if (type === 'isEmpty') {
+                return setValue === null || (setValue === '');
+            } else if (type === 'isNotEmpty') {
+                return setValue !== null && (setValue !== '');
+            } else if (type === 'greaterThan') {
+                return setValue > value;
+            } else if (type === 'lessThan') {
+                return setValue < value;
+            } else if (type === 'greaterThanOrEquals') {
+                return setValue >= value;
+            } else if (type === 'lessThanOrEquals') {
+                return setValue <= value;
+            } else if (type === 'in') {
+                return ~value.indexOf(setValue);
+            } else if (type === 'notIn') {
+                return !~value.indexOf(setValue);
+            } else if (type === 'isToday') {
+                var dateTime = this.recordView.getDateTime();
+                if (setValue) {
+                    if (setValue.length > 10) {
+                        return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
+                    } else {
+                        return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
+                    }
                 }
+            } else if (type === 'isFuture') {
+
+            } else if (type === 'isPast') {
+
             }
             return false;
         },
@@ -159,28 +201,12 @@ Espo.define('dynamic-logic', [], function () {
             this.recordView.hideField(field);
         },
 
-        makeFieldHiddenTrue: function (field) {
-            this.recordView.hideField(field);
-        },
-
-        makeFieldHiddenFalse: function (field) {
-            this.recordView.showField(field);
-        },
-
         makeFieldRequiredTrue: function (field) {
             this.recordView.setFieldRequired(field);
         },
 
         makeFieldRequiredFalse: function (field) {
             this.recordView.setFieldNotRequired(field);
-        },
-
-        makeFieldNotRequiredTrue: function (field) {
-            this.recordView.setFieldNotRequired(field);
-        },
-
-        makeFieldNotRequiredFalse: function (field) {
-            this.recordView.setFieldRequired(field);
         },
 
         makeFieldReadOnlyTrue: function (field) {
@@ -191,28 +217,12 @@ Espo.define('dynamic-logic', [], function () {
             this.recordView.setFieldNotReadOnly(field);
         },
 
-        makeFieldNotReadOnlyTrue: function (field) {
-            this.recordView.setFieldNotReadOnly(field);
-        },
-
-        makeFieldNotReadOnlyFalse: function (field) {
-            this.recordView.setFieldReadOnly(field);
-        },
-
         makePanelVisibleTrue: function (field) {
             this.recordView.showPanel(field);
         },
 
         makePanelVisibleFalse: function (field) {
             this.recordView.hidePanel(field);
-        },
-
-        makePanelHiddenTrue: function (field) {
-            this.recordView.hidePanel(field);
-        },
-
-        makePanelHiddenFalse: function (field) {
-            this.recordView.showPanel(field);
         }
 
     });

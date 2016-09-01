@@ -1,0 +1,1 @@
+{{translate field category='fields' scope=scope}} {{{operatorString}}} <span data-name="{{valueViewKey}}">{{{value}}}</span>

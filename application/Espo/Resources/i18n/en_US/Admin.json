@@ -138,7 +138,10 @@
         "prefix": "Prefix",
         "nextNumber": "Next Number",
         "padLength": "Pad Length",
-        "disableFormatting": "Disable Formatting"
+        "disableFormatting": "Disable Formatting",
+        "dynamicLogicVisible": "Conditions making field visible",
+        "dynamicLogicReadOnly": "Conditions making field read-only",
+        "dynamicLogicRequired": "Conditions making field required"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
@@ -190,5 +193,10 @@
             "medium": "Medium",
             "large": "Large"
         }
+    },
+    "logicalOperators": {
+        "and": "AND",
+        "or": "OR",
+        "not": "NOT"
     }
 }

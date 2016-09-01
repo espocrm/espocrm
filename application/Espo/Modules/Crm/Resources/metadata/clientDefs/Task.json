@@ -14,9 +14,24 @@
             "visible": {
                "conditionGroup": [
                   {
-                     "attribute": "status",
                      "type": "equals",
+                     "attribute": "status",
                      "value": "Completed"
+                  },
+                  {
+                     "type": "or",
+                     "value": [
+                        {
+                           "type": "notEquals",
+                           "attribute": "status",
+                           "value": "Not Started"
+                        },
+                        {
+                           "type": "notEquals",
+                           "attribute": "status",
+                           "value": "Canceled"
+                        }
+                     ]
                   }
                ]
             }
