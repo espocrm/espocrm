@@ -138,7 +138,10 @@
     "prefix": "Prefijo",
     "nextNumber": "Siguiente Número",
     "padLength": "Longitud del Relleno",
-    "disableFormatting": "Desactivar Formateo"
+    "disableFormatting": "Desactivar Formateo",
+    "dynamicLogicVisible": "Condiciones que hacen el campo visible",
+    "dynamicLogicReadOnly": "Condiciones que hacen el campo de solo lectura",
+    "dynamicLogicRequired": "Condiciones que hacen el campo requerido"
   },
   "messages": {
     "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Esto Tomará algún tiempo.",
@@ -190,5 +193,10 @@
       "medium": "Mediano",
       "large": "Grande"
     }
+  },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
   }
 }
