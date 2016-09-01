@@ -63,8 +63,8 @@
     "filters": "Filtros de Búsqueda",
     "massUpdate": "Actualización Masiva",
     "relationships": "Relaciones",
-    "sidePanelsDetail": "Side Panels (Detail)",
-    "sidePanelsEdit": "Side Panels (Edit)"
+    "sidePanelsDetail": "Paneles laterales (Detalles)",
+    "sidePanelsEdit": "Paneles laterales (Editar)"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -108,7 +108,7 @@
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
-    "tooltipText": "Tooltip Text",
+    "tooltipText": "Texto del Tooltip",
     "required": "Requerido",
     "default": "Por Defecto",
     "maxLength": "Longitud máxima",
