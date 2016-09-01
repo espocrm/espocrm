@@ -147,6 +147,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         this.createFieldView(o.type, o.name, null, o);
                     }, this);
 
+                    if (!this.getMetadata().get(['entityDefs', this.scope, this.field, 'layoutDetailDisabled'])) {
+                        this.model.set('dynamicLogicVisible', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']));
+                        this.createFieldView(null, 'dynamicLogicVisible', null, {
+                            view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                            scope: this.scope
+                        });
+                    }
+
                     callback();
 
                 }.bind(this));

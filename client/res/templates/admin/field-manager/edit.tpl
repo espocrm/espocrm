@@ -32,5 +32,16 @@
         </div>
     </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class="panel-title">{{translate 'Dynamic Logic' scope='FieldManager'}}</h4></div>
+        <div class="panel-body">
+            {{#if dynamicLogicVisible}}
+            <div class="cell form-group" data-name="dynamicLogicVisible">
+                <label class="control-label" data-name="dynamicLogicVisible">{{translate 'dynamicLogicVisible' scope='Admin' category='fields'}}</label>
+                <div class="field" data-name="dynamicLogicVisible">{{{dynamicLogicVisible}}}</div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
     </div>
 </div>
