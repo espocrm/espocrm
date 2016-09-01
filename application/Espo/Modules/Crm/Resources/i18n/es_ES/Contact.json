@@ -5,7 +5,7 @@
     "title": "Título",
     "accountRole": "Título",
     "account": "Cuenta",
-    "accounts": "Empresas",
+    "accounts": "Cuentas",
     "phoneNumber": "Teléfono",
     "accountType": "Tipo de Cuenta",
     "doNotCall": "No Llamar",
@@ -24,7 +24,7 @@
     "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
     "account": "Cuentas (Primaria)",
-    "accounts": "Empresas",
+    "accounts": "Cuentas",
     "casesPrimary": "Casos (Primaria)",
     "portalUser": "Usuarios de portal"
   },

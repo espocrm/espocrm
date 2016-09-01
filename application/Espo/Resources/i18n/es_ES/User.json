@@ -20,11 +20,12 @@
     "isActive": "Está Activo",
     "isPortalUser": "Es un usuario del portal",
     "contact": "Contacto",
-    "accounts": "Empresas",
+    "accounts": "Cuentas",
     "account": "Cuenta (Primaria)",
     "sendAccessInfo": "Enviar correo electrónico con los accesos a la información del usuario",
     "portal": "Portal",
-    "gender": "Género"
+    "gender": "Género",
+    "position": "Position in Team"
   },
   "links": {
     "teams": "Equipos",
@@ -33,7 +34,7 @@
     "portals": "Portales",
     "portalRoles": "Roles del portal",
     "contact": "Contacto",
-    "accounts": "Empresas",
+    "accounts": "Cuentas",
     "account": "Cuenta (Primaria)"
   },
   "labels": {

@@ -30,7 +30,8 @@
     "useCustomTabList": "Lista de Pestañas Personalizadas",
     "emailReplyToAllByDefault": "Correo electrónico responder a todos por defecto",
     "dashboardLayout": "Distribución del Panel de control",
-    "emailReplyForceHtml": "Responder correo electrónico en formato HTML"
+    "emailReplyForceHtml": "Responder correo electrónico en formato HTML",
+    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required"
   },
   "options": {
     "weekStart": {
