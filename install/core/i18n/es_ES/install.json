@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "Bienvenido a EspoCRM (Español)",
+    "Main page title": "Bienvenido a EspoCRM en Español",
     "Start page title": "Contrato de licencia",
     "Step1 page title": "Contrato de licencia",
     "License Agreement": "Contrato de licencia",
@@ -27,7 +27,7 @@
     "Start": "Comenzar",
     "Back": "Anterior",
     "Next": "Siguiente",
-    "Go to EspoCRM": "Ir a EspoCRM(Español)",
+    "Go to EspoCRM": "Ir a EspoCRM en Español",
     "Re-check": "Revisar otra vez",
     "Version": "Version",
     "Test settings": "Probar conexión",
