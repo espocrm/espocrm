@@ -2,12 +2,12 @@
   "fields": {
     "name": "Nombre",
     "account": "Cuenta",
-    "stage": "Etapa",
-    "amount": "Cantidad",
-    "probability": "Probabilidad, %",
-    "leadSource": "Fuente Principal",
+    "stage": "Etapa de Ventas",
+    "amount": "Ingresos esperados",
+    "probability": "Probabilidad de ganar (%)",
+    "leadSource": "Origen del cliente potencial",
     "doNotCall": "No Llamar",
-    "closeDate": "Fecha de cierre",
+    "closeDate": "Fecha esperada de cierre",
     "contacts": "Contactos",
     "description": "Descripción",
     "amountConverted": "Cantidad (convertido)",
@@ -27,7 +27,7 @@
       "Value Proposition": "Valor de la Propuesta",
       "Id. Decision Makers": "Id. Tomadores de Decisiones",
       "Perception Analysis": "Análisis de la Percepción",
-      "Proposal/Price Quote": "Propuesta/precio Presupuesto",
+      "Proposal/Price Quote": "Propuesta/Presupuesto",
       "Negotiation/Review": "Negociación/Revisión",
       "Closed Won": "Cerrado Ganado",
       "Closed Lost": "Cerrado Perdido"
@@ -39,6 +39,6 @@
   "presetFilters": {
     "open": "Abiertos",
     "won": "Ganados",
-    "lost": "Perdido"
+    "lost": "Perdidos"
   }
 }
