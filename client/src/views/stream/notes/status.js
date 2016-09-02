@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.Status', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/status', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.status',
+        template: 'stream/notes/status',
 
         messageName: 'status',
 
@@ -58,7 +58,7 @@ Espo.define('Views.Stream.Notes.Status', 'Views.Stream.Note', function (Dep) {
 
             this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
 
-            this.messageData['field'] = this.translate(field, 'fields', this.model.name).toLowerCase();
+            this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
 
             this.createMessage();
         },
