@@ -145,7 +145,7 @@
                     return this.defs[fieldType].view;
                 }
             }
-            return 'Fields.' + Espo.Utils.upperCaseFirst(fieldType);
+            return 'views/fields/' + Espo.Utils.camelCaseToHyphen(fieldType);
         },
 
         getParams: function (fieldType) {
