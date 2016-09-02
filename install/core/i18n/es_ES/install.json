@@ -45,7 +45,7 @@
     "OK": "OK"
   },
   "fields": {
-    "Choose your language": "Seleccione un lenguaje",
+    "Choose your language": "Seleccione un idioma",
     "Database Name": "Nombre de la Base de Datos",
     "Host Name": "Servidor de la Base de Datos (usualmente localhost)",
     "Port": "Puerto",
