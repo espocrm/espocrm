@@ -15,8 +15,8 @@
     "subject": "Asunto",
     "attachments": "Adjuntos",
     "selectTemplate": "Seleccione una Plantilla",
-    "fromEmailAddress": "De la dirección",
-    "toEmailAddresses": "a la Dirección",
+    "fromEmailAddress": "De (email):",
+    "toEmailAddresses": "A (email)",
     "emailAddress": "Correo Electrónico",
     "deliveryDate": "Fecha Entrega",
     "account": "Cuenta",
@@ -24,16 +24,16 @@
     "replied": "Respondió",
     "replies": "Respuestas",
     "isRead": "Es leído",
-    "isNotRead": "No se lee",
+    "isNotRead": "No leído",
     "isImportant": "Es Importante",
     "isReplied": "Se contesta",
-    "isNotReplied": "No se responde",
+    "isNotReplied": "No Respondido",
     "isUsers": "Es del Usuario",
     "inTrash": "En Papelera",
     "sentBy": "Enviado por (Usuario)",
     "folder": "Carpeta",
-    "inboundEmails": "Cuentas de grupo",
-    "emailAccounts": "Las cuentas personales"
+    "inboundEmails": "Cuentas Grupales",
+    "emailAccounts": "Cuentas Personales"
   },
   "links": {
     "replied": "Respondió",
@@ -52,16 +52,16 @@
     }
   },
   "labels": {
-    "Create Email": "Archivar Correo",
-    "Archive Email": "Archivar Correo",
+    "Create Email": "Correo Archivado",
+    "Archive Email": "Correo Archivado",
     "Compose": "Nuevo",
     "Reply": "Responder",
     "Reply to All": "Responder a Todos",
     "Forward": "Reenviar",
     "Original message": "Mensaje Original",
     "Forwarded message": "Mensaje reenviado",
-    "Email Accounts": "Cuentas de Correo Electrónico",
-    "Inbound Emails": "Grupo de Cuentas de Correo",
+    "Email Accounts": "Cuentas de Correo Personal",
+    "Inbound Emails": "Cuentas de Correo Grupales",
     "Email Templates": "Plantillas de Correo",
     "Send Test Email": "Enviar correo electrónico de prueba",
     "Send": "Enviar",
@@ -76,7 +76,7 @@
     "Move to Trash": "Mover a la papelera",
     "Retrieve from Trash": "Recuperar de la Papelera",
     "Move to Folder": "Mover a la carpeta",
-    "Filters": "filtros",
+    "Filters": "Filtros",
     "Folders": "Carpetas"
   },
   "messages": {
@@ -86,7 +86,7 @@
     "savedAsDraft": "Guardado como borrador"
   },
   "presetFilters": {
-    "sent": "Enviado",
+    "sent": "Enviado en (Fecha/Tiempo)",
     "archived": "Archivado",
     "inbox": "Bandeja de Entrada",
     "drafts": "Borradores",
@@ -94,7 +94,7 @@
     "important": "Importante"
   },
   "massActions": {
-    "markAsRead": "Marcar como leído",
+    "markAsRead": "Marcar como Leído",
     "markAsNotRead": "Marcar como No Leído",
     "markAsImportant": "Marcar como Importante",
     "markAsNotImportant": "Marcar como No Importante",

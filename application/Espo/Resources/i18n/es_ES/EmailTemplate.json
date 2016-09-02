@@ -14,10 +14,10 @@
     "Info": "Información"
   },
   "messages": {
-    "infoText": "Las variables disponibles:\n\n{optOutUrl} &#8211; URL de un enlace de baja};\n\n{optOutLink} &#8211; un enlace para anular."
+    "infoText": "Variables disponibles:\n\n{optOutUrl} &#8211; URL del enlace de baja.\n\n{optOutLink} &#8211;  Enlace de baja."
   },
   "tooltips": {
-    "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
+    "oneOff": "Marque la casilla si usted va a utilizar esta plantilla solo una vez. Por ejemplo: para Correo Masivo."
   },
   "presetFilters": {
     "actual": "Actuales"

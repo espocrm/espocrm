@@ -56,13 +56,16 @@
     "soft": "suave",
     "Unsubscribe": "Desuscribirse",
     "Mass Emails": "Correos electrónicos masivos",
-    "Email Templates": "Plantillas de correos"
+    "Email Templates": "Plantillas de correos",
+    "Unsubscribe again": "Desuscribirse nuevamente",
+    "Subscribe again": "Suscribirse nuevamente"
   },
   "presetFilters": {
     "active": "Activo"
   },
   "messages": {
-    "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo."
+    "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo.",
+    "subscribedAgain": "Te has suscripto nuevamente."
   },
   "tooltips": {
     "targetLists": "Los objetivos que deben recibir los mensajes.",

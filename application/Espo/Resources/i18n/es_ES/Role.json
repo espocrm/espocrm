@@ -11,8 +11,8 @@
     "teams": "Equipos"
   },
   "tooltips": {
-    "assignmentPermission": "Permite restringir la capacidad de los usuarios para asignar registros a otros usuarios.\n\nall - Sin restricción\n\nteam - puede asignar a los usuarios de equipos propios\n\nno - puede asignar sólo a la libre",
-    "userPermission": "Permite restringir la capacidad de los usuarios para ver las actividades, calendario y secuencia de otros usuarios.\n\nall - puede ver todo\n\nequipo - pueden ver las actividades de los compañeros de equipo sólo se\n\nno - no puede ver",
+    "assignmentPermission": "Permite restringir la capacidad de los usuarios para asignar registros a otros usuarios.\n\nall - Sin restricción\n\nteam - puede asignar a los usuarios de equipos propios\n\nno - puede asignar solo a la libre",
+    "userPermission": "Permite restringir la capacidad de los usuarios para ver las actividades, calendario y secuencia de otros usuarios.\n\nall - puede ver todo\n\nequipo - pueden ver las actividades de los compañeros de equipo solo se\n\nno - no puede ver",
     "portalPermission": "Define un portal de acceso a la información, la capacidad de convertir los contactos a los usuarios del portal y enviar mensajes a los usuarios del portal."
   },
   "labels": {
