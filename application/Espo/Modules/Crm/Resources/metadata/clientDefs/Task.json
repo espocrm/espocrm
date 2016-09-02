@@ -30,6 +30,10 @@
                            "type": "notEquals",
                            "attribute": "status",
                            "value": "Canceled"
+                        },
+                        {
+                           "type": "isNotEmpty",
+                           "attribute": "status"
                         }
                      ]
                   }

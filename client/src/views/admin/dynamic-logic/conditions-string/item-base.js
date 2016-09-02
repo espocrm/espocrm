@@ -49,6 +49,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             this.number = this.options.number || 0;
             this.scope = this.options.scope;
 
+            this.operator = this.options.operator || this.operator;
+            this.operatorString = this.options.operatorString || this.operatorString;
+
             this.field = (this.itemData.data || {}).field || this.itemData.attribute;
 
             this.additionalData = (this.itemData.data || {});
