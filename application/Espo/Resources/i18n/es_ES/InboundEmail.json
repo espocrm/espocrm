@@ -5,7 +5,7 @@
     "team": "Equipo",
     "status": "Estado",
     "assignToUser": "Asignar al Usuario",
-    "host": "Host",
+    "host": "Servidor",
     "username": "Nombre de Usuario",
     "password": "Contraseña",
     "port": "Puerto",
@@ -24,7 +24,7 @@
     "addAllTeamUsers": "Para todos los usuarios del equipo"
   },
   "tooltips": {
-    "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
+    "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Solo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
     "createCase": "Automaticamente crear un Caso de los correos entrantes.",
     "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
     "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",

@@ -29,8 +29,9 @@
     "theme": "Tema",
     "useCustomTabList": "Lista de Pestañas Personalizadas",
     "emailReplyToAllByDefault": "Correo electrónico responder a todos por defecto",
-    "dashboardLayout": "Distribución del Panel de control",
-    "emailReplyForceHtml": "Responder correo electrónico en formato HTML"
+    "dashboardLayout": "Distribución del Escritorio",
+    "emailReplyForceHtml": "Responder correo electrónico en formato HTML",
+    "doNotFillAssignedUserIfNotRequired": "No llene usuario asignado si no es necesario"
   },
   "options": {
     "weekStart": {

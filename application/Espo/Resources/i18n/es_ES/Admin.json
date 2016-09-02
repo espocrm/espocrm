@@ -15,22 +15,22 @@
     "Settings": "Opciones",
     "Scheduled Jobs": "Tareas Programadas",
     "Upgrade": "Actualizar",
-    "Clear Cache": "Limpiar Cache",
+    "Clear Cache": "Limpiar Caché",
     "Rebuild": "Reconstruir",
     "Teams": "Equipos",
     "Roles": "Roles",
     "Portal": "Portal",
     "Portals": "Portales",
     "Portal Roles": "Roles del Portal",
-    "Outbound Emails": "Correos Salientes",
-    "Group Email Accounts": "Grupo de Cuentas de Correo",
-    "Personal Email Accounts": "Cuentas de correo electrónico personales",
-    "Inbound Emails": "Correos Entrantes",
-    "Email Templates": "Plantillas de Correo",
+    "Outbound Emails": "Correo Saliente",
+    "Group Email Accounts": "Cuentas Grupales",
+    "Personal Email Accounts": "Cuentas Personales",
+    "Inbound Emails": "Correo Entrante",
+    "Email Templates": "Plantillas",
     "Import": "Importar",
     "Layout Manager": "Administrador de Diseño",
     "User Interface": "Interfaz de Usuario",
-    "Auth Tokens": "Tokens Certificados",
+    "Auth Tokens": "Tokens de Autenticación",
     "Authentication": "Autenticación",
     "Currency": "Moneda",
     "Integrations": "Integración",
@@ -53,7 +53,7 @@
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
     "Reset to Default": "Aplicar a valores por defecto",
-    "Email Filters": "Filtros de Correo"
+    "Email Filters": "Filtros"
   },
   "layouts": {
     "list": "Lista",
@@ -62,7 +62,9 @@
     "detailSmall": "Detalle (Pequeño)",
     "filters": "Filtros de Búsqueda",
     "massUpdate": "Actualización Masiva",
-    "relationships": "Relaciones"
+    "relationships": "Relaciones",
+    "sidePanelsDetail": "Paneles laterales (Detalles)",
+    "sidePanelsEdit": "Paneles laterales (Editar)"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -106,6 +108,7 @@
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
+    "tooltipText": "Texto del Tooltip",
     "required": "Requerido",
     "default": "Por Defecto",
     "maxLength": "Longitud máxima",
@@ -135,7 +138,10 @@
     "prefix": "Prefijo",
     "nextNumber": "Siguiente Número",
     "padLength": "Longitud del Relleno",
-    "disableFormatting": "Desactivar Formateo"
+    "disableFormatting": "Desactivar Formateo",
+    "dynamicLogicVisible": "Condiciones que hacen el campo visible",
+    "dynamicLogicReadOnly": "Condiciones que hacen el campo de solo lectura",
+    "dynamicLogicRequired": "Condiciones que hacen el campo requerido"
   },
   "messages": {
     "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Esto Tomará algún tiempo.",
@@ -144,41 +150,41 @@
     "thousandSeparatorEqualsDecimalMark": "El separador de miles no puede ser el mismo que la marca decimal",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
-    "selectUpgradePackage": "Seleccione Actualizar Paquete",
-    "downloadUpgradePackage": "La descarga necesita paquete(s) actualizados de <a href=\"{url}\">acá</a>.",
+    "selectUpgradePackage": "Seleccione el paquete para actualizar",
+    "downloadUpgradePackage": "Si necesita paquetes de actualización puede descargarlos desde <a href=\"{url}\">acá</a>.",
     "selectLayout": "Seleccione el diseño necesario en el menú de la izquierda y editelo.",
-    "selectExtensionPackage": "Seleccionar extensión del paquete",
+    "selectExtensionPackage": "Seleccionar el paquete de la extensión",
     "extensionInstalled": "La Extensión {name} {version} ha sido instalada",
     "installExtension": "La Extensión {name} {version} está lista para ser instalada.",
     "uninstallConfirmation": "¿Realmente desea desinstalar la extensión?"
   },
   "descriptions": {
     "settings": "Configuración del sistema de la aplicación.",
-    "scheduledJob": "Trabajos que se ejecutan por cron.(cron Jobs)",
+    "scheduledJob": "Trabajos que se ejecutan en segundo plano (CRON).",
     "upgrade": "Actualiza EspoCRM.",
-    "clearCache": "Limpiar la cache de la Administración.",
-    "rebuild": "Reconstruir y limpiar la cache de la Administración.",
+    "clearCache": "Limpiar la memoria caché del servidor.",
+    "rebuild": "Reconstruir y limpiar la caché del servidor.",
     "users": "Gestión de usuarios.",
-    "teams": "Gestión de Equipos",
-    "roles": "Gestión de Roles",
+    "teams": "Gestión de equipos",
+    "roles": "Gestión de roles",
     "portals": "Gestión de portales.",
     "portalRoles": "Roles para el portal.",
     "outboundEmails": "Opciones SMTP para correo saliente.",
-    "groupEmailAccounts": "Grupo de Cuentas Correo IMAP. Importación de Correo y Correo a Caso.",
-    "personalEmailAccounts": "Cuentas de correo electrónico del usuario",
+    "groupEmailAccounts": "Grupos de buzones. Importación de Correo. Correo a Caso y Autorespondedores.",
+    "personalEmailAccounts": "Buzones personales de los usuarios.",
     "emailTemplates": "Plantillas para mensajes de correo electrónico salientes.",
     "import": "Importar datos desde CSV.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
     "entityManager": "Crear entidades personalizadas, editar las existentes. Administrar campo y las relaciones.",
-    "userInterface": "Configurar IU.",
-    "authTokens": "Sesiones certificas activas. Direcciones IP y última fecha de acceso",
-    "authentication": "Opciones de autentificación",
-    "currency": "Opciones y tarifas de Moneda",
+    "userInterface": "Configurar interfaz de usuario: Logo, tema, menu, etc.",
+    "authTokens": "Sesiones de usuarios activas. Direcciones IP y última fecha de acceso.",
+    "authentication": "Ajustes de autenticación.",
+    "currency": "Opciones y Tipo de cambio.",
     "extensions": "Instalar o desinstalar extensiones",
     "integrations": "Integración con los servicios de terceros.",
-    "notifications": "Ajustes de notificaciones In-app y de Correo",
-    "inboundEmails": "Cuentas de correo Grupo IMAP . Importación-correo y dirección de correo electrónico a la sentencia.",
-    "emailFilters": "Los mensajes de correo electrónico que coinciden con el filtro especificado no se importarán."
+    "notifications": "Ajustes de notificaciones en el sistema y por correo electrónico.",
+    "inboundEmails": "Configuración de correo entrante.",
+    "emailFilters": "Filtrar correo entrante. Correo a carpeta. Ignorar correos."
   },
   "options": {
     "previewSize": {
@@ -187,5 +193,10 @@
       "medium": "Mediano",
       "large": "Grande"
     }
+  },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
   }
 }

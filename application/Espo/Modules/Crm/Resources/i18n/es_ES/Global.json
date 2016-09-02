@@ -8,7 +8,7 @@
     "calls": "Llamadas",
     "tasks": "Tareas",
     "emails": "Correos",
-    "accounts": "Empresas",
+    "accounts": "Cuentas",
     "cases": "Casos",
     "documents": "Documentos",
     "account": "Cuenta",
@@ -38,7 +38,7 @@
     "KnowledgeBaseCategory": "Categoría de base de conocimientos"
   },
   "scopeNamesPlural": {
-    "Account": "Empresas",
+    "Account": "Cuentas",
     "Contact": "Contactos",
     "Lead": "Potenciales",
     "Target": "Objetivos",

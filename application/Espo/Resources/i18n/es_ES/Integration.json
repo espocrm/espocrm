@@ -4,7 +4,7 @@
     "clientId": "ID Cliente",
     "clientSecret": "Cliente Secreto",
     "redirectUri": "Redireccionar URI",
-    "apiKey": "Clave API"
+    "apiKey": " Clave para el API de JavaScript"
   },
   "titles": {
     "GoogleMaps": "Google Maps"
@@ -15,6 +15,6 @@
   },
   "help": {
     "Google": "<p><b>Obtener las credenciales de  OAuth 2.0 desde la Consola de Google Developers.</b></p><p>Visita <a href=\"https://console.developers.google.com/project\">Consola Google Developers</a> para obtener las credenciales de  OAuth 2.0 tales como  ID Cliente y Secreto de Cliente que son conocidos por ambos Google y la aplicación EspoCRM.</p>",
-    "GoogleMaps": "<p>Obtener clave API <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">aquí</a>.</p>"
+    "GoogleMaps": "<p>Para obtener una clave para el API de JavaScript, haga <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">click aquí</a>.</p>"
   }
 }

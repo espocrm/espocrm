@@ -31,7 +31,7 @@
     "Re-check": "Revisar otra vez",
     "Version": "Version",
     "Test settings": "Probar conexión",
-    "Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (nombre del host, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
+    "Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (servidor, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
     "Install": "Instalar",
     "SetupConfirmation page title": "Configuración Recomendada",
     "PHP Configuration": "Configuración PHP Recomendada",
@@ -39,7 +39,7 @@
     "Configuration Instructions": "Instrucciones de Configuración",
     "phpVersion": "Versión PHP",
     "mysqlVersion": "Versión MySQL",
-    "dbHostName": "Hostname usualmente(localhost)",
+    "dbHostName": "Servidor de la Base de Datos (usualmente localhost)",
     "dbName": "Nombre de la Base de Datos",
     "dbUserName": "Usuario de la Base de Datos",
     "OK": "OK"
@@ -47,7 +47,7 @@
   "fields": {
     "Choose your language": "Seleccione un lenguaje",
     "Database Name": "Nombre de la Base de Datos",
-    "Host Name": "Hostname usualmente(localhost)",
+    "Host Name": "Servidor de la Base de Datos (usualmente localhost)",
     "Port": "Puerto",
     "smtpPort": "Puerto",
     "Database User Name": "Usuario de la Base de Datos",
@@ -57,8 +57,8 @@
     "Password": "Contraseña",
     "smtpPassword": "Contraseña",
     "Confirm Password": "Confirme su contraseña",
-    "From Address": "De la dirección",
-    "From Name": "De Nombre",
+    "From Address": "De (email)",
+    "From Name": "De (nombre):",
     "Is Shared": "Es Compartido",
     "Date Format": "Formato de fecha",
     "Time Format": "Formato de tiempo",
@@ -115,7 +115,7 @@
     },
     "modRewriteTitle": {
       "apache": "API Error: EspoCRM API inaccesible.<br> Posibles problemas: se requiere RewriteBase , \"mod_rewrite\" desactivado en el servidor  Apache o en el soporte .htaccess.",
-      "nginx": "API Error: EspoCRM API inaccesible.<br> Agregar este código a su Configuración de Host Nginx (inside \"server\" block):",
+      "nginx": "API Error: EspoCRM API inaccesible.<br> Agregar este código a su Configuración de Servidor Nginx (inside \"server\" block):",
       "microsoft-iis": "API Error: EspoCRM API inaccesible.<br> Problema posible: \"URL Rewrite\" desactivado. Por favor revisar y activar \"URL Rewrite\" Módulo en Servidor IIS",
       "default": "API Error: EspoCRM API inaccesible.<br> Problema posible: Módulo Rewrite desactivado.Por favor revisar y activar el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y en el soporte .htaccess"
     },

@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "status": "Estado",
-    "host": "Host",
+    "host": "Servidor",
     "username": "Nombre de Usuario",
     "password": "Contraseña",
     "port": "Puerto",
@@ -15,7 +15,7 @@
     "keepFetchedEmailsUnread": "Mantener los correos que se han obtenido sin leer",
     "emailFolder": "Poner en la carpeta",
     "useSmtp": "Utilizar SMTP",
-    "smtpHost": "Host SMTP",
+    "smtpHost": "Servidor SMTP",
     "smtpPort": "Puerto SMTP",
     "smtpAuth": "Autentificación SMTP",
     "smtpSecurity": "Seguridad SMTP",
