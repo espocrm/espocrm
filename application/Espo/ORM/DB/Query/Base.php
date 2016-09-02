@@ -288,6 +288,9 @@ abstract class Base
                 if (stripos($field[0], 'VALUE:') === 0) {
                     $part = substr($field[0], 6);
                     $part = $this->quote($part);
+                } else if (stripos($field[0], 'CONCAT:') === 0) {
+                    $part = substr($field[0], 7);
+                    $part = 'CONCAT(' . $part . ')';
                 } else {
                     $part = $this->convertComplexExpression($entity, $field[0], $distinct);
                 }
