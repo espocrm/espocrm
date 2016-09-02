@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', function (Dep) {
+Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-base', 'views/admin/dynamic-logic/conditions-string/item-base', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin/dynamic-logic/conditions-string/item-base',
+        template: 'admin/dynamic-logic/conditions-string/item-multiple-values-base',
 
         data: function () {
             return {
-                valueViewKey: this.getValueViewKey(),
+                valueViewDataList: this.valueViewDataList,
                 scope: this.scope,
                 operator: this.operator,
                 operatorString: this.operatorString,
@@ -42,53 +42,37 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             };
         },
 
-        setup: function () {
-            this.itemData = this.options.itemData;
-
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
-            this.scope = this.options.scope;
-
-            this.operator = this.options.operator || this.operator;
-            this.operatorString = this.options.operatorString || this.operatorString;
-
-            this.field = (this.itemData.data || {}).field || this.itemData.attribute;
-
-            this.additionalData = (this.itemData.data || {});
-
-            this.wait(true);
-
-            this.getModelFactory().create(this.scope, function (model) {
-                this.model = model;
-
-                this.populateValues();
-
-                this.createValueFieldView();
-
-                this.wait(false);
-            }, this);
-        },
-
         populateValues: function () {
-            this.model.set(this.itemData.attribute, this.itemData.value);
-            this.model.set(this.additionalData.values || {});
         },
 
-        getValueViewKey: function () {
-            return 'view-' + this.level.toString() + '-' + this.number.toString() + '-0';
+
+        getValueViewKey: function (i) {
+            return 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
         },
 
         createValueFieldView: function () {
-            var key = this.getValueViewKey();
+            var valueList = this.itemData.value || [];
 
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
             var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
 
-            this.createView('value', viewName, {
-                model: this.model,
-                name: this.field,
-                el: '[data-view-key="'+key+'"]'
-            });
+            this.valueViewDataList = [];
+            valueList.forEach(function (value, i) {
+                var model = this.model.clone();
+                model.set(this.itemData.attribute, value);
+
+                var key = this.getValueViewKey(i);
+                this.valueViewDataList.push({
+                    key: key,
+                    isEnd: i === valueList.length - 1
+                });
+
+                this.createView(key, viewName, {
+                    model: model,
+                    name: this.field,
+                    el: '[data-view-key="'+key+'"]'
+                });
+            }, this);
         },
 
     });
