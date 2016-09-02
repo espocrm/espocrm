@@ -170,6 +170,7 @@ Espo.define('dynamic-logic', [], function () {
                 return !~value.indexOf(setValue);
             } else if (type === 'isToday') {
                 var dateTime = this.recordView.getDateTime();
+                if (!setValue) return;
                 if (setValue) {
                     if (setValue.length > 10) {
                         return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
@@ -177,10 +178,26 @@ Espo.define('dynamic-logic', [], function () {
                         return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
                     }
                 }
-            } else if (type === 'isFuture') {
-
-            } else if (type === 'isPast') {
-
+            } else if (type === 'inFuture') {
+                var dateTime = this.recordView.getDateTime();
+                if (!setValue) return;
+                if (setValue) {
+                    if (setValue.length > 10) {
+                        return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
+                    } else {
+                        return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
+                    }
+                }
+            } else if (type === 'inPast') {
+                var dateTime = this.recordView.getDateTime();
+                if (!setValue) return;
+                if (setValue) {
+                    if (setValue.length > 10) {
+                        return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
+                    } else {
+                        return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
+                    }
+                }
             }
             return false;
         },

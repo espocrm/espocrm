@@ -1,0 +1,68 @@
+{
+    "itemTypes": {
+        "and": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-base",
+            "operator": "and"
+        },
+        "or": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-base",
+            "operator": "or"
+        },
+        "not": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-not",
+            "operator": "not"
+        },
+        "equals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "="
+        },
+        "notEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&ne;"
+        },
+        "greaterThan": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&gt;"
+        },
+        "lessThan": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&lt;"
+        },
+        "greaterThanOrEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&ge;"
+        },
+        "lessThanOrEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&le;"
+        },
+        "isEmpty": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= &empty;"
+        },
+        "isNotEmpty": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "&ne; &empty;"
+        },
+        "in": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+            "operatorString": "&isin;"
+        },
+        "notIn": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+            "operatorString": "&notin;"
+        },
+        "isToday": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-is-today",
+            "operatorString": "="
+        },
+        "inFuture": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-in-future",
+            "operatorString": "&isin;"
+        },
+        "inPast": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-in-past",
+            "operatorString": "&isin;"
+        }
+    }
+}

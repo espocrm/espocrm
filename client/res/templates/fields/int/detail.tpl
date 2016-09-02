@@ -1,5 +1,3 @@
-{{#if isNotEmpty}}
-    {{value}}
-{{else}}
+{{#if isNotEmpty}}{{value}}{{else}}
     {{translate 'None'}}
 {{/if}}

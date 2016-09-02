@@ -38,11 +38,11 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
         setup: function () {
             var conditionGroup = (this.model.get(this.name) || {}).conditionGroup || [];
 
-            this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/and', {
+            this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
                 itemData: {
-                    type: 'and',
                     value: conditionGroup
                 },
+                operator: 'and',
                 scope: this.options.scope
             });
         },
@@ -95,7 +95,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                 case 'greaterThanOrEquals':
                     operator = '&ge;';
                     break;
-                case 'greaterThanOrEquals':
+                case 'lessThanOrEquals':
                     operator = '&le;';
                     break;
                 case 'isEmpty':

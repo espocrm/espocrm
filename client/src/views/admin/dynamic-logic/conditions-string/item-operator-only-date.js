@@ -26,43 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/status', 'views/stream/note', function (Dep) {
+Espo.define('views/admin/dynamic-logic/conditions-string/item-operator-only-date', 'views/admin/dynamic-logic/conditions-string/item-operator-only-base', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream/notes/status',
-
-        messageName: 'status',
+        template: 'admin/dynamic-logic/conditions-string/item-operator-only-date',
 
         data: function () {
-            return _.extend({
-                style: this.style,
-                statusText: this.statusText,
-            }, Dep.prototype.data.call(this));
-        },
-
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
-            Dep.prototype.init.call(this);
-        },
-
-        setup: function () {
-            var data = this.model.get('data');
-
-            var field = data.field;
-            var value = data.value;
-
-            this.style = data.style || 'default';
-
-            this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
-
-            this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
-
-            this.createMessage();
+            var data = Dep.prototype.data.call(this);
+            data.dateValue = this.dateValue;
+            return data;
         },
 
     });
+
 });
 

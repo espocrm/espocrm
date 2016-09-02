@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/equals', 'views/admin/dynamic-logic/conditions-string/item-base', function (Dep) {
+Espo.define('views/admin/dynamic-logic/conditions-string/item-is-today', 'views/admin/dynamic-logic/conditions-string/item-operator-only-date', function (Dep) {
 
     return Dep.extend({
 
-        operatorString: '='
+        dateValue: 'today'
 
     });
 

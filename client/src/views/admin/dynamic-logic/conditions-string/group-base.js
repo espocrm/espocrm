@@ -50,6 +50,8 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
             this.number = this.options.number || 0;
             this.scope = this.options.scope;
 
+            this.operator = this.options.operator || this.operator;
+
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
@@ -70,13 +72,24 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
         createItemView: function (number, key, item) {
             this.viewList.push(key);
 
+            item = item || {};
+
             var type = item.type || 'equals';
-            this.createView(key, 'views/admin/dynamic-logic/conditions-string/' + Espo.Utils.camelCaseToHyphen(type), {
+
+            var viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
+            if (!viewName) return;
+
+            var operator = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
+            var operatorString = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
+
+            this.createView(key, viewName, {
                 itemData: item,
                 scope: this.scope,
                 level: this.level + 1,
                 el: '[data-view-key="'+key+'"]',
-                number: number
+                number: number,
+                operator: operator,
+                operatorString: operatorString
             });
         },
 
