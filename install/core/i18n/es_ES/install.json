@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "Bienvenido a EspoCRM(Español)",
+    "Main page title": "Bienvenido a EspoCRM (Español)",
     "Start page title": "Contrato de licencia",
     "Step1 page title": "Contrato de licencia",
     "License Agreement": "Contrato de licencia",
@@ -11,9 +11,9 @@
     "Step5 page title": "Configuración SMTP para los correos salientes",
     "Errors page title": "Errores",
     "Finish page title": "La instalación ha finalizado",
-    "Congratulation! Welcome to EspoCRM": "¡Felicitaciones! EspoCRM(Español) se ha instalado correctamente.",
-    "More Information": "Para más información, por favir visitar nuestro {BLOG},siguenos en {TWITTER}.<br><br>Si tienes alguna sugerencia o pregunta, por favor realizala en el {FORUM}. ",
-    "share": "Si te gusta EspoCRM, compartelo con tus amigos. Deja que sepan de este genial producto",
+    "Congratulation! Welcome to EspoCRM": "¡Felicitaciones! EspoCRM (en Español) se ha instalado correctamente.",
+    "More Information": "Para más información, por favor visite nuestro {BLOG} y siguenos en {TWITTER}.<br><br>Si tienes alguna sugerencia o pregunta, por favor realizala en el {FORUM}. ",
+    "share": "Si te gusta EspoCRM, compartelo con tus amigos. Deja que sepan de este genial producto.",
     "blog": "blog",
     "twitter": "twitter",
     "forum": "foro",

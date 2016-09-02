@@ -21,8 +21,8 @@
       "SendEmailNotifications": "Enviar notificaciones por correo electrónico"
     },
     "cronSetup": {
-      "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
-      "mac": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
+      "linux": "Nota: Añada esta línea al archivo crontab para que EspoCRM pueda ejecutar los trabajos programados:",
+      "mac": "Nota: Añada esta línea al archivo crontab para que EspoCRM pueda ejecutar los trabajos programados:",
       "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar trabajos programados de Espo usando tareas programadas de Windows:",
       "default": "Nota: Agregar este comando a Cron Job (Tarea Programada):"
     },
