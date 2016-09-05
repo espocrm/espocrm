@@ -74,7 +74,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
 
             item = item || {};
 
-            var type = item.type || 'equals';
+            var additionalData = item.data || {};
+
+            var type = additionalData.type || item.type || 'equals';
 
             var viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
             if (!viewName) return;
