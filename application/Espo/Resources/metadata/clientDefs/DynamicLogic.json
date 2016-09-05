@@ -64,5 +64,88 @@
             "view": "views/admin/dynamic-logic/conditions-string/item-in-past",
             "operatorString": "&isin;"
         }
+    },
+    "fieldTypes": {
+        "varchar": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+        },
+        "text": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "int": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
+        "float": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
+        "currencyConverted": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
+        "date": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast", "equals", "notEquals"]
+        },
+        "dateTime": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
+        },
+        "enum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/enum",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "in", "notIn"]
+        },
+        "link": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        },
+        "linkParent": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link-parent",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        }
+    },
+    "conditionTypes": {
+        "isEmpty": {
+            "valueType": "empty"
+        },
+        "isNotEmpty": {
+            "valueType": "empty"
+        },
+        "equals": {
+            "valueType": "field"
+        },
+        "notEquals": {
+            "valueType": "field"
+        },
+        "greaterThan": {
+            "valueType": "field"
+        },
+        "lessThan": {
+            "valueType": "field"
+        },
+        "greaterThanOrEquals": {
+            "valueType": "field"
+        },
+        "lessThanOrEquals": {
+            "valueType": "field"
+        },
+        "in": {
+            "valueType": "custom"
+        },
+        "notIn": {
+            "valueType": "custom"
+        },
+        "inPast": {
+            "valueType": "empty"
+        },
+        "isFuture": {
+            "valueType": "empty"
+        },
+        "isToday": {
+            "valueType": "empty"
+        }
     }
 }

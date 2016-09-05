@@ -89,7 +89,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                el: '[data-view-key="'+key+'"]'
+                el: this.getSelector() + ' [data-view-key="'+key+'"]'
             });
         },
 

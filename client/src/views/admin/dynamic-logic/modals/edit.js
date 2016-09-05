@@ -26,56 +26,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/fields/base', function (Dep) {
+
+Espo.define('views/admin/dynamic-logic/modals/edit', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
-        editTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/edit',
-
-        events: {
-            'click [data-action="editConditions"]': function () {
-                this.edit();
-            }
-        },
+        template: 'admin/dynamic-logic/modals/edit',
 
         data: function () {
+            return {
+            };
         },
+
+        events: {
+
+        },
+
+        buttonList: [
+            {
+                name: 'apply',
+                label: 'Apply',
+                style: 'primary'
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel'
+            }
+        ],
 
         setup: function () {
-            this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
+            this.conditionGroup = Espo.Utils.cloneDeep(this.options.conditionGroup || []);
             this.scope = this.options.scope;
-            this.createStringView();
-        },
 
-        createStringView: function () {
-            this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
-                el: this.getSelector() + ' .top-group-string-container',
+            this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions/and', {
+                el: this.getSelector() + ' .top-group-container',
                 itemData: {
                     value: this.conditionGroup
                 },
-                operator: 'and',
-                scope: this.scope
-            }, function (view) {
-                if (this.isRendered()) {
-                    view.render();
-                }
-            }, this);
+                scope: this.options.scope
+            });
         },
 
-        edit: function () {
-            this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
-                conditionGroup: this.conditionGroup,
-                scope: this.options.scope
-            }, function (view) {
-                view.render();
+        actionApply: function () {
+            var data = this.getView('conditionGroup').fetch();
 
-                this.listenTo(view, 'apply', function (conditionGroup) {
-                    this.conditionGroup = conditionGroup;
+            var conditionGroup = data.value;
 
-                    this.createStringView();
-                }, this);
-            }, this);
-        }
+            this.trigger('apply', conditionGroup);
+            this.close();
+        },
     });
-
 });
+
+
