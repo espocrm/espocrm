@@ -479,7 +479,9 @@
             "currentYear": "Current Year",
             "lastYear": "Last Year",
             "lastSevenDays": "Last 7 Days",
+            "beforeXDays": "Before the last X Days",
             "lastXDays": "Last X Days",
+            "afterXDays": "After the next X Days",
             "nextXDays": "Next X Days",
             "ever": "Ever",
             "isEmpty": "Is Empty"
