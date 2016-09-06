@@ -75,6 +75,13 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                     this.createStringView();
                 }, this);
             }, this);
+        },
+
+        fetch: function () {
+            var data = {};
+            data[this.name] = this.conditionGroup;
+
+            return data;
         }
     });
 

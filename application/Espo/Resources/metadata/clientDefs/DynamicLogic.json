@@ -44,6 +44,14 @@
             "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
             "operatorString": "&ne; &empty;"
         },
+        "isTrue": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= 1"
+        },
+        "isFalse": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= 0"
+        },
         "in": {
             "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
             "operatorString": "&isin;"
@@ -66,6 +74,10 @@
         }
     },
     "fieldTypes": {
+        "bool": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isTrue", "isFalse"]
+        },
         "varchar": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
@@ -82,21 +94,21 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
         },
-        "currencyConverted": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
-        },
         "date": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
             "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast", "equals", "notEquals"]
         },
-        "dateTime": {
+        "datetime": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
+        },
+        "datetimeOptional": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
             "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
         },
         "enum": {
             "view": "views/admin/dynamic-logic/conditions/field-types/enum",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "in", "notIn"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "in", "notIn"]
         },
         "link": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link",
@@ -108,6 +120,12 @@
         }
     },
     "conditionTypes": {
+        "isTrue": {
+            "valueType": "empty"
+        },
+        "isFalse": {
+            "valueType": "empty"
+        },
         "isEmpty": {
             "valueType": "empty"
         },

@@ -201,6 +201,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
+            if (this.options.readOnlyDisabled) {
+                this.readOnly = false;
+            }
+
             this.disabledLocked = this.options.disabledLocked || false;
             this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 

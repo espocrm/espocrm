@@ -26,67 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-logic/conditions/group-base', function (Dep) {
+Espo.define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        template: 'admin/dynamic-logic/conditions/not',
+        _template: '<div class="field" data-name="field">{{{field}}}</div>',
 
-        operator: 'not',
-
-        data: function () {
-            return {
-                viewKey: this.viewKey,
-                operator: this.operator,
-                hasItem: this.hasView(this.viewKey)
-            };
+        events: {
+            'click a[data-action="addField"]': function (e) {
+                this.trigger('add-field', $(e.currentTarget).data().name);
+            }
         },
 
         setup: function () {
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
+            this.header = this.translate('Add Field');
             this.scope = this.options.scope;
 
-            this.itemData = this.options.itemData || {};
-            this.viewList = [];
+            var model = new Model();
 
-            var i = 0;
-            var key = this.getKey();
-
-            this.createItemView(i, key, this.itemData.value);
-            this.viewKey = key;
-        },
-
-        removeItem: function () {
-            var key = this.getKey();
-            this.clearView(key);
-        },
-
-        getKey: function () {
-            var i = 0;
-            return 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
-        },
-
-        getIndexForNewItem: function () {
-            return 0;
-        },
-
-        addItemContainer: function () {
-        },
-
-        addViewDataListItem: function () {
-        },
-
-        fetch: function () {
-            var value = this.getView(this.viewKey).fetch();
-
-            return {
-                type: this.operator,
-                value: value
-            };
-        },
+            this.createView('field', 'views/admin/dynamic-logic/fields/field', {
+                el: this.getSelector() + ' [data-name="field"]',
+                model: model,
+                mode: 'edit',
+                scope: this.scope,
+                defs: {
+                    name: 'field',
+                    params: {}
+                }
+            }, function (view) {
+                this.listenTo(view, 'change', function () {
+                    var list = model.get('field') || [];
+                    if (!list.length) return;
+                    this.trigger('add-field', list[0]);
+                }, this);
+            });
+        }
 
     });
-
 });
 

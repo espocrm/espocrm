@@ -1,1 +1,1 @@
-<div class="top-group-container">{{{conditionGroup}}}</div>
+<div class="top-group-container dynamic-logic-expression-container">{{{conditionGroup}}}</div>

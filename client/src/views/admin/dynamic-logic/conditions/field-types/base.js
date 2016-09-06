@@ -41,6 +41,13 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             };
         },
 
+        events: {
+            'click > div > div > [data-action="remove"]': function (e) {
+                e.stopPropagation();
+                this.trigger('remove-item');
+            }
+        },
+
         setup: function () {
             this.type = this.options.type;
             this.field = this.options.field;
@@ -51,7 +58,6 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             this.additionalData = (this.itemData.data || {});
 
             this.typeList = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
-
 
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
@@ -89,7 +95,8 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
                     model: this.model,
                     name: this.field,
                     el: this.getSelector() + ' .value-container',
-                    mode: 'edit'
+                    mode: 'edit',
+                    readOnlyDisabled: true
                 }, function (view) {
                     if (this.isRendered()) {
                         view.render();
@@ -107,17 +114,17 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
         fetch: function () {
             var valueView = this.getView('value');
 
-            var data = {
+            var item = {
                 type: this.type,
                 attribute: this.field
             };
 
             if (valueView) {
                 valueView.fetchToModel();
-                data.value = this.model.get(this.field);
+                item.value = this.model.get(this.field);
             }
 
-            return data;
+            return item;
         }
 
     });

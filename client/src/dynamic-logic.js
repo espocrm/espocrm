@@ -156,6 +156,10 @@ Espo.define('dynamic-logic', [], function () {
                 return setValue === null || (setValue === '');
             } else if (type === 'isNotEmpty') {
                 return setValue !== null && (setValue !== '');
+            } else if (type === 'isTrue') {
+                return !!setValue;
+            } else if (type === 'isFalse') {
+                return !setValue;
             } else if (type === 'greaterThan') {
                 return setValue > value;
             } else if (type === 'lessThan') {
