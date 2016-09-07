@@ -7,7 +7,9 @@
       },
       {
          "name":"default",
-         "type":"varchar"
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/date/default",
+         "trim": true
       },
       {
          "name":"after",
