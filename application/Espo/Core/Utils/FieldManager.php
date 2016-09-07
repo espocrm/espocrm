@@ -135,15 +135,83 @@ class FieldManager
             if (isset($fieldDefs['tooltipText'])) {
                 $this->getDefaultLanguage()->save();
             }
+        }
+
+        $metadataToBeSaved = false;
+
+        $clientDefsToBeSet = false;
+
+        $clientDefs = array();
+
+        if (array_key_exists('dynamicLogicVisible', $fieldDefs)) {
+            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
+            if (!is_null($fieldDefs['dynamicLogicVisible'])) {
+                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = array(
+                    'conditionGroup' => $fieldDefs['dynamicLogicVisible']
+                );
+            } else {
+                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
+            }
+            $metadataToBeSaved = true;
+            $clientDefsToBeSet = true;
+        }
+
+        if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
+            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
+            if (!is_null($fieldDefs['dynamicLogicReadOnly'])) {
+                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = array(
+                    'conditionGroup' => $fieldDefs['dynamicLogicReadOnly']
+                );
+            } else {
+                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
+            }
+            $metadataToBeSaved = true;
+            $clientDefsToBeSet = true;
+        }
+
+        if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
+            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
+            if (!is_null($fieldDefs['dynamicLogicRequired'])) {
+                $clientDefs['dynamicLogic']['fields'][$name]['required'] = array(
+                    'conditionGroup' => $fieldDefs['dynamicLogicRequired']
+                );
+            } else {
+                $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
+            }
+            $metadataToBeSaved = true;
+            $clientDefsToBeSet = true;
+        }
+
+        if ($clientDefsToBeSet) {
+            $this->getMetadata()->set('clientDefs', $scope, $clientDefs);
+        }
+
+        if ($this->isDefsChanged($name, $fieldDefs, $scope)) {
+            $entityDefs = $this->normalizeDefs($name, $fieldDefs, $scope);
+            $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
+            $metadataToBeSaved = true;
+        }
+
+        if ($metadataToBeSaved) {
+            $res &= $this->getMetadata()->save();
 
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs);
         }
 
-        if ($this->isDefsChanged($name, $fieldDefs, $scope)) {
-            $res &= $this->setEntityDefs($name, $fieldDefs, $scope);
-        }
-
         return (bool) $res;
+    }
+
+    protected function prepareClientDefsFieldDynamicLogic(&$clientDefs, $name)
+    {
+        if (!array_key_exists('dynamicLogic', $clientDefs)) {
+            $clientDefs['dynamicLogic'] = array();
+        }
+        if (!array_key_exists('fields', $clientDefs['dynamicLogic'])) {
+            $clientDefs['dynamicLogic']['fields'] = array();
+        }
+        if (!array_key_exists($name, $clientDefs['dynamicLogic']['fields'])) {
+            $clientDefs['dynamicLogic']['fields'][$name] = array();
+        }
     }
 
     public function delete($name, $scope)
@@ -161,7 +229,14 @@ class FieldManager
             'links.'.$name,
         );
 
-        $this->getMetadata()->delete($this->metadataType, $scope, $unsets);
+        $this->getMetadata()->delete('entityDefs', $scope, $unsets);
+
+        $this->getMetadata()->delete('clientDefs', $scope, [
+            'dynamicLogic.fields.' . $name,
+            'dynamicLogic.options.' . $name
+        ]);
+
+
         $res = $this->getMetadata()->save();
         $res &= $this->deleteLabel($name, $scope);
 
@@ -181,6 +256,10 @@ class FieldManager
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name]);
+        $this->getMetadata()->delete('clientDefs', $scope, [
+            'dynamicLogic.fields.' . $name,
+            'dynamicLogic.options.' . $name
+        ]);
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete($scope, 'fields', $name);
@@ -196,7 +275,7 @@ class FieldManager
     {
         $fieldDefs = $this->normalizeDefs($name, $fieldDefs, $scope);
 
-        $this->getMetadata()->set($this->metadataType, $scope, $fieldDefs);
+        $this->getMetadata()->set('entityDefs', $scope, $fieldDefs);
         $res = $this->getMetadata()->save();
 
         return $res;
@@ -236,12 +315,12 @@ class FieldManager
 
     protected function getFieldDefs($name, $scope)
     {
-        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.fields.'.$name);
+        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name);
     }
 
     protected function getLinkDefs($name, $scope)
     {
-        return $this->getMetadata()->get($this->metadataType.'.'.$scope.'.links.'.$name);
+        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.links.'.$name);
     }
 
     /**

@@ -84,16 +84,26 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             this.model.set(this.additionalData.values || {});
         },
 
+        getValueViewName: function () {
+            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
+
+            return viewName;
+        },
+
+        getValueFieldName: function () {
+            return this.field;
+        },
+
         manageValue: function () {
             var valueType = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
 
             if (valueType === 'field') {
-                var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-                var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
-
+                var viewName = this.getValueViewName();
+                var fieldName = this.getValueFieldName();
                 this.createView('value', viewName, {
                     model: this.model,
-                    name: this.field,
+                    name: fieldName,
                     el: this.getSelector() + ' .value-container',
                     mode: 'edit',
                     readOnlyDisabled: true
@@ -105,7 +115,8 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
 
             } else if (valueType === 'custom') {
                 this.clearView('value');
-
+                var methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
+                this[methodName]();
             } else {
                 this.clearView('value');
             }

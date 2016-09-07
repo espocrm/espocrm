@@ -335,7 +335,7 @@ class Manager
     {
         $currentData = $this->getContents($path);
         if (!isset($currentData) || !$currentData) {
-            return false;
+            return true;
         }
 
         $currentDataArray = Utils\Json::getArrayData($currentData);
@@ -344,6 +344,9 @@ class Manager
 
         if (is_null($unsettedData) || (is_array($unsettedData) && empty($unsettedData))) {
             $fullPath = $this->concatPaths($path);
+            if (!file_exists($fullPath)) {
+                return true;
+            }
             return $this->unlink($fullPath);
         }
 

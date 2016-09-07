@@ -47,6 +47,7 @@ Espo.define('dynamic-logic', [], function () {
                 var item = (fields[field] || {});
                 this.fieldTypeList.forEach(function (type) {
                     if (!(type in item)) return;
+                    if (!item[type]) return;
                     var typeItem = (item[type] || {});
                     var conditionGroup = typeItem.conditionGroup;
                     var conditionGroup = (item[type] || {}).conditionGroup;
@@ -153,13 +154,25 @@ Espo.define('dynamic-logic', [], function () {
                 if (!value) return;
                 return setValue !== value;
             } else if (type === 'isEmpty') {
+                if (Array.isArray(setValue)) {
+                    return !setValue.length;
+                }
                 return setValue === null || (setValue === '');
             } else if (type === 'isNotEmpty') {
+                if (Array.isArray(setValue)) {
+                    return !!setValue.length;
+                }
                 return setValue !== null && (setValue !== '');
             } else if (type === 'isTrue') {
                 return !!setValue;
             } else if (type === 'isFalse') {
                 return !setValue;
+            } else if (type === 'contains') {
+                if (!setValue) return false;
+                return !!~setValue.indexOf(value);
+            } else if (type === 'notContains') {
+                if (!setValue) return true;
+                return !~setValue.indexOf(value);
             } else if (type === 'greaterThan') {
                 return setValue > value;
             } else if (type === 'lessThan') {

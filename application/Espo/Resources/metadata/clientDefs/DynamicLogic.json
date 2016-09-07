@@ -71,6 +71,14 @@
         "inPast": {
             "view": "views/admin/dynamic-logic/conditions-string/item-in-past",
             "operatorString": "&isin;"
+        },
+        "contains": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "operatorString": "&niv;"
+        },
+        "notContains": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "operatorString": "&notni"
         }
     },
     "fieldTypes": {
@@ -117,6 +125,10 @@
         "linkParent": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link-parent",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        },
+        "linkMultiple": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link-multiple",
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
         }
     },
     "conditionTypes": {
@@ -151,9 +163,15 @@
             "valueType": "field"
         },
         "in": {
-            "valueType": "custom"
+            "valueType": "field"
         },
         "notIn": {
+            "valueType": "field"
+        },
+        "contains": {
+            "valueType": "custom"
+        },
+        "notContains": {
             "valueType": "custom"
         },
         "inPast": {

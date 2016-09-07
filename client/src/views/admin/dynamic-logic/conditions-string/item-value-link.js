@@ -26,34 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/field-types/enum', 'views/admin/dynamic-logic/conditions/field-types/base', function (Dep) {
+Espo.define('views/admin/dynamic-logic/conditions-string/item-value-link', 'views/admin/dynamic-logic/conditions-string/item-base', function (Dep) {
 
     return Dep.extend({
 
-        fetch: function () {
-            var valueView = this.getView('value');
+        template: 'admin/dynamic-logic/conditions-string/item-base',
 
-            var item = {
-                type: this.type,
-                attribute: this.field
-            };
 
-            if (valueView) {
-                valueView.fetchToModel();
-                item.value = this.model.get(this.field);
-            }
+        createValueFieldView: function () {
+            var key = this.getValueViewKey();
 
-            return item;
-        },
-
-        getValueViewName: function () {
-            var viewName = Dep.prototype.getValueViewName.call(this);
-
-            if (~['in', 'notIn'].indexOf(this.type)) {
-                viewName = 'views/fields/multi-enum';
-            }
-
-            return viewName;
+            var viewName = 'views/fields/link';
+            this.createView('value', viewName, {
+                model: this.model,
+                name: 'link',
+                el: '[data-view-key="'+key+'"]',
+                foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+            });
         },
 
     });
