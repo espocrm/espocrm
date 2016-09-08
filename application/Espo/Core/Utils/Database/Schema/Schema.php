@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
+
 use Doctrine\DBAL\Types\Type,
     Espo\Core\Utils\Util;
 
@@ -80,7 +81,7 @@ class Schema
 
 
 
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser)
+    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser, \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata)
     {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -92,6 +93,10 @@ class Schema
         $this->initFieldTypes();
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
+
+        $this->schemaConverter = new Converter($this->fileManager);
+
+        $this->ormMetadata = $ormMetadata;
     }
 
 
@@ -189,12 +194,13 @@ class Schema
      */
     public function rebuild($entityList = null)
     {
-        if ($this->getConverter()->process() === false) {
+        if (!$this->getConverter()->process()) {
             return false;
         }
 
         $currentSchema = $this->getCurrentSchema();
-        $metadataSchema = $this->getConverter()->getSchemaFromMetadata($entityList);
+
+        $metadataSchema = $this->schemaConverter->process($this->ormMetadata->getData(), $entityList);
 
         $this->initRebuildActions($currentSchema, $metadataSchema);
         $this->executeRebuildActions('beforeRebuild');

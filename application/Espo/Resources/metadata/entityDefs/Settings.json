@@ -128,7 +128,8 @@
         "language": {
             "type": "enum",
             "options": ["en_US"],
-            "default": "en_US"
+            "default": "en_US",
+            "view": "views/settings/fields/language"
         },
         "globalSearchEntityList": {
             "type": "multiEnum",

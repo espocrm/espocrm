@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database;
+
 use Espo\Core\Utils\Util,
     Espo\ORM\Entity;
 
@@ -45,10 +46,7 @@ class Converter
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-
         $this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager);
-
-        $this->schemaConverter = new Schema\Converter($this->fileManager);
     }
 
     protected function getMetadata()
@@ -61,32 +59,10 @@ class Converter
         return $this->ormConverter;
     }
 
-    protected function getSchemaConverter()
-    {
-        return $this->schemaConverter;
-    }
-
-    public function getSchemaFromMetadata($entityList = null)
-    {
-        $ormMeta = $this->getMetadata()->getOrmMetadata();
-
-        $this->schemaFromMetadata = $this->getSchemaConverter()->process($ormMeta, $entityList);
-
-        return $this->schemaFromMetadata;
-    }
-
-    /**
-    * Main method of convertation from metadata to orm metadata and database schema
-    *
-    * @return bool
-    */
     public function process()
     {
-        $ormMeta = $this->getOrmConverter()->process();
+        $data = $this->getOrmConverter()->process();
 
-        //save database meta to a file espoMetadata.php
-        $result = $this->getMetadata()->setOrmMetadata($ormMeta);
-
-        return $result;
+        return $data;
     }
 }

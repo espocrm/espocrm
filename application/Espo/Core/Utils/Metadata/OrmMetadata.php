@@ -27,38 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Utils\Metadata;
 
-class Module
+use Espo\Core\Utils\Util;
+
+class OrmMetadata
 {
-    private $fileManager;
+    protected $data = array();
 
-    private $useCache;
+    protected $cacheFile = 'data/cache/application/ormMetadata.php';
 
-    private $unifier;
+    protected $metadata;
 
-    protected $data = null;
+    protected $fileManager;
 
-    protected $cacheFile = 'data/cache/application/modules.php';
+    protected $useCache;
 
-    protected $paths = array(
-        'corePath' => 'application/Espo/Resources/module.json',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/module.json',
-        'customPath' => 'custom/Espo/Custom/Resources/module.json',
-    );
-
-    public function __construct(File\Manager $fileManager, $useCache = false)
+    public function __construct($metadata, $fileManager, $useCache = false)
     {
+        $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-
-        $this->unifier = new \Espo\Core\Utils\File\FileUnifier($this->fileManager);
-
         $this->useCache = $useCache;
     }
 
-    protected function getConfig()
+    protected function getConverter()
     {
-        return $this->config;
+        if (!isset($this->converter)) {
+            $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
+        }
+
+        return $this->converter;
     }
 
     protected function getFileManager()
@@ -66,42 +64,33 @@ class Module
         return $this->fileManager;
     }
 
-    protected function getUnifier()
+    public function clearData()
     {
-        return $this->unifier;
+        $this->ormData = null;
     }
 
-    public function get($key = '', $returns = null)
+    public function getData($reload = false)
     {
-        if (!isset($this->data)) {
-            $this->init();
+        if (!empty($this->ormData) && !$reload) {
+            return $data;
         }
 
-        if (empty($key)) {
-            return $this->data;
-        }
-
-        return Util::getValueByKey($this->data, $key, $returns);
-    }
-
-    public function getAll()
-    {
-        return $this->get();
-    }
-
-    protected function init()
-    {
-        if (file_exists($this->cacheFile) && $this->useCache) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
-        } else {
-            $this->data = $this->getUnifier()->unify($this->paths, true);
+        if (!file_exists($this->cacheFile) || !$this->useCache || $reload) {
+            $this->data = $this->getConverter()->process();
 
             if ($this->useCache) {
                 $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error('Module - Cannot save unified modules.');
+                    throw new \Espo\Core\Exceptions\Error('OrmMetadata::getData() - Cannot save ormMetadata to cache file');
                 }
             }
         }
+
+        if (empty($this->data)) {
+            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
+        }
+
+        return $this->data;
     }
+
 }

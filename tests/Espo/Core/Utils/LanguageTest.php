@@ -52,13 +52,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $map = array(
-          array('useCache', false)
-        );
-        $this->objects['config']->expects($this->any())
-             ->method('get')
-             ->will($this->returnValueMap($map));
 
         $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
         $this->objects['metadata']->expects($this->any())
@@ -69,9 +62,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
                 )
              ));
 
-        $this->objects['preferences'] = $this->getMockBuilder('\Espo\Entities\Preferences')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\Language($this->objects['fileManager'], $this->objects['config'], $this->objects['metadata'], $this->objects['preferences']);
+        $this->object = new \Espo\Core\Utils\Language(null, $this->objects['fileManager'], $this->objects['metadata'], false);
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('cacheFile', $this->cacheFile);

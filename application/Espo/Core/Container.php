@@ -209,8 +209,8 @@ class Container
     protected function loadMetadata()
     {
         return new \Espo\Core\Utils\Metadata(
-            $this->get('config'),
-            $this->get('fileManager')
+            $this->get('fileManager'),
+            $this->get('config')->get('useCache')
         );
     }
 
@@ -247,7 +247,17 @@ class Container
             $this->get('metadata'),
             $this->get('fileManager'),
             $this->get('entityManager'),
-            $this->get('classParser')
+            $this->get('classParser'),
+            $this->get('ormMetadata')
+        );
+    }
+
+    protected function loadOrmMetadata()
+    {
+        return new \Espo\Core\Utils\Metadata\OrmMetadata(
+            $this->get('metadata'),
+            $this->get('fileManager'),
+            $this->get('config')->get('useCache')
         );
     }
 

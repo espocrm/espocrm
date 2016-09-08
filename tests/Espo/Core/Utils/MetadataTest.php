@@ -51,25 +51,15 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
             copy($this->defaultCacheFile, $this->cacheFile);
         }
 
-        $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
-        $this->objects['Unifier'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Unifier')->disableOriginalConstructor()->getMock();
 
         $this->objects['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
         $GLOBALS['log'] = $this->objects['log'];
 
-        //set to use cache
-        $this->objects['config']
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValue(true));
-
-
-        $this->object = new \Espo\Core\Utils\Metadata($this->objects['config'], $this->objects['fileManager']);
+        $this->object = new \Espo\Core\Utils\Metadata($this->objects['fileManager'], true);
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('cacheFile', $this->cacheFile);
-        $this->reflection->setProperty('ormCacheFile', $this->ormCacheFile);
     }
 
     protected function tearDown()

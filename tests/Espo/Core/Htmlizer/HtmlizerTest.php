@@ -104,7 +104,7 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
 
         $template = "{{name}} test {{date}} {{dateTime}} {{#each list}}{{value}} {{/each}}{{int}} {{float}}";
         $html = $this->htmlizer->render($entity, $template);
-        $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 1 2,000.5 3 3.5', $html);
+        $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 1 2,000.50 3 3.50', $html);
 
 
         $template = "{{float}}";
@@ -121,7 +121,7 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
         $template = "{{float}}";
         $entity->set('float', 10000.50);
         $html = $this->htmlizer->render($entity, $template);
-        $this->assertEquals('10,000.5', $html);
+        $this->assertEquals('10,000.50', $html);
 
         $template = "{{int}}";
         $entity->set('int', 3000);
