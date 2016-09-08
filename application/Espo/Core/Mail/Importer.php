@@ -126,7 +126,10 @@ class Importer
             }
 
             if (isset($message->messageId) && !empty($message->messageId)) {
-                $email->set('messageId', $message->messageId);
+                $messageId = $message->messageId;
+                $messageId = str_replace('<<', '<', $messageId);
+                $messageId = str_replace('>>', '>', $messageId);
+                $email->set('messageId', $messageId);
                 if (isset($message->deliveredTo)) {
                     $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
                 }
