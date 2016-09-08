@@ -190,6 +190,10 @@ class Sender
             $email->set('from', $fromAddress);
         }
 
+        $sender = new \Zend\Mail\Header\Sender();
+        $sender->setAddress($email->get('from'));
+        $message->getHeaders()->addHeader($sender);
+
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
             if (!empty($params['replyToName'])) {
