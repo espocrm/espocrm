@@ -440,11 +440,6 @@ class Util
         return $content;
     }
 
-    protected static function unsetEmptyArrays()
-    {
-
-    }
-
 
     /**
      * Get class name from the file path
