@@ -1334,17 +1334,21 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             'Contact' => array(
                 'useCache' => true,
             ),
+            'Lead' => array(
+                'useCache' => true,
+            )
         );
 
         $unsets = array(
             'Account.useCache',
             'Account.sub',
+            'Lead.useCache'
         );
 
         $result = array(
             'Contact' => array(
                 'useCache' => true,
-            ),
+            )
         );
 
         $this->assertEquals($result, Util::unsetInArray($input, $unsets, true));

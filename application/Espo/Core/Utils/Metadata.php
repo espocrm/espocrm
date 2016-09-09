@@ -85,7 +85,7 @@ class Metadata
     protected function getUnifier()
     {
         if (!isset($this->unifier)) {
-            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this);
+            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this, false);
         }
 
         return $this->unifier;
@@ -174,7 +174,8 @@ class Metadata
     */
     public function get($key = null, $default = null)
     {
-        return Util::getValueByKey($this->getData(), $key, $default);
+        $result = Util::getValueByKey($this->getData(), $key, $default);
+        return $result;
     }
 
     /**
@@ -228,6 +229,28 @@ class Metadata
         return $data;
     }
 
+    protected function addAdditionalFieldsObj()
+    {
+        $data = &$this->data;
+
+        if (!isset($data->entityDefs)) return;
+
+        foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
+            if (!isset($entityDefsItem->fields)) continue;
+            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), Util::objectToArray($data->fields));
+                if (!$additionalFields) continue;
+                foreach ($additionalFields as $subFieldName => $subFieldParams) {
+                    if (isset($entityDefsItem->fields->$subFieldName)) {
+                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName);
+                    } else {
+                        $data->entityDefs->$entityType->fields->$subFieldName = Util::arrayToObject($subFieldParams);
+                    }
+                }
+            }
+        }
+    }
+
     /**
     * Set Metadata data
     * Ex. $key1 = menu, $key2 = Account then will be created a file metadataFolder/menu/Account.json
@@ -278,14 +301,14 @@ class Metadata
 
         $unsetData = array(
             $key1 => array(
-                $key2 => $normalizedData,
+                $key2 => $normalizedData
             )
         );
 
         $this->deletedData = Util::merge($this->deletedData, $unsetData);
-        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData);
+        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
 
-        $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData);
+        $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
     }
 
     /**
