@@ -138,7 +138,6 @@ class FieldManager
         }
 
         $metadataToBeSaved = false;
-
         $clientDefsToBeSet = false;
 
         $clientDefs = array();
@@ -149,11 +148,16 @@ class FieldManager
                 $clientDefs['dynamicLogic']['fields'][$name]['visible'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicVisible']
                 );
+                $metadataToBeSaved = true;
+                $clientDefsToBeSet = true;
             } else {
-                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
+                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
+                    $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
+                    $metadataToBeSaved = true;
+                    $clientDefsToBeSet = true;
+                }
             }
-            $metadataToBeSaved = true;
-            $clientDefsToBeSet = true;
+
         }
 
         if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
@@ -162,11 +166,15 @@ class FieldManager
                 $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicReadOnly']
                 );
+                $metadataToBeSaved = true;
+                $clientDefsToBeSet = true;
             } else {
-                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
+                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])) {
+                    $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
+                    $metadataToBeSaved = true;
+                    $clientDefsToBeSet = true;
+                }
             }
-            $metadataToBeSaved = true;
-            $clientDefsToBeSet = true;
         }
 
         if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
@@ -175,11 +183,15 @@ class FieldManager
                 $clientDefs['dynamicLogic']['fields'][$name]['required'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicRequired']
                 );
+                $metadataToBeSaved = true;
+                $clientDefsToBeSet = true;
             } else {
-                $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
+                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
+                    $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
+                    $metadataToBeSaved = true;
+                    $clientDefsToBeSet = true;
+                }
             }
-            $metadataToBeSaved = true;
-            $clientDefsToBeSet = true;
         }
 
         if ($clientDefsToBeSet) {
