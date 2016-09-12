@@ -143,8 +143,8 @@ class FieldManager
         $clientDefs = array();
 
         if (array_key_exists('dynamicLogicVisible', $fieldDefs)) {
-            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
             if (!is_null($fieldDefs['dynamicLogicVisible'])) {
+                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                 $clientDefs['dynamicLogic']['fields'][$name]['visible'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicVisible']
                 );
@@ -152,6 +152,7 @@ class FieldManager
                 $clientDefsToBeSet = true;
             } else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
+                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                     $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
                     $metadataToBeSaved = true;
                     $clientDefsToBeSet = true;
@@ -161,8 +162,8 @@ class FieldManager
         }
 
         if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
-            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
             if (!is_null($fieldDefs['dynamicLogicReadOnly'])) {
+                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                 $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicReadOnly']
                 );
@@ -170,6 +171,7 @@ class FieldManager
                 $clientDefsToBeSet = true;
             } else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])) {
+                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                     $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
                     $metadataToBeSaved = true;
                     $clientDefsToBeSet = true;
@@ -178,8 +180,8 @@ class FieldManager
         }
 
         if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
-            $this->prepareClientDefsFieldDynamicLogic($clientDefs, $name);
             if (!is_null($fieldDefs['dynamicLogicRequired'])) {
+                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                 $clientDefs['dynamicLogic']['fields'][$name]['required'] = array(
                     'conditionGroup' => $fieldDefs['dynamicLogicRequired']
                 );
@@ -187,7 +189,24 @@ class FieldManager
                 $clientDefsToBeSet = true;
             } else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
+                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                     $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
+                    $metadataToBeSaved = true;
+                    $clientDefsToBeSet = true;
+                }
+            }
+        }
+
+        if (array_key_exists('dynamicLogicOptions', $fieldDefs)) {
+            if (!is_null($fieldDefs['dynamicLogicOptions'])) {
+                $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
+                $clientDefs['dynamicLogic']['options'][$name] = $fieldDefs['dynamicLogicOptions'];
+                $metadataToBeSaved = true;
+                $clientDefsToBeSet = true;
+            } else {
+                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
+                    $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
+                    $clientDefs['dynamicLogic']['options'][$name] = null;
                     $metadataToBeSaved = true;
                     $clientDefsToBeSet = true;
                 }
@@ -213,7 +232,7 @@ class FieldManager
         return (bool) $res;
     }
 
-    protected function prepareClientDefsFieldDynamicLogic(&$clientDefs, $name)
+    protected function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name)
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
             $clientDefs['dynamicLogic'] = array();
@@ -223,6 +242,19 @@ class FieldManager
         }
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['fields'])) {
             $clientDefs['dynamicLogic']['fields'][$name] = array();
+        }
+    }
+
+    protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name)
+    {
+        if (!array_key_exists('dynamicLogic', $clientDefs)) {
+            $clientDefs['dynamicLogic'] = array();
+        }
+        if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
+            $clientDefs['dynamicLogic']['options'] = array();
+        }
+        if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
+            $clientDefs['dynamicLogic']['options'][$name] = array();
         }
     }
 

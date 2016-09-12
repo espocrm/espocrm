@@ -57,7 +57,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             },
             'click button[data-action="resetToDefault"]': function () {
                 this.resetToDefault();
-            },
+            }
         },
 
         setupFieldData: function (callback) {
@@ -188,6 +188,21 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             });
                             this.hasDynamicLogicPanel = true;
                         }
+
+                        if (
+                            ~['enum', 'array', 'multiEnum'].indexOf(this.type)
+                            &&
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled'])
+                            &&
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])
+                        ) {
+                            this.model.set('dynamicLogicOptions', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]));
+                            this.createFieldView(null, 'dynamicLogicOptions', null, {
+                                view: 'views/admin/field-manager/fields/dynamic-logic-options',
+                                scope: this.scope
+                            });
+                            this.hasDynamicLogicPanel = true;
+                        };
                     }
 
                     callback();
@@ -228,7 +243,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }, this);
         },
 
-        createFieldView: function (type, name, readOnly, params) {
+        createFieldView: function (type, name, readOnly, params, callback) {
             var viewName = (params || {}).view || this.getFieldManager().getViewName(type);
             this.createView(name, viewName, {
                 model: this.model,
@@ -241,7 +256,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 readOnly: readOnly,
                 scope: this.scope,
                 field: this.field,
-            });
+            }, callback);
             this.fieldList.push(name);
         },
 

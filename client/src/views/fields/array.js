@@ -156,6 +156,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
         },
 
+        setTranslatedOptions: function (translatedOptions) {
+            this.translatedOptions = translatedOptions;
+        },
+
         resetOptionList: function () {
             if (this.originalOptionList) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);

@@ -55,8 +55,14 @@
                     <div class="field" data-name="dynamicLogicReadOnly">{{{dynamicLogicReadOnly}}}</div>
                 </div>
                 {{/if}}
+                {{#if dynamicLogicOptions}}
+                <div class="cell form-group" data-name="dynamicLogicOptions">
+                    <label class="control-label" data-name="dynamicLogicOptions">{{translate 'dynamicLogicOptions' scope='Admin' category='fields'}}</label>
+                    <div class="field" data-name="dynamicLogicOptions">{{{dynamicLogicOptions}}}</div>
+                </div>
+                {{/if}}
             </div>
+        </div>
     </div>
     {{/if}}
-    </div>
 </div>
