@@ -113,7 +113,7 @@ class DataUtil
                 }
             }
             if ($doReindex) {
-                $data =& array_values($data);
+                $data = array_values($data);
             }
         }
 
