@@ -78,6 +78,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                             });
                         }, this);
 
+                        this.dashletIdList.forEach(function (item) {
+                            this.clearView('dashlet-' + item);
+                        }, this);
+
                         this.dashboardLayout = dashboardLayout;
                         this.saveLayout();
 
