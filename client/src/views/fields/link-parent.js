@@ -289,6 +289,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             data[this.typeName] = this.$elementType.val() || null;
             data[this.nameName] = this.$elementName.val() || null;
             data[this.idName] = this.$elementId.val() || null;
+            if (data[this.idName] === null) {
+                data[this.typeName] = null;
+            }
             return data;
         },
 
