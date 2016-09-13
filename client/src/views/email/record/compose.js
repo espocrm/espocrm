@@ -49,7 +49,10 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
 	        }
 
             this.listenTo(this.model, 'insert-template', function (data) {
-                var body = this.appendSignature(data.body || '', data.isHtml);
+                var body = data.body;
+                if (this.hasSignature()) {
+                    body = this.appendSignature(body || '', data.isHtml);
+                }
                 this.model.set('isHtml', data.isHtml);
                 this.model.set('name', data.subject);
                 this.model.set('body', '');
@@ -98,7 +101,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         },
 
         getSignature: function () {
-            return this.getPreferences().get('signature');
+            return this.getPreferences().get('signature') || '';
         },
 
         getPlainTextSignature: function () {
