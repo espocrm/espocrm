@@ -169,20 +169,22 @@ class AclManager extends \Espo\Core\AclManager
         return parent::get($user, $permission);
     }
 
-    public function checkReadOnlyTeam(User $user, $permission)
+    public function checkReadOnlyTeam(User $user, $scope)
     {
         if ($this->checkUserIsNotPortal($user)) {
-            return $this->getMainManager()->checkReadOnlyTeam($user, $permission);
+            $data = $this->getTable($user)->getScopeData($scope);
+            return $this->getMainManager()->checkReadOnlyTeam($user, $data);
         }
-        return false;
+        return parent::checkReadOnlyTeam($user, $scope);
     }
 
-    public function checkReadOnlyOwn(User $user, $permission)
+    public function checkReadOnlyOwn(User $user, $scope)
     {
         if ($this->checkUserIsNotPortal($user)) {
-            return $this->getMainManager()->checkReadOnlyOwn($user, $permission);
+            $data = $this->getTable($user)->getScopeData($scope);
+            return $this->getMainManager()->checkReadOnlyOwn($user, $data);
         }
-        return false;
+        return parent::checkReadOnlyOwn($user, $scope);
     }
 
     public function check(User $user, $subject, $action = null)
