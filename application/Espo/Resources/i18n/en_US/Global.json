@@ -473,7 +473,8 @@
             "lastSevenDays": "Last 7 Days",
             "lastXDays": "Last X Days",
             "nextXDays": "Next X Days",
-            "ever": "Ever"
+            "ever": "Ever",
+            "isEmpty": "Is Empty"
         },
         "searchRanges": {
             "is": "Is",

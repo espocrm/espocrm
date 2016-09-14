@@ -38,7 +38,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'date', 'after', 'before'],
 
-        searchTypeOptions: ['lastSevenDays', 'ever', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeOptions: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -246,6 +246,11 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     value: value,
                     dateValue: value
                 };
+            } else if (type === 'isEmpty') {
+                data = {
+                    typeFront: type,
+                    type: 'isNull'
+                }
             } else {
                 data = {
                     type: type
