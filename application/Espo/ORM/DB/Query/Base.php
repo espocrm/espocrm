@@ -1010,8 +1010,8 @@ abstract class Base
                     'distantKey' => $distantKey
                 );
             case IEntity::BELONGS_TO_PARENT:
-                $key = $this->toDb($entity->getEntityType()) . 'Id';
-                $typeKey = $this->toDb($entity->getEntityType()) . 'Type';
+                $key = $relationName . 'Id';
+                $typeKey = $relationName . 'Type';
                 return array(
                     'key' => $key,
                     'typeKey' => $typeKey,

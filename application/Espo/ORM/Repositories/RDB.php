@@ -215,8 +215,16 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return [];
         }
-        $entityType = $entity->relations[$relationName]['entity'];
-        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+
+        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO_PARENT) {
+            $entityType = $entity->get($relationName . 'Type');
+        } else {
+            $entityType = $entity->relations[$relationName]['entity'];
+        }
+
+        if ($entityType) {
+            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+        }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
         if (is_array($result)) {
