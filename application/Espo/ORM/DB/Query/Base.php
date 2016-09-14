@@ -978,14 +978,14 @@ abstract class Base
                 if (isset($relOpt['foreignKey'])) {
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                $foreignType = 'parentType';
+                $foreignTypeKey = 'parentType';
                 if (isset($relOpt['foreignType'])) {
-                    $foreignType = $relOpt['foreignType'];
+                    $foreignTypeKey = $relOpt['foreignType'];
                 }
                 return array(
                     'key' => $key,
                     'foreignKey' => $foreignKey,
-                    'foreignType' => $foreignType,
+                    'foreignTypeKey' => $foreignTypeKey,
                 );
 
             case IEntity::MANY_MANY:
@@ -1007,7 +1007,15 @@ abstract class Base
                     'key' => $key,
                     'foreignKey' => $foreignKey,
                     'nearKey' => $nearKey,
-                    'distantKey' => $distantKey,
+                    'distantKey' => $distantKey
+                );
+            case IEntity::BELONGS_TO_PARENT:
+                $key = $this->toDb($entity->getEntityType()) . 'Id';
+                $type = $this->toDb($entity->getEntityType()) . 'Type';
+                return array(
+                    'key' => $key,
+                    'typeKey' => $foreignType,
+                    'foreignKey' => 'id'
                 );
         }
     }
