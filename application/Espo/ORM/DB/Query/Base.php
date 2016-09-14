@@ -978,14 +978,14 @@ abstract class Base
                 if (isset($relOpt['foreignKey'])) {
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                $foreignTypeKey = 'parentType';
+                $foreignType = 'parentType';
                 if (isset($relOpt['foreignType'])) {
-                    $foreignTypeKey = $relOpt['foreignType'];
+                    $foreignType = $relOpt['foreignType'];
                 }
                 return array(
                     'key' => $key,
                     'foreignKey' => $foreignKey,
-                    'foreignTypeKey' => $foreignTypeKey,
+                    'foreignType' => $foreignType,
                 );
 
             case IEntity::MANY_MANY:
