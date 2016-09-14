@@ -19,7 +19,8 @@
         "CampaignTrackingUrl": "Tracking URL",
         "Activities": "Activities",
         "KnowledgeBaseArticle": "Knowledge Base Article",
-        "KnowledgeBaseCategory": "Knowledge Base Category"
+        "KnowledgeBaseCategory": "Knowledge Base Category",
+        "CampaignLogRecord": "Campaign Log Record"
     },
     "scopeNamesPlural": {
         "Account": "Accounts",
@@ -41,7 +42,8 @@
         "CampaignTrackingUrl": "Tracking URLs",
         "Activities": "Activities",
         "KnowledgeBaseArticle": "Knowledge Base",
-        "KnowledgeBaseCategory": "Knowledge Base Categories"
+        "KnowledgeBaseCategory": "Knowledge Base Categories",
+        "CampaignLogRecord": "Campaign Log Records"
     },
     "dashlets": {
         "Leads": "My Leads",
