@@ -1011,10 +1011,10 @@ abstract class Base
                 );
             case IEntity::BELONGS_TO_PARENT:
                 $key = $this->toDb($entity->getEntityType()) . 'Id';
-                $type = $this->toDb($entity->getEntityType()) . 'Type';
+                $typeKey = $this->toDb($entity->getEntityType()) . 'Type';
                 return array(
                     'key' => $key,
-                    'typeKey' => $foreignType,
+                    'typeKey' => $typeKey,
                     'foreignKey' => 'id'
                 );
         }
