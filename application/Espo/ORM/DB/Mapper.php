@@ -151,22 +151,27 @@ abstract class Mapper implements IMapper
     {
         $relOpt = $entity->relations[$relationName];
 
-        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+        if (!isset($relOpt['type'])) {
+            throw new \LogicException("Missing 'type' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
-        $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
-        $relEntity = $this->entityFactory->create($relEntityName);
+        if ($relOpt['type'] !== IEntity::BELONGS_TO_PARENT) {
+            if (!isset($relOpt['entity'])) {
+                throw new \LogicException("Missing 'entity' in defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            }
 
-        if (!$relEntity) {
-            return null;
+            $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+            $relEntity = $this->entityFactory->create($relEntityName);
+
+            if (!$relEntity) {
+                return null;
+            }
         }
 
         if ($totalCount) {
             $params['aggregation'] = 'COUNT';
             $params['aggregationBy'] = 'id';
         }
-
 
         if (empty($params['whereClause'])) {
             $params['whereClause'] = array();
@@ -207,8 +212,8 @@ abstract class Mapper implements IMapper
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == IEntity::HAS_CHILDREN) {
-                    $foreignType = $keySet['foreignType'];
-                    $params['whereClause'][$foreignType] = $entity->getEntityType();
+                    $foreignTypeKey = $keySet['foreignTypeKey'];
+                    $params['whereClause'][$foreignTypeKey] = $entity->getEntityType();
                 }
 
                 if ($relType == IEntity::HAS_ONE) {
@@ -282,6 +287,33 @@ abstract class Mapper implements IMapper
                 } else {
                     return $resultArr;
                 }
+            case IEntity::BELONGS_TO_PARENT:
+                $foreignEntityType = $entity->get($keySet['typeKey']);
+                $foreignEntityId = $entity->get($key);
+                if (!$foreignEntityType || !$foreignEntityId) {
+                    return null;
+                }
+                $params['whereClause'][$foreignKey] = $foreignEntityId;
+                $params['offset'] = 0;
+                $params['limit'] = 1;
+
+                $relEntity = $this->entityFactory->create($foreignEntityType);
+
+                $sql = $this->query->createSelectQuery($foreignEntityType, $params);
+
+                $ps = $this->pdo->query($sql);
+
+                if ($ps) {
+                    foreach ($ps as $row) {
+                        if (!$totalCount) {
+                            $relEntity = $this->fromRow($relEntity, $row);
+                            return $relEntity;
+                        } else {
+                            return $row['AggregateValue'];
+                        }
+                    }
+                }
+                return null;
         }
 
         return false;

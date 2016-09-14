@@ -289,6 +289,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             data[this.typeName] = this.$elementType.val() || null;
             data[this.nameName] = this.$elementName.val() || null;
             data[this.idName] = this.$elementId.val() || null;
+            if (data[this.idName] === null) {
+                data[this.typeName] = null;
+            }
             return data;
         },
 
@@ -316,33 +319,54 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             var entityName = this.$elementName.val()
             var entityId = this.$elementId.val();
 
-            if (!entityId || !entityType) {
+            if (!entityType) {
                 return false;
             }
 
-            var data = {
-                frontType: 'is',
-                type: 'and',
-                field: this.idName,
+            var data;
+            if (entityId) {
+                data = {
+                    frontType: 'is',
+                    type: 'and',
+                    field: this.idName,
 
-                value: [
-                    {
-                        type: 'equals',
-                        field: this.idName,
-                        value: entityId,
-                    },
-                    {
-                        type: 'equals',
-                        field: this.typeName,
-                        value: entityType,
-                    }
-                ],
-                valueId: entityId,
-                valueName: entityName,
-                valueType: entityType,
-            };
+                    value: [
+                        {
+                            type: 'equals',
+                            field: this.idName,
+                            value: entityId,
+                        },
+                        {
+                            type: 'equals',
+                            field: this.typeName,
+                            value: entityType,
+                        }
+                    ],
+                    valueId: entityId,
+                    valueName: entityName,
+                    valueType: entityType,
+                };
+            } else {
+                data = {
+                    frontType: 'is',
+                    type: 'and',
+                    field: this.idName,
+                    value: [
+                        {
+                            type: 'isNotNull',
+                            field: this.idName
+                        },
+                        {
+                            type: 'equals',
+                            field: this.typeName,
+                            value: entityType,
+                        }
+                    ],
+                    valueType: entityType
+                };
+            }
             return data;
-        },
+        }
     });
 });
 
