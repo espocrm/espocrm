@@ -177,7 +177,7 @@
         "massRemoveResultSingle": "{count} enregistrement a été supprimé",
         "noRecordsRemoved": "Aucun enregistrement n'a été trouvé",
         "clickToRefresh": "Cliquer pour rafraîchir",
-        "streamPostInfo": "Taper <strong>@utilisateur</strong> pour mentionner des utilisateurs dans votre message.\n\nSyntaxe disponible:\n`<code>code</code>`\n**<strong>gras</strong>**\n*<em>italique</em>*\n~<del>texte barré</del>~\n> bloc de citation\n(url)[lien]",
+        "streamPostInfo": "Taper <strong>@utilisateur</strong> pour mentionner des utilisateurs dans votre message.\n\nSyntaxe disponible:\n`<code>code</code>`\n**<strong>gras</strong>**\n*<em>italique</em>*\n~<del>texte barré</del>~\n> bloc de citation\n[url](lien)",
         "writeYourCommentHere": "Écrivez votre commentaire ici"
     },
     "boolFilters": {

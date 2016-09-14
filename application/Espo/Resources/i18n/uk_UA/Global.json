@@ -183,7 +183,7 @@
         "massRemoveResultSingle": "{count} запис була видалена",
         "noRecordsRemoved": "Жодних записів не було видалено",
         "clickToRefresh": "Натисніть, щоби поновити",
-        "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
+        "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[текст](url)",
         "writeYourCommentHere": "Напишіть свій коментар"
     },
     "boolFilters": {

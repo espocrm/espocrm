@@ -215,7 +215,7 @@
     "massRemoveResultSingle": "{count} запись была удалена",
     "noRecordsRemoved": "Записи не были удалены",
     "clickToRefresh": "Нажмите для обновления",
-    "streamPostInfo": "Введите <strong>@username</strong> чтобы упомянуть пользователей в сообщении.\n\nДоступный синтаксис разметки:\n`<code>код</code>`\n**<strong>важный текст</strong>**\n*<em>эмоционально выделенный текст</em>*\n~<del>удаленный текст</del>~\n> цитата\n(название ссылки)[URL]",
+    "streamPostInfo": "Введите <strong>@username</strong> чтобы упомянуть пользователей в сообщении.\n\nДоступный синтаксис разметки:\n`<code>код</code>`\n**<strong>важный текст</strong>**\n*<em>эмоционально выделенный текст</em>*\n~<del>удаленный текст</del>~\n> цитата\n[текст ссылки](URL)",
     "writeYourCommentHere": "Оставьте свою заметку здесь",
     "writeMessageToUser": "Оставить сообщение для {user}",
     "writeMessageToSelf": "Оставить сообщение для себя",
