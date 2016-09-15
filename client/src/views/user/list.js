@@ -57,7 +57,7 @@ Espo.define('views/user/list', 'views/list', function (Dep) {
                     attributes.contactId = model.id;
                     attributes.contactName = model.get('name');
 
-                    if (model.has('accountId')) {
+                    if (model.get('accountId')) {
                         var names = {};
                         names[model.get('accountId')] = model.get('accountName');
 
