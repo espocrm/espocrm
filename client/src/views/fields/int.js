@@ -59,11 +59,23 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             }
         },
 
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode == 'search') {
+                var $searchType = this.$el.find('select.search-type');
+                this.handleSearchType($searchType.val());
+            }
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
 
             if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
                 data.isNotEmpty = true;
+            }
+            if (this.mode === 'search') {
+                data.searchType = this.searchParams.typeFront || this.searchParams.type;
             }
             return data;
         },
@@ -86,17 +98,28 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.typeOptions = ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
+            this.searchData.typeOptions = [, 'isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
-                    var additional = this.$el.find('input.additional');
-                    if ($(e.currentTarget).val() == 'between') {
-                        additional.removeClass('hide');
-                    } else {
-                        additional.addClass('hide');
-                    }
+                    this.handleSearchType($(e.currentTarget).val());
                 },
             }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            var $additionalInput = this.$el.find('input.additional');
+            var $input = this.$el.find('input[name="'+this.name+'"]');
+
+            if (type === 'between') {
+                $additionalInput.removeClass('hidden');
+                $input.removeClass('hidden');
+            } else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+                $additionalInput.addClass('hidden');
+                $input.addClass('hidden');
+            } else {
+                $additionalInput.addClass('hidden');
+                $input.removeClass('hidden');
+            }
         },
 
         defineMaxLength: function () {
@@ -193,13 +216,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 return false;
             }
 
-            if (type != 'between') {
-                data = {
-                    type: type,
-                    value: value,
-                    value1: value
-                };
-            } else {
+            if (type === 'between') {
                 var valueTo = this.parse(this.$el.find('[name="' + this.name + '-additional"]').val());
                 if (isNaN(valueTo)) {
                     return false;
@@ -209,6 +226,22 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                     value: [value, valueTo],
                     value1: value,
                     value2: valueTo
+                };
+            } else if (type == 'isEmpty') {
+                data = {
+                    type: 'isNull',
+                    typeFront: 'isEmpty'
+                };
+            } else if (type == 'isNotEmpty') {
+                data = {
+                    type: 'isNotNull',
+                    typeFront: 'isNotEmpty'
+                };
+            } else {
+                data = {
+                    type: type,
+                    value: value,
+                    value1: value
                 };
             }
             return data;

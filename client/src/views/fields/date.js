@@ -45,11 +45,13 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         data: function () {
+            var data = Dep.prototype.data.call(this);
             if (this.mode === 'search') {
                 this.searchData.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
                 this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
+                data.searchType = this.searchParams.typeFront || this.searchParams.type;
             }
-            return Dep.prototype.data.call(this);
+            return data;
         },
 
         setupSearch: function () {
