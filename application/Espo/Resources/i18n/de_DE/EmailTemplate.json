@@ -14,7 +14,7 @@
     "Info": "Info"
   },
   "messages": {
-    "infoText": "Verfügbare Variablen:\n\n{optOutUrl} &#8211; URL für den Abmeldelink};\n\n{optOutLink} &#8211; ein Abmeldelink."
+    "infoText": "Verfügbare Variablen:\n\n{optOutUrl} &#8211; URL für den Abmeldelink;\n\n{optOutLink} &#8211; ein Abmeldelink."
   },
   "tooltips": {
     "oneOff": "Überprüfen Sie, ob Sie die Vorlage nur einmal benutzen z.B. für eine Massenaussendung"
