@@ -130,12 +130,14 @@
         "createdContact": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/created-contact"
         },
         "createdOpportunity": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/created-opportunity"
         },
         "targetLists": {
             "type": "linkMultiple",
