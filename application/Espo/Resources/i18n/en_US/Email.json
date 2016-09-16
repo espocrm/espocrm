@@ -99,6 +99,7 @@
         "markAsImportant": "Mark as Important",
         "markAsNotImportant": "Unmark Importance",
         "moveToTrash": "Move to Trash",
-        "moveToFolder": "Move to Folder"
+        "moveToFolder": "Move to Folder",
+        "retrieveFromTrash": "Retrieve from Trash"
     }
 }

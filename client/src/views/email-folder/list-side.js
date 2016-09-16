@@ -88,7 +88,7 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
                 this.manageModelRemoving(model);
             }, this);
 
-            this.listenTo(this.emailCollection, 'retrieving-to-trash', function (id) {
+            this.listenTo(this.emailCollection, 'retrieving-from-trash', function (id) {
                 var model = this.emailCollection.get(id);
                 if (!model) return;
                 if (this.countsIsBeingLoaded) return;
