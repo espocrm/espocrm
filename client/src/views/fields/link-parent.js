@@ -54,6 +54,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
+
         data: function () {
             return _.extend({
                 idName: this.idName,
@@ -142,7 +144,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -301,15 +302,19 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (type == 'isEmpty') {
                 var data = {
                     type: 'isNull',
-                    typeFront: type,
-                    field: this.idName
+                    field: this.idName,
+                    data: {
+                        type: type
+                    }
                 };
                 return data;
             } else if (type == 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
-                    typeFront: type,
-                    field: this.idName
+                    field: this.idName,
+                    data: {
+                        type: type
+                    }
                 };
                 return data;
             }
@@ -326,7 +331,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             var data;
             if (entityId) {
                 data = {
-                    frontType: 'is',
                     type: 'and',
                     field: this.idName,
 
@@ -345,10 +349,12 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     valueId: entityId,
                     valueName: entityName,
                     valueType: entityType,
+                    data: {
+                        type: 'is'
+                    }
                 };
             } else {
                 data = {
-                    frontType: 'is',
                     type: 'and',
                     field: this.idName,
                     value: [
@@ -362,10 +368,17 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             value: entityType,
                         }
                     ],
-                    valueType: entityType
+                    valueType: entityType,
+                    data: {
+                        type: 'is'
+                    }
                 };
             }
             return data;
+        },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || this.searchParams.typeFront;
         }
     });
 });

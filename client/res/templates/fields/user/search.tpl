@@ -1,5 +1,5 @@
 <select class="form-control search-type input-sm" name="{{name}}-type">
-    {{options searchData.typeOptions searchParams.typeFront field='searchRanges'}}
+    {{options searchTypeList searchType field='searchRanges'}}
 </select>
 <div class="primary">
 	<div class="input-group">

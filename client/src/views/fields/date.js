@@ -38,7 +38,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'date', 'after', 'before'],
 
-        searchTypeOptions: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -49,13 +49,11 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             if (this.mode === 'search') {
                 this.searchData.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
                 this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
-                data.searchType = this.searchParams.typeFront || this.searchParams.type;
             }
             return data;
         },
 
         setupSearch: function () {
-            this.searchData.typeOptions = this.searchTypeOptions;
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
@@ -250,8 +248,10 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 };
             } else if (type === 'isEmpty') {
                 data = {
-                    typeFront: type,
-                    type: 'isNull'
+                    type: 'isNull',
+                    data: {
+                        type: type
+                    }
                 }
             } else {
                 data = {
@@ -259,6 +259,10 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 };
             }
             return data;
+        },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
         validateRequired: function () {

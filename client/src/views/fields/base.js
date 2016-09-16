@@ -159,6 +159,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 data.searchData = this.searchData;
                 data.searchValues = this.getSearchValues();
                 data.searchType = this.getSearchType();
+                data.searchTypeList = this.getSearchTypeList();
             }
             return data;
         },
@@ -300,12 +301,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        getSearchParamsData: function () {
+            return this.searchParams.data || {};
+        },
+
         getSearchValues: function () {
-            return (this.searchParams.data || {}).values || {};
+            return this.getSearchParamsData().values || {};
         },
 
         getSearchType: function () {
-            return (this.searchParams.data || {}).type || this.searchParams.type;
+            return this.getSearchParamsData().type || this.searchParams.type;
+        },
+
+        getSearchTypeList: function () {
+            return this.searchTypeList;
         },
 
         initInlineEdit: function () {

@@ -42,6 +42,8 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         thousandSeparator: ',',
 
+        searchTypeList: ['isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.defineMaxLength();
@@ -74,9 +76,6 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
                 data.isNotEmpty = true;
             }
-            if (this.mode === 'search') {
-                data.searchType = this.searchParams.typeFront || this.searchParams.type;
-            }
             return data;
         },
 
@@ -98,7 +97,6 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.typeOptions = [, 'isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     this.handleSearchType($(e.currentTarget).val());
@@ -246,6 +244,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             }
             return data;
         },
+
+        getSearchType: function () {
+            return this.searchParams.typeFront || this.searchParams.type;
+        }
 
     });
 });
