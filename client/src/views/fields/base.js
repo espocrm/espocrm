@@ -157,6 +157,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'search') {
                 data.searchParams = this.searchParams;
                 data.searchData = this.searchData;
+                data.searchValues = this.getSearchValues();
+                data.searchType = this.getSearchType();
             }
             return data;
         },
@@ -296,6 +298,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        getSearchValues: function () {
+            return (this.searchParams.data || {}).values || {};
+        },
+
+        getSearchType: function () {
+            return (this.searchParams.data || {}).type || this.searchParams.type;
         },
 
         initInlineEdit: function () {
