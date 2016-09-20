@@ -218,7 +218,7 @@
     "massRemoveResultSingle": "{count} registro se ha eliminado",
     "noRecordsRemoved": "No hay registros se eliminaron",
     "clickToRefresh": "Clic aqui para actualizar",
-    "streamPostInfo": "Escriba <strong>@username</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n(nombre del enlace)[url]",
+    "streamPostInfo": "Escriba <strong>@username</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n[nombre del enlace](url)",
     "writeYourCommentHere": "Escriba su comentario aquí",
     "writeMessageToUser": "Escribir un mensaje a {user}",
     "writeMessageToSelf": "Escribir un mensaje a uno mismo",

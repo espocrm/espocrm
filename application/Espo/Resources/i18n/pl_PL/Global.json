@@ -215,7 +215,7 @@
     "massRemoveResultSingle": "Ilość usuniętych rekordów: {count}",
     "noRecordsRemoved": "Nic nie usunięto",
     "clickToRefresh": "Kliknij aby odświeżyć",
-    "streamPostInfo": "Wpisz <strong>@użytkownik</strong> aby zaznaczyć użytkownika w poście.\n\nDostępne znaczniki:\n`<code>kod</code>`\n**<strong>pogrubiony</strong>**\n*<em>pochylony</em>*\n~<del>skasowany</del>~\n> blockquote\n(link name)[url]",
+    "streamPostInfo": "Wpisz <strong>@użytkownik</strong> aby zaznaczyć użytkownika w poście.\n\nDostępne znaczniki:\n`<code>kod</code>`\n**<strong>pogrubiony</strong>**\n*<em>pochylony</em>*\n~<del>skasowany</del>~\n> blockquote\n[link text](url)",
     "writeYourCommentHere": "Dodaj swój komentarz tutaj",
     "writeMessageToUser": "Napisz wiadomość do {user}",
     "writeMessageToSelf": "Napisz wiadomość do siebie",

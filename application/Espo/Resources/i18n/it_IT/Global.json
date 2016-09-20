@@ -216,7 +216,7 @@
     "massRemoveResult": "{count} record sono stati rimossi",
     "noRecordsRemoved": "Nessun record è stato rimosso",
     "clickToRefresh": "Clicca per aggiornare",
-    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(link name)[url]",
+    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[text](url)",
     "writeYourCommentHere": "Scrivi il tuo commento qui",
     "writeMessageToUser": "Scrivi un messaggio a {user}",
     "writeMessageToSelf": "Scrivi un messaggio sul tuo streame",

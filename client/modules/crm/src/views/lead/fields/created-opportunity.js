@@ -26,20 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/currency-converted', 'views/fields/float', function (Dep) {
+Espo.define('crm:views/lead/fields/created-opportunity', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'fields/currency/detail',
-
-        listTemplate: 'fields/currency/detail',
-
-        data: function () {
-            return _.extend({
-                currencyValue: this.getConfig().get('baseCurrency'),
-            }, Dep.prototype.data.call(this));
+        getSelectFilters: function () {
+            if (this.model.get('createdAccountId')) {
+                return {
+                    'account': {
+                        type: 'equals',
+                        field: 'accountId',
+                        value: this.model.get('createdAccountId'),
+                        valueName: this.model.get('createdAccountName')
+                    }
+                };
+            }
         },
-
     });
-});
 
+});

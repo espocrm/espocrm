@@ -189,7 +189,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             attributes.parentName = this.model.get('parentName');
             attributes.parentType = this.model.get('parentType');
 
-            attributes.description = '(' + this.model.get('name') + ')[#Email/view/' + this.model.id + ']';
+            attributes.description = '[' + this.model.get('name') + '](#Email/view/' + this.model.id + ')';
 
             attributes.name = this.translate('Email', 'scopeNames') + ': ' + this.model.get('name');
 

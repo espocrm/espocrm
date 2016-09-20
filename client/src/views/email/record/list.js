@@ -52,6 +52,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.massActionList.push('markAsImportant');
             this.massActionList.push('markAsNotImportant');
             this.massActionList.push('moveToFolder');
+            this.massActionList.push('retrieveFromTrash');
         },
 
         massActionMarkAsRead: function () {
@@ -141,16 +142,41 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
-            $.ajax({
-                url: 'Email/action/moveToTrash',
-                type: 'POST',
-                data: JSON.stringify({
-                    ids: ids
-                })
-            });
+
+            this.ajaxPostRequest('Email/action/moveToTrash', {
+                ids: ids
+            }).then(function () {
+                Espo.Ui.success(this.translate('Done'));
+            }.bind(this));
+
+            if (this.collection.data.folderId === 'trash') {
+                return;
+            }
 
             ids.forEach(function (id) {
                 this.collection.trigger('moving-to-trash', id);
+                this.removeRecordFromList(id);
+            }, this);
+        },
+
+        massActionRetrieveFromTrash: function () {
+            var ids = [];
+            for (var i in this.checkedList) {
+                ids.push(this.checkedList[i]);
+            }
+
+            this.ajaxPostRequest('Email/action/retrieveFromTrash', {
+                ids: ids
+            }).then(function () {
+                Espo.Ui.success(this.translate('Done'));
+            }.bind(this));
+
+            if (this.collection.data.folderId !== 'trash') {
+                return;
+            }
+
+            ids.forEach(function (id) {
+                this.collection.trigger('retrieving-from-trash', id);
                 this.removeRecordFromList(id);
             }, this);
         },
@@ -242,7 +268,7 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
                 id: id
             }).then(function () {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
-                this.collection.trigger('retrieving-to-trash', id);
+                this.collection.trigger('retrieving-from-trash', id);
                 this.removeRecordFromList(id);
             }.bind(this));
         },

@@ -29,11 +29,11 @@
 Espo.define('view-helper', [], function () {
 
     var ViewHelper = function (options) {
-        this.urlRegex = /(^|[^\[])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        this.urlRegex = /(^|[^\(])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
         this.mdSearch = [
-            /\("?(.*?)"?\)\[(.*?)\]/g,
+            /\["?(.*?)"?\]\((.*?)\)/g,
             /\&\#x60;(([\s\S]*?)\&\#x60;)/g,
             /(\*\*)(.*?)\1/g,
             /(\*)(.*?)\1/g,
@@ -199,7 +199,7 @@ Espo.define('view-helper', [], function () {
             Handlebars.registerHelper('complexText', function (text) {
                 text = Handlebars.Utils.escapeExpression(text || '');
 
-                text = text.replace(self.urlRegex, '$1($2)[$2]');
+                text = text.replace(self.urlRegex, '$1[$2]($2)');
 
                 self.mdSearch.forEach(function (re, i) {
                     text = text.replace(re, self.mdReplace[i]);

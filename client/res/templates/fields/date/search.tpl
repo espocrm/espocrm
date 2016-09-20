@@ -1,6 +1,6 @@
 
 <select class="form-control search-type input-sm" name="{{name}}-type">
-    {{options searchData.typeOptions searchParams.type field='dateSearchRanges'}}
+    {{options searchTypeList searchType field='dateSearchRanges'}}
 </select>
 <div class="input-group primary">
     <input class="main-element form-control input-sm" type="text" name="{{name}}" value="{{searchData.dateValue}}" autocomplete="off">

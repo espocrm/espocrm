@@ -122,7 +122,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getWherePart: function (name, defs) {
-            var field = name;
+            var attribute = name;
 
             if ('where' in defs) {
                 return defs.where;
@@ -140,13 +140,16 @@ Espo.define('search-manager', [], function () {
                         value: a
                     };
                 }
-                if ('field' in defs) {
-                    field = defs.field;
+                if ('field' in defs) { // for backward compatibility
+                    attribute = defs.field;
+                }
+                if ('attribute' in defs) {
+                    attribute = defs.attribute;
                 }
                 if (defs.dateTime) {
                     return {
                         type: type,
-                        field: field,
+                        attribute: attribute,
                         value: defs.value,
                         dateTime: true,
                         timeZone: this.dateTime.timeZone || 'UTC'
@@ -155,8 +158,8 @@ Espo.define('search-manager', [], function () {
                     value = defs.value;
                     return {
                         type: type,
-                        field: field,
-                        value: value,
+                        attribute: attribute,
+                        value: value
                     };
                 }
             }

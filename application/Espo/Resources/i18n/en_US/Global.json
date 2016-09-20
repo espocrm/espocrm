@@ -219,7 +219,7 @@
         "massRemoveResultSingle": "{count} record has been removed",
         "noRecordsRemoved": "No records were removed",
         "clickToRefresh": "Click to refresh",
-        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(link name)[url]",
+        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[link text](url)",
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
         "writeMessageToSelf": "Write a message on your stream",
@@ -473,7 +473,8 @@
             "lastSevenDays": "Last 7 Days",
             "lastXDays": "Last X Days",
             "nextXDays": "Next X Days",
-            "ever": "Ever"
+            "ever": "Ever",
+            "isEmpty": "Is Empty"
         },
         "searchRanges": {
             "is": "Is",
@@ -498,7 +499,9 @@
             "lessThan": "Less Than",
             "greaterThanOrEquals": "Greater Than or Equals",
             "lessThanOrEquals": "Less Than or Equals",
-            "between": "Between"
+            "between": "Between",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
         },
         "autorefreshInterval": {
             "0": "None",

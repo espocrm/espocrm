@@ -212,8 +212,8 @@ abstract class Mapper implements IMapper
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == IEntity::HAS_CHILDREN) {
-                    $foreignTypeKey = $keySet['foreignTypeKey'];
-                    $params['whereClause'][$foreignTypeKey] = $entity->getEntityType();
+                    $foreignType = $keySet['foreignType'];
+                    $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
 
                 if ($relType == IEntity::HAS_ONE) {

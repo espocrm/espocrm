@@ -190,7 +190,7 @@
         "massRemoveResultSingle": "{count} záznam byl odstraněn",
         "noRecordsRemoved": "Žádné záznamy nebyly odstraněny",
         "clickToRefresh": "Kliknout pro obnovení",
-        "streamPostInfo": "Napište <strong>@username</strong> pro zmínění uživatelů v příspěvku.\n\nDostupná syntaxe:\n`<code>code</code>`\n**<strong>tučný text</strong>**\n*<em>kurzíva</em>*\n~<del>smazaný text</del>~\n> citace\n(url)[link]"
+        "streamPostInfo": "Napište <strong>@username</strong> pro zmínění uživatelů v příspěvku.\n\nDostupná syntaxe:\n`<code>code</code>`\n**<strong>tučný text</strong>**\n*<em>kurzíva</em>*\n~<del>smazaný text</del>~\n> citace\n[text](url)"
     },
     "boolFilters": {
         "onlyMy": "Pouze moje",

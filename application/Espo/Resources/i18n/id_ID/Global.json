@@ -215,7 +215,7 @@
     "massRemoveResultSingle": "{count} record telah dihapus",
     "noRecordsRemoved": "Tidak ada catatan yang dihapus",
     "clickToRefresh": "Klik untuk refresh",
-    "streamPostInfo": "Ketik <strong> @nama pengguna </ strong> untuk menyebutkan pengguna di pos.\n\nSintaks yang tersedia:\n`<Code> Kode </ code>`\n** <Strong> teks yang kuat </ strong> **\n* <Em> menekankan teks </ em> *\n~ <Del> teks yang dihapus </ del> ~\n> blockquote\n(D) [url]",
+    "streamPostInfo": "Ketik <strong> @nama pengguna </ strong> untuk menyebutkan pengguna di pos.\n\nSintaks yang tersedia:\n`<Code> Kode </ code>`\n** <Strong> teks yang kuat </ strong> **\n* <Em> menekankan teks </ em> *\n~ <Del> teks yang dihapus </ del> ~\n> blockquote\n[D](url)",
     "writeYourCommentHere": "Tulis komentar Anda di sini",
     "writeMessageToUser": "Tulis pesan ke {user}",
     "writeMessageToSelf": "Tulis pesan ke diri sendiri",
