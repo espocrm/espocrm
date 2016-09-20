@@ -183,6 +183,11 @@ class Language
         $options = $this->get($scope. '.options.' . $field);
         if (is_array($options) && array_key_exists($value, $options)) {
             return $options[$value];
+        } else if ($scope !== 'Global') {
+            $options = $this->get('Global.options.' . $field);
+            if (is_array($options) && array_key_exists($value, $options)) {
+                return $options[$value];
+            }
         }
         return $value;
     }
