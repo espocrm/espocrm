@@ -14,7 +14,7 @@
 /client/css/sakura-vertical.css
 /client/css/violet.css
 /client/css/violet-vertical.css
-/tests/testData/cache/*
+/tests/unit/testData/cache/*
 composer.phar
 vendor/
 /custom/Espo/Custom/*
