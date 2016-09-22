@@ -309,16 +309,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             	data.ids = this.checkedList;
             }
 
-            $.ajax({
-                url: this.scope + '/action/export',
-                type: 'GET',
-                data: data,
-                success: function (data) {
-                    if ('id' in data) {
-                        window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                    }
-                }.bind(this),
-            });
+            this.ajaxPostRequest(this.scope + '/action/export', data).then(function (data) {
+                if ('id' in data) {
+                    window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
+                }
+            }.bind(this));
         },
 
         massAction: function (name) {
