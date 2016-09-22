@@ -1510,18 +1510,19 @@ class Record extends \Espo\Core\Services\Base
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (isset($data['_duplicatingEntityId'])) {
-            $this->duplicateLinks($entity, $data['_duplicatingEntityId']);
-        }
-    }
+        if (!isset($data['_duplicatingEntityId'])) return;
 
-    protected function duplicateLinks(Entity $entity, $duplicatingEntityId)
-    {
+        $duplicatingEntityId = $data['_duplicatingEntityId'];
         if (!$duplicatingEntityId) return;
         $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
         if (!$duplicatingEntity) return;
         if (!$this->getAcl()->check($duplicatingEntity, 'read')) return;
 
+        $this->duplicateLinks($entity, $duplicatingEntity);
+    }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
         $repository = $this->getRepository();
 
         foreach ($this->duplicatingLinkList as $link) {
