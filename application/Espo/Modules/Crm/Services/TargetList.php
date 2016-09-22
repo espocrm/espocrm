@@ -37,6 +37,8 @@ class TargetList extends \Espo\Services\Record
 {
     protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
+    protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -225,6 +227,24 @@ class TargetList extends \Espo\Services\Record
         return $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
             'optedOut' => false
         ));
+    }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        $repository = $this->getRepository();
+
+        foreach ($this->duplicatingLinkList as $link) {
+            $linkedList = $repository->findRelated($duplicatingEntity, $link, array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
+            foreach ($linkedList as $linked) {
+                $repository->relate($entity, $link, $linked, array(
+                    'optedOut' => false
+                ));
+            }
+        }
     }
 }
 

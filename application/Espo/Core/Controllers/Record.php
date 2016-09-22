@@ -226,6 +226,10 @@ class Record extends Base
 
     public function actionExport($params, $data, $request)
     {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
         if ($this->getConfig()->get('exportDisabled') && !$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
@@ -234,10 +238,10 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $ids = $request->get('ids');
-        $where = $request->get('where');
-        $byWhere = $request->get('byWhere');
-        $selectData = $request->get('selectData');
+        $ids = isset($data['ids']) ? $data['ids'] : null;
+        $where = isset($data['where']) ? json_decode(json_encode($data['where']), true) : null;
+        $byWhere = isset($data['byWhere']) ? $data['byWhere'] : false;
+        $selectData = isset($data['selectData']) ? json_decode(json_encode($data['selectData']), true) : null;
 
         $params = array();
         if ($byWhere) {
@@ -245,6 +249,10 @@ class Record extends Base
             $params['where'] = $where;
         } else {
             $params['ids'] = $ids;
+        }
+
+        if (isset($data['attributeList'])) {
+            $params['attributeList'] = $data['attributeList'];
         }
 
         return array(

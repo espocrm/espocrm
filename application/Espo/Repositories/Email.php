@@ -80,6 +80,45 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
+    public function loadToField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('toEmailAddresses');
+        $names = $entity->get('toEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('to', implode(';', $arr));
+        }
+    }
+
+    public function loadCcField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('ccEmailAddresses');
+        $names = $entity->get('ccEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('cc', implode(';', $arr));
+        }
+    }
+
+    public function loadBccField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('bccEmailAddresses');
+        $names = $entity->get('bccEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('bcc', implode(';', $arr));
+        }
+    }
+
     public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])
     {
         $addressList = array();
