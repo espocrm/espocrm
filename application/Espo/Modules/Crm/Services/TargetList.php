@@ -228,5 +228,23 @@ class TargetList extends \Espo\Services\Record
             'optedOut' => false
         ));
     }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        $repository = $this->getRepository();
+
+        foreach ($this->duplicatingLinkList as $link) {
+            $linkedList = $repository->findRelated($duplicatingEntity, $link, array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
+            foreach ($linkedList as $linked) {
+                $repository->relate($entity, $link, $linked, array(
+                    'optedOut' => false
+                ));
+            }
+        }
+    }
 }
 
