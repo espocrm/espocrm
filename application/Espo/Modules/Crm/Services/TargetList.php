@@ -37,6 +37,8 @@ class TargetList extends \Espo\Services\Record
 {
     protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
+    protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);

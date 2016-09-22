@@ -81,6 +81,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $checkForDuplicatesInUpdate = false;
 
+    protected $duplicatingLinkList = [];
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -542,13 +544,13 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             $this->afterCreate($entity, $data);
+            $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
             return $entity;
         }
 
         throw new Error();
     }
-
 
     public function updateEntity($id, $data)
     {
@@ -1501,7 +1503,33 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
+        $attributes['_duplicatingEntityId'] = $id;
+
         return $attributes;
+    }
+
+    protected function afterCreateProcessDuplicating(Entity $entity, $data)
+    {
+        if (isset($data['_duplicatingEntityId'])) {
+            $this->duplicateLinks($entity, $data['_duplicatingEntityId']);
+        }
+    }
+
+    protected function duplicateLinks(Entity $entity, $duplicatingEntityId)
+    {
+        if (!$duplicatingEntityId) return;
+        $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
+        if (!$duplicatingEntity) return;
+        if (!$this->getAcl()->check($duplicatingEntity, 'read')) return;
+
+        $repository = $this->getRepository();
+
+        foreach ($this->duplicatingLinkList as $link) {
+            $linkedList = $repository->findRelated($duplicatingEntity, $link);
+            foreach ($linkedList as $linked) {
+                $repository->relate($entity, $link, $linked);
+            }
+        }
     }
 }
 
