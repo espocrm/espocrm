@@ -78,19 +78,21 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 useCustomFieldList: data.useCustomFieldList
             };
 
-            var attributeList = [];
-            data.fieldList.forEach(function (item) {
-                if (item === 'id') {
-                    attributeList.push('id');
-                    return;
-                }
-                var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
-                if (!type) return;
-                this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
-                    attributeList.push(attribute);
+            if (data.useCustomFieldList) {
+                var attributeList = [];
+                data.fieldList.forEach(function (item) {
+                    if (item === 'id') {
+                        attributeList.push('id');
+                        return;
+                    }
+                    var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
+                    if (!type) return;
+                    this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
+                        attributeList.push(attribute);
+                    }, this);
                 }, this);
-            }, this);
-            returnData.attributeList = attributeList;
+                returnData.attributeList = attributeList;
+            }
 
             this.trigger('proceed', returnData);
             this.close();

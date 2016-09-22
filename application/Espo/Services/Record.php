@@ -1100,8 +1100,6 @@ class Record extends \Espo\Core\Services\Base
 
     public function export(array $params)
     {
-
-
         if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             $where = array(
@@ -1151,8 +1149,19 @@ class Record extends \Espo\Core\Services\Base
 
         $attributeList = null;
         if (array_key_exists('attributeList', $params)) {
-            $attributeList = $params['attributeList'];
+            $attributeList = [];
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+            foreach ($params['attributeList'] as $attribute) {
+                if (empty($entity->getAttributeParam($attribute, 'notStorable'))) {
+                    $attributeList[] = $attribute;
+                } else {
+                    if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
+                        $attributeList[] = $attribute;
+                    }
+                }
+            }
         }
+
         foreach ($collection as $entity) {
             if (empty($attributeList)) {
                 $attributeList = [];
