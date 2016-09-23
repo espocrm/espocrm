@@ -1166,7 +1166,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         foreach ($collection as $entity) {
-            if (empty($attributeList)) {
+            if (is_null($attributeList)) {
                 $attributeList = [];
                 foreach ($entity->getAttributes() as $attribute => $defs) {
                     if (in_array($attribute, $attributeListToSkip)) {
