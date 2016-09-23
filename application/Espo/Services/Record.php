@@ -1152,6 +1152,9 @@ class Record extends \Espo\Core\Services\Base
             $attributeList = [];
             $entity = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($params['attributeList'] as $attribute) {
+                if (in_array($attribute, $attributeListToSkip)) {
+                    continue;
+                }
                 if (empty($entity->getAttributeParam($attribute, 'notStorable'))) {
                     $attributeList[] = $attribute;
                 } else {
