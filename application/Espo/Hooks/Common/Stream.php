@@ -82,9 +82,13 @@ class Stream extends \Espo\Core\Hooks\Base
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
         $query = $this->getEntityManager()->getQuery();
+        $quotedId = $query->quote($entity->id);
+        $quotedType = $query->quote($entity->getEntityType());
         $sql = "
             DELETE FROM `note`
-            WHERE related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) ."
+            WHERE (related_id = $quotedId AND related_type = $quotedType)
+            OR (parent_id = $quotedId AND parent_type = $quotedType)
+            OR (super_parent_id = $quotedId AND super_parent_type = $quotedType)
         ";
         $this->getEntityManager()->getPDO()->query($sql);
     }
