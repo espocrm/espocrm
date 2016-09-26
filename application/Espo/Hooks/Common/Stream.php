@@ -83,8 +83,14 @@ class Stream extends \Espo\Core\Hooks\Base
         }
         $query = $this->getEntityManager()->getQuery();
         $sql = "
-            DELETE FROM `note`
-            WHERE related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) ."
+            UPDATE `note`
+            SET `deleted` = 1
+            WHERE
+                (
+                    (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
+                OR
+                    (parent_id = ".$query->quote($entity->id)." AND parent_type = ".$query->quote($entity->getEntityType()) .")
+                )
         ";
         $this->getEntityManager()->getPDO()->query($sql);
     }
