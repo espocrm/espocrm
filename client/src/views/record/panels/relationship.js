@@ -173,14 +173,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {
-                this.filterList.forEach(function (item) {
+                if (this.actionList.length) {
+                    this.actionList.unshift(false);
+                }
+                this.filterList.slice(0).reverse().forEach(function (item) {
                     var selected = false;
                     if (item == 'all') {
                         selected = !this.filter;
                     } else {
                         selected = item === this.filter;
                     }
-                    this.actionList.push({
+                    this.actionList.unshift({
                         action: 'selectFilter',
                         html: '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
                         data: {
