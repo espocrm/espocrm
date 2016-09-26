@@ -39,7 +39,7 @@ class Tester
 
     protected $testDataPath = 'tests/integration/testData';
 
-    private $app;
+    private $application;
 
     private $dataLoader;
 
@@ -75,11 +75,11 @@ class Tester
         return $returns;
     }
 
-    public function getApp($reload = false, $userName = null, $password = null)
+    public function getApplication($reload = false, $userName = null, $password = null)
     {
-        if (!isset($this->app) || $reload)  {
-            $this->app = new \Espo\Core\Application();
-            $auth = new \Espo\Core\Utils\Auth($this->app->getContainer());
+        if (!isset($this->application) || $reload)  {
+            $this->application = new \Espo\Core\Application();
+            $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
 
             if (isset($userName) && isset($password)) {
                 $auth->login($userName, $password);
@@ -88,13 +88,13 @@ class Tester
             }
         }
 
-        return $this->app;
+        return $this->application;
     }
 
     protected function getDataLoader()
     {
         if (!isset($this->dataLoader)) {
-            $this->dataLoader = new DataLoader($this->getApp());
+            $this->dataLoader = new DataLoader($this->getApplication());
         }
 
         return $this->dataLoader;
@@ -116,13 +116,13 @@ class Tester
 
     protected function install()
     {
-        $mainApp = new \Espo\Core\Application();
-        $fileManager = $mainApp->getContainer()->get('fileManager');
+        $mainApplication = new \Espo\Core\Application();
+        $fileManager = $mainApplication->getContainer()->get('fileManager');
 
         $latestEspo = Utils::getLatestBuildedPath($this->buildedPath);
 
         $configData = include($this->configPath);
-        $configData['siteUrl'] = $mainApp->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
+        $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
 
         //remove and copy Espo files
         Utils::dropTables($configData['database']);
