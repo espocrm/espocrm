@@ -64,14 +64,16 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         });
 
                         (data.dashboardTabList).forEach(function (name) {
-                            var isExisting = false;
                             var layout = [];
                             this.dashboardLayout.forEach(function (d) {
                                 if (d.name == name) {
-                                    isExisting = true;
                                     layout = d.layout;
                                 }
                             }, this);
+
+                            if (name in data.renameMap) {
+                                name = data.renameMap[name];
+                            }
                             dashboardLayout.push({
                                 name: name,
                                 layout: layout
