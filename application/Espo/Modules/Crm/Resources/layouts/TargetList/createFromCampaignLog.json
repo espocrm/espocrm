@@ -1,0 +1,11 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [{"name":"name", "fullWidth": true}],
+            [{"name":"includingActionList", "fullWidth": true}],
+            [{"name":"excludingActionList", "fullWidth": true}],
+            [{"name":"description", "fullWidth": true}]
+        ]
+    }
+]
