@@ -4,6 +4,7 @@
     "tab": true,
     "acl": true,
     "aclPortal": true,
+    "aclPortalLevelList": ["all", "account", "contact", "own", "no"],
     "customizable": true,
     "importable": true,
     "calendar": true,

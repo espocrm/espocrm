@@ -50,6 +50,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             'record': ['all', 'team', 'own', 'no']
         },
 
+        type: 'acl',
+
         levelList: ['yes', 'all', 'team', 'own', 'no'],
 
         booleanLevelList: ['yes', 'no'],
@@ -186,7 +188,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 level = 'no';
                             }
                         }
-                        var levelList = this.levelListMap[type] || [];
+                        var levelList = this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) || this.levelListMap[type] || [];
                         if (~this.booleanActionList.indexOf(action)) {
                             levelList = this.booleanLevelList;
                         }
@@ -267,7 +269,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     this.scopeList.push(scope);
                     this.aclTypeMap[scope] = acl;
                     if (acl === true) {
-                        this.aclTypeMap[scope] = 'recordAllTeamOwnNo';
+                        this.aclTypeMap[scope] = 'record';
                     }
                 }
             }, this);
