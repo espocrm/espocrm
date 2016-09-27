@@ -725,13 +725,15 @@ abstract class Base
                             $valArr[$k] = $this->pdo->quote($valArr[$k]);
                         }
                         $oppose = '';
+                        $emptyValue = '0';
                         if ($operator == '<>') {
                             $oppose = 'NOT ';
+                            $emptyValue = '1';
                         }
                         if (!empty($valArr)) {
                             $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
                         } else {
-                            $whereParts[] = " 0";
+                            $whereParts[] = "" . $emptyValue;
                         }
                     }
                 }
