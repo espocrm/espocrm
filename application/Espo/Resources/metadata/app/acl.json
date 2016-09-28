@@ -1,13 +1,6 @@
 {
     "mandatory": {
         "scopeLevel": {
-            "User": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "stream": "no",
-                "create": "no"
-            },
             "Team": {
                 "read": "all",
                 "edit": "no",

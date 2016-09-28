@@ -69,5 +69,24 @@ class User extends \Espo\Core\SelectManagers\Base
         );
         $this->setDistinct(true, $result);
     }
+
+    protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'id' => $this->getUser()->id
+        );
+    }
+
+    protected function accessOnlyTeam(&$result)
+    {
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+        $result['whereClause'][] = array(
+            'OR' => array(
+                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+                'id' => $this->getUser()->id
+            )
+        );
+    }
 }
 

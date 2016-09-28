@@ -71,7 +71,7 @@ class Base extends \Espo\Core\Acl\Base
         }
 
         if (!isset($data->$action)) {
-            return true;
+            return false;
         }
 
         $value = $data->$action;
