@@ -125,12 +125,21 @@ class Base
     protected function order($sortBy, $desc = false, &$result)
     {
         if (!empty($sortBy)) {
+
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if ($type === 'link') {
                 $result['orderBy'] .= 'Name';
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
+            } else if ($type === 'address') {
+                if (!$desc) {
+                    $orderPart = 'ASC';
+                } else {
+                    $orderPart = 'DESC';
+                }
+                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
+                return;
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
                 if ($list && is_array($list) && count($list)) {
