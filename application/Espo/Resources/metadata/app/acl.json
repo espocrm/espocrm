@@ -1,12 +1,6 @@
 {
     "mandatory": {
         "scopeLevel": {
-            "Team": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "create": "no"
-            },
             "Note": {
                 "read": "own",
                 "edit": "own",

@@ -1,1 +1,9 @@
-{"entity":true,"layouts":false,"tab":false,"acl":false,"customizable":false}
+{
+    "entity": true,
+    "layouts": false,
+    "tab": false,
+    "acl": true,
+    "aclActionList": ["read"],
+    "aclLevelList": ["all", "team", "no"],
+    "customizable": false
+}
