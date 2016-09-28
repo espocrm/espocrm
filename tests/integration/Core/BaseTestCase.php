@@ -33,7 +33,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $espoTester;
 
-    private $espoApp;
+    private $espoApplication;
 
     /**
      * Path to file with data
@@ -49,17 +49,27 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $pathToFiles = null;
 
+    /**
+     * Espo username which is used for authentication
+     *
+     * @var null
+     */
     protected $userName = null;
 
+    /**
+     * Espo user password which is used for authentication
+     *
+     * @var null
+     */
     protected $password = null;
 
-    protected function loadApp($userName = null, $password = null)
+    protected function loadApplication($userName = null, $password = null)
     {
         if (isset($userName) && isset($password)) {
-            return $this->espoTester->getApp(true, $userName, $password);
+            return $this->espoTester->getApplication(true, $userName, $password);
         }
 
-        return $this->espoTester->getApp(true);
+        return $this->espoTester->getApplication(true);
     }
 
     /**
@@ -67,9 +77,9 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return \Espo\Core\Application
      */
-    protected function getApp()
+    protected function getApplication()
     {
-        return $this->espoApp;
+        return $this->espoApplication;
     }
 
     /**
@@ -79,7 +89,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getContainer()
     {
-        return $this->getApp()->getContainer();
+        return $this->getApplication()->getContainer();
     }
 
     protected function setUp()
@@ -92,13 +102,13 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         $this->espoTester = new Tester($params);
         $this->espoTester->initialize();
-        $this->espoApp = $this->loadApp($this->userName, $this->password);
+        $this->espoApplication = $this->loadApplication($this->userName, $this->password);
     }
 
     protected function tearDown()
     {
         $this->espoTester->terminate();
         $this->espoTester = NULL;
-        $this->espoApp = NULL;
+        $this->espoApplication = NULL;
     }
 }

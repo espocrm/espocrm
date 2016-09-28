@@ -31,26 +31,26 @@ namespace tests\integration\Core;
 
 class DataLoader
 {
-    private $app;
+    private $application;
 
     private $passwordHash;
 
-    public function __construct($app)
+    public function __construct($application)
     {
-        $this->app = $app;
+        $this->application = $application;
 
         $config = $this->getContainer()->get('config');
         $this->passwordHash = new \Espo\Core\Utils\PasswordHash($config);
     }
 
-    protected function getApp()
+    protected function getApplication()
     {
-        return $this->app;
+        return $this->application;
     }
 
     protected function getContainer()
     {
-        return $this->app->getContainer();
+        return $this->application->getContainer();
     }
 
     protected function getPasswordHash()
