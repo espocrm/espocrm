@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\NumberUtil;
+
 class Container
 {
 
@@ -181,7 +183,7 @@ class Container
 
     protected function loadNumber()
     {
-        return new \Espo\Core\Utils\Number(
+        return new NumberUtil(
             $this->get('config')->get('decimalMark'),
             $this->get('config')->get('thousandSeparator')
         );
