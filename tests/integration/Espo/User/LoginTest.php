@@ -45,7 +45,7 @@ class LoginTest extends \tests\integration\Core\BaseTestCase
 
     public function testWrongCredentials()
     {
-        $application = $this->loadApplication('admin', 'wrong-password');
+        $application = $this->createApplication('admin', 'wrong-password');
 
         $this->assertNull($application->getContainer()->get('user'));
     }

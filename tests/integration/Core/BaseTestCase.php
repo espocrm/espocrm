@@ -63,7 +63,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $password = null;
 
-    protected function loadApplication($userName = null, $password = null)
+    protected function createApplication($userName = null, $password = null)
     {
         if (isset($userName) && isset($password)) {
             return $this->espoTester->getApplication(true, $userName, $password);
@@ -102,7 +102,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         $this->espoTester = new Tester($params);
         $this->espoTester->initialize();
-        $this->espoApplication = $this->loadApplication($this->userName, $this->password);
+        $this->espoApplication = $this->createApplication($this->userName, $this->password);
     }
 
     protected function tearDown()
