@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils;
 
-class Number
+class NumberUtil
 {
     protected $decimalMark;
 
