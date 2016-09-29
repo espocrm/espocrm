@@ -181,7 +181,7 @@ class Container
 
     protected function loadNumber()
     {
-        return new \Espo\Core\Utils\Number(
+        return new \Espo\Core\Utils\NumberUtil(
             $this->get('config')->get('decimalMark'),
             $this->get('config')->get('thousandSeparator')
         );
