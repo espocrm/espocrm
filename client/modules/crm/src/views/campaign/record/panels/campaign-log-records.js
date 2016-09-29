@@ -41,8 +41,41 @@ Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/reco
     	},
 
     	setup: function () {
+            if (this.getAcl().checkScope('TargetList', 'create')) {
+                this.actionList.push({
+                    action: 'createTargetList',
+                    label: 'Create Target List'
+                });
+            }
     		Dep.prototype.setup.call(this);
-    	}
+    	},
+
+        actionCreateTargetList: function () {
+            var attributes = {
+                sourceCampaignId: this.model.id,
+                sourceCampaignName: this.model.get('name')
+            };
+
+            if (!this.collection.data.primaryFilter) {
+                attributes.includingActionList = [];
+            } else {
+                var status = Espo.Utils.upperCaseFirst(this.collection.data.primaryFilter).replace(/([A-Z])/g, ' $1');
+                attributes.includingActionList = [status];
+            }
+
+            var viewName = this.getMetadata().get('clientDefs.TargetList.modalViews.edit') || 'views/modals/edit';
+            this.createView('quickCreate', viewName, {
+                scope: 'TargetList',
+                attributes: attributes,
+                fullFormDisabled: true,
+                layoutName: 'createFromCampaignLog'
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'after:save', function () {
+                    Espo.Ui.success(this.translate('Done'));
+                }, this);
+            }, this);
+        }
 
     });
 });

@@ -291,6 +291,54 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testInArray()
+    {
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'id' => ['id_1']
+            ),
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE comment.id IN ('id_1') AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'id!=' => ['id_1']
+            ),
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE comment.id NOT IN ('id_1') AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'id' => []
+            ),
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE 0 AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'name' => 'Test',
+                'id!=' => []
+            ),
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE comment.name = 'Test' AND 1 AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
 }
 
 

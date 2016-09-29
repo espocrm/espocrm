@@ -42,7 +42,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
         data: function () {
             return {
-                panelList: this.panelList
+                panelList: this.panelList,
+                scope: this.scope
             };
         },
 

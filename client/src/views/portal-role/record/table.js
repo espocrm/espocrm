@@ -44,6 +44,8 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
 
         levelList: ['all', 'account', 'contact', 'own', 'no'],
 
+        type: 'aclPortal',
+
         setupScopeList: function () {
             this.aclTypeMap = {};
             this.scopeList = [];
@@ -59,7 +61,7 @@ Espo.define('views/portal-role/record/table', 'views/role/record/table', functio
                     this.scopeList.push(scope);
                     this.aclTypeMap[scope] = acl;
                     if (acl === true) {
-                        this.aclTypeMap[scope] = 'recordAllOwnNo';
+                        this.aclTypeMap[scope] = 'record';
                     }
                 }
             }, this);

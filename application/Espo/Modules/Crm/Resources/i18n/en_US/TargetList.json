@@ -5,7 +5,9 @@
         "entryCount": "Entry Count",
         "campaigns": "Campaigns",
         "endDate": "End Date",
-        "targetLists": "Target Lists"
+        "targetLists": "Target Lists",
+        "includingActionList": "Including",
+        "excludingActionList": "Excluding"
     },
     "links": {
         "accounts": "Accounts",

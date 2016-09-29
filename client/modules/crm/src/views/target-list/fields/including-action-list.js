@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,24 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+Espo.define('crm:views/target-list/fields/including-action-list', 'views/fields/multi-enum', function (Dep) {
 
-class Team extends \Espo\Core\SelectManagers\Base
-{
-    protected function boolFilterOnlyMy(&$result)
-    {
-        if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
+    return Dep.extend({
+
+        setupOptions: function () {
+            this.params.options = this.getMetadata().get('entityDefs.CampaignLogRecord.fields.action.options') || [];
+            this.translatedOptions = {};
+            this.params.options.forEach(function (item) {
+                this.translatedOptions[item] = this.getLanguage().translateOption(item, 'action', 'CampaignLogRecord');
+            }, this);
         }
-        $result['whereClause'][] = array(
-        	'usersMiddle.userId' => $this->getUser()->id
-        );
-        $result['distinct'] = true;
-    }
-
-    protected function accessOnlyTeam(&$result)
-    {
-        $this->boolFilterOnlyMy($result);
-    }
-}
+    });
+});
 

@@ -177,7 +177,7 @@ class Table
                 return $this->data->table->$scope->$action;
             }
         }
-        return false;
+        return 'no';
     }
 
     private function load()
@@ -459,6 +459,17 @@ class Table
                         $defaultValue = (object) $defaultValue;
                     }
                     $table->$scope = $defaultValue;
+
+                    if (is_object($table->$scope)) {
+                        $actionList = $this->getMetadata()->get(['scopes', $scope, $this->type . 'ActionList']);
+                        if ($actionList) {
+                            foreach (get_object_vars($table->$scope) as $action => $level) {
+                                if (!in_array($action, $actionList)) {
+                                    unset($table->$scope->$action);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -606,7 +617,9 @@ class Table
 
                     if (!is_object($row)) continue;
 
-                    foreach ($this->actionList as $i => $action) {
+                    $actionList = $this->getMetadata()->get(['scopes', $scope, $this->type . 'ActionList'], $this->actionList);
+
+                    foreach ($actionList as $i => $action) {
                         if (isset($row->$action)) {
                             $level = $row->$action;
                             if (!isset($data->$scope->$action)) {
@@ -623,7 +636,7 @@ class Table
                                 if (in_array($action, $this->booleanActionList)) {
                                     $data->$scope->$action = 'yes';
                                 } else {
-                                    if (isset($data->$scope->$previousAction)) {
+                                    if ($action === 'stream' && isset($data->$scope->$previousAction)) {
                                         $data->$scope->$action = $data->$scope->$previousAction;
                                     }
                                 }
@@ -684,11 +697,12 @@ class Table
 
     private function buildCache()
     {
-        $contents = '<' . '?'. 'php return ' .  $this->varExport($this->data)  . ';';
-        $this->fileManager->putContents($this->cacheFilePath, $contents);
+        $this->fileManager->putPhpContents($this->cacheFilePath, $this->data, true);
+        /*$contents = '<' . '?'. 'php return ' .  $this->varExport($this->data)  . ';';
+        $this->fileManager->putContents($this->cacheFilePath, $contents);*/
     }
 
-    private function varExport($variable)
+    /*private function varExport($variable)
     {
         if ($variable instanceof \StdClass) {
             $result = '(object) ' . $this->varExport(get_object_vars($variable), true);
@@ -703,6 +717,6 @@ class Table
         }
 
         return $result;
-    }
+    }*/
 }
 

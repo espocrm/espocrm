@@ -27,24 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Modules\Crm\Repositories;
 
-class Team extends \Espo\Core\SelectManagers\Base
+use Espo\ORM\Entity;
+
+class TargetList extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function boolFilterOnlyMy(&$result)
-    {
-        if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
-        }
-        $result['whereClause'][] = array(
-        	'usersMiddle.userId' => $this->getUser()->id
-        );
-        $result['distinct'] = true;
-    }
+    protected $entityTypeLinkMap = array(
+        'Lead' => 'leads',
+        'Account' => 'accounts',
+        'Contact' => 'contacts',
+        'User' => 'users'
+    );
 
-    protected function accessOnlyTeam(&$result)
+    public function relateTarget(Entity $entity, Entity $target, $data = null)
     {
-        $this->boolFilterOnlyMy($result);
+        if (empty($this->entityTypeLinkMap[$target->getEntityType()])) {
+            return;
+        }
+        $relation = $this->entityTypeLinkMap[$target->getEntityType()];
+
+        $this->relate($entity, $relation, $target, $data);
     }
 }
 

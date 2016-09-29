@@ -68,6 +68,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
+            this.layoutName = this.options.layoutName || this.layoutName;
+
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',

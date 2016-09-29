@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Task.Fields.IsOverdue', 'Views.Fields.Base', function (Dep) {
+Espo.define('crm:views/task/fields/is-overdue', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 

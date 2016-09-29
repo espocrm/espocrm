@@ -4,6 +4,7 @@
     "tab": true,
     "acl": true,
     "aclPortal": true,
+    "aclPortalLevelList": ["all", "account", "own", "no"],
     "customizable": true,
     "importable": true,
     "notifications": true

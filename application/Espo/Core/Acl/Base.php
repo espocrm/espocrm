@@ -155,7 +155,7 @@ class Base implements Injectable
         }
 
         if (!isset($data->$action)) {
-            return true;
+            return false;
         }
 
         $value = $data->$action;

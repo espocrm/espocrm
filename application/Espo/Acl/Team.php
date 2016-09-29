@@ -27,24 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Acl;
 
-class Team extends \Espo\Core\SelectManagers\Base
+use \Espo\ORM\Entity;
+
+class Team extends \Espo\Core\Acl\Base
 {
-    protected function boolFilterOnlyMy(&$result)
+    public function checkInTeam(\Espo\Entities\User $user, Entity $entity)
     {
-        if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
-        }
-        $result['whereClause'][] = array(
-        	'usersMiddle.userId' => $this->getUser()->id
-        );
-        $result['distinct'] = true;
-    }
-
-    protected function accessOnlyTeam(&$result)
-    {
-        $this->boolFilterOnlyMy($result);
+        $userTeamIdList = $user->getLinkMultipleIdList('teams');
+        return in_array($entity->id, $userTeamIdList);
     }
 }
-
