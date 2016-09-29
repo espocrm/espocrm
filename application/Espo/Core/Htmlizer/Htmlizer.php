@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Utils\Number;
+use Espo\Core\Utils\NumberUtil;
 
 require('vendor/zordius/lightncandy/src/lightncandy.php');
 
@@ -48,7 +48,7 @@ class Htmlizer
 
     protected $acl;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, Number $number, $acl = null)
+    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;

@@ -70,7 +70,7 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
 
 
         $this->dateTime = new \Espo\Core\Utils\DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
-        $this->number = new \Espo\Core\Utils\Number('.', ',');
+        $this->number = new \Espo\Core\Utils\NumberUtil('.', ',');
 
         $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
