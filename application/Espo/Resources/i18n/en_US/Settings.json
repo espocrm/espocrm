@@ -81,7 +81,8 @@
         "notificationSoundsDisabled": "Disable Notification Sounds",
         "applicationName": "Application Name",
         "calendarEntityList": "Calendar Entity List",
-        "mentionEmailNotifications": "Send email notifications about mentions in posts"
+        "mentionEmailNotifications": "Send email notifications about mentions in posts",
+        "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link"
     },
     "options": {
         "weekStart": {

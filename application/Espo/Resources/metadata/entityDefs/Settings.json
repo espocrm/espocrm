@@ -396,6 +396,9 @@
         },
         "googleMapsApiKey": {
             "type": "varchar"
+        },
+        "massEmailDisableMandatoryOptOutLink": {
+            "type": "bool"
         }
     },
     "links": {
