@@ -253,11 +253,13 @@
         },
         "ldapUserDefaultTeam": {
             "type": "link",
-            "tooltip": true
+            "tooltip": true,
+            "entity": "Team"
         },
         "ldapUserTeams": {
             "type": "linkMultiple",
-            "tooltip": true
+            "tooltip": true,
+            "entity": "Team"
         },
         "exportDisabled": {
             "type": "bool",
@@ -399,24 +401,6 @@
         },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
-        }
-    },
-    "links": {
-        "ldapUserDefaultTeam": {
-            "type": "belongsTo",
-            "entity": "Team"
-        },
-        "ldapUserTeams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "foreign": "users",
-            "additionalColumns": {
-                "role": {
-                    "type": "varchar",
-                    "len": 100
-                }
-            },
-            "layoutRelationshipsDisabled": true
         }
     }
 }
