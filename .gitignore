@@ -15,6 +15,7 @@
 /client/css/violet.css
 /client/css/violet-vertical.css
 /tests/unit/testData/cache/*
+!/tests/unit/testData/cache/.data
 /tests/integration/config.php
 composer.phar
 vendor/
