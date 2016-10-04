@@ -8,10 +8,10 @@
 		"zendframework/zend-ldap": "2.*",
 		"monolog/monolog": "1.*",
 		"yzalis/identicon": "*",
-		"tecnick.com/tcpdf": "6.*",
 		"zordius/lightncandy": "0.*",
 		"composer/semver": "^1.4",
-		"zendframework/zend-servicemanager": "^3.1"
+		"zendframework/zend-servicemanager": "^3.1",
+		"tecnickcom/tcpdf": "^6.2"
 	},
 	"autoload": {
 		"psr-0": {

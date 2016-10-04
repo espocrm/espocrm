@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Pdf;
 
-require "vendor/tecnick.com/tcpdf/tcpdf.php";
+require "vendor/tecnickcom/tcpdf/tcpdf.php";
 
 class Tcpdf extends \TCPDF
 {
