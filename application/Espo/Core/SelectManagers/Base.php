@@ -257,18 +257,21 @@ class Base
 
         $defs = $relDefs[$link];
         if ($relationType == 'manyMany') {
-            $this->addJoin($link, $result);
+            $this->addJoin([$link, $link . 'Filter'], $result);
             $midKeys = $seed->getRelationParam($link, 'midKeys');
 
             if (!empty($midKeys)) {
                 $key = $midKeys[1];
-                $part[$link . 'Middle.' . $key] = $idsValue;
+                $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
             }
-        } else if ($relationType== 'belongsTo') {
+        } else if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
             if (!empty($key)) {
                 $part[$key] = $idsValue;
             }
+        } else if ($relationType == 'hasOne') {
+            $this->addJoin([$link, $link . 'Filter'], $result);
+            $part[$link . 'Filter' . '.id'] = $idsValue;
         } else {
             return;
         }

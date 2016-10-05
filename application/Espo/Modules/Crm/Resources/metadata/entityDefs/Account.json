@@ -164,7 +164,8 @@
             "type": "link",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/link-one"
         }
     },
     "links": {

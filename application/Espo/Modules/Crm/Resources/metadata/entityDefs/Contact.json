@@ -182,13 +182,16 @@
             "type": "link",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "notStorable": true,
+            "view": "views/fields/link-one"
         },
         "originalLead": {
             "type": "link",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/link-one"
         }
     },
     "links": {
