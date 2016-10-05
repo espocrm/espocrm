@@ -42,7 +42,12 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
             Dep.prototype.setup.call(this);
 
             this.wait(true);
+            this.loadLayout(function () {
+                this.wait(false);
+            }.bind(this));
+        },
 
+        loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
 
@@ -83,7 +88,7 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
                     }
 
-                    this.wait(false);
+                    callback();
                 }.bind(this), false);
             }.bind(this));
         },

@@ -38,7 +38,12 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
             Dep.prototype.setup.call(this);
 
             this.wait(true);
+            this.loadLayout(function () {
+                this.wait(false);
+            }.bind(this));
+        },
 
+        loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
 
@@ -80,7 +85,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
                     }
 
-                    this.wait(false);
+                    callback();
                 }.bind(this), false);
             }.bind(this));
         },

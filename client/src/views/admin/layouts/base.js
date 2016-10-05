@@ -101,12 +101,6 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             }.bind(this));
         },
 
-        cancel: function () {
-            this.loadLayout(function () {
-                this.render();
-            }.bind(this));
-        },
-
         reset: function () {
             this.render();
         },
