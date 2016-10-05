@@ -176,11 +176,6 @@
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
         },
-        "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
-            "foreign": "leads"
-        },
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
