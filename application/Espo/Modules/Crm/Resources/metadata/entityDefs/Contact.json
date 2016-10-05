@@ -183,6 +183,12 @@
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "readOnly": true
+        },
+        "originalLead": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "readOnly": true
         }
     },
     "links": {
@@ -280,6 +286,11 @@
             "type": "hasOne",
             "entity": "User",
             "foreign": "contact"
+        },
+        "originalLead": {
+            "type": "hasOne",
+            "entity": "Lead",
+            "foreign": "createdContact"
         }
     },
     "collection": {

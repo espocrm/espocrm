@@ -13,7 +13,8 @@
         "contactRole": "Title",
         "campaign": "Campaign",
         "targetLists": "Target Lists",
-        "targetList": "Target List"
+        "targetList": "Target List",
+        "originalLead": "Original Lead"
     },
     "links": {
         "contacts": "Contacts",
@@ -27,7 +28,8 @@
         "targetLists": "Target Lists",
         "campaignLogRecords": "Campaign Log",
         "campaign": "Campaign",
-        "portalUsers": "Portal Users"
+        "portalUsers": "Portal Users",
+        "originalLead": "Original Lead"
     },
     "options": {
         "type": {

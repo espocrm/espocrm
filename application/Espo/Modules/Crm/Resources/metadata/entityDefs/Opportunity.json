@@ -70,6 +70,12 @@
         "campaign": {
             "type": "link"
         },
+        "originalLead": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -167,6 +173,11 @@
             "entity": "Campaign",
             "foreign": "opportunities",
             "noJoin": true
+        },
+        "originalLead": {
+            "type": "hasOne",
+            "entity": "Lead",
+            "foreign": "createdOpportunity"
         }
     },
     "collection": {

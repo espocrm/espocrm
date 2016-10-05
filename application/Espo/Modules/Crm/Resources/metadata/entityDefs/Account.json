@@ -159,6 +159,12 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "entity": "TargetList"
+        },
+        "originalLead": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "readOnly": true
         }
     },
     "links": {
@@ -268,6 +274,11 @@
             "type": "hasMany",
             "entity": "User",
             "foreign": "accounts"
+        },
+        "originalLead": {
+            "type": "hasOne",
+            "entity": "Lead",
+            "foreign": "createdAccount"
         }
     },
     "collection": {

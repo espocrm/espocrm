@@ -208,17 +208,20 @@
         "createdAccount": {
             "type": "belongsTo",
             "entity": "Account",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "createdContact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "campaign": {
             "type": "belongsTo",

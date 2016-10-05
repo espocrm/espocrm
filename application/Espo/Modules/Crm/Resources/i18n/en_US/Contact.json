@@ -15,7 +15,8 @@
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List",
-        "portalUser": "Portal User"
+        "portalUser": "Portal User",
+        "originalLead": "Original Lead"
     },
     "links": {
         "opportunities": "Opportunities",
@@ -26,7 +27,8 @@
         "account": "Account (Primary)",
         "accounts": "Accounts",
         "casesPrimary": "Cases (Primary)",
-        "portalUser": "Portal User"
+        "portalUser": "Portal User",
+        "originalLead": "Original Lead"
     },
     "labels": {
         "Create Contact": "Create Contact"
