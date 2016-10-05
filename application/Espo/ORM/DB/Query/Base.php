@@ -289,11 +289,25 @@ abstract class Base
                     $part = substr($field[0], 6);
                     $part = $this->quote($part);
                 } else {
-                    $part = $this->convertComplexExpression($entity, $field[0], $distinct);
+                    if (!array_key_exists($field[0], $entity->fields)) {
+                        $part = $this->convertComplexExpression($entity, $field[0], $distinct);
+                    } else {
+                        $fieldDefs = $entity->fields[$field];
+                        if (!empty($fieldDefs['select'])) {
+                            $part = $fieldDefs['select'];
+                        } else {
+                            if (!empty($fieldDefs['notStorable'])) {
+                                continue;
+                            }
+                            $part = $this->getFieldPath($entity, $field[0]);
+                        }
+                    }
                 }
+
                 $arr[] = $part . ' AS `' . $this->sanitizeAlias($field[1]) . '`';
                 continue;
             }
+
             if (array_key_exists($field, $entity->fields)) {
                 $fieldDefs = $entity->fields[$field];
             } else {
@@ -341,16 +355,16 @@ abstract class Base
     {
         $joinsArr = array();
 
-        $fieldDefs = $entity->fields;
-
         $relationsToJoin = array();
-        if (is_array($select) && is_array($fieldDefs)) {
-            foreach ($select as $field) {
-                if (is_array($field)) {
-                    continue;
+        if (is_array($select)) {
+            foreach ($select as $item) {
+                $field = $item;
+                if (is_array($item)) {
+                    if (count($field) == 0) continue;
+                    $field = $item[0];
                 }
-                if (!empty($fieldDefs[$field]) && !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'foreign' && !empty($fieldDefs[$field]['relation'])) {
-                    $relationsToJoin[] = $fieldDefs[$field]['relation'];
+                if ($entity->getAttributeType($field) == 'foreign' && $entity->getAttributeParam($field, 'relation')) {
+                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
                 }
             }
         }
