@@ -130,8 +130,9 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -180,8 +181,9 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -224,8 +226,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -266,8 +269,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -370,8 +374,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -475,8 +480,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -992,10 +998,16 @@ class Activities extends \Espo\Core\Services\Base
 
         $selectParams['select'] = $select;
 
-        $selectParams['whereClause'][] = array(
-            'parentId' => $entity->id,
-            'parentType' => $entity->getEntityType()
-        );
+        if ($entity->getEntityType() === 'User') {
+            $selectParams['whereClause'][] = array(
+                'assignedUserId' => $entity->id
+            );
+        } else {
+            $selectParams['whereClause'][] = array(
+                'parentId' => $entity->id,
+                'parentType' => $entity->getEntityType()
+            );
+        }
 
         $selectParams['whereClause'][]  = array(
             'status' => $statusList

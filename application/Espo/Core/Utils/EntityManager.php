@@ -139,6 +139,14 @@ class EntityManager
         }
         $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
 
+        if ($type == 'Event') {
+            $labelSchedule = $this->getLanguage()->translate('Schedule', 'labels', 'EntityManager') . ' ' . $labelSingular;
+            $this->getLanguage()->set($name, 'labels', 'Schedule ' . $name, $labelSchedule);
+
+            $labelLog = $this->getLanguage()->translate('Log', 'labels', 'EntityManager') . ' ' . $labelSingular;
+            $this->getLanguage()->set($name, 'labels', 'Log ' . $name, $labelLog);
+        }
+
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/scopes.json";
         $scopesDataContents = $this->getFileManager()->getContents($filePath);
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);

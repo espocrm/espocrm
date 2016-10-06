@@ -161,7 +161,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
                 var o = {
                     action: 'createActivity',
-                    label: 'Schedule ' + scope,
+                    html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
                     data: {},
                     acl: 'create',
                     aclScope: scope
@@ -173,7 +173,13 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     if (!this.model.hasLink(link)) return;
                 } else {
                     o.data.scope = scope;
-                    if (!~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(this.model.name)) return;
+                    if (
+                        this.model.name !== 'User'
+                        &&
+                        !this.checkParentTypeAvailability(scope, this.model.name)
+                    ) {
+                        return;
+                    }
                 }
 
                 o.data = o.data || {};
@@ -250,41 +256,51 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         },
 
-        getCreateActivityAttributes: function (data, callback) {
+        getCreateActivityAttributes: function (scope, data, callback) {
             data = data || {};
 
             var attributes = {
                 status: data.status
             };
 
-            if (this.model.name == 'Contact') {
-                if (this.model.get('accountId')) {
-                    attributes.parentType = 'Account',
-                    attributes.parentId = this.model.get('accountId');
-                    attributes.parentName = this.model.get('accountName');
-                }
-            } else if (this.model.name == 'Lead') {
-                attributes.parentType = 'Lead',
-                attributes.parentId = this.model.id;
-                attributes.parentName = this.model.get('name');
-            }
-            if (this.model.name != 'Account' && this.model.has('contactsIds')) {
-                attributes.contactsIds = this.model.get('contactsIds');
-                attributes.contactsNames = this.model.get('contactsNames');
-            }
-
             if (this.model.name == 'User') {
                 attributes.assignedUserId = this.model.id;
                 attributes.assignedUserName = this.model.get('name');
-            }
+            } else {
+                if (this.model.name == 'Contact') {
+                    if (this.model.get('accountId')) {
+                        if (this.checkParentTypeAvailability(scope, 'Account')) {
+                            attributes.parentType = 'Account',
+                            attributes.parentId = this.model.get('accountId');
+                            attributes.parentName = this.model.get('accountName');
+                        }
+                    }
+                } else if (this.model.name == 'Lead') {
+                    if (this.checkParentTypeAvailability(scope, 'Lead')) {
+                        attributes.parentType = 'Lead',
+                        attributes.parentId = this.model.id;
+                        attributes.parentName = this.model.get('name');
+                    }
+                }
+                if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+                    attributes.contactsIds = this.model.get('contactsIds');
+                    attributes.contactsNames = this.model.get('contactsNames');
+                }
 
-            if (data.scope && !attributes.parentId) {
-                attributes.parentType = this.model.name;
-                attributes.parentId = this.model.id;
-                attributes.parentName = this.model.get('name');
+                if (data.scope && !attributes.parentId) {
+                    if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                        attributes.parentType = this.model.name;
+                        attributes.parentId = this.model.id;
+                        attributes.parentName = this.model.get('name');
+                    }
+                }
             }
 
             callback.call(this, attributes);
+        },
+
+        checkParentTypeAvailability: function (scope, parentType) {
+            return ~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
         },
 
         actionCreateActivity: function (data) {
@@ -314,7 +330,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-            this.getCreateActivityAttributes(data, function (attributes) {
+            this.getCreateActivityAttributes(scope, data, function (attributes) {
                 o.attributes = attributes;
                 this.createView('quickCreate', viewName, o , function (view) {
                     view.render();

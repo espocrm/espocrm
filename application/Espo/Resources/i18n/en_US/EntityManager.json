@@ -1,7 +1,9 @@
 {
     "labels": {
         "Fields": "Fields",
-        "Relationships": "Relationships"
+        "Relationships": "Relationships",
+        "Schedule": "Schedule",
+        "Log": "Log"
     },
     "fields": {
         "name": "Name",
