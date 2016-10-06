@@ -82,7 +82,9 @@
         "applicationName": "Application Name",
         "calendarEntityList": "Calendar Entity List",
         "mentionEmailNotifications": "Send email notifications about mentions in posts",
-        "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link"
+        "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
+        "activitiesEntityList": "Activities Entity List",
+        "historyEntityList": "History Entity List"
     },
     "options": {
         "weekStart": {
@@ -132,7 +134,8 @@
         "Currency Rates": "Currency Rates",
         "Mass Email": "Mass Email",
         "Test Connection": "Test Connection",
-        "Connecting": "Connecting..."
+        "Connecting": "Connecting...",
+        "Activities": "Activities"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."

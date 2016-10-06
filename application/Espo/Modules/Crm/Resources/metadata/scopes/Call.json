@@ -10,5 +10,7 @@
     "notifications": true,
     "calendar": true,
     "activity": true,
-    "object": true
+    "object": true,
+    "activityStatusList": ["Planned"],
+    "historyStatusList": ["Held", "Not Held"]
 }

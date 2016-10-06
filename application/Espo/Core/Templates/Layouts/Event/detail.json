@@ -6,7 +6,9 @@
                 {
                     "name": "name"
                 },
-                false
+                {
+                    "name": "parent"
+                }
             ],
             [
                 {

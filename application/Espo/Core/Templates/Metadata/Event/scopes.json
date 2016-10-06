@@ -8,5 +8,8 @@
     "customizable": true,
     "importable": true,
     "calendar": true,
-    "notifications": true
+    "activity": true,
+    "notifications": true,
+    "activityStatusList": ["Planned"],
+    "historyStatusList": ["Held", "Not Held"]
 }

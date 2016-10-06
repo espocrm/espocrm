@@ -32,76 +32,15 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
 
         name: 'history',
 
-        scopeList: ['Meeting', 'Call', 'Email'],
-
         sortBy: 'dateStart',
 
         asc: false,
 
         rowActionsView: 'crm:views/record/row-actions/history',
 
-        actionList: [
-            {
-                action: 'createActivity',
-                label: 'Log Meeting',
-                data: {
-                    link: 'meetings',
-                    status: 'Held',
-                },
-                acl: 'create',
-                aclScope: 'Meeting',
-            },
-            {
-                action: 'createActivity',
-                label: 'Log Call',
-                data: {
-                    link: 'calls',
-                    status: 'Held',
-                },
-                acl: 'create',
-                aclScope: 'Call',
-            },
-            {
-                action: 'archiveEmail',
-                label: 'Archive Email',
-                acl: 'create',
-                aclScope: 'Email',
-            },
-        ],
+        actionList: [],
 
         listLayout: {
-            'Meeting': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                        {name: 'status'},
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
-                ]
-            },
-            'Call': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                        {name: 'status'},
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
-                ]
-            },
             'Email': {
                 rows: [
                     [
@@ -113,14 +52,24 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                     ],
                     [
                         {name: 'status'},
-                        {name: 'dateSent'},
+                        {name: 'dateSent'}
                     ]
                 ]
             },
         },
 
         where: {
-            scope: false,
+            scope: false
+        },
+
+        setupActionList: function () {
+            Dep.prototype.setupActionList.call(this);
+            this.actionList.push({
+                action: 'archiveEmail',
+                label: 'Archive Email',
+                acl: 'create',
+                aclScope: 'Email'
+            });
         },
 
         getArchiveEmailAttributes: function (data, callback) {

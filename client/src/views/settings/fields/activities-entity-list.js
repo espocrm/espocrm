@@ -25,38 +25,21 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
+Espo.define('views/settings/fields/activities-entity-list', 'views/fields/entity-type-list', function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            var tpl;
+        setupOptions: function () {
 
-            var icoTpl;
-            if (this.params.notRelationship) {
-                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
-            } else {
-                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
-            }
+            Dep.prototype.setupOptions.call(this);
 
-            switch (this.model.name) {
-                case 'Meeting':
-                    tpl = icoTpl.replace('{icoName}', 'briefcase');
-                    break;
-                case 'Call':
-                    tpl = icoTpl.replace('{icoName}', 'phone-alt');
-                    break;
-                case 'Email':
-                    tpl = icoTpl.replace('{icoName}', 'envelope');
-                    break;
-                default:
-                    tpl = icoTpl.replace('{icoName}', 'calendar');
-                    break;
-            }
-
-            this._template = tpl;
-        }
+            this.params.options = this.params.options.filter(function (scope) {
+                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
+                if (!this.getMetadata().get('scopes.' + scope + '.object')) return;
+                if (!this.getMetadata().get('scopes.' + scope + '.activity')) return;
+                return true;
+            }, this)
+        },
 
     });
-
 });

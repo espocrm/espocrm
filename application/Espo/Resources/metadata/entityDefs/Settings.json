@@ -396,6 +396,14 @@
             "type": "multiEnum",
             "view": "views/settings/fields/calendar-entity-list"
         },
+        "activitiesEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/activities-entity-list"
+        },
+        "historyEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/activities-entity-list"
+        },
         "googleMapsApiKey": {
             "type": "varchar"
         },

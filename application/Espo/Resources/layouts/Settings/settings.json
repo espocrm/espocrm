@@ -4,7 +4,7 @@
         "rows": [
             [{"name": "useCache"}, {"name": "siteUrl"}],
             [{"name": "exportDisabled"}, {"name": "globalSearchEntityList"}],
-            [{"name": "followCreatedEntities"}, {"name": "calendarEntityList"}]
+            [{"name": "followCreatedEntities"}, false]
         ]
     },
     {
@@ -16,6 +16,13 @@
             [{"name": "language"}, {"name": "decimalMark"}],
             [{"name": "addressFormat"}, false],
             [{"name": "addressPreview"}, false]
+        ]
+    },
+    {
+        "label": "Activities",
+        "rows": [
+            [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
+            [false, {"name": "historyEntityList"}]
         ]
     }
 ]
