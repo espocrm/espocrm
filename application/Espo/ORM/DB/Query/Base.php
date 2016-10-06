@@ -292,7 +292,7 @@ abstract class Base
                     if (!array_key_exists($field[0], $entity->fields)) {
                         $part = $this->convertComplexExpression($entity, $field[0], $distinct);
                     } else {
-                        $fieldDefs = $entity->fields[$field];
+                        $fieldDefs = $entity->fields[$field[0]];
                         if (!empty($fieldDefs['select'])) {
                             $part = $fieldDefs['select'];
                         } else {
