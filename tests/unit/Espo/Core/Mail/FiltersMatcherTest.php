@@ -181,6 +181,17 @@ class FiltersMatcherTest extends \PHPUnit_Framework_TestCase
         $filterList = [$filter];
         $this->assertTrue($this->object->match($email, $filterList));
 
+
+        $email->set('name', 'Access information to the EspoCRM cloud');
+        $email->set('from', 'no-reply@test.com');
+        $email->set('to', 'info@test.com');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'subject' => 'Access information to the EspoCRM cloud',
+            'from' => 'no-reply@test.com',
+            'to' => 'info@test.com'
+        ));
+        $this->assertTrue($this->object->match($email, $filter));
     }
 
     function testMatchBody()
