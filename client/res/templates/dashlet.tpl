@@ -4,7 +4,7 @@
             <button class="dropdown-toggle btn btn-link btn-sm menu-button" data-toggle="dropdown"><span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
               {{#each actionList}}
-                <li><a data-action="{{name}}" class="action" href="{{#if url}}{{url}}{{else}}javascript:{{/if}}">{{#if iconHtml}}{{{iconHtml}}} {{/if}}{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</a></li>
+                <li><a data-action="{{name}}" class="action" href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}>{{#if iconHtml}}{{{iconHtml}}} {{/if}}{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</a></li>
               {{/each}}
               </ul>
           </div>

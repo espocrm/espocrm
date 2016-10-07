@@ -1124,30 +1124,40 @@ class Activities extends \Espo\Core\Services\Base
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
 
-        $entityTypeList = ['Meeting', 'Call'];
+        $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'read')) {
-                continue;
-            }
-
+            if (!$this->getMetadata()->get(['scopes', $entityType, 'activity'])) continue;
+            if (!$this->getAcl()->checkScope($entityType, 'read')) continue;
 
             $selectParams = array(
-                'select' => ['id', 'name', 'dateStart', ['VALUE:' . $entityType, 'entityType']],
+                'select' => [
+                    'id',
+                    'name',
+                    'dateStart',
+                    ['VALUE:' . $entityType, 'entityType']
+                ]
             );
 
             $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
-
             $selectManager->applyAccess($selectParams);
 
-            if (!empty($prams['textFilter'])) {
-                $selectManager->applyTextFilter($prams['textFilter'], $selectParams);
+            if (!empty($params['textFilter'])) {
+                $selectManager->applyTextFilter($params['textFilter'], $selectParams);
             }
 
-            $selectManager->applyPrimaryFilter('planned', $selectParams);
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
+
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
+            $selectManager->addAndWhere([
+                'status' => $statusList
+            ], $selectParams);
+
             $selectManager->addOrWhere([
                 $selectManager->convertDateTimeWhere(array(
                     'type' => 'today',

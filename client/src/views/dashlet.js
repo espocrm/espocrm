@@ -55,6 +55,7 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                 var data = $target.data();
                 if (action) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    delete data['action'];
                     if (typeof this[method] == 'function') {
                         e.preventDefault();
                         this[method].call(this, data);

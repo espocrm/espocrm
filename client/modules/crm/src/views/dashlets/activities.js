@@ -36,72 +36,36 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
         rowActionsView: 'crm:views/meeting/record/row-actions/dashlet',
 
-        scopeList: ['Meeting', 'Call'],
-
-        listLayout: {
-            'Meeting': {
-                rows: [
-                    [
-                        {
-                            name: 'ico',
-                            view: 'crm:views/fields/ico',
-                            params: {
-                                notRelationship: true
-                            }
-                        },
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                    ],
-                    [
-                        {name: 'dateStart'}
-                    ]
+        defaultListLayout: {
+            rows: [
+                [
+                    {
+                        name: 'ico',
+                        view: 'crm:views/fields/ico',
+                        params: {
+                            notRelationship: true
+                        }
+                    },
+                    {
+                        name: 'name',
+                        link: true,
+                    },
+                ],
+                [
+                    {name: 'dateStart'}
                 ]
-            },
-            'Call': {
-                rows: [
-                    [
-                        {
-                            name: 'ico',
-                            view: 'crm:views/fields/ico',
-                            params: {
-                                notRelationship: true
-                            }
-                        },
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                    ],
-                    [
-                        {name: 'dateStart'}
-                    ]
-                ]
-            }
-        },
-
-        setupActionList: function () {
-            if (this.getAcl().checkScope('Call', 'create')) {
-                this.actionList.unshift({
-                    name: 'createCall',
-                    html: this.translate('Create Call', 'labels', 'Call'),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
-                    url: '#Call/create'
-                });
-            }
-            if (this.getAcl().checkScope('Meeting', 'create')) {
-                this.actionList.unshift({
-                    name: 'createMeeting',
-                    html: this.translate('Create Meeting', 'labels', 'Meeting'),
-                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
-                    url: '#Meeting/create'
-                });
-            }
+            ]
         },
 
         setup: function () {
             this.seeds = {};
+
+            this.scopeList = this.getConfig().get('activitiesEntityList') || [];
+
+            this.listLayout = {};
+            this.scopeList.forEach(function (item) {
+                this.listLayout[item] = this.defaultListLayout;
+            }, this);
 
             this.wait(true);
             var i = 0;
@@ -114,8 +78,21 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
                     }
                 }.bind(this));
             }, this);
-        },
 
+            this.scopeList.slice(0).reverse().forEach(function (scope) {
+                if (this.getAcl().checkScope(scope, 'create')) {
+                    this.actionList.unshift({
+                        name: 'createActivity',
+                        html: this.translate('Create ' + scope, 'labels', scope),
+                        iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                        url: '#' + scope + '/create',
+                        data: {
+                            scope: scope
+                        }
+                    });
+                }
+            }, this);
+        },
 
         afterRender: function () {
             this.collection = new MultiCollection();
@@ -142,6 +119,24 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
         actionRefresh: function () {
             this.collection.fetch();
+        },
+
+        actionCreateActivity: function (data) {
+            var scope = data.scope;
+            var attributes = {};
+
+            this.notify('Loading...');
+            var viewName = this.getMetadata().get('clientDefs.'+scope+'.modalViews.edit') || 'views/modals/edit';
+            this.createView('quickCreate', viewName, {
+                scope: scope,
+                attributes: attributes,
+            }, function (view) {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', function () {
+                    this.actionRefresh();
+                }, this);
+            }.bind(this));
         },
 
         actionCreateMeeting: function () {
