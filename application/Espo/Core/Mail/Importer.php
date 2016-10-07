@@ -208,7 +208,7 @@ class Importer
                     $email->set('body', $body);
                 }
 
-                if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
+                if ($this->getFiltersMatcher()->match($email, $filterList)) {
                     return false;
                 }
             } else {
