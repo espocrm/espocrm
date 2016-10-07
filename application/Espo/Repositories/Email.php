@@ -240,6 +240,12 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
 
         if ($entity->get('isBeingImported')) {
+            if (!$entity->has('from')) {
+                $this->loadFromField($entity);
+            }
+            if (!$entity->has('to')) {
+                $this->loadToField($entity);
+            }
             foreach ($entity->getLinkMultipleIdList('users') as $userId) {
                 $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
                 if ($filter) {
