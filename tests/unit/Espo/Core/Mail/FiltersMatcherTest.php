@@ -139,6 +139,48 @@ class FiltersMatcherTest extends \PHPUnit_Framework_TestCase
         $filterList = [$filter];
         $this->assertFalse($this->object->match($email, $filterList));
 
+
+        $email->set('name', 'test hello man');
+        $email->set('from', 'test@tester');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'subject' => '*hello*',
+            'from' => 'test@tester'
+        ));
+        $filterList = [$filter];
+        $this->assertTrue($this->object->match($email, $filterList));
+
+        $email->set('name', 'test hello man');
+        $email->set('from', 'hello@tester');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'subject' => '*hello*',
+            'from' => 'test@tester'
+        ));
+        $filterList = [$filter];
+        $this->assertFalse($this->object->match($email, $filterList));
+
+
+        $email->set('name', 'test hello man');
+        $email->set('body', 'one hello three');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'subject' => 'test hello man',
+            'bodyContains' => ['hello']
+        ));
+        $filterList = [$filter];
+        $this->assertFalse($this->object->match($email, $filterList, true));
+
+        $email->set('name', 'test hello man');
+        $email->set('body', 'one hello three');
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'subject' => 'test hello man',
+            'bodyContains' => ['hello']
+        ));
+        $filterList = [$filter];
+        $this->assertTrue($this->object->match($email, $filterList));
+
     }
 
     function testMatchBody()
@@ -150,7 +192,19 @@ class FiltersMatcherTest extends \PHPUnit_Framework_TestCase
             'bodyContains' => ['man', 'red']
         ));
         $filterList = [$filter];
-        $this->assertTrue($this->object->matchBody($email, $filterList));
+        $this->assertTrue($this->object->match($email, $filterList));
+
+        $email = new \Espo\Entities\Email($this->emailDefs);
+        $email->set('body', 'hello Man tester');
+        $email->set('from', 'hello@test');
+
+        $filter = new \Espo\Entities\EmailFilter($this->filterDefs);
+        $filter->set(array(
+            'bodyContains' => ['man', 'red'],
+            'from' => 'test@tester'
+        ));
+        $filterList = [$filter];
+        $this->assertFalse($this->object->match($email, $filterList));
     }
 
 }
