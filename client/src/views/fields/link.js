@@ -442,7 +442,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.frontType;
+            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         }
 
     });
