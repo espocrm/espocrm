@@ -949,12 +949,9 @@ class Activities extends \Espo\Core\Services\Base
         $serviceName = 'Activities' . $entity->getEntityType();
         if ($this->getServiceFactory()->checkExists($serviceName)) {
             $service = $this->getServiceFactory()->create($serviceName);
-            if (method_exists($service, 'getActivitiesQuery')) {
-                return $service->getActivitiesQuery($entity, $scope, $isHistory);
-            }
-            if (method_exists($service, 'getActivitiesSelectParams')) {
-                $selectParams = $service->getActivitiesSelectParams($entity, $scope, $isHistory);
-                return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
+            $methodName = 'getActivities' . $scope . 'Query';
+            if (method_exists($service, $methodName)) {
+                return $service->$methodName($entity, $statusList, $isHistory);
             }
         }
 
