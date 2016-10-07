@@ -39,6 +39,18 @@ class FiltersMatcher
 
     }
 
+    protected function matchTo(Email $email, $filter)
+    {
+        if ($email->get('to')) {
+            $toArr = explode(';', $email->get('to'));
+            foreach ($toArr as $to) {
+                if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
+                    return true;
+                }
+            }
+        }
+    }
+
     public function match(Email $email, $subject, $skipBody = false)
     {
         if (is_array($subject) || $subject instanceof \Traversable) {
@@ -48,30 +60,42 @@ class FiltersMatcher
         }
 
         foreach ($filterList as $filter) {
-            if ($filter->get('from')) {
-                if ($this->matchString(strtolower($filter->get('from')), strtolower($email->get('from')))) {
-                    return true;
-                }
-            }
-            if ($filter->get('to')) {
-                if ($email->get('to')) {
-                    $toArr = explode(';', $email->get('to'));
-                    foreach ($toArr as $to) {
-                        if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            if ($filter->get('subject')) {
-                if ($this->matchString($filter->get('subject'), $email->get('name'))) {
-                    return true;
-                }
-            }
-        }
+            $filterCount = 0;
 
-        if (!$skipBody) {
-            if ($this->matchBody($email, $filterList)) {
+            if ($filter->get('from')) {
+                $filterCount++;
+                if (!$this->matchString(strtolower($filter->get('from')), strtolower($email->get('from')))) {
+                    continue;
+                }
+            }
+
+            if ($filter->get('to')) {
+                $filterCount++;
+                if (!$this->matchTo($email, $filter)) {
+                    continue;
+                }
+            }
+
+            if ($filter->get('subject')) {
+                $filterCount++;
+                if (!$this->matchString($filter->get('subject'), $email->get('name'))) {
+                    continue;
+                }
+            }
+
+            $wordList = $filter->get('bodyContains');
+            if (!empty($wordList)) {
+                $filterCount++;
+                if ($skipBody) {
+                    continue;
+                }
+                if (!$this->matchBody($email, $filter)) {
+                    continue;
+                }
+
+            }
+
+            if ($filterCount) {
                 return true;
             }
         }
@@ -79,30 +103,19 @@ class FiltersMatcher
         return false;
     }
 
-    public function matchBody(Email $email, $subject)
+    protected function matchBody(Email $email, $filter)
     {
-        if (is_array($subject) || $subject instanceof \Traversable) {
-            $filterList = $subject;
-        } else {
-            $filterList = [$subject];
-        }
-
-        foreach ($filterList as $filter) {
-            if ($filter->get('bodyContains')) {
-                $phraseList = $filter->get('bodyContains');
-                $body = $email->get('body');
-                $bodyPlain = $email->get('bodyPlain');
-                foreach ($phraseList as $phrase) {
-                    if (stripos($bodyPlain, $phrase) !== false) {
-                        return true;
-                    }
-                    if (stripos($body, $phrase) !== false) {
-                        return true;
-                    }
-                }
+        $phraseList = $filter->get('bodyContains');
+        $body = $email->get('body');
+        $bodyPlain = $email->get('bodyPlain');
+        foreach ($phraseList as $phrase) {
+            if (stripos($bodyPlain, $phrase) !== false) {
+                return true;
+            }
+            if (stripos($body, $phrase) !== false) {
+                return true;
             }
         }
-        return false;
     }
 
     protected function matchString($pattern, $value)
