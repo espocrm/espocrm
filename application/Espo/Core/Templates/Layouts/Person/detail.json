@@ -12,6 +12,14 @@
                 {
                     "name": "emailAddress"
                 },
+                {
+                    "name": "phoneNumber"
+                }
+            ],
+            [
+                {
+                    "name": "address"
+                },
                 false
             ],
             [

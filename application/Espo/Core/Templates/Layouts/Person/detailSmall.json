@@ -16,6 +16,12 @@
             ],
             [
                 {
+                    "name": "phoneNumber",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
                     "name": "description",
                     "fullWidth": true
                 }
