@@ -345,16 +345,46 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         },
 
-        getComposeEmailAttributes: function (data, callback) {
+        getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
             var attributes = {
                 status: 'Draft',
                 to: this.model.get('emailAddress')
             };
+
+            if (this.model.name == 'Contact') {
+                if (this.getConfig().get('b2cMode')) {
+                    attributes.parentType = 'Contact';
+                    attributes.parentName = this.model.get('name');
+                    attributes.parentId = this.model.id;
+                } else {
+                    if (this.model.get('accountId')) {
+                        attributes.parentType = 'Account',
+                        attributes.parentId = this.model.get('accountId');
+                        attributes.parentName = this.model.get('accountName');
+                    }
+                }
+            } else if (this.model.name == 'Lead') {
+                attributes.parentType = 'Lead',
+                attributes.parentId = this.model.id
+                attributes.parentName = this.model.get('name');
+            }
+            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
+                attributes.nameHash = {};
+                attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
+            }
+
+            if (scope && !attributes.parentId) {
+                if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                    attributes.parentType = this.model.name;
+                    attributes.parentId = this.model.id;
+                    attributes.parentName = this.model.get('name');
+                }
+            }
             callback.call(this, attributes);
         },
 
-        actionComposeEmail: function () {
+        actionComposeEmail: function (data) {
             var self = this;
             var link = 'emails';
             var scope = 'Email';
@@ -369,29 +399,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             this.notify('Loading...');
 
-            this.getComposeEmailAttributes(null, function (attributes) {
-                if (this.model.name == 'Contact') {
-                    if (this.getConfig().get('b2cMode')) {
-                        attributes.parentType = 'Contact';
-                        attributes.parentName = this.model.get('name');
-                        attributes.parentId = this.model.id;
-                    } else {
-                        if (this.model.get('accountId')) {
-                            attributes.parentType = 'Account',
-                            attributes.parentId = this.model.get('accountId');
-                            attributes.parentName = this.model.get('accountName');
-                        }
-                    }
-                } else if (this.model.name == 'Lead') {
-                    attributes.parentType = 'Lead',
-                    attributes.parentId = this.model.id
-                    attributes.parentName = this.model.get('name');
-                }
-                if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
-                    attributes.nameHash = {};
-                    attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
-                }
-
+            this.getComposeEmailAttributes(scope, data, function (attributes) {
                 this.createView('quickCreate', 'views/modals/compose-email', {
                     relate: relate,
                     attributes: attributes

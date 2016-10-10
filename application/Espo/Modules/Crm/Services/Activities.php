@@ -88,7 +88,7 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function isPerson($scope)
     {
-        return in_array($scope, ['Contact', 'Lead', 'User']);
+        return in_array($scope, ['Contact', 'Lead', 'User']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
     }
 
     protected function getActivitiesUserMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)

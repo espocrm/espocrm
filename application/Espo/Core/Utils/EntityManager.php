@@ -44,13 +44,17 @@ class EntityManager
 
     private $metadataHelper;
 
-    public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager)
+    private $container;
+
+    public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Container $container = null)
     {
         $this->metadata = $metadata;
         $this->language = $language;
         $this->fileManager = $fileManager;
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
+
+        $this->container = $container;
     }
 
     protected function getMetadata()
@@ -185,6 +189,8 @@ class EntityManager
             $this->getFileManager()->copy($layoutsPath, 'custom/Espo/Custom/Resources/layouts/' . $name);
         }
 
+        $this->processHook('afterCreate', $type, $name, $params);
+
         return true;
     }
 
@@ -250,6 +256,8 @@ class EntityManager
 
         $normalizedName = Util::normilizeClassName($name);
 
+        $type = $this->getMetadata()->get(['scopes', $name, 'type']);
+
         $unsets = array(
             'entityDefs',
             'clientDefs',
@@ -275,6 +283,10 @@ class EntityManager
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
+
+        if ($type) {
+            $this->processHook('afterRemove', $type, $name);
+        }
 
         return true;
     }
@@ -605,5 +617,30 @@ class EntityManager
         $this->getMetadata()->save();
 
         return true;
+    }
+
+    protected function processHook($methodName, $type, $name, &$params = null)
+    {
+        $hook = $this->getHook($type);
+        if (!$hook) return;
+
+        if (!method_exists($hook, $methodName)) return;
+
+        $hook->$methodName($name, $params);
+    }
+
+    protected function getHook($type)
+    {
+        $className = '\\Espo\\Core\\Utils\\EntityManager\\Hooks\\' . $type . 'Type';
+        $className = $this->getMetadata()->get(['entityTemplates', $type, 'hookClassName'], $className);
+
+        if (class_exists($className)) {
+            $hook = new $className();
+            foreach ($hook->getDependencyList() as $name) {
+                $hook->inject($name, $this->container->get($name));
+            }
+            return $hook;
+        }
+        return;
     }
 }
