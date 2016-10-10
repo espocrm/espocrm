@@ -1,5 +1,6 @@
 [
    "Base",
+   "BasePlus",
    "Person",
    "Event"
 ]
