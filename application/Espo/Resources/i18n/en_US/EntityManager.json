@@ -32,7 +32,8 @@
             "Person": "Person",
             "CategoryTree": "Category Tree",
             "Event": "Event",
-            "BasePlus": "Base Plus"
+            "BasePlus": "Base Plus",
+            "Company": "Company"
         },
         "linkType": {
             "manyToMany": "Many-to-Many",

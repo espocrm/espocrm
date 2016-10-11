@@ -1,0 +1,141 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "website": {
+            "type": "url"
+        },
+        "emailAddress": {
+            "type": "email"
+        },
+        "phoneNumber": {
+            "type": "phone",
+            "typeList": ["Office", "Mobile", "Fax", "Other"],
+            "defaultType": "Office"
+        },
+        "billingAddress": {
+            "type": "address"
+        },
+        "billingAddressStreet": {
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
+        },
+        "billingAddressCity": {
+            "type": "varchar"
+        },
+        "billingAddressState": {
+            "type": "varchar"
+        },
+        "billingAddressCountry": {
+            "type": "varchar"
+        },
+        "billingAddressPostalCode": {
+            "type": "varchar"
+        },
+        "shippingAddress": {
+            "type": "address",
+            "view": "crm:views/account/fields/shipping-address"
+        },
+        "shippingAddressStreet": {
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
+        },
+        "shippingAddressCity": {
+            "type": "varchar"
+        },
+        "shippingAddressState": {
+            "type": "varchar"
+        },
+        "shippingAddressCountry": {
+            "type": "varchar"
+        },
+        "shippingAddressPostalCode": {
+            "type": "varchar"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": false,
+            "view": "views/fields/assigned-user"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "meetings": {
+            "type": "hasMany",
+            "entity": "Meeting",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
+        },
+        "calls": {
+            "type": "hasMany",
+            "entity": "Call",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
+        },
+        "tasks": {
+            "type": "hasChildren",
+            "entity": "Task",
+            "foreign": "parent",
+            "layoutRelationshipsDisabled": true
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    },
+    "indexes": {
+        "name": {
+            "columns": ["name", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        }
+    }
+}
