@@ -33,6 +33,7 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Utils\Json;
+use \Espo\Core\Container;
 
 class EntityManager
 {
@@ -275,6 +276,8 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Services/{$normalizedName}.php");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$normalizedName}.php");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$normalizedName}.php");
+
+        $this->getFileManager()->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
 
         try {
             $this->getLanguage()->delete('Global', 'scopeNames', $name);
