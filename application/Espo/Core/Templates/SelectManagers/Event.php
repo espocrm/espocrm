@@ -27,21 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Templates\SelectManagers;
 
-class EntityManagerUtil extends Base
+class Event extends \Espo\Core\SelectManagers\Base
 {
-    public function load()
+    protected function filterPlanned(&$result)
     {
-        $entityManager = new \Espo\Core\Utils\EntityManager(
-            $this->getContainer()->get('metadata'),
-            $this->getContainer()->get('language'),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('config'),
-            $this->getContainer()
+        $result['whereClause'][] = array(
+            'status' => 'Planned'
         );
+    }
 
-        return $entityManager;
+    protected function filterHeld(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Held'
+        );
+    }
+
+    protected function filterTodays(&$result)
+    {
+        $result['whereClause'][] = $this->convertDateTimeWhere(array(
+            'type' => 'today',
+            'attribute' => 'dateStart',
+            'timeZone' => $this->getUserTimeZone()
+        ));
     }
 }
 

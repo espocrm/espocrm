@@ -53,7 +53,8 @@ function PO (espoPath, language) {
 
     var dirs = [
         this.path + 'application/Espo/Resources/i18n/',
-        this.path + 'install/core/i18n/'
+        this.path + 'install/core/i18n/',
+        this.path + 'application/Espo/Core/Templates/i18n/'
     ];
     this.moduleList.forEach(function (moduleName) {
         dirs.push(this.path + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/');

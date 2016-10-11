@@ -43,15 +43,18 @@ class EntityManager
 
     private $fileManager;
 
+    private $config;
+
     private $metadataHelper;
 
     private $container;
 
-    public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Container $container = null)
+    public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
         $this->metadata = $metadata;
         $this->language = $language;
         $this->fileManager = $fileManager;
+        $this->config = $config;
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
 
@@ -71,6 +74,11 @@ class EntityManager
     protected function getFileManager()
     {
         return $this->fileManager;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     protected function getMetadataHelper()
@@ -126,6 +134,17 @@ class EntityManager
         $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
+        if (file_exists('application/Espo/Core/Templates/SelectManagers/' . $type . '.php')) {
+            $contents = "<" . "?" . "php\n\n".
+                "namespace Espo\Custom\SelectManagers;\n\n".
+                "class {$normalizedName} extends \Espo\Core\Templates\SelectManagers\\{$type}\n".
+                "{\n".
+                "}\n";
+
+            $filePath = "custom/Espo/Custom/SelectManagers/{$normalizedName}.php";
+            $this->getFileManager()->putContents($filePath, $contents);
+        }
+
         $stream = false;
         if (!empty($params['stream'])) {
             $stream = $params['stream'];
@@ -142,14 +161,17 @@ class EntityManager
         if (!empty($params['labelPlural'])) {
             $labelPlural = $params['labelPlural'];
         }
-        $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
 
-        if ($type == 'Event') {
-            $labelSchedule = $this->getLanguage()->translate('Schedule', 'labels', 'EntityManager') . ' ' . $labelSingular;
-            $this->getLanguage()->set($name, 'labels', 'Schedule ' . $name, $labelSchedule);
+        $languageList = $this->getConfig()->get('languageList', []);
+        foreach ($languageList as $language) {
+            $filePath = 'application/Espo/Core/Templates/i18n/' . $language . '/' . $type . '.json';
+            if (!file_exists($filePath)) continue;
+            $languageContents = $this->getFileManager()->getContents($filePath);
+            $languageContents = str_replace('{entityType}', $name, $languageContents);
+            $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
 
-            $labelLog = $this->getLanguage()->translate('Log', 'labels', 'EntityManager') . ' ' . $labelSingular;
-            $this->getLanguage()->set($name, 'labels', 'Log ' . $name, $labelLog);
+            $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
+            $this->getFileManager()->putContents($destinationFilePath, $languageContents);
         }
 
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/scopes.json";
@@ -180,7 +202,6 @@ class EntityManager
 
         $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
         $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
-        $this->getLanguage()->set($name, 'labels', 'Create ' . $name, $labelCreate);
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
@@ -277,8 +298,19 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$normalizedName}.php");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$normalizedName}.php");
 
+        if (file_exists("custom/Espo/Custom/SelectManagers/{$normalizedName}.php")) {
+            $this->getFileManager()->removeFile("custom/Espo/Custom/SelectManagers/{$normalizedName}.php");
+        }
+
         $this->getFileManager()->removeInDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
         $this->getFileManager()->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
+
+        $languageList = $this->getConfig()->get('languageList', []);
+        foreach ($languageList as $language) {
+            $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json' ;
+            if (!file_exists($filePath)) continue;
+            $this->getFileManager()->removeFile($filePath);
+        }
 
         try {
             $this->getLanguage()->delete('Global', 'scopeNames', $name);
