@@ -549,6 +549,11 @@ class Manager
         return (bool) $result;
     }
 
+    public function removeDir($dirPaths)
+    {
+        return $this->rmdir($dirPaths);
+    }
+
     /**
      * Remove file/files by given path
      *
