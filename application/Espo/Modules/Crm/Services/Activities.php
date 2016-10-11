@@ -91,6 +91,11 @@ class Activities extends \Espo\Core\Services\Base
         return in_array($scope, ['Contact', 'Lead', 'User']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
     }
 
+    protected function isCompany($scope)
+    {
+        return in_array($scope, ['Account']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Company';
+    }
+
     protected function getActivitiesUserMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
@@ -520,7 +525,7 @@ class Activities extends \Espo\Core\Services\Base
 
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
-        if ($this->isPerson($scope) || $scope == 'Account') {
+        if ($this->isPerson($scope) || $this->isCompany($scope)) {
             $selectParams = $baseSelectParams;
             $selectParams['customJoin'] .= "
                 LEFT JOIN entity_email_address AS entityEmailAddress2 ON

@@ -213,7 +213,7 @@ class EmailAddress extends Record
         $list = [];
         $scopeDefs = $this->getMetadata()->get(['scopes']);
         foreach ($scopeDefs as $scope => $defs) {
-            if (empty($defs['disabled']) && !empty($defs['type']) && $defs['type'] === 'Person') {
+            if (empty($defs['disabled']) && !empty($defs['type']) && ($defs['type'] === 'Person' || $defs['type'] === 'Company')) {
                 $list[] = $scope;
             }
         }
