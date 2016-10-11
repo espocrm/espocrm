@@ -277,6 +277,7 @@ class EntityManager
         $this->getFileManager()->removeFile("custom/Espo/Custom/Controllers/{$normalizedName}.php");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Repositories/{$normalizedName}.php");
 
+        $this->getFileManager()->removeInDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
         $this->getFileManager()->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
 
         try {
