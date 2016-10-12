@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "emailAddress": "E-Mail Adresse",
     "team": "Team",
     "status": "Status",
@@ -10,21 +10,21 @@
     "password": "Passwort",
     "port": "Port",
     "monitoredFolders": "Überwachte Ordner",
-    "trashFolder": "Papierkorb Ordner",
+    "trashFolder": "Papierkorb",
     "ssl": "SSL",
     "createCase": "Fall erstellen",
     "reply": "Autoantwort",
     "caseDistribution": "Fall Verteilung",
     "replyEmailTemplate": "Vorlage E-Mail Antwort",
-    "replyFromAddress": "Von Adresse antworten",
+    "replyFromAddress": "Rückantwortadresse",
     "replyToAddress": "Antwort an Adresse",
-    "replyFromName": "Von Name antworten",
+    "replyFromName": "Absendername für Rückantwort",
     "targetUserPosition": "Position Zielbenutzer",
     "fetchSince": "Holen seit",
     "addAllTeamUsers": "Für alle Teambenutzer"
   },
   "tooltips": {
-    "reply": "E-Mail Absender informieren, dass ihre E-Mails empfangen wurde.\n\n Es wird pro Zeitabschnitt nur eine E-Mail an einen bestimmten Empfänger gesendet um Endlosschleifen zu vermeiden.",
+    "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
     "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
     "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
     "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
@@ -34,7 +34,8 @@
     "addAllTeamUsers": "E-Mails erscheinen im Posteingang aller Benutzer eines bestimmten Teams."
   },
   "links": {
-    "filters": "Filter"
+    "filters": "Filter",
+    "emails": "E-Mails"
   },
   "options": {
     "status": {

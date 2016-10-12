@@ -1,11 +1,13 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "description": "Beschreibung",
     "entryCount": "Eingabezähler",
     "campaigns": "Kampagnen",
     "endDate": "Enddatum",
-    "targetLists": "Kontaktlisten"
+    "targetLists": "Kontaktlisten",
+    "includingActionList": "Inklusive",
+    "excludingActionList": "Exklusive"
   },
   "links": {
     "accounts": "Firmen",
@@ -19,14 +21,14 @@
       "Email": "E-Mail",
       "Web": "Web",
       "Television": "Fernsehen",
-      "Radio": "Radio Button",
+      "Radio": "Radio",
       "Newsletter": "Newsletter"
     }
   },
   "labels": {
     "Create TargetList": "Kontaktliste erstellen",
-    "Opted Out": "Keine E-Mails",
+    "Opted Out": "Opt-Out gesetzt",
     "Cancel Opt-Out": "Opt-Out zurücksetzen",
-    "Opt-Out": "Keine E-Mails"
+    "Opt-Out": "Opt-Out"
   }
 }

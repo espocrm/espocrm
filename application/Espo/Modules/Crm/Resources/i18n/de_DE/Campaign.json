@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "description": "Beschreibung",
     "status": "Status",
     "type": "Typ",
@@ -11,15 +11,15 @@
     "sentCount": "Gesendet",
     "openedCount": "Geöffnet",
     "clickedCount": "Geklickt",
-    "optedOutCount": "Keine E-Mails",
+    "optedOutCount": "Opt-Out gesetzt",
     "bouncedCount": "Nicht zustellbar",
-    "hardBouncedCount": "Hard Bounced",
-    "softBouncedCount": "Soft Bounced",
+    "hardBouncedCount": "Zurückgewiesen",
+    "softBouncedCount": "Temporär nicht zustellbar",
     "leadCreatedCount": "Erstellte Interessenten",
     "revenue": "Umsatz",
-    "revenueConverted": "Umsatz (konvertiert)",
+    "revenueConverted": "Umsatz (umgerechnet)",
     "budget": "Budget",
-    "budgetConverted": "Budget (konvertiert)"
+    "budgetConverted": "Budget (umgerechnet)"
   },
   "links": {
     "targetLists": "Kontaktlisten",
@@ -37,7 +37,7 @@
       "Email": "E-Mail",
       "Web": "Web",
       "Television": "Fernsehen",
-      "Radio": "Radio Button",
+      "Radio": "Radio",
       "Newsletter": "Newsletter",
       "Mail": "Mail"
     },
@@ -45,7 +45,7 @@
       "Planning": "Planung",
       "Active": "Aktiv",
       "Inactive": "Inaktiv",
-      "Complete": "Fertig"
+      "Complete": "Abgeschlossen"
     }
   },
   "labels": {
@@ -56,13 +56,17 @@
     "soft": "weich",
     "Unsubscribe": "Abmelden",
     "Mass Emails": "Massen E-Mails",
-    "Email Templates": "E-Mail Vorlagen"
+    "Email Templates": "E-Mail Vorlagen",
+    "Unsubscribe again": "Abmelden",
+    "Subscribe again": "Anmelden",
+    "Create Target List": "Interessentenliste erstellen"
   },
   "presetFilters": {
     "active": "Aktiv"
   },
   "messages": {
-    "unsubscribed": "Sie wurden erfolgreich von unserem Verteiler entfernt"
+    "unsubscribed": "Sie wurden erfolgreich aus unserem Verteiler entfernt",
+    "subscribedAgain": "Sie sind wieder angemeldet."
   },
   "tooltips": {
     "targetLists": "Zielkontakte die Nachrichten empfangen sollen",

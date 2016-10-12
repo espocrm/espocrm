@@ -1,6 +1,7 @@
 {
   "fields": {
     "status": "Status",
-    "executionTime": "Ausführungszeit"
+    "executionTime": "Ausführungszeit",
+    "target": "Ziel"
   }
 }

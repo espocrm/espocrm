@@ -1,22 +1,24 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "logo": "Logo",
     "companyLogo": "Logo",
     "url": "URL",
     "portalRoles": "Rollen",
     "isActive": "Ist aktiv",
     "isDefault": "Ist Standard",
-    "tabList": "Reiter Liste",
+    "tabList": "Menüoptionen",
     "quickCreateList": "Liste Schnellerstellung",
     "theme": "Design",
     "language": "Sprache",
-    "dashboardLayout": "Layout Übersicht",
+    "dashboardLayout": "Dashboard Layout",
     "dateFormat": "Datumsformat",
     "timeFormat": "Zeitformat",
     "timeZone": "Zeitzone",
     "weekStart": "Erster Tag der Woche",
-    "defaultCurrency": "Standardwährung"
+    "defaultCurrency": "Standardwährung",
+    "customUrl": "Benutzerdefinierte URL",
+    "customId": "Benutzerdefinierte ID"
   },
   "links": {
     "users": "Benutzer",

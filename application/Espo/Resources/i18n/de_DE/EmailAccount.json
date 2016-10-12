@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "status": "Status",
     "host": "Host",
     "username": "Benutzername",
@@ -12,10 +12,19 @@
     "emailAddress": "E-Mail Adresse",
     "sentFolder": "Gesendet Ordner",
     "storeSentEmails": "Gesendete E-Mails speichern",
-    "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten"
+    "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten",
+    "emailFolder": "In Ordner ablegen",
+    "useSmtp": "SMTP verwenden",
+    "smtpHost": "SMTP Host",
+    "smtpPort": "SMTP Port",
+    "smtpAuth": "SMTP Auth",
+    "smtpSecurity": "SMTP Transportsicherheit",
+    "smtpUsername": "SMTP Benutzername",
+    "smtpPassword": "SMTP Passwort"
   },
   "links": {
-    "filters": "Filter"
+    "filters": "Filter",
+    "emails": "E-Mails"
   },
   "options": {
     "status": {
@@ -27,7 +36,9 @@
     "Create EmailAccount": "E-Mail Konto erstellen",
     "IMAP": "IMAP",
     "Main": "Hauptteil",
-    "Test Connection": "Verbindung überprüfen"
+    "Test Connection": "Verbindung überprüfen",
+    "Send Test Email": "Test E-Mail senden",
+    "SMTP": "SMTP"
   },
   "messages": {
     "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",

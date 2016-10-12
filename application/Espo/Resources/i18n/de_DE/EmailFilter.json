@@ -3,10 +3,20 @@
     "from": "Von",
     "to": "An",
     "subject": "Betreff",
-    "bodyContains": "Mailinhalt"
+    "bodyContains": "Mailinhalt",
+    "action": "Aktion",
+    "isGlobal": "Ist global",
+    "emailFolder": "Ordner"
   },
   "labels": {
-    "Create EmailFilter": "E.Mail Filter erstellen"
+    "Create EmailFilter": "E.Mail Filter erstellen",
+    "Emails": "E-Mails"
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorieren",
+      "Move to Folder": "In Ordner ablegen"
+    }
   },
   "tooltips": {
     "name": "Ein Name für den Filter",
@@ -14,6 +24,6 @@
     "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
     "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
     "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-    "parent": "Leer lassen um den Filter global anzuwenden (für alle eingehenden E-Mails)."
+    "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an."
   }
 }

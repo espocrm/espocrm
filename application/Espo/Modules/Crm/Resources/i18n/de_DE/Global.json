@@ -27,7 +27,7 @@
     "Task": "Aufgabe",
     "Case": "Fall",
     "Document": "Dokument",
-    "DocumentFolder": "Dokumente Ordner",
+    "DocumentFolder": "Dokumentenordner",
     "Campaign": "Kampagne",
     "TargetList": "Kontaktliste",
     "MassEmail": "Massen E-Mails",
@@ -35,7 +35,8 @@
     "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Aktivitäten",
     "KnowledgeBaseArticle": "Wissensbasis Artikel",
-    "KnowledgeBaseCategory": "Wissensbasis Kategorie"
+    "KnowledgeBaseCategory": "Wissensbasis Kategorie",
+    "CampaignLogRecord": "Kampagnen-Logeintrag"
   },
   "scopeNamesPlural": {
     "Account": "Firmen",
@@ -49,7 +50,7 @@
     "Task": "Aufgaben",
     "Case": "Fälle",
     "Document": "Dokumente",
-    "DocumentFolder": "Dokumente Ordner",
+    "DocumentFolder": "Dokumentenordner",
     "Campaign": "Kampagnen",
     "TargetList": "Kontaktlisten",
     "MassEmail": "Massen E-Mails",
@@ -57,7 +58,8 @@
     "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Aktivitäten",
     "KnowledgeBaseArticle": "Wissensbasis",
-    "KnowledgeBaseCategory": "Wissensbasis Kategorien"
+    "KnowledgeBaseCategory": "Wissensbasis Kategorien",
+    "CampaignLogRecord": "Kampagnen-Logeinträge"
   },
   "dashlets": {
     "Leads": "Meine Interessenten",
@@ -103,8 +105,9 @@
     "shippingAddressCity": "Ort (Lieferadresse)",
     "shippingAddressStreet": "Straße (Lieferadresse)",
     "shippingAddressCountry": "Land (Lieferadresse)",
-    "shippingAddressMap": "Karte (Lieferadresse)",
-    "shippingAddressPostalCode": "PLZ (Lieferadresse)"
+    "shippingAddressState": "Bundesland/Kanton (Versand)",
+    "shippingAddressPostalCode": "PLZ (Lieferadresse)",
+    "shippingAddressMap": "Karte (Lieferadresse)"
   },
   "options": {
     "reminderTypes": {

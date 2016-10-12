@@ -1,7 +1,7 @@
 {
   "labels": {
     "Primary": "Primär",
-    "Opted Out": "Keine E-Mails",
+    "Opted Out": "Opt-Out gesetzt",
     "Invalid": "Ungültig"
   }
 }

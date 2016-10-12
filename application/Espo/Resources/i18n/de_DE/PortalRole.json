@@ -3,9 +3,9 @@
     "users": "Benutzer"
   },
   "labels": {
-    "Access": "Zugang",
+    "Access": "Berechtigungen",
     "Create PortalRole": "Portal Rolle erstellen",
-    "Scope Level": "Scope Ebene",
+    "Scope Level": "Berechtigungsumfang",
     "Field Level": "Feldebene"
   }
 }
