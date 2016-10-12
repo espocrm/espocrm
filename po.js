@@ -175,6 +175,7 @@ PO.prototype.replaceAll = function (string, find, replace) {
 }
 
 PO.prototype.fixString = function (savedString) {
+    savedString = this.replaceAll(savedString, "\\", '\\\\');
     savedString = this.replaceAll(savedString, '"', '\\"');
     savedString = this.replaceAll(savedString, "\n", '\\n');
     savedString = this.replaceAll(savedString, "\t", '\\t');
