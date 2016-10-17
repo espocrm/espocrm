@@ -39,6 +39,8 @@ class Tester
 
     protected $testDataPath = 'tests/integration/testData';
 
+    protected $defaultUserPassword = '1';
+
     private $application;
 
     private $dataLoader;
@@ -75,13 +77,19 @@ class Tester
         return $returns;
     }
 
-    public function getApplication($reload = false, $userName = null, $password = null)
+    public function getApplication($reload = false, $userName = null, $password = null, $clearCache = true)
     {
         if (!isset($this->application) || $reload)  {
+
+            if ($clearCache) {
+                $this->clearCache();
+            }
+
             $this->application = new \Espo\Core\Application();
             $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
 
-            if (isset($userName) && isset($password)) {
+            if (isset($userName)) {
+                $password = isset($password) ? $password : $this->defaultUserPassword;
                 $auth->login($userName, $password);
             } else {
                 $auth->useNoAuth();
@@ -154,5 +162,12 @@ class Tester
         if (!empty($this->params['pathToFiles'])) {
             $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
         }
+    }
+
+    public function clearCache()
+    {
+        $fileManager = new \Espo\Core\Utils\File\Manager();
+
+        return $fileManager->removeInDir('data/cache');
     }
 }
