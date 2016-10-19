@@ -104,16 +104,17 @@ class RDB extends \Espo\ORM\Repository
 
     protected function getEntityById($id)
     {
+        $entity = $this->entityFactory->create($this->entityType);
+
+        if (!$entity) return null;
+
         $params = array();
         $this->handleSelectParams($params);
-
-        $entity = $this->entityFactory->create($this->entityType);
-        if ($entity) {
-            if ($this->getMapper()->selectById($entity, $id, $params)) {
-                $entity->setAsFetched();
-                return $entity;
-            }
+        if ($this->getMapper()->selectById($entity, $id, $params)) {
+            $entity->setAsFetched();
+            return $entity;
         }
+
         return null;
     }
 
