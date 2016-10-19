@@ -119,7 +119,10 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
         $d = array(
             'usersMiddle.inTrash=' => false,
-            'usersMiddle.folderId' => null
+            'usersMiddle.folderId' => null,
+            array(
+                'status!=' => 'Draft'
+            )
         );
         if (!empty($idList)) {
             $d['fromEmailAddressId!='] = $idList;
@@ -150,6 +153,9 @@ class Email extends \Espo\Core\SelectManagers\Base
                     'status' => 'Sent',
                     'createdById' => $this->getUser()->id
                 )
+            ),
+            array(
+                'status!=' => 'Draft'
             ),
             'usersMiddle.inTrash=' => false
         );
