@@ -417,6 +417,9 @@ class Import extends \Espo\Services\Record
 
         foreach ($importFieldList as $i => $field) {
             if (!empty($field)) {
+                if (!array_key_exists($i, $row)) {
+                    continue;
+                }
                 $value = $row[$i];
                 if ($field == 'id') {
                     if ($params['action'] == 'create') {
