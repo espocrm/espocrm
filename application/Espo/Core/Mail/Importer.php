@@ -225,6 +225,9 @@ class Importer
                 $emailSent = PHP_INT_MAX;
                 $number = null;
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+                if ($n != 4) {
+                    $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
+                }
                 if ($n == 4 && $emailSent < time()) {
                     if (!empty($parentType) && !empty($parentId)) {
                         if ($parentType == 'Lead') {

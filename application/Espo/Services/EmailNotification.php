@@ -133,7 +133,9 @@ class EmailNotification extends \Espo\Core\Services\Base
                     'body' => $body,
                     'isHtml' => true,
                     'to' => $emailAddress,
-                    'isSystem' => true
+                    'isSystem' => true,
+                    'parentId' => $entity->id,
+                    'parentType' => $entity->getEntityType()
                 ));
                 try {
                     $this->getMailSender()->send($email);
@@ -429,6 +431,13 @@ class EmailNotification extends \Espo\Core\Services\Base
             'to' => $emailAddress,
             'isSystem' => true
         ));
+        if ($parentId && $parentType) {
+            $email->set(array(
+                'parentId' => $parentId,
+                'parentType' => $parentType
+            ));
+        }
+
         try {
             $this->getMailSender()->send($email);
         } catch (\Exception $e) {
@@ -517,6 +526,12 @@ class EmailNotification extends \Espo\Core\Services\Base
             'to' => $emailAddress,
             'isSystem' => true
         ));
+        if ($parentId && $parentType) {
+            $email->set(array(
+                'parentId' => $parentId,
+                'parentType' => $parentType
+            ));
+        }
         try {
             $this->getMailSender()->send($email);
         } catch (\Exception $e) {
@@ -576,8 +591,11 @@ class EmailNotification extends \Espo\Core\Services\Base
             'body' => $body,
             'isHtml' => true,
             'to' => $emailAddress,
-            'isSystem' => true
+            'isSystem' => true,
+            'parentId' => $parentId,
+            'parentType' => $parentType
         ));
+
         try {
             $this->getMailSender()->send($email);
         } catch (\Exception $e) {
