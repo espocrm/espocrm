@@ -121,11 +121,22 @@ class Email extends \Espo\Core\SelectManagers\Base
             'usersMiddle.inTrash=' => false,
             'usersMiddle.folderId' => null,
             array(
-                'status!=' => 'Draft'
+                'status' => ['Archived', 'Sent']
             )
         );
         if (!empty($idList)) {
             $d['fromEmailAddressId!='] = $idList;
+            $d[] = array(
+                'OR' => array(
+                    'status' => 'Archived',
+                    'createdById!=' => $this->getUser()->id
+                )
+            );
+        } else {
+            $d[] = array(
+                'status' => 'Archived',
+                'createdById!=' => $this->getUser()->id
+            );
         }
         $result['whereClause'][] = $d;
 
