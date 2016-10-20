@@ -48,6 +48,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsDefault: 4,
 
+        searchTypeList: ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'],
+
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
@@ -62,7 +64,6 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
@@ -192,6 +193,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 }
             }
             return false;
+        },
+
+        getSearchType: function () {
+            return this.searchParams.typeFront || this.searchParams.type;
         }
 
     });
