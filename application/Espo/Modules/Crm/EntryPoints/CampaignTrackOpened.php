@@ -90,7 +90,7 @@ class CampaignTrackOpened extends \Espo\Core\EntryPoints\Base
         imagefill($img, 0, 0, $color);
 
         imagepng($img);
-        imagecolordeallocate($background);
+        imagecolordeallocate($color);
         imagedestroy($img);
     }
 }
