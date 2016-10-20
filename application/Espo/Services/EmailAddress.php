@@ -177,13 +177,13 @@ class EmailAddress extends Record
     {
         $result = [];
 
+        $this->findInAddressBookUsers($query, $limit, $result);
         if ($this->getAcl()->checkScope('Contact')) {
             $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
         }
         if ($this->getAcl()->checkScope('Lead')) {
             $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
         }
-        $this->findInAddressBookUsers($query, $limit, $result);
         if ($this->getAcl()->checkScope('Account')) {
             $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
         }
