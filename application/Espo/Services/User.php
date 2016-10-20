@@ -32,6 +32,7 @@ namespace Espo\Services;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
 
 use \Espo\ORM\Entity;
 
@@ -153,7 +154,7 @@ class User extends Record
             throw new Forbidden();
         }
 
-        $requestId = uniqid();
+        $requestId = Util::generateId();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set(array(

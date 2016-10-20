@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\Utils\Util;
 
 class Meeting extends \Espo\Core\ORM\Repositories\RDB
 {
@@ -210,7 +211,7 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
                 $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
 
                 foreach ($userIdList as $userId) {
-                    $id = uniqid(true);
+                    $id = Util::generateId();
 
                     $sql = "
                         INSERT
