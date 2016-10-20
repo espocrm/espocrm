@@ -586,7 +586,7 @@ class Email extends Record
         $searchByEmailAddress = false;
         if (!empty($params['where']) && is_array($params['where'])) {
             foreach ($params['where'] as $i => $p) {
-                if (!empty($p['field']) && $p['field'] == 'emailAddress') {
+                if (!empty($p['attribute']) && $p['attribute'] == 'emailAddress') {
                     $searchByEmailAddress = true;
                     $emailAddress = $p['value'];
                     unset($params['where'][$i]);
