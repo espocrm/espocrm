@@ -1101,22 +1101,39 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         $result = array();
-        foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+        foreach ($rowList as $row) {
+            $reminderId = $row['id'];
+            $entityType = $row['entityType'];
+            $entityId = $row['entityId'];
+
+
+            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             $data = null;
+
             if ($entity) {
+                if ($entityType === 'Meeting' || $entityType === 'Call') {
+                    $entity->loadLinkMultipleField('users', array('status' => 'acceptanceStatus'));
+                    $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
+                    if ($status === 'Declined') {
+                        $this->removeReminder($reminderId);
+                        continue;
+                    }
+                }
+
                 $data = array(
                     'id' => $entity->id,
-                    'entityType' => $row['entityType'],
+                    'entityType' => $entityType,
                     'dateStart' => $entity->get('dateStart'),
                     'name' => $entity->get('name')
                 );
+            } else {
+                continue;
             }
             $result[] = array(
-                'id' => $row['id'],
+                'id' => $reminderId,
                 'data' => $data
             );
 
