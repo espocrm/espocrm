@@ -96,7 +96,7 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
 
                     this.getFieldManager().getEntityAttributes(model.name).forEach(function (attr) {
                         if (~attributeList.indexOf(attr) && !~ignoreAttributeList.indexOf(attr)) {
-                            model.set(attr, this.model.get(attr), {silent: true}); 
+                            model.set(attr, this.model.get(attr), {silent: true});
                         }
                     }, this);
 
