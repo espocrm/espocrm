@@ -111,7 +111,7 @@ Espo.define('crm:views/lead/convert', 'View', function (Dep) {
                         }.bind(this));
                     }
 
-                    this.createView(scope, 'Record.Edit', {
+                    this.createView(scope, 'views/record/edit', {
                         model: model,
                         el: '#main .edit-container-' + Espo.Utils.toDom(scope),
                         buttonsPosition: false,
