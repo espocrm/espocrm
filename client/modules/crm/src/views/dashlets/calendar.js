@@ -38,7 +38,7 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
 
         init: function () {
             Dep.prototype.init.call(this);
-            this.optionsFields['enabledScopeList'].options = this.getMetadata().get('clientDefs.Calendar.scopeList') || this.optionsFields['enabledScopeList'].options;
+            this.optionsFields['enabledScopeList'].options = this.getConfig().get('calendarEntityList') || [];
         },
 
         afterRender: function () {
