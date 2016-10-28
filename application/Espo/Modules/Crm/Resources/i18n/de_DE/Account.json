@@ -1,19 +1,20 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "emailAddress": "E-Mail",
     "website": "Webseite",
     "phoneNumber": "Telefon",
     "billingAddress": "Rechnungsadresse",
     "shippingAddress": "Lieferadresse",
     "description": "Beschreibung",
-    "sicCode": "WKN Nummer",
+    "sicCode": "ISIC Code",
     "industry": "Branche",
     "type": "Typ",
     "contactRole": "Rolle",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
-    "targetList": "Kontaktliste"
+    "targetList": "Kontaktliste",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "links": {
     "contacts": "Kontakte",
@@ -27,7 +28,8 @@
     "targetLists": "Kontaktlisten",
     "campaignLogRecords": "Kampagnen Log",
     "campaign": "Kampagne",
-    "portalUsers": "Portal Benutzer"
+    "portalUsers": "Portal Benutzer",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "options": {
     "type": {
@@ -75,6 +77,7 @@
   },
   "presetFilters": {
     "customers": "Kunden",
-    "partners": "Partner"
+    "partners": "Partner",
+    "recentlyCreated": "Kürzlich erstellt"
   }
 }

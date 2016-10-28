@@ -11,16 +11,17 @@
     "ScheduledJob": "Geplante Aufgabe",
     "ExternalAccount": "Externes Konto",
     "Extension": "Erweiterung",
-    "Dashboard": "Übersicht",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen E-Mail Konto",
-    "Stream": "Vorgänge",
+    "Stream": "Aktivitäten",
     "Import": "Import",
     "Template": "Vorlage",
     "Job": "Job",
     "EmailFilter": "E-Mail Filter",
     "Portal": "Portal",
     "PortalRole": "Portal Rolle",
-    "Attachment": "Anhang"
+    "Attachment": "Anhang",
+    "EmailFolder": "E-Mail Ordner"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -34,16 +35,17 @@
     "ScheduledJob": "Geplante Jobs",
     "ExternalAccount": "Externe Konten",
     "Extension": "Erweiterungen",
-    "Dashboard": "Übersicht",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen E-Mail Konten",
-    "Stream": "Vorgänge",
+    "Stream": "Aktivitäten",
     "Import": "Importergebnisse",
     "Template": "Vorlagen",
     "Job": "Jobs",
     "EmailFilter": "E-Mail Filter",
     "Portal": "Portale",
     "PortalRole": "Portal Rollen",
-    "Attachment": "Anhänge"
+    "Attachment": "Anhänge",
+    "EmailFolder": "E-Mail Ordner"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -69,7 +71,7 @@
     "Done": "Fertig",
     "Access denied": "Zugriff verweigert",
     "Not found": "Nicht gefunden",
-    "Access": "Zugang",
+    "Access": "Berechtigungen",
     "Are you sure?": "Sind Sie sicher?",
     "Record has been removed": "Datensatz wurde gelöscht",
     "Wrong username/password": "Falscher Benutzername/Passwort",
@@ -91,7 +93,7 @@
     "Add Field": "Feld hinzufügen",
     "Add Dashlet": "Dashlet hinzufügen",
     "Filter": "Filter",
-    "Edit Dashboard": "Übersicht bearbeiten",
+    "Edit Dashboard": "Dashboard bearbeiten",
     "Add": "Hinzufügen",
     "Add Item": "Eintrag hinzufügen",
     "Reset": "Zurücksetzen",
@@ -115,9 +117,9 @@
     "Country": "Land",
     "City": "Ort",
     "PostalCode": "PLZ",
-    "Followed": "Beobachtet",
-    "Follow": "Beobachten",
-    "Followers": "Beobachter",
+    "Followed": "Abonniert",
+    "Follow": "Abonnieren",
+    "Followers": "Abonnenten",
     "Clear Local Cache": "Lokalen Cache leeren",
     "Actions": "Aktionen",
     "Delete": "Löschen",
@@ -137,7 +139,7 @@
     "Inactive": "Inaktiv",
     "Write your comment here": "Notiz hier einfügen",
     "Post": "Senden",
-    "Stream": "Vorgänge",
+    "Stream": "Aktivitäten",
     "Show more": "Mehr anzeigen",
     "Dashlet Options": "Dashlet Optionen",
     "Full Form": "Komplettes Formular",
@@ -186,9 +188,10 @@
   "messages": {
     "pleaseWait": "Bitte warten...",
     "posting": "Poste...",
-    "confirmLeaveOutMessage": "Sind Sie sicher dass Sie das Formular verlassen wollen?",
-    "notModified": "Sie haben den Datensatz nicht geändert",
+    "confirmLeaveOutMessage": "Sind Sie sicher, dass Sie das Formular verlassen wollen?",
+    "notModified": "Sie haben keine Änderungen am Datensatz vorgenommen",
     "duplicate": "Der Datensatz den Sie erstellen wollen, könnte eine Dublette sein",
+    "dropToAttach": "Anhang hier ablegen",
     "fieldIsRequired": "{field} wird benötigt",
     "fieldShouldBeEmail": "{field} muss eine gültige E-Mail sein",
     "fieldShouldBeFloat": "{field} muss eine gültige Fließkomma Zahl sein",
@@ -218,17 +221,19 @@
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n[text](url)",
     "writeYourCommentHere": "Notiz hier einfügen",
     "writeMessageToUser": "Nachricht an {user} schreiben",
-    "writeMessageToSelf": "Nachricht an sich selbst schreiben",
+    "writeMessageToSelf": "Nachricht auf eigene Pinnwand schreiben",
     "typeAndPressEnter": "Tippen & Enter drücken",
     "checkForNewNotifications": "Nach neuen Benachrichtigungen überprüfen",
-    "checkForNewNotes": "Nach neuen Vorgängen überprüfen"
+    "checkForNewNotes": "Nach neuen Aktivitäten überprüfen",
+    "internalPost": "Beitrag kann nur von internen Benutzern gesehen werden",
+    "done": "Fertig"
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
-    "followed": "Beobachtet"
+    "followed": "Abonniert"
   },
   "presetFilters": {
-    "followed": "Beobachtet",
+    "followed": "Abonniert",
     "all": "Alle"
   },
   "massActions": {
@@ -238,7 +243,7 @@
     "export": "Exportieren"
   },
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "salutationName": "Anrede",
@@ -261,7 +266,8 @@
     "phoneNumberOther": "Telefon (Andere)",
     "order": "Reihenfolge",
     "parent": "Bezieht sich auf",
-    "children": "Kinder"
+    "children": "Kinder",
+    "id": "ID"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -275,7 +281,8 @@
     "children": "Kinder"
   },
   "dashlets": {
-    "Stream": "Vorgänge"
+    "Stream": "Aktivitäten",
+    "Emails": "Mein Posteingang"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} wurde Ihnen zugewiesen",
@@ -307,8 +314,12 @@
     "createThis": "{user} hat {entityType} erstellt",
     "createAssignedThis": "{user} hat {entityType} erstellt und an {assignee} zugewiesen",
     "createAssigned": "{user} hat {entityType} {entity} erstellt und an {assignee} zugewiesen",
+    "createAssignedYou": "{user} hat ihnen die {entityType} {entity} zugewiesen",
     "assign": "{user} hat {entityType} {entity} an {assignee} zugewiesen",
     "assignThis": "{user} hat {entityType} an {assignee} zugewiesen",
+    "assignYou": "{entityType} {entity} wurde Ihnen zugewiesen",
+    "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
+    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen",
     "postThis": "{user} hat notiert",
     "attachThis": "{user} hat hinzugefügt",
     "statusThis": "{user} hat {field} aktualisiert",
@@ -328,6 +339,12 @@
     "emailReceivedInitial": "E-Mail empfangen: {entityType} {entity} wurde erstellt",
     "emailSent": "{by} hat eine E-Mail verbunden mit {entityType} {entity} gesendet",
     "emailSentThis": "{by} hat eine E-Mail gesendet"
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
   "lists": {
     "monthNames": [
@@ -484,7 +501,8 @@
       "lastSevenDays": "Letzten 7 Tage",
       "lastXDays": "Letzten X Tage",
       "nextXDays": "Nächsten X Tage",
-      "ever": "Jemals"
+      "ever": "Jemals",
+      "isEmpty": "Ist leer"
     },
     "searchRanges": {
       "is": "Ist",
@@ -509,7 +527,9 @@
       "lessThan": "Weniger als",
       "greaterThanOrEquals": "Größer oder gleich als",
       "lessThanOrEquals": "Weniger oder gleich als",
-      "between": "Zwischen"
+      "between": "Zwischen",
+      "isEmpty": "Ist leer",
+      "isNotEmpty": "Ist nicht leer"
     },
     "autorefreshInterval": {
       "0": "Kein(e)",
@@ -549,7 +569,7 @@
         "floatLeft": "Linksbündig",
         "floatRight": "Rechtsbündig",
         "floatNone": "Kein Textfluss",
-        "dragImageHere": "Ziehen Sie ein Bild mit der Maus hierher",
+        "dragImageHere": "Bild hier ablegen",
         "selectFromFiles": "Wählen Sie eine Datei aus",
         "url": "Grafik URL",
         "remove": "Grafik entfernen"

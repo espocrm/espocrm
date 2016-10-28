@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "roles": "Rollen",
-    "positionList": "Stellungen"
+    "positionList": "Positionsbezeichnungen"
   },
   "links": {
     "users": "Benutzer",
@@ -10,7 +10,7 @@
     "roles": "Rollen"
   },
   "tooltips": {
-    "roles": "Zugriffsrollen Benutzer dieses Teams erhalten Zugriffsberechtigung von ausgewählten Rollen.",
+    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
     "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
   },
   "labels": {

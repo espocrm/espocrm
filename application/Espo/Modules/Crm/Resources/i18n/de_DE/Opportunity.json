@@ -1,33 +1,35 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "account": "Firma",
     "stage": "Verkaufsphase",
     "amount": "Betrag",
     "probability": "Wahrscheinlichkeit (%)",
     "leadSource": "Quelle",
-    "doNotCall": "Nicht anrufen",
+    "doNotCall": "Anrufe unerwünscht",
     "closeDate": "Abschlussdatum",
     "contacts": "Kontakte",
     "description": "Beschreibung",
-    "amountConverted": "Betrag (konvertiert)",
+    "amountConverted": "Betrag (umgerechnet)",
     "amountWeightedConverted": "Betrag gewichtet",
-    "campaign": "Kampagne"
+    "campaign": "Kampagne",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "links": {
     "contacts": "Kontakte",
     "documents": "Dokumente",
-    "campaign": "Kampagne"
+    "campaign": "Kampagne",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "options": {
     "stage": {
-      "Prospecting": "Prospecting",
+      "Prospecting": "Identifikation",
       "Qualification": "Qualifikation",
       "Needs Analysis": "Bedarfserhebung",
       "Value Proposition": "Richtangebot",
-      "Id. Decision Makers": "Entscheider ident.",
-      "Perception Analysis": "Analyse Sichtweise",
-      "Proposal/Price Quote": "Preisangebot",
+      "Id. Decision Makers": "Identifikation der Entscheider",
+      "Perception Analysis": "Analyse der Wahrnehmung",
+      "Proposal/Price Quote": "Angebot/Kostenvoranschlag",
       "Negotiation/Review": "Verhandlung/Überarbeitung",
       "Closed Won": "Gewonnen",
       "Closed Lost": "Verloren"

@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "parent": "Bezieht sich auf",
     "status": "Status",
     "dateSent": "Sendedatum",
@@ -15,7 +15,7 @@
     "subject": "Betreff",
     "attachments": "Anhänge",
     "selectTemplate": "Vorlage wählen",
-    "fromEmailAddress": "Von Adresse",
+    "fromEmailAddress": "Absenderadresse",
     "toEmailAddresses": "An Adresse",
     "emailAddress": "E-Mail Adresse",
     "deliveryDate": "Zustelldatum",
@@ -26,12 +26,20 @@
     "isRead": "Ist gelesen",
     "isNotRead": "Ungelesen",
     "isImportant": "Ist wichtig",
+    "isReplied": "Beantwortet",
+    "isNotReplied": "Nicht beantwortet",
     "isUsers": "Gehört Benutzer",
-    "inTrash": "Im Papierkorb"
+    "inTrash": "Im Papierkorb",
+    "sentBy": "Gesendet von (Benutzer)",
+    "folder": "Ordner",
+    "inboundEmails": "Gruppenkonten",
+    "emailAccounts": "Persönliche Konten"
   },
   "links": {
     "replied": "Beantwortet",
-    "replies": "Antworten"
+    "replies": "Antworten",
+    "inboundEmails": "Gruppenkonten",
+    "emailAccounts": "Persönliche Konten"
   },
   "options": {
     "status": {
@@ -66,7 +74,10 @@
     "Mark as Important": "Als wichtig markieren",
     "Unmark Importance": "Wichtig Markierung entfernen",
     "Move to Trash": "In den Papierkorb verschieben",
-    "Retrieve from Trash": "Aus dem Papierkorb hervorholen"
+    "Retrieve from Trash": "Aus dem Papierkorb hervorholen",
+    "Move to Folder": "In Ordner verschieben",
+    "Filters": "Filter",
+    "Folders": "Ordner"
   },
   "messages": {
     "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
@@ -79,13 +90,16 @@
     "archived": "Archiviert",
     "inbox": "Posteingang",
     "drafts": "Entwürfe",
-    "trash": "Papierkorb"
+    "trash": "Papierkorb",
+    "important": "Wichtig"
   },
   "massActions": {
     "markAsRead": "Als gelesen markieren",
     "markAsNotRead": "Als ungelesen markieren",
     "markAsImportant": "Als wichtig markieren",
     "markAsNotImportant": "Wichtig Markierung entfernen",
-    "moveToTrash": "In den Papierkorb verschieben"
+    "moveToTrash": "In den Papierkorb verschieben",
+    "moveToFolder": "In Ordner verschieben",
+    "retrieveFromTrash": "Aus dem Papierkorb holen"
   }
 }

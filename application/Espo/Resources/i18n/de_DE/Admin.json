@@ -9,7 +9,7 @@
     "Customization": "Anpassung",
     "Available Fields": "Verfügbare Felder",
     "Layout": "Aktuelles Layout",
-    "Entity Manager": "Entitäts-/Modulmanager",
+    "Entity Manager": "Entitätsmanager",
     "Add Panel": "Panel hinzufügen",
     "Add Field": "Feld hinzufügen",
     "Settings": "Einstellungen",
@@ -21,7 +21,7 @@
     "Roles": "Rollen",
     "Portal": "Portal",
     "Portals": "Portale",
-    "Portal Roles": "Portal Rollen",
+    "Portal Roles": "Portal-Rollen",
     "Outbound Emails": "Ausgehende E-Mails",
     "Group Email Accounts": "Gruppen E-Mail Konten",
     "Personal Email Accounts": "Persönliche E-Mail Konten",
@@ -46,8 +46,8 @@
     "Ready for installation": "Bereit für Installation",
     "Uninstalling...": "Deinstalliere...",
     "Uninstalled": "Deinstalliert",
-    "Create Entity": "Entität/Modul erstellen",
-    "Edit Entity": "Entität/Modul bearbeiten",
+    "Create Entity": "Entität erstellen",
+    "Edit Entity": "Entität bearbeiten",
     "Create Link": "Relation erstellen",
     "Edit Link": "Relation bearbeiten",
     "Notifications": "Benachrichtigungen",
@@ -62,7 +62,9 @@
     "detailSmall": "Detail (Klein)",
     "filters": "Suchfilter",
     "massUpdate": "Massenänderung",
-    "relationships": "Beziehungen"
+    "relationships": "Beziehungen",
+    "sidePanelsDetail": "Seitenleisten (Detail)",
+    "sidePanelsEdit": "Seitenleisten (Bearbeiten)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -99,12 +101,14 @@
     "rangeFloat": "Bereich Fließkommawerte",
     "rangeCurrency": "Bereich Währung",
     "wysiwyg": "Texteditor",
-    "map": "Karte"
+    "map": "Karte",
+    "number": "Nummer"
   },
   "fields": {
     "type": "Typ",
-    "name": "Betreff",
+    "name": "Name",
     "label": "Bezeichnung",
+    "tooltipText": "Tooltip Text",
     "required": "Erforderlich",
     "default": "Standard",
     "maxLength": "Maximallänge",
@@ -130,15 +134,23 @@
     "typeList": "Typenliste",
     "rows": "Anzahl Zeilen Textbereich",
     "lengthOfCut": "Angezeigte Textlänge",
-    "sourceList": "Quellenliste"
+    "sourceList": "Quellenliste",
+    "prefix": "Prefix",
+    "nextNumber": "Nächste Nummer",
+    "padLength": "Länge auffüllen",
+    "disableFormatting": "Formatierung deaktivieren",
+    "dynamicLogicVisible": "Bedingungen die ein Feld sichtbar machen",
+    "dynamicLogicReadOnly": "Bedingungen die ein Feld schreibgeschützt machen",
+    "dynamicLogicRequired": "Bedingungen die ein Feld erforderlich machen",
+    "dynamicLogicOptions": "Bedingungsoptionen"
   },
   "messages": {
     "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
     "upgradeDone": "Ihr EspoCRM wurde auf Version <strong>{version}</strong> aktualisiert.",
-    "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die Espo Dateien sowie die Datenbank zu sichern.",
-    "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen kann nicht gleich dem Dezimaltrennzeichen sein",
+    "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die EspoCRM Dateien sowie die Datenbank zu sichern.",
+    "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
-    "selectEntityType": "Modul/Entität links auswählen",
+    "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectUpgradePackage": "Aktualisierungspaket auswählen",
     "downloadUpgradePackage": "Aktualisierungspaket(e) <a href=\"{url}\">hier </a>herunterladen.",
     "selectLayout": "Layout zum Editieren links auswählen",
@@ -160,20 +172,20 @@
     "portalRoles": "Rollen für Portale.",
     "outboundEmails": "SMTP Einstellungen für ausgehende E-Mails.",
     "groupEmailAccounts": "IMAP Gruppenkonten. E-Mail Import und E-Mails für Fälle.",
-    "personalEmailAccounts": "E-Mail Konten des Benutzers.",
+    "personalEmailAccounts": "E-Mail Konten der Benutzer.",
     "emailTemplates": "Vorlagen für ausgehende E-Mails.",
     "import": "Datenimport aus CSV Datei.",
     "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
-    "entityManager": "Module/Entitäten selbst erstellen und bearbeiten. Felder und Relationen verwalten.",
-    "userInterface": "UI.",
-    "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum,",
-    "authentication": "Authentifizierungs Einstellungen.",
-    "currency": "Währungseinstellungen und Kurse",
-    "extensions": "Erweiterungen installieren oder deinstallieren",
-    "integrations": "Integration mit Drittanbietern",
+    "entityManager": "Neue Entitäten selbst erstellen und bestehende bearbeiten. Felder und Relationen verwalten.",
+    "userInterface": "Benutzeroberfläche konfigurieren.",
+    "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum.",
+    "authentication": "Authentifizierungseinstellungen.",
+    "currency": "Währungseinstellungen und Wechselkurse.",
+    "extensions": "Erweiterungen installieren oder deinstallieren.",
+    "integrations": "Integration mit Drittanbietern.",
     "notifications": "In-App und E-Mail Benachrichtigungseinstellungen.",
-    "inboundEmails": "Einstellungen für eingehende E-Mails",
-    "emailFilters": "E-Mails auf die die angegebenen Filter zutreffen werden nicht importiert"
+    "inboundEmails": "Einstellungen für eingehende E-Mails.",
+    "emailFilters": "E-Mails auf die die angegebenen Filter zutreffen werden nicht importiert."
   },
   "options": {
     "previewSize": {
@@ -182,5 +194,10 @@
       "medium": "Mittel",
       "large": "Groß"
     }
+  },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
   }
 }

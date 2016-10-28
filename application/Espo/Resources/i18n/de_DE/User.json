@@ -1,10 +1,10 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "userName": "Benutzername",
     "title": "Funktion",
     "isAdmin": "Ist Admin",
-    "defaultTeam": "Standard Team",
+    "defaultTeam": "Standard-Team",
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
     "roles": "Rollen",
@@ -21,8 +21,11 @@
     "isPortalUser": "Ist Portal Benutzer",
     "contact": "Kontakt",
     "accounts": "Firmen",
+    "account": "Benutzerkonto (Primär)",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
-    "portal": "Portal"
+    "portal": "Portal",
+    "gender": "Geschlecht",
+    "position": "Position im Team"
   },
   "links": {
     "teams": "Teams",
@@ -31,12 +34,13 @@
     "portals": "Portale",
     "portalRoles": "Portal Rollen",
     "contact": "Kontakt",
-    "accounts": "Firmen"
+    "accounts": "Firmen",
+    "account": "Benutzerkonto (Primär)"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
     "Generate": "Erzeugen",
-    "Access": "Zugang",
+    "Access": "Berechtigungen",
     "Preferences": "Benutzereinstellungen",
     "Change Password": "Passwort ändern",
     "Teams and Access Control": "Teams und Zugriffsberechtigung",
@@ -50,7 +54,7 @@
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
-    "userName": "Buchstaben a-z, Zahlen 0-9 und Unterstriche sind erlaubt.",
+    "userName": "Erlaubte Zeichen sind die Buchstaben a-z, Ziffern, Punkt, @-Symbol, Strich und Unterstrich.",
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
     "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
@@ -73,6 +77,14 @@
     "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
     "passwordChangedByRequest": "Das Passwort wurde geändert",
     "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann."
+  },
+  "options": {
+    "gender": {
+      "": "Nicht gesetzt",
+      "Male": "Männlich",
+      "Female": "Weiblich",
+      "Neutral": "Neutral"
+    }
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"

@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "roles": "Rollen",
-    "assignmentPermission": "Zuweisungsberechtigungen",
+    "assignmentPermission": "Zuweisungsberechtigung",
     "userPermission": "Benutzerberechtigung",
     "portalPermission": "Portal Berechtigungen"
   },
@@ -12,13 +12,13 @@
   },
   "tooltips": {
     "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
-    "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Vorgänge anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen",
+    "userPermission": "Erlaubt Benutzer zu beschränken, die Aktivitäten, Kalendereinträge und Aktivitäten anderer Benutzer zu sehen.\n\nAlle - Kann alle sehen\n\nTeam - Kann nur Aktivitäten der Benutzer im eigenen Team sehen\n\nNein - Kann keine anderen Aktivitäten sehen",
     "portalPermission": "Gibt Zugang zu Portalinformationen, die Möglichkeit Kontakte zu Portalbenutzern zu konvertieren und erlaubt das Senden von Nachrichten an Portalbenutzer"
   },
   "labels": {
-    "Access": "Zugang",
+    "Access": "Berechtigungen",
     "Create Role": "Rolle erstellen",
-    "Scope Level": "Scope Ebene",
+    "Scope Level": "Berechtigungsumfang",
     "Field Level": "Feldebene"
   },
   "options": {
@@ -42,7 +42,7 @@
     "read": "Lesen",
     "edit": "Bearbeiten",
     "delete": "Löschen",
-    "stream": "Vorgänge",
+    "stream": "Aktivitäten",
     "create": "Erstellen"
   },
   "messages": {
