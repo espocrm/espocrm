@@ -49,7 +49,7 @@ class PhpMimeMailParser
     {
         $key = spl_object_hash($message);
         if (!array_key_exists($key, $this->parserHash)) {
-            $this->parserHash[$key] = new \PhpMimeMailParser\Parser();
+            $this->parserHash[$key] = new PhpMimeMailParser\Parser();
             $raw = $message->getRawHeader();
             if (!$raw) {
                 $raw = $message->getFullRawContent();
@@ -103,6 +103,7 @@ class PhpMimeMailParser
 
         $bodyPlain = $this->getParser($message)->getMessageBody('text');
         $bodyHtml = $this->getParser($message)->getMessageBody('html');
+
         if ($bodyHtml) {
             $email->set('isHtml', true);
             $email->set('body', $bodyHtml);
@@ -150,6 +151,7 @@ class PhpMimeMailParser
         }
 
         $body = $email->get('body');
+
         if (!empty($body)) {
             foreach ($inlineIds as $cid => $attachmentId) {
                 if (strpos($body, 'cid:' . $cid) !== false) {
