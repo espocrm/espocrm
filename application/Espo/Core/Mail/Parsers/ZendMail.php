@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Mail\Parsers;
 
-class Zend
+class ZendMail
 {
     private $entityManager;
 
@@ -38,18 +38,22 @@ class Zend
         $this->entityManager = $entityManager;
     }
 
-    public function getEntityManager()
+    protected function getEntityManager()
     {
         return $this->entityManager;
     }
 
     public function checkMessageAttribute($message, $attribute)
     {
+        $message = $message->getZendMessage();
+
         return isset($message->$attribute);
     }
 
     public function getMessageAttribute($message, $attribute)
     {
+        $message = $message->getZendMessage();
+
         if (!isset($message->$attribute)) return null;
 
         return $message->$attribute;
@@ -57,6 +61,8 @@ class Zend
 
     public function getMessageMessageId($message)
     {
+        $message = $message->getZendMessage();
+
         if (!isset($message->messageId)) return null;
 
         $messageId = $message->messageId;
@@ -68,6 +74,8 @@ class Zend
 
     public function getAddressListFromMessage($message, $type)
     {
+        $message = $message->getZendMessage();
+
         $addressList = array();
         if (isset($message->$type)) {
             $list = $this->normilizeHeader($message->getHeader($type))->getAddressList();
@@ -80,6 +88,8 @@ class Zend
 
     public function fetchContentParts(\Espo\Entities\Email $email, $message)
     {
+        $message = $message->getZendMessage();
+
         $inlineIds = array();
 
         if ($message->isMultipart()) {

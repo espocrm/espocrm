@@ -64,11 +64,15 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null, $parserType = 'Zend')
+    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null, $parserType = 'ZendMail')
     {
         try {
+            $parser = $message->getParser();
             $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
-            $parser = new $parserClassName($this->getEntityManager());
+
+            if (get_class($parser) !== $parserClassName) {
+                $parser = new $parserClassName($this->getEntityManager());
+            }
 
             $email = $this->getEntityManager()->getEntity('Email');
 
@@ -105,14 +109,14 @@ class Importer
                 $email->set('fromString', $parser->getMessageAttribute($message, 'from'));
             }
 
-            if ($parser->checkMessageAttribute($message, 'replyTo')) {
-                $email->set('replyToString', $parser->getMessageAttribute($message, 'replyTo'));
+            if ($parser->checkMessageAttribute($message, 'reply-To')) {
+                $email->set('replyToString', $parser->getMessageAttribute($message, 'reply-To'));
             }
 
             $fromArr = $parser->getAddressListFromMessage($message, 'from');
             $toArr = $parser->getAddressListFromMessage($message, 'to');
             $ccArr = $parser->getAddressListFromMessage($message, 'cc');
-            $replyToArr = $parser->getAddressListFromMessage($message, 'replyTo');
+            $replyToArr = $parser->getAddressListFromMessage($message, 'reply-To');
 
             $email->set('from', $fromArr[0]);
             $email->set('to', implode(';', $toArr));
@@ -129,12 +133,12 @@ class Importer
                 return false;
             }
 
-            if ($parser->checkMessageAttribute($message, 'messageId') && $parser->getMessageAttribute($message, 'messageId')) {
+            if ($parser->checkMessageAttribute($message, 'message-Id') && $parser->getMessageAttribute($message, 'message-Id')) {
                 $messageId = $parser->getMessageMessageId($message);
 
                 $email->set('messageId', $messageId);
-                if ($parser->checkMessageAttribute($message, 'deliveredTo')) {
-                    $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'deliveredTo'));
+                if ($parser->checkMessageAttribute($message, 'delivered-To')) {
+                    $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
                 }
                 if (stripos($messageId, '@espo-system') !== false) {
                     return;
@@ -181,12 +185,12 @@ class Importer
             } else {
                 $email->set('dateSent', date('Y-m-d H:i:s'));
             }
-            if ($parser->checkMessageAttribute($message, 'deliveryDate')) {
+            if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
                 try {
-                    $dt = new \DateTime($parser->getMessageAttribute($message, 'deliveryDate'));
+                    $dt = new \DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
                     if ($dt) {
                         $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-                        $email->set('deliveryDate', $deliveryDate);
+                        $email->set('delivery-Date', $deliveryDate);
                     }
                 } catch (\Exception $e) {}
             }
@@ -206,8 +210,8 @@ class Importer
 
             $replied = null;
 
-            if ($parser->checkMessageAttribute($message, 'inReplyTo') && $parser->getMessageAttribute($message, 'inReplyTo')) {
-                $arr = explode(' ', $parser->getMessageAttribute($message, 'inReplyTo'));
+            if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
+                $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
                 $inReplyTo = $arr[0];
                 $replied = $this->getEntityManager()->getRepository('Email')->where(array(
                     'messageId' => $inReplyTo
