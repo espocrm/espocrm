@@ -90,16 +90,19 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         getValueForDisplay: function () {
             var value = Dep.prototype.getValueForDisplay.call(this);
-            if (this.mode == 'edit' && value) {
-                value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
+            return this.sanitizeHtml(value);
+        },
+
+        sanitizeHtml: function (value) {
+            if (value) {
+                value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
             }
             return value || '';
         },
 
         getValueForEdit: function () {
             var value = this.model.get(this.name) || '';
-            value = value.replace(/<[\/]{0,1}(base|BASE)[^><]*>/g, '');
-            return value;
+            return this.sanitizeHtml(value);
         },
 
         afterRender: function () {
@@ -141,7 +144,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     var link = '<link href="'+this.getBasePath()+'client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
 
                     doc.open('text/html', 'replace');
-                    var body = this.model.get(this.name) || '';
+                    var body = this.sanitizeHtml(this.model.get(this.name) || '');
                     body += link;
 
                     doc.write(body);
