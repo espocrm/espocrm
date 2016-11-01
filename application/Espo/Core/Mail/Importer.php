@@ -64,7 +64,7 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null, $parserType = 'ZendMail')
+    public function importMessage($parserType = 'ZendMail', $message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
     {
         $parser = $message->getParser();
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
