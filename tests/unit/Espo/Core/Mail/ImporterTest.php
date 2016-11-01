@@ -75,11 +75,6 @@ class ImporterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap($repositoryMap));
 
         $entityManager
-            ->expects($this->any())
-            ->method('saveEntity')
-            ->with($this->isInstanceOf('\\Espo\\Entities\\Attachment'));
-
-        $entityManager
             ->expects($this->once())
             ->method('saveEntity')
             ->with($this->isInstanceOf('\\Espo\\Entities\\Email'));
@@ -100,9 +95,10 @@ class ImporterTest extends \PHPUnit_Framework_TestCase
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
         $importer = new \Espo\Core\Mail\Importer($entityManager, $config);
 
-        $message = new \Zend\Mail\Storage\Message(array('raw' => $contents));
+        $message = new \Espo\Core\Mail\MessageWrapper();
+        $message->setFullRawContent($contents);
 
-        $importer->importMessage($message, null, ['teamTestId'], ['userTestId']);
+        $email = $importer->importMessage($message, null, ['teamTestId'], ['userTestId']);
 
         $this->assertEquals('test 3', $email->get('name'));
 

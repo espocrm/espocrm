@@ -66,62 +66,96 @@ class Importer
 
     public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null, $parserType = 'ZendMail')
     {
-        try {
-            $parser = $message->getParser();
-            $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
+        $parser = $message->getParser();
+        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
 
-            if (get_class($parser) !== $parserClassName) {
-                $parser = new $parserClassName($this->getEntityManager());
+        if (!$parser || get_class($parser) !== $parserClassName) {
+            $parser = new $parserClassName($this->getEntityManager());
+        }
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        $email->set('isBeingImported', true);
+
+        $subject = '';
+        if ($parser->checkMessageAttribute($message, 'subject')) {
+            $subject = $parser->getMessageAttribute($message, 'subject');
+        }
+        if (!empty($subject) && is_string($subject)) {
+            $subject = trim($subject);
+        }
+        if ($subject !== '0' && empty($subject)) {
+            $subject = '(No Subject)';
+        }
+
+        $email->set('isHtml', false);
+        $email->set('name', $subject);
+        $email->set('status', 'Archived');
+        $email->set('attachmentsIds', []);
+        if ($assignedUserId) {
+            $email->set('assignedUserId', $assignedUserId);
+            $email->addLinkMultipleId('assignedUsers', $assignedUserId);
+        }
+        $email->set('teamsIds', $teamsIdList);
+
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $uId) {
+                $email->addLinkMultipleId('users', $uId);
             }
+        }
 
-            $email = $this->getEntityManager()->getEntity('Email');
+        if ($parser->checkMessageAttribute($message, 'from')) {
+            $email->set('fromString', $parser->getMessageAttribute($message, 'from'));
+        }
 
-            $email->set('isBeingImported', true);
+        if ($parser->checkMessageAttribute($message, 'reply-To')) {
+            $email->set('replyToString', $parser->getMessageAttribute($message, 'reply-To'));
+        }
 
-            $subject = '';
-            if ($parser->checkMessageAttribute($message, 'subject')) {
-                $subject = $parser->getMessageAttribute($message, 'subject');
+        $fromArr = $parser->getAddressListFromMessage($message, 'from');
+        $toArr = $parser->getAddressListFromMessage($message, 'to');
+        $ccArr = $parser->getAddressListFromMessage($message, 'cc');
+        $replyToArr = $parser->getAddressListFromMessage($message, 'reply-To');
+
+        if (count($fromArr)) {
+            $email->set('from', $fromArr[0]);
+        }
+        $email->set('to', implode(';', $toArr));
+        $email->set('cc', implode(';', $ccArr));
+        $email->set('replyTo', implode(';', $replyToArr));
+
+        if ($folderData) {
+            foreach ($folderData as $uId => $folderId) {
+                $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
             }
-            if (!empty($subject) && is_string($subject)) {
-                $subject = trim($subject);
-            }
-            if ($subject !== '0' && empty($subject)) {
-                $subject = '(No Subject)';
-            }
+        }
 
-            $email->set('isHtml', false);
-            $email->set('name', $subject);
-            $email->set('status', 'Archived');
-            $email->set('attachmentsIds', []);
+        if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
+            return false;
+        }
+
+        if ($parser->checkMessageAttribute($message, 'message-Id') && $parser->getMessageAttribute($message, 'message-Id')) {
+            $messageId = $parser->getMessageMessageId($message);
+
+            $email->set('messageId', $messageId);
+            if ($parser->checkMessageAttribute($message, 'delivered-To')) {
+                $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
+            }
+            if (stripos($messageId, '@espo-system') !== false) {
+                return;
+            }
+        }
+
+        if ($duplicate = $this->findDuplicate($email)) {
             if ($assignedUserId) {
-                $email->set('assignedUserId', $assignedUserId);
-                $email->addLinkMultipleId('assignedUsers', $assignedUserId);
+                $duplicate->addLinkMultipleId('users', $assignedUserId);
+                $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
             }
-            $email->set('teamsIds', $teamsIdList);
-
             if (!empty($userIdList)) {
                 foreach ($userIdList as $uId) {
-                    $email->addLinkMultipleId('users', $uId);
+                    $duplicate->addLinkMultipleId('users', $uId);
                 }
             }
-
-            if ($parser->checkMessageAttribute($message, 'from')) {
-                $email->set('fromString', $parser->getMessageAttribute($message, 'from'));
-            }
-
-            if ($parser->checkMessageAttribute($message, 'reply-To')) {
-                $email->set('replyToString', $parser->getMessageAttribute($message, 'reply-To'));
-            }
-
-            $fromArr = $parser->getAddressListFromMessage($message, 'from');
-            $toArr = $parser->getAddressListFromMessage($message, 'to');
-            $ccArr = $parser->getAddressListFromMessage($message, 'cc');
-            $replyToArr = $parser->getAddressListFromMessage($message, 'reply-To');
-
-            $email->set('from', $fromArr[0]);
-            $email->set('to', implode(';', $toArr));
-            $email->set('cc', implode(';', $ccArr));
-            $email->set('replyTo', implode(';', $replyToArr));
 
             if ($folderData) {
                 foreach ($folderData as $uId => $folderId) {
@@ -129,171 +163,136 @@ class Importer
                 }
             }
 
-            if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
+            $duplicate->set('isBeingImported', true);
+
+            $this->getEntityManager()->saveEntity($duplicate);
+
+            if (!empty($teamsIdList)) {
+                foreach ($teamsIdList as $teamId) {
+                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                }
+            }
+            return $duplicate;
+        }
+
+        if ($parser->checkMessageAttribute($message, 'date')) {
+            try {
+                $dt = new \DateTime($parser->getMessageAttribute($message, 'date'));
+                if ($dt) {
+                    $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                    $email->set('dateSent', $dateSent);
+                }
+            } catch (\Exception $e) {}
+        } else {
+            $email->set('dateSent', date('Y-m-d H:i:s'));
+        }
+        if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
+            try {
+                $dt = new \DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
+                if ($dt) {
+                    $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                    $email->set('delivery-Date', $deliveryDate);
+                }
+            } catch (\Exception $e) {}
+        }
+
+        if (!$fetchOnlyHeader) {
+            $parser->fetchContentParts($email, $message);
+
+            if ($this->getFiltersMatcher()->match($email, $filterList)) {
                 return false;
             }
+        } else {
+            $email->set('body', '(Not fetched)');
+            $email->set('isHtml', false);
+        }
 
-            if ($parser->checkMessageAttribute($message, 'message-Id') && $parser->getMessageAttribute($message, 'message-Id')) {
-                $messageId = $parser->getMessageMessageId($message);
+        $parentFound = false;
 
-                $email->set('messageId', $messageId);
-                if ($parser->checkMessageAttribute($message, 'delivered-To')) {
-                    $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
-                }
-                if (stripos($messageId, '@espo-system') !== false) {
-                    return;
-                }
+        $replied = null;
+
+        if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
+            $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
+            $inReplyTo = $arr[0];
+            $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                'messageId' => $inReplyTo
+            ))->findOne();
+            if ($replied) {
+                $email->set('repliedId', $replied->id);
             }
+        }
 
-            if ($duplicate = $this->findDuplicate($email)) {
-                if ($assignedUserId) {
-                    $duplicate->addLinkMultipleId('users', $assignedUserId);
-                    $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
-                }
-                if (!empty($userIdList)) {
-                    foreach ($userIdList as $uId) {
-                        $duplicate->addLinkMultipleId('users', $uId);
-                    }
-                }
-
-                if ($folderData) {
-                    foreach ($folderData as $uId => $folderId) {
-                        $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-                    }
-                }
-
-                $duplicate->set('isBeingImported', true);
-
-                $this->getEntityManager()->saveEntity($duplicate);
-
-                if (!empty($teamsIdList)) {
-                    foreach ($teamsIdList as $teamId) {
-                        $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
-                    }
-                }
-                return $duplicate;
+        if ($parser->checkMessageAttribute($message, 'references') && $parser->getMessageAttribute($message, 'references')) {
+            $arr = explode(' ', $parser->getMessageAttribute($message, 'references'));
+            $reference = $arr[0];
+            $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
+            $parentType = $parentId = null;
+            $emailSent = PHP_INT_MAX;
+            $number = null;
+            $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+            if ($n != 4) {
+                $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
             }
-
-            if ($parser->checkMessageAttribute($message, 'date')) {
-                try {
-                    $dt = new \DateTime($parser->getMessageAttribute($message, 'date'));
-                    if ($dt) {
-                        $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-                        $email->set('dateSent', $dateSent);
-                    }
-                } catch (\Exception $e) {}
-            } else {
-                $email->set('dateSent', date('Y-m-d H:i:s'));
-            }
-            if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
-                try {
-                    $dt = new \DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
-                    if ($dt) {
-                        $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-                        $email->set('delivery-Date', $deliveryDate);
-                    }
-                } catch (\Exception $e) {}
-            }
-
-            if (!$fetchOnlyHeader) {
-                $parser->fetchContentParts($email, $message);
-
-                if ($this->getFiltersMatcher()->match($email, $filterList)) {
-                    return false;
-                }
-            } else {
-                $email->set('body', '(Not fetched)');
-                $email->set('isHtml', false);
-            }
-
-            $parentFound = false;
-
-            $replied = null;
-
-            if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
-                $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
-                $inReplyTo = $arr[0];
-                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
-                    'messageId' => $inReplyTo
-                ))->findOne();
-                if ($replied) {
-                    $email->set('repliedId', $replied->id);
-                }
-            }
-
-            if ($parser->checkMessageAttribute($message, 'references') && $parser->getMessageAttribute($message, 'references')) {
-                $arr = explode(' ', $parser->getMessageAttribute($message, 'references'));
-                $reference = $arr[0];
-                $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
-                $parentType = $parentId = null;
-                $emailSent = PHP_INT_MAX;
-                $number = null;
-                $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
-                if ($n != 4) {
-                    $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
-                }
-                if ($n == 4 && $emailSent < time()) {
-                    if (!empty($parentType) && !empty($parentId)) {
-                        if ($parentType == 'Lead') {
-                            $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
-                            if ($parent && $parent->get('status') == 'Converted') {
-                                if ($parent->get('createdAccountId')) {
-                                    $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
-                                    if ($account) {
-                                        $parentType = 'Account';
-                                        $parentId = $account->id;
-                                    }
-                                } else {
-                                    if ($this->getConfig()->get('b2cMode')) {
-                                        if ($parent->get('createdContactId')) {
-                                            $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
-                                            if ($contact) {
-                                                $parentType = 'Contact';
-                                                $parentId = $contact->id;
-                                            }
+            if ($n == 4 && $emailSent < time()) {
+                if (!empty($parentType) && !empty($parentId)) {
+                    if ($parentType == 'Lead') {
+                        $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
+                        if ($parent && $parent->get('status') == 'Converted') {
+                            if ($parent->get('createdAccountId')) {
+                                $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
+                                if ($account) {
+                                    $parentType = 'Account';
+                                    $parentId = $account->id;
+                                }
+                            } else {
+                                if ($this->getConfig()->get('b2cMode')) {
+                                    if ($parent->get('createdContactId')) {
+                                        $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
+                                        if ($contact) {
+                                            $parentType = 'Contact';
+                                            $parentId = $contact->id;
                                         }
                                     }
                                 }
                             }
                         }
-                        $email->set('parentType', $parentType);
-                        $email->set('parentId', $parentId);
-                        $parentFound = true;
                     }
+                    $email->set('parentType', $parentType);
+                    $email->set('parentId', $parentId);
+                    $parentFound = true;
                 }
             }
+        }
 
-            if (!$parentFound) {
-                if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
-                    $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
-                    if ($parentFound) {
-                        $email->set('parentType', $replied->get('parentType'));
-                        $email->set('parentId', $replied->get('parentId'));
-                    }
+        if (!$parentFound) {
+            if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
+                $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
+                if ($parentFound) {
+                    $email->set('parentType', $replied->get('parentType'));
+                    $email->set('parentId', $replied->get('parentId'));
                 }
             }
-            if (!$parentFound) {
-                $from = $email->get('from');
-                if ($from) {
-                    $parentFound = $this->findParent($email, $from);
-                }
+        }
+        if (!$parentFound) {
+            $from = $email->get('from');
+            if ($from) {
+                $parentFound = $this->findParent($email, $from);
             }
-            if (!$parentFound) {
-                if (!empty($replyToArr)) {
-                    $parentFound = $this->findParent($email, $replyToArr[0]);
-                }
+        }
+        if (!$parentFound) {
+            if (!empty($replyToArr)) {
+                $parentFound = $this->findParent($email, $replyToArr[0]);
             }
-            if (!$parentFound) {
-                if (!empty($toArr)) {
-                    $parentFound = $this->findParent($email, $toArr[0]);
-                }
+        }
+        if (!$parentFound) {
+            if (!empty($toArr)) {
+                $parentFound = $this->findParent($email, $toArr[0]);
             }
+        }
 
-            $this->getEntityManager()->saveEntity($email);
+        $this->getEntityManager()->saveEntity($email);
 
-            return $email;
-
-        } catch (\Exception $e) {}
+        return $email;
     }
 
     protected function findParent(Entity $email, $emailAddress)

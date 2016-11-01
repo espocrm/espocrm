@@ -45,27 +45,27 @@ class ZendMail
 
     public function checkMessageAttribute($message, $attribute)
     {
-        $message = $message->getZendMessage();
+        $zendMessage = $message->getZendMessage();
 
-        return isset($message->$attribute);
+        return isset($zendMessage->$attribute);
     }
 
     public function getMessageAttribute($message, $attribute)
     {
-        $message = $message->getZendMessage();
+        $zendMessage = $message->getZendMessage();
 
-        if (!isset($message->$attribute)) return null;
+        if (!isset($zendMessage->$attribute)) return null;
 
-        return $message->$attribute;
+        return $zendMessage->$attribute;
     }
 
     public function getMessageMessageId($message)
     {
-        $message = $message->getZendMessage();
+        $zendMessage = $message->getZendMessage();
 
-        if (!isset($message->messageId)) return null;
+        if (!isset($zendMessage->messageId)) return null;
 
-        $messageId = $message->messageId;
+        $messageId = $zendMessage->messageId;
         $messageId = str_replace('<<', '<', $messageId);
         $messageId = str_replace('>>', '>', $messageId);
 
@@ -74,11 +74,11 @@ class ZendMail
 
     public function getAddressListFromMessage($message, $type)
     {
-        $message = $message->getZendMessage();
+        $zendMessage = $message->getZendMessage();
 
         $addressList = array();
-        if (isset($message->$type)) {
-            $list = $this->normilizeHeader($message->getHeader($type))->getAddressList();
+        if (isset($zendMessage->$type)) {
+            $list = $this->normilizeHeader($zendMessage->getHeader($type))->getAddressList();
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();
             }
@@ -88,16 +88,16 @@ class ZendMail
 
     public function fetchContentParts(\Espo\Entities\Email $email, $message)
     {
-        $message = $message->getZendMessage();
+        $zendMessage = $message->getZendMessage();
 
         $inlineIds = array();
 
-        if ($message->isMultipart()) {
-            foreach (new \RecursiveIteratorIterator($message) as $part) {
+        if ($zendMessage->isMultipart()) {
+            foreach (new \RecursiveIteratorIterator($zendMessage) as $part) {
                 $this->importPartDataToEmail($email, $part, $inlineIds);
             }
         } else {
-            $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
+            $this->importPartDataToEmail($email, $zendMessage, $inlineIds, 'text/plain');
         }
 
         if (!$email->get('body') && $email->get('bodyPlain')) {
@@ -172,6 +172,7 @@ class ZendMail
 
             if ($isAttachment) {
                 $content = $part->getContent();
+                echo "--" . $content;
                 $disposition = null;
 
                 $fileName = null;

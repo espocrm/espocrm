@@ -47,6 +47,8 @@ class MessageWrapper
 
     protected $fullRawContent = null;
 
+    protected $flagList = null;
+
     public function __construct($storage = null, $id = null, $parser = null)
     {
         if ($storage) {
@@ -106,23 +108,28 @@ class MessageWrapper
     public function getZendMessage()
     {
         if (!$this->zendMessage) {
-            if ($this->setFullRawContent) {
-                $this->message = new $this->zendMessageClass([
-                    'handler' => $this->storage,
-                    'raw' => $this->fullRawContent,
-                    'flags' => $this->flagList
-                ]);
-            } else {
-                $this->message = new $this->zendMessageClass([
-                    'handler' => $this->storage,
-                    'id' => $this->id,
-                    'headers' => $this->rawHeader,
-                    'flags' => $this->flagList
-                ]);
+            $data = array();
+            if ($this->storage) {
+                $data['handler'] = $this->storage;
             }
+            if ($this->flagList) {
+                $data['flags'] = $this->flagList;
+            }
+            if ($this->fullRawContent) {
+                $data['raw'] = $this->fullRawContent;
+            } else {
+                if ($this->rawHeader) {
+                    $data['headers'] = $this->rawHeader;
+                }
+            }
+            if ($this->id) {
+                $data['id'] = $this->id;
+            }
+
+            $this->zendMessage = new $this->zendMessageClass($data);
         }
 
-        return $this->message;
+        return $this->zendMessage;
     }
 
     public function getFlags()
