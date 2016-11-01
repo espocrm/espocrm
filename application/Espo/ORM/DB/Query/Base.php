@@ -52,7 +52,8 @@ abstract class Base
         'aggregation',
         'aggregationBy',
         'groupBy',
-        'skipTextColumns'
+        'skipTextColumns',
+        'maxTextColumnsLength'
     );
 
     protected static $sqlOperators = array(
@@ -124,7 +125,7 @@ abstract class Base
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns']);
+            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
@@ -261,58 +262,63 @@ abstract class Base
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false)
+    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null)
     {
         $select = "";
         $arr = array();
         $specifiedList = is_array($fields) ? true : false;
 
         if (empty($fields)) {
-            $fieldList = array_keys($entity->fields);
+            $attributeList = array_keys($entity->fields);
         } else {
-            $fieldList = $fields;
-            foreach ($fieldList as $i => $field) {
-                if (!is_array($field)) {
-                    $fieldList[$i] = $this->sanitizeAlias($field);
+            $attributeList = $fields;
+            foreach ($attributeList as $i => $attribute) {
+                if (!is_array($attribute)) {
+                    $attributeList[$i] = $this->sanitizeAlias($attribute);
                 }
             }
         }
 
-        foreach ($fieldList as $field) {
+        foreach ($attributeList as $attribute) {
+            $attributeType = null;
+            if (is_string($attribute)) {
+                $attributeType = $entity->getAttributeType($attribute);
+            }
             if ($skipTextColumns) {
-                if ($entity->getAttributeType($field) === $entity::TEXT) {
+                if ($attributeType === $entity::TEXT) {
                     continue;
                 }
             }
-            if (is_array($field) && count($field) == 2) {
-                if (stripos($field[0], 'VALUE:') === 0) {
-                    $part = substr($field[0], 6);
+
+            if (is_array($attribute) && count($attribute) == 2) {
+                if (stripos($attribute[0], 'VALUE:') === 0) {
+                    $part = substr($attribute[0], 6);
                     $part = $this->quote($part);
                 } else {
-                    if (!array_key_exists($field[0], $entity->fields)) {
-                        $part = $this->convertComplexExpression($entity, $field[0], $distinct);
+                    if (!array_key_exists($attribute[0], $entity->fields)) {
+                        $part = $this->convertComplexExpression($entity, $attribute[0], $distinct);
                     } else {
-                        $fieldDefs = $entity->fields[$field[0]];
+                        $fieldDefs = $entity->fields[$attribute[0]];
                         if (!empty($fieldDefs['select'])) {
                             $part = $fieldDefs['select'];
                         } else {
                             if (!empty($fieldDefs['notStorable'])) {
                                 continue;
                             }
-                            $part = $this->getFieldPath($entity, $field[0]);
+                            $part = $this->getFieldPath($entity, $attribute[0]);
                         }
                     }
                 }
 
-                $arr[] = $part . ' AS `' . $this->sanitizeAlias($field[1]) . '`';
+                $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute[1]) . '`';
                 continue;
             }
 
-            if (array_key_exists($field, $entity->fields)) {
-                $fieldDefs = $entity->fields[$field];
+            if (array_key_exists($attribute, $entity->fields)) {
+                $fieldDefs = $entity->fields[$attribute];
             } else {
-                $part = $this->convertComplexExpression($entity, $field, $distinct);
-                $arr[] = $part . ' AS `' . $field . '`';
+                $part = $this->convertComplexExpression($entity, $attribute, $distinct);
+                $arr[] = $part . ' AS `' . $attribute . '`';
                 continue;
             }
 
@@ -322,10 +328,13 @@ abstract class Base
                 if (!empty($fieldDefs['notStorable'])) {
                     continue;
                 }
-                $fieldPath = $this->getFieldPath($entity, $field);
+                $fieldPath = $this->getFieldPath($entity, $attribute);
+                if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
+                    $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
+                }
             }
 
-            $arr[] = $fieldPath . ' AS `' . $field . '`';
+            $arr[] = $fieldPath . ' AS `' . $attribute . '`';
         }
 
         $select = implode(', ', $arr);

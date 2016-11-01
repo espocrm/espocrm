@@ -83,6 +83,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $duplicatingLinkList = [];
 
+    const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -685,6 +687,8 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
+        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+
         $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $e) {
@@ -748,6 +752,8 @@ class Record extends \Espo\Core\Services\Base
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
+
+        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
