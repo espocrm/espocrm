@@ -116,10 +116,10 @@ class Stream extends \Espo\Core\Hooks\Base
                     $scopeNotifiedList[] = $scope;
                 }
             } else if ($defs['type'] == 'belongsToParent') {
-                $foreign = $defs['foreign'];
                 if (empty($defs['foreign'])) {
                     continue;
                 }
+                $foreign = $defs['foreign'];
                 $scope = $entity->get($link . 'Type');
                 $entityId = $entity->get($link . 'Id');
                 if (!empty($scope) && !empty($entityId)) {
