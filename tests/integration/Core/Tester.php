@@ -39,13 +39,29 @@ class Tester
 
     protected $testDataPath = 'tests/integration/testData';
 
-    protected $defaultUserPassword = '1';
-
     private $application;
+
+    private $apiClient;
 
     private $dataLoader;
 
     protected $params;
+
+    /**
+     * Espo username which is used for authentication
+     *
+     * @var null
+     */
+    protected $userName = null;
+
+    /**
+     * Espo user password which is used for authentication
+     *
+     * @var null
+     */
+    protected $password = null;
+
+    protected $defaultUserPassword = '1';
 
     public function __construct(array $params)
     {
@@ -57,11 +73,21 @@ class Tester
         $namespaceToRemove = 'tests\\integration\\Espo';
         $classPath = preg_replace('/^'.preg_quote($namespaceToRemove).'\\\\(.+)Test$/', '${1}', $params['className']);
 
-        if (!isset($params['dataFile'])) {
+        if (isset($params['dataFile'])) {
+            $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
+            if (!file_exists($params['dataFile'])) {
+                die('"dataFile" is not found, path: '.$params['dataFile'].'.');
+            }
+        } else {
             $params['dataFile'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath) . '.php';
         }
 
-        if (!isset($params['pathToFiles'])) {
+        if (isset($params['pathToFiles'])) {
+            $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
+            if (!file_exists($params['pathToFiles'])) {
+                die('"pathToFiles" is not found, path: '.$params['pathToFiles'].'.');
+            }
+        } else {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath);
         }
 
@@ -77,7 +103,13 @@ class Tester
         return $returns;
     }
 
-    public function getApplication($reload = false, $userName = null, $password = null, $clearCache = true)
+    public function auth($userName, $password = null)
+    {
+        $this->userName = $userName;
+        $this->password = $password;
+    }
+
+    public function getApplication($reload = false, $clearCache = true)
     {
         if (!isset($this->application) || $reload)  {
 
@@ -88,15 +120,24 @@ class Tester
             $this->application = new \Espo\Core\Application();
             $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
 
-            if (isset($userName)) {
-                $password = isset($password) ? $password : $this->defaultUserPassword;
-                $auth->login($userName, $password);
+            if (isset($this->userName)) {
+                $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
+                $auth->login($this->userName, $this->password);
             } else {
                 $auth->useNoAuth();
             }
         }
 
         return $this->application;
+    }
+
+    protected function getApiClient()
+    {
+        if (!isset($this->apiClient)) {
+            $this->apiClient = new ApiClient($this->getParam('siteUrl'));
+        }
+
+        return $this->apiClient;
     }
 
     protected function getDataLoader()
@@ -131,6 +172,7 @@ class Tester
 
         $configData = include($this->configPath);
         $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
+        $this->params['siteUrl'] = $configData['siteUrl'];
 
         //remove and copy Espo files
         Utils::dropTables($configData['database']);
@@ -169,5 +211,14 @@ class Tester
         $fileManager = new \Espo\Core\Utils\File\Manager();
 
         return $fileManager->removeInDir('data/cache');
+    }
+
+    public function sendRequest($method, $action, $data = null)
+    {
+        $apiClient = $this->getApiClient();
+        $apiClient->setUserName($this->userName);
+        $apiClient->setPassword(isset($this->password) ? $this->password : $this->defaultUserPassword);
+
+        return $apiClient->request($method, $action, $data);
     }
 }

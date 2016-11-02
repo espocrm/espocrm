@@ -63,9 +63,19 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $password = null;
 
-    protected function createApplication($userName = null, $password = null, $clearCache = true)
+    protected function createApplication($clearCache = true)
     {
-        return $this->espoTester->getApplication(true, $userName, $password, $clearCache);
+        return $this->espoTester->getApplication(true, $clearCache);
+    }
+
+    protected function auth($userName, $password = null)
+    {
+        $this->userName = $userName;
+        $this->password = $password;
+
+        if (isset($this->espoTester)) {
+            $this->espoTester->auth($userName, $password);
+        }
     }
 
     /**
@@ -88,6 +98,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->getApplication()->getContainer();
     }
 
+    protected function sendRequest($method, $action, $data = null)
+    {
+        return $this->espoTester->sendRequest($method, $action, $data);
+    }
+
     protected function setUp()
     {
         $params = array(
@@ -98,9 +113,10 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         $this->espoTester = new Tester($params);
         $this->espoTester->initialize();
+        $this->auth($this->userName, $this->password);
 
         $this->beforeStartApplication();
-        $this->espoApplication = $this->createApplication($this->userName, $this->password);
+        $this->espoApplication = $this->createApplication();
         $this->afterStartApplication();
     }
 
@@ -120,4 +136,25 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
 
     }
+
+    /**
+     * Create a user with roles
+     *
+     * @param  string|array $userData - If $userData is a string, then it's a userName with default password
+     * @param  array  $roles
+     *
+     * @return \Espo\Entities\User
+     */
+    /*protected function createUser($userData, array $roles)
+    {
+        if (!is_array($userData)) {
+            $userData = array(
+                'userName' => $userData
+            );
+        }
+
+
+
+
+    }*/
 }

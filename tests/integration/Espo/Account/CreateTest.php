@@ -27,27 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\User;
+namespace tests\integration\Espo\Account;
 
-class LoginTest extends \tests\integration\Core\BaseTestCase
+class CreateTest extends \tests\integration\Core\BaseTestCase
 {
+    protected $dataFile = 'Account/ChangeFields.php';
+
     protected $userName = 'admin';
     protected $password = '1';
 
-    public function testLogin()
+    public function testCreate()
     {
-        $user = $this->getContainer()->get('user');
+        $result = $this->sendRequest('POST', 'Account', '{"type":"","industry":"","assignedUserId":"1","assignedUserName":"Admin","name":"Test Account","emailAddressData":[{"emailAddress":"test@tester.com","primary":true,"optOut":false,"invalid":false,"lower":"test@tester.com"}],"emailAddress":"test@tester.com","phoneNumberData":[{"phoneNumber":"123-456-789","primary":true,"type":"Office"}],"phoneNumber":"123-456-789","website":"","sicCode":"","billingAddressPostalCode":"","billingAddressStreet":"","billingAddressState":"","billingAddressCity":"","billingAddressCountry":"","shippingAddressPostalCode":"","shippingAddressStreet":"","shippingAddressState":"","shippingAddressCity":"","shippingAddressCountry":"","description":"","teamsIds":[],"teamsNames":{}}');
 
-        $this->assertEquals('Espo\\Entities\\User', get_class($user));
-        $this->assertEquals('1', $user->get('id'));
-        $this->assertEquals('admin', $user->get('userName'));
+        $this->assertTrue(!empty($result['id']));
     }
 
-    public function testWrongCredentials()
+    public function testCreate2()
     {
-        $this->auth('admin', 'wrong-password');
-        $application = $this->createApplication();
+        $result = $this->sendRequest('POST', 'Account', array(
+            'name' => 'Test Account',
+            'emailAddress' => 'test@tester.com',
+            'phoneNumber' => '123-456-789',
+        ));
 
-        $this->assertNull($application->getContainer()->get('user'));
+        $this->assertTrue(!empty($result['id']));
     }
 }

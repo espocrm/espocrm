@@ -27,27 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\User;
+namespace tests\integration\Espo\Account;
 
-class LoginTest extends \tests\integration\Core\BaseTestCase
+class SearchTest extends \tests\integration\Core\BaseTestCase
 {
+    protected $dataFile = 'Account/ChangeFields.php';
+
     protected $userName = 'admin';
     protected $password = '1';
 
-    public function testLogin()
+    public function testSearchByName()
     {
-        $user = $this->getContainer()->get('user');
+        $result = $this->sendRequest('GET', 'Account', array(
+            'maxSize' => 20,
+            'offset' => 0,
+            'sortBy' => 'name',
+            'asc' => true,
+            'where' => array(
+                array(
+                    'type' => 'textFilter',
+                    'value' => 'Besha',
+                ),
+            ),
+        ));
 
-        $this->assertEquals('Espo\\Entities\\User', get_class($user));
-        $this->assertEquals('1', $user->get('id'));
-        $this->assertEquals('admin', $user->get('userName'));
-    }
-
-    public function testWrongCredentials()
-    {
-        $this->auth('admin', 'wrong-password');
-        $application = $this->createApplication();
-
-        $this->assertNull($application->getContainer()->get('user'));
+        $this->assertEquals(1, $result['total']);
+        $this->assertEquals('53203b942850b', $result['list'][0]['id']);
     }
 }
