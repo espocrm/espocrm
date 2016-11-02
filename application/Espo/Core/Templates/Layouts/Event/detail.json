@@ -28,7 +28,9 @@
                 {
                     "name": "duration"
                 },
-                false
+                {
+                    "name": "reminders"
+                }
             ],
             [
                 {

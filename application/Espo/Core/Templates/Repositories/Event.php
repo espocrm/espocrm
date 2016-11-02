@@ -29,8 +29,7 @@
 
 namespace Espo\Core\Templates\Repositories;
 
-class Event extends \Espo\Core\ORM\Repositories\RDB
+class Event extends \Espo\Core\Repositories\Event
 {
-
+    
 }
-

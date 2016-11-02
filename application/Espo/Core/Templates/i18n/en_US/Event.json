@@ -4,7 +4,8 @@
         "dateStart": "Date Start",
         "dateEnd": "Date End",
         "duration": "Duration",
-        "status": "Status"
+        "status": "Status",
+        "reminders": "Reminders"
     },
     "links": {
         "parent": "Parent"
