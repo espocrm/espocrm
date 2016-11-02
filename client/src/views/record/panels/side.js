@@ -85,6 +85,8 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.readOnly = this.readOnly || this.options.readOnly;
             this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
+
+            this.recordViewObject = this.options.recordViewObject;
         },
 
         setup: function () {

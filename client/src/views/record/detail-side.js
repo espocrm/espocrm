@@ -97,6 +97,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
+
+            this.recordViewObject = this.options.recordViewObject;
         },
 
         setupPanels: function () {
@@ -196,7 +198,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                     mode: this.mode,
                     recordHelper: this.recordHelper,
                     defs: p,
-                    disabled: p.hidden || false
+                    disabled: p.hidden || false,
+                    recordViewObject: this.recordViewObject
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {

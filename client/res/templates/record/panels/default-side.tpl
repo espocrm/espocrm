@@ -10,23 +10,19 @@
 </div>
 
 <div class="row">
-    {{#ifAttrNotEmpty model 'createdById'}}
-    <div class="cell form-group col-sm-6 col-md-12">
-        <label class="control-label">{{translate 'Created'}}</label>
-        <div class="field">
+    <div class="cell form-group col-sm-6 col-md-12" data-name="complexCreated">
+        <label class="control-label" data-name="complexCreated">{{translate 'Created'}}</label>
+        <div class="field" data-name="complexCreated">
             <span data-name="createdAt" class="field">{{{createdAt}}}</span> <span class="text-muted">&raquo;</span> <span data-name="createdBy" class="field">{{{createdBy}}}</span>
         </div>
     </div>
-    {{/ifAttrNotEmpty}}
 
-    {{#ifAttrNotEmpty model 'modifiedById'}}
-    <div class="cell form-group col-sm-6 col-md-12">
-        <label class="control-label">{{translate 'Modified'}}</label>
-        <div class="field">
-            <span data-name="modifiedAt" class="field">{{{modifiedAt}}}</span> <span class="text-muted">&raquo;</span> <span data-name="modifiedBy" >{{{modifiedBy}}}</span>
+    <div class="cell form-group col-sm-6 col-md-12" data-name="complexModified">
+        <label class="control-label" data-name="complexModified">{{translate 'Modified'}}</label>
+        <div class="field" data-name="complexModified">
+            <span data-name="modifiedAt" class="field">{{{modifiedAt}}}</span> <span class="text-muted">&raquo;</span> <span data-name="modifiedBy" class="field">{{{modifiedBy}}}</span>
         </div>
     </div>
-    {{/ifAttrNotEmpty}}
 </div>
 
 <div class="row">
@@ -39,5 +35,3 @@
     </div>
 {{/if}}
 </div>
-
-

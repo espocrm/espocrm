@@ -241,24 +241,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
             if ($entity->hasAttribute('createdById')) {
                 if (empty($options['import']) || !$entity->has('createdById')) {
-                    $entity->set('createdById', $this->entityManager->getUser()->id);
+                    $entity->set('createdById', $this->getEntityManager()->getUser()->id);
                 }
             }
 
             if ($entity->has('modifiedById')) {
                 $restoreData['modifiedById'] = $entity->get('modifiedById');
             }
+            if ($entity->has('modifiedByName')) {
+                $restoreData['modifiedByName'] = $entity->get('modifiedByName');
+            }
             if ($entity->has('modifiedAt')) {
                 $restoreData['modifiedAt'] = $entity->get('modifiedAt');
             }
             $entity->clear('modifiedById');
+            $entity->clear('modifiedByName');
         } else {
             if (empty($options['silent'])) {
                 if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('modifiedById')) {
-                    $entity->set('modifiedById', $this->entityManager->getUser()->id);
+                    $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+                    $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
                 }
             }
 
