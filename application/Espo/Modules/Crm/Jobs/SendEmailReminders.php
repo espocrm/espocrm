@@ -51,6 +51,7 @@ class SendEmailReminders extends \Espo\Core\Jobs\Base
         if (!empty($collection)) {
             $emailReminder = new \Espo\Modules\Crm\Business\Reminder\EmailReminder(
                 $this->getEntityManager(),
+                $this->getContainer()->get('templateFileManager'),
                 $this->getContainer()->get('mailSender'),
                 $this->getConfig(),
                 $this->getContainer()->get('fileManager'),

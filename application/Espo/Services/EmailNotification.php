@@ -47,7 +47,8 @@ class EmailNotification extends \Espo\Core\Services\Base
             'dateTime',
             'number',
             'fileManager',
-            'selectManagerFactory'
+            'selectManagerFactory',
+            'templateFileManager'
         ]);
     }
 
@@ -73,6 +74,10 @@ class EmailNotification extends \Espo\Core\Services\Base
         return $this->getInjection('dateTime');
     }
 
+    protected function getTemplateFileManager()
+    {
+        return $this->getInjection('templateFileManager');
+    }
     protected function getHtmlizer()
     {
         if (empty($this->htmlizer)) {
@@ -111,8 +116,9 @@ class EmailNotification extends \Espo\Core\Services\Base
             if (!empty($emailAddress)) {
                 $email = $this->getEntityManager()->getEntity('Email');
 
-                $subjectTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'subject');
-                $bodyTpl = $this->getAssignmentTemplate($entity->getEntityType(), 'body');
+                $subjectTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'subject', $entity->getEntityType());
+                $bodyTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'body', $entity->getEntityType());
+
                 $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
                 $recordUrl = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
@@ -146,126 +152,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         }
 
         return true;
-    }
-
-    protected function getAssignmentTemplate($entityType, $name)
-    {
-        $fileName = $this->getAssignmentTemplateFileName($entityType, $name);
-        return file_get_contents($fileName);
-    }
-
-    protected function getAssignmentTemplateFileName($entityType, $name)
-    {
-        $language = $this->getConfig()->get('language');
-        $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
-        $type = 'assignment';
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        if ($moduleName) {
-            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-            if (file_exists($fileName)) return $fileName;
-        }
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $language = 'en_US';
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        if ($moduleName) {
-            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-            if (file_exists($fileName)) return $fileName;
-        }
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        return $fileName;
-    }
-
-    protected function getTemplate($type, $name, $entityType = null)
-    {
-        if ($entityType) {
-            $fileName = $this->getEntityTemplateFileName($entityType, $type, $name);
-        } else {
-            $fileName = $this->getTemplateFileName($type, $name);
-        }
-        return file_get_contents($fileName);
-    }
-
-    protected function getTemplateFileName($type, $name)
-    {
-        $language = $this->getConfig()->get('language');
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $language = 'en_US';
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        return $fileName;
-    }
-
-    protected function getEntityTemplateFileName($entityType, $type, $name)
-    {
-        $language = $this->getConfig()->get('language');
-        $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        if ($moduleName) {
-            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-            if (file_exists($fileName)) return $fileName;
-        }
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $language = 'en_US';
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        if ($moduleName) {
-            $fileName = "application/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-            if (file_exists($fileName)) return $fileName;
-        }
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        if (file_exists($fileName)) return $fileName;
-
-        $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        return $fileName;
     }
 
     public function process()
@@ -415,8 +301,9 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $data['post'] = $note->get('post');
 
-        $subjectTpl = $this->getTemplate('mention', 'subject');
-        $bodyTpl = $this->getTemplate('mention', 'body');
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('mention', 'subject');
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('mention', 'body');
+
         $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
@@ -500,8 +387,9 @@ class EmailNotification extends \Espo\Core\Services\Base
             $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
             $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
 
-            $subjectTpl = $this->getTemplate('notePost', 'subject', $parentType);
-            $bodyTpl = $this->getTemplate('notePost', 'body', $parentType);
+            $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'subject', $parentType);
+            $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'body', $parentType);
+
             $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject-' . $parentType, $data, true);
@@ -509,8 +397,9 @@ class EmailNotification extends \Espo\Core\Services\Base
         } else {
             $data['url'] = $this->getConfig()->getSiteUrl() . '/#Notification';
 
-            $subjectTpl = $this->getTemplate('notePostNoParent', 'subject');
-            $bodyTpl = $this->getTemplate('notePostNoParent', 'body');
+            $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'subject');
+            $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'body');
+
             $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
@@ -577,8 +466,8 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $data['userName'] = $note->get('createdByName');
 
-        $subjectTpl = $this->getTemplate('noteStatus', 'subject', $parentType);
-        $bodyTpl = $this->getTemplate('noteStatus', 'body', $parentType);
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteStatus', 'subject', $parentType);
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteStatus', 'body', $parentType);
         $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-status-email-subject', $data, true);

@@ -6,7 +6,7 @@
             [{"name":"status"},
             {"name":"priority"}],
             [{"name":"dateStart"},{"name":"dateCompleted"}],
-            [{"name":"dateEnd"},false],
+            [{"name":"dateEnd"},{"name":"reminders"}],
             [{"name":"description", "fullWidth": true}],
             [{"name":"attachments", "fullWidth": true}]
         ]

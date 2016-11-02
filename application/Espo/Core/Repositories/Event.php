@@ -34,6 +34,8 @@ use Espo\Core\Utils\Util;
 
 class Event extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected $reminderDateAttribute = 'dateStart';
+
     protected function afterRemove(Entity $entity, array $options = array())
     {
         $pdo = $this->getEntityManager()->getPDO();
@@ -53,9 +55,9 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
 
         if (
             $entity->isNew() ||
-            $entity->isFieldChanged('assignedUserId') ||
-            $entity->isFieldChanged('usersIds') ||
-            $entity->isFieldChanged('dateStart') ||
+            $entity->isAttributeChanged('assignedUserId') ||
+            $entity->isAttributeChanged('usersIds') ||
+            $entity->isAttributeChanged($this->reminderDateAttribute) ||
             $entity->has('reminders')
         ) {
             $pdo = $this->getEntityManager()->getPDO();
@@ -83,12 +85,12 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
 
             $entityType = $entity->getEntityType();
 
-            $dateStart = $entity->get('dateStart');
+            $dateValue = $entity->get($this->reminderDateAttribute);
 
-            if (!$dateStart) {
+            if (!$dateValue) {
                 $e = $this->get($entity->id);
                 if ($e) {
-                    $dateStart = $e->get('dateStart');
+                    $dateValue = $e->get($this->reminderDateAttribute);
                 }
             }
 
@@ -101,14 +103,14 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
 
-            if (!$dateStart) return;
+            if (!$dateValue) return;
             if (empty($userIdList)) return;
 
-            $dateStartObj = new \DateTime($dateStart);
-            if (!$dateStartObj) return;
+            $dateValueObj = new \DateTime($dateValue);
+            if (!$dateValueObj) return;
 
             foreach ($reminderList as $item) {
-                $remindAt = clone $dateStartObj;
+                $remindAt = clone $dateValueObj;
                 $seconds = intval($item->seconds);
                 $type = $item->type;
 
@@ -130,7 +132,7 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
                             ".$pdo->quote($type).",
                             ".$pdo->quote($userId).",
                             ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
-                            ".$pdo->quote($dateStart).",
+                            ".$pdo->quote($dateValue).",
                             ".$pdo->quote($seconds)."
                         )
                     ";

@@ -64,6 +64,17 @@ Espo.define('crm:views/task/fields/date-end', 'views/fields/datetime-optional', 
             return data;
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this, 'change', function (e) {
+                if (!this.model.get('dateEnd')) {
+                    if (this.model.get('reminders')) {
+                        this.model.set('reminders', []);
+                    }
+                }
+            }, this);
+        }
+
     });
 });
 

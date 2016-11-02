@@ -12,7 +12,8 @@
         "isOverdue": "Is Overdue",
         "account": "Account",
         "dateCompleted": "Date Completed",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "reminders": "Reminders"
     },
     "links": {
         "attachments": "Attachments"

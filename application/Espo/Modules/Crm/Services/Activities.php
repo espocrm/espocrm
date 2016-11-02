@@ -1109,12 +1109,11 @@ class Activities extends \Espo\Core\Services\Base
             $entityType = $row['entityType'];
             $entityId = $row['entityId'];
 
-
             $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             $data = null;
 
             if ($entity) {
-                if ($entityType === 'Meeting' || $entityType === 'Call') {
+                if ($entity->hasLinkMultipleField('users')) {
                     $entity->loadLinkMultipleField('users', array('status' => 'acceptanceStatus'));
                     $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
                     if ($status === 'Declined') {
@@ -1123,10 +1122,15 @@ class Activities extends \Espo\Core\Services\Base
                     }
                 }
 
+                $dateAttribute = 'dateStart';
+                if ($entityType === 'Task') {
+                    $dateAttribute = 'dateEnd';
+                }
+
                 $data = array(
                     'id' => $entity->id,
                     'entityType' => $entityType,
-                    'dateStart' => $entity->get('dateStart'),
+                    $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name')
                 );
             } else {

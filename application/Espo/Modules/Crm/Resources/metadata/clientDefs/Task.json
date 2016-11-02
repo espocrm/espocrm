@@ -20,6 +20,26 @@
                   }
                ]
             }
+         },
+         "reminders": {
+            "visible": {
+               "conditionGroup": [
+                  {
+                     "type": "and",
+                     "value": [
+                        {
+                           "type": "isNotEmpty",
+                           "attribute": "dateEnd"
+                        },
+                        {
+                           "type": "isEmpty",
+                           "attribute": "dateEndDate"
+                        }
+                     ]
+                  }
+
+               ]
+            }
          }
       }
    },

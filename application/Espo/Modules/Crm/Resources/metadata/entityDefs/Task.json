@@ -50,6 +50,11 @@
             "view": "crm:views/task/fields/is-overdue",
             "disabled": true
         },
+        "reminders": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "view": "crm:views/meeting/fields/reminders"
+        },
         "description": {
             "type": "text"
         },
