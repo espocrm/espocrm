@@ -30,7 +30,7 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
 
     return Dep.extend({
 
-        getComposeEmailAttributes: function (data, callback) {
+        getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
             var attributes = {
                 status: 'Draft',
