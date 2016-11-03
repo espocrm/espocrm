@@ -144,19 +144,22 @@
             "type": "hasChildren",
             "entity": "Meeting",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -167,7 +170,8 @@
         "documents": {
             "type": "hasMany",
             "entity": "Document",
-            "foreign": "opportunities"
+            "foreign": "opportunities",
+            "audited": true
         },
         "campaign": {
             "type": "belongsTo",

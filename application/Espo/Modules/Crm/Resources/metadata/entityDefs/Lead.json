@@ -180,24 +180,28 @@
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "leads",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "leads",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "cases": {
             "type": "hasMany",
             "entity": "Case",
-            "foreign": "lead"
+            "foreign": "lead",
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -242,7 +246,8 @@
         "documents": {
             "type": "hasMany",
             "entity": "Document",
-            "foreign": "leads"
+            "foreign": "leads",
+            "audited": true
         }
     },
     "convertEntityList": [

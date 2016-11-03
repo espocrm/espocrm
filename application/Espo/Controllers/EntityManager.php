@@ -198,6 +198,13 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
 
+        if (array_key_exists('audited', $data)) {
+            $params['audited'] = $data['audited'];
+        }
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['auditedForeign'] = $data['auditedForeign'];
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
 
         if ($result) {
@@ -240,6 +247,13 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
         if (array_key_exists('linkMultipleFieldForeign', $data)) {
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
+        }
+
+        if (array_key_exists('audited', $data)) {
+            $params['audited'] = $data['audited'];
+        }
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['auditedForeign'] = $data['auditedForeign'];
         }
 
         $result = $this->getContainer()->get('entityManagerUtil')->updateLink($params);

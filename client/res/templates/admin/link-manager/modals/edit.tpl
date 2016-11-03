@@ -66,4 +66,18 @@
 		</div>
 	</div>
 </div>
-
+<div class="row">
+	<div class="cell form-group col-md-4" data-name="auditedForeign">
+		<label class="control-label" data-name="auditedForeign">{{translate 'audited' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="auditedForeign">
+			{{{auditedForeign}}}
+		</div>
+	</div>
+	<div class="cell form-group col-md-4"></div>
+	<div class="cell form-group col-md-4" data-name="audited">
+		<label class="control-label" data-name="audited">{{translate 'audited' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="audited">
+			{{{audited}}}
+		</div>
+	</div>
+</div>

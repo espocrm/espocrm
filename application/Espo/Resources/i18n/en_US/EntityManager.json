@@ -23,7 +23,9 @@
         "linkMultipleField": "Link Multiple Field",
         "linkMultipleFieldForeign": "Foreign Link Multiple Field",
         "disabled": "Disabled",
-        "textFilterFields": "Text Filter Fields"
+        "textFilterFields": "Text Filter Fields",
+        "audited": "Audited",
+        "auditedForeign": "Foreign Audited"
     },
     "options": {
         "type": {

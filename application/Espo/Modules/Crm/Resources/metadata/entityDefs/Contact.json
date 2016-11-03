@@ -249,19 +249,22 @@
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",

@@ -36,6 +36,7 @@ class BelongsTo extends Base
         $linkParams = $this->getLinkParams();
 
         $foreignEntityName = $this->getForeignEntityName();
+        $foreignLinkName = $this->getForeignLinkName();
 
         if (!empty($linkParams['noJoin'])) {
             $fieldNameDefs = array(
@@ -49,7 +50,7 @@ class BelongsTo extends Base
                 'type' => 'foreign',
                 'relation' => $linkName,
                 'foreign' => $this->getForeignField('name', $foreignEntityName),
-                'notStorable' => false,
+                'notStorable' => false
             );
         }
 
@@ -59,8 +60,8 @@ class BelongsTo extends Base
                     $linkName.'Name' => $fieldNameDefs,
                     $linkName.'Id' => array(
                         'type' => 'foreignId',
-                        'index' => true,
-                    ),
+                        'index' => true
+                    )
                 ),
                 'relations' => array(
                     $linkName => array(
@@ -68,9 +69,10 @@ class BelongsTo extends Base
                         'entity' => $foreignEntityName,
                         'key' => $linkName.'Id',
                         'foreignKey' => 'id',
-                    ),
-                ),
-            ),
+                        'foreign' => $foreignLinkName
+                    )
+                )
+            )
         );
     }
 

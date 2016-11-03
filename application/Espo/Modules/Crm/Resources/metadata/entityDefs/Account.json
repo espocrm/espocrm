@@ -206,7 +206,8 @@
         "documents": {
             "type": "hasMany",
             "entity": "Document",
-            "foreign": "accounts"
+            "foreign": "accounts",
+            "audited": true
         },
         "meetingsPrimary": {
             "type": "hasMany",
@@ -236,19 +237,22 @@
             "type": "hasChildren",
             "entity": "Meeting",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",

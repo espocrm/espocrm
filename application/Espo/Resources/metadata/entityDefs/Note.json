@@ -123,33 +123,6 @@
         "sortBy": "number",
         "asc": false
     },
-    "streamRelated": {
-        "Account": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Contact": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Lead": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Opportunity": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Case": [
-            "meetings",
-            "calls",
-            "tasks"
-        ]
-    },
     "statusStyles": {
         "Lead": {
             "New" : "primary",

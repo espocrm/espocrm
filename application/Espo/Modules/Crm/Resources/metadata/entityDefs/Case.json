@@ -128,19 +128,22 @@
             "type": "hasChildren",
             "entity": "Meeting",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -151,7 +154,8 @@
         "articles": {
             "type": "hasMany",
             "entity": "KnowledgeBaseArticle",
-            "foreign": "cases"
+            "foreign": "cases",
+            "audited": true
         }
     },
     "collection": {

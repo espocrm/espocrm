@@ -198,6 +198,35 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $result;
     }
 
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    {
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+
+        if ($foreign instanceof Entity) {
+            $foreignEntity = $foreign;
+            $hookData = array(
+                'relationName' => $relationName,
+                'relationData' => $data,
+                'foreignEntity' => $foreignEntity
+            );
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
+        }
+    }
+
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    {
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+
+        if ($foreign instanceof Entity) {
+            $foreignEntity = $foreign;
+            $hookData = array(
+                'relationName' => $relationName,
+                'foreignEntity' => $foreignEntity
+            );
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);

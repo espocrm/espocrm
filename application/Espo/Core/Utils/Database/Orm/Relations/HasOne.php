@@ -53,7 +53,8 @@ class HasOne extends Base
                     $linkName => array(
                         'type' => 'hasOne',
                         'entity' => $foreignEntityName,
-                        'foreignKey' => lcfirst($foreignLinkName.'Id')
+                        'foreignKey' => lcfirst($foreignLinkName.'Id'),
+                        'foreign' => $foreignLinkName
                     )
                 )
             )

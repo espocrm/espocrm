@@ -362,6 +362,17 @@ class EntityManager
             $linkMultipleFieldForeign = true;
         }
 
+
+        $audited = false;
+        if (!empty($params['audited'])) {
+            $audited = true;
+        }
+
+        $auditedForeign = false;
+        if (!empty($params['auditedForeign'])) {
+            $auditedForeign = true;
+        }
+
         if (empty($linkType)) {
             throw new Error();
         }
@@ -413,6 +424,7 @@ class EntityManager
                             'type' => 'hasMany',
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
+                            'audited' => $auditedForeign,
                             'isCustom' => true
                         )
                     )
@@ -428,6 +440,7 @@ class EntityManager
                             'type' => 'belongsTo',
                             'foreign' => $link,
                             'entity' => $entity,
+                            'audited' => $audited,
                             'isCustom' => true
                         )
                     )
@@ -454,6 +467,7 @@ class EntityManager
                             'type' => 'belongsTo',
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
+                            'audited' => $auditedForeign,
                             'isCustom' => true
                         )
                     )
@@ -475,6 +489,7 @@ class EntityManager
                             'type' => 'hasMany',
                             'foreign' => $link,
                             'entity' => $entity,
+                            'audited' => $audited,
                             'isCustom' => true
                         )
                     )
@@ -499,6 +514,7 @@ class EntityManager
                             'relationName' => $relationName,
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
+                            'audited' => $auditedForeign,
                             'isCustom' => true
                         )
                     )
@@ -521,6 +537,7 @@ class EntityManager
                             'relationName' => $relationName,
                             'foreign' => $link,
                             'entity' => $entity,
+                            'audited' => $audited,
                             'isCustom' => true
                         )
                     )
@@ -605,6 +622,40 @@ class EntityManager
                             "noLoad"  => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
                             'isCustom' => true
+                        )
+                    )
+                );
+                $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
+                $this->getMetadata()->save();
+            }
+        }
+
+        if (
+            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
+        ) {
+            if (array_key_exists('audited', $params)) {
+                $audited = $params['audited'];
+                $dataLeft = array(
+                    'links' => array(
+                        $link => array(
+                            "audited" => $audited
+                        )
+                    )
+                );
+                $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+                $this->getMetadata()->save();
+            }
+        }
+
+        if (
+           $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
+        ) {
+            if (array_key_exists('auditedForeign', $params)) {
+                $auditedForeign = $params['auditedForeign'];
+                $dataRight = array(
+                    'links' => array(
+                        $linkForeign => array(
+                            "audited" => $auditedForeign
                         )
                     )
                 );

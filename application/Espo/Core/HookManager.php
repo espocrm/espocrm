@@ -51,6 +51,8 @@ class HookManager
         'afterSave',
         'beforeRemove',
         'afterRemove',
+        'afterRelate',
+        'afterUnrelate'
     );
 
     protected $paths = array(
@@ -100,14 +102,14 @@ class HookManager
         }
     }
 
-    public function process($scope, $hookName, $injection = null, array $options = array())
+    public function process($scope, $hookName, $injection = null, array $options = array(), array $hookData = array())
     {
         if (!isset($this->data)) {
             $this->loadHooks();
         }
 
         if ($scope != 'Common') {
-            $this->process('Common', $hookName, $injection, $options);
+            $this->process('Common', $hookName, $injection, $options, $hookData);
         }
 
         if (!empty($this->data[$scope])) {
@@ -120,7 +122,7 @@ class HookManager
                         }
                     }
                     $hook = $this->hooks[$className];
-                    $hook->$hookName($injection, $options);
+                    $hook->$hookName($injection, $options, $hookData);
                 }
             }
         }
