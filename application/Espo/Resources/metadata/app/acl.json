@@ -76,7 +76,7 @@
         "fieldLevel": {
         },
         "assignmentPermission": "all",
-        "userPermission": "no",
+        "userPermission": "all",
         "portalPermission": "no"
     },
     "scopeLevelTypesDefaults": {

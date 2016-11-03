@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2016 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -27,32 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+namespace tests\integration\Espo\Email;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\BadRequest;
-
-class Lead extends \Espo\Core\Controllers\Record
+class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
 {
-    public function postActionConvert($params, $data, $request)
+
+    public function testSearchByEmailAddress()
     {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        $entity = $this->getRecordService()->convert($data['id'], $data['records']);
+        $entityManager = $this->getContainer()->get('entityManager');
 
-        if (!empty($entity)) {
-            return $entity->toArray();
-        }
-        throw new Error();
-    }
+        $email = $entityManager->getEntity('Email');
+        $email->set('from', 'test@test.com');
+        $email->set('status', 'Archived');
+        $entityManager->saveEntity($email);
 
-    public function postActionGetConvertAttributes($params, $data, $request)
-    {
-        if (empty($data['id'])) {
-            throw new BadRequest();
-        }
+        $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
 
-        return $this->getRecordService()->getConvertAttributes($data['id']);
+        $result = $emailService->findEntities(array(
+            'where' => array(
+                array(
+                    'type' => 'equals',
+                    'attribute' => 'emailAddress',
+                    'value' => 'test@test.com'
+                )
+            )
+        ));
+
+        $this->assertArrayHasKey('collection', $result);
+        $this->assertEquals(1, count($result['collection']));
     }
 }

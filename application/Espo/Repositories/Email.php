@@ -149,6 +149,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         $idHash = (object) [];
         foreach ($addressList as $address) {
             $p = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($address);
+            if (!$p) {
+                $p = $this->getEntityManager()->getRepository('InboundEmail')->where(array('emailAddress' => $address))->findOne();
+            }
             if ($p) {
                 $nameHash->$address = $p->get('name');
                 $typeHash->$address = $p->getEntityName();

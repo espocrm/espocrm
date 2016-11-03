@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
@@ -38,10 +38,7 @@ Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
 
         listTemplate: 'fields/email/list',
 
-        searchTemplate: 'fields/email/search',
-
         validations: ['required', 'emailData'],
-
 
         validateEmailData: function () {
             var data = this.model.get(this.dataFieldName);
@@ -370,23 +367,8 @@ Espo.define('views/fields/email', 'views/fields/base', function (Dep) {
             }
 
             return data;
-        },
-
-        fetchSearch: function () {
-            var value = this.$element.val() || null;
-            if (value) {
-                if (typeof value.trim === 'function') {
-                    value = value.trim();
-                }
-                var data = {
-                    type: 'like',
-                    value: value + '%',
-                    valueText: value
-                };
-                return data;
-            }
-            return false;
         }
+
     });
 });
 

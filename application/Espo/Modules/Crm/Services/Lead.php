@@ -36,6 +36,18 @@ use \Espo\ORM\Entity;
 
 class Lead extends \Espo\Services\Record
 {
+
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('container');
+    }
+
+    protected function getFieldManager()
+    {
+        return $this->getInjection('container')->get('fieldManager');
+    }
+
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(
@@ -98,6 +110,105 @@ class Lead extends \Espo\Services\Record
         		$this->getEntityManager()->saveEntity($log);
         	}
         }
+    }
+
+    public function getConvertAttributes($id)
+    {
+        $lead = $this->getEntity($id);
+
+        if (!$this->getAcl()->check($lead, 'read')) {
+            throw new Forbidden();
+        }
+
+        $data = array();
+
+        $entityList = $this->getMetadata()->get('entityDefs.Lead.convertEntityList', []);
+
+        $ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
+
+        $convertFieldsDefs = $this->getMetadata()->get('entityDefs.Lead.convertFields', array());
+
+        foreach ($entityList as $entityType) {
+            if (!$this->getAcl()->checkScope($entityType, 'edit')) continue;
+
+            $attributes = array();
+
+            $target = $this->getEntityManager()->getEntity($entityType);
+
+            $fieldMap = array();
+
+            $fieldList = array_keys($this->getMetadata()->get('entityDefs.Lead.fields', array()));
+            foreach ($fieldList as $field) {
+                if (!$this->getMetadata()->get('entityDefs.'.$entityType.'.fields.' . $field)) continue;
+                if (
+                    $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type'])
+                    !==
+                    $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type'])
+                ) continue;
+
+                $fieldMap[$field] = $field;
+            }
+            if (array_key_exists($entityType, $convertFieldsDefs)) {
+                foreach ($convertFieldsDefs[$entityType] as $field => $leadField) {
+                    $fieldMap[$field] = $leadField;
+                }
+            }
+
+            foreach ($fieldMap as $field => $leadField) {
+                $type = $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
+
+
+                if (in_array($type, ['file', 'image'])) {
+                    $attachment = $lead->get($field);
+                    if ($attachment) {
+                        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                        $idAttribute = $field . 'Id';
+                        $nameAttribute = $field . 'Name';
+                        if ($attachment) {
+                            $attributes[$idAttribute] = $attachment->id;
+                            $attributes[$nameAttribute] = $attachment->get('name');
+                        }
+                    }
+                    continue;
+                } else if (in_array($type, ['attachmentMultiple'])) {
+                    $attachmentList = $lead->get($field);
+                    if (count($attachmentList)) {
+                        $idList = [];
+                        $nameHash = (object) [];
+                        $typeHash = (object) [];
+                        foreach ($attachmentList as $attachment) {
+                            $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                            if ($attachment) {
+                                $idList[] = $attachment->id;
+                                $nameHash->{$attachment->id} = $attachment->get('name');
+                                $typeHash->{$attachment->id} = $attachment->get('type');
+                            }
+                        }
+                        $attributes[$field . 'Ids'] = $idList;
+                        $attributes[$field . 'Names'] = $nameHash;
+                        $attributes[$field . 'Types'] = $typeHash;
+                    }
+                    continue;
+                }
+
+                $leadAttributeList = $this->getFieldManager()->getAttributeList('Lead', $leadField);
+                $attributeList = $this->getFieldManager()->getAttributeList($entityType, $field);
+
+                foreach ($attributeList as $i => $attribute) {
+                    if (in_array($attribute, $ignoreAttributeList)) continue;
+
+                    $leadAttribute = $leadAttributeList[$i];
+                    if (!$lead->has($leadAttribute)) continue;
+
+                    $attributes[$attribute] = $lead->get($leadAttribute);
+                }
+            }
+
+            $data[$entityType] = $attributes;
+
+        }
+
+        return $data;
     }
 
     public function convert($id, $recordsData)
