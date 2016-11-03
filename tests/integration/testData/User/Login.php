@@ -49,5 +49,13 @@ return array(
                 ),
             ),
         ],
+        'Portal' => [
+            array(
+                'id' => 'testPortalId',
+                'isActive' => true,
+                'name' => 'Test portal',
+                'customId' => 'test',
+            ),
+        ],
     ),
 );

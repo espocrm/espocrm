@@ -37,7 +37,11 @@ class ApiClient
 
     private $password;
 
-    protected $urlPath = '/api/v1/';
+    private $portalId;
+
+    protected $apiPath = '/api/v1/';
+
+    protected $portalApiPath = '/api/v1/portal-access/{PORTAL_ID}/';
 
     protected $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36';
 
@@ -55,7 +59,7 @@ class ApiClient
      */
     private $lastResponse;
 
-    public function __construct($url = null, $userName = null, $password = null)
+    public function __construct($url = null, $userName = null, $password = null, $portalId = null)
     {
         if (isset($url)) {
             $this->url = $url;
@@ -67,6 +71,10 @@ class ApiClient
 
         if (isset($password)) {
             $this->password = $password;
+        }
+
+        if (isset($portalId)) {
+            $this->portalId = $portalId;
         }
     }
 
@@ -83,6 +91,11 @@ class ApiClient
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    public function setPortalId($portalId)
+    {
+        $this->portalId = $portalId;
     }
 
     /**
@@ -142,10 +155,11 @@ class ApiClient
         }
 
         $header = $this->normalizeHeader($parsedResponse['header']);
-        $errorMessage = !empty($header['X-Status-Reason']) ? $header['X-Status-Reason'] : 'Unknown Error';
+        $errorCode = $this->getResponseHttpCode();
+        $errorMessage = !empty($header['X-Status-Reason']) ? $header['X-Status-Reason'] : $errorCode;
 
         curl_close($ch);
-        throw new \Exception($errorMessage, $this->getResponseHttpCode());
+        throw new \Exception($errorMessage, $errorCode);
     }
 
     public function getResponseContentType()
@@ -165,7 +179,9 @@ class ApiClient
 
     protected function normalizeUrl($action)
     {
-        return $this->url . $this->urlPath . $action;
+        $apiPath = $this->portalId ? str_replace('{PORTAL_ID}', $this->portalId, $this->portalApiPath) : $this->apiPath;
+
+        return $this->url . $apiPath . $action;
     }
 
     protected function checkParams()

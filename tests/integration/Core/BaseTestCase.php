@@ -63,18 +63,21 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $password = null;
 
+    protected $portalId = null;
+
     protected function createApplication($clearCache = true)
     {
         return $this->espoTester->getApplication(true, $clearCache);
     }
 
-    protected function auth($userName, $password = null)
+    protected function auth($userName, $password = null, $portalId = null)
     {
         $this->userName = $userName;
         $this->password = $password;
+        $this->portalId = $portalId;
 
         if (isset($this->espoTester)) {
-            $this->espoTester->auth($userName, $password);
+            $this->espoTester->auth($userName, $password, $portalId);
         }
     }
 
@@ -127,6 +130,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->espoApplication = NULL;
     }
 
+    protected function createUser($userData, array $role = null, $isPortal = false)
+    {
+        return $this->espoTester->createUser($userData, $role, $isPortal);
+    }
+
     protected function beforeStartApplication()
     {
 
@@ -136,25 +144,4 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
 
     }
-
-    /**
-     * Create a user with roles
-     *
-     * @param  string|array $userData - If $userData is a string, then it's a userName with default password
-     * @param  array  $roles
-     *
-     * @return \Espo\Entities\User
-     */
-    /*protected function createUser($userData, array $roles)
-    {
-        if (!is_array($userData)) {
-            $userData = array(
-                'userName' => $userData
-            );
-        }
-
-
-
-
-    }*/
 }

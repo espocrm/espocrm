@@ -61,6 +61,8 @@ class Tester
      */
     protected $password = null;
 
+    protected $portalId = null;
+
     protected $defaultUserPassword = '1';
 
     public function __construct(array $params)
@@ -103,10 +105,11 @@ class Tester
         return $returns;
     }
 
-    public function auth($userName, $password = null)
+    public function auth($userName, $password = null, $portalId = null)
     {
         $this->userName = $userName;
         $this->password = $password;
+        $this->portalId = $portalId;
     }
 
     public function getApplication($reload = false, $clearCache = true)
@@ -218,7 +221,87 @@ class Tester
         $apiClient = $this->getApiClient();
         $apiClient->setUserName($this->userName);
         $apiClient->setPassword(isset($this->password) ? $this->password : $this->defaultUserPassword);
+        $apiClient->setPortalId($this->portalId);
 
         return $apiClient->request($method, $action, $data);
+    }
+
+    /**
+     * Create a user with roles
+     *
+     * @param  string|array $userData - If $userData is a string, then it's a userName with default password
+     * @param  array  $role
+     *
+     * @return \Espo\Entities\User
+     */
+    public function createUser($userData, array $roleData = null, $isPortal = false)
+    {
+        if (!is_array($userData)) {
+            $userData = array(
+                'userName' => $userData,
+                'lastName' => $userData,
+            );
+        }
+
+        //create a role
+        if (!empty($roleData)) {
+            if (!isset($roleData['name'])) {
+                $roleData['name'] = $userData['userName'] . 'Role';
+            }
+
+            $role = $this->createRole($roleData, $isPortal);
+
+            if (isset($role)) {
+                $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
+                if (!isset($userData[$fieldName])) {
+                    $userData[$fieldName] = array();
+                }
+                $userData[$fieldName][] = $role->id;
+            }
+        }
+
+        $application = $this->getApplication();
+        $entityManager = $application->getContainer()->get('entityManager');
+        $config = $application->getContainer()->get('config');
+
+        if (!isset($userData['password'])) {
+            $userData['password'] = $this->defaultUserPassword;
+        }
+
+        $passwordHash = new \Espo\Core\Utils\PasswordHash($config);
+        $userData['password'] = $passwordHash->hash($userData['password']);
+
+        if ($isPortal) {
+            $userData['isPortalUser'] = true;
+        }
+
+        $user = $entityManager->getEntity('User');
+        $user->set($userData);
+        $entityManager->saveEntity($user);
+
+        return $user;
+    }
+
+    protected function createRole(array $roleData, $isPortal = false)
+    {
+        $entityName = $isPortal ? 'PortalRole' : 'Role';
+
+        if (is_array($roleData['data'])) {
+            $roleData['data'] = json_encode($roleData['data']);
+        }
+
+        if (is_array($roleData['fieldData'])) {
+            $roleData['fieldData'] = json_encode($roleData['fieldData']);
+        }
+
+        $application = $this->getApplication();
+        $entityManager = $application->getContainer()->get('entityManager');
+
+        $role = $entityManager->getEntity($entityName);
+        $role->set($roleData);
+
+        $entityManager->saveEntity($role);
+
+        return $role;
     }
 }
