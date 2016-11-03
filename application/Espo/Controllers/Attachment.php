@@ -44,8 +44,13 @@ class Attachment extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        list($prefix, $contents) = explode(',', $data);
-        $contents = base64_decode($contents);
+        $arr = explode(',', $data);
+        if (count($arr) > 1) {
+            list($prefix, $contents) = $arr;
+            $contents = base64_decode($contents);
+        } else {
+            $contents = '';
+        }
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $this->getEntityManager()->saveEntity($attachment);
