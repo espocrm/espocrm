@@ -7,5 +7,6 @@
     "customizable": true,
     "stream": false,
     "importable": false,
-    "object": true
+    "object": true,
+    "statusField": "status"
 }

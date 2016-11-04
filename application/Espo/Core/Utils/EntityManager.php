@@ -233,6 +233,11 @@ class EntityManager
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
+        if (array_key_exists('statusField', $data)) {
+            $scopeData['statusField'] = $data['statusField'];
+            $this->getMetadata()->set('scopes', $name, $scopeData);
+        }
+
         if (!empty($data['labelSingular'])) {
             $labelSingular = $data['labelSingular'];
             $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);

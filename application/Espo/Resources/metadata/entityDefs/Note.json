@@ -164,15 +164,6 @@
             "Held": "success"
         }
     },
-    "statusFields": {
-        "Lead": "status",
-        "Case": "status",
-        "Opportunity": "stage",
-        "Task": "status",
-        "Meeting": "status",
-        "Call": "status",
-        "Campaign": "status"
-    },
     "indexes": {
         "createdAt": {
             "type": "index",

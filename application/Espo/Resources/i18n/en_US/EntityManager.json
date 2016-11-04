@@ -25,7 +25,8 @@
         "disabled": "Disabled",
         "textFilterFields": "Text Filter Fields",
         "audited": "Audited",
-        "auditedForeign": "Foreign Audited"
+        "auditedForeign": "Foreign Audited",
+        "statusField": "Status Field"
     },
     "options": {
         "type": {

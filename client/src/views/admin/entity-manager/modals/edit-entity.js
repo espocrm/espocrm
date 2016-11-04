@@ -34,6 +34,12 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
         template: 'admin/entity-manager/modals/edit-entity',
 
+        data: function () {
+            return {
+                isNew: this.isNew
+            };
+        },
+
         setup: function () {
             this.buttonList = [
                 {
@@ -50,8 +56,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             var scope = this.scope = this.options.scope || false;
 
             var header = 'Create Entity';
+            this.isNew = true;
             if (scope) {
                 header = 'Edit Entity';
+                this.isNew = false;
             }
 
             this.header = this.translate(header, 'labels', 'Admin');
@@ -79,6 +87,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
 
                 this.model.set('textFilterFields', this.getMetadata().get('entityDefs.' + scope + '.collection.textFilterFields') || ['name']);
+
+                this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
             }
 
             this.createView('type', 'views/fields/enum', {
@@ -155,6 +165,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             if (scope) {
                 var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {}
+
                 var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
                     if (fieldDefs[item].notStorable) {
                         return false;
@@ -222,7 +233,56 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     },
                     translatedOptions: textFilterFieldsTranslation
                 });
+
+
+                if (this.hasStreamField) {
+                    var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
+                        if (fieldDefs[item].disabled) return;
+                        if (fieldDefs[item].type == 'enum') {
+                            return true;
+                        }
+                        return;
+                    }, this).sort(function (v1, v2) {
+                        return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                    }.bind(this));
+
+                    var translatedStatusFields = {};
+                    enumFieldList.forEach(function (item) {
+                        translatedStatusFields[item] = this.translate(item, 'fields', scope);
+                    }, this);
+                    enumFieldList.unshift('');
+                    translatedStatusFields[''] = '-' + this.translate('None') + '-';
+
+                    this.createView('statusField', 'views/fields/enum', {
+                        model: model,
+                        mode: 'edit',
+                        el: this.options.el + ' .field[data-name="statusField"]',
+                        defs: {
+                            name: 'statusField',
+                            params: {
+                                options: enumFieldList
+                            }
+                        },
+                        translatedOptions: translatedStatusFields
+                    });
+                }
             }
+        },
+
+        hideField: function (name) {
+            var view = this.getView(name);
+            if (view) {
+                view.disabled = true;
+            }
+            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'hidden');
+        },
+
+        showField: function (name) {
+            var view = this.getView(name);
+            if (view) {
+                view.disabled = false;
+            }
+            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
         },
 
         afterRender: function () {
@@ -243,6 +303,19 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 }
                 this.model.set('name', name);
             }, this);
+
+            this.manageStreamField();
+            this.listenTo(this.model, 'change:stream', function () {
+                this.manageStreamField();
+            }, this);
+        },
+
+        manageStreamField: function () {
+            if (this.model.get('stream')) {
+                this.showField('statusField');
+            } else {
+                this.hideField('statusField');
+            }
         },
 
         actionSave: function () {
@@ -252,7 +325,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'labelSingular',
                 'labelPlural',
                 'stream',
-                'disabled'
+                'disabled',
+                'statusField'
             ];
 
             if (this.scope) {
@@ -294,8 +368,13 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 type: this.model.get('type'),
                 stream: this.model.get('stream'),
                 disabled: this.model.get('disabled'),
-                textFilterFields: this.model.get('textFilterFields')
+                textFilterFields: this.model.get('textFilterFields'),
+                statusField: this.model.get('statusField')
             };
+
+            if (data.statusField === '') {
+                data.statusField = null;
+            }
 
             if (this.scope) {
                 data.sortBy = this.model.get('sortBy');

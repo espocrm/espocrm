@@ -11,7 +11,8 @@
         "contacts": "Contacts",
         "leads": "Leads",
         "reminders": "Reminders",
-        "account": "Account"
+        "account": "Account",
+        "acceptanceStatus": "Acceptance Status"
     },
     "links": {
     },

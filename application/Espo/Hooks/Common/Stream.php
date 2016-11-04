@@ -400,7 +400,12 @@ class Stream extends \Espo\Core\Hooks\Base
     protected function getStatusFields()
     {
         if (is_null($this->statusFields)) {
-            $this->statusFields = $this->getMetadata()->get("entityDefs.Note.statusFields", array());
+            $this->statusFields = array();
+            $scopes = $this->getMetadata()->get('scopes', array());
+            foreach ($scopes as $scope => $data) {
+                if (empty($data['statusField'])) continue;
+                $this->statusFields[$scope] = $data['statusField'];
+            }
         }
         return $this->statusFields;
     }
@@ -412,6 +417,4 @@ class Stream extends \Espo\Core\Hooks\Base
         }
         return $this->streamService;
     }
-
 }
-
