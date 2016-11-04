@@ -245,7 +245,9 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 defs: {
                     name: 'linkMultipleField'
                 },
-                readOnly: !isCustom
+                readOnly: !isCustom,
+                tooltip: true,
+                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
             });
 
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
@@ -255,7 +257,9 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 defs: {
                     name: 'linkMultipleFieldForeign'
                 },
-                readOnly: !isCustom
+                readOnly: !isCustom,
+                tooltip: true,
+                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
             });
 
             this.createView('audited', 'views/fields/bool', {
@@ -264,7 +268,9 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 el: this.options.el + ' .field[data-name="audited"]',
                 defs: {
                     name: 'audited'
-                }
+                },
+                tooltip: true,
+                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
             });
 
             this.createView('auditedForeign', 'views/fields/bool', {
@@ -273,7 +279,9 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 el: this.options.el + ' .field[data-name="auditedForeign"]',
                 defs: {
                     name: 'auditedForeign'
-                }
+                },
+                tooltip: true,
+                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
             });
         },
 

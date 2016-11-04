@@ -112,7 +112,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     el: this.options.el + ' .field[data-name="stream"]',
                     defs: {
                         name: 'stream'
-                    }
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager')
                 });
             }
 
@@ -122,7 +124,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 el: this.options.el + ' .field[data-name="disabled"]',
                 defs: {
                     name: 'disabled'
-                }
+                },
+                tooltip: true,
+                tooltipText: this.translate('disabled', 'tooltips', 'EntityManager')
             });
 
             this.createView('name', 'views/fields/varchar', {
@@ -231,6 +235,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                             options: optionList
                         }
                     },
+                    tooltip: true,
+                    tooltipText: this.translate('textFilterFields', 'tooltips', 'EntityManager'),
                     translatedOptions: textFilterFieldsTranslation
                 });
 
@@ -263,6 +269,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                                 options: enumFieldList
                             }
                         },
+                        tooltip: true,
+                        tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
                         translatedOptions: translatedStatusFields
                     });
                 }
@@ -308,6 +316,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.listenTo(this.model, 'change:stream', function () {
                 this.manageStreamField();
             }, this);
+
+            if (this.isNew) {
+                this.hideField('disabled');
+            }
         },
 
         manageStreamField: function () {

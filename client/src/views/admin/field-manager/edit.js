@@ -34,6 +34,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
 
+        paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before'],
+
         data: function () {
             return {
                 scope: this.scope,
@@ -145,7 +147,12 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (o.hidden) {
                             return;
                         }
-                        this.createFieldView(o.type, o.name, null, o);
+                        var options = {};
+                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                            options.tooltip = true;
+                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+                        }
+                        this.createFieldView(o.type, o.name, null, o, options);
                     }, this);
 
                     this.hasDynamicLogicPanel = false;
@@ -243,9 +250,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }, this);
         },
 
-        createFieldView: function (type, name, readOnly, params, callback) {
+        createFieldView: function (type, name, readOnly, params, options, callback) {
             var viewName = (params || {}).view || this.getFieldManager().getViewName(type);
-            this.createView(name, viewName, {
+
+            var o = {
                 model: this.model,
                 el: this.options.el + ' .field[data-name="' + name + '"]',
                 defs: {
@@ -256,7 +264,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 readOnly: readOnly,
                 scope: this.scope,
                 field: this.field,
-            }, callback);
+            };
+            _.extend(o, options || {});
+
+            this.createView(name, viewName, o, callback);
             this.fieldList.push(name);
         },
 

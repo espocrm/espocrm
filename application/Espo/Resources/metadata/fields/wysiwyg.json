@@ -15,7 +15,8 @@
       },
       {
          "name": "seeMoreDisabled",
-         "type": "bool"
+         "type": "bool",
+         "tooltip": true
       },
       {
          "name": "height",

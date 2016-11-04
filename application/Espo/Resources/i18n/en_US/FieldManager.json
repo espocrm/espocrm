@@ -1,5 +1,17 @@
 {
     "labels": {
         "Dynamic Logic": "Dynamic Logic"
+    },
+    "tooltips": {
+        "audited": "Updates will be logged in stream.",
+        "required": "Field will be mandatory. Can't be left empty.",
+        "default": "Value will be set by default upon creating.",
+        "min": "Min acceptable value.",
+        "max": "Max acceptable value.",
+        "seeMoreDisabled": "If not checked then long texts will be shortened.",
+        "lengthOfCut": "How long text can be before it will be cut.",
+        "maxLength": "Max acceptable length of text.",
+        "before": "The date value should be before the date value of the specified field.",
+        "after": "The date value should be after the date value of the specified field."
     }
 }

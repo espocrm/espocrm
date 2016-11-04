@@ -15,7 +15,8 @@
       },
       {
          "name":"seeMoreDisabled",
-         "type":"bool"
+         "type":"bool",
+         "tooltip": true
       },
       {
          "name": "rows",
@@ -27,7 +28,8 @@
          "name": "lengthOfCut",
          "type": "int",
          "default": 400,
-         "min": 1
+         "min": 1,
+         "tooltip": true
       }
    ],
    "filter": true
