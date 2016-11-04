@@ -36,7 +36,7 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
     protected $userName = 'admin';
     protected $password = '1';
 
-    public function testSearchByName()
+    /*public function testSearchByName()
     {
         $result = $this->sendRequest('GET', 'Account', array(
             'maxSize' => 20,
@@ -53,5 +53,5 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('53203b942850b', $result['list'][0]['id']);
-    }
+    }*/
 }
