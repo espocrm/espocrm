@@ -27,35 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-    'entities' => array(
-        'User' => [
-            array(
-                'id' => '1',
-                'isAdmin' => true,
-                'userName' => 'admin',
-                'password' => '1',
-                'salutationName' => '',
-                'firstName' => '',
-                'lastName' => 'Admin',
-                'title' => '',
-                'emailAddress' => 'demo@espocrm.com',
-                'phoneNumberData' => array(
-                    (object) array(
-                        'phoneNumber' => '111',
-                        'primary' => true,
-                        'type' => 'Office',
-                    ),
+namespace tests\integration\Espo\Account;
+
+class SearchTest extends \tests\integration\Core\BaseTestCase
+{
+    protected $dataFile = 'Account/ChangeFields.php';
+
+    protected $userName = 'admin';
+    protected $password = '1';
+
+    public function testSearchByName()
+    {
+        $result = $this->sendRequest('GET', 'Account', array(
+            'maxSize' => 20,
+            'offset' => 0,
+            'sortBy' => 'name',
+            'asc' => true,
+            'where' => array(
+                array(
+                    'type' => 'textFilter',
+                    'value' => 'Besha',
                 ),
             ),
-        ],
-        'Portal' => [
-            array(
-                'id' => 'testPortalId',
-                'isActive' => true,
-                'name' => 'Test portal',
-                'customId' => 'test',
-            ),
-        ],
-    ),
-);
+        ));
+
+        $this->assertEquals(1, $result['total']);
+        $this->assertEquals('53203b942850b', $result['list'][0]['id']);
+    }
+}

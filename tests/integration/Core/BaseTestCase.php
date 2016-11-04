@@ -63,13 +63,22 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $password = null;
 
-    protected function createApplication($userName = null, $password = null)
-    {
-        if (isset($userName) && isset($password)) {
-            return $this->espoTester->getApplication(true, $userName, $password);
-        }
+    protected $portalId = null;
 
-        return $this->espoTester->getApplication(true);
+    protected function createApplication($clearCache = true)
+    {
+        return $this->espoTester->getApplication(true, $clearCache);
+    }
+
+    protected function auth($userName, $password = null, $portalId = null)
+    {
+        $this->userName = $userName;
+        $this->password = $password;
+        $this->portalId = $portalId;
+
+        if (isset($this->espoTester)) {
+            $this->espoTester->auth($userName, $password, $portalId);
+        }
     }
 
     /**
@@ -92,6 +101,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->getApplication()->getContainer();
     }
 
+    protected function sendRequest($method, $action, $data = null)
+    {
+        return $this->espoTester->sendRequest($method, $action, $data);
+    }
+
     protected function setUp()
     {
         $params = array(
@@ -102,7 +116,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         $this->espoTester = new Tester($params);
         $this->espoTester->initialize();
-        $this->espoApplication = $this->createApplication($this->userName, $this->password);
+        $this->auth($this->userName, $this->password);
+
+        $this->beforeStartApplication();
+        $this->espoApplication = $this->createApplication();
+        $this->afterStartApplication();
     }
 
     protected function tearDown()
@@ -110,5 +128,20 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->espoTester->terminate();
         $this->espoTester = NULL;
         $this->espoApplication = NULL;
+    }
+
+    protected function createUser($userData, array $role = null, $isPortal = false)
+    {
+        return $this->espoTester->createUser($userData, $role, $isPortal);
+    }
+
+    protected function beforeStartApplication()
+    {
+
+    }
+
+    protected function afterStartApplication()
+    {
+
     }
 }

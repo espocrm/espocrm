@@ -41,9 +41,29 @@ class Tester
 
     private $application;
 
+    private $apiClient;
+
     private $dataLoader;
 
     protected $params;
+
+    /**
+     * Espo username which is used for authentication
+     *
+     * @var null
+     */
+    protected $userName = null;
+
+    /**
+     * Espo user password which is used for authentication
+     *
+     * @var null
+     */
+    protected $password = null;
+
+    protected $portalId = null;
+
+    protected $defaultUserPassword = '1';
 
     public function __construct(array $params)
     {
@@ -55,11 +75,21 @@ class Tester
         $namespaceToRemove = 'tests\\integration\\Espo';
         $classPath = preg_replace('/^'.preg_quote($namespaceToRemove).'\\\\(.+)Test$/', '${1}', $params['className']);
 
-        if (!isset($params['dataFile'])) {
+        if (isset($params['dataFile'])) {
+            $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
+            if (!file_exists($params['dataFile'])) {
+                die('"dataFile" is not found, path: '.$params['dataFile'].'.');
+            }
+        } else {
             $params['dataFile'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath) . '.php';
         }
 
-        if (!isset($params['pathToFiles'])) {
+        if (isset($params['pathToFiles'])) {
+            $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
+            if (!file_exists($params['pathToFiles'])) {
+                die('"pathToFiles" is not found, path: '.$params['pathToFiles'].'.');
+            }
+        } else {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath);
         }
 
@@ -75,20 +105,42 @@ class Tester
         return $returns;
     }
 
-    public function getApplication($reload = false, $userName = null, $password = null)
+    public function auth($userName, $password = null, $portalId = null)
+    {
+        $this->userName = $userName;
+        $this->password = $password;
+        $this->portalId = $portalId;
+    }
+
+    public function getApplication($reload = false, $clearCache = true)
     {
         if (!isset($this->application) || $reload)  {
+
+            if ($clearCache) {
+                $this->clearCache();
+            }
+
             $this->application = new \Espo\Core\Application();
             $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
 
-            if (isset($userName) && isset($password)) {
-                $auth->login($userName, $password);
+            if (isset($this->userName)) {
+                $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
+                $auth->login($this->userName, $this->password);
             } else {
                 $auth->useNoAuth();
             }
         }
 
         return $this->application;
+    }
+
+    protected function getApiClient()
+    {
+        if (!isset($this->apiClient)) {
+            $this->apiClient = new ApiClient($this->getParam('siteUrl'));
+        }
+
+        return $this->apiClient;
     }
 
     protected function getDataLoader()
@@ -123,6 +175,7 @@ class Tester
 
         $configData = include($this->configPath);
         $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
+        $this->params['siteUrl'] = $configData['siteUrl'];
 
         //remove and copy Espo files
         Utils::dropTables($configData['database']);
@@ -154,5 +207,101 @@ class Tester
         if (!empty($this->params['pathToFiles'])) {
             $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
         }
+    }
+
+    public function clearCache()
+    {
+        $fileManager = new \Espo\Core\Utils\File\Manager();
+
+        return $fileManager->removeInDir('data/cache');
+    }
+
+    public function sendRequest($method, $action, $data = null)
+    {
+        $apiClient = $this->getApiClient();
+        $apiClient->setUserName($this->userName);
+        $apiClient->setPassword(isset($this->password) ? $this->password : $this->defaultUserPassword);
+        $apiClient->setPortalId($this->portalId);
+
+        return $apiClient->request($method, $action, $data);
+    }
+
+    /**
+     * Create a user with roles
+     *
+     * @param  string|array $userData - If $userData is a string, then it's a userName with default password
+     * @param  array  $role
+     *
+     * @return \Espo\Entities\User
+     */
+    public function createUser($userData, array $roleData = null, $isPortal = false)
+    {
+        if (!is_array($userData)) {
+            $userData = array(
+                'userName' => $userData,
+                'lastName' => $userData,
+            );
+        }
+
+        //create a role
+        if (!empty($roleData)) {
+            if (!isset($roleData['name'])) {
+                $roleData['name'] = $userData['userName'] . 'Role';
+            }
+
+            $role = $this->createRole($roleData, $isPortal);
+
+            if (isset($role)) {
+                $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
+                if (!isset($userData[$fieldName])) {
+                    $userData[$fieldName] = array();
+                }
+                $userData[$fieldName][] = $role->id;
+            }
+        }
+
+        $application = $this->getApplication();
+        $entityManager = $application->getContainer()->get('entityManager');
+        $config = $application->getContainer()->get('config');
+
+        if (!isset($userData['password'])) {
+            $userData['password'] = $this->defaultUserPassword;
+        }
+
+        $passwordHash = new \Espo\Core\Utils\PasswordHash($config);
+        $userData['password'] = $passwordHash->hash($userData['password']);
+
+        if ($isPortal) {
+            $userData['isPortalUser'] = true;
+        }
+
+        $user = $entityManager->getEntity('User');
+        $user->set($userData);
+        $entityManager->saveEntity($user);
+
+        return $user;
+    }
+
+    protected function createRole(array $roleData, $isPortal = false)
+    {
+        $entityName = $isPortal ? 'PortalRole' : 'Role';
+
+        if (is_array($roleData['data'])) {
+            $roleData['data'] = json_encode($roleData['data']);
+        }
+
+        if (is_array($roleData['fieldData'])) {
+            $roleData['fieldData'] = json_encode($roleData['fieldData']);
+        }
+
+        $application = $this->getApplication();
+        $entityManager = $application->getContainer()->get('entityManager');
+
+        $role = $entityManager->getEntity($entityName);
+        $role->set($roleData);
+
+        $entityManager->saveEntity($role);
+
+        return $role;
     }
 }
