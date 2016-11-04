@@ -40,6 +40,10 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $statusFields = null;
 
+    protected $successDefaultStyleList = ['Held', 'Closed Won', 'Closed', 'Completed', 'Complete', 'Sold'];
+
+    protected $dangerDefaultStyleList = ['Not Held', 'Closed Lost', 'Dead'];
+
     protected function init()
     {
         parent::init();
@@ -825,6 +829,12 @@ class Stream extends \Espo\Core\Services\Base
                 $style = 'default';
                 if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
                     $style = $statusStyles[$entityType][$value];
+                } else {
+                    if (in_array($value, $this->successDefaultStyleList)) {
+                        $style = 'success';
+                    } else if (in_array($value, $this->dangerDefaultStyleList)) {
+                        $style = 'danger';
+                    }
                 }
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
@@ -910,6 +920,12 @@ class Stream extends \Espo\Core\Services\Base
 
         if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
             $style = $statusStyles[$entityType][$value];
+        } else {
+            if (in_array($value, $this->successDefaultStyleList)) {
+                $style = 'success';
+            } else if (in_array($value, $this->dangerDefaultStyleList)) {
+                $style = 'danger';
+            }
         }
 
         $note->set('data', array(
