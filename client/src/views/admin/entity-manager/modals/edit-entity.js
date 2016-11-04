@@ -398,11 +398,32 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 (global.scopeNames || {})[name] = this.model.get('labelSingular');
                 (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
 
-                this.getMetadata().load(function () {
+                /*this.getMetadata().load(function () {
                     this.getConfig().load(function () {
                         this.trigger('after:save');
                     }.bind(this), true);
-                }.bind(this), true);
+                }.bind(this), true);*/
+
+                Promise.all([
+                    new Promise(function (resolve) {
+                        this.getMetadata().load(function () {
+                            resolve();
+                        }, true);
+                    }.bind(this)),
+                    new Promise(function (resolve) {
+                        this.getConfig().load(function () {
+                            resolve();
+                        }, true);
+                    }.bind(this)),
+                    new Promise(function (resolve) {
+                        this.getLanguage().load(function () {
+                            resolve();
+                        }, true);
+                    }.bind(this))
+                ]).then(function () {
+                    this.trigger('after:save');
+                }.bind(this));
+
             }.bind(this));
         },
 
