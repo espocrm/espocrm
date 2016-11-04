@@ -323,16 +323,23 @@
 
         "createThis": "{user} created this {entityType}",
 
-        "createAssignedThis": "{user} created this {entity} assigned to {assignee}",
+        "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
 
         "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
 
         "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
 
+        "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
+
+        "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
+
         "assign": "{user} assigned {entityType} {entity} to {assignee}",
 
         "assignThis": "{user} assigned this {entityType} to {assignee}",
         "assignYou": "{user} assigned {entityType} {entity} to you",
+
+        "assignThisVoid": "{user} unassigned this {entityType}",
+        "assignVoid": "{user} unassigned {entityType} {entity}",
 
         "assignThisSelf": "{user} self-assigned this {entityType}",
         "assignSelf": "{user} self-assigned {entityType} {entity}",

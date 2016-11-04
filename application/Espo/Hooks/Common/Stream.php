@@ -240,6 +240,8 @@ class Stream extends \Espo\Core\Hooks\Base
 			                if ($this->getUser()->id === $assignedUserId) {
 			                	$entity->set('isFollowed', true);
 			                }
+                        } else {
+                            $this->getStreamService()->noteAssign($entity);
                         }
                     }
                     $this->getStreamService()->handleAudited($entity);

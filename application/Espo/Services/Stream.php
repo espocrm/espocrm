@@ -807,7 +807,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $data = array();
 
-        if ($entity->get('assignedUserId') != $entity->get('createdById')) {
+        if ($entity->get('assignedUserId')) {
             if (!$entity->has('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
@@ -872,13 +872,19 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
-        if (!$entity->has('assignedUserName')) {
-            $this->loadAssignedUserName($entity);
+        if ($entity->get('assignedUserId')) {
+            if (!$entity->has('assignedUserName')) {
+                $this->loadAssignedUserName($entity);
+            }
+            $note->set('data', array(
+                'assignedUserId' => $entity->get('assignedUserId'),
+                'assignedUserName' => $entity->get('assignedUserName'),
+            ));
+        } else {
+            $note->set('data', array(
+                'assignedUserId' => null
+            ));
         }
-        $note->set('data', array(
-            'assignedUserId' => $entity->get('assignedUserId'),
-            'assignedUserName' => $entity->get('assignedUserName'),
-        ));
 
         $this->getEntityManager()->saveEntity($note);
     }
