@@ -102,7 +102,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         options: this.getMetadata().get('app.entityTemplateList') || ['Base']
                     }
                 },
-                readOnly: scope != false
+                readOnly: scope != false,
+                tooltip: true,
+                tooltipText: this.translate('entityType', 'tooltips', 'EntityManager')
             });
 
             if (this.hasStreamField) {
