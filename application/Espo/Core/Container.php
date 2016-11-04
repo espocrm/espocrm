@@ -135,6 +135,13 @@ class Container
         );
     }
 
+    protected function loadControllerManager()
+    {
+        return new \Espo\Core\ControllerManager(
+            $this
+        );
+    }
+
     protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
