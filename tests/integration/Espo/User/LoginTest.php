@@ -112,11 +112,11 @@ class LoginTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('tester', $newUser->get('userName'));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionCode 403
-     */
-    public function testAccessUser()
+    ///**
+    // * @expectedException \Exception
+    // * @expectedExceptionCode 403
+    // */
+    /*public function testAccessUser()
     {
         $this->testCreateUserWithRole();
         $this->auth('tester');
@@ -124,7 +124,7 @@ class LoginTest extends \tests\integration\Core\BaseTestCase
         $this->sendRequest('POST', 'Account', array(
             'name' => 'Test Account',
         ));
-    }
+    }*/
 
     public function testCreatePortalUserWithRole()
     {
@@ -156,11 +156,11 @@ class LoginTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('tester', $newUser->get('userName'));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionCode 403
-     */
-    public function testAccessPortalUser()
+    ///**
+    // * @expectedException \Exception
+    // * @expectedExceptionCode 403
+    // */
+    /*public function testAccessPortalUser()
     {
         $this->testCreatePortalUserWithRole();
         $this->auth('tester', null, 'testPortalId');
@@ -168,5 +168,5 @@ class LoginTest extends \tests\integration\Core\BaseTestCase
         $this->sendRequest('POST', 'Account', array(
             'name' => 'Test Account',
         ));
-    }
+    }*/
 }
