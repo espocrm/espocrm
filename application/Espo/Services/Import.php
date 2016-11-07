@@ -529,6 +529,9 @@ class Import extends \Espo\Services\Record
             if ($isNew) {
                 $isDuplicate = $recordService->checkEntityForDuplicate($entity);
             }
+            if ($entity->id) {
+                $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
+            }
             $saveResult = $this->getEntityManager()->saveEntity($entity, array(
                 'noStream' => true,
                 'noNotifications' => true,

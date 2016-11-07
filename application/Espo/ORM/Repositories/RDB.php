@@ -174,9 +174,9 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function deleteFromDb($id)
+    public function deleteFromDb($id, $onlyDeleted = false)
     {
-        return $this->getMapper()->deleteFromDb($this->entityType, $id);
+        return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
     public function find(array $params = array())

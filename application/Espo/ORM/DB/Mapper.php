@@ -784,11 +784,14 @@ abstract class Mapper implements IMapper
         return $value;
     }
 
-    public function deleteFromDb($entityName, $id)
+    public function deleteFromDb($entityType, $id, $onlyDeleted = false)
     {
-        if (!empty($entityName) && !empty($id)) {
-            $table = $this->toDb($entityName);
+        if (!empty($entityType) && !empty($id)) {
+            $table = $this->toDb($entityType);
             $sql = "DELETE FROM `{$table}` WHERE id = " . $this->quote($id);
+            if ($onlyDeleted) {
+                $sql .= " AND deleted = 1";
+            }
             if ($this->pdo->query($sql)) {
                 return true;
             }
