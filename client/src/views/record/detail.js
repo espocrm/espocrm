@@ -812,7 +812,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var editAccess = this.getAcl().checkModel(this.model, 'edit', true);
 
-            if (!editAccess) {
+            if (!editAccess || this.readOnlyLocked) {
                 this.readOnly = true;
                 this.hideActionItem('edit');
                 if (this.duplicateAction) {
