@@ -57,10 +57,14 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             ]
         },
 
+        init: function () {
+            Dep.prototype.init.call(this);
+        },
+
         setup: function () {
             this.seeds = {};
 
-            this.scopeList = this.getConfig().get('activitiesEntityList') || [];
+            this.scopeList = this.getOption('enabledScopeList') || [];
 
             this.listLayout = {};
             this.scopeList.forEach(function (item) {
@@ -99,6 +103,7 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             this.collection.seeds = this.seeds;
             this.collection.url = 'Activities/action/listUpcoming';
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+            this.collection.data.entityTypeList = this.scopeList;
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'crm:views/meeting/record/list-expanded', {

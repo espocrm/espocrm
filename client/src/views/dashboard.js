@@ -324,8 +324,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 view.render();
 
                 this.listenToOnce(view, 'change', function () {
+                    this.clearView(id);
                     this.createDashletView(id, name, label, function (view) {
-                        view.render();
                     }, this);
                 }, this);
 

@@ -99,6 +99,8 @@ class Activities extends \Espo\Core\Controllers\Base
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
 
+        $entityTypeList = $request->get('entityTypeList');
+
         if (empty($maxSize)) {
             $maxSize = $this->maxSizeLimit;
         }
@@ -109,7 +111,7 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getUpcomingActivities($userId, array(
             'offset' => $offset,
             'maxSize' => $maxSize
-        ));
+        ), $entityTypeList);
     }
 
     public function actionPopupNotifications()
