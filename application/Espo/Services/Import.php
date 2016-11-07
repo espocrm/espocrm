@@ -527,7 +527,10 @@ class Import extends \Espo\Services\Record
 
         try {
             if ($isNew) {
-                $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                $isDuplicate = false;
+                if (empty($params['skipDuplicateChecking'])) {
+                    $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                }
             }
             if ($entity->id) {
                 $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);

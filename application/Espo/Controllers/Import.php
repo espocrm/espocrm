@@ -138,6 +138,7 @@ class Import extends \Espo\Core\Controllers\Record
             'currency' => $data['currency'],
             'defaultValues' => $data['defaultValues'],
             'action' => $data['action'],
+            'skipDuplicateChecking' => $data['skipDuplicateChecking']
         );
 
         if (array_key_exists('updateBy', $data)) {
