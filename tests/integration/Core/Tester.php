@@ -120,7 +120,7 @@ class Tester
                 $this->clearCache();
             }
 
-            $this->application = new \Espo\Core\Application();
+            $this->application = empty($this->portalId) ? new \Espo\Core\Application() : new \Espo\Core\Portal\Application($this->portalId);
             $auth = new \Espo\Core\Utils\Auth($this->application->getContainer());
 
             if (isset($this->userName)) {
