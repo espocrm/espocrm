@@ -1145,12 +1145,14 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getUpcomingActivities($userId, $params = array())
+    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
 
-        $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
+        if (!$entityTypeList) {
+            $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
+        }
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {

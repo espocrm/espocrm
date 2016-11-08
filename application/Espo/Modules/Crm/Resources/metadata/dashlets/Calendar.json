@@ -14,7 +14,6 @@
             },
             "enabledScopeList": {
                 "type": "multiEnum",
-                "options": ["Meeting", "Call", "Task"],
                 "translation": "Global.scopeNamesPlural",
                 "required": true
             },

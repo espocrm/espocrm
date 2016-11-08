@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,39 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+Espo.define('crm:views/dashlets/options/activities', 'views/dashlets/options/base', function (Dep) {
 
-use Espo\ORM\Entity;
+    return Dep.extend({
 
-class Account extends \Espo\Core\ORM\Repositories\RDB
-{
-    public function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->has('targetListId')) {
-        	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
+        init: function () {
+            Dep.prototype.init.call(this);
+            this.fields.enabledScopeList.options = this.getConfig().get('activitiesEntityList') || [];
         }
-    }
 
-    protected function afterRelateContacts(Entity $entity, $foreign, $data, array $options = array())
-    {
-        if (!($foreign instanceof Entity)) return;
+    });
+});
 
-        if (!$foreign->get('accountId')) {
-            $foreign->set('accountId', $entity->id);
-            $this->getEntityManager()->saveEntity($foreign);
-        }
-    }
-
-    protected function afterUnrelateContacts(Entity $entity, $foreign, array $options = array())
-    {
-        if (!($foreign instanceof Entity)) return;
-
-        if ($foreign->get('accountId') && $foreign->get('accountId') === $entity->id) {
-            $foreign->set('accountId', null);
-            $this->getEntityManager()->saveEntity($foreign);
-        }
-    }
-}
 

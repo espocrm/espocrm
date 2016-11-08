@@ -49,17 +49,27 @@
         "Single Quote": "Single Quote",
         "Imported": "Imported",
         "Duplicates": "Duplicates",
-        "Updated": "Updated"
+        "Updated": "Updated",
+        "Skip searching for duplicates": "Skip searching for duplicates"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",
-        "duplicatesRemoved": "Duplicates removed"
+        "duplicatesRemoved": "Duplicates removed",
+        "inIdle": "Execute in idle (for big data; via cron)"
     },
     "fields": {
         "file": "File",
         "entityType": "Entity Type",
         "imported": "Imported Records",
         "duplicates": "Duplicate Records",
-        "updated": "Updated Records"
+        "updated": "Updated Records",
+        "status": "Status"
+    },
+    "options": {
+        "status": {
+            "Failed": "Failed",
+            "In Process": "In Process",
+            "Complete": "Complete"
+        }
     }
 }

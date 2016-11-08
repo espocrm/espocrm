@@ -147,13 +147,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     };
                 }
 
-                var options = {
-                    format: this.getDateTime().dateFormat.toLowerCase(),
-                    weekStart: this.getDateTime().weekStart,
-                    autoclose: true,
-                    todayHighlight: true,
-                    language: language
-                };
+                options.language = language;
 
                 var $datePicker = this.$element.datepicker(options).on('show', function (e) {
                     $('body > .datepicker.datepicker-dropdown').css('z-index', 1200);

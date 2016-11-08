@@ -80,7 +80,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
         init: function () {
             Dep.prototype.init.call(this);
-            this.fields = this.options.fields;
+
+            this.fields = Espo.Utils.cloneDeep(this.options.fields);
+
             this.fieldList = Object.keys(this.fields);
             this.optionsData = this.options.optionsData;
         },

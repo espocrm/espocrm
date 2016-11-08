@@ -40,6 +40,8 @@ Espo.define('MultiCollection', 'Collection', function (Collection) {
             this.sortBy = options.sortBy || this.sortBy;
             this.asc = ('asc' in options) ? options.asc : this.asc;
 
+            this.data = {};
+
             Backbone.Collection.prototype.initialize.call(this);
         },
 

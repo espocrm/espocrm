@@ -3,11 +3,18 @@
         "entityType": {
             "type": "enum",
             "translation": "Global.scopeNames",
-            "required": true
+            "required": true,
+            "readOnly": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["In Process", "Complete", "Failed"],
+            "readOnly": true
         },
         "file": {
             "type": "file",
-            "required": true
+            "required": true,
+            "readOnly": true
         },
         "importedCount": {
             "type": "int",
