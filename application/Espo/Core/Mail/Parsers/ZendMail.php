@@ -172,7 +172,7 @@ class ZendMail
 
             if ($isAttachment) {
                 $content = $part->getContent();
-                echo "--" . $content;
+
                 $disposition = null;
 
                 $fileName = null;
