@@ -174,7 +174,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled'])
                             &&
-                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])&&
+                            !this.getMetadata().get(['fields', this.type, 'readOnly'])
                         ) {
                             this.model.set('dynamicLogicRequired', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']));
                             this.createFieldView(null, 'dynamicLogicRequired', null, {
@@ -187,6 +188,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicReadOnlyDisabled'])
                             &&
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])
+                            &&
+                            !this.getMetadata().get(['fields', this.type, 'readOnly'])
                         ) {
                             this.model.set('dynamicLogicReadOnly', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']));
                             this.createFieldView(null, 'dynamicLogicReadOnly', null, {
