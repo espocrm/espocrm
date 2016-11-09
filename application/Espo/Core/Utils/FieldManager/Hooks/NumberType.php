@@ -4,7 +4,7 @@ namespace Espo\Core\Utils\FieldManager\Hooks;
 
 class NumberType extends Base
 {
-    public function onRead($scope, $name, &$defs)
+    public function onRead($scope, $name, &$defs, $options)
     {
         $number = $this->getEntityManager()->getRepository('NextNumber')->where(array(
             'entityType' => $scope,
@@ -27,7 +27,7 @@ class NumberType extends Base
         $defs['nextNumber'] = $value;
     }
 
-    public function afterSave($scope, $name, $defs)
+    public function afterSave($scope, $name, $defs, $options)
     {
         if (!isset($defs['nextNumber'])) return;
 
@@ -47,7 +47,7 @@ class NumberType extends Base
         $this->getEntityManager()->saveEntity($number);
     }
 
-    public function afterRemove($scope, $name)
+    public function afterRemove($scope, $name, $defs, $options)
     {
         $number = $this->getEntityManager()->getRepository('NextNumber')->where(array(
             'entityType' => $scope,

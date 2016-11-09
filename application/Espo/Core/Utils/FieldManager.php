@@ -98,10 +98,10 @@ class FieldManager
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
         }
 
-        return $this->update($name, $fieldDefs, $scope);
+        return $this->update($name, $fieldDefs, $scope, true);
     }
 
-    public function update($name, $fieldDefs, $scope)
+    public function update($name, $fieldDefs, $scope, $isNew = false)
     {
         $name = trim($name);
         /*Add option to metadata to identify the custom field*/
@@ -226,7 +226,7 @@ class FieldManager
         if ($metadataToBeSaved) {
             $res &= $this->getMetadata()->save();
 
-            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs);
+            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
         }
 
         return (bool) $res;
@@ -533,14 +533,14 @@ class FieldManager
         return array_merge($this->getActualAttributeList($scope, $name), $this->getNotActualAttributeList($scope, $name));
     }
 
-    protected function processHook($methodName, $type, $scope, $name, &$defs = null)
+    protected function processHook($methodName, $type, $scope, $name, &$defs = null, $options = array())
     {
         $hook = $this->getHook($type);
         if (!$hook) return;
 
         if (!method_exists($hook, $methodName)) return;
 
-        $hook->$methodName($scope, $name, $defs);
+        $hook->$methodName($scope, $name, $defs, $options);
     }
 
     protected function getHook($type)
