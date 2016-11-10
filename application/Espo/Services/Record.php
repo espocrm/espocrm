@@ -1106,6 +1106,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function export(array $params)
     {
+        $selectManager = $this->getSelectManager($this->getEntityType());
         if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             $where = array(
@@ -1115,7 +1116,7 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-            $selectParams = $this->getSelectManager($this->getEntityType())->getSelectParams(array('where' => $where), true, true);
+            $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
         } else if (array_key_exists('where', $params)) {
             $where = $params['where'];
 
@@ -1129,6 +1130,12 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams($p);
         } else {
             throw new BadRequest();
+        }
+
+        $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
+        $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
+        if ($orderBy) {
+            $selectManager->applyOrder($orderBy, $desc, $selectParams);
         }
 
         $collection = $this->getRepository()->find($selectParams);
