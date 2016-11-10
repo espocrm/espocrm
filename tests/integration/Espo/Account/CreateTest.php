@@ -36,14 +36,28 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
     protected $userName = 'admin';
     protected $password = '1';
 
+    public function testCreate()
+    {
+        $service = $this->getContainer()->get('serviceFactory')->create('Account');
+
+        $entity = $service->createEntity(array(
+            'name' => 'Test Account',
+            'emailAddress' => 'test@tester.com',
+            'phoneNumber' => '123-456-789',
+        ));
+
+        $this->assertInstanceOf('\\Espo\\ORM\\Entity', $entity);
+        $this->assertTrue(!empty($entity->id));
+    }
+
     /*public function testCreate()
     {
         $result = $this->sendRequest('POST', 'Account', '{"type":"","industry":"","assignedUserId":"1","assignedUserName":"Admin","name":"Test Account","emailAddressData":[{"emailAddress":"test@tester.com","primary":true,"optOut":false,"invalid":false,"lower":"test@tester.com"}],"emailAddress":"test@tester.com","phoneNumberData":[{"phoneNumber":"123-456-789","primary":true,"type":"Office"}],"phoneNumber":"123-456-789","website":"","sicCode":"","billingAddressPostalCode":"","billingAddressStreet":"","billingAddressState":"","billingAddressCity":"","billingAddressCountry":"","shippingAddressPostalCode":"","shippingAddressStreet":"","shippingAddressState":"","shippingAddressCity":"","shippingAddressCountry":"","description":"","teamsIds":[],"teamsNames":{}}');
 
         $this->assertTrue(!empty($result['id']));
-    }
+    }*/
 
-    public function testCreate2()
+    /*public function testCreate2()
     {
         $result = $this->sendRequest('POST', 'Account', array(
             'name' => 'Test Account',

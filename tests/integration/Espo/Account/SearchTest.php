@@ -36,6 +36,37 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
     protected $userName = 'admin';
     protected $password = '1';
 
+    public function testSearchByName()
+    {
+        $service = $this->getContainer()->get('serviceFactory')->create('Account');
+
+        $params = array(
+            'where' => array(
+                array(
+                    'type' => 'textFilter',
+                    'value' => 'Besha',
+                ),
+            ),
+            'offset' => 0,
+            'maxSize' => 20,
+            'asc' => true,
+            'sortBy' => 'name',
+        );
+
+        $result = $service->findEntities($params);
+
+        $this->assertArrayHasKey('total', $result);
+        $this->assertArrayHasKey('collection', $result);
+
+        $this->assertEquals(1, $result['total']);
+
+        $this->assertInstanceOf('\\Espo\\ORM\\EntityCollection', $result['collection']);
+
+        $list = $result['collection']->toArray();
+
+        $this->assertEquals('53203b942850b', $list[0]['id']);
+    }
+
     /*public function testSearchByName()
     {
         $result = $this->sendRequest('GET', 'Account', array(

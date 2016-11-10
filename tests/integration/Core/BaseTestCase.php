@@ -144,4 +144,28 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
 
     }
+
+    /**
+     * Create Slim request object
+     *
+     * @param  string $method
+     * @param  array  $params
+     * @param  array  $envParams  E.g. 'REQUEST_METHOD' => 'GET', 'QUERY_STRING' => 'name=John&age=30'. More details \Slim\Environment::mock()
+     *
+     * @return \Slim\Http\Request
+     */
+    protected function createRequest($method, array $params = array(), array $envParams = array())
+    {
+        if (!isset($envParams['REQUEST_METHOD'])) {
+            $envParams['REQUEST_METHOD'] = strtoupper($method);
+        }
+
+        if (!isset($envParams['QUERY_STRING'])) {
+            $envParams['QUERY_STRING'] = http_build_query($params);
+        }
+
+        $slimEnvironment = \Slim\Environment::mock($envParams);
+
+        return new \Slim\Http\Request($slimEnvironment);
+    }
 }
