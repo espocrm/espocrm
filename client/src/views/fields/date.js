@@ -114,9 +114,19 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         afterRender: function () {
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element = this.$el.find('[name="' + this.name + '"]');
+                this.$additionalElement = this.$el.find('div.additional-number');
 
                 var wait = false;
                 this.$element.on('change', function () {
+                    if (!wait) {
+                        this.trigger('change');
+                        wait = true;
+                        setTimeout(function () {
+                            wait = false
+                        }, 100);
+                    }
+                }.bind(this));
+                this.$additionalElement.on('change', function () {
                     if (!wait) {
                         this.trigger('change');
                         wait = true;
@@ -188,6 +198,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 this.$el.find('div.primary').removeClass('hidden');
                 this.$el.find('div.additional').removeClass('hidden');
             }
+            this.trigger('change');
         },
 
         parseDate: function (string) {

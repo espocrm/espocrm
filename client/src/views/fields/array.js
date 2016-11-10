@@ -247,6 +247,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     };
                 }
             });
+            this.$element.on('change', function () {
+                this.trigger('change');
+            }.bind(this));
         },
 
         fetchFromDom: function () {

@@ -223,6 +223,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.searchData = {};
                 this.setupSearch();
+                this.listenTo(this, 'change', function() {
+                    this._parentView.trigger('change');
+                });
             }
 
             this.on('invalid', function () {
@@ -352,7 +355,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initElement: function () {
             this.$element = this.$el.find('[name="' + this.name + '"]');
-            if (this.mode == 'edit') {
+            if (this.mode == 'edit' || this.mode == 'search') {
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));

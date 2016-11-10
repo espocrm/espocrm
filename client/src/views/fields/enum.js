@@ -189,6 +189,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         };
                     }
                 });
+
+                this.$element.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 

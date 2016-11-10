@@ -165,6 +165,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     view.populateDefaults();
                     this.fetch();
                     this.updateSearch();
+                    this.updateCollection();
                 }.bind(this));
                 this.updateAddFilterButton();
                 this.handleLeftDropdownVisibility();
@@ -188,6 +189,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
                 this.fetch();
                 this.updateSearch();
+                this.updateCollection();
 
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();
@@ -606,6 +608,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 if (rendered && !noRender) {
                     view.render();
                 }
+                this.listenTo(view, 'change', _.throttle(function () {
+                    this.fetch();
+                    this.updateSearch();
+                    this.updateCollection();
+                }, 450));
             }.bind(this));
         },
 

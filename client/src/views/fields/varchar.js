@@ -51,6 +51,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             } else {
                 this.$el.find('input.main-element').removeClass('hidden');
             }
+            this.trigger('change');
         },
 
         afterRender: function () {

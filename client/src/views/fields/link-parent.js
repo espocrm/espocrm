@@ -159,6 +159,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             } else {
                 this.$el.find('div.primary').addClass('hidden');
             }
+            this.trigger('change');
         },
 
         select: function (model) {
