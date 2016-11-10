@@ -1131,6 +1131,10 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
+        $collectionParams = $this->getMetadata()->get('entityDefs.' . $this->entityType . '.collection', array());
+        $selectParams['orderBy']  = $collectionParams['sortBy'] ?: '';
+        $selectParams['order']  = $collectionParams['asc'] ? 'ASC' : 'DESC';
+
         $collection = $this->getRepository()->find($selectParams);
 
         $arr = array();
