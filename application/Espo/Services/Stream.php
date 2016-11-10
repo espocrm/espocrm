@@ -66,22 +66,27 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getServiceFactory()
     {
-        return $this->injections['container']->get('serviceFactory');
+        return $this->getInjection('container')->get('serviceFactory');
     }
 
     protected function getAcl()
     {
-        return $this->injections['acl'];
+        return $this->getInjection('acl');
     }
 
     protected function getAclManager()
     {
-        return $this->injections['aclManager'];
+        return $this->getInjection('aclManager');
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->getInjection('metadata');
+    }
+
+    protected function getFieldManager()
+    {
+        return $this->getInjection('container')->get('fieldManager');
     }
 
     protected function getNotificationService()
@@ -937,7 +942,7 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    protected function getAuditedFields(Entity $entity)
+    protected function getAuditedFieldsData(Entity $entity)
     {
         $entityType = $entity->getEntityType();
 
@@ -951,23 +956,10 @@ class Stream extends \Espo\Core\Services\Base
                     if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
                         continue;
                     }
-
-                    $attributes = [];
-                    $fieldsDefs = $this->getMetadata()->get('fields.' . $d['type']);
-
-                    if (empty($fieldsDefs['actualFields'])) {
-                        $attributes[] = $field;
-                    } else {
-                        foreach ($fieldsDefs['actualFields'] as $part) {
-                            if (!empty($fieldsDefs['naming']) && $fieldsDefs['naming'] == 'prefix') {
-                                $attributes[] = $part . ucfirst($field);
-                            } else {
-                                $attributes[] = $field . ucfirst($part);
-                            }
-                        }
-                    }
-
-                    $auditedFields[$field] = $attributes;
+                    $auditedFields[$field] = array();
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['fieldType'] = $d['type'];
                 }
             }
             $this->auditedFieldsCache[$entityType] = $auditedFields;
@@ -978,37 +970,52 @@ class Stream extends \Espo\Core\Services\Base
 
     public function handleAudited($entity)
     {
-        $auditedFields = $this->getAuditedFields($entity);
+        $auditedFields = $this->getAuditedFieldsData($entity);
 
-        $updatedFields = array();
+        $updatedFieldList = [];
         $was = array();
         $became = array();
 
-        foreach ($auditedFields as $field => $attrs) {
+        foreach ($auditedFields as $field => $item) {
             $updated = false;
-            foreach ($attrs as $attr) {
-                if ($entity->get($attr) != $entity->getFetched($attr)) {
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->get($attribute) !== $entity->getFetched($attribute)) {
                     $updated = true;
                 }
             }
             if ($updated) {
-                $updatedFields[] = $field;
-                foreach ($attrs as $attr) {
-                    $was[$attr] = $entity->getFetched($attr);
-                    $became[$attr] = $entity->get($attr);
+                $updatedFieldList[] = $field;
+                foreach ($item['actualList'] as $attribute) {
+                    $was[$attribute] = $entity->getFetched($attribute);
+                    $became[$attribute] = $entity->get($attribute);
+                }
+                foreach ($item['notActualList'] as $attribute) {
+                    $was[$attribute] = $entity->getFetched($attribute);
+                    $became[$attribute] = $entity->get($attribute);
+                }
+
+                if ($item['fieldType'] === 'linkParent') {
+                    $wasParentType = $was[$field . 'Type'];
+                    $wasParentId = $was[$field . 'Id'];
+                    if ($wasParentType && $wasParentId) {
+                        $wasParent = $this->getEntityManager()->getEntity($wasParentType, $wasParentId);
+                        if ($wasParent) {
+                            $was[$field . 'Name'] = $wasParent->get('name');
+                        }
+                    }
                 }
             }
         }
 
-        if (!empty($updatedFields)) {
+        if (!empty($updatedFieldList)) {
             $note = $this->getEntityManager()->getEntity('Note');
 
             $note->set('type', 'Update');
             $note->set('parentId', $entity->id);
-            $note->set('parentType', $entity->getEntityName());
+            $note->set('parentType', $entity->getEntityType());
 
             $note->set('data', array(
-                'fields' => $updatedFields,
+                'fields' => $updatedFieldList,
                 'attributes' => array(
                     'was' => $was,
                     'became' => $became,
