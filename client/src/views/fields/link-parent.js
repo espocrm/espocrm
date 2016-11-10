@@ -62,7 +62,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 nameName: this.nameName,
                 typeName: this.typeName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.get(this.nameName),
+                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
                 typeValue: this.model.get(this.typeName),
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,

@@ -61,7 +61,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.get(this.nameName),
+                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
                 foreignScope: this.foreignScope
             }, Dep.prototype.data.call(this));
         },
