@@ -76,6 +76,7 @@
                 <li>php-semver by Lars Vierbergen</li>
                 <li>TCPDF</li>
                 <li>Lightncandy by Zordius</li>
+                <li>php-mime-mail-parser by Vincent Dauce</li>
             </ul>
         </section>
     </div>
