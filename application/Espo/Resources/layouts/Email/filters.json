@@ -12,6 +12,7 @@
     "sentBy",
     "users",
     "createdAt",
+    "hasAttachment",
     "inboundEmails",
     "emailAccounts"
 ]

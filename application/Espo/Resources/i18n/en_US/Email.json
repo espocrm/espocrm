@@ -33,7 +33,8 @@
         "sentBy": "Sent by (User)",
         "folder": "Folder",
         "inboundEmails": "Group Accounts",
-        "emailAccounts": "Personal Accounts"
+        "emailAccounts": "Personal Accounts",
+        "hasAttachment": "Has Attachment"
     },
     "links": {
         "replied": "Replied",
