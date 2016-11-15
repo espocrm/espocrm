@@ -299,25 +299,34 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        export: function () {
-            var data = {};
-            if (this.allResultIsChecked) {
-            	data.where = this.collection.getWhere();
-                data.selectData = this.collection.data || {};
-            	data.byWhere = true;
-            } else {
-            	data.ids = this.checkedList;
+        export: function (data, url, fieldList) {
+            if (!data) {
+                data = {};
+                if (this.allResultIsChecked) {
+                    data.where = this.collection.getWhere();
+                    data.selectData = this.collection.data || {};
+                    data.byWhere = true;
+                } else {
+                    data.ids = this.checkedList;
+                }
             }
 
-            this.createView('dialogExport', 'views/export/modals/export', {
+            var url = url || this.scope + '/action/export';
+
+            var o = {
                 scope: this.scope
-            }, function (view) {
+            };
+            if (fieldList) {
+                o.fieldList = fieldList;
+            }
+
+            this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
                 view.render();
                 this.listenToOnce(view, 'proceed', function (dialogData) {
                     if (dialogData.useCustomFieldList) {
                         data.attributeList = dialogData.attributeList;
                     }
-                    this.ajaxPostRequest(this.scope + '/action/export', data).then(function (data) {
+                    this.ajaxPostRequest(url, data).then(function (data) {
                         if ('id' in data) {
                             window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                         }
