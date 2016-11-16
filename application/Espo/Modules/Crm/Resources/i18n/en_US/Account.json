@@ -65,14 +65,17 @@
             "Marketing": "Marketing",
             "Publishing": "Publishing",
             "Real Estate": "Real Estate",
+            "Retail": "Retail",
             "Service": "Service",
+            "Support": "Support",
             "Sports": "Sports",
             "Software": "Software",
             "Technology": "Technology",
             "Telecommunications": "Telecommunications",
             "Television": "Television",
             "Transportation": "Transportation",
-            "Venture Capital": "Venture Capital"
+            "Venture Capital": "Venture Capital",
+            "Wholesale": "Wholesale"
         }
     },
     "labels": {
