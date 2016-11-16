@@ -96,6 +96,11 @@
             "entity": "Lead",
             "foreign": "documents"
         },
+        "contacts": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "documents"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

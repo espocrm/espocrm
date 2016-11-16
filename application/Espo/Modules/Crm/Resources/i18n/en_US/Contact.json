@@ -28,7 +28,8 @@
         "accounts": "Accounts",
         "casesPrimary": "Cases (Primary)",
         "portalUser": "Portal User",
-        "originalLead": "Original Lead"
+        "originalLead": "Original Lead",
+        "documents": "Documents"
     },
     "labels": {
         "Create Contact": "Create Contact"
