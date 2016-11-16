@@ -51,14 +51,17 @@
                 "Marketing",
                 "Publishing",
                 "Real Estate",
+                "Retail",
                 "Service",
                 "Sports",
                 "Software",
+                "Support",
                 "Technology",
                 "Telecommunications",
                 "Television",
                 "Transportation",
-                "Venture Capital"
+                "Venture Capital",
+                "Wholesale"
             ],
             "default": "",
             "isSorted": true

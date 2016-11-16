@@ -39,6 +39,13 @@
             "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"],
             "default": ""
         },
+        "industry": {
+            "type": "enum",
+            "view": "crm:views/lead/fields/industry",
+            "customizationOptionsDisabled": true,
+            "default": "",
+            "isSorted": true
+        },
         "opportunityAmount": {
             "type": "currency",
             "audited": true

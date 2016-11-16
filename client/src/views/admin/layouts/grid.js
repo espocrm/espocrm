@@ -225,9 +225,13 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                         }
                     }
 
-                    if ($(this).data('full-width')) {
-                        $(ui.draggable).data('full-width', true).attr('data-full-width', true);
-                    }
+                    var fullWidth = $(this).data('fullWidth');
+
+                    $(this).data('fullWidth', $(ui.draggable).data('fullWidth'));
+                    $(ui.draggable).data('fullWidth', fullWidth);
+
+                    $(this).attr('data-full-width', $(ui.draggable).attr('data-full-width'));
+                    $(ui.draggable).attr('data-full-width', fullWidth);
 
                     ui.draggable.css({
                         top: 0,
