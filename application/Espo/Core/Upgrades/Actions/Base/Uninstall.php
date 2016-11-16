@@ -179,13 +179,15 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $this->data['restoreFileList'];
     }
 
-    protected function getDeleteFileList()
+    protected function getDeleteList($type = 'delete')
     {
-        $packageFileList = $this->getRestoreFileList();
-        $backupFileList = $this->getCopyFileList();
+        if ($type == 'delete') {
+            $packageFileList = $this->getRestoreFileList();
+            $backupFileList = $this->getCopyFileList();
 
-        $deleteFileList = array_diff($packageFileList, $backupFileList);
+            return array_diff($packageFileList, $backupFileList);
+        }
 
-        return $deleteFileList;
+        return array();
     }
 }
