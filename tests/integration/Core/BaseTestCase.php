@@ -101,6 +101,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->getApplication()->getContainer();
     }
 
+    protected function normalizePath($path)
+    {
+        return $this->espoTester->normalizePath($path);
+    }
+
     protected function sendRequest($method, $action, $data = null)
     {
         return $this->espoTester->sendRequest($method, $action, $data);

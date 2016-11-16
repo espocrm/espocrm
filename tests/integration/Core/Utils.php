@@ -46,7 +46,7 @@ class Utils
         while ($folderName = $buildDir->read()) {
             if ($folderName === '.'|| $folderName === '..' || empty($folderName)) continue;
 
-            $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)[0-9]+)?)?$/';
+            $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|beta\.|pre|rc)[0-9]+)?)?$/';
 
             if (preg_match($pattern, $folderName)) {
                 $archives[] = $folderName;

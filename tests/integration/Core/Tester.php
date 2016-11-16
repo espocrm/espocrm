@@ -75,6 +75,8 @@ class Tester
         $namespaceToRemove = 'tests\\integration\\Espo';
         $classPath = preg_replace('/^'.preg_quote($namespaceToRemove).'\\\\(.+)Test$/', '${1}', $params['className']);
 
+        $params['testDataPath'] = realpath($this->testDataPath);
+
         if (isset($params['dataFile'])) {
             $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
             if (!file_exists($params['dataFile'])) {
@@ -177,15 +179,27 @@ class Tester
         $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
         $this->params['siteUrl'] = $configData['siteUrl'];
 
+        if (!file_exists($this->installPath)) {
+            $fileManager->mkdir($this->installPath);
+        }
+
+        if (!is_writable($this->installPath)) {
+            die("Permission denied for directory [".$this->installPath."].\n");
+        }
+
         //remove and copy Espo files
         Utils::dropTables($configData['database']);
         $fileManager->removeInDir($this->installPath);
-        $fileManager->copy($latestEspo, $this->installPath, true);
+        $tt = $fileManager->copy($latestEspo, $this->installPath, true);
 
         Utils::fixUndefinedVariables();
 
         chdir($this->installPath);
         set_include_path($this->installPath);
+
+        if (!file_exists('bootstrap.php')) {
+            die("Permission denied to copy espo files.\n");
+        }
 
         require_once('install/core/Installer.php');
 
@@ -303,5 +317,10 @@ class Tester
         $entityManager->saveEntity($role);
 
         return $role;
+    }
+
+    public function normalizePath($path)
+    {
+        return $this->getParam('testDataPath') . '/' . $path;
     }
 }
