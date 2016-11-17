@@ -26,8 +26,10 @@
             "options": [
                 "",
                 "Advertising",
+                "Aerospace",
                 "Agriculture",
                 "Apparel & Accessories",
+                "Architecture",
                 "Automotive",
                 "Banking",
                 "Biotechnology",
@@ -36,6 +38,8 @@
                 "Construction",
                 "Computer",
                 "Culture",
+                "Creative",
+                "Defense",
                 "Education",
                 "Electronics",
                 "Energy",
@@ -47,10 +51,10 @@
                 "Hospitality",
                 "Insurance",
                 "Legal",
-                "Leisure",
                 "Manufacturing",
                 "Mass Media",
                 "Marketing",
+                "Music",
                 "Publishing",
                 "Real Estate",
                 "Retail",
@@ -63,7 +67,8 @@
                 "Television",
                 "Transportation",
                 "Venture Capital",
-                "Wholesale"
+                "Wholesale",
+                "Water"
             ],
             "default": "",
             "isSorted": true
