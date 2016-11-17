@@ -77,7 +77,15 @@ class Avatar extends Image
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
-            throw new NotFound();
+            header('Content-Type: image/png');
+            $img  = imagecreatetruecolor(14, 14);
+            imagesavealpha($img, true);
+            $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
+            imagefill($img, 0, 0, $color);
+            imagepng($img);
+            imagecolordeallocate($img, $color);
+            imagedestroy($img);
+            exit;
         }
 
         if (isset($_GET['attachmentId'])) {
