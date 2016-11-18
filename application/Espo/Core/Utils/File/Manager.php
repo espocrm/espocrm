@@ -625,11 +625,18 @@ class Manager
             $items = (array) $items;
         }
 
+        $removeList = array();
         $permissionDeniedList = array();
         foreach ($items as $item) {
             if (isset($dirPath)) {
                 $item = Utils\Util::concatPath($dirPath, $item);
             }
+
+            if (!file_exists($item)) {
+                continue;
+            }
+
+            $removeList[] = $item;
 
             if (!is_writable($item)) {
                 $permissionDeniedList[] = $item;
@@ -644,11 +651,7 @@ class Manager
         }
 
         $result = true;
-        foreach ($items as $item) {
-            if (isset($dirPath)) {
-                $item = Utils\Util::concatPath($dirPath, $item);
-            }
-
+        foreach ($removeList as $item) {
             if (is_dir($item)) {
                 $result &= $this->removeInDir($item, true);
             } else {
