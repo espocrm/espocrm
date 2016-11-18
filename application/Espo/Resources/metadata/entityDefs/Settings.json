@@ -306,7 +306,8 @@
         },
         "b2cMode": {
             "type": "bool",
-            "default": false
+            "default": false,
+            "tooltip": true
         },
         "avatarsDisabled": {
             "type": "bool",

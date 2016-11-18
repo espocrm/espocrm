@@ -84,7 +84,8 @@
         "mentionEmailNotifications": "Send email notifications about mentions in posts",
         "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
         "activitiesEntityList": "Activities Entity List",
-        "historyEntityList": "History Entity List"
+        "historyEntityList": "History Entity List",
+        "b2cMode": "B2C Mode"
     },
     "options": {
         "weekStart": {
@@ -121,7 +122,8 @@
         "ldapAccountDomainName": "The domain which is used for authorization to LDAP server.",
         "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
         "ldapUserTeams": "Teams for created user. For more, see user profile.",
-        "ldapUserDefaultTeam": "Default team for created user. For more, see user profile."
+        "ldapUserDefaultTeam": "Default team for created user. For more, see user profile.",
+        "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C."
     },
     "labels": {
         "System": "System",
