@@ -48,7 +48,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsDefault: 4,
 
-        searchTypeList: ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: ['contains', 'startsWith', 'equals', 'isEmpty', 'isNotEmpty'],
 
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
