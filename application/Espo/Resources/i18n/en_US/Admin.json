@@ -176,7 +176,7 @@
         "emailTemplates": "Templates for outbound emails.",
         "import": "Import data from CSV file.",
         "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
-        "entityManager": "Create custom entities, edit existing ones. Manage field and relationships.",
+        "entityManager": "Create custom entities, edit existing ones. Manage fields and relationships.",
         "userInterface": "Configure UI.",
         "authTokens": "Active auth sessions. IP address and last access date.",
         "authentication": "Authentication settings.",

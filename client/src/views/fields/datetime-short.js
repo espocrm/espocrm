@@ -30,7 +30,19 @@ Espo.define('views/fields/datetime-short', 'views/fields/datetime', function (De
 
     return Dep.extend({
 
-        getValueForDisplay: function () {
+        listTemplate: 'fields/datetime-short/list',
+
+        detailTemplate: 'fields/datetime-short/detail',
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            if (this.mode == 'list' || this.mode == 'detail') {
+                data.fullDateValue = Dep.prototype.getDateStringValue.call(this);
+            }
+            return data;
+        },
+
+        getDateStringValue: function () {
             if (this.mode == 'list' || this.mode == 'detail') {
                 var value = this.model.get(this.name)
                 if (value) {
@@ -57,7 +69,7 @@ Espo.define('views/fields/datetime-short', 'views/fields/datetime', function (De
                 }
             }
 
-            return Dep.prototype.getValueForDisplay.call(this);
+            return Dep.prototype.getDateStringValue.call(this);
         }
 
     });

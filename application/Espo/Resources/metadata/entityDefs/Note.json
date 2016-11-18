@@ -1,7 +1,8 @@
 {
     "fields": {
         "post": {
-            "type": "text"
+            "type": "text",
+            "rows": 8
         },
         "data": {
             "type": "jsonObject",

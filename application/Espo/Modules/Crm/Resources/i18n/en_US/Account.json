@@ -39,9 +39,11 @@
             "Reseller": "Reseller"
         },
         "industry": {
+            "Aerospace": "Aerospace",
             "Agriculture": "Agriculture",
             "Advertising": "Advertising",
             "Apparel & Accessories": "Apparel & Accessories",
+            "Architecture": "Architecture",
             "Automotive": "Automotive",
             "Banking": "Banking",
             "Biotechnology": "Biotechnology",
@@ -49,6 +51,9 @@
             "Chemical": "Chemical",
             "Construction": "Construction",
             "Computer": "Computer",
+            "Defense": "Defense",
+            "Creative": "Creative",
+            "Culture": "Culture",
             "Education": "Education",
             "Electronics": "Electronics",
             "Energy": "Energy",
@@ -62,6 +67,7 @@
             "Legal": "Legal",
             "Manufacturing": "Manufacturing",
             "Mass Media": "Mass Media",
+            "Music": "Music",
             "Marketing": "Marketing",
             "Publishing": "Publishing",
             "Real Estate": "Real Estate",
@@ -75,7 +81,8 @@
             "Television": "Television",
             "Transportation": "Transportation",
             "Venture Capital": "Venture Capital",
-            "Wholesale": "Wholesale"
+            "Wholesale": "Wholesale",
+            "Water": "Water"
         }
     },
     "labels": {
