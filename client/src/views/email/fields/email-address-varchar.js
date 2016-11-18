@@ -33,6 +33,8 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
         editTemplate: 'email/fields/email-address-varchar/edit',
 
+        emailAddressRegExp: /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
+
         events: {
             'click a[data-action="clearAddress"]': function (e) {
                 var address = $(e.currentTarget).data('address').toString();
@@ -42,9 +44,12 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 if (e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 13) {
                     var $input = $(e.currentTarget);
                     var address = $input.val().replace(',', '').replace(';', '').trim();
+
                     if (~address.indexOf('@')) {
-                        this.addAddress(address, '');
-                        $input.val('');
+                        if (this.checkEmailAddressInString(address)) {
+                            this.addAddress(address, '');
+                            $input.val('');
+                        }
                     }
                 }
             },
@@ -52,8 +57,10 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 var $input = $(e.currentTarget);
                 var address = $input.val().replace(',','').replace(';','').trim();
                 if (~address.indexOf('@')) {
-                    this.addAddress(address, '');
-                    $input.val('');
+                    if (this.checkEmailAddressInString(address)) {
+                        this.addAddress(address, '');
+                        $input.val('');
+                    }
                 }
             },
             'click [data-action="createContact"]': function (e) {
@@ -153,6 +160,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             }
         },
 
+        checkEmailAddressInString: function (string) {
+            var arr = string.match(this.emailAddressRegExp);
+            if (!arr || !arr.length) return;
+
+            return true;
+        },
+
         addAddress: function (address, name, type, id) {
             if (this.justAddedAddress) {
                 this.deleteAddress(this.justAddedAddress);
@@ -161,6 +175,13 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             setTimeout(function () {
                 this.justAddedAddress = null;
             }.bind(this), 100);
+
+            address = address.trim();
+
+            var arr = address.match(this.emailAddressRegExp);
+            if (!arr || !arr.length) return;
+
+            address = arr[0];
 
             if (!~this.addressList.indexOf(address)) {
                 this.addressList.push(address);
