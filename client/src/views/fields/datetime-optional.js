@@ -55,12 +55,12 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             return data;
         },
 
-        getValueForDisplay: function () {
+        getDateStringValue: function () {
             if (this.isDate()) {
                 var dateValue = this.model.get(this.nameDate);
                 return this.stringifyDateValue(dateValue);
             }
-            return Dep.prototype.getValueForDisplay.call(this);
+            return Dep.prototype.getDateStringValue.call(this);
         },
 
         setDefaultTime: function () {

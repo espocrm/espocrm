@@ -32,6 +32,10 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         type: 'date',
 
+        listTemplate: 'fields/date/detail',
+
+        detailTemplate: 'fields/date/detail',
+
         editTemplate: 'fields/date/edit',
 
         searchTemplate: 'fields/date/search',
@@ -50,6 +54,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 this.searchData.dateValue = this.getDateTime().toDisplayDate(this.searchParams.dateValue);
                 this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
             }
+            data.dateValue = this.getDateStringValue();
             return data;
         },
 
@@ -106,7 +111,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             return this.getDateTime().toDisplayDate(value);
         },
 
-        getValueForDisplay: function () {
+        getDateStringValue: function () {
             var value = this.model.get(this.name);
             return this.stringifyDateValue(value);
         },
