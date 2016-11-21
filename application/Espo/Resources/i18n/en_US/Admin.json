@@ -64,7 +64,9 @@
         "massUpdate": "Mass Update",
         "relationships": "Relationship Panels",
         "sidePanelsDetail": "Side Panels (Detail)",
-        "sidePanelsEdit": "Side Panels (Edit)"
+        "sidePanelsEdit": "Side Panels (Edit)",
+        "sidePanelsDetailSmall": "Side Panels (Detail Small)",
+        "sidePanelsEditSmall": "Side Panels (Edit Small)"
     },
     "fieldTypes": {
         "address": "Address",

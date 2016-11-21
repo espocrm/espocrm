@@ -896,6 +896,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var panel = {};
                 panel.label = simplifiedLayout[p].label || null;
                 panel.name = simplifiedLayout[p].name || null;
+                panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];

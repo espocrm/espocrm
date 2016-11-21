@@ -473,10 +473,58 @@ select[multiple].input-sm {
     margin: -@panel-padding;
 }
 
+.panel > .panel-body > .list-container .list-group-item {
+    border-width: 0;
+}
+
+.record {
+    .panel-warning {
+        > .panel-heading {
+            background-color: @state-warning-border;
+            .btn-warning {
+                color: @panel-warning-text;
+                background-color: @state-warning-border;
+                border-color: @state-warning-border;
+            }
+        }
+    }
+    .panel-danger {
+        > .panel-heading {
+            background-color: @state-danger-border;
+            .btn-danger {
+                color: @panel-danger-text;
+                background-color: @state-danger-border;
+                border-color: @state-danger-border;
+            }
+        }
+    }
+    .panel-info {
+        border-color: @state-info-bg;
+        > .panel-heading {
+            color: @panel-info-text;
+            background-color: @state-info-bg;
+            .btn-info {
+                color: @panel-info-text;
+                background-color: @state-info-bg;
+                border-color: @state-info-bg;
+            }
+        }
+    }
+    .panel-success {
+        > .panel-heading {
+            background-color: @state-success-border;
+            .btn-success {
+                color: @panel-success-text;
+                background-color: @state-success-border;
+                border-color: @state-success-border;
+            }
+        }
+    }
+}
+
 table.no-margin {
     margin-bottom: 0;
 }
-
 
 .list-expanded > .show-more {
     padding: 0px;
@@ -840,6 +888,10 @@ body > footer > p a:visited {
 .bottom > .panel.sticked,
 .side > .panel.sticked {
     margin-top: -1 * @line-height-computed - 2;
+}
+
+.panel.sticked-2 {
+    margin-top: -1 * @line-height-computed !important;
 }
 
 .stream-head-container {

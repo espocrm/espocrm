@@ -34,7 +34,19 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
         scopeList: null,
 
-        typeList: ['list', 'detail', 'listSmall', 'detailSmall', 'filters', 'massUpdate', 'relationships', 'sidePanelsDetail', 'sidePanelsEdit'],
+        typeList: [
+            'list',
+            'detail',
+            'listSmall',
+            'detailSmall',
+            'filters',
+            'massUpdate',
+            'relationships',
+            'sidePanelsDetail',
+            'sidePanelsEdit',
+            'sidePanelsDetailSmall',
+            'sidePanelsEditSmall'
+        ],
 
         scope: null,
 

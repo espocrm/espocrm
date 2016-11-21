@@ -27,7 +27,7 @@
  ************************************************************************/
 
 
-Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], function (Dep, Model) {
+Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -50,18 +50,14 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
             model.name = 'LayoutManager';
             model.set(this.options.attributes || {});
 
-            this.header = this.translate(this.options.name, 'fields', this.options.scope);
+            var attributeList = this.options.attributeList;
 
-            var attributeList = Espo.Utils.clone(this.options.attributeList || []);
-            var index = attributeList.indexOf('name');
-            if (~index) {
-                attributeList.splice(index, 1);
-            }
+            var attributeDefs = this.options.attributeDefs; 
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
                 el: this.options.el + ' .edit-container',
                 attributeList: attributeList,
-                attributeDefs: this.options.attributeDefs,
+                attributeDefs: attributeDefs,
                 model: model
             });
         },

@@ -128,31 +128,34 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
-                var el = $(e.target).closest('header').children('label');
-                var value = el.text();
+                var $header = $(e.target).closest('header');
+                var $label = $header.children('label');
+                var panelName = $label.text();
 
-                var dialog = new Espo.Ui.Dialog({
-                    modal: true,
-                    body: '<label>' + this.getLanguage().translate('Panel Name', 'labels', 'Admin') + '</label><input type="text" name="label" class="form-control" value="'+value+'">',
-                    buttons: [
-                        {
-                            name: 'ok',
-                            text: '&nbsp; ' + this.getLanguage().translate('Ok') + ' &nbsp;',
-                            onClick: function (dialog) {
-                                el.text(dialog.$el.find('input[name="label"]').val());
-                                dialog.close();
-                            }.bind(this),
-                        },
-                        {
-                            name: 'cancel',
-                            text: this.getLanguage().translate('Cancel'),
-                            onClick: function (dialog) {
-                                dialog.close();
-                            }
-                        }
-                    ]
-                });
-                dialog.show();
+                var style = $header.data('style');
+
+                var attributes = {
+                    panelName: panelName
+                };
+
+                var attributeList = ['panelName'];
+                var attributeDefs = {
+                    panelName: {
+                        type: 'varchar',
+                    }
+                };
+
+                this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
+                    attributeList: attributeList,
+                    attributeDefs: attributeDefs,
+                    attributes: attributes
+                }, function (view) {
+                    view.render();
+                    this.listenTo(view, 'after:save', function (attributes) {
+                        $label.text(attributes.panelName);
+                        view.close();
+                    }, this);
+                }, this);
             }
         }, Dep.prototype.events),
 
@@ -165,6 +168,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }
 
             data = data || {label: this.translate('New panel', 'labels', 'Admin'), rows: [[]]};
+
+            data.label = data.label || '';
+            data.style = data.style || null;
 
             data.rows.forEach(function (row) {
                 var rest = this.columnCount - row.length;
@@ -260,6 +266,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             $("#layout ul.panels > li").each(function () {
                 var o = {
                     label: $(this).find('header label').text(),
+                    style: $(this).find('header').data('style') || 'default',
                     rows: []
                 };
                 $(this).find('ul.rows > li').each(function (i, li) {
