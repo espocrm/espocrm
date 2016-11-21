@@ -31,5 +31,10 @@ namespace Espo\Core\Templates\Services;
 
 class Company extends \Espo\Services\Record
 {
-
+    protected function getDuplicateWhereClause(Entity $entity, $data = array())
+    {
+        return array(
+            'name' => $entity->get('name')
+        );
+    }
 }
