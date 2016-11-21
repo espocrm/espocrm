@@ -28,6 +28,9 @@
  ************************************************************************/
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config;
+
 class Installer
 {
 	protected $app = null;
@@ -58,6 +61,8 @@ class Installer
 
 	public function __construct()
 	{
+		$this->initialize();
+
 		$this->app = new \Espo\Core\Application();
 
 		$user = $this->getEntityManager()->getEntity('User');
@@ -74,6 +79,21 @@ class Installer
 			$configData = $this->getConfig()->getDefaults();
 			$this->getConfig()->set($configData);
 			$this->getConfig()->save();
+		}
+	}
+
+	protected function initialize()
+	{
+		$fileManager = new FileManager();
+		$config = new Config($fileManager);
+		$configPath = $config->getConfigPath();
+
+		if (!file_exists($configPath)) {
+			$fileManager->putPhpContents($configPath, array());
+
+			$configData = $config->getDefaults();
+			$config->set($configData);
+			$config->save();
 		}
 	}
 
