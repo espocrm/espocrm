@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Templates\Services;
 
+use \Espo\ORM\Entity;
 
 class Person extends \Espo\Services\Record
 {
