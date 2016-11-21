@@ -269,20 +269,24 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
 
             this.setupFinal();
+        },
+
+        setupFinal: function () {
+            this.attributes = this.model.getClonedAttributes();
 
             this.listenTo(this.model, 'change', function () {
                 if (this.mode == 'edit') {
                     this.setIsChanged();
                 }
             }, this);
-        },
-
-        setupFinal: function () {
-            this.attributes = this.model.getClonedAttributes();
 
             if (this.options.attributes) {
                 this.model.set(this.options.attributes);
             }
+
+            this.listenTo(this.model, 'sync', function () {
+                this.attributes = this.model.getClonedAttributes();
+            }, this);
 
             this.initDependancy();
             this.initDynamicLogic();
@@ -435,6 +439,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     }
                     this.trigger('after:save');
                     model.trigger('after:save');
+
                     if (!callback) {
                         this.exit('save');
                     } else {
