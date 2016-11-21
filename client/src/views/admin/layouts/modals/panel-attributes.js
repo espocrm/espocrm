@@ -52,7 +52,7 @@ Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'mode
 
             var attributeList = this.options.attributeList;
 
-            var attributeDefs = this.options.attributeDefs; 
+            var attributeDefs = this.options.attributeDefs;
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
                 el: this.options.el + ' .edit-container',
