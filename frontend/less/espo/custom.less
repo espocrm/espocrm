@@ -882,16 +882,30 @@ body > footer > p a:visited {
 }
 
 .record .middle > .panel {
-    margin-top: -1 * @line-height-computed - 2;
+    margin-top: -1 * @line-height-computed;
+    border-top-width: 0;
+    .panel-heading {
+        .btn-group {
+            top: -6px;
+            .btn {
+                border-top-width: 0;
+            }
+        }
+    }
 }
 
-.bottom > .panel.sticked,
-.side > .panel.sticked {
-    margin-top: -1 * @line-height-computed - 2;
-}
-
-.panel.sticked-2 {
-    margin-top: -1 * @line-height-computed !important;
+.panel.sticked,
+.panel.sticked {
+    margin-top: -1 * @line-height-computed;
+    border-top-width: 0;
+    .panel-heading {
+        .btn-group {
+            top: -6px;
+            .btn {
+                border-top-width: 0;
+            }
+        }
+    }
 }
 
 .stream-head-container {

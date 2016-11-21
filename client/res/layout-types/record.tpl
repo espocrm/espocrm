@@ -1,6 +1,5 @@
-<% var previousStyle = null;%>
 <% _.each(layout, function (panel, columnNumber) { %>
-    <div class="panel panel-<%= panel.style %><% if (previousStyle && previousStyle !== panel.style) {print(' sticked-2');} %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"<% if (panel.name) print(' data-name="'+panel.name+'"') %>>
+    <div class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"<% if (panel.name) print(' data-name="'+panel.name+'"') %>>
         {{#if "<%= panel.label %>"}}
         <div class="panel-heading"><h4 class="panel-title"><%= "{{translate \"" + panel.label + "\" scope=\""+model.name+"\"}}" %></h4></div>
         {{/if}}
@@ -37,5 +36,4 @@
         <% }); %>
         </div>
     </div>
-<% previousStyle = panel.style; %>
 <% }); %>

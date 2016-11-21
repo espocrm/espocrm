@@ -135,13 +135,19 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var style = $header.data('style');
 
                 var attributes = {
-                    panelName: panelName
+                    panelName: panelName,
+                    style: style
                 };
 
-                var attributeList = ['panelName'];
+                var attributeList = ['panelName', 'style'];
                 var attributeDefs = {
                     panelName: {
                         type: 'varchar',
+                    },
+                    style: {
+                        type: 'enum',
+                        options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                        translation: 'LayoutManager.options.style'
                     }
                 };
 
@@ -153,6 +159,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     view.render();
                     this.listenTo(view, 'after:save', function (attributes) {
                         $label.text(attributes.panelName);
+                        $header.data('style', attributes.style);
                         view.close();
                     }, this);
                 }, this);
