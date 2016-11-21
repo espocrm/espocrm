@@ -121,19 +121,6 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             }
         },
 
-        /*fetchSearch: function () {
-            var value = this.$element.val();
-            if (value) {
-                var data = {
-                    type: 'like',
-                    value: '%' + value + '%',
-                    valueText: value
-                };
-                return data;
-            }
-            return false;
-        },*/
-
         fetchSearch: function () {
 
             var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
