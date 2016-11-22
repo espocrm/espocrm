@@ -50,7 +50,11 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
             model.name = 'LayoutManager';
             model.set(this.options.attributes || {});
 
-            this.header = this.translate(this.options.name, 'fields', this.options.scope);
+            if (this.options.languageCategory) {
+                this.header = this.translate(this.options.name, this.options.languageCategory || 'fields', this.options.scope);
+            } else {
+                this.header = false;
+            }
 
             var attributeList = Espo.Utils.clone(this.options.attributeList || []);
             var index = attributeList.indexOf('name');

@@ -7,8 +7,8 @@
 }
 
 .panel-body {
-  padding: 14px;
-  .clearfix();
+    padding: @panel-padding;
+    .clearfix();
 }
 
 blockquote {
@@ -543,7 +543,7 @@ table.no-margin {
 
 .show-more > .btn {
     border-radius: 0;
-
+    border-width: 0;
     border-color: #e0e0e0;
 }
 
@@ -879,6 +879,7 @@ body > footer > p a:visited {
 
 .record .middle > .panel:first-child {
     margin-top: 0;
+    border-top-width: 2px;
 }
 
 .record .middle > .panel {

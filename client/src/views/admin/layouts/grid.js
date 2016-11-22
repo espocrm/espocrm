@@ -32,7 +32,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         template: 'admin/layouts/grid',
 
-        dataAttributes: null,
+        dataAttributeList: null,
 
         panels: null,
 
@@ -282,7 +282,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                         var cell = false;
                         if (!$(li).hasClass('empty')) {
                             cell = {};
-                            self.dataAttributes.forEach(function (attr) {
+                            self.dataAttributeList.forEach(function (attr) {
                                 var value = $(li).data(Espo.Utils.toDom(attr)) || null;
                                 if (value) {
                                     cell[attr] = value;

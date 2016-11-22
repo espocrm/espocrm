@@ -265,7 +265,7 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 if (typeof item == 'string' || item instanceof String) {
                     p = {name: item};
                 } else {
-                    p = item || {};
+                    p = Espo.Utils.clone(item || {});
                 }
                 if (!p.name) {
                     return;
@@ -286,12 +286,17 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     return;
                 }
 
-                p.view = 'views/record/panels/relationship';
-
                 var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
                 defs = Espo.Utils.clone(defs);
 
-                p = _.extend(p, defs);
+                for (var i in defs) {
+                    if (i in p) continue;
+                    p[i] = defs[i];
+                }
+
+                if (!p.view) {
+                    p.view = 'views/record/panels/relationship';
+                }
 
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');

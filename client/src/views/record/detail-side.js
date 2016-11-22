@@ -144,20 +144,24 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.mode), function (layoutData) {
                 if (layoutData) {
-                    this.filterPanels(layoutData);
+                    this.alterPanels(layoutData);
                 }
                 this.setupPanelViews();
                 this.wait(false);
             }.bind(this));
         },
 
-        filterPanels: function (layoutData) {
+        alterPanels: function (layoutData) {
             layoutData = layoutData || {};
 
             var newList = [];
             this.panelList.forEach(function (item) {
-                if (item.name && (layoutData[item.name] || {}).disabled) {
-                    return;
+                if (item.name) {
+                    var itemData = layoutData[item.name] || {};
+                    if (itemData.disabled) return;
+                    for (var i in itemData) {
+                        item[i] = itemData[i];
+                    }
                 }
                 newList.push(item);
             }, this);

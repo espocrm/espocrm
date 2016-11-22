@@ -30,7 +30,7 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
 
     return Dep.extend({
 
-        dataAttributes: ['name'],
+        dataAttributeList: ['name'],
 
         editable: false,
 

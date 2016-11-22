@@ -108,7 +108,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
         fetch: function () {},
 
         setup: function () {
-            this.dataAttributes = _.clone(this.dataAttributes);
+            this.dataAttributeList = _.clone(this.dataAttributeList);
             this.buttonList = _.clone(this.buttonList);
             this.events = _.clone(this.events);
             this.scope = this.options.scope;
@@ -136,12 +136,13 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
 
         openEditDialog: function (attributes) {
             var name = attributes.name;
-            this.createView('editModal', 'Admin.Layouts.Modals.EditAttributes', {
+            this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
                 name: attributes.name,
                 scope: this.scope,
-                attributeList: this.dataAttributes,
+                attributeList: this.dataAttributeList,
                 attributeDefs: this.dataAttributesDefs,
-                attributes: attributes
+                attributes: attributes,
+                languageCategory: this.languageCategory
             }, function (view) {
                 view.render();
                 this.listenToOnce(view, 'after:save', function (attributes) {

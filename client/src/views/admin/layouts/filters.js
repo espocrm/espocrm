@@ -30,7 +30,7 @@ Espo.define('views/admin/layouts/filters', 'views/admin/layouts/rows', function 
 
     return Dep.extend({
 
-        dataAttributes: ['name'],
+        dataAttributeList: ['name'],
 
         editable: false,
 

@@ -30,7 +30,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
     return Dep.extend({
 
-        dataAttributes: ['name', 'width', 'link', 'notSortable', 'align'],
+        dataAttributeList: ['name', 'width', 'link', 'notSortable', 'align'],
 
         dataAttributesDefs: {
             link: {type: 'bool'},
@@ -43,6 +43,8 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
         },
 
         editable: true,
+
+        languageCategory: 'fields',
 
         ignoreList: [],
 
@@ -108,17 +110,6 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
             for (var i in this.rowLayout) {
                 this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
             }
-        },
-
-        parseDataAttributes: function (dialog) {
-            var width = parseFloat(dialog.$el.find("[name='width']").val());
-            if (isNaN(width) || width > 100 || width < 0) {
-                width = '';
-            }
-            return {
-                width: width,
-                link: dialog.$el.find("[name='link']").val()
-            };
         },
 
         checkFieldType: function (type) {

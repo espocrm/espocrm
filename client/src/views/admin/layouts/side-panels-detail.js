@@ -30,12 +30,17 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
     return Dep.extend({
 
-        dataAttributes: ['name'],
+        dataAttributeList: ['name', 'style'],
 
         dataAttributesDefs: {
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            }
         },
 
-        editable: false,
+        editable: true,
 
         ignoreList: [],
 
@@ -64,12 +69,14 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
         readDataFromLayout: function (layout) {
             var panelListAll = [];
             var labels = {};
+            var params = {};
             (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || []).forEach(function (item) {
                 if (!item.name) return;
                 panelListAll.push(item.name);
                 if (item.label) {
                     labels[item.name] = item.label;
                 }
+                params[item.name] = item;
             }, this);
 
             this.disabledFields = [];
@@ -80,7 +87,8 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
             panelListAll.forEach(function (item) {
                 var disabled = false;
-                if ((layout[item] || {}).disabled) {
+                var itemData = layout[item] || {};
+                if (itemData.disabled) {
                     disabled = true;
                 }
                 var labelText;
@@ -96,25 +104,52 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
                         label: labelText
                     });
                 } else {
-                    this.rowLayout.push({
+                    var o = {
                         name: item,
                         label: labelText
-                    });
+                    };
+                    if (o.name in params) {
+                        this.dataAttributeList.forEach(function (attribute) {
+                            if (attribute === 'name') return;
+                            var itemParams = params[o.name] || {};
+                            if (attribute in itemParams) {
+                                o[attribute] = itemParams[attribute];
+                            }
+                        }, this);
+                    }
+                    for (var i in itemData) {
+                        o[i] = itemData[i];
+                    }
+                    this.rowLayout.push(o);
                 }
             }, this);
-
         },
 
 
         fetch: function () {
             var layout = {};
             $("#layout ul.disabled > li").each(function (i, el) {
-                var o = {};
                 var name = $(el).attr('data-name');
                 layout[name] = {
                     disabled: true
                 };
             }.bind(this));
+
+            $("#layout ul.enabled > li").each(function (i, el) {
+                var $el = $(el);
+                var o = {};
+                var name = $el.attr('data-name');
+
+                this.dataAttributeList.forEach(function (attribute) {
+                    if (attribute === 'name') return;
+
+                    var value = $el.data(Espo.Utils.toDom(attribute)) || null;
+                    o[attribute] = value;
+                });
+
+                layout[name] = o;
+            }.bind(this))
+
             return layout;
         },
 
