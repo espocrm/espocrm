@@ -352,6 +352,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null)
+    {
+        parent::beforeRelate($entity, $relationName, $foreign, $data);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRelate', $entity, array( 'relationName' => $relationName, 'foreign' => $foreign, 'data' => $data));
+    }
+
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null)
+    {
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, array( 'relationName' => $relationName, 'foreign' => $foreign, 'data' => $data));
+    }
+
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign)
+    {
+        parent::beforeUnrelate($entity, $relationName, $foreign);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeUnrelate', $entity, array( 'relationName' => $relationName, 'foreign' => $foreign));
+    }
+
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign)
+    {
+        parent::afterUnrelate($entity, $relationName, $foreign);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, array( 'relationName' => $relationName, 'foreign' => $foreign));
+    }
+
     protected function processSpecifiedRelationsSave(Entity $entity)
     {
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];

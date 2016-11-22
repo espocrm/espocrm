@@ -47,6 +47,10 @@ class HookManager
      * @var array
      */
     protected $hookList = array(
+        'beforeRelate',
+        'afterRelate',
+        'beforeUnrelate',
+        'afterUnrelate',
         'beforeSave',
         'afterSave',
         'beforeRemove',
