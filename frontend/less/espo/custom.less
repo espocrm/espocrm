@@ -473,8 +473,11 @@ select[multiple].input-sm {
     margin: -@panel-padding;
 }
 
-.panel > .panel-body > .list-container .list-group-item {
-    border-width: 0;
+.panel > .panel-body > .list-container > .list > .list-group {
+    .list-group-item {
+        border-width: 0;
+        border-bottom-width: 1px;
+    }
 }
 
 .record {
