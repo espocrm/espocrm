@@ -40,32 +40,32 @@ class AuthToken extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function actionUpdate($params, $data)
+    public function actionUpdate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionCreate($params, $data)
+    public function actionCreate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionListLinked($params, $data)
+    public function actionListLinked($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionMassUpdate($params, $data)
+    public function actionMassUpdate($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionCreateLink($params, $data)
+    public function actionCreateLink($params, $data, $request)
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink($params, $data)
+    public function actionRemoveLink($params, $data, $request)
     {
         throw new Forbidden();
     }
