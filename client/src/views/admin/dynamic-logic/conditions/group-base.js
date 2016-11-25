@@ -99,7 +99,15 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
             } else {
                 fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-                viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'view']);
+
+                if (field === 'id') {
+                    fieldType = 'id';
+                }
+
+                if (fieldType) {
+                    viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'view']);
+                }
+
             }
 
             if (!viewName) return;
@@ -170,6 +178,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
         addField: function (field) {
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+            if (!fieldType && field == 'id') {
+                fieldType = 'id';
+            }
             if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) {
                 throw new Error();
             }

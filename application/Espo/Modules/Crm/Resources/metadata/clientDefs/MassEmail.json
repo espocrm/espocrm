@@ -1,54 +1,75 @@
 {
-  "controller": "controllers/record",
-  "acl": "crm:acl/mass-email",
-  "recordViews": {
-    "detail": "crm:views/mass-email/record/detail",
-    "edit": "crm:views/mass-email/record/edit",
-    "editQuick": "crm:views/mass-email/record/edit-small"
-  },
-  "views": {
-    "detail": "crm:views/mass-email/detail"
-  },
-  "defaultSidePanel": {
-    "edit": false,
-    "editSmall": false
-  },
-  "formDependency": {
-    "status": {
-      "map": {
-        "Complete": [
-          {
-            "action": "setReadOnly",
-            "fields": [
-              "status"
+    "controller": "controllers/record",
+    "acl": "crm:acl/mass-email",
+    "recordViews": {
+        "detail": "crm:views/mass-email/record/detail",
+        "edit": "crm:views/mass-email/record/edit",
+        "editQuick": "crm:views/mass-email/record/edit-small"
+    },
+    "views": {
+        "detail": "crm:views/mass-email/detail"
+    },
+    "defaultSidePanel": {
+        "edit": false,
+        "editSmall": false
+    },
+    "dynamicLogic": {
+        "fields": {
+            "status": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "or",
+                                    "value": [
+                                        {
+                                            "type": "equals",
+                                            "attribute": "status",
+                                            "value": "Complete"
+                                        },
+                                        {
+                                            "type": "equals",
+                                            "attribute": "status",
+                                            "value": "In Process"
+                                        },
+                                        {
+                                            "type": "equals",
+                                            "attribute": "status",
+                                            "value": "Failed"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "id"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "options": {
+            "status": [
+                {
+                    "optionList": [
+                        "Draft",
+                        "Pending"
+                    ],
+                    "conditionGroup": [
+                        {
+                            "type": "in",
+                            "attribute": "status",
+                            "value": [
+                                "Draft",
+                                "Pending"
+                            ]
+                        }
+                    ]
+                }
             ]
-          }
-        ],
-        "In Process": [
-          {
-            "action": "setReadOnly",
-            "fields": [
-              "status"
-            ]
-          }
-        ],
-        "Failed": [
-          {
-            "action": "setReadOnly",
-            "fields": [
-              "status"
-            ]
-          }
-        ]
-      },
-      "default": [
-        {
-          "action": "setNotReadOnly",
-          "fields": [
-            "status"
-          ]
         }
-      ]
     }
-  }
 }

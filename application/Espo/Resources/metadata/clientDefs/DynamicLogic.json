@@ -129,6 +129,10 @@
         "linkMultiple": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link-multiple",
             "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
+        },
+        "id": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
         }
     },
     "conditionTypes": {

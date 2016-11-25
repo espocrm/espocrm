@@ -42,6 +42,8 @@ Espo.define('views/admin/dynamic-logic/fields/field', 'views/fields/multi-enum',
                 return true;
             }, this);
 
+            filterList.push('id');
+
             filterList.sort(function (v1, v2) {
                 return this.translate(v1, 'fields', this.options.scope).localeCompare(this.translate(v2, 'fields', this.options.scope));
             }.bind(this));
