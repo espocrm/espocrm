@@ -44,11 +44,18 @@ class Task extends \Espo\Core\SelectManagers\Base
     protected function filterActual(&$result)
     {
         $result['whereClause'][] = array(
-            'status!=' => ['Completed', 'Canceled']
+            'status!=' => ['Completed', 'Canceled', 'Deferred']
         );
     }
 
-    protected function filterActualNotDeferred(&$result)
+    protected function filterDeferred(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status=' => 'Deferred'
+        );
+    }
+
+    protected function filterActualStartingNotInPast(&$result)
     {
         $result['whereClause'][] = array(
             array(

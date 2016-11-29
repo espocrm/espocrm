@@ -39,6 +39,7 @@
   "presetFilters": {
     "actual": "Aktuell",
     "completed": "Abgeschlossen",
+    "deferred": "Zurückgestellt",
     "todays": "Heutige",
     "overdue": "Überfällig"
   }

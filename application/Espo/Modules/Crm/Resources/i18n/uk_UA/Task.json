@@ -37,9 +37,10 @@
         "Complete": "Завершити"
     },
     "presetFilters": {
-        "actual": "Актуально",
-        "completed": "Завершено",
-        "todays": "Сьогоднішнє",
-        "overdue": "Прострочено"
+        "actual": "Актуальні",
+        "completed": "Завершені",
+        "todays": "Сьогоднішні",
+        "deferred": "Відстрочені",
+        "overdue": "Прострочені"
     }
 }
