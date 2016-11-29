@@ -6,16 +6,16 @@
         },
         "recordsPerPage": {
             "type": "int",
-            "minValue": 1,
-            "maxValue": 1000,
+            "min": 1,
+            "max": 200,
             "default": 20,
             "required": true,
             "tooltip": true
         },
         "recordsPerPageSmall": {
             "type": "int",
-            "minValue": 1,
-            "maxValue": 100,
+            "min": 1,
+            "max": 100,
             "default": 10,
             "required": true,
             "tooltip": true
