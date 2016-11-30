@@ -170,7 +170,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             });
 
             if (scope) {
-                var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {}
+                var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
                 var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
                     if (fieldDefs[item].notStorable) {
@@ -210,7 +210,6 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         }
                     }
                 });
-                var fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
 
                 var optionList = Object.keys(fieldDefs).filter(function (item) {
                     if (!~['varchar', 'text', 'phone', 'email', 'personName'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
