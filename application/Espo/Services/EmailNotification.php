@@ -52,7 +52,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $noteNotificationTypeList = ['Post', 'Status'];
+    protected $noteNotificationTypeList = ['Post', 'Status', 'EmailReceived'];
 
     protected function getMailSender()
     {
@@ -279,7 +279,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         $note = $this->getEntityManager()->getEntity('Note', $notification->get('relatedId'));
         if (!$note) return;
 
-        $post = $note->get('post');
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 
@@ -299,7 +298,7 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $data['userName'] = $note->get('createdByName');
 
-        $data['post'] = $note->get('post');
+        $data['post'] = nl2br($note->get('post'));
 
         $subjectTpl = $this->getTemplateFileManager()->getTemplate('mention', 'subject');
         $bodyTpl = $this->getTemplateFileManager()->getTemplate('mention', 'body');
@@ -361,7 +360,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     protected function processNotificationNotePost($note, $user)
     {
-        $post = $note->get('post');
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 
@@ -371,7 +369,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $data = array();
 
         $data['userName'] = $note->get('createdByName');
-        $data['post'] = $note->get('post');
+        $data['post'] = nl2br($note->get('post'));
 
         if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
@@ -430,7 +428,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     protected function processNotificationNoteStatus($note, $user)
     {
-        $post = $note->get('post');
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 
@@ -481,6 +478,84 @@ class EmailNotification extends \Espo\Core\Services\Base
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true,
+            'parentId' => $parentId,
+            'parentType' => $parentType
+        ));
+
+        try {
+            $this->getMailSender()->send($email);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+    }
+
+    protected function processNotificationNoteEmailReceived($note, $user)
+    {
+        $parentId = $note->get('parentId');
+        $parentType = $note->get('parentType');
+
+        $emailAddress = $user->get('emailAddress');
+        if (!$emailAddress) return;
+
+        $noteData = $note->get('data');
+
+        if (!($noteData instanceof \StdClass)) return;
+
+        if (!isset($noteData->emailId)) return;
+        $email = $this->getEntityManager()->getEntity('Email', $noteData->emailId);
+        if (!$email) return;
+        if ($email->hasLinkMultipleId('users', $user->id)) return;
+
+        $data = array();
+
+        $data['fromName'] = '';
+        if (isset($noteData->personEntityName)) {
+            $data['fromName'] = $noteData->personEntityName;
+        } else if (isset($noteData->fromString)) {
+            $data['fromName'] = $noteData->fromString;
+        }
+
+        $data['subject'] = '';
+        if (isset($noteData->emailName)) {
+            $data['subject'] = $noteData->emailName;
+        }
+
+        $data['post'] = nl2br($note->get('post'));
+
+        if (!$parentId || !$parentType) return;
+
+        $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+        if (!$parent) return;
+
+        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+        $data['parentName'] = $parent->get('name');
+        $data['parentType'] = $parentType;
+        $data['parentId'] = $parentId;
+
+        $data['name'] = $data['parentName'];
+
+        $data['entityType'] = $this->getLanguage()->translate($data['parentType'], 'scopeNames');
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'subject', $parentType);
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('noteEmailRecieved', 'body', $parentType);
+
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-email-recieved-email-subject-' . $parentType, $data, true);
+        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-email-recieved-email-body-' . $parentType, $data, true);
+
+        $email = $this->getEntityManager()->getEntity('Email');
+
+        $email->set(array(
+            'subject' => $subject,
+            'body' => $body,
+            'isHtml' => true,
+            'to' => $emailAddress,
+            'isSystem' => true
+        ));
+
+        $email->set(array(
             'parentId' => $parentId,
             'parentType' => $parentType
         ));
