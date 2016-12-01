@@ -58,6 +58,7 @@ return array (
         'isInstalled',
         'defaultPermissions',
         'systemUser',
+        'userItems',
     ),
     'adminItems' =>
     array (
@@ -72,6 +73,19 @@ return array (
         'smtpUsername',
         'smtpPassword',
         'cron',
+    ),
+    'userItems' =>
+    array (
+        'currencyList',
+        'addressFormat',
+        'quickCreateList',
+        'recordsPerPage',
+        'recordsPerPageSmall',
+        'tabList',
+        'thousandSeparator',
+        'timeFormat',
+        'timeZone',
+        'weekStart'
     ),
     'isInstalled' => false,
 );

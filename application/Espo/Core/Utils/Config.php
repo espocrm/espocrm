@@ -226,7 +226,7 @@ class Config
      * @param $isAdmin
      * @return array
      */
-    public function getData($isAdmin = false)
+    public function getData($isAdmin = null)
     {
         $data = $this->loadConfig();
 
@@ -247,7 +247,7 @@ class Config
      * @param $isAdmin
      * @return bool
      */
-    public function setData($data, $isAdmin = false)
+    public function setData($data, $isAdmin = null)
     {
         $restrictItems = $this->getRestrictItems($isAdmin);
 
@@ -285,7 +285,7 @@ class Config
      *
      * @return object
      */
-    protected function getRestrictItems($onlySystemItems = false)
+    protected function getRestrictItems($onlySystemItems = null)
     {
         $data = $this->loadConfig();
 
@@ -297,7 +297,11 @@ class Config
             $this->adminItems = array_merge($data['systemItems'], $data['adminItems']);
         }
 
-        return $this->adminItems;
+        if ($onlySystemItems === false) {
+            return $this->adminItems;
+        }
+
+        return array_merge($this->adminItems, $data['userItems']);
     }
 
 
