@@ -60,9 +60,9 @@ class App extends \Espo\Core\Controllers\Base
         }
         $userData['emailAddressList'] = $emailAddressList;
 
-        $settings = array();
+        $settings = (object)[];
         foreach ($this->getConfig()->get('userItems') as $item) {
-            $settings[$item] = $this->getConfig()->get($item);
+            $settings->$item = $this->getConfig()->get($item);
         }
 
         return array(
