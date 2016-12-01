@@ -22,8 +22,7 @@
             "Not Started": "Niet Gestart",
             "Started": "Gestart",
             "Completed": "Voltooid",
-            "Canceled": "Geannuleerd",
-            "Deferred": "Deferred"
+            "Canceled": "Geannuleerd"
         },
         "priority" : {
             "Low": "Laag",

@@ -9,7 +9,12 @@
         "status": {
             "type": "enum",
             "options": ["In Process", "Complete", "Failed"],
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/enum-styled",
+            "style": {
+                "Complete": "success",
+                "Failed": "danger"
+            }
         },
         "file": {
             "type": "file",

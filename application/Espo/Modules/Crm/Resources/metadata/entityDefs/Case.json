@@ -30,6 +30,7 @@
         "type": {
             "type": "enum",
             "options": ["", "Question", "Incident", "Problem"],
+            "default": "",
             "audited": true
         },
         "description": {

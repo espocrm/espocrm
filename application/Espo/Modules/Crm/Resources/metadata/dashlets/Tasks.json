@@ -43,7 +43,7 @@
                 "bool": {
                     "onlyMy": true
                 },
-                "primary": "actualNotDeferred"
+                "primary": "actualStartingNotInPast"
             }
         },
         "layout": [

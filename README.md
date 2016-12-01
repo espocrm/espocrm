@@ -15,7 +15,7 @@ For more information about server configuration see [this article](http://blog.e
 
 ### How to report bug
 
-Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/bug-reports?routestring=forum/bug-reports).
+Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
 
 ### How to get started (for developers)
 

@@ -55,6 +55,9 @@
       {
          "name":"overdue",
          "style": "danger"
+      },
+      {
+         "name":"deferred"
       }
    ],
    "boolFilterList": ["onlyMy"]

@@ -662,8 +662,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             for (var i in this.listLayout) {
             	var width = false;
 
-            	if ('width' in this.listLayout[i]) {
-					width = this.listLayout[i].width + '%';
+                if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
+                    width = this.listLayout[i].width + '%';
 				} else if ('widthPx' in this.listLayout[i]) {
 					width = this.listLayout[i].widthPx;
 				}
