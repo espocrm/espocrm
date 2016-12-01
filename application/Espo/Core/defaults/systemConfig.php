@@ -146,6 +146,8 @@ return array (    'defaultPermissions' =>
     ),
     'userItems' =>
     array (
+        'outboundEmailFromAddress',
+        'outboundEmailFromName'
     ),
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',

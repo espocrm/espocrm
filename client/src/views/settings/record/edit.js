@@ -51,7 +51,6 @@ Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
 
             this.listenTo(this.model, 'after:save', function () {
                 this.getConfig().set(this.model.toJSON());
-                this.getConfig().storeToCache();
             }.bind(this));
         },
 

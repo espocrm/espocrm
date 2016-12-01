@@ -107,7 +107,8 @@ Espo.define('views/login', 'view', function (Dep) {
                             },
                             user: data.user,
                             preferences: data.preferences,
-                            acl: data.acl
+                            acl: data.acl,
+                            settings: data.settings
                         });
                     }.bind(this),
                     error: function (xhr) {
