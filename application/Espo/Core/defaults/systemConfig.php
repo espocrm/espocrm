@@ -94,7 +94,8 @@ return array (    'defaultPermissions' =>
         'restrictedMode',
         'userLimit',
         'portalUserLimit',
-        'stylesheet'
+        'stylesheet',
+        'userItems'
     ),
     'adminItems' =>
     array (
@@ -137,7 +138,14 @@ return array (    'defaultPermissions' =>
         'personalEmailMaxPortionSize',
         'inboundEmailMaxPortionSize',
         'authTokenLifetime',
-        'authTokenMaxIdleTime'
+        'authTokenMaxIdleTime',
+        'ldapUserDefaultTeamId',
+        'ldapUserDefaultTeamName',
+        'ldapUserTeamsIds',
+        'ldapUserTeamsNames'
+    ),
+    'userItems' =>
+    array (
     ),
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',
