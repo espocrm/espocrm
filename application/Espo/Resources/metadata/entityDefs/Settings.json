@@ -403,7 +403,7 @@
         },
         "historyEntityList": {
             "type": "multiEnum",
-            "view": "views/settings/fields/activities-entity-list"
+            "view": "views/settings/fields/history-entity-list"
         },
         "googleMapsApiKey": {
             "type": "varchar"
