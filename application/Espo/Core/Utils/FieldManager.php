@@ -123,7 +123,13 @@ class FieldManager
 
         if ($this->getMetadata()->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
-                $this->setTranslatedOptions($name, $fieldDefs['translatedOptions'], $scope);
+                $translatedOptions = $fieldDefs['translatedOptions'];
+                $translatedOptions = json_decode(json_encode($fieldDefs['translatedOptions']), true);
+                if (isset($translatedOptions['_empty_'])) {
+                    $translatedOptions[''] = $translatedOptions['_empty_'];
+                }
+
+                $this->setTranslatedOptions($name, $translatedOptions, $scope);
             }
         }
 
