@@ -559,6 +559,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
+                var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'acl']);
+                var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'aclScope']);
+                if (acl || aclScope) {
+                    if (!this.getAcl().check(aclScope || this.scope, acl)) {
+                        return;
+                    }
+                }
                 this.massActionList.push(item);
             }, this);
 
@@ -572,6 +579,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
+                    var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'acl']);
+                    var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'aclScope']);
+                    if (acl || aclScope) {
+                        if (!this.getAcl().check(aclScope || this.scope, acl)) {
+                            return;
+                        }
+                    }
                     this.checkAllResultMassActionList.push(item);
                 }
             }, this);
