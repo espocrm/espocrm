@@ -559,10 +559,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
-                var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'acl']);
-                var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'aclScope']);
+                var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                var acl = defs.acl;
+                var aclScope = defs.aclScope;
                 if (acl || aclScope) {
                     if (!this.getAcl().check(aclScope || this.scope, acl)) {
+                        return;
+                    }
+                }
+                var configCheck = defs.configCheck;
+                if (configCheck) {
+                    var arr = configCheck.split('.');
+                    if (!this.getConfig().getByPath(arr)) {
                         return;
                     }
                 }
@@ -579,10 +587,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
-                    var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'acl']);
-                    var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item, 'aclScope']);
+                    var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                    var acl = defs.acl;
+                    var aclScope = defs.aclScope;
                     if (acl || aclScope) {
                         if (!this.getAcl().check(aclScope || this.scope, acl)) {
+                            return;
+                        }
+                    }
+                    var configCheck = defs.configCheck;
+                    if (configCheck) {
+                        var arr = configCheck.split('.');
+                        if (!this.getConfig().getByPath(arr)) {
                             return;
                         }
                     }
