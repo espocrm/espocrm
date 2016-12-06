@@ -600,11 +600,17 @@ table.no-margin {
     table-layout: fixed;
 }
 
-.list > table td, table.list th {
+.list > table td,
+table.list th {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.list > table td > div.field {
+    white-space: normal;
+}
+
 .list > table td.cell[data-name="buttons"] {
     overflow: visible;
 }
