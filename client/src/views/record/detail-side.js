@@ -189,6 +189,13 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
             defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
 
+            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList', this.type]);
+
+            if (fieldList) {
+                defaultPanelDefs.options = defaultPanelDefs.options || {};
+                defaultPanelDefs.options.fieldList = fieldList;
+            }
+
             this.panelList.unshift(defaultPanelDefs);
         },
 
