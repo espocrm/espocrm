@@ -182,6 +182,7 @@
             "type": "link",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
             "readOnly": true,
             "notStorable": true,
             "view": "views/fields/link-one"
