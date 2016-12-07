@@ -488,6 +488,15 @@ select[multiple].input-sm {
     }
 }
 
+.table.less-padding > thead > tr > th,
+.table.less-padding > tbody >tr > th,
+.table.less-padding > tfoot >tr > th,
+.table.less-padding > thead >tr > td,
+.table.less-padding > tbody >tr > td,
+.table.less-padding > tfoot >tr > td {
+    padding: @table-cell-padding @table-cell-padding/2 @table-cell-padding @table-cell-padding/2;
+}
+
 .panel > .panel-body > .list-container > .list > .list-group {
     .list-group-item {
         border-width: 0;
