@@ -53,7 +53,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
         },
 
         init: function () {
-            this.createField('createdAt', null, null, 'views/fields/datetime-short');
+            this.createField('createdAt', null, null, 'views/fields/datetime');
             this.isUserStream = this.options.isUserStream;
             this.isThis = !this.isUserStream;
 
