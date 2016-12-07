@@ -473,6 +473,21 @@ select[multiple].input-sm {
     margin: -@panel-padding;
 }
 
+.panel-body .no-side-margin {
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
+
+    > table td:first-child,
+    > table th:first-child {
+        padding-left: @panel-padding;
+    }
+
+    > table td:last-child,
+    > table th:last-child {
+        padding-right: @panel-padding;
+    }
+}
+
 .panel > .panel-body > .list-container > .list > .list-group {
     .list-group-item {
         border-width: 0;
