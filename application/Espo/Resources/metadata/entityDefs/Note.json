@@ -59,9 +59,6 @@
         "isInternal": {
             "type": "bool"
         },
-        "isToSelf": {
-            "type": "bool"
-        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
