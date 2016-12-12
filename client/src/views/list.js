@@ -188,6 +188,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 if (!this.hasParentView()) return;
 
                 view.render();
+
+                this.listenToOnce(view, 'after:render', function () {
+                    if (!this.hasParentView()) {
+                        this.clearView('list');
+                    }
+                }, this);
+
                 view.notify(false);
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', function (obj) {
