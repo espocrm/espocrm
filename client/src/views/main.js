@@ -142,6 +142,14 @@ Espo.define('views/main', 'view', function (Dep) {
             }
         },
 
+        disableMenuItem: function (action) {
+            this.$el.find('.header .header-buttons [data-action="'+action+'"]').addClass('disabled');
+        },
+
+        enableMenuItem: function (action) {
+            this.$el.find('.header .header-buttons [data-action="'+action+'"]').removeClass('disabled');
+        },
+
         removeMenuItem: function (name, doNotReRender) {
             var index = -1;
             var type = false;

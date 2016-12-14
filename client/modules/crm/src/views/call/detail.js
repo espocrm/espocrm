@@ -26,26 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- Espo.define('crm:views/call/detail', 'views/detail', function (Dep) {
+ Espo.define('crm:views/call/detail', ['views/detail', 'crm:views/meeting/detail'], function (Dep, MeetingDetail) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
-                if (this.getAcl().checkModel(this.model, 'edit') && this.getAcl().checkScope('Email', 'create')) {
-                    this.menu.buttons.push({
-                        'label': 'Send Invitations',
-                        'action': 'sendInvitations',
-                        'acl': 'edit',
-                    });
+
+            MeetingDetail.prototype.controlSendInvitationsButton.call(this);
+            this.listenTo(this.model, 'change', function () {
+                if (
+                    this.model.hasChanged('status')
+                    ||
+                    this.model.hasChanged('teamsIds')
+                ) {
+                    MeetingDetail.prototype.controlSendInvitationsButton.call(this);
                 }
-            }
+            }.bind(this));
         },
 
         actionSendInvitations: function () {
             if (confirm(this.translate('confirmation', 'messages'))) {
-                this.$el.find('[data-action="sendInvitations"]').addClass('disabled');
+                this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
                 $.ajax({
                     url: 'Call/action/sendInvitations',
@@ -53,12 +55,16 @@
                     data: JSON.stringify({
                         id: this.model.id
                     }),
-                    success: function () {
-                        this.notify('Sent', 'success');
-                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                    success: function (result) {
+                        if (result) {
+                            this.notify('Sent', 'success');
+                        } else {
+                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                        }
+                        this.enableMenuItem('sendInvitations');
                     }.bind(this),
                     error: function () {
-                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                        this.enableMenuItem('sendInvitations');
                     }.bind(this),
                 });
             }

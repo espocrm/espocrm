@@ -32,20 +32,55 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
-                if (this.getAcl().checkModel(this.model, 'edit') && this.getAcl().checkScope('Email', 'create')) {
-                    this.menu.buttons.push({
-                        'label': 'Send Invitations',
-                        'action': 'sendInvitations',
-                        'acl': 'edit',
-                    });
+            this.controlSendInvitationsButton();
+            this.listenTo(this.model, 'change', function () {
+                if (
+                    this.model.hasChanged('status')
+                    ||
+                    this.model.hasChanged('teamsIds')
+                ) {
+                    this.controlSendInvitationsButton();
                 }
+            }.bind(this));
+        },
+
+        controlSendInvitationsButton: function () {
+            var show = true;;
+
+            if (
+                ~['Held', 'Not Held'].indexOf(this.model.get('status'))
+            ) {
+                show = false;
+            }
+
+            if (show && (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create'))) {
+                show = false;
+            }
+
+            if (show) {
+                var userIdList = this.model.getLinkMultipleIdList('users');
+                var contactIdList = this.model.getLinkMultipleIdList('contacts');
+                var leadIdList = this.model.getLinkMultipleIdList('leads');
+
+                if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
+                    show = false;
+                }
+            }
+
+            if (show) {
+                this.addMenuItem('buttons', {
+                    label: 'Send Invitations',
+                    action: 'sendInvitations',
+                    acl: 'edit',
+                });
+            } else {
+                this.removeMenuItem('sendInvitations');
             }
         },
 
         actionSendInvitations: function () {
             if (confirm(this.translate('confirmation', 'messages'))) {
-                this.$el.find('button[data-action="sendInvitations"]').addClass('disabled');
+                 this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
                 $.ajax({
                     url: 'Meeting/action/sendInvitations',
@@ -53,12 +88,17 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                     data: JSON.stringify({
                         id: this.model.id
                     }),
-                    success: function () {
-                        this.notify('Sent', 'success');
-                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                    success: function (result) {
+                        if (result) {
+                            this.notify('Sent', 'success');
+                        } else {
+                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                        }
+
+                        this.enableMenuItem('sendInvitations');
                     }.bind(this),
                     error: function () {
-                        this.$el.find('[data-action="sendInvitations"]').removeClass('disabled');
+                        this.enableMenuItem('sendInvitations');
                     }.bind(this),
                 });
             }

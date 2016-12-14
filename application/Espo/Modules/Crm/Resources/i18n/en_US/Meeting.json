@@ -45,5 +45,8 @@
         "planned": "Planned",
         "held": "Held",
         "todays": "Today's"
+    },
+    "messages": {
+        "nothingHasBeenSent": "Nothing were sent"
     }
 }
