@@ -31,7 +31,7 @@ namespace Espo\Core\Utils;
 
 class DateTime
 {
-    protected $dataFormat;
+    protected $dateFormat;
 
     protected $timeFormat;
 
@@ -121,6 +121,13 @@ class DateTime
         $this->timezone = new \DateTimeZone($timezone);
     }
 
+    public function getInternalNowString()
+    {
+        return date($this->getInternalDateTimeFormat());
+    }
+
+    public function getInternalTodayString()
+    {
+        return date($this->getInternalDateFormat());
+    }
 }
-
-
