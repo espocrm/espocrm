@@ -45,6 +45,16 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 return !~forbiddenFieldList.indexOf(item);
             }, this);
 
+
+            fieldList = fieldList.filter(function (item) {
+                var defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', item]) || {};
+                if (defs.disabled) return;
+                if (defs.exportDisabled) return;
+                if (defs.type === 'map') return;
+
+                return true;
+            }, this);
+
             this.getLanguage().sortFieldList(this.scope, fieldList);
 
             fieldList.unshift('id');
