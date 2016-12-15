@@ -273,18 +273,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $entity->set('createdById', $this->getEntityManager()->getUser()->id);
                 }
             }
-
-            if ($entity->has('modifiedById')) {
-                $restoreData['modifiedById'] = $entity->get('modifiedById');
-            }
-            if ($entity->has('modifiedByName')) {
-                $restoreData['modifiedByName'] = $entity->get('modifiedByName');
-            }
-            if ($entity->has('modifiedAt')) {
-                $restoreData['modifiedAt'] = $entity->get('modifiedAt');
-            }
-            $entity->clear('modifiedById');
-            $entity->clear('modifiedByName');
         } else {
             if (empty($options['silent'])) {
                 if ($entity->hasAttribute('modifiedAt')) {
@@ -293,20 +281,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 if ($entity->hasAttribute('modifiedById')) {
                     $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
                     $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
-                }
-            }
-
-            if ($entity->has('createdById')) {
-                if (empty($options['import'])) {
-                    $restoreData['createdById'] = $entity->get('createdById');
-                    $entity->clear('createdById');
-                }
-            }
-
-            if ($entity->has('createdAt')) {
-                if (empty($options['import'])) {
-                    $restoreData['createdAt'] = $entity->get('createdAt');
-                    $entity->clear('createdAt');
                 }
             }
         }

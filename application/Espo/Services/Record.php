@@ -530,6 +530,13 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
+        unset($data['modifiedById']);
+        unset($data['modifiedByName']);
+        unset($data['modifiedAt']);
+        unset($data['createdById']);
+        unset($data['createdByName']);
+        unset($data['createdAt']);
+
         $entity->set($data);
 
         $this->beforeCreate($entity, $data);
@@ -564,6 +571,13 @@ class Record extends \Espo\Core\Services\Base
 
         $this->filterInput($data);
         $this->handleInput($data);
+
+        unset($data['modifiedById']);
+        unset($data['modifiedByName']);
+        unset($data['modifiedAt']);
+        unset($data['createdById']);
+        unset($data['createdByName']);
+        unset($data['createdAt']);
 
         if ($this->getEntityBeforeUpdate) {
             $entity = $this->getEntity($id);
