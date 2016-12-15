@@ -1168,7 +1168,8 @@ class Record extends \Espo\Core\Services\Base
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
-                if (empty($entity->getAttributeParam($attribute, 'notStorable'))) {
+                $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
+                if (!$isNotStorable) {
                     $attributeList[] = $attribute;
                 } else {
                     if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
