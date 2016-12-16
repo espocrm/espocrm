@@ -13,7 +13,7 @@
         "rows": [
             [{"name":"status"},{"name":"source"}],
             [{"name":"opportunityAmount"},{"name":"campaign"}],
-            [false, {"name":"industry"}],
+            [{"name":"industry"}, false],
             [{"name":"description", "fullWidth": true}]
         ]
     }
