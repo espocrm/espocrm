@@ -35,7 +35,8 @@
         "portalRoles": "Portal Roles",
         "contact": "Contact",
         "accounts": "Accounts",
-        "account": "Account (Primary)"
+        "account": "Account (Primary)",
+        "tasks": "Tasks"
     },
     "labels": {
         "Create User": "Create User",

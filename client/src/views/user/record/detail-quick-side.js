@@ -26,21 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/detail-quick-side', 'views/record/detail-side', function (Dep) {
+Espo.define('views/user/record/detail-quick-side', ['views/record/detail-side', 'views/user/record/detail-side'], function (Dep, UserDetailSide) {
 
     return Dep.extend({
 
-        panelList: [
-            {
-                name: 'default',
-                label: false,
-                view: 'views/record/panels/side',
-                options: {
-                    fieldList: ['avatar'],
-                    mode: 'detail',
-                }
-            }
-        ]
+        setupPanels: function () {
+            UserDetailSide.prototype.setupPanels.call(this);
+        }
 
     });
 

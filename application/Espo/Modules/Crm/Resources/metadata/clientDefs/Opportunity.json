@@ -1,10 +1,30 @@
 {
    "controller": "controllers/record",
    "views":{
-      "detail":"Crm:Opportunity.Detail"
+      "detail":"crm:views/opportunity/detail"
    },
    "sidePanels":{
       "detail":[
+         {
+            "name":"activities",
+            "label":"Activities",
+            "view":"crm:views/record/panels/activities",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"history",
+            "label":"History",
+            "view":"crm:views/record/panels/history",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"tasks",
+            "label":"Tasks",
+            "view":"crm:views/record/panels/tasks",
+            "aclScope": "Task"
+         }
+      ],
+      "detailSmall":[
          {
             "name":"activities",
             "label":"Activities",

@@ -140,9 +140,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 return item;
             }, this);
 
-
             this.wait(true);
-            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.mode), function (layoutData) {
+            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
                 if (layoutData) {
                     this.alterPanels(layoutData);
                 }
@@ -267,6 +266,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         },
 
         showPanel: function (name, callback) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             var isFound = false;
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
@@ -275,8 +276,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
             }, this);
             if (!isFound) return;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             if (this.isRendered()) {
                 var view = this.getView(name);
@@ -297,6 +296,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         },
 
         hidePanel: function (name, callback) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
             var isFound = false;
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
@@ -305,8 +306,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
             }, this);
             if (!isFound) return;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             if (this.isRendered()) {
                 var view = this.getView(name);
