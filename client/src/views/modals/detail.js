@@ -207,7 +207,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }
             }
 
-            var viewName = this.detailViewName || this.detailView || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.detailQuick') || 'views/record/detail-small'; 
+            var viewName =
+                this.detailViewName ||
+                this.detailView ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailSmall']) ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
+                'views/record/detail-small'; 
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',

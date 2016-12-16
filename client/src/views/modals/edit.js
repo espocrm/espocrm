@@ -129,7 +129,12 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
         },
 
         createEdit: function (model, callback) {
-            var viewName = this.editViewName || this.editView || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.editQuick') || 'views/record/edit-small';
+            var viewName =
+                this.editViewName ||
+                this.editView ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
+                'views/record/edit-small';
             var options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
