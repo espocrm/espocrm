@@ -45,6 +45,18 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }, this.events || {});
         },
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            if (
+                this.model.get(this.name) !== null
+                &&
+                this.model.get(this.name) !== ''
+            ) {
+                data.isNotEmpty = true;
+            }
+            return data;
+        },
+
         handleSearchType: function (type) {
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
                 this.$el.find('input.main-element').addClass('hidden');

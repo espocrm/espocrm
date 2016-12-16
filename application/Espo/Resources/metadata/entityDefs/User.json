@@ -253,6 +253,11 @@
             "entity": "Account",
             "foreign": "portalUsers",
             "relationName": "AccountPortalUser"
+        },
+        "tasks": {
+            "type": "hasMany",
+            "entity": "Task",
+            "foreign": "assignedUser"
         }
     },
     "collection": {

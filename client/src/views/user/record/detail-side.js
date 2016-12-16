@@ -30,16 +30,6 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
 
     return Dep.extend({
 
-        defaultPanelDefs: {
-            name: 'default',
-            label: false,
-            view: 'views/record/panels/side',
-            options: {
-                fieldList: ['avatar'],
-                mode: 'detail',
-            }
-        },
-
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
 
@@ -55,26 +45,20 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                                 this.showPanel('history', function () {
                                     this.getView('history').actionRefresh();
                                 });
+                                this.showPanel('tasks', function () {
+                                    this.getView('tasks').actionRefresh();
+                                });
                             }
                         }, this);
                     }
                 }
             }
 
-            this.panelList.push({
-                "name":"activities",
-                "label":"Activities",
-                "view":"crm:views/record/panels/activities",
-                "hidden": !showActivities,
-                "aclScope": "Activities"
-            });
-            this.panelList.push({
-                "name":"history",
-                "label":"History",
-                "view":"crm:views/record/panels/history",
-                "hidden": !showActivities,
-                "aclScope": "Activities"
-            });
+            if (!showActivities) {
+                this.hidePanel('activities');
+                this.hidePanel('history');
+                this.hidePanel('tasks');
+            }
         }
 
     });

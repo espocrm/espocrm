@@ -32,7 +32,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         type: 'enum',
 
-        listTemplate: 'fields/enum/detail',
+        listTemplate: 'fields/enum/list',
 
         detailTemplate: 'fields/enum/detail',
 
@@ -45,6 +45,16 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
+            var value = this.model.get(this.name);
+            if (
+                value !== null
+                &&
+                value !== ''
+                ||
+                value === '' && (value in (this.translatedOptions || {}))
+            ) {
+                data.isNotEmpty = true;
+            }
             return data;
         },
 
