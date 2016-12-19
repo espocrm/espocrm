@@ -100,7 +100,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
             if (!this.options.id && !this.options.scope) {
                 var scopeList = [];
                 this.scopeList.forEach(function (scope) {
-                    if (this.getAcl().check(scope, 'edit')) {
+                    if (this.getAcl().check(scope, 'create')) {
                         if (~this.enabledScopeList.indexOf(scope)) {
                             scopeList.push(scope);
                         }
