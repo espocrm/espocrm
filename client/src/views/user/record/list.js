@@ -36,6 +36,14 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
         checkAllResultMassActionList: ['massUpdate', 'export'],
 
+        getModelScope: function (id) {
+            var model = this.collection.get(id);
+
+            if (model.get('isPortalUser')) {
+                return 'PortalUser';
+            }
+            return this.scope;
+        }
     });
 
 });

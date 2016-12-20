@@ -21,7 +21,8 @@
         "Portal": "Portal",
         "PortalRole": "Portal Role",
         "Attachment": "Attachment",
-        "EmailFolder": "Email Folder"
+        "EmailFolder": "Email Folder",
+        "PortalUser": "Portal User"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -45,7 +46,8 @@
         "Portal": "Portals",
         "PortalRole": "Portal Roles",
         "Attachment": "Attachments",
-        "EmailFolder": "Email Folders"
+        "EmailFolder": "Email Folders",
+        "PortalUser": "Portal Users"
     },
     "labels": {
         "Misc": "Misc",
@@ -184,7 +186,8 @@
         "Previous Entry": "Previous Entry",
         "Next Entry": "Next Entry",
         "View List": "View List",
-        "Attach File": "Attach File"
+        "Attach File": "Attach File",
+        "Skip": "Skip"
     },
     "messages": {
         "pleaseWait": "Please wait...",

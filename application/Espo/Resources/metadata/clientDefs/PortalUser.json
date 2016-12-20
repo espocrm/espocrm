@@ -1,0 +1,65 @@
+{
+    "controller": "controllers/portal-user",
+    "views": {
+        "detail": "views/user/detail",
+        "list": "views/portal-user/list"
+    },
+    "recordViews": {
+        "list": "views/user/record/list",
+        "detail": "views/user/record/detail",
+        "edit":"views/user/record/edit",
+        "detailSmall":"views/user/record/detail-quick",
+        "editSmall":"views/user/record/edit-quick"
+    },
+    "defaultSidePanelFieldList": {
+        "detail": [
+            "avatar"
+        ],
+        "detailSmall": [
+            "avatar"
+        ],
+        "edit": [
+            "avatar"
+        ],
+        "editSmall": [
+            "avatar"
+        ]
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            }
+        ],
+        "detailSmall": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            }
+        ]
+    },
+    "filterList": [
+        "activePortal"
+    ],
+    "boolFilterList": [],
+    "selectDefaultFilters": {
+        "filter": "activePortal"
+    }
+}

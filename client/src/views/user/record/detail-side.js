@@ -45,9 +45,11 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
                                 this.showPanel('history', function () {
                                     this.getView('history').actionRefresh();
                                 });
-                                this.showPanel('tasks', function () {
-                                    this.getView('tasks').actionRefresh();
-                                });
+                                if (!this.model.get('isPortalUser')) {
+                                    this.showPanel('tasks', function () {
+                                        this.getView('tasks').actionRefresh();
+                                    });
+                                }
                             }
                         }, this);
                     }
@@ -57,6 +59,10 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
             if (!showActivities) {
                 this.hidePanel('activities');
                 this.hidePanel('history');
+                this.hidePanel('tasks');
+            }
+
+            if (this.model.get('isPortalUser')) {
                 this.hidePanel('tasks');
             }
         }

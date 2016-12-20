@@ -32,6 +32,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
                 this.menu.buttons.push({
                     name: 'preferences',

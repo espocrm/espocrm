@@ -685,6 +685,12 @@ class Base
             }
         }
 
+        if (!empty($params['filterList']) && is_array($params['filterList'])) {
+            foreach ($params['filterList'] as $filterName) {
+                $this->applyFilter($filterName, $result);
+            }
+        }
+
         if (!empty($params['where']) && is_array($params['where'])) {
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
@@ -1128,6 +1134,11 @@ class Base
         if (method_exists($this, $method)) {
             $this->$method($result);
         }
+    }
+
+    public function applyFilter($filterName, &$result)
+    {
+        $this->applyPrimaryFilter($filterName, $result);
     }
 
     public function applyBoolFilter($filterName, &$result)

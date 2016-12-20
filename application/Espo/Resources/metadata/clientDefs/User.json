@@ -1,14 +1,18 @@
 {
+   "controller": "controllers/user",
    "views": {
       "detail": "views/user/detail",
       "list": "views/user/list"
    },
    "recordViews":{
       "detail":"views/user/record/detail",
-      "detailQuick":"views/user/record/detail-quick",
+      "detailSmall":"views/user/record/detail-quick",
       "edit":"views/user/record/edit",
-      "editQuick":"views/user/record/edit-quick",
+      "editSmall":"views/user/record/edit-quick",
       "list":"views/user/record/list"
+   },
+   "modalViews": {
+      "detail": "views/user/modals/detail"
    },
    "defaultSidePanelFieldList": {
       "detail": [
@@ -67,8 +71,7 @@
       ]
    },
    "filterList": [
-      "active",
-      "activePortal"
+      "active"
    ],
    "boolFilterList": ["onlyMyTeam"],
     "selectDefaultFilters": {

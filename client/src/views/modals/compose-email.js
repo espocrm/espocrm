@@ -57,7 +57,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             this.header = this.getLanguage().translate('Compose Email');
         },
 
-        createEdit: function (model, callback) {
+        createRecordView: function (model, callback) {
             var viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') || 'views/email/record/compose';
             var options = {
                 model: model,

@@ -164,15 +164,21 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.removeButton('remove');
         },
 
+        getScope: function () {
+            return this.scope;
+        },
+
         createRecordView: function (callback) {
             var model = this.model;
-            this.header = this.getLanguage().translate(this.scope, 'scopeNames');
+            var scope = this.getScope();
+
+            this.header = this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
                 this.header += ' &raquo; ' + model.get('name');
             }
             if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + this.scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
 
             if (!this.editDisabled) {
@@ -397,14 +403,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var url;
             var router = this.getRouter();
 
-            url = '#' + this.scope + '/view/' + this.id;
+            var scope = this.getScope();
+
+            url = '#' + scope + '/view/' + this.id;
 
             var attributes = this.getView('record').fetch();
             var model = this.getView('record').model;
             attributes = _.extend(attributes, model.getClonedAttributes());
 
             setTimeout(function () {
-                router.dispatch(this.scope, 'view', {
+                router.dispatch(scope, 'view', {
                     attributes: attributes,
                     returnUrl: Backbone.history.fragment,
                     model: this.sourceModel || this.model,

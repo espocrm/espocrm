@@ -75,8 +75,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var id = $(e.currentTarget).data('id');
                 var model = this.collection.get(id);
 
-                this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: false});
-                this.getRouter().dispatch(this.scope, 'view', {
+                var scope = this.getModelScope(id);
+
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+                this.getRouter().dispatch(scope, 'view', {
                     id: id,
                     model: model
                 });
@@ -262,6 +264,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        getModelScope: function (id) {
+            return this.scope;
+        },
+
         selectAllResult: function () {
             this.allResultIsChecked = true;
 
@@ -311,10 +317,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            var url = url || this.scope + '/action/export';
+            var url = url || this.entityType + '/action/export';
 
             var o = {
-                scope: this.scope
+                scope: this.entityType
             };
             if (fieldList) {
                 o.fieldList = fieldList;
@@ -369,7 +375,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 idList.push(this.checkedList[i]);
             }
 
-            data.entityType = this.scope;
+            data.entityType = this.entityType;
 
             var waitMessage = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
             Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
@@ -390,7 +396,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         massActionRemove: function () {
-            if (!this.getAcl().check(this.scope, 'delete')) {
+            if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
@@ -464,7 +470,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         massActionMerge: function () {
-            if (!this.getAcl().check(this.scope, 'edit')) {
+            if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
@@ -478,16 +484,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
             this.checkedList.sort();
-            var url = '#' + this.scope + '/merge/ids=' + this.checkedList.join(',');
+            var url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
             this.getRouter().navigate(url, {trigger: false});
-            this.getRouter().dispatch(this.scope, 'merge', {
+            this.getRouter().dispatch(this.entityType, 'merge', {
                 ids: this.checkedList.join(','),
                 collection: this.collection
             });
         },
 
         massActionMassUpdate: function () {
-            if (!this.getAcl().check(this.scope, 'edit')) {
+            if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
@@ -500,7 +506,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.createView('massUpdate', 'views/modals/mass-update', {
-                scope: this.scope,
+                scope: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
                 selectData: this.collection.data,
@@ -553,7 +559,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.layoutLoadCallbackList = [];
 
-            this.scope = this.collection.name || null;
+            this.entityType = this.collection.name || null;
+            this.scope = this.options.scope || this.entityType;
+
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
@@ -1164,7 +1172,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }.bind(this),
                     error: function () {
                         self.notify('Error occured', 'error');
-                    },
+                    }
                 });
             }
         },

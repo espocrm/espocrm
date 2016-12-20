@@ -168,6 +168,9 @@ class Record extends Base
         if ($request->get('boolFilterList')) {
             $params['boolFilterList'] = $request->get('boolFilterList');
         }
+        if ($request->get('filterList')) {
+            $params['filterList'] = $request->get('filterList');
+        }
     }
 
     public function actionListLinked($params, $data, $request)

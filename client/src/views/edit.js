@@ -55,14 +55,16 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .header'
+                el: '#main > .header',
+                scope: this.scope
             });
         },
 
         setupRecord: function () {
             var o = {
                 model: this.model,
-                el: '#main > .record'
+                el: '#main > .record',
+                scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
@@ -80,9 +82,9 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             var arr = [];
 
             if (this.options.noHeaderLinks) {
-                arr.push(this.getLanguage().translate(this.model.name, 'scopeNamesPlural'));
+                arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
             } else {
-                arr.push('<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>');
+                arr.push('<a href="#' + this.scope + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
             }
 
             if (this.model.isNew()) {
@@ -92,7 +94,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                 if (this.options.noHeaderLinks) {
                     arr.push(name);
                 } else {
-                    arr.push('<a href="#' + this.model.name + '/view/' + this.model.id + '" class="action">' + name + '</a>');
+                    arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
                 }
             }
             return this.buildHeaderHtml(arr);
@@ -101,13 +103,13 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         updatePageTitle: function () {
             var title;
             if (this.model.isNew()) {
-                title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.model.name, 'scopeNames');
+                title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
             } else {
                 var name = this.model.get('name');
                 if (name) {
                     title = name;
                 } else {
-                    title = this.getLanguage().translate(this.model.name, 'scopeNames')
+                    title = this.getLanguage().translate(this.scope, 'scopeNames')
                 }
             }
             this.setPageTitle(title);

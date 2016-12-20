@@ -26,42 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/header', 'view', function (Dep) {
+Espo.define('crm:views/contact/modals/select-for-portal-user', 'views/modals/select-records', function (Dep) {
 
     return Dep.extend({
 
-        template: 'header',
-
-        data: function () {
-            var data = {};
-            if ('getHeader' in this.getParentView()) {
-                data.header = this.getParentView().getHeader();
-            }
-            data.scope = this.scope || this.getParentView().scope;
-            data.items = this.getItems();
-            return data;
-        },
-
         setup: function () {
-            this.scope = this.options.scope;
-            if (this.model) {
-                this.listenTo(this.model, 'after:save', function () {
-                    if (this.isRendered()) {
-                        this.reRender();
-                    }
-                }, this);
-            }
+            Dep.prototype.setup.call(this);
+
+            this.buttonList.unshift({
+                name: 'skip',
+                html: this.translate('Proceed w/o Contact', 'labels', 'User')
+            });
         },
 
-        afterRender: function () {
-
-        },
-
-        getItems: function () {
-            var items = this.getParentView().getMenu() || {};
-
-            return items;
+        actionSkip: function () {
+            this.trigger('skip');
+            this.remove();
         }
+
     });
 });
-

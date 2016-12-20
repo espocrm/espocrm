@@ -113,7 +113,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         model.id = this.id;
                     }
                     model.once('sync', function () {
-                        this.createEdit(model);
+                        this.createRecordView(model);
                     }, this);
                     model.fetch();
                 } else {
@@ -123,12 +123,12 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     if (this.options.attributes) {
                         model.set(this.options.attributes);
                     }
-                    this.createEdit(model);
+                    this.createRecordView(model);
                 }
             }.bind(this));
         },
 
-        createEdit: function (model, callback) {
+        createRecordView: function (model, callback) {
             var viewName =
                 this.editViewName ||
                 this.editView ||

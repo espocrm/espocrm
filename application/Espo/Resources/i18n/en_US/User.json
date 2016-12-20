@@ -51,7 +51,8 @@
         "External Accounts": "External Accounts",
         "Email Accounts": "Email Accounts",
         "Portal": "Portal",
-        "Create Portal User": "Create Portal User"
+        "Create Portal User": "Create Portal User",
+        "Proceed w/o Contact": "Proceed w/o Contact"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

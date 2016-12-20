@@ -64,6 +64,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             return {
                 panelList: this.panelList,
                 scope: this.scope,
+                entityType: this.entityType
             };
         },
 
@@ -88,7 +89,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
         init: function () {
             this.panelList = this.options.panelList || this.panelList;
-            this.scope = this.options.model.name;
+            this.scope = this.entityType = this.options.model.name;
 
             this.recordHelper = this.options.recordHelper;
 

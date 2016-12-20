@@ -61,6 +61,20 @@ class User extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterPortal(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isPortalUser' => true
+        );
+    }
+
+    protected function filterInternal(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isPortalUser' => false
+        );
+    }
+
     protected function boolFilterOnlyMyTeam(&$result)
     {
         $this->addJoin('teams', $result);
