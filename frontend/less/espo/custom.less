@@ -29,19 +29,29 @@ blockquote {
 }
 
 .modal-header {
-  padding: 10px 14px;
-  border-bottom: 1px solid @modal-header-border-color;
-  min-height: (10px + @modal-title-line-height);
+  padding: @modal-title-padding @panel-padding;
+  border-bottom: 0 solid @modal-header-border-color;
+  min-height: (@modal-title-padding + @modal-title-line-height);
+}
+
+.modal-header .close {
+    margin-top: 3px;
 }
 
 .modal-footer {
-    margin-top: 10px;
+    margin-top: @modal-title-padding;
     padding: @panel-padding @panel-padding @panel-padding;
 }
 
 .modal-footer .btn.pull-left {
     margin-left: 0;
     margin-right: 0;
+}
+
+.modal-dialog > .modal-content {
+    background-clip: border-box;
+    border-color: @default-border-color;
+    border-width: 0;
 }
 
 .table thead > tr > th {
