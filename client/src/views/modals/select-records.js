@@ -48,7 +48,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         data: function () {
             return {
-                createButton: this.createButton && this.getAcl().check(this.scope, 'create')
+                createButton: this.createButton && this.getAcl().check(this.scope, 'create'),
+                createText: this.translate('Create ' + this.scope, 'labels', this.scope) 
             };
         },
 
@@ -108,7 +109,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 });
             }
 
-            this.scope = this.options.scope || this.scope;
+            this.scope = this.entityType = this.options.scope || this.scope;
 
             if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
                 this.createButton = false;
