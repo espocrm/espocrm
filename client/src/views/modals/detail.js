@@ -138,6 +138,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.createRecordView();
                 }
             }, this);
+
+            this.listenToOnce(this.getRouter(), 'routed', function () {
+                this.remove();
+            }, this);
         },
 
         addEditButton: function () {
