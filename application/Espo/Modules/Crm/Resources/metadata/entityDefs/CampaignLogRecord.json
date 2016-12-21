@@ -74,7 +74,7 @@
         },
         "object": {
             "type": "belongsToParent",
-            "entityList": ["Email"]
+            "entityList": ["Email", "CampaignTrackingUrl"]
         }
     },
     "collection": {
