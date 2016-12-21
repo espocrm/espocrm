@@ -34,17 +34,23 @@ Espo.define('view-helper', [], function () {
 
         this.mdSearch = [
             /\["?(.*?)"?\]\((.*?)\)/g,
-            /\&\#x60;(([\s\S]*?)\&\#x60;)/g,
+            /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
+            /\&\#x60;([\s\S]*?)\&\#x60;/g,
             /(\*\*)(.*?)\1/g,
             /(\*)(.*?)\1/g,
             /\~\~(.*?)\~\~/g
         ];
         this.mdReplace = [
             '<a href="$2">$1</a>',
-            '<code>$2</code>',
+            function (s, string) {
+                return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+            },
+            function (s, string) {
+                return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+            },
             '<strong>$2</strong>',
             '<em>$2</em>',
-            '<del>$1</del>',
+            '<del>$1</del>'
         ];
     }
 
