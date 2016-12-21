@@ -51,7 +51,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 &&
                 value !== ''
                 ||
-                value === '' && (value in (this.translatedOptions || {}))
+                value === '' && (value in (this.translatedOptions || {}) && (this.translatedOptions || {})[value] !== '')
             ) {
                 data.isNotEmpty = true;
             }
