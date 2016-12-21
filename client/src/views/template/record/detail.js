@@ -30,7 +30,13 @@ Espo.define('views/template/record/detail', 'views/record/detail', function (Dep
 
     return Dep.extend({
 
-        duplicateAction: true
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            if (!this.model.isNew()) {
+                this.setFieldReadOnly('entityType');
+            }
+        }
 
     });
 
