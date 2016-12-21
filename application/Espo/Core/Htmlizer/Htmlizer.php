@@ -159,7 +159,15 @@ class Htmlizer
 
     public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
     {
-        $code = \LightnCandy::compile($template);
+        $code = \LightnCandy::compile($template, [
+            'helpers' => [
+                'file' => function ($context, $options) {
+                    if (count($context) && $context[0]) {
+                        return 'data/upload/'.$context[0];
+                    }
+                }
+            ]
+        ]);
 
         $toRemove = false;
         if ($id === null) {
