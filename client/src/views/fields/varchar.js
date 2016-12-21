@@ -32,6 +32,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         type: 'varchar',
 
+        detailTemplate: 'fields/varchar/detail',
+
         searchTemplate: 'fields/varchar/search',
 
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'isEmpty', 'isNotEmpty'],
