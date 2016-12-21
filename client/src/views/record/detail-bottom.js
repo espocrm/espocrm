@@ -202,6 +202,11 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         },
 
         setup: function () {
+            this.type = this.mode;
+            if ('type' in this.options) {
+                this.type = this.options.type;
+            }
+
             this.panelList = [];
 
             this.setupPanels();
