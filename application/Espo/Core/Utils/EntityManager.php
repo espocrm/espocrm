@@ -49,6 +49,8 @@ class EntityManager
 
     private $container;
 
+    private $reservedWordList = ['__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor'];
+
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
         $this->metadata = $metadata;
@@ -86,16 +88,33 @@ class EntityManager
         return $this->metadataHelper;
     }
 
+    protected function getServiceFactory()
+    {
+        if (!$this->container) return;
+
+        return $this->container->get('serviceFactory');
+    }
+
     public function create($name, $type, $params = array())
     {
+        $name = ucfirst($name);
+        $name = trim($name);
+
         if ($this->getMetadata()->get('scopes.' . $name)) {
-            throw new Conflict('Entity ['.$name.'] already exists.');
+            throw new Conflict('Entity \''.$name.'\' already exists.');
         }
         if (empty($name) || empty($type)) {
             throw new Error();
         }
 
-        $name = trim($name);
+        $serviceFactory = $this->getServiceFactory();
+        if ($serviceFactory && $serviceFactory->checKExists($name)) {
+            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+        }
+
+        if (in_array(strtolower($name), $this->reservedWordList)) {
+            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+        }
 
         $normalizedName = Util::normilizeClassName($name);
 

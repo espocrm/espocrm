@@ -1,7 +1,8 @@
 {
     "controller": "controllers/record",
     "recordViews": {
-        "detail": "Template.Record.Detail"
+        "detail": "views/template/record/detail",
+        "edit": "views/template/record/edit"
     },
     "formDependency": {
         "printFooter": {
