@@ -271,6 +271,7 @@ class Import extends \Espo\Services\Record
     public function runIdleImport($data)
     {
         $entityType = $data['entityType'];
+
         $params = json_decode(json_encode($data['params']), true);
 
         $importFieldList = $data['importFieldList'];
@@ -452,7 +453,11 @@ class Import extends \Espo\Services\Record
 
 
         if (!empty($params['defaultValues'])) {
-            $v = get_object_vars($params['defaultValues']);
+            if (is_object($params['defaultValues'])) {
+                $v = get_object_vars($params['defaultValues']);
+            } else {
+                $v = $params['defaultValues'];
+            }
             $entity->set($v);
         }
 
