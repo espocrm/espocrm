@@ -3,7 +3,8 @@
         "Fields": "Fields",
         "Relationships": "Relationships",
         "Schedule": "Schedule",
-        "Log": "Log"
+        "Log": "Log",
+        "Formula": "Formula"
     },
     "fields": {
         "name": "Name",
