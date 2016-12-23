@@ -47,7 +47,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
         controlTextareaHeight: function () {
             var scrollHeight = this.$element.prop('scrollHeight');
             var clientHeight = this.$element.prop('clientHeight');
-            if (this.$element.prop('scrollHeight') > clientHeight) {
+            if (this.$element.prop('scrollHeight') > clientHeight + 2) {
                 this.$element.prop('rows', this.$element.prop('rows') + 1);
                 this.controlTextareaHeight();
             }
