@@ -730,6 +730,12 @@ class EntityManager
         return true;
     }
 
+    public function setFormulaData($scope, $data)
+    {
+        $this->getMetadata()->set('formula', $scope, $data);
+        $this->getMetadata()->save();
+    }
+
     protected function processHook($methodName, $type, $name, &$params = null)
     {
         $hook = $this->getHook($type);

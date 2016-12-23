@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,24 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('views/admin/entity-manager/record/edit-formula', 'views/record/base', function (Dep) {
 
-use \Espo\Core\Exceptions\Forbidden;
+    return Dep.extend({
 
-class Metadata extends \Espo\Core\Controllers\Base
-{
-    public function actionRead($params, $data)
-    {
-        return $this->getMetadata()->getAll(true);
-    }
+        template: 'admin/entity-manager/record/edit-formula',
 
-    public function getActionGet($params, $data, $request)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new \Forbidden();
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.createField('beforeSaveCustomScript', 'views/fields/text', {
+                rows: 12
+            }, 'edit');
         }
-        $key = $request->get('key');
 
-        return $this->getMetadata()->get($key, false);
-    }
-}
+    });
+});
+

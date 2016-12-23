@@ -27,7 +27,8 @@
         "textFilterFields": "Text Filter Fields",
         "audited": "Audited",
         "auditedForeign": "Foreign Audited",
-        "statusField": "Status Field"
+        "statusField": "Status Field",
+        "beforeSaveCustomScript": "Before Save Custom Script"
     },
     "options": {
         "type": {
