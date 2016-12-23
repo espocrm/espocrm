@@ -44,16 +44,19 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
             Dep.prototype.setup.call(this);
         },
 
-        controlTextareaHeight: function () {
+        controlTextareaHeight: function (lastHeight) {
             var scrollHeight = this.$element.prop('scrollHeight');
             var clientHeight = this.$element.prop('clientHeight');
-            if (this.$element.prop('scrollHeight') > clientHeight) {
-                this.$element.prop('rows', this.$element.prop('rows') + 1);
-                this.controlTextareaHeight();
+
+            if (clientHeight === lastHeight) return;
+
+            if (scrollHeight > clientHeight) {
+                this.$element.attr('rows', this.$element.prop('rows') + 1);
+                this.controlTextareaHeight(clientHeight);
             }
 
             if (this.$element.val().length === 0) {
-                this.$element.prop('rows', 1);
+                this.$element.attr('rows', 1);
             }
         },
 
