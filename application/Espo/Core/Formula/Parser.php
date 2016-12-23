@@ -307,6 +307,11 @@ class Parser
                     'type' => 'value',
                     'value' => false
                 ];
+            } else if ($expression === 'null') {
+                return (object) [
+                    'type' => 'value',
+                    'value' => null
+                ];
             }
 
             if ($expression[strlen($expression) - 1] === ')') {
