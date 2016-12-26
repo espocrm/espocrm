@@ -1454,12 +1454,6 @@ class Record extends \Espo\Core\Services\Base
     protected function findLinkedEntitiesFollowers($id, $params)
     {
         $maxSize = 0;
-        if ($disableCount) {
-            if (!empty($params['maxSize'])) {
-                $maxSize = $params['maxSize'];
-                $params['maxSize'] = $params['maxSize'] + 1;
-            }
-        }
 
         $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
         if (!$entity) {
