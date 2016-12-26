@@ -500,6 +500,8 @@ abstract class Base
     {
         if (is_null($value)) {
             return 'NULL';
+        } else if (is_bool($value)) {
+            return $value ? '1' : '0';
         } else {
             return $this->pdo->quote($value);
         }

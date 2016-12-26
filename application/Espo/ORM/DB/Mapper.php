@@ -358,7 +358,7 @@ abstract class Mapper implements IMapper
 
                 $setArr = array();
                 foreach ($columnData as $column => $value) {
-                    $setArr[] = "`".$this->toDb($column) . "` = " . $this->pdo->quote($value);
+                    $setArr[] = "`".$this->toDb($column) . "` = " . $this->quote($value);
                 }
                 if (empty($setArr)) {
                     return true;
@@ -542,14 +542,14 @@ abstract class Mapper implements IMapper
                         if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                             foreach ($relOpt['conditions'] as $f => $v) {
                                 $fieldsPart .= ", " . $this->toDb($f);
-                                $valuesPart .= ", " . $this->pdo->quote($v);
+                                $valuesPart .= ", " . $this->quote($v);
                             }
                         }
 
                         if (!empty($data) && is_array($data)) {
                             foreach ($data as $column => $columnValue) {
                                 $fieldsPart .= ", " . $this->toDb($column);
-                                $valuesPart .= ", " . $this->pdo->quote($columnValue);
+                                $valuesPart .= ", " . $this->quote($columnValue);
                             }
                         }
 
@@ -700,6 +700,8 @@ abstract class Mapper implements IMapper
     {
         if (is_null($value)) {
             return 'NULL';
+        } else if (is_bool($value)) {
+            return $value ? '1' : '0';
         } else {
             return $this->pdo->quote($value);
         }
