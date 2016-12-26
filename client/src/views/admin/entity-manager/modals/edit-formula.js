@@ -67,7 +67,8 @@ Espo.define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'm
 
                 this.createView('record', 'views/admin/entity-manager/record/edit-formula', {
                     el: this.getSelector() + ' .record',
-                    model: model
+                    model: model,
+                    targetEntityType: this.scope
                 });
                 this.wait(false);
             }.bind(this));

@@ -34,8 +34,8 @@ Espo.define('views/admin/entity-manager/record/edit-formula', 'views/record/base
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.createField('beforeSaveCustomScript', 'views/fields/text', {
-                rows: 12
+            this.createField('beforeSaveCustomScript', 'views/fields/formula', {
+                targetEntityType: this.options.targetEntityType
             }, 'edit');
         }
 

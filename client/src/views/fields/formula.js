@@ -1,0 +1,111 @@
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: http://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
+
+Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
+
+    return Dep.extend({
+
+        detailTemplate: 'fields/formula/edit',
+
+        editTemplate: 'fields/formula/edit',
+
+        height: 300,
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.height = this.options.height || this.params.height || this.height;
+            this.targetEntityType = this.options.targetEntityType;
+
+            this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
+
+            if (this.mode == 'edit' || this.mode == 'detail') {
+                this.wait(true);
+                Promise.all([
+                    new Promise(function (resolve) {
+                        Espo.loader.load('lib!client/lib/ace/ace.js', function () {
+                            Espo.loader.load('lib!client/lib/ace/mode-javascript.js', function () {
+                                resolve();
+                            }.bind(this));
+                        }.bind(this));
+                    }.bind(this))
+                ]).then(function () {
+                    ace.config.set("basePath", this.getBasePath() + 'client/lib/ace');
+                    this.wait(false);
+                }.bind(this));
+            }
+
+            this.on('remove', function () {
+                if (this.editor) {
+                    this.editor.destroy();
+                }
+            }, this);
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.containerId = this.containerId;
+
+            return data;
+        },
+
+        afterRender: function () {
+            Dep.prototype.setup.call(this);
+
+            this.$editor = this.$el.find('#' + this.containerId);
+
+            if (this.mode === 'edit' || this.mode == 'detail') {
+                this.$editor
+                    .css('height', this.height + 'px')
+                    .css('fontSize', '14px');
+                var editor = this.editor = ace.edit(this.containerId);
+
+                if (this.mode == 'detail') {
+                    editor.setReadOnly(true);
+                }
+
+                editor.setShowPrintMargin(false);
+                editor.getSession().setUseWorker(false);
+                editor.commands.removeCommand('find');
+                editor.setHighlightActiveLine(false);
+
+                var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+                editor.session.setMode(new JavaScriptMode());
+            }
+        },
+
+        fetch: function () {
+            var data = {};
+            data[this.name] = this.editor.getValue()
+
+            return data;
+        }
+
+    });
+});
+
