@@ -1215,6 +1215,49 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test', $actual);
     }
 
+    function testSubstring()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\substring",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 1
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('234', $actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\substring",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 0
+                    },
+                    {
+                        "type": "value",
+                        "value": 2
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('12', $actual);
+    }
+
     function testBundle()
     {
         $item = json_decode('
