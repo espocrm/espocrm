@@ -180,6 +180,20 @@ Espo.define('date-time', [], function () {
             return moment.utc().format(this.internalDateFormat);
         },
 
+        getDateTimeShiftedFromNow: function (shift, type, multiplicity) {
+            if (!multiplicity) {
+                return moment.utc().add(type, shift).format(this.internalDateTimeFormat);
+            } else {
+                var unix = moment().unix();
+                unix = unix - (unix % (multiplicity * 60));
+                return moment.unix(unix).utc().add(type, shift).format(this.internalDateTimeFormat);
+            }
+        },
+
+        getDateShiftedFromToday: function (shift, type) {
+            return moment.utc().add(type, shift).format(this.internalDateFormat);
+        },
+
         getNow: function (multiplicity) {
             if (!multiplicity) {
                 return moment.utc().format(this.internalDateTimeFormat);
