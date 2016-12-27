@@ -157,7 +157,7 @@ Espo.define('dynamic-logic', [], function () {
                 if (Array.isArray(setValue)) {
                     return !setValue.length;
                 }
-                return setValue === null || (setValue === '');
+                return setValue === null || (setValue === '') || typeof setValue === 'undefined';
             } else if (type === 'isNotEmpty') {
                 if (Array.isArray(setValue)) {
                     return !!setValue.length;
