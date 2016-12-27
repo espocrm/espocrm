@@ -26,50 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function (Dep) {
+Espo.define('crm:views/opportunity/admin/field-manager/fields/probability-map', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'fields/enum-styled/detail',
-
-        detailTemplate: 'fields/enum-styled/detail',
-
-        data: function () {
-            var style = 'default';
-            var stage = this.model.get('stage');
-            if (stage == 'Closed Won') {
-                style = 'success';
-            } else if (stage == 'Closed Lost') {
-                style = 'danger';
-            }
-            return _.extend({
-                style: style,
-            }, Dep.prototype.data.call(this));
-        },
+        editTemplate: 'crm:opportunity/admin/field-manager/fields/probability-map/edit',
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
+            this.listenTo(this.model, 'change:options', function () {
+                this.reRender();
+            }, this);
+        },
 
-            if (this.mode != 'list') {
-                if (!this.model.has('probability') && this.model.has('stage')) {
-                    this.model.set('probability', this.probabilityMap[this.model.get('stage')]);
-                }
-
-                this.on('change', function () {
-                    this.model.set('probability', this.probabilityMap[this.model.get(this.name)]);
-                }, this);
-            }
+        data: function () {
+            var data = {};
+            var values = this.model.get('probabilityMap') || {};
+            data.stageList = this.model.get('options') || [];
+            data.values = values;
+            return data;
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-            if (this.probabilityChanged) {
-                data['probability'] = this.model.get('probability');
-            }
+            var data = {
+                probabilityMap: {}
+            };
+
+            (this.model.get('options') || []).forEach(function (item) {
+                data.probabilityMap[item] = parseInt(this.$el.find('input[name="'+item+'"]').val());
+
+            }, this);
+
             return data;
         },
+
+        afterRender: function () {
+            this.$el.find('input').on('change', function () {
+                this.trigger('change')
+            }.bind(this));
+        }
+
     });
 
 });

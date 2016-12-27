@@ -112,6 +112,13 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 ]).then(function () {
                     this.paramList = [];
                     var paramList = this.getFieldManager().getParams(this.type) || [];
+
+                    if (!this.isNew) {
+                        (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
+                            paramList.push(item);
+                        }, this);
+                    }
+
                     paramList.forEach(function (o) {
                         var item = o.name;
                         var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
