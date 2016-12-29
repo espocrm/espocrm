@@ -135,6 +135,8 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
 
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Uninstall', $class);
+
+        $class->run(array());
     }
 
     public function testGetObjectUpgradeDelete()
@@ -146,6 +148,8 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
 
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Delete', $class);
+
+        $class->run(array());
     }
 
 }
