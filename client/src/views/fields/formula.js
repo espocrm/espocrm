@@ -40,6 +40,9 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
             'click [data-action="addAttribute"]': function () {
                 this.addAttribute();
             },
+            'click [data-action="addFunction"]': function () {
+                this.addFunction();
+            }
         },
 
         setup: function () {
@@ -117,8 +120,24 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
                 scope: this.targetEntityType
             }, function (view) {
                 view.render();
+                this.listenToOnce(view, 'add', function (attribute) {
+                    this.editor.insert(attribute);
+                    this.clearView('dialog');
+                }, this);
             }, this);
         },
+
+        addFunction: function () {
+            this.createView('dialog', 'views/admin/formula/modals/add-function', {
+                scope: this.targetEntityType
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'add', function (string) {
+                    this.editor.insert(string);
+                    this.clearView('dialog');
+                }, this);
+            }, this);
+        }
 
     });
 });

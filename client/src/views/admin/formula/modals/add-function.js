@@ -26,39 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/admin/formula/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+        template: 'admin/formula/modals/add-function',
 
-            var attributeList = this.getFieldManager().getEntityAttributeList(this.options.scope).sort();
+        fitHeight: true,
 
-            var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']);
-            var linkList = [];
-            Object.keys(links).forEach(function (link) {
-                var type = links[link].type;
-                if (!type) return;
+        events: {
+            'click [data-action="add"]': function (e) {
+                this.trigger('add', $(e.currentTarget).data('value'));
+            }
+        },
 
-                if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
-                    linkList.push(link);
-                }
-            }, this);
-            linkList.sort();
-            linkList.forEach(function (link) {
-                var scope = links[link].entity;
-                if (!scope) return;
-                var linkAttributeList = this.getFieldManager().getEntityAttributeList(scope).sort();
-                linkAttributeList.forEach(function (item) {
-                    attributeList.push(link + '.' + item);
-                }, this);
-            }, this);
+        data: function () {
+            return {
+                functionDataList: this.functionDataList
+            };
+        },
 
-            this.params.options = attributeList;
+        setup: function () {
+            this.header = this.translate('Function');
+
+            this.functionDataList = this.getMetadata().get('app.formula.functionList') || [];
         }
 
     });
-
 });
 

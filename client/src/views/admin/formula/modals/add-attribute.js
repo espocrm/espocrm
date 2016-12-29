@@ -32,12 +32,6 @@ Espo.define('views/admin/formula/modals/add-attribute', ['views/modal', 'model']
 
         _template: '<div class="attribute" data-name="attribute">{{{attribute}}}</div>',
 
-        events: {
-            'click a[data-action="add"]': function (e) {
-                this.trigger('add', $(e.currentTarget).data().name);
-            }
-        },
-
         setup: function () {
             this.header = this.translate('Attribute');
             this.scope = this.options.scope;
