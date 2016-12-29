@@ -35,7 +35,9 @@ class Metadata extends \Espo\Core\Controllers\Base
 {
     public function actionRead($params, $data)
     {
-        return $this->getMetadata()->getAll(true);
+        $data = $this->getMetadata()->getAll();
+        unset($data['formula']);
+        return $data;
     }
 
     public function getActionGet($params, $data, $request)
