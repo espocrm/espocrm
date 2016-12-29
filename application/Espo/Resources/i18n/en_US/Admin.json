@@ -146,7 +146,8 @@
         "dynamicLogicReadOnly": "Conditions making field read-only",
         "dynamicLogicRequired": "Conditions making field required",
         "dynamicLogicOptions": "Conditional options",
-        "probabilityMap": "Stage Probabilities (%)"
+        "probabilityMap": "Stage Probabilities (%)",
+        "readOnly": "Read-only"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",

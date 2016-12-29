@@ -34,7 +34,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
 
-        paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before'],
+        paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
 
         data: function () {
             return {
@@ -90,6 +90,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             } else {
                 this.model.set('type', this.type);
             }
+
+            this.listenTo(this.model, 'change:readOnly', function () {
+                this.readOnlyControl();
+            }, this);
 
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.isNew) {
@@ -181,7 +185,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled'])
                             &&
-                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])&&
                             !this.getMetadata().get(['fields', this.type, 'readOnly'])
                         ) {
                             this.model.set('dynamicLogicRequired', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']));
@@ -193,8 +196,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         }
                         if (
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicReadOnlyDisabled'])
-                            &&
-                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])
                             &&
                             !this.getMetadata().get(['fields', this.type, 'readOnly'])
                         ) {
@@ -210,8 +211,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             ~['enum', 'array', 'multiEnum'].indexOf(this.type)
                             &&
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled'])
-                            &&
-                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'readOnly'])
                         ) {
                             this.model.set('dynamicLogicOptions', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]));
                             this.createFieldView(null, 'dynamicLogicOptions', null, {
@@ -258,6 +257,49 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }
                 this.model.set('name', name);
             }, this);
+        },
+
+        readOnlyControl: function () {
+            if (this.model.get('readOnly')) {
+                this.hideField('dynamicLogicReadOnly');
+                this.hideField('dynamicLogicRequired');
+                this.hideField('dynamicLogicOptions');
+            } else {
+                this.showField('dynamicLogicReadOnly');
+                this.showField('dynamicLogicRequired');
+                this.showField('dynamicLogicOptions');
+            }
+        },
+
+        hideField: function (name) {
+            var f = function () {
+                var view = this.getView(name)
+                console.log();
+                if (view) {
+                    this.$el.find('.cell[data-name="'+name+'"]').addClass('hidden');
+                    view.setDisabled();
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                f();
+            } else {
+                this.once('after:render', f);
+            }
+        },
+
+        showField: function (name) {
+            var f = function () {
+                var view = this.getView(name)
+                if (view) {
+                    this.$el.find('.cell[data-name="'+name+'"]').removeClass('hidden');
+                    view.setNotDisabled();
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                f();
+            } else {
+                this.once('after:render', f);
+            }
         },
 
         createFieldView: function (type, name, readOnly, params, options, callback) {

@@ -21,6 +21,10 @@
       {
          "name":"audited",
          "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
       }
    ],
    "filter": true

@@ -25,6 +25,10 @@
       {
          "name": "minHeight",
          "type": "int"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
       }
    ],
    "filter": true,

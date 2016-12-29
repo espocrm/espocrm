@@ -69,6 +69,7 @@
         "lengthOfCut": "How long text can be before it will be cut.",
         "maxLength": "Max acceptable length of text.",
         "before": "The date value should be before the date value of the specified field.",
-        "after": "The date value should be after the date value of the specified field."
+        "after": "The date value should be after the date value of the specified field.",
+        "readOnly": "Field value can't be specified by user. But can be calculated by formula."
     }
 }
