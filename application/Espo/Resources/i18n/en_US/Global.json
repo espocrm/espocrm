@@ -187,7 +187,9 @@
         "Next Entry": "Next Entry",
         "View List": "View List",
         "Attach File": "Attach File",
-        "Skip": "Skip"
+        "Skip": "Skip",
+        "Attribute": "Attribute",
+        "Function": "Function"
     },
     "messages": {
         "pleaseWait": "Please wait...",

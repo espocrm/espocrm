@@ -36,11 +36,17 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         height: 300,
 
+        events: {
+            'click [data-action="addAttribute"]': function () {
+                this.addAttribute();
+            },
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.height = this.options.height || this.params.height || this.height;
-            this.targetEntityType = this.options.targetEntityType;
+            this.targetEntityType = this.options.targetEntityType || this.params.targetEntityType;
 
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
@@ -104,7 +110,15 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
             data[this.name] = this.editor.getValue()
 
             return data;
-        }
+        },
+
+        addAttribute: function () {
+            this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
+                scope: this.targetEntityType
+            }, function (view) {
+                view.render();
+            }, this);
+        },
 
     });
 });
