@@ -3,6 +3,10 @@
    "views":{
       "detail":"crm:views/opportunity/detail"
    },
+   "recordViews":{
+      "edit":"crm:views/opportunity/record/edit",
+      "editSmall":"crm:views/opportunity/record/edit-small"
+   },
    "sidePanels":{
       "detail":[
          {
