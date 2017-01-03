@@ -293,7 +293,11 @@ abstract class Base
             if (is_array($attribute) && count($attribute) == 2) {
                 if (stripos($attribute[0], 'VALUE:') === 0) {
                     $part = substr($attribute[0], 6);
-                    $part = $this->quote($part);
+                    if ($part !== false) {
+                        $part = $this->quote($part);
+                    } else {
+                        $part = $this->quote('');
+                    }
                 } else {
                     if (!array_key_exists($attribute[0], $entity->fields)) {
                         $part = $this->convertComplexExpression($entity, $attribute[0], $distinct);
