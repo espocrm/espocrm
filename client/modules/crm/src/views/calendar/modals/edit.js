@@ -66,7 +66,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
         },
 
         handleAccess: function (model) {
-            if (!this.getAcl().checkModel(model, 'edit')) {
+            if (this.id && !this.getAcl().checkModel(model, 'edit') || !this.id && !this.getAcl().checkModel(model, 'create')) {
                 this.hideButton('save');
                 this.hideButton('fullForm');
                 this.$el.find('button[data-name="save"]').addClass('hidden');
