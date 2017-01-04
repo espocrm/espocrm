@@ -46,10 +46,14 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
                 this.list.push(this.getUser().get('emailAddress'));
             }*/
 
+            this.list.push(this.getUser().get('emailAddress'));
+
             var emailAddressList = this.getUser().get('emailAddressList') || [];
             emailAddressList.forEach(function (item) {
                 this.list.push(item);
             }, this);
+
+            this.list = _.uniq(this.list);
 
             if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
                 var address = this.getConfig().get('outboundEmailFromAddress');
