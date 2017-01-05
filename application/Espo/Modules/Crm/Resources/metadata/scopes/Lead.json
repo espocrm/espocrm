@@ -9,5 +9,6 @@
     "stream": true,
     "importable": true,
     "notifications": true,
-    "object": true
+    "object": true,
+    "statusField": "status"
 }

@@ -125,12 +125,21 @@ class Base
     protected function order($sortBy, $desc = false, &$result)
     {
         if (!empty($sortBy)) {
+
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if ($type === 'link') {
                 $result['orderBy'] .= 'Name';
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
+            } else if ($type === 'address') {
+                if (!$desc) {
+                    $orderPart = 'ASC';
+                } else {
+                    $orderPart = 'DESC';
+                }
+                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
+                return;
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
                 if ($list && is_array($list) && count($list)) {
@@ -210,8 +219,17 @@ class Base
                     if (!empty($item['value'])) {
                         $methodName = 'apply' . ucfirst($type);
 
-                        if (method_exists($this, $methodName)) {;
-                            $this->$methodName($item['field'], $item['value'], $result);
+                        if (method_exists($this, $methodName)) {
+                            $attribute = null;
+                            if (isset($item['field'])) {
+                                $attribute = $item['field'];
+                            }
+                            if (isset($item['attribute'])) {
+                                $attribute = $item['attribute'];
+                            }
+                            if ($attribute) {
+                                $this->$methodName($attribute, $item['value'], $result);
+                            }
                         }
                     }
                 }
@@ -239,18 +257,21 @@ class Base
 
         $defs = $relDefs[$link];
         if ($relationType == 'manyMany') {
-            $this->addJoin($link, $result);
+            $this->addJoin([$link, $link . 'Filter'], $result);
             $midKeys = $seed->getRelationParam($link, 'midKeys');
 
             if (!empty($midKeys)) {
                 $key = $midKeys[1];
-                $part[$link . 'Middle.' . $key] = $idsValue;
+                $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
             }
-        } else if ($relationType== 'belongsTo') {
+        } else if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
             if (!empty($key)) {
                 $part[$key] = $idsValue;
             }
+        } else if ($relationType == 'hasOne') {
+            $this->addJoin([$link, $link . 'Filter'], $result);
+            $part[$link . 'Filter' . '.id'] = $idsValue;
         } else {
             return;
         }
@@ -664,6 +685,12 @@ class Base
             }
         }
 
+        if (!empty($params['filterList']) && is_array($params['filterList'])) {
+            foreach ($params['filterList'] as $filterName) {
+                $this->applyFilter($filterName, $result);
+            }
+        }
+
         if (!empty($params['where']) && is_array($params['where'])) {
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
@@ -689,13 +716,20 @@ class Base
     protected function checkWhere($where)
     {
         foreach ($where as $w) {
+            $attribute = null;
             if (isset($w['field'])) {
+                $attribute = $w['field'];
+            }
+            if (isset($w['attribute'])) {
+                $attribute = $w['attribute'];
+            }
+            if ($attribute) {
                 if (isset($w['type']) && $w['type'] === 'linkedWith') {
-                    if (in_array($w['field'], $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
+                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
                 } else {
-                    if (in_array($w['field'], $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
+                    if (in_array($attribute, $this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
                 }
@@ -728,7 +762,15 @@ class Base
         $value = null;
         $timeZone = 'UTC';
 
-        if (empty($item['field'])) {
+        $attribute = null;
+        if (isset($item['field'])) {
+            $attribute = $item['field'];
+        }
+        if (isset($item['attribute'])) {
+            $attribute = $item['attribute'];
+        }
+
+        if (!$attribute) {
             return null;
         }
         if (empty($item['type'])) {
@@ -741,14 +783,13 @@ class Base
             $timeZone = $item['timeZone'];
         }
         $type = $item['type'];
-        $field = $item['field'];
 
         if (empty($value) && in_array($type, array('on', 'before', 'after'))) {
             return null;
         }
 
         $where = array();
-        $where['field'] = $field;
+        $where['attribute'] = $attribute;
 
         $dt = new \DateTime('now', new \DateTimeZone($timeZone));
 
@@ -875,8 +916,16 @@ class Base
     {
         $part = array();
 
-        if (!empty($item['field']) && !empty($item['type'])) {
-            $methodName = 'getWherePart' . ucfirst($item['field']) . ucfirst($item['type']);
+        $attribute = null;
+        if (!empty($item['field'])) { // for backward compatibility
+            $attribute = $item['field'];
+        }
+        if (!empty($item['attribute'])) {
+            $attribute = $item['attribute'];
+        }
+
+        if (!empty($attribute) && !empty($item['type'])) {
+            $methodName = 'getWherePart' . ucfirst($attribute) . ucfirst($item['type']);
             if (method_exists($this, $methodName)) {
                 $value = null;
                 if (!empty($item['value'])) {
@@ -909,74 +958,74 @@ class Base
                     }
                     break;
                 case 'like':
-                    $part[$item['field'] . '*'] = $item['value'];
+                    $part[$attribute . '*'] = $item['value'];
                     break;
                 case 'equals':
                 case 'on':
-                    $part[$item['field'] . '='] = $item['value'];
+                    $part[$attribute . '='] = $item['value'];
                     break;
                 case 'startsWith':
-                    $part[$item['field'] . '*'] = $item['value'] . '%';
+                    $part[$attribute . '*'] = $item['value'] . '%';
                     break;
                 case 'endsWith':
-                    $part[$item['field'] . '*'] = '%' . $item['value'];
+                    $part[$attribute . '*'] = '%' . $item['value'];
                     break;
                 case 'contains':
-                    $part[$item['field'] . '*'] = '%' . $item['value'] . '%';
+                    $part[$attribute . '*'] = '%' . $item['value'] . '%';
                     break;
                 case 'notEquals':
                 case 'notOn':
-                    $part[$item['field'] . '!='] = $item['value'];
+                    $part[$attribute . '!='] = $item['value'];
                     break;
                 case 'greaterThan':
                 case 'after':
-                    $part[$item['field'] . '>'] = $item['value'];
+                    $part[$attribute . '>'] = $item['value'];
                     break;
                 case 'lessThan':
                 case 'before':
-                    $part[$item['field'] . '<'] = $item['value'];
+                    $part[$attribute . '<'] = $item['value'];
                     break;
                 case 'greaterThanOrEquals':
-                    $part[$item['field'] . '>='] = $item['value'];
+                    $part[$attribute . '>='] = $item['value'];
                     break;
                 case 'lessThanOrEquals':
-                    $part[$item['field'] . '<'] = $item['value'];
+                    $part[$attribute . '<'] = $item['value'];
                     break;
                 case 'in':
-                    $part[$item['field'] . '='] = $item['value'];
+                    $part[$attribute . '='] = $item['value'];
                     break;
                 case 'notIn':
-                    $part[$item['field'] . '!='] = $item['value'];
+                    $part[$attribute . '!='] = $item['value'];
                     break;
                 case 'isNull':
-                    $part[$item['field'] . '='] = null;
+                    $part[$attribute . '='] = null;
                     break;
                 case 'isNotNull':
                 case 'ever':
-                    $part[$item['field'] . '!='] = null;
+                    $part[$attribute . '!='] = null;
                     break;
                 case 'isTrue':
-                    $part[$item['field'] . '='] = true;
+                    $part[$attribute . '='] = true;
                     break;
                 case 'isFalse':
-                    $part[$item['field'] . '='] = false;
+                    $part[$attribute . '='] = false;
                     break;
                 case 'today':
-                    $part[$item['field'] . '='] = date('Y-m-d');
+                    $part[$attribute . '='] = date('Y-m-d');
                     break;
                 case 'past':
-                    $part[$item['field'] . '<'] = date('Y-m-d');
+                    $part[$attribute . '<'] = date('Y-m-d');
                     break;
                 case 'future':
-                    $part[$item['field'] . '>='] = date('Y-m-d');
+                    $part[$attribute . '>='] = date('Y-m-d');
                     break;
                 case 'lastSevenDays':
                     $dt1 = new \DateTime();
                     $dt2 = clone $dt1;
                     $dt2->modify('-7 days');
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt2->format('Y-m-d'),
-                        $item['field'] . '<=' => $dt1->format('Y-m-d'),
+                        $attribute . '>=' => $dt2->format('Y-m-d'),
+                        $attribute . '<=' => $dt1->format('Y-m-d'),
                     );
                     break;
                 case 'lastXDays':
@@ -986,8 +1035,8 @@ class Base
 
                     $dt2->modify('-'.$number.' days');
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt2->format('Y-m-d'),
-                        $item['field'] . '<=' => $dt1->format('Y-m-d'),
+                        $attribute . '>=' => $dt2->format('Y-m-d'),
+                        $attribute . '<=' => $dt1->format('Y-m-d'),
                     );
                     break;
                 case 'nextXDays':
@@ -996,22 +1045,22 @@ class Base
                     $number = strval(intval($item['value']));
                     $dt2->modify('+'.$number.' days');
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt1->format('Y-m-d'),
-                        $item['field'] . '<=' => $dt2->format('Y-m-d'),
+                        $attribute . '>=' => $dt1->format('Y-m-d'),
+                        $attribute . '<=' => $dt2->format('Y-m-d'),
                     );
                     break;
                 case 'currentMonth':
                     $dt = new \DateTime();
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     );
                     break;
                 case 'lastMonth':
                     $dt = new \DateTime();
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     );
                     break;
                 case 'currentQuarter':
@@ -1019,8 +1068,8 @@ class Base
                     $quarter = ceil($dt->format('m') / 3);
                     $dt->modify('first day of January this year');
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     );
                     break;
                 case 'lastQuarter':
@@ -1033,29 +1082,29 @@ class Base
                         $dt->sub('P1Y');
                     }
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     );
                     break;
                 case 'currentYear':
                     $dt = new \DateTime();
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     );
                     break;
                 case 'lastYear':
                     $dt = new \DateTime();
                     $part['AND'] = array(
-                        $item['field'] . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                        $item['field'] . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     );
                     break;
                 case 'between':
                     if (is_array($item['value'])) {
                         $part['AND'] = array(
-                            $item['field'] . '>=' => $item['value'][0],
-                            $item['field'] . '<=' => $item['value'][1],
+                            $attribute . '>=' => $item['value'][0],
+                            $attribute . '<=' => $item['value'][1],
                         );
                     }
                     break;
@@ -1085,6 +1134,11 @@ class Base
         if (method_exists($this, $method)) {
             $this->$method($result);
         }
+    }
+
+    public function applyFilter($filterName, &$result)
+    {
+        $this->applyPrimaryFilter($filterName, $result);
     }
 
     public function applyBoolFilter($filterName, &$result)

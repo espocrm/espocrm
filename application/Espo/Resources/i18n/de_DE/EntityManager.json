@@ -1,40 +1,46 @@
 {
   "labels": {
     "Fields": "Felder",
-    "Relationships": "Beziehungen"
+    "Relationships": "Beziehungen",
+    "Schedule": "Geplant",
+    "Log": "Log"
   },
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "type": "Typ",
     "labelSingular": "Bezeichnung Einzahl",
     "labelPlural": "Bezeichnung Mehrzahl",
-    "stream": "Vorgänge",
+    "stream": "Aktivitäten",
     "label": "Bezeichnung",
     "linkType": "Relationstyp",
-    "entityForeign": "Fremdentität/-modul",
-    "linkForeign": "Fremdrelation/-modul",
+    "entityForeign": "Fremdentität",
+    "linkForeign": "Fremdrelation",
     "link": "Link",
     "labelForeign": "Fremdbezeichnung",
-    "sortBy": "Standardsortierung (Feld)",
-    "sortDirection": "Standardsortierung (Richtung)",
+    "sortBy": "Standardmäßig sortieren nach",
+    "sortDirection": "Standardmäßig sortieren in Reihenfolge",
     "relationName": "Mittlerer Tabellenname",
     "linkMultipleField": "Mehrere Felder verlinken",
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
-    "disabled": "Inaktiv"
+    "disabled": "Inaktiv",
+    "textFilterFields": "Textfilter Felder"
   },
   "options": {
     "type": {
       "": "Kein(e)",
       "Base": "Basis",
       "Person": "Person",
-      "CategoryTree": "Kategoriebaum"
+      "CategoryTree": "Kategoriebaum",
+      "Event": "Ereignis",
+      "BasePlus": "Basis Plus",
+      "Company": "Firma"
     },
     "linkType": {
-      "manyToMany": "Viele zu Viele",
-      "oneToMany": "Eins zu Viele",
-      "manyToOne": "Viele zu Eins",
-      "parentToChildren": "Vater zu KInd",
-      "childrenToParent": "Kind zu Vater"
+      "manyToMany": "n:n",
+      "oneToMany": "1:n",
+      "manyToOne": "n:1",
+      "parentToChildren": "Eltern zu Kind",
+      "childrenToParent": "Kind zu Eltern"
     },
     "sortDirection": {
       "asc": "Aufsteigend",
@@ -43,7 +49,7 @@
   },
   "messages": {
     "entityCreated": "Entität wurde erstellt",
-    "linkAlreadyExists": "Konflikt Name Relation",
+    "linkAlreadyExists": "Relationsnamenkonflikt",
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   }
 }

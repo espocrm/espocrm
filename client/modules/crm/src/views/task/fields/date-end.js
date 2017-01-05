@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Task.Fields.DateEnd', 'Views.Fields.DatetimeOptional', function (Dep) {
+Espo.define('crm:views/task/fields/date-end', 'views/fields/datetime-optional', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'crm:task.fields.date-end.detail',
+        detailTemplate: 'crm:task/fields/date-end/detail',
 
-        listTemplate: 'crm:task.fields.date-end.detail',
+        listTemplate: 'crm:task/fields/date-end/detail',
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -63,6 +63,17 @@ Espo.define('Crm:Views.Task.Fields.DateEnd', 'Views.Fields.DatetimeOptional', fu
 
             return data;
         },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this, 'change', function (e) {
+                if (!this.model.get('dateEnd')) {
+                    if (this.model.get('reminders')) {
+                        this.model.set('reminders', []);
+                    }
+                }
+            }, this);
+        }
 
     });
 });

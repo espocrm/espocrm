@@ -68,6 +68,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
+            this.layoutName = this.options.layoutName || this.layoutName;
+
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
@@ -111,7 +113,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         model.id = this.id;
                     }
                     model.once('sync', function () {
-                        this.createEdit(model);
+                        this.createRecordView(model);
                     }, this);
                     model.fetch();
                 } else {
@@ -121,13 +123,18 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     if (this.options.attributes) {
                         model.set(this.options.attributes);
                     }
-                    this.createEdit(model);
+                    this.createRecordView(model);
                 }
             }.bind(this));
         },
 
-        createEdit: function (model, callback) {
-            var viewName = this.editViewName || this.editView || this.getMetadata().get('clientDefs.' + model.name + '.recordViews.editQuick') || 'views/record/edit-small';
+        createRecordView: function (model, callback) {
+            var viewName =
+                this.editViewName ||
+                this.editView ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
+                this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
+                'views/record/edit-small';
             var options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',

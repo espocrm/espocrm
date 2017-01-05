@@ -1,6 +1,6 @@
 [{
     "label":"",
     "rows": [
-        [{"name":"name", "fullWidth": true}, false]
+        [{"name":"name", "fullWidth": true}]
     ]
 }]

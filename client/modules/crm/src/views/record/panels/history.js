@@ -32,76 +32,15 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
 
         name: 'history',
 
-        scopeList: ['Meeting', 'Call', 'Email'],
-
         sortBy: 'dateStart',
 
         asc: false,
 
         rowActionsView: 'crm:views/record/row-actions/history',
 
-        actionList: [
-            {
-                action: 'createActivity',
-                label: 'Log Meeting',
-                data: {
-                    link: 'meetings',
-                    status: 'Held',
-                },
-                acl: 'create',
-                aclScope: 'Meeting',
-            },
-            {
-                action: 'createActivity',
-                label: 'Log Call',
-                data: {
-                    link: 'calls',
-                    status: 'Held',
-                },
-                acl: 'create',
-                aclScope: 'Call',
-            },
-            {
-                action: 'archiveEmail',
-                label: 'Archive Email',
-                acl: 'create',
-                aclScope: 'Email',
-            },
-        ],
+        actionList: [],
 
         listLayout: {
-            'Meeting': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                        {name: 'status'},
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
-                ]
-            },
-            'Call': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                        {name: 'status'},
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
-                ]
-            },
             'Email': {
                 rows: [
                     [
@@ -113,17 +52,27 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                     ],
                     [
                         {name: 'status'},
-                        {name: 'dateSent'},
+                        {name: 'dateSent'}
                     ]
                 ]
             },
         },
 
         where: {
-            scope: false,
+            scope: false
         },
 
-        getArchiveEmailAttributes: function (data, callback) {
+        setupActionList: function () {
+            Dep.prototype.setupActionList.call(this);
+            this.actionList.push({
+                action: 'archiveEmail',
+                label: 'Archive Email',
+                acl: 'create',
+                aclScope: 'Email'
+            });
+        },
+
+        getArchiveEmailAttributes: function (scope, data, callback) {
             data = data || {};
             var attributes = {
                 dateSent: this.getDateTime().getNow(15),
@@ -133,15 +82,33 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             };
 
             if (this.model.name == 'Contact') {
-                if (this.model.get('accountId')) {
-                    attributes.parentType = 'Account',
-                    attributes.parentId = this.model.get('accountId');
-                    attributes.parentName = this.model.get('accountName');
+                if (this.getConfig().get('b2cMode')) {
+                    attributes.parentType = 'Contact';
+                    attributes.parentName = this.model.get('name');
+                    attributes.parentId = this.model.id;
+                } else {
+                    if (this.model.get('accountId')) {
+                        attributes.parentType = 'Account',
+                        attributes.parentId = this.model.get('accountId');
+                        attributes.parentName = this.model.get('accountName');
+                    }
                 }
             } else if (this.model.name == 'Lead') {
                 attributes.parentType = 'Lead',
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
+            }
+            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
+                attributes.nameHash = {};
+                attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
+            }
+
+            if (scope && !attributes.parentId) {
+                if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                    attributes.parentType = this.model.name;
+                    attributes.parentId = this.model.id;
+                    attributes.parentName = this.model.get('name');
+                }
             }
             callback.call(this, attributes);
         },
@@ -163,7 +130,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-            this.getArchiveEmailAttributes(data, function (attributes) {
+            this.getArchiveEmailAttributes(scope, data, function (attributes) {
                 this.createView('quickCreate', viewName, {
                     scope: scope,
                     relate: relate,

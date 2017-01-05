@@ -28,5 +28,6 @@
       "notNull": false,
       "unique": false
    },
-   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\NumberType"
+   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\NumberType",
+   "readOnly": true
 }

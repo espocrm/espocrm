@@ -31,7 +31,8 @@
             "label":"Converted To",
             "view": "crm:views/lead/record/panels/converted-to",
             "notRefreshable": true,
-            "hidden": true
+            "hidden": true,
+            "style": "success"
          },
          {
             "name":"activities",
@@ -58,7 +59,8 @@
             "label":"Converted To",
             "view": "crm:views/lead/record/panels/converted-to",
             "notRefreshable": true,
-            "hidden": true
+            "hidden": true,
+            "style": "success"
          }
       ],
       "detailSmall": [
@@ -67,7 +69,26 @@
             "label":"Converted To",
             "view": "crm:views/lead/record/panels/converted-to",
             "notRefreshable": true,
-            "hidden": true
+            "hidden": true,
+            "style": "success"
+         },
+         {
+            "name":"activities",
+            "label":"Activities",
+            "view":"crm:views/record/panels/activities",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"history",
+            "label":"History",
+            "view":"crm:views/record/panels/history",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"tasks",
+            "label":"Tasks",
+            "view":"crm:views/record/panels/tasks",
+            "aclScope": "Task"
          }
       ],
       "editSmall": [
@@ -76,7 +97,8 @@
             "label":"Converted To",
             "view": "crm:views/lead/record/panels/converted-to",
             "notRefreshable": true,
-            "hidden": true
+            "hidden": true,
+            "style": "success"
          }
       ]
    },

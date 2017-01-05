@@ -225,6 +225,18 @@ class EmailAccount extends Record
 
         $portionLimit = $this->getConfig()->get('personalEmailMaxPortionSize', self::PORTION_LIMIT);
 
+        $parserName = 'ZendMail';
+        if (extension_loaded('mailparse')) {
+            $parserName = 'PhpMimeMailParser';
+        }
+
+        if ($this->getConfig()->get('emailParser')) {
+            $parserName = $this->getConfig()->get('emailParser');
+        }
+
+        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
+        $parser = new $parserClassName($this->getEntityManager());
+
         $monitoredFoldersArr = explode(',', $monitoredFolders);
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
@@ -288,15 +300,15 @@ class EmailAccount extends Record
                 $message = null;
                 $email = null;
                 try {
-                    $message = $storage->getMessage($id);
-                    if ($message && $emailAccount->get('keepFetchedEmailsUnread')) {
+                    $message = new \Espo\Core\Mail\MessageWrapper($storage, $id, $parser);
+
+                    if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
                         $flags = $message->getFlags();
                     }
-                    try {
-                    	$email = $importer->importMessage($message, null, $teamIdList, [$userId], $filterCollection, $fetchOnlyHeader, $folderData);
-    	            } catch (\Exception $e) {
-    	                $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
-    	            }
+
+                    $importMethodName = 'importWith' . $parserName;
+
+                    $email = $this->$importMethodName($importer, $emailAccount, $message, $teamIdList, null, [$userId], $filterCollection, $fetchOnlyHeader, $folderData);
 
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
                         if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
@@ -305,7 +317,7 @@ class EmailAccount extends Record
                     }
 
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 if (!empty($email)) {
@@ -318,10 +330,10 @@ class EmailAccount extends Record
                 if ($k == count($ids) - 1) {
                     $lastUID = $storage->getUniqueId($id);
 
-                    if ($message && isset($message->date)) {
+                    if ($email && $email->get('dateSent')) {
                         $dt = null;
                         try {
-                            $dt = new \DateTime($message->date);
+                            $dt = new \DateTime($email->get('dateSent'));
                         } catch (\Exception $e) {}
 
                         if ($dt) {
@@ -348,6 +360,28 @@ class EmailAccount extends Record
         $storage->close();
 
         return true;
+    }
+
+    protected function importWithPhpMimeMailParser($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
+    {
+        $email = null;
+        try {
+            $email = $importer->importMessage('PhpMimeMailParser', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message w/ php-mime-mail-parser): [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+        return $email;
+    }
+
+    protected function importWithZendMail($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
+    {
+        $email = null;
+        try {
+            $email = $importer->importMessage('ZendMail', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailAccount '.$emailAccount->id.' (Import Message w/ zend-mail): [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+        return $email;
     }
 
     protected function noteAboutEmail($email)

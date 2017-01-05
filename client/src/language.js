@@ -117,10 +117,10 @@ Espo.define('language', [], function () {
                 }
             }
 
-            this.fetch();
+            this.fetch(false, disableCache);
         },
 
-        fetch: function (sync) {
+        fetch: function (sync, disableCache) {
             var self = this;
             $.ajax({
                 url: this.url,
@@ -129,7 +129,9 @@ Espo.define('language', [], function () {
                 async: !(sync || false),
                 success: function (data) {
                     self.data = data;
-                    self.storeToCache();
+                    if (!disableCache) {
+                        self.storeToCache();
+                    }
                     self.trigger('sync');
                 }
             });

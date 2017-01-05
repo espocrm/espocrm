@@ -157,6 +157,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'search') {
                 data.searchParams = this.searchParams;
                 data.searchData = this.searchData;
+                data.searchValues = this.getSearchValues();
+                data.searchType = this.getSearchType();
+                data.searchTypeList = this.getSearchTypeList();
             }
             return data;
         },
@@ -201,6 +204,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
+            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip');
+
+            if (this.options.readOnlyDisabled) {
+                this.readOnly = false;
+            }
+
             this.disabledLocked = this.options.disabledLocked || false;
             this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 
@@ -233,7 +242,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, this);
             }
 
-            if ((this.mode == 'detail' || this.mode == 'edit') && this.model.getFieldParam(this.name, 'tooltip')) {
+            if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 var $a;
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted"><span class="glyphicon glyphicon-info-sign"></span></a>');
@@ -244,7 +253,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         placement: 'bottom',
                         container: 'body',
                         html: true,
-                        content: this.translate(this.name, 'tooltips', this.model.name).replace(/\n/g, "<br />"),
+                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
                         trigger: 'click',
                     }).on('shown.bs.popover', function () {
                         $('body').one('click', function () {
@@ -292,6 +301,22 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        getSearchParamsData: function () {
+            return this.searchParams.data || {};
+        },
+
+        getSearchValues: function () {
+            return this.getSearchParamsData().values || {};
+        },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || this.searchParams.type;
+        },
+
+        getSearchTypeList: function () {
+            return this.searchTypeList;
         },
 
         initInlineEdit: function () {

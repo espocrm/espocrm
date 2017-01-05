@@ -67,6 +67,19 @@ class Integration extends \Espo\Core\Controllers\Record
         $entity->set($data);
         $this->getEntityManager()->saveEntity($entity);
 
+        $integrationsConfigData = $this->getConfig()->get('integrations');
+
+        if (!$integrationsConfigData || !($integrationsConfigData instanceof \StdClass)) {
+            $integrationsConfigData = (object)[];
+        }
+        $integrationName = $params['id'];
+
+        $integrationsConfigData->$integrationName = $entity->get('enabled');
+        $this->getConfig()->set('integrations', $integrationsConfigData);
+
+        $this->getConfig()->save();
+
+
         return $entity->toArray();
     }
 }

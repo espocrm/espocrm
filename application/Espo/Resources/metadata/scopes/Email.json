@@ -7,5 +7,7 @@
     "notifications": true,
     "object": true,
     "customizable": true,
-    "activity": true
+    "activity": true,
+    "activityStatusList": ["Draft"],
+    "historyStatusList": ["Archived", "Sent"]
 }

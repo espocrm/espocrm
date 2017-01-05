@@ -6,16 +6,16 @@
         },
         "recordsPerPage": {
             "type": "int",
-            "minValue": 1,
-            "maxValue": 1000,
+            "min": 1,
+            "max": 200,
             "default": 20,
             "required": true,
             "tooltip": true
         },
         "recordsPerPageSmall": {
             "type": "int",
-            "minValue": 1,
-            "maxValue": 100,
+            "min": 1,
+            "max": 100,
             "default": 10,
             "required": true,
             "tooltip": true
@@ -128,7 +128,8 @@
         "language": {
             "type": "enum",
             "options": ["en_US"],
-            "default": "en_US"
+            "default": "en_US",
+            "view": "views/settings/fields/language"
         },
         "globalSearchEntityList": {
             "type": "multiEnum",
@@ -252,11 +253,13 @@
         },
         "ldapUserDefaultTeam": {
             "type": "link",
-            "tooltip": true
+            "tooltip": true,
+            "entity": "Team"
         },
         "ldapUserTeams": {
             "type": "linkMultiple",
-            "tooltip": true
+            "tooltip": true,
+            "entity": "Team"
         },
         "exportDisabled": {
             "type": "bool",
@@ -303,7 +306,8 @@
         },
         "b2cMode": {
             "type": "bool",
-            "default": false
+            "default": false,
+            "tooltip": true
         },
         "avatarsDisabled": {
             "type": "bool",
@@ -393,26 +397,19 @@
             "type": "multiEnum",
             "view": "views/settings/fields/calendar-entity-list"
         },
+        "activitiesEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/activities-entity-list"
+        },
+        "historyEntityList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/history-entity-list"
+        },
         "googleMapsApiKey": {
             "type": "varchar"
-        }
-    },
-    "links": {
-        "ldapUserDefaultTeam": {
-            "type": "belongsTo",
-            "entity": "Team"
         },
-        "ldapUserTeams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "foreign": "users",
-            "additionalColumns": {
-                "role": {
-                    "type": "varchar",
-                    "len": 100
-                }
-            },
-            "layoutRelationshipsDisabled": true
+        "massEmailDisableMandatoryOptOutLink": {
+            "type": "bool"
         }
     }
 }

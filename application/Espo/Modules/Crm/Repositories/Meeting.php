@@ -30,8 +30,9 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\Utils\Util;
 
-class Meeting extends \Espo\Core\ORM\Repositories\RDB
+class Meeting extends \Espo\Core\Repositories\Event
 {
     protected function beforeSave(Entity $entity, array $options = array())
     {
@@ -117,120 +118,4 @@ class Meeting extends \Espo\Core\ORM\Repositories\RDB
             }
         }
     }
-
-    public function getEntityReminderList(Entity $entity)
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-        $reminderList = [];
-
-        $sql = "
-            SELECT DISTINCT `seconds`, `type`
-            FROM `reminder`
-            WHERE
-                `entity_type` = ".$pdo->quote($entity->getEntityType())." AND
-                `entity_id` = ".$pdo->quote($entity->id)." AND
-                `deleted` = 0
-            ORDER BY `seconds` ASC
-        ";
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        foreach ($rows as $row) {
-            $o = new \StdClass();
-            $o->seconds = intval($row['seconds']);
-            $o->type = $row['type'];
-            $reminderList[] = $o;
-        }
-
-        return $reminderList;
-    }
-
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        if (
-            $entity->isNew() ||
-            $entity->isFieldChanged('assignedUserId') ||
-            $entity->isFieldChanged('usersIds') ||
-            $entity->isFieldChanged('dateStart') ||
-            $entity->has('reminders')
-        ) {
-            $pdo = $this->getEntityManager()->getPDO();
-
-            $reminderTypeList = $this->getMetadata()->get('entityDefs.Reminder.fields.type.options');
-
-            if (!$entity->has('reminders')) {
-                $reminderList = $this->getEntityReminderList($entity);
-            } else {
-                $reminderList = $entity->get('reminders');
-            }
-
-            if (!$entity->isNew()) {
-                $sql = "
-                    DELETE FROM `reminder`
-                    WHERE
-                        entity_id = ".$pdo->quote($entity->id)." AND
-                        entity_type = ".$pdo->quote($entity->getEntityName())." AND
-                        deleted = 0
-                ";
-                $pdo->query($sql);
-            }
-
-            if (empty($reminderList) || !is_array($reminderList)) return;
-
-            $entityType = $entity->getEntityName();
-
-            $dateStart = $entity->get('dateStart');
-
-            if (!$dateStart) {
-                $e = $this->get($entity->id);
-                if ($e) {
-                    $dateStart = $e->get('dateStart');
-                }
-            }
-
-            $userIdList = $entity->getLinkMultipleIdList('users');
-
-            if (!$dateStart) return;
-            if (empty($userIdList)) return;
-
-            $dateStartObj = new \DateTime($dateStart);
-            if (!$dateStartObj) return;
-
-            foreach ($reminderList as $item) {
-                $remindAt = clone $dateStartObj;
-                $seconds = intval($item->seconds);
-                $type = $item->type;
-
-                if (!in_array($type , $reminderTypeList)) continue;
-
-                $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
-
-                foreach ($userIdList as $userId) {
-                    $id = uniqid(true);
-
-                    $sql = "
-                        INSERT
-                        INTO `reminder`
-                        (id, entity_id, entity_type, `type`, user_id, remind_at, start_at, `seconds`)
-                        VALUES (
-                            ".$pdo->quote($id).",
-                            ".$pdo->quote($entity->id).",
-                            ".$pdo->quote($entityType).",
-                            ".$pdo->quote($type).",
-                            ".$pdo->quote($userId).",
-                            ".$pdo->quote($remindAt->format('Y-m-d H:i:s')).",
-                            ".$pdo->quote($dateStart).",
-                            ".$pdo->quote($seconds)."
-                        )
-                    ";
-                    $pdo->query($sql);
-                }
-            }
-        }
-    }
 }
-

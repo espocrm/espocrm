@@ -61,6 +61,20 @@ class User extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterPortal(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isPortalUser' => true
+        );
+    }
+
+    protected function filterInternal(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isPortalUser' => false
+        );
+    }
+
     protected function boolFilterOnlyMyTeam(&$result)
     {
         $this->addJoin('teams', $result);
@@ -68,6 +82,25 @@ class User extends \Espo\Core\SelectManagers\Base
         	'teamsMiddle.teamId' => $this->getUser()->getLinkMultipleIdList('teams')
         );
         $this->setDistinct(true, $result);
+    }
+
+    protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'id' => $this->getUser()->id
+        );
+    }
+
+    protected function accessOnlyTeam(&$result)
+    {
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+        $result['whereClause'][] = array(
+            'OR' => array(
+                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+                'id' => $this->getUser()->id
+            )
+        );
     }
 }
 

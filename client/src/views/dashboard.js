@@ -64,18 +64,24 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         });
 
                         (data.dashboardTabList).forEach(function (name) {
-                            var isExisting = false;
                             var layout = [];
                             this.dashboardLayout.forEach(function (d) {
                                 if (d.name == name) {
-                                    isExisting = true;
                                     layout = d.layout;
                                 }
                             }, this);
+
+                            if (name in data.renameMap) {
+                                name = data.renameMap[name];
+                            }
                             dashboardLayout.push({
                                 name: name,
                                 layout: layout
                             });
+                        }, this);
+
+                        this.dashletIdList.forEach(function (item) {
+                            this.clearView('dashlet-' + item);
                         }, this);
 
                         this.dashboardLayout = dashboardLayout;
@@ -318,8 +324,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 view.render();
 
                 this.listenToOnce(view, 'change', function () {
+                    this.clearView(id);
                     this.createDashletView(id, name, label, function (view) {
-                        view.render();
                     }, this);
                 }, this);
 

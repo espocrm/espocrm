@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="js/install.js"></script>
 		<link href="../client/css/espo.css" rel="stylesheet">
 		<link href="css/install.css" rel="stylesheet">
+		<link rel="shortcut icon" href="../client/img/favicon.ico" type="image/x-icon">
 	</head>
 	<body class='install-body'>
 		<header id="header"></header>

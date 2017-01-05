@@ -104,6 +104,9 @@ class Email extends \Espo\Core\Notificators\Base
             $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
         }
 
+        if (!$entity->has('to')) {
+            $this->getEntityManager()->getRepository('Email')->loadToField($entity);
+        }
         $person = null;
 
         $from = $entity->get('from');

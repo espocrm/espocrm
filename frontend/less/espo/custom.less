@@ -7,8 +7,8 @@
 }
 
 .panel-body {
-  padding: 14px;
-  .clearfix();
+    padding: @panel-padding;
+    .clearfix();
 }
 
 blockquote {
@@ -29,19 +29,29 @@ blockquote {
 }
 
 .modal-header {
-  padding: 10px 14px;
-  border-bottom: 1px solid @modal-header-border-color;
-  min-height: (10px + @modal-title-line-height);
+  padding: @modal-title-padding @panel-padding;
+  border-bottom: 0 solid @modal-header-border-color;
+  min-height: (@modal-title-padding + @modal-title-line-height);
+}
+
+.modal-header .close {
+    margin-top: 3px;
 }
 
 .modal-footer {
-    margin-top: 10px;
+    margin-top: @modal-title-padding;
     padding: @panel-padding @panel-padding @panel-padding;
 }
 
 .modal-footer .btn.pull-left {
     margin-left: 0;
     margin-right: 0;
+}
+
+.modal-dialog > .modal-content {
+    background-clip: border-box;
+    border-color: @default-border-color;
+    border-width: 0;
 }
 
 .table thead > tr > th {
@@ -452,31 +462,143 @@ select[multiple].input-sm {
     z-index: 3;
 }
 
-.panel-body > .list-container > .list-expanded {
+.panel-body > div > .list-expanded {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;
 }
-.panel-body > .list-container > .list {
+.panel-body > div > .list {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;
 }
-.panel-body > .list-container > .list > table td:first-child,
-.panel-body > .list-container > .list > table th:first-child {
+.panel-body > div > .list > table td:first-child,
+.panel-body > div > .list > table th:first-child {
     padding-left: @panel-padding;
 }
-.panel-body > .list-container > .list > table td:last-child,
-.panel-body > .list-container > .list > table th:last-child {
+.panel-body > div > .list > table td:last-child,
+.panel-body > div > .list > table th:last-child {
     padding-right: @panel-padding;
+}
+
+.modal-body > div > .list {
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
+}
+.modal-body > div > .list > table td:first-child,
+.modal-body > div > .list > table th:first-child {
+     padding-left: @panel-padding;
+}
+.modal-body > div > .list > table td:last-child,
+.modal-body > div > .list > table th:last-child {
+    padding-right: @panel-padding;
+}
+
+#main > .list-container > .list {
+    margin-left: -@container-padding;
+    margin-right: -@container-padding;
+}
+#main > .list-container > .list > table td:first-child,
+#main > .list-container > .list > table th:first-child {
+    padding-left: @container-padding;
+}
+#main > .list-container > .list > table td:last-child,
+#main > .list-container > .list > table th:last-child {
+    padding-right: @container-padding;
 }
 
 .panel-body > .no-margin {
     margin: -@panel-padding;
 }
 
+.panel-body .no-side-margin {
+    margin-left: -@panel-padding;
+    margin-right: -@panel-padding;
+
+    > table td:first-child,
+    > table th:first-child {
+        padding-left: @panel-padding;
+    }
+
+    > table td:last-child,
+    > table th:last-child {
+        padding-right: @panel-padding;
+    }
+}
+
+.panel-body .no-bottom-margin {
+    margin-bottom: -@panel-padding;
+}
+
+.table.less-padding > thead > tr > th,
+.table.less-padding > tbody >tr > th,
+.table.less-padding > tfoot >tr > th,
+.table.less-padding > thead >tr > td,
+.table.less-padding > tbody >tr > td,
+.table.less-padding > tfoot >tr > td {
+    padding: @table-cell-padding @table-cell-padding/2 @table-cell-padding @table-cell-padding/2;
+}
+
+.panel > .panel-body > .list-container > .list > .list-group {
+    > .list-group-item {
+        border-width: 0;
+        border-bottom-width: 1px;
+    }
+    > li.list-group-item:first-child {
+        border-top-width: 1px;
+    }
+    > li.list-group-item:last-child {
+        border-bottom-width: 0;
+    }
+}
+
+
+.record {
+    .panel-warning {
+        > .panel-heading {
+            background-color: @state-warning-border;
+            .btn-warning {
+                color: @panel-warning-text;
+                background-color: @state-warning-border;
+                border-color: @state-warning-border;
+            }
+        }
+    }
+    .panel-danger {
+        > .panel-heading {
+            background-color: @state-danger-border;
+            .btn-danger {
+                color: @panel-danger-text;
+                background-color: @state-danger-border;
+                border-color: @state-danger-border;
+            }
+        }
+    }
+    .panel-info {
+        border-color: @state-info-bg;
+        > .panel-heading {
+            color: @panel-info-text;
+            background-color: @state-info-bg;
+            .btn-info {
+                color: @panel-info-text;
+                background-color: @state-info-bg;
+                border-color: @state-info-bg;
+            }
+        }
+    }
+    .panel-success {
+        > .panel-heading {
+            background-color: @state-success-border;
+            .btn-success {
+                color: @panel-success-text;
+                background-color: @state-success-border;
+                border-color: @state-success-border;
+            }
+        }
+    }
+}
+
 table.no-margin {
     margin-bottom: 0;
 }
-
 
 .list-expanded > .show-more {
     padding: 0px;
@@ -495,21 +617,21 @@ table.no-margin {
 
 .show-more > .btn {
     border-radius: 0;
-
+    border-width: 0;
     border-color: #e0e0e0;
 }
 
-.panel-body > .list-container:first-child > .list-expanded:first-child {
+.panel-body > div:first-child > .list-expanded:first-child {
     margin-top: -@panel-padding;
 }
-.panel-body > .list-container:last-child > .list-expanded:last-child {
+.panel-body > div:last-child > .list-expanded:last-child {
     margin-bottom: -@panel-padding;
 }
 
-.panel-body > .list-container:first-child > .list:first-child {
+.panel-body > div:first-child > .list:first-child {
     margin-top: -@panel-padding;
 }
-.panel-body > .list-container:last-child > .list:last-child {
+.panel-body > div:last-child > .list:last-child {
     margin-bottom: -@panel-padding;
 }
 
@@ -549,11 +671,17 @@ table.no-margin {
     table-layout: fixed;
 }
 
-.list > table td, table.list th {
+.list > table td,
+table.list th {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.list > table td > div.field {
+    white-space: normal;
+}
+
 .list > table td.cell[data-name="buttons"] {
     overflow: visible;
 }
@@ -625,7 +753,7 @@ td.cell[data-name="buttons"] > .btn-group {
 }
 
 .list-container + .button-container {
-    margin-top: 6px;
+    margin-top: 10px;
     padding-bottom: 0;
 }
 
@@ -831,15 +959,34 @@ body > footer > p a:visited {
 
 .record .middle > .panel:first-child {
     margin-top: 0;
+    border-top-width: 2px;
 }
 
 .record .middle > .panel {
-    margin-top: -1 * @line-height-computed - 2;
+    margin-top: -1 * @line-height-computed;
+    border-top-width: 0;
+    > .panel-heading {
+        .btn-group {
+            top: -6px;
+            .btn {
+                border-top-width: 0;
+            }
+        }
+    }
 }
 
-.bottom > .panel.sticked,
-.side > .panel.sticked {
-    margin-top: -1 * @line-height-computed - 2;
+.panel.sticked,
+.panel.sticked {
+    margin-top: -1 * @line-height-computed;
+    border-top-width: 0;
+    > .panel-heading {
+        .btn-group {
+            top: -6px;
+            .btn {
+                border-top-width: 0;
+            }
+        }
+    }
 }
 
 .stream-head-container {
@@ -1106,6 +1253,39 @@ h5 {
 
 .post-container .attachments {
     width: 270px;
+}
+
+
+
+.dynamic-logic-expression-container {
+    div.item-list {
+        margin-left: 30px;
+    }
+    div.item-list > div {
+        margin: 0 0 10px 0;
+    }
+    div.group-head {
+        line-height: 33px;
+    }
+    .dynamic-logic-edit-item-row {
+        > div {
+            line-height: 33px;
+        }
+    }
+}
+
+.dynamic-logic-options {
+    a.remove-option-list,
+    a.add-option-list {
+        line-height: 33px;
+    }
+    .option-list-item-header {
+        margin-top: -10px;
+    }
+
+    .dynamic-logic-options-list-container {
+        margin-bottom: 0;
+    }
 }
 
 @media screen and (min-width: @screen-sm-min) {

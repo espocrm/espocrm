@@ -138,11 +138,19 @@ class Meeting extends \Espo\Services\Record
 
         $emailHash = array();
 
+        $sentCount = 0;
+
         $users = $entity->get('users');
         foreach ($users as $user) {
+            if ($user->id === $this->getUser()->id) {
+                if ($entity->getLinkMultipleColumn('users', 'status', $user->id) === 'Accepted') {
+                    continue;
+                }
+            }
             if ($user->get('emailAddress') && !array_key_exists($user->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $user, 'users');
                 $emailHash[$user->get('emailAddress')] = true;
+                $sentCount ++;
             }
         }
 
@@ -151,6 +159,7 @@ class Meeting extends \Espo\Services\Record
             if ($contact->get('emailAddress') && !array_key_exists($contact->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $contact, 'contacts');
                 $emailHash[$user->get('emailAddress')] = true;
+                $sentCount ++;
             }
         }
 
@@ -159,8 +168,11 @@ class Meeting extends \Espo\Services\Record
             if ($lead->get('emailAddress') && !array_key_exists($lead->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $lead, 'leads');
                 $emailHash[$user->get('emailAddress')] = true;
+                $sentCount ++;
             }
         }
+
+        if (!$sentCount) return false;
 
         return true;
     }

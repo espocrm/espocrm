@@ -61,5 +61,10 @@
             "name":"todays"
         }
     ],
-    "boolFilterList": ["onlyMy"]
+    "boolFilterList": ["onlyMy"],
+    "activityDefs": {
+        "link": "meetings",
+        "activitiesCreate": true,
+        "historyCreate": true
+    }
 }

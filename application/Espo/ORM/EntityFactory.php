@@ -43,8 +43,11 @@ class EntityFactory
     public function create($name)
     {
         $className = $this->entityManager->normalizeEntityName($name);
-        $defs = $this->metadata->get($name);
         if (!class_exists($className)) {
+            return null;
+        }
+        $defs = $this->metadata->get($name);
+        if (is_null($defs)) {
             return null;
         }
         $entity = new $className($defs, $this->entityManager);

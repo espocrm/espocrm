@@ -34,12 +34,9 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Lead extends \Espo\Core\Controllers\Record
 {
-    public function actionConvert($params, $data, $request)
+    public function postActionConvert($params, $data, $request)
     {
         if (empty($data['id'])) {
-            throw new BadRequest();
-        }
-        if (!$request->isPost()) {
             throw new BadRequest();
         }
         $entity = $this->getRecordService()->convert($data['id'], $data['records']);
@@ -48,5 +45,14 @@ class Lead extends \Espo\Core\Controllers\Record
             return $entity->toArray();
         }
         throw new Error();
+    }
+
+    public function postActionGetConvertAttributes($params, $data, $request)
+    {
+        if (empty($data['id'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getConvertAttributes($data['id']);
     }
 }

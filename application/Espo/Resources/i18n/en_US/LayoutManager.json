@@ -3,12 +3,23 @@
         "width": "Width (%)",
         "link": "Link",
         "notSortable": "Not Sortable",
-        "align": "Align"
+        "align": "Align",
+        "panelName": "Panel Name",
+        "style": "Style",
+        "sticked": "Sticked"
     },
     "options": {
         "align": {
             "left": "Left",
             "right": "Right"
+        },
+        "style": {
+            "default": "Default",
+            "success": "Success",
+            "danger": "Danger",
+            "info": "Info",
+            "warning": "Warning",
+            "primary": "Primary"
         }
     }
 }

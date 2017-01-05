@@ -52,9 +52,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             this.operator = this.options.operator || this.operator;
             this.operatorString = this.options.operatorString || this.operatorString;
 
-            this.field = (this.itemData.data || {}).field || this.itemData.attribute;
-
             this.additionalData = (this.itemData.data || {});
+
+            this.field = (this.itemData.data || {}).field || this.itemData.attribute;
 
             this.wait(true);
 
@@ -70,7 +70,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
         },
 
         populateValues: function () {
-            this.model.set(this.itemData.attribute, this.itemData.value);
+            if (this.itemData.attribute) {
+                this.model.set(this.itemData.attribute, this.itemData.value);
+            }
             this.model.set(this.additionalData.values || {});
         },
 
@@ -87,7 +89,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                el: '[data-view-key="'+key+'"]'
+                el: this.getSelector() + ' [data-view-key="'+key+'"]'
             });
         },
 

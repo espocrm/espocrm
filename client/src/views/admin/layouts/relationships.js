@@ -30,15 +30,30 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributes: ['name'],
+        dataAttributeList: ['name', 'style'],
 
-        editable: false,
+        editable: true,
+
+        dataAttributesDefs: {
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            }
+        },
+
+        languageCategory: 'links',
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.wait(true);
+            this.loadLayout(function () {
+                this.wait(false);
+            }.bind(this));
+        },
 
+        loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
 
@@ -59,11 +74,28 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                     this.enabledFields = [];
                     this.disabledFields = [];
                     for (var i in layout) {
-                        this.enabledFields.push({
-                            name: layout[i],
-                            label: this.getLanguage().translate(layout[i], 'links', this.scope)
-                        });
-                        this.enabledFieldsList.push(layout[i]);
+                        var item = layout[i];
+                        var o;
+                        if (typeof item == 'string' || item instanceof String) {
+                            o = {
+                                name: item,
+                                label: this.getLanguage().translate(item, 'links', this.scope)
+                            };
+                        } else {
+                            o = item;
+                            o.label =  this.getLanguage().translate(o.name, 'links', this.scope);
+                        }
+                        this.dataAttributeList.forEach(function (attribute) {
+                            if (attribute === 'name') return;
+                            if (attribute in o) return;
+
+                            var value = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', o.name, attribute]);
+                            if (value === null) return;
+                            o[attribute] = value;
+                        }, this);
+
+                        this.enabledFields.push(o);
+                        this.enabledFieldsList.push(o.name);
                     }
 
                     for (var i in allFields) {
@@ -80,17 +112,9 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                         this.rowLayout[i].label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
                     }
 
-                    this.wait(false);
+                    callback();
                 }.bind(this), false);
             }.bind(this));
-        },
-
-        fetch: function () {
-            var layout = [];
-            $("#layout ul.enabled > li").each(function (i, el) {
-                layout.push($(el).data('name'));
-            }.bind(this));
-            return layout;
         },
 
         validate: function () {

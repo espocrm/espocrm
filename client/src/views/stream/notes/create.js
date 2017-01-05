@@ -63,11 +63,20 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
 
                 if (this.assignedUserId) {
                     this.messageName = 'createAssigned';
+
                     if (this.isThis) {
                         this.messageName += 'This';
+
+                        if (this.assignedUserId == this.model.get('createdById')) {
+                            this.messageName += 'Self';
+                        }
                     } else {
-                        if (isYou) {
-                            this.messageName += 'You';
+                        if (this.assignedUserId == this.model.get('createdById')) {
+                            this.messageName += 'Self';
+                        } else {
+                            if (isYou) {
+                                this.messageName += 'You';
+                            }
                         }
                     }
                 }

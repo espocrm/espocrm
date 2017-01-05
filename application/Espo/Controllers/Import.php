@@ -127,8 +127,48 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
+        if (!isset($data['fieldDelimiter'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['textQualifier'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['dateFormat'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['timeFormat'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['personNameFormat'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['decimalMark'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['defaultValues'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['action'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['attachmentId'])) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data['entityType'])) {
+            throw new BadRequest();
+        }
+
         $importParams = array(
-            'headerRow' => $data['headerRow'],
+            'headerRow' => !empty($data['headerRow']),
             'fieldDelimiter' => $data['fieldDelimiter'],
             'textQualifier' => $data['textQualifier'],
             'dateFormat' => $data['dateFormat'],
@@ -138,6 +178,8 @@ class Import extends \Espo\Core\Controllers\Record
             'currency' => $data['currency'],
             'defaultValues' => $data['defaultValues'],
             'action' => $data['action'],
+            'skipDuplicateChecking' => !empty($data['skipDuplicateChecking']),
+            'idleMode' => !empty($data['idleMode'])
         );
 
         if (array_key_exists('updateBy', $data)) {

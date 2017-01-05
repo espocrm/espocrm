@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Crm:Views.Opportunity.Detail', 'Views.Detail', function (Dep) {
+Espo.define('crm:views/opportunity/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 

@@ -48,7 +48,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
         },
 
         getViewName: function (type) {
-            return this.viewMap[type] || this.getMetadata().get('clientDefs.' + this.name + '.views.' + type) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
+            return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
         },
 
         beforeList: function () {
@@ -83,17 +83,21 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             this.handleCheckAccess('read');
         },
 
+        createViewView: function (options, model) {
+            this.main(this.getViewName('detail'), {
+                scope: this.name,
+                model: model,
+                returnUrl: options.returnUrl,
+                returnDispatchParams: options.returnDispatchParams,
+                params: options
+            });
+        },
+
         view: function (options) {
             var id = options.id;
 
             var createView = function (model) {
-                this.main(this.getViewName('detail'), {
-                    scope: this.name,
-                    model: model,
-                    returnUrl: options.returnUrl,
-                    returnDispatchParams: options.returnDispatchParams,
-                    params: options
-                });
+                this.createViewView.call(this, options, model);
             }.bind(this);
 
             if ('model' in options) {
@@ -231,7 +235,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             if (!this.name) {
                 throw new Error('No collection for unnamed controller');
             }
-            var collectionName = this.name;
+            var collectionName = this.entityType || this.name;
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
                     var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
@@ -258,7 +262,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             if (!this.name) {
                 throw new Error('No collection for unnamed controller');
             }
-            var modelName = this.name;
+            var modelName = this.entityType || this.name;
             this.modelFactory.create(modelName, function (model) {
                 callback.call(context, model);
             }, context);

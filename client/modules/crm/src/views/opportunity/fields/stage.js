@@ -50,26 +50,15 @@ Espo.define('crm:views/opportunity/fields/stage', 'views/fields/enum', function 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.probabilityMap = this.getMetadata().get('entityDefs.Opportunity.probabilityMap') || {};
+            this.probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
 
             if (this.mode != 'list') {
-                if (!this.model.has('probability') && this.model.has('stage')) {
-                    this.model.set('probability', this.probabilityMap[this.model.get('stage')]);
-                }
-
                 this.on('change', function () {
                     this.model.set('probability', this.probabilityMap[this.model.get(this.name)]);
                 }, this);
             }
-        },
+        }
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-            if (this.probabilityChanged) {
-                data['probability'] = this.model.get('probability');
-            }
-            return data;
-        },
     });
 
 });

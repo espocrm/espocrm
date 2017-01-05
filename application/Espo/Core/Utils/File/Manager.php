@@ -335,7 +335,7 @@ class Manager
     {
         $currentData = $this->getContents($path);
         if (!isset($currentData) || !$currentData) {
-            return false;
+            return true;
         }
 
         $currentDataArray = Utils\Json::getArrayData($currentData);
@@ -344,6 +344,9 @@ class Manager
 
         if (is_null($unsettedData) || (is_array($unsettedData) && empty($unsettedData))) {
             $fullPath = $this->concatPaths($path);
+            if (!file_exists($fullPath)) {
+                return true;
+            }
             return $this->unlink($fullPath);
         }
 
@@ -546,6 +549,11 @@ class Manager
         return (bool) $result;
     }
 
+    public function removeDir($dirPaths)
+    {
+        return $this->rmdir($dirPaths);
+    }
+
     /**
      * Remove file/files by given path
      *
@@ -617,11 +625,18 @@ class Manager
             $items = (array) $items;
         }
 
+        $removeList = array();
         $permissionDeniedList = array();
         foreach ($items as $item) {
             if (isset($dirPath)) {
                 $item = Utils\Util::concatPath($dirPath, $item);
             }
+
+            if (!file_exists($item)) {
+                continue;
+            }
+
+            $removeList[] = $item;
 
             if (!is_writable($item)) {
                 $permissionDeniedList[] = $item;
@@ -636,11 +651,7 @@ class Manager
         }
 
         $result = true;
-        foreach ($items as $item) {
-            if (isset($dirPath)) {
-                $item = Utils\Util::concatPath($dirPath, $item);
-            }
-
+        foreach ($removeList as $item) {
             if (is_dir($item)) {
                 $result &= $this->removeInDir($item, true);
             } else {

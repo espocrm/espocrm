@@ -61,7 +61,8 @@
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc": false,
+        "textFilterFields": ["name", "method", "serviceName"]
     },
     "indexes": {
         "executeTime": {

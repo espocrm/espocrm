@@ -6,7 +6,9 @@
                 {
                     "name": "name"
                 },
-                false
+                {
+                    "name": "parent"
+                }
             ],
             [
                 {
@@ -26,7 +28,9 @@
                 {
                     "name": "duration"
                 },
-                false
+                {
+                    "name": "reminders"
+                }
             ],
             [
                 {

@@ -5,18 +5,18 @@
     "Convert": "Umwandeln"
   },
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "emailAddress": "E-Mail",
     "title": "Funktion",
     "website": "Webseite",
     "phoneNumber": "Telefon",
     "accountName": "Firmenname",
-    "doNotCall": "Nicht anrufen",
+    "doNotCall": "Anrufe unerwünscht",
     "address": "Adresse",
     "status": "Status",
     "source": "Quelle",
-    "opportunityAmount": "Verkaufschance Betrag",
-    "opportunityAmountConverted": "Verkaufschance Betrag (konvertiert)",
+    "opportunityAmount": "Verkaufschance Volumen",
+    "opportunityAmountConverted": "Verkaufschance Volumen (umgerechnet)",
     "description": "Beschreibung",
     "createdAccount": "Firma",
     "createdContact": "Kontakt",
@@ -32,7 +32,8 @@
     "createdAccount": "Firma",
     "createdContact": "Kontakt",
     "createdOpportunity": "Verkaufschance",
-    "cases": "Fälle"
+    "cases": "Fälle",
+    "documents": "Dokumente"
   },
   "options": {
     "status": {
@@ -47,10 +48,10 @@
       "": "Kein(e)",
       "Call": "Anruf",
       "Email": "E-Mail",
-      "Existing Customer": "Bestehender Kunde",
+      "Existing Customer": "Bestandskunde",
       "Partner": "Partner",
       "Public Relations": "Public Relations",
-      "Web Site": "Web Seite",
+      "Web Site": "Webseite",
       "Campaign": "Kampagne",
       "Other": "Andere"
     }

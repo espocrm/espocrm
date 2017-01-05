@@ -49,11 +49,13 @@ Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
                 case 'Email':
                     tpl = icoTpl.replace('{icoName}', 'envelope');
                     break;
+                default:
+                    tpl = icoTpl.replace('{icoName}', 'calendar');
+                    break;
             }
 
             this._template = tpl;
-        },
-
+        }
 
     });
 

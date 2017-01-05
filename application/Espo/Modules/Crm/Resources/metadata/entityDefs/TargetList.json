@@ -41,6 +41,23 @@
         },
         "campaigns": {
             "type": "link"
+        },
+        "includingActionList": {
+            "type": "multiEnum",
+            "view": "crm:views/target-list/fields/including-action-list",
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutLinkDisabled": true,
+            "notStorable": true,
+            "required": true
+        },
+        "excludingActionList": {
+            "type": "multiEnum",
+            "view": "crm:views/target-list/fields/including-action-list",
+            "layoutDetailDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutLinkDisabled": true,
+            "notStorable": true
         }
     },
     "links": {

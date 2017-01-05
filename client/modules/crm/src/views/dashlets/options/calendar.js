@@ -37,6 +37,12 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
             this.listenTo(this.model, 'change:mode', this.manageUsersField, this);
         },
 
+
+        init: function () {
+            Dep.prototype.init.call(this);
+            this.fields.enabledScopeList.options = this.getConfig().get('calendarEntityList') || [];
+        },
+
         manageUsersField: function () {
             if (this.model.get('mode') === 'timeline') {
                 this.showField('users');

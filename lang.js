@@ -92,6 +92,11 @@ function Lang (poPath, espoPath) {
     dirs.push(installDir);
     dirNames[installDir] = 'install/core/i18n/' + resLang + '/';
 
+
+    var templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
+    dirs.push(templatesDir);
+    dirNames[templatesDir] = 'application/Espo/Core/Templates/i18n/' + resLang + '/';
+
     this.dirs = dirs;
 };
 

@@ -12,7 +12,7 @@
         list-style-type: none;
         margin: 0;
     }
-    
+
     #layout ul li {
         list-style: none;
         border: 1px solid #CCC;
@@ -20,45 +20,43 @@
         padding: 5px;
         height: 32px;
     }
-    
+
     #layout header {
         font-weight: bold;
     }
-    
+
     #layout ul > li .left {
         float: left;
     }
-    
+
     #layout ul > li {
         background-color: #FFF;
     }
-    
+
     #layout ul.enabled > li .right {
         float: right;
     }
-    
+
     #layout ul.disabled > li .right {
         display: none;
     }
-    
 
-    
     #layout ul > li .width {
         font-size: small;
     }
-    
+
     #layout ul.disabled > li .width {
         display: none;
     }
-    
+
     #layout label {
         font-weight: normal;
     }
-    
+
     .enabled li a.edit-field {
         display: none;
     }
-    
+
     .enabled li:hover a.edit-field {
         display: block;
     }
@@ -70,7 +68,7 @@
             <header>{{translate 'Enabled' scope='Admin'}}</header>
             <ul class="enabled connected">
                 {{#each layout}}
-                    <li draggable="true" {{#each ../dataAttributes}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
+                    <li draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
                         <div class="left">
                             <label>{{label}}</label>
                         </div>

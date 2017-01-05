@@ -36,7 +36,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         validations: ['required', 'datetime', 'after', 'before'],
 
-        searchTypeOptions: ['lastSevenDays', 'ever', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
 
         timeFormatMap: {
             'HH:mm': 'H:i',
@@ -56,7 +56,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             return data;
         },
 
-        getValueForDisplay: function () {
+        getDateStringValue: function () {
             var value = this.model.get(this.name);
             if (!value) {
                 if (this.mode == 'edit' || this.mode == 'search') {

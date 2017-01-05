@@ -4,8 +4,13 @@
     "tab": true,
     "acl": true,
     "aclPortal": true,
+    "aclPortalLevelList": ["all", "account", "contact", "own", "no"],
     "customizable": true,
     "importable": true,
     "calendar": true,
-    "notifications": true
+    "activity": true,
+    "notifications": true,
+    "activityStatusList": ["Planned"],
+    "historyStatusList": ["Held", "Not Held"],
+    "statusField": "status"
 }

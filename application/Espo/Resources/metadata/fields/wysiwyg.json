@@ -15,7 +15,8 @@
       },
       {
          "name": "seeMoreDisabled",
-         "type": "bool"
+         "type": "bool",
+         "tooltip": true
       },
       {
          "name": "height",
@@ -24,6 +25,10 @@
       {
          "name": "minHeight",
          "type": "int"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
       }
    ],
    "filter": true,

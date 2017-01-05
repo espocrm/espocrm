@@ -58,7 +58,8 @@
         "Mass Emails": "Mass Emails",
         "Email Templates": "Email Templates",
         "Unsubscribe again": "Unsubscribe again",
-        "Subscribe again": "Subscribe again"
+        "Subscribe again": "Subscribe again",
+        "Create Target List": "Create Target List"
     },
     "presetFilters": {
         "active": "Active"

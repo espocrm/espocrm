@@ -102,7 +102,6 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
                 }, this);
             }
 
-
             this.actionList = Espo.Utils.clone(this.actionList);
 
             if (this.options.readOnly) {
@@ -136,7 +135,6 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
         ],
 
         setupDefaultOptions: function () {},
-
 
         setupActionList: function () {},
 

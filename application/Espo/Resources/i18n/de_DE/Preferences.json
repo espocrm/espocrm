@@ -4,29 +4,34 @@
     "timeFormat": "Zeitformat",
     "timeZone": "Zeitzone",
     "weekStart": "Erster Tag der Woche",
-    "thousandSeparator": "Tausender Trennzeichen",
+    "thousandSeparator": "Tausendertrennzeichen",
     "decimalMark": "Dezimaltrennzeichen",
     "defaultCurrency": "Standardwährung",
     "currencyList": "Währungsliste",
     "language": "Sprache",
     "smtpServer": "Server",
     "smtpPort": "Port",
-    "smtpAuth": "Autorisierung",
-    "smtpSecurity": "Sicherheit",
+    "smtpAuth": "Authentifizierung",
+    "smtpSecurity": "Transportsicherheit",
     "smtpUsername": "Benutzername",
     "emailAddress": "E-Mail",
     "smtpPassword": "Passwort",
     "smtpEmailAddress": "E-Mail Adresse",
     "exportDelimiter": "Export Trennzeichen",
     "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten",
-    "autoFollowEntityTypeList": "Autom. Beobachten",
+    "receiveMentionEmailNotifications": "E-Mail-Benachrichtigungen über Erwähnungen in Beiträgen",
+    "receiveStreamEmailNotifications": "E-Mail-Benachrichtigungen über Beiträge und Statusaktualisierungen",
+    "autoFollowEntityTypeList": "Automatisches Abonnieren",
     "signature": "E-Mail Signatur",
-    "dashboardTabList": "Reiter Liste",
-    "tabList": "Reiter Liste",
-    "defaultReminders": "Standarderinnerungen",
+    "dashboardTabList": "Menüliste",
+    "tabList": "Menüliste",
+    "defaultReminders": "Vorgaben für Benachrichtigungen",
     "theme": "Design",
-    "useCustomTabList": "Benutzerdefinierte Reiter Liste",
-    "emailReplyToAllByDefault": "Allen antworten als Standard"
+    "useCustomTabList": "Benutzerdefinierte Menüliste",
+    "emailReplyToAllByDefault": "Standardmäßig Allen antworten",
+    "dashboardLayout": "Dashboard Layout",
+    "emailReplyForceHtml": "E-Mail Antwort als HTML",
+    "doNotFillAssignedUserIfNotRequired": "Zugwiesenen Benutzer nicht ausfüllen wenn optional"
   },
   "options": {
     "weekStart": {
@@ -39,9 +44,9 @@
     "User Interface": "Benutzeroberfläche",
     "SMTP": "SMTP",
     "Misc": "Verschiedenes",
-    "Locale": "Lokale Einstellungen"
+    "Locale": "Lokalisierungs-Einstellungen"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Der Benutzer beobachtet alle neuen Einträge der gewählten Entität, sieht Neuigkeiten in den Vorgängen und erhält Benachrichtigungen."
+    "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten in den Aktivitäten und erhält Benachrichtigungen."
   }
 }

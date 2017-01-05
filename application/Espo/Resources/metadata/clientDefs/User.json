@@ -1,18 +1,77 @@
 {
+   "controller": "controllers/user",
    "views": {
       "detail": "views/user/detail",
       "list": "views/user/list"
    },
    "recordViews":{
       "detail":"views/user/record/detail",
-      "detailQuick":"views/user/record/detail-quick",
+      "detailSmall":"views/user/record/detail-quick",
       "edit":"views/user/record/edit",
-      "editQuick":"views/user/record/edit-quick",
+      "editSmall":"views/user/record/edit-quick",
       "list":"views/user/record/list"
    },
+   "modalViews": {
+      "detail": "views/user/modals/detail"
+   },
+   "defaultSidePanelFieldList": {
+      "detail": [
+        "avatar"
+      ],
+      "detailSmall": [
+        "avatar"
+      ],
+      "edit": [
+        "avatar"
+      ],
+      "editSmall": [
+        "avatar"
+      ]
+   },
+   "sidePanels": {
+      "detail": [
+         {
+            "name":"activities",
+            "label":"Activities",
+            "view":"crm:views/record/panels/activities",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"history",
+            "label":"History",
+            "view":"crm:views/record/panels/history",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"tasks",
+            "label":"Tasks",
+            "view":"crm:views/record/panels/tasks",
+            "aclScope": "Task"
+         }
+      ],
+      "detailSmall": [
+         {
+            "name":"activities",
+            "label":"Activities",
+            "view":"crm:views/record/panels/activities",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"history",
+            "label":"History",
+            "view":"crm:views/record/panels/history",
+            "aclScope": "Activities"
+         },
+         {
+            "name":"tasks",
+            "label":"Tasks",
+            "view":"crm:views/record/panels/tasks",
+            "aclScope": "Task"
+         }
+      ]
+   },
    "filterList": [
-      "active",
-      "activePortal"
+      "active"
    ],
    "boolFilterList": ["onlyMyTeam"],
     "selectDefaultFilters": {

@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "Rechnungsadresse",
+    "shippingAddress": "Lieferadresse",
+    "website": "Webseite"
+  },
+  "links": {
+    "meetings": "Meetings",
+    "calls": "Anrufe",
+    "tasks": "Aufgaben"
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypeTranslated} erstellen"
+  }
+}

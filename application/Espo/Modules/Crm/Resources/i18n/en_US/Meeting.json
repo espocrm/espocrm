@@ -11,7 +11,8 @@
         "contacts": "Contacts",
         "leads": "Leads",
         "reminders": "Reminders",
-        "account": "Account"
+        "account": "Account",
+        "acceptanceStatus": "Acceptance Status"
     },
     "links": {
     },
@@ -44,5 +45,8 @@
         "planned": "Planned",
         "held": "Held",
         "todays": "Today's"
+    },
+    "messages": {
+        "nothingHasBeenSent": "Nothing were sent"
     }
 }

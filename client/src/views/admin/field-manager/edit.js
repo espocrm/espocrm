@@ -34,6 +34,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
 
+        paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
+
         data: function () {
             return {
                 scope: this.scope,
@@ -44,6 +46,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 fieldList: this.fieldList,
                 isCustom: this.defs.isCustom,
                 isNew: this.isNew,
+                hasDynamicLogicPanel: this.hasDynamicLogicPanel
             };
         },
 
@@ -56,7 +59,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             },
             'click button[data-action="resetToDefault"]': function () {
                 this.resetToDefault();
-            },
+            }
         },
 
         setupFieldData: function (callback) {
@@ -88,6 +91,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.set('type', this.type);
             }
 
+            this.listenTo(this.model, 'change:readOnly', function () {
+                this.readOnlyControl();
+            }, this);
+
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.isNew) {
                     this.type = model.getFieldType(this.field);
@@ -109,6 +116,13 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 ]).then(function () {
                     this.paramList = [];
                     var paramList = this.getFieldManager().getParams(this.type) || [];
+
+                    if (!this.isNew) {
+                        (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
+                            paramList.push(item);
+                        }, this);
+                    }
+
                     paramList.forEach(function (o) {
                         var item = o.name;
                         var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
@@ -144,15 +158,67 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (o.hidden) {
                             return;
                         }
-                        this.createFieldView(o.type, o.name, null, o);
+                        var options = {};
+                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                            options.tooltip = true;
+                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+                        }
+                        this.createFieldView(o.type, o.name, null, o, options);
                     }, this);
 
-                    if (!this.getMetadata().get(['entityDefs', this.scope, this.field, 'layoutDetailDisabled'])) {
-                        this.model.set('dynamicLogicVisible', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']));
-                        this.createFieldView(null, 'dynamicLogicVisible', null, {
-                            view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                            scope: this.scope
-                        });
+                    this.hasDynamicLogicPanel = false;
+                    if (
+                        !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'disabled'])
+                        &&
+                        !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicDisabled'])
+                        &&
+                        !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'layoutDetailDisabled'])
+                    ) {
+                        if (!this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled'])) {
+                            this.model.set('dynamicLogicVisible', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']));
+                            this.createFieldView(null, 'dynamicLogicVisible', null, {
+                                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                                scope: this.scope
+                            });
+                            this.hasDynamicLogicPanel = true;
+                        }
+                        if (
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled'])
+                            &&
+                            !this.getMetadata().get(['fields', this.type, 'readOnly'])
+                        ) {
+                            this.model.set('dynamicLogicRequired', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']));
+                            this.createFieldView(null, 'dynamicLogicRequired', null, {
+                                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                                scope: this.scope
+                            });
+                            this.hasDynamicLogicPanel = true;
+                        }
+                        if (
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicReadOnlyDisabled'])
+                            &&
+                            !this.getMetadata().get(['fields', this.type, 'readOnly'])
+                        ) {
+                            this.model.set('dynamicLogicReadOnly', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']));
+                            this.createFieldView(null, 'dynamicLogicReadOnly', null, {
+                                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                                scope: this.scope
+                            });
+                            this.hasDynamicLogicPanel = true;
+                        }
+
+                        if (
+                            ~['enum', 'array', 'multiEnum'].indexOf(this.type)
+                            &&
+                            !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled'])
+                        ) {
+                            this.model.set('dynamicLogicOptions', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]));
+                            this.createFieldView(null, 'dynamicLogicOptions', null, {
+                                view: 'views/admin/field-manager/fields/dynamic-logic-options',
+                                scope: this.scope
+                            });
+                            this.hasDynamicLogicPanel = true;
+                        };
                     }
 
                     callback();
@@ -193,9 +259,53 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }, this);
         },
 
-        createFieldView: function (type, name, readOnly, params) {
+        readOnlyControl: function () {
+            if (this.model.get('readOnly')) {
+                this.hideField('dynamicLogicReadOnly');
+                this.hideField('dynamicLogicRequired');
+                this.hideField('dynamicLogicOptions');
+            } else {
+                this.showField('dynamicLogicReadOnly');
+                this.showField('dynamicLogicRequired');
+                this.showField('dynamicLogicOptions');
+            }
+        },
+
+        hideField: function (name) {
+            var f = function () {
+                var view = this.getView(name)
+                console.log();
+                if (view) {
+                    this.$el.find('.cell[data-name="'+name+'"]').addClass('hidden');
+                    view.setDisabled();
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                f();
+            } else {
+                this.once('after:render', f);
+            }
+        },
+
+        showField: function (name) {
+            var f = function () {
+                var view = this.getView(name)
+                if (view) {
+                    this.$el.find('.cell[data-name="'+name+'"]').removeClass('hidden');
+                    view.setNotDisabled();
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                f();
+            } else {
+                this.once('after:render', f);
+            }
+        },
+
+        createFieldView: function (type, name, readOnly, params, options, callback) {
             var viewName = (params || {}).view || this.getFieldManager().getViewName(type);
-            this.createView(name, viewName, {
+
+            var o = {
                 model: this.model,
                 el: this.options.el + ' .field[data-name="' + name + '"]',
                 defs: {
@@ -206,7 +316,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 readOnly: readOnly,
                 scope: this.scope,
                 field: this.field,
-            });
+            };
+            _.extend(o, options || {});
+
+            this.createView(name, viewName, o, callback);
             this.fieldList.push(name);
         },
 

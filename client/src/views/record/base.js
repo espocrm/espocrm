@@ -34,6 +34,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         fieldsMode: 'edit',
 
+        entityType: null,
+
         scope: null,
 
         isNew: false,
@@ -237,6 +239,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         data: function () {
             return {
+                scope: this.scope,
+                entityType: this.entityType,
                 hiddenPanels: this.recordHelper.getHiddenPanels(),
                 hiddenFields: this.recordHelper.getHiddenFields()
             };
@@ -258,31 +262,37 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             this.events = this.events || {};
 
-            this.scope = this.model.name;
+            this.entityType = this.model.name;
+            this.scope = this.options.scope || this.entityType;
+
             this.fieldList = this.options.fieldList || this.fieldList || [];
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
-            this.id = Espo.Utils.toDom(this.scope) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
+            this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             if (this.model.isNew()) {
                 this.isNew = true;
             }
 
             this.setupFinal();
+        },
+
+        setupFinal: function () {
+            this.attributes = this.model.getClonedAttributes();
 
             this.listenTo(this.model, 'change', function () {
                 if (this.mode == 'edit') {
                     this.setIsChanged();
                 }
             }, this);
-        },
-
-        setupFinal: function () {
-            this.attributes = this.model.getClonedAttributes();
 
             if (this.options.attributes) {
                 this.model.set(this.options.attributes);
             }
+
+            this.listenTo(this.model, 'sync', function () {
+                this.attributes = this.model.getClonedAttributes();
+            }, this);
 
             this.initDependancy();
             this.initDynamicLogic();
@@ -319,12 +329,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         },
 
         setupFieldLevelSecurity: function () {
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
             forbiddenFieldList.forEach(function (field) {
                 this.hideField(field, true);
             }, this);
 
-            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
+            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
@@ -435,6 +445,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     }
                     this.trigger('after:save');
                     model.trigger('after:save');
+
                     if (!callback) {
                         this.exit('save');
                     } else {

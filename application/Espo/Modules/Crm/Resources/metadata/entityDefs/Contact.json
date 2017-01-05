@@ -182,7 +182,17 @@
             "type": "link",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
-            "readOnly": true
+            "layoutDetailDisabled": true,
+            "readOnly": true,
+            "notStorable": true,
+            "view": "views/fields/link-one"
+        },
+        "originalLead": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "readOnly": true,
+            "view": "views/fields/link-one"
         }
     },
     "links": {
@@ -240,19 +250,22 @@
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -280,6 +293,17 @@
             "type": "hasOne",
             "entity": "User",
             "foreign": "contact"
+        },
+        "originalLead": {
+            "type": "hasOne",
+            "entity": "Lead",
+            "foreign": "createdContact"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "Document",
+            "foreign": "contacts",
+            "audited": true
         }
     },
     "collection": {

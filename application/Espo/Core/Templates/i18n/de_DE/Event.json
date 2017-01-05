@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "parent": "Bezieht sich auf",
+    "dateStart": "Startdatum",
+    "dateEnd": "Enddatum",
+    "duration": "Dauer",
+    "status": "Status"
+  },
+  "links": {
+    "parent": "Bezieht sich auf"
+  },
+  "options": {
+    "status": {
+      "Planned": "Geplant",
+      "Held": "Durchgeführt",
+      "Not Held": "Nicht durchgeführt"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypeTranslated} erstellen",
+    "Schedule {entityType}": "{entityTypeTranslated} planen",
+    "Log {entityType}": "Log {entityTypeTranslated}",
+    "Set Held": "Auf durchgeführt setzen",
+    "Set Not Held": "Auf nicht durchgeführt setzen"
+  },
+  "massActions": {
+    "setHeld": "Auf durchgeführt setzen",
+    "setNotHeld": "Auf nicht durchgeführt setzen"
+  },
+  "presetFilters": {
+    "planned": "Geplant",
+    "held": "Durchgeführt",
+    "todays": "Heutige"
+  }
+}

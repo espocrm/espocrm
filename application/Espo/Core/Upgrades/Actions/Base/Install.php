@@ -70,6 +70,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         /* run before install script */
         $this->runScript('before');
 
+        /* remove files defined in a manifest "deleteBeforeCopy" */
+        $this->deleteBeforeCopy(true);
+
         /* copy files from directory "Files" to EspoCRM files */
         if (!$this->copyFiles()) {
             $this->throwErrorAndRemovePackage('Cannot copy files.');

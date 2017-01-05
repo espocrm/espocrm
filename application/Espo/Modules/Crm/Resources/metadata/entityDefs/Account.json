@@ -26,35 +26,54 @@
             "options": [
                 "",
                 "Advertising",
+                "Aerospace",
                 "Agriculture",
                 "Apparel & Accessories",
+                "Architecture",
                 "Automotive",
                 "Banking",
                 "Biotechnology",
                 "Building Materials & Equipment",
                 "Chemical",
+                "Construction",
                 "Computer",
+                "Culture",
+                "Creative",
+                "Defense",
                 "Education",
                 "Electronics",
+                "Electric Power",
                 "Energy",
                 "Entertainment & Leisure",
                 "Finance",
                 "Food & Beverage",
                 "Grocery",
                 "Healthcare",
+                "Hospitality",
                 "Insurance",
                 "Legal",
                 "Manufacturing",
+                "Mass Media",
+                "Marketing",
+                "Mining",
+                "Music",
                 "Publishing",
+                "Petroleum",
                 "Real Estate",
+                "Retail",
                 "Service",
                 "Sports",
                 "Software",
+                "Support",
+                "Shipping",
                 "Technology",
                 "Telecommunications",
                 "Television",
                 "Transportation",
-                "Venture Capital"
+                "Testing, Inspection & Certification",
+                "Venture Capital",
+                "Wholesale",
+                "Water"
             ],
             "default": "",
             "isSorted": true
@@ -159,6 +178,13 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "entity": "TargetList"
+        },
+        "originalLead": {
+            "type": "link",
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "readOnly": true,
+            "view": "views/fields/link-one"
         }
     },
     "links": {
@@ -198,7 +224,8 @@
         "documents": {
             "type": "hasMany",
             "entity": "Document",
-            "foreign": "accounts"
+            "foreign": "accounts",
+            "audited": true
         },
         "meetingsPrimary": {
             "type": "hasMany",
@@ -228,19 +255,22 @@
             "type": "hasChildren",
             "entity": "Meeting",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasChildren",
             "entity": "Call",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -268,6 +298,11 @@
             "type": "hasMany",
             "entity": "User",
             "foreign": "accounts"
+        },
+        "originalLead": {
+            "type": "hasOne",
+            "entity": "Lead",
+            "foreign": "createdAccount"
         }
     },
     "collection": {

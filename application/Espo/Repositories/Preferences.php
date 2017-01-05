@@ -97,8 +97,8 @@ class Preferences extends \Espo\Core\ORM\Repository
                     $dashboardLayout = $this->getConfig()->get('dashboardLayout');
                     $dashletsOptions = null;
                     if (!$dashboardLayout) {
-                         $dashboardLayout = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
-                         $dashletsOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
+                        $dashboardLayout = $this->getMetadata()->get('app.defaultDashboardLayouts.Standard');
+                        $dashletsOptions = $this->getMetadata()->get('app.defaultDashboardOptions.Standard');
                     }
 
                     if ($dashletsOptions === null) {

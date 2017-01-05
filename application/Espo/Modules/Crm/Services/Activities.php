@@ -33,6 +33,8 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 
+use \Espo\ORM\Entity;
+
 use \PDO;
 
 class Activities extends \Espo\Core\Services\Base
@@ -86,10 +88,15 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function isPerson($scope)
     {
-        return in_array($scope, ['Contact', 'Lead', 'User']);
+        return in_array($scope, ['Contact', 'Lead', 'User']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
     }
 
-    protected function getUserMeetingQuery($entity, $op = 'IN', $statusList = null)
+    protected function isCompany($scope)
+    {
+        return in_array($scope, ['Account']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Company';
+    }
+
+    protected function getActivitiesUserMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
@@ -128,11 +135,9 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -142,7 +147,7 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getUserCallQuery($entity, $op = 'IN', $statusList = null)
+    protected function getActivitiesUserCallQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
@@ -181,11 +186,9 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -195,12 +198,12 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getUserEmailQuery($entity, $op = 'IN', $statusList = null)
+    protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         if ($entity->get('isPortalUser') && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
             if ($contact) {
-                return $this->getEmailQuery($contact, $op, $statusList);
+                return $this->getActivitiesEmailQuery($contact, $op, $statusList);
             }
         }
 
@@ -228,11 +231,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $selectParams['whereClause'][$statusOpKey] = $statusList;
+            $selectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectManager->applyAccess($selectParams);
@@ -242,14 +243,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getMeetingQuery($entity, $op = 'IN', $statusList = null)
+    protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
-        $methodName = 'get' .$scope . 'MeetingQuery';
+        $methodName = 'getActivities' . $scope . 'MeetingQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $op, $statusList);
+            return $this->$methodName($entity, $statusList, $isHistory);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
@@ -273,11 +274,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -350,14 +349,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getCallQuery($entity, $op = 'IN', $statusList = null)
+    protected function getActivitiesCallQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
-        $methodName = 'get' .$scope . 'CallQuery';
+        $methodName = 'getActivities' .$scope . 'CallQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $op, $statusList);
+            return $this->$methodName($entity, $statusList, $isHistory);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
@@ -380,11 +379,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -457,14 +454,14 @@ class Activities extends \Espo\Core\Services\Base
         return $sql;
     }
 
-    protected function getEmailQuery($entity, $op = 'IN', $statusList = null)
+    protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [], $isHistory = false)
     {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
         $methodName = 'get' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $op, $statusList);
+            return $this->$methodName($entity, $statusList, $isHistory);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
@@ -488,11 +485,9 @@ class Activities extends \Espo\Core\Services\Base
         );
 
         if (!empty($statusList)) {
-            $statusOpKey = 'status';
-            if ($op == 'NOT IN') {
-                $statusOpKey .= '!=';
-            }
-            $baseSelectParams['whereClause'][$statusOpKey] = $statusList;
+            $baseSelectParams['whereClause'][] = array(
+                'status' => $statusList
+            );
         }
 
         $selectParams = $baseSelectParams;
@@ -530,7 +525,7 @@ class Activities extends \Espo\Core\Services\Base
 
         $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Email', $selectParams);
 
-        if ($this->isPerson($scope) || $scope == 'Account') {
+        if ($this->isPerson($scope) || $this->isCompany($scope)) {
             $selectParams = $baseSelectParams;
             $selectParams['customJoin'] .= "
                 LEFT JOIN entity_email_address AS entityEmailAddress2 ON
@@ -675,11 +670,16 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         $parts = array();
-        if ($this->getAcl()->checkScope('Meeting')) {
-            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
-        }
-        if ($this->getAcl()->checkScope('Call')) {
-            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($entity, 'NOT IN', ['Held', 'Not Held']) : [];
+
+        $entityTypeList = $this->getConfig()->get('activitiesEntityList', ['Meeting', 'Call']);
+
+        foreach ($entityTypeList as $entityType) {
+            if (!$fetchAll && $params['scope'] !== $entityType) continue;
+            if (!$this->getAcl()->checkScope($entityType)) continue;
+            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) continue;
+
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
@@ -703,15 +703,17 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         $parts = array();
-        if ($this->getAcl()->checkScope('Meeting')) {
-            $parts['Meeting'] = ($fetchAll || $params['scope'] == 'Meeting') ? $this->getMeetingQuery($entity, 'IN', ['Held', 'Not Held']) : [];
+        $entityTypeList = $this->getConfig()->get('historyEntityList', ['Meeting', 'Call', 'Email']);
+
+        foreach ($entityTypeList as $entityType) {
+            if (!$fetchAll && $params['scope'] !== $entityType) continue;
+            if (!$this->getAcl()->checkScope($entityType)) continue;
+            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) continue;
+
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
+            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, true);
         }
-        if ($this->getAcl()->checkScope('Call')) {
-            $parts['Call'] = ($fetchAll || $params['scope'] == 'Call') ? $this->getCallQuery($entity, 'IN', ['Held', 'Not Held']) : [];
-        }
-        if ($this->getAcl()->checkScope('Email')) {
-            $parts['Email'] = ($fetchAll || $params['scope'] == 'Email') ? $this->getEmailQuery($entity, 'IN', ['Archived', 'Sent']) : [];
-        }
+
         $result = $this->getResultFromQueryParts($parts, $scope, $id, $params);
 
         foreach ($result['list'] as &$item) {
@@ -899,11 +901,11 @@ class Activities extends \Espo\Core\Services\Base
                         array(
                             'dateEnd' => null,
                             'dateStart>=' => $from,
-                            'dateStart<' => $to,
+                            'dateStart<' => $to
                         ),
                         array(
                             'dateEnd>=' => $from,
-                            'dateEnd<' => $to,
+                            'dateEnd<' => $to
                         ),
                         array(
                             'dateStart<=' => $from,
@@ -912,7 +914,7 @@ class Activities extends \Espo\Core\Services\Base
                         array(
                             'dateEndDate!=' => null,
                             'dateEndDate>=' => $from,
-                            'dateEndDate<' => $to,
+                            'dateEndDate<' => $to
                         )
                     )
                 )
@@ -932,15 +934,90 @@ class Activities extends \Espo\Core\Services\Base
 
     protected function getCalendarQuery($scope, $userId, $from, $to)
     {
-        $service = $this->getServiceFactory()->create($scope);
-
-        if (method_exists($service, 'getCalendarSelectParams')) {
-            $selectParams = $service->getCalendarSelectParams($userId, $from, $to);
-        } else {
-            $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to);
+        $selectManager = $this->getSelectManagerFactory()->create($scope);
+        if (method_exists($selectManager, 'getCalendarSelectParams')) {
+            $selectParams = $selectManager->getCalendarSelectParams($userId, $from, $to);
+            return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
         }
 
+        $methodName = 'getCalendar' . $scope . 'Query';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($userId, $from, $to);
+        }
+
+        $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to);
         return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
+    }
+
+    protected function getActivitiesQuery(Entity $entity, $scope, array $statusList = [], $isHistory = false)
+    {
+        $serviceName = 'Activities' . $entity->getEntityType();
+        if ($this->getServiceFactory()->checkExists($serviceName)) {
+            $service = $this->getServiceFactory()->create($serviceName);
+            $methodName = 'getActivities' . $scope . 'Query';
+            if (method_exists($service, $methodName)) {
+                return $service->$methodName($entity, $statusList, $isHistory);
+            }
+        }
+
+        $selectManager = $this->getSelectManagerFactory()->create($scope);
+        if (method_exists($selectManager, 'getActivitiesSelectParams')) {
+            $selectParams = $selectManager->getActivitiesSelectParams($entity, $statusList, $isHistory);
+            return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
+        }
+
+        $methodName = 'getActivities' . $scope . 'Query';
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($entity, $statusList, $isHistory);
+        }
+
+        $selectParams = $this->getActivitiesSelectParams($entity, $scope, $statusList, $isHistory);
+
+        return $this->getEntityManager()->getQuery()->createSelectQuery($scope, $selectParams);
+    }
+
+    protected function getActivitiesSelectParams(Entity $entity, $scope, array $statusList = [], $isHistory)
+    {
+        $selectManager = $this->getSelectManagerFactory()->create($scope);
+
+        $seed = $this->getEntityManager()->getEntity($scope);
+
+        $select = [
+            'id',
+            'name',
+            ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['VALUE:', 'dateStart']),
+            ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['VALUE:', 'dateEnd']),
+            ['VALUE:' . $scope, '_scope'],
+            ($seed->hasAttribute('assignedUserId') ? ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
+            ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] : ['VALUE:', 'assignedUserName']),
+            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
+            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
+            'status',
+            'createdAt'
+        ];
+
+        $selectParams = $selectManager->getEmptySelectParams();
+
+        $selectParams['select'] = $select;
+
+        if ($entity->getEntityType() === 'User') {
+            $selectParams['whereClause'][] = array(
+                'assignedUserId' => $entity->id
+            );
+        } else {
+            $selectParams['whereClause'][] = array(
+                'parentId' => $entity->id,
+                'parentType' => $entity->getEntityType()
+            );
+        }
+
+        $selectParams['whereClause'][]  = array(
+            'status' => $statusList
+        );
+
+        $selectManager->applyAccess($selectParams);
+
+        return $selectParams;
     }
 
     public function getEvents($userId, $from, $to, $scopeList = null)
@@ -966,13 +1043,8 @@ class Activities extends \Espo\Core\Services\Base
                 continue;
             }
             if ($this->getAcl()->checkScope($scope)) {
-                $methodName = 'getCalendar' . $scope . 'Query';
-                if (method_exists($this, $methodName)) {
-                    $sqlPartList[] = $this->$methodName($userId, $from, $to);
-                } else {
-                    if ($this->getMetadata()->get('scopes.' . $scope . '.calendar')) {
-                        $sqlPartList[] = $this->getCalendarQuery($scope, $userId, $from, $to);
-                    }
+                if ($this->getMetadata()->get('scopes.' . $scope . '.calendar')) {
+                    $sqlPartList[] = $this->getCalendarQuery($scope, $userId, $from, $to);
                 }
             }
         }
@@ -1029,22 +1101,43 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         $result = array();
-        foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+        foreach ($rowList as $row) {
+            $reminderId = $row['id'];
+            $entityType = $row['entityType'];
+            $entityId = $row['entityId'];
+
+            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             $data = null;
+
             if ($entity) {
+                if ($entity->hasLinkMultipleField('users')) {
+                    $entity->loadLinkMultipleField('users', array('status' => 'acceptanceStatus'));
+                    $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
+                    if ($status === 'Declined') {
+                        $this->removeReminder($reminderId);
+                        continue;
+                    }
+                }
+
+                $dateAttribute = 'dateStart';
+                if ($entityType === 'Task') {
+                    $dateAttribute = 'dateEnd';
+                }
+
                 $data = array(
                     'id' => $entity->id,
-                    'entityType' => $row['entityType'],
-                    'dateStart' => $entity->get('dateStart'),
+                    'entityType' => $entityType,
+                    $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name')
                 );
+            } else {
+                continue;
             }
             $result[] = array(
-                'id' => $row['id'],
+                'id' => $reminderId,
                 'data' => $data
             );
 
@@ -1052,35 +1145,47 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getUpcomingActivities($userId, $params = array())
+    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
 
-        $entityTypeList = ['Meeting', 'Call'];
+        if (!$entityTypeList) {
+            $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
+        }
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'read')) {
-                continue;
-            }
-
+            if (!$this->getMetadata()->get(['scopes', $entityType, 'activity'])) continue;
+            if (!$this->getAcl()->checkScope($entityType, 'read')) continue;
 
             $selectParams = array(
-                'select' => ['id', 'name', 'dateStart', ['VALUE:' . $entityType, 'entityType']],
+                'select' => [
+                    'id',
+                    'name',
+                    'dateStart',
+                    ['VALUE:' . $entityType, 'entityType']
+                ]
             );
 
             $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
-
             $selectManager->applyAccess($selectParams);
 
-            if (!empty($prams['textFilter'])) {
-                $selectManager->applyTextFilter($prams['textFilter'], $selectParams);
+            if (!empty($params['textFilter'])) {
+                $selectManager->applyTextFilter($params['textFilter'], $selectParams);
             }
 
-            $selectManager->applyPrimaryFilter('planned', $selectParams);
+            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
+
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
+            $selectManager->addAndWhere([
+                'status' => $statusList
+            ], $selectParams);
+
             $selectManager->addOrWhere([
                 $selectManager->convertDateTimeWhere(array(
                     'type' => 'today',

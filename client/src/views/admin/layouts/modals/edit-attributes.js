@@ -50,7 +50,11 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
             model.name = 'LayoutManager';
             model.set(this.options.attributes || {});
 
-            this.header = this.translate(this.options.name, 'fields', this.options.scope);
+            if (this.options.languageCategory) {
+                this.header = this.translate(this.options.name, this.options.languageCategory || 'fields', this.options.scope);
+            } else {
+                this.header = false;
+            }
 
             var attributeList = Espo.Utils.clone(this.options.attributeList || []);
             var index = attributeList.indexOf('name');
@@ -58,7 +62,7 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
                 attributeList.splice(index, 1);
             }
 
-            this.createView('edit', 'Admin.Layouts.Record.EditAttributes', {
+            this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
                 el: this.options.el + ' .edit-container',
                 attributeList: attributeList,
                 attributeDefs: this.options.attributeDefs,

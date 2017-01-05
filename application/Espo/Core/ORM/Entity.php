@@ -31,6 +31,15 @@ namespace Espo\Core\ORM;
 
 class Entity extends \Espo\ORM\Entity
 {
+    public function hasLinkMultipleField($field)
+    {
+        return $this->hasAttribute($field . 'Ids');
+    }
+
+    public function hasLinkField($field)
+    {
+        return $this->hasAttribute($field . 'Id');
+    }
 
     public function loadLinkMultipleField($field, $columns = null)
     {

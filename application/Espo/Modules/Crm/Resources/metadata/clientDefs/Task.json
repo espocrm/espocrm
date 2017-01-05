@@ -20,6 +20,26 @@
                   }
                ]
             }
+         },
+         "reminders": {
+            "visible": {
+               "conditionGroup": [
+                  {
+                     "type": "and",
+                     "value": [
+                        {
+                           "type": "isNotEmpty",
+                           "attribute": "dateEnd"
+                        },
+                        {
+                           "type": "isEmpty",
+                           "attribute": "dateEndDate"
+                        }
+                     ]
+                  }
+
+               ]
+            }
          }
       }
    },
@@ -35,6 +55,9 @@
       {
          "name":"overdue",
          "style": "danger"
+      },
+      {
+         "name":"deferred"
       }
    ],
    "boolFilterList": ["onlyMy"]

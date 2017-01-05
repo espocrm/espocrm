@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "emailAddress": "E-Mail",
     "title": "Funktion",
     "accountRole": "Funktion",
@@ -8,14 +8,15 @@
     "accounts": "Firmen",
     "phoneNumber": "Telefon",
     "accountType": "Firmentyp",
-    "doNotCall": "Nicht anrufen",
+    "doNotCall": "Anrufe unerwünscht",
     "address": "Adresse",
     "opportunityRole": "Verkaufschance Rolle",
     "description": "Beschreibung",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
     "targetList": "Kontaktliste",
-    "portalUser": "Portal Benutzer"
+    "portalUser": "Portal Benutzer",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "links": {
     "opportunities": "Verkaufschancen",
@@ -26,7 +27,8 @@
     "account": "Firma (Primär)",
     "accounts": "Firmen",
     "casesPrimary": "Fälle (Primär)",
-    "portalUser": "Portal Benutzer"
+    "portalUser": "Portal Benutzer",
+    "originalLead": "Ursprünglicher Interessent"
   },
   "labels": {
     "Create Contact": "Kontakt erstellen"

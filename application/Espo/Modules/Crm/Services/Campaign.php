@@ -47,7 +47,8 @@ class Campaign extends \Espo\Services\Record
         $openedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Opened',
-            'isTest' => false
+            'isTest' => false,
+            'groupBy' => ['queueItemId']
         ))->count();
         $entity->set('openedCount', $openedCount);
 
@@ -60,7 +61,8 @@ class Campaign extends \Espo\Services\Record
         $clickedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Clicked',
-            'isTest' => false
+            'isTest' => false,
+            'groupBy' => ['queueItemId']
         ))->count();
         $entity->set('clickedCount', $clickedCount);
 
@@ -73,7 +75,8 @@ class Campaign extends \Espo\Services\Record
         $optedOutCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Opted Out',
-            'isTest' => false
+            'isTest' => false,
+            'groupBy' => ['queueItemId']
         ))->count();
         $entity->set('optedOutCount', $optedOutCount);
 
@@ -86,7 +89,8 @@ class Campaign extends \Espo\Services\Record
         $bouncedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
             'campaignId' => $entity->id,
             'action' => 'Bounced',
-            'isTest' => false
+            'isTest' => false,
+            'groupBy' => ['queueItemId']
         ))->count();
         $entity->set('bouncedCount', $bouncedCount);
 

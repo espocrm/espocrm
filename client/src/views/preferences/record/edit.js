@@ -129,6 +129,17 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             if (this.getConfig().get('userThemesDisabled')) {
                 this.hideField('theme');
             }
+
+            this.listenTo(this.model, 'after:save', function () {
+                if (
+                    this.model.get('language') !== this.attributes.language
+                    ||
+                    this.model.get('theme') !== this.attributes.theme
+
+                ) {
+                    window.location.reload();
+                }
+            }, this);
         },
 
         actionReset: function () {

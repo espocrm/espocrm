@@ -59,6 +59,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.searchPanel = false;
             }
 
+            this.entityType = this.collection.name;
+
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
             this.searchView = this.options.searchView || this.searchView;
@@ -83,7 +85,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 collection: this.collection,
-                el: '#main > .page-header'
+                el: '#main > .page-header',
+                scope: this.scope
             });
         },
 
@@ -93,7 +96,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     action: 'quickCreate',
                     label: 'Create ' + this.scope,
                     style: 'primary',
-                    acl: 'create'
+                    acl: 'create',
+                    aclScope: this.entityType || this.scope
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -101,7 +105,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     action: 'create',
                     label: 'Create ' +  this.scope,
                     style: 'primary',
-                    acl: 'create'
+                    acl: 'create',
+                    aclScope: this.entityType || this.scope
                 });
             }
         },
@@ -111,11 +116,12 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 collection: this.collection,
                 el: '#main > .search-container',
                 searchManager: this.searchManager,
+                scope: this.scope
             }, function (view) {
                 this.listenTo(view, 'reset', function () {
                     this.collection.sortBy = this.defaultSortBy;
                     this.collection.asc = this.defaultAsc;
-                    this.getStorage().clear('listSorting', this.collection.name)
+                    this.getStorage().clear('listSorting', this.collection.name);
                 }, this);
             }.bind(this));
         },
@@ -128,6 +134,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             var collection = this.collection;
 
             var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+            searchManager.scope = this.scope;
 
             searchManager.loadStored();
             collection.where = searchManager.getWhere();
@@ -177,7 +184,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         createListRecordView: function (fetch) {
             var o = {
                 collection: this.collection,
-                el: this.options.el + ' .list-container'
+                el: this.options.el + ' .list-container',
+                scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
@@ -188,6 +196,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 if (!this.hasParentView()) return;
 
                 view.render();
+
+                this.listenToOnce(view, 'after:render', function () {
+                    if (!this.hasParentView()) {
+                        this.clearView('list');
+                    }
+                }, this);
+
                 view.notify(false);
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', function (obj) {
@@ -204,12 +219,12 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         getHeader: function () {
             return this.buildHeaderHtml([
-                this.getLanguage().translate(this.collection.name, 'scopeNamesPlural')
+                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
             ]);
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate(this.collection.name, 'scopeNamesPlural'));
+            this.setPageTitle(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         },
 
         getCreateAttributes: function () {},

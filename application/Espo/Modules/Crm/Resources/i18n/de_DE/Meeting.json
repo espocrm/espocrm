@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "parent": "Bezieht sich auf",
     "status": "Status",
     "dateStart": "Startdatum",
@@ -16,7 +16,7 @@
   "options": {
     "status": {
       "Planned": "Geplant",
-      "Held": "Durchgeführt",
+      "Held": "Abgehalten",
       "Not Held": "Nicht durchgeführt"
     },
     "acceptanceStatus": {
@@ -27,20 +27,20 @@
     }
   },
   "massActions": {
-    "setHeld": "Auf gehalten setzen",
-    "setNotHeld": "Auf nicht gehalten setzen"
+    "setHeld": "Auf abgehalten setzen",
+    "setNotHeld": "Auf nicht abgehalten setzen"
   },
   "labels": {
     "Create Meeting": "Meeting erstellen",
-    "Set Held": "Auf gehalten setzen",
-    "Set Not Held": "Auf nicht gehalten setzen",
+    "Set Held": "Auf abgehalten setzen",
+    "Set Not Held": "Auf nicht abgehalten setzen",
     "Send Invitations": "Einladungen versenden",
-    "on time": "Aktuelle Zeit",
-    "before": "vor"
+    "on time": "Genaue Uhrzeit",
+    "before": "vorher"
   },
   "presetFilters": {
     "planned": "Geplant",
-    "held": "Durchgeführt",
+    "held": "Abgehalten",
     "todays": "Heutige"
   }
 }

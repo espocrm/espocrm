@@ -81,6 +81,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected $checkForDuplicatesInUpdate = false;
 
+    protected $duplicatingLinkList = [];
+
+    const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
+
     const FOLLOWERS_LIMIT = 4;
 
     public function __construct()
@@ -526,6 +530,13 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
+        unset($data['modifiedById']);
+        unset($data['modifiedByName']);
+        unset($data['modifiedAt']);
+        unset($data['createdById']);
+        unset($data['createdByName']);
+        unset($data['createdAt']);
+
         $entity->set($data);
 
         $this->beforeCreate($entity, $data);
@@ -542,13 +553,13 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             $this->afterCreate($entity, $data);
+            $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
             return $entity;
         }
 
         throw new Error();
     }
-
 
     public function updateEntity($id, $data)
     {
@@ -560,6 +571,13 @@ class Record extends \Espo\Core\Services\Base
 
         $this->filterInput($data);
         $this->handleInput($data);
+
+        unset($data['modifiedById']);
+        unset($data['modifiedByName']);
+        unset($data['modifiedAt']);
+        unset($data['createdById']);
+        unset($data['createdByName']);
+        unset($data['createdAt']);
 
         if ($this->getEntityBeforeUpdate) {
             $entity = $this->getEntity($id);
@@ -683,6 +701,8 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
+        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+
         $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $e) {
@@ -746,6 +766,8 @@ class Record extends \Espo\Core\Services\Base
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
+
+        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
@@ -1098,8 +1120,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function export(array $params)
     {
-
-
+        $selectManager = $this->getSelectManager($this->getEntityType());
         if (array_key_exists('ids', $params)) {
             $ids = $params['ids'];
             $where = array(
@@ -1109,7 +1130,7 @@ class Record extends \Espo\Core\Services\Base
                     'value' => $ids
                 )
             );
-            $selectParams = $this->getSelectManager($this->getEntityType())->getSelectParams(array('where' => $where), true, true);
+            $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
         } else if (array_key_exists('where', $params)) {
             $where = $params['where'];
 
@@ -1125,60 +1146,79 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
+        $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
+        $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
+        if ($orderBy) {
+            $selectManager->applyOrder($orderBy, $desc, $selectParams);
+        }
+
         $collection = $this->getRepository()->find($selectParams);
 
         $arr = array();
 
         $collection->toArray();
 
-        $fieldListToSkip = array(
-            'modifiedByName',
-            'modifiedById',
-            'modifiedAt',
-            'deleted',
-        );
+        $attributeListToSkip = [
+            'deleted'
+        ];
 
         foreach ($this->exportSkipAttributeList as $attribute) {
-            $fieldListToSkip[] = $attribute;
+            $attributeListToSkip[] = $attribute;
         }
 
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType(), 'read') as $attribute) {
-            $fieldListToSkip[] = $attribute;
+            $attributeListToSkip[] = $attribute;
         }
 
         foreach ($this->internalAttributeList as $attribute) {
-            $fieldListToSkip[] = $attribute;
+            $attributeListToSkip[] = $attribute;
         }
 
-        $fieldList = null;
+        $attributeList = null;
+        if (array_key_exists('attributeList', $params)) {
+            $attributeList = [];
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+            foreach ($params['attributeList'] as $attribute) {
+                if (in_array($attribute, $attributeListToSkip)) {
+                    continue;
+                }
+                $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
+                if (!$isNotStorable) {
+                    $attributeList[] = $attribute;
+                } else {
+                    if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
+                        $attributeList[] = $attribute;
+                    }
+                }
+            }
+        }
+
         foreach ($collection as $entity) {
-            if (empty($fieldList)) {
-                $fieldList = [];
-                foreach ($entity->getAttributes() as $field => $defs) {
-                    if (in_array($field, $fieldListToSkip)) {
+            if (is_null($attributeList)) {
+                $attributeList = [];
+                foreach ($entity->getAttributes() as $attribute => $defs) {
+                    if (in_array($attribute, $attributeListToSkip)) {
                         continue;
                     }
 
                     if (empty($defs['notStorable'])) {
-                        $fieldList[] = $field;
+                        $attributeList[] = $attribute;
                     } else {
                         if (in_array($defs['type'], ['email', 'phone'])) {
-                            $fieldList[] = $field;
-                        } /*else if ($defs['name'] == 'name') {
-                            $fieldList[] = $field;
-                        }*/
+                            $attributeList[] = $attribute;
+                        }
                     }
                 }
-                foreach ($this->exportAdditionalAttributeList as $field) {
-                    $fieldList[] = $field;
+                foreach ($this->exportAdditionalAttributeList as $attribute) {
+                    $attributeList[] = $attribute;
                 }
             }
 
             $this->loadAdditionalFieldsForExport($entity);
             $row = array();
-            foreach ($fieldList as $field) {
-                $value = $this->getAttributeFromEntityForExport($entity, $field);
-                $row[$field] = $value;
+            foreach ($attributeList as $attribute) {
+                $value = $this->getAttributeFromEntityForExport($entity, $attribute);
+                $row[$attribute] = $value;
             }
             $arr[] = $row;
         }
@@ -1414,12 +1454,6 @@ class Record extends \Espo\Core\Services\Base
     protected function findLinkedEntitiesFollowers($id, $params)
     {
         $maxSize = 0;
-        if ($disableCount) {
-            if (!empty($params['maxSize'])) {
-                $maxSize = $params['maxSize'];
-                $params['maxSize'] = $params['maxSize'] + 1;
-            }
-        }
 
         $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
         if (!$entity) {
@@ -1501,7 +1535,34 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
+        $attributes['_duplicatingEntityId'] = $id;
+
         return $attributes;
+    }
+
+    protected function afterCreateProcessDuplicating(Entity $entity, $data)
+    {
+        if (!isset($data['_duplicatingEntityId'])) return;
+
+        $duplicatingEntityId = $data['_duplicatingEntityId'];
+        if (!$duplicatingEntityId) return;
+        $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
+        if (!$duplicatingEntity) return;
+        if (!$this->getAcl()->check($duplicatingEntity, 'read')) return;
+
+        $this->duplicateLinks($entity, $duplicatingEntity);
+    }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        $repository = $this->getRepository();
+
+        foreach ($this->duplicatingLinkList as $link) {
+            $linkedList = $repository->findRelated($duplicatingEntity, $link);
+            foreach ($linkedList as $linked) {
+                $repository->relate($entity, $link, $linked);
+            }
+        }
     }
 }
 

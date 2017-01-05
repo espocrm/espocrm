@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Benachrichtigungen überspringen"
+  },
+  "labels": {
+    "Create EmailFolder": "Ordner erstellen",
+    "Manage Folders": "Ordner verwalten",
+    "Emails": "E-Mails"
+  }
+}

@@ -3,13 +3,18 @@
     "enabled": "Aktiv",
     "clientId": "Client ID",
     "clientSecret": "Client Geheimnis",
-    "redirectUri": "Weiterleitungs URI"
+    "redirectUri": "Weiterleitungs URI",
+    "apiKey": "API Key"
+  },
+  "titles": {
+    "GoogleMaps": "Google Maps"
   },
   "messages": {
     "selectIntegration": "Wählen Sie eine Integration aus dem Menü.",
     "noIntegrations": "Keine Integration verfügbar."
   },
   "help": {
-    "Google": "<p><b>Holen Sie die OAuth 2.0 Credentials über die Google Developers Console.</b></p><p>Besuchen Sie <a href=\"https://console.developers.google.com/project\">die Google Developers Console</a> um OAuth 2.0 Credentials wie eine Client ID und Client Geheimnis zu erhalten die sowohl Google als auch EspoCRM bekannt sind.</p>"
+    "Google": "<p><b>Holen Sie die OAuth 2.0 Credentials über die Google Developers Console.</b></p><p>Besuchen Sie <a href=\"https://console.developers.google.com/project\">die Google Developers Console</a> um OAuth 2.0 Credentials wie eine Client ID und Client Geheimnis zu erhalten die sowohl Google als auch EspoCRM bekannt sind.</p>",
+    "GoogleMaps": "<p>API Key <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">hier</a> beantragen.</p>"
   }
 }

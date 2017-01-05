@@ -32,16 +32,31 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         type: 'varchar',
 
+        detailTemplate: 'fields/varchar/detail',
+
         searchTemplate: 'fields/varchar/search',
 
+        searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'isEmpty', 'isNotEmpty'],
+
         setupSearch: function () {
-            this.searchParams.typeOptions = ['startsWith', 'endsWith', 'contains', 'equals', 'like', 'isEmpty', 'isNotEmpty'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
                     this.handleSearchType(type);
                 },
             }, this.events || {});
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            if (
+                this.model.get(this.name) !== null
+                &&
+                this.model.get(this.name) !== ''
+            ) {
+                data.isNotEmpty = true;
+            }
+            return data;
         },
 
         handleSearchType: function (type) {
@@ -131,6 +146,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 }
             }
             return false;
+        },
+
+        getSearchType: function () {
+            return this.searchParams.typeFront || this.searchParams.type;
         }
 
     });

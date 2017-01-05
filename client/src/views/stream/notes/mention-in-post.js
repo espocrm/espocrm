@@ -96,6 +96,8 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                                     }, this);
                                     this.messageData['target'] = userHtmlList.join(', ');
                                 }
+                            } else if (this.model.get('targetType') === 'self') {
+                                this.messageName = 'mentionYouInPostTargetNoTarget';
                             }
                         }
                     } else {

@@ -129,7 +129,18 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$badge.attr('title', '');
         },
 
+        checkBypass: function () {
+            var last = this.getRouter().getLast() || {};
+            if (last.controller == 'Admin' && last.action == 'upgrade') {
+                return true;
+            }
+        },
+
         checkUpdates: function (isFirstCheck) {
+            if (this.checkBypass()) {
+                return;
+            }
+
             $.ajax('Notification/action/notReadCount').done(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
 
@@ -172,13 +183,21 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 isFirstCheck = true;
             }
 
-            var jqxhr = $.ajax(url).done(function (list) {
-                list.forEach(function (d) {
-                    this.showPopupNotification(name, d, isFirstCheck);
-                }, this);
-            }.bind(this));
+            (new Promise(function (resolve) {
+                if (this.checkBypass()) {
+                    resolve();
+                    return;
+                }
+                var jqxhr = $.ajax(url).done(function (list) {
+                    list.forEach(function (d) {
+                        this.showPopupNotification(name, d, isFirstCheck);
+                    }, this);
+                }.bind(this));
 
-            jqxhr.always(function() {
+                jqxhr.always(function() {
+                    resolve();
+                });
+            }.bind(this))).then(function () {
                 this.popoupTimeouts[name] = setTimeout(function () {
                     this.popupCheckIteration++;
                     this.checkPopupNotifications(name);

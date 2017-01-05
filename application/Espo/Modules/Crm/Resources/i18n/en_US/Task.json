@@ -12,7 +12,8 @@
         "isOverdue": "Is Overdue",
         "account": "Account",
         "dateCompleted": "Date Completed",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "reminders": "Reminders"
     },
     "links": {
         "attachments": "Attachments"
@@ -39,6 +40,7 @@
     "presetFilters": {
         "actual": "Actual",
         "completed": "Completed",
+        "deferred": "Deferred",
         "todays": "Today's",
         "overdue": "Overdue"
     }

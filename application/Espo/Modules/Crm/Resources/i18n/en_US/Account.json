@@ -13,7 +13,8 @@
         "contactRole": "Title",
         "campaign": "Campaign",
         "targetLists": "Target Lists",
-        "targetList": "Target List"
+        "targetList": "Target List",
+        "originalLead": "Original Lead"
     },
     "links": {
         "contacts": "Contacts",
@@ -27,7 +28,8 @@
         "targetLists": "Target Lists",
         "campaignLogRecords": "Campaign Log",
         "campaign": "Campaign",
-        "portalUsers": "Portal Users"
+        "portalUsers": "Portal Users",
+        "originalLead": "Original Lead"
     },
     "options": {
         "type": {
@@ -37,36 +39,55 @@
             "Reseller": "Reseller"
         },
         "industry": {
+            "Aerospace": "Aerospace",
             "Agriculture": "Agriculture",
             "Advertising": "Advertising",
             "Apparel & Accessories": "Apparel & Accessories",
+            "Architecture": "Architecture",
             "Automotive": "Automotive",
             "Banking": "Banking",
             "Biotechnology": "Biotechnology",
             "Building Materials & Equipment": "Building Materials & Equipment",
             "Chemical": "Chemical",
+            "Construction": "Construction",
             "Computer": "Computer",
+            "Defense": "Defense",
+            "Creative": "Creative",
+            "Culture": "Culture",
             "Education": "Education",
             "Electronics": "Electronics",
+            "Electric Power": "Electric Power",
             "Energy": "Energy",
             "Entertainment & Leisure": "Entertainment & Leisure",
             "Finance": "Finance",
             "Food & Beverage": "Food & Beverage",
             "Grocery": "Grocery",
+            "Hospitality": "Hospitality",
             "Healthcare": "Healthcare",
             "Insurance": "Insurance",
             "Legal": "Legal",
             "Manufacturing": "Manufacturing",
+            "Mass Media": "Mass Media",
+            "Mining": "Mining",
+            "Music": "Music",
+            "Marketing": "Marketing",
             "Publishing": "Publishing",
+            "Petroleum": "Petroleum",
             "Real Estate": "Real Estate",
+            "Retail": "Retail",
+            "Shipping": "Shipping",
             "Service": "Service",
+            "Support": "Support",
             "Sports": "Sports",
             "Software": "Software",
             "Technology": "Technology",
             "Telecommunications": "Telecommunications",
             "Television": "Television",
+            "Testing, Inspection & Certification": "Testing, Inspection & Certification",
             "Transportation": "Transportation",
-            "Venture Capital": "Venture Capital"
+            "Venture Capital": "Venture Capital",
+            "Wholesale": "Wholesale",
+            "Water": "Water"
         }
     },
     "labels": {

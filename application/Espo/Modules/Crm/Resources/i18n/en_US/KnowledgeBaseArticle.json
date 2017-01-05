@@ -4,7 +4,9 @@
         "Any": "Any",
         "Send in Email": "Send in Email",
         "Move Up": "Move Up",
-        "Move Down": "Move Down"
+        "Move Down": "Move Down",
+        "Move to Top": "Move to Top",
+        "Move to Bottom": "Move to Bottom"
     },
     "fields": {
         "name": "Name",

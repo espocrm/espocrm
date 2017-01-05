@@ -54,13 +54,15 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
+
         data: function () {
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 typeName: this.typeName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.get(this.nameName),
+                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
                 typeValue: this.model.get(this.typeName),
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,
@@ -142,7 +144,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.typeOptions = ['is', 'isEmpty', 'isNotEmpty'];
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -289,6 +290,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             data[this.typeName] = this.$elementType.val() || null;
             data[this.nameName] = this.$elementName.val() || null;
             data[this.idName] = this.$elementId.val() || null;
+            if (data[this.idName] === null) {
+                data[this.typeName] = null;
+            }
             return data;
         },
 
@@ -298,15 +302,19 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (type == 'isEmpty') {
                 var data = {
                     type: 'isNull',
-                    typeFront: type,
-                    field: this.idName
+                    field: this.idName,
+                    data: {
+                        type: type
+                    }
                 };
                 return data;
             } else if (type == 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
-                    typeFront: type,
-                    field: this.idName
+                    field: this.idName,
+                    data: {
+                        type: type
+                    }
                 };
                 return data;
             }
@@ -316,33 +324,62 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             var entityName = this.$elementName.val()
             var entityId = this.$elementId.val();
 
-            if (!entityId || !entityType) {
+            if (!entityType) {
                 return false;
             }
 
-            var data = {
-                frontType: 'is',
-                type: 'and',
-                field: this.idName,
+            var data;
+            if (entityId) {
+                data = {
+                    type: 'and',
+                    field: this.idName,
 
-                value: [
-                    {
-                        type: 'equals',
-                        field: this.idName,
-                        value: entityId,
-                    },
-                    {
-                        type: 'equals',
-                        field: this.typeName,
-                        value: entityType,
+                    value: [
+                        {
+                            type: 'equals',
+                            field: this.idName,
+                            value: entityId,
+                        },
+                        {
+                            type: 'equals',
+                            field: this.typeName,
+                            value: entityType,
+                        }
+                    ],
+                    valueId: entityId,
+                    valueName: entityName,
+                    valueType: entityType,
+                    data: {
+                        type: 'is'
                     }
-                ],
-                valueId: entityId,
-                valueName: entityName,
-                valueType: entityType,
-            };
+                };
+            } else {
+                data = {
+                    type: 'and',
+                    field: this.idName,
+                    value: [
+                        {
+                            type: 'isNotNull',
+                            field: this.idName
+                        },
+                        {
+                            type: 'equals',
+                            field: this.typeName,
+                            value: entityType,
+                        }
+                    ],
+                    valueType: entityType,
+                    data: {
+                        type: 'is'
+                    }
+                };
+            }
             return data;
         },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || this.searchParams.typeFront;
+        }
     });
 });
 

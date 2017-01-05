@@ -21,7 +21,8 @@
         "Portal": "Portal",
         "PortalRole": "Portal Role",
         "Attachment": "Attachment",
-        "EmailFolder": "Email Folder"
+        "EmailFolder": "Email Folder",
+        "PortalUser": "Portal User"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -45,7 +46,8 @@
         "Portal": "Portals",
         "PortalRole": "Portal Roles",
         "Attachment": "Attachments",
-        "EmailFolder": "Email Folders"
+        "EmailFolder": "Email Folders",
+        "PortalUser": "Portal Users"
     },
     "labels": {
         "Misc": "Misc",
@@ -184,14 +186,17 @@
         "Previous Entry": "Previous Entry",
         "Next Entry": "Next Entry",
         "View List": "View List",
-        "Attach File": "Attach File"
+        "Attach File": "Attach File",
+        "Skip": "Skip",
+        "Attribute": "Attribute",
+        "Function": "Function"
     },
     "messages": {
         "pleaseWait": "Please wait...",
         "posting": "Posting...",
         "confirmLeaveOutMessage": "Are you sure you want to leave the form?",
         "notModified": "You have not modified the record",
-        "duplicate": "The record you are creating seems to be a duplicate",
+        "duplicate": "The record you are creating might already exist",
         "dropToAttach": "Drop to attach",
         "fieldIsRequired": "{field} is required",
         "fieldShouldBeEmail": "{field} should be valid email",
@@ -219,7 +224,7 @@
         "massRemoveResultSingle": "{count} record has been removed",
         "noRecordsRemoved": "No records were removed",
         "clickToRefresh": "Click to refresh",
-        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(link name)[url]",
+        "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[link text](url)",
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
         "writeMessageToSelf": "Write a message on your stream",
@@ -267,7 +272,8 @@
         "phoneNumberOther": "Phone (Other)",
         "order": "Order",
         "parent": "Parent",
-        "children": "Children"
+        "children": "Children",
+        "id": "ID"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -322,16 +328,23 @@
 
         "createThis": "{user} created this {entityType}",
 
-        "createAssignedThis": "{user} created this {entity} assigned to {assignee}",
+        "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
 
         "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
 
         "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
 
+        "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
+
+        "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
+
         "assign": "{user} assigned {entityType} {entity} to {assignee}",
 
         "assignThis": "{user} assigned this {entityType} to {assignee}",
         "assignYou": "{user} assigned {entityType} {entity} to you",
+
+        "assignThisVoid": "{user} unassigned this {entityType}",
+        "assignVoid": "{user} unassigned {entityType} {entity}",
 
         "assignThisSelf": "{user} self-assigned this {entityType}",
         "assignSelf": "{user} self-assigned {entityType} {entity}",
@@ -473,7 +486,8 @@
             "lastSevenDays": "Last 7 Days",
             "lastXDays": "Last X Days",
             "nextXDays": "Next X Days",
-            "ever": "Ever"
+            "ever": "Ever",
+            "isEmpty": "Is Empty"
         },
         "searchRanges": {
             "is": "Is",
@@ -498,7 +512,9 @@
             "lessThan": "Less Than",
             "greaterThanOrEquals": "Greater Than or Equals",
             "lessThanOrEquals": "Less Than or Equals",
-            "between": "Between"
+            "between": "Between",
+            "isEmpty": "Is Empty",
+            "isNotEmpty": "Is Not Empty"
         },
         "autorefreshInterval": {
             "0": "None",

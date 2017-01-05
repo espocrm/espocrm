@@ -104,16 +104,17 @@ class RDB extends \Espo\ORM\Repository
 
     protected function getEntityById($id)
     {
+        $entity = $this->entityFactory->create($this->entityType);
+
+        if (!$entity) return null;
+
         $params = array();
         $this->handleSelectParams($params);
-
-        $entity = $this->entityFactory->create($this->entityType);
-        if ($entity) {
-            if ($this->getMapper()->selectById($entity, $id, $params)) {
-                $entity->setAsFetched();
-                return $entity;
-            }
+        if ($this->getMapper()->selectById($entity, $id, $params)) {
+            $entity->setAsFetched();
+            return $entity;
         }
+
         return null;
     }
 
@@ -173,9 +174,9 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function deleteFromDb($id)
+    public function deleteFromDb($id, $onlyDeleted = false)
     {
-        return $this->getMapper()->deleteFromDb($this->entityType, $id);
+        return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
     public function find(array $params = array())
@@ -215,8 +216,16 @@ class RDB extends \Espo\ORM\Repository
         if (!$entity->id) {
             return [];
         }
-        $entityType = $entity->relations[$relationName]['entity'];
-        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+
+        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO_PARENT) {
+            $entityType = $entity->get($relationName . 'Type');
+        } else {
+            $entityType = $entity->getRelationParam($relationName, 'entity');
+        }
+
+        if ($entityType) {
+            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
+        }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
         if (is_array($result)) {
@@ -263,22 +272,22 @@ class RDB extends \Espo\ORM\Repository
         ));
     }
 
-    public function relate(Entity $entity, $relationName, $foreign, $data = null)
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
     {
         if (!$entity->id) {
             return;
         }
 
-        $this->beforeRelate($entity, $relationName, $foreign, $data);
+        $this->beforeRelate($entity, $relationName, $foreign, $data, $options);
         $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
-            $this->$beforeMethodName($entity, $foreign, $data);
+            $this->$beforeMethodName($entity, $foreign, $data, $options);
         }
 
         $result = false;
         $methodName = 'relate' . ucfirst($relationName);
         if (method_exists($this, $methodName)) {
-            $result = $this->$methodName($entity, $foreign, $data);
+            $result = $this->$methodName($entity, $foreign, $data, $options);
         } else {
             $d = $data;
             if ($d instanceof \stdClass) {
@@ -293,10 +302,10 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if ($result) {
-            $this->afterRelate($entity, $relationName, $foreign, $data);
+            $this->afterRelate($entity, $relationName, $foreign, $data, $options);
             $afterMethodName = 'afterRelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
-                $this->$afterMethodName($entity, $foreign, $data);
+                $this->$afterMethodName($entity, $foreign, $data, $options);
             }
         }
 
@@ -304,16 +313,16 @@ class RDB extends \Espo\ORM\Repository
     }
 
 
-    public function unrelate(Entity $entity, $relationName, $foreign)
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = array())
     {
         if (!$entity->id) {
             return;
         }
 
-        $this->beforeUnrelate($entity, $relationName, $foreign);
+        $this->beforeUnrelate($entity, $relationName, $foreign, $options);
         $beforeMethodName = 'beforeUnrelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
-            $this->$beforeMethodName($entity, $foreign);
+            $this->$beforeMethodName($entity, $foreign, $options);
         }
 
         $result = false;
@@ -333,32 +342,32 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if ($result) {
-            $this->afterUnrelate($entity, $relationName, $foreign);
+            $this->afterUnrelate($entity, $relationName, $foreign, $options);
             $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
             if (method_exists($this, $afterMethodName)) {
-                $this->$afterMethodName($entity, $foreign);
+                $this->$afterMethodName($entity, $foreign, $options);
             }
         }
 
         return $result;
     }
 
-    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null)
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
     {
 
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null)
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
     {
 
     }
 
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign)
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
     {
 
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign)
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
     {
 
     }

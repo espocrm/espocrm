@@ -48,6 +48,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsDefault: 4,
 
+        searchTypeList: ['contains', 'startsWith', 'equals', 'isEmpty', 'isNotEmpty'],
+
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
@@ -62,13 +64,24 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchParams.typeOptions = ['startsWith', 'contains', 'equals', 'isEmpty', 'isNotEmpty'];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
                     this.handleSearchType(type);
                 },
             }, this.events || {});
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            if (
+                this.model.get(this.name) !== null
+                &&
+                this.model.get(this.name) !== ''
+            ) {
+                data.isNotEmpty = true;
+            }
+            return data;
         },
 
         handleSearchType: function (type) {
@@ -119,19 +132,6 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
             }
         },
-
-        /*fetchSearch: function () {
-            var value = this.$element.val();
-            if (value) {
-                var data = {
-                    type: 'like',
-                    value: '%' + value + '%',
-                    valueText: value
-                };
-                return data;
-            }
-            return false;
-        },*/
 
         fetchSearch: function () {
 
@@ -192,6 +192,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 }
             }
             return false;
+        },
+
+        getSearchType: function () {
+            return this.searchParams.typeFront || this.searchParams.type;
         }
 
     });

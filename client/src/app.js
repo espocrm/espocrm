@@ -61,7 +61,7 @@ Espo.define(
 
         this.setupAjax();
 
-        this.settings = new Settings(null, {cache: this.cache});
+        this.settings = new Settings(null);
         this.language = new Language(this.cache);
         this.metadata = new Metadata(this.cache);
         this.fieldManager = new FieldManager();
@@ -470,8 +470,12 @@ Espo.define(
                 var preferencesData = options.preferences || null;
                 var aclData = options.acl || null;
 
+                var settingData = options.settings || {};
+
                 this.user.set(userData);
                 this.preferences.set(preferencesData);
+
+                this.settings.set(settingData);
                 this.acl.set(aclData);
 
                 if (!this.auth) {

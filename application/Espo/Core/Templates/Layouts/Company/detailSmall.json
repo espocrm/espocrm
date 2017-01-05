@@ -1,0 +1,37 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [
+                {
+                    "name": "name",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "website",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "emailAddress",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "phoneNumber",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "billingAddressCountry",
+                    "fullWidth": true
+                }
+            ]
+        ]
+    }
+]

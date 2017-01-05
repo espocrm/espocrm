@@ -151,7 +151,7 @@ class Sender
         return $this;
     }
 
-    public function send(Email $email, $params = array(), &$message = null, $attachmetList = [])
+    public function send(Email $email, $params = array(), &$message = null, $attachmentList = [])
     {
         if (!$message) {
             $message = new Message();
@@ -189,6 +189,10 @@ class Sender
         if (!$email->get('from')) {
             $email->set('from', $fromAddress);
         }
+
+        $sender = new \Zend\Mail\Header\Sender();
+        $sender->setAddress($email->get('from'));
+        $message->getHeaders()->addHeader($sender);
 
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
@@ -242,7 +246,7 @@ class Sender
         $attachmentCollection = $email->get('attachments');
         $attachmentInlineCollection = $email->getInlineAttachments();
 
-        foreach ($attachmetList as $attachment) {
+        foreach ($attachmentList as $attachment) {
             $attachmentCollection[] = $attachment;
         }
 

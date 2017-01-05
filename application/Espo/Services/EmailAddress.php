@@ -177,11 +177,22 @@ class EmailAddress extends Record
     {
         $result = [];
 
-        $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
-        $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
         $this->findInAddressBookUsers($query, $limit, $result);
-        $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
+        if ($this->getAcl()->checkScope('Contact')) {
+            $this->findInAddressBookByEntityType($query, $limit, 'Contact', $result);
+        }
+        if ($this->getAcl()->checkScope('Lead')) {
+            $this->findInAddressBookByEntityType($query, $limit, 'Lead', $result);
+        }
+        if ($this->getAcl()->checkScope('Account')) {
+            $this->findInAddressBookByEntityType($query, $limit, 'Account', $result);
+        }
         $this->findInInboundEmail($query, $limit, $result);
+        foreach ($this->getHavingEmailAddressEntityTypeList() as $entityType) {
+            if ($this->getAcl()->checkScope($entityType)) {
+                $this->findInAddressBookByEntityType($query, $limit, $entityType, $result);
+            }
+        }
 
         $final = array();
 
@@ -195,6 +206,18 @@ class EmailAddress extends Record
         }
 
         return $final;
+    }
+
+    protected function getHavingEmailAddressEntityTypeList()
+    {
+        $list = [];
+        $scopeDefs = $this->getMetadata()->get(['scopes']);
+        foreach ($scopeDefs as $scope => $defs) {
+            if (empty($defs['disabled']) && !empty($defs['type']) && ($defs['type'] === 'Person' || $defs['type'] === 'Company')) {
+                $list[] = $scope;
+            }
+        }
+        return $list;
     }
 
 }

@@ -1,4 +1,20 @@
 {
-   "controller": "controllers/record",
-   "boolFilterList": ["onlyMy"]
+    "controller": "controllers/record",
+    "boolFilterList": ["onlyMy"],
+    "activityDefs": {
+        "activitiesCreate": true,
+        "historyCreate": true
+    },
+    "filterList": [
+        {
+            "name":"planned"
+        },
+        {
+            "name":"held",
+            "style": "success"
+        },
+        {
+            "name":"todays"
+        }
+    ]
 }

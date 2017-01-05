@@ -198,6 +198,35 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $result;
     }
 
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    {
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+
+        if ($foreign instanceof Entity) {
+            $foreignEntity = $foreign;
+            $hookData = array(
+                'relationName' => $relationName,
+                'relationData' => $data,
+                'foreignEntity' => $foreignEntity
+            );
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
+        }
+    }
+
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    {
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+
+        if ($foreign instanceof Entity) {
+            $foreignEntity = $foreign;
+            $hookData = array(
+                'relationName' => $relationName,
+                'foreignEntity' => $foreignEntity
+            );
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
@@ -241,38 +270,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
             if ($entity->hasAttribute('createdById')) {
                 if (empty($options['import']) || !$entity->has('createdById')) {
-                    $entity->set('createdById', $this->entityManager->getUser()->id);
+                    $entity->set('createdById', $this->getEntityManager()->getUser()->id);
                 }
             }
-
-            if ($entity->has('modifiedById')) {
-                $restoreData['modifiedById'] = $entity->get('modifiedById');
-            }
-            if ($entity->has('modifiedAt')) {
-                $restoreData['modifiedAt'] = $entity->get('modifiedAt');
-            }
-            $entity->clear('modifiedById');
         } else {
             if (empty($options['silent'])) {
                 if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('modifiedById')) {
-                    $entity->set('modifiedById', $this->entityManager->getUser()->id);
-                }
-            }
-
-            if ($entity->has('createdById')) {
-                if (empty($options['import'])) {
-                    $restoreData['createdById'] = $entity->get('createdById');
-                    $entity->clear('createdById');
-                }
-            }
-
-            if ($entity->has('createdAt')) {
-                if (empty($options['import'])) {
-                    $restoreData['createdAt'] = $entity->get('createdAt');
-                    $entity->clear('createdAt');
+                    $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+                    $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
                 }
             }
         }

@@ -1,7 +1,8 @@
 {
   "labels": {
-    "Create DocumentFolder": "Dokumente Ordner erstellen",
-    "Manage Categories": "Ordner verwalten"
+    "Create DocumentFolder": "Dokumentenordner erstellen",
+    "Manage Categories": "Ordner verwalten",
+    "Documents": "Dokumente"
   },
   "links": {
     "documents": "Dokumente"

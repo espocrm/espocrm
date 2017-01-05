@@ -1,5 +1,7 @@
 [
    "Base",
+   "BasePlus",
+   "Event",
    "Person",
-   "Event"
+   "Company"
 ]

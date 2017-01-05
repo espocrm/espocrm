@@ -31,8 +31,10 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
-class Task extends \Espo\Core\ORM\Repositories\RDB
+class Task extends \Espo\Core\Repositories\Event
 {
+    protected $reminderDateAttribute = 'dateEnd';
+
     protected function init()
     {
         parent::init();
@@ -124,6 +126,4 @@ class Task extends \Espo\Core\ORM\Repositories\RDB
             }
         }
     }
-
 }
-

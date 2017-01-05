@@ -37,7 +37,11 @@ class Settings extends \Espo\Core\Controllers\Base
 {
     protected function getConfigData()
     {
-        $data = $this->getConfig()->getData($this->getUser()->isAdmin());
+        if ($this->getUser()->id == 'system') {
+            $data = $this->getConfig()->getData();
+        } else {
+            $data = $this->getConfig()->getData($this->getUser()->isAdmin());
+        }
 
         $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
 

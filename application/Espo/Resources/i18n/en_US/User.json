@@ -35,7 +35,8 @@
         "portalRoles": "Portal Roles",
         "contact": "Contact",
         "accounts": "Accounts",
-        "account": "Account (Primary)"
+        "account": "Account (Primary)",
+        "tasks": "Tasks"
     },
     "labels": {
         "Create User": "Create User",
@@ -50,7 +51,8 @@
         "External Accounts": "External Accounts",
         "Email Accounts": "Email Accounts",
         "Portal": "Portal",
-        "Create Portal User": "Create Portal User"
+        "Create Portal User": "Create Portal User",
+        "Proceed w/o Contact": "Proceed w/o Contact"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -67,7 +69,7 @@
         "accountInfoEmailSubject": "EspoCRM User Access Info",
         "accountInfoEmailBody": "Your access information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
         "passwordChangeLinkEmailSubject": "Change Password Request",
-        "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be exprired soon.",
+        "passwordChangeLinkEmailBody": "You can change your password by this link {link}. This unique url will be expired soon.",
         "passwordChanged": "Password has been changed",
         "userCantBeEmpty": "Username can not be empty",
         "wrongUsernamePasword": "Wrong username/password",

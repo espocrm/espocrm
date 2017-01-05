@@ -12,7 +12,8 @@
       },
       {
          "name":"default",
-         "type":"varchar"
+         "type":"enum",
+         "view": "views/admin/field-manager/fields/options/default"
       },
       {
          "name":"isSorted",
@@ -25,6 +26,10 @@
       },
       {
          "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
          "type":"bool"
       }
    ],

@@ -59,8 +59,9 @@
 		</div>
 	</div>
 </div>
+{{/if}}
 
-
+{{#unless isNew}}
 <div class="row">
 	<div class="cell form-group col-md-6" data-name="textFilterFields">
 		<label class="control-label" data-name="textFilterFields">{{translate 'textFilterFields' category='fields' scope='EntityManager'}}</label>
@@ -68,5 +69,13 @@
 			{{{textFilterFields}}}
 		</div>
 	</div>
+	{{#if stream}}
+	<div class="cell form-group col-md-6" data-name="statusField">
+		<label class="control-label" data-name="statusField">{{translate 'statusField' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="statusField">
+			{{{statusField}}}
+		</div>
+	</div>
+	{{/if}}
 </div>
-{{/if}}
+{{/unless}}

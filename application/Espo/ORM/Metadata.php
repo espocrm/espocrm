@@ -38,11 +38,11 @@ class Metadata
         $this->data = $data;
     }
 
-    public function get($entityName)
+    public function get($entityType)
     {
-        return $this->data[$entityName];
+        if (!array_key_exists($entityType, $this->data)) {
+            return null;
+        }
+        return $this->data[$entityType];
     }
-
 }
-
-

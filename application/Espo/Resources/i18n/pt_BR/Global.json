@@ -173,7 +173,7 @@
         "massRemoveResultSingle": "{count} registro foi removido",
         "noRecordsRemoved": "Nenhum registro foi removido",
         "clickToRefresh": "Clique para atualizar",
-        "streamPostInfo": "Digite <strong>@usuario</strong> para mencionar usuários na postagem.\n\nSintaxe markdown disponível::\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n(url)[link]",
+        "streamPostInfo": "Digite <strong>@usuario</strong> para mencionar usuários na postagem.\n\nSintaxe markdown disponível::\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[link text](url)",
         "writeYourCommentHere": "Escreva seu comentário aqui"
     },
     "boolFilters": {

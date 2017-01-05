@@ -22,6 +22,7 @@
         "Portal": "Portal",
         "Portals": "Portals",
         "Portal Roles": "Portal Roles",
+        "Portal Users": "Portal Users",
         "Outbound Emails": "Outbound Emails",
         "Group Email Accounts": "Group Email Accounts",
         "Personal Email Accounts": "Personal Email Accounts",
@@ -64,7 +65,9 @@
         "massUpdate": "Mass Update",
         "relationships": "Relationship Panels",
         "sidePanelsDetail": "Side Panels (Detail)",
-        "sidePanelsEdit": "Side Panels (Edit)"
+        "sidePanelsEdit": "Side Panels (Edit)",
+        "sidePanelsDetailSmall": "Side Panels (Detail Small)",
+        "sidePanelsEditSmall": "Side Panels (Edit Small)"
     },
     "fieldTypes": {
         "address": "Address",
@@ -141,7 +144,10 @@
         "disableFormatting": "Disable Formatting",
         "dynamicLogicVisible": "Conditions making field visible",
         "dynamicLogicReadOnly": "Conditions making field read-only",
-        "dynamicLogicRequired": "Conditions making field required"
+        "dynamicLogicRequired": "Conditions making field required",
+        "dynamicLogicOptions": "Conditional options",
+        "probabilityMap": "Stage Probabilities (%)",
+        "readOnly": "Read-only"
     },
     "messages": {
         "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
@@ -169,13 +175,14 @@
         "roles": "Roles management.",
         "portals": "Portals management.",
         "portalRoles": "Roles for portal.",
+        "portalUsers": "Users of portal.",
         "outboundEmails": "SMTP settings for outgoing emails.",
         "groupEmailAccounts": "Group IMAP email accounts. Email import and Email-to-Case.",
         "personalEmailAccounts": "Users email accounts.",
         "emailTemplates": "Templates for outbound emails.",
         "import": "Import data from CSV file.",
         "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
-        "entityManager": "Create custom entities, edit existing ones. Manage field and relationships.",
+        "entityManager": "Create custom entities, edit existing ones. Manage fields and relationships.",
         "userInterface": "Configure UI.",
         "authTokens": "Active auth sessions. IP address and last access date.",
         "authentication": "Authentication settings.",

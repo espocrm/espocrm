@@ -104,7 +104,7 @@
 		"Thousand Separator and Decimal Mark equal": "Thousand Separator and Decimal Mark cannot be equal",
 		"1049": "Unknown database",
 		"2005": "Unknown MySQL server host",
-		"1045": "Access denied for user",
+		"1045": "Access denied for the user",
 		"extension": "{0} extension is missing",
 		"option": "Recommended value is {0}",
 		"mysqlSettingError": "EspoCRM requires the MySQL setting \"{NAME}\" to be set to {VALUE}"

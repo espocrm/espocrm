@@ -37,12 +37,13 @@ Espo.define('views/header', 'view', function (Dep) {
             if ('getHeader' in this.getParentView()) {
                 data.header = this.getParentView().getHeader();
             }
-            data.scope = this.getParentView().scope;
+            data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
             return data;
         },
 
         setup: function () {
+            this.scope = this.options.scope;
             if (this.model) {
                 this.listenTo(this.model, 'after:save', function () {
                     if (this.isRendered()) {
@@ -60,7 +61,7 @@ Espo.define('views/header', 'view', function (Dep) {
             var items = this.getParentView().getMenu() || {};
 
             return items;
-        },
+        }
     });
 });
 

@@ -53,6 +53,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         data: function () {
             return {
                 scope: this.scope,
+                entityType: this.entityType,
                 textFilter: this.textFilter,
                 bool: this.bool || {},
                 boolFilterList: this.boolFilterList,
@@ -65,7 +66,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.scope = this.collection.name;
+            this.entityType = this.collection.name;
+            this.scope = this.options.scope || this.entityType;
+
             this.searchManager = this.options.searchManager;
 
             if ('disableSavePreset' in this.options) {
@@ -78,9 +81,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []);
 
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.scope, 'filters', function (list) {
+            this._helper.layoutManager.get(this.entityType, 'filters', function (list) {
                 this.moreFieldList = [];
                 (list || []).forEach(function (field) {
                     if (~forbiddenFieldList.indexOf(field)) return;
@@ -94,7 +97,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.presetFilterList.push(item);
             }, this);
 
-            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+            if (this.getMetadata().get('scopes.' + this.entityType + '.stream')) {
                 this.boolFilterList.push('followed');
             }
 
@@ -436,7 +439,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                         return;
                     }
                 }, this);
-                label = label || this.translate(this.presetName, 'presetFilters', this.scope);
+                label = label || this.translate(this.presetName, 'presetFilters', this.entityType);
 
                 filterLabel = label;
                 filterStyle = style;
@@ -459,7 +462,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
 
                 if (primary) {
-                	var label = this.translate(primary, 'presetFilters', this.scope);
+                	var label = this.translate(primary, 'presetFilters', this.entityType);
                 	var style = this.getPrimaryFilterStyle();
                 	filterLabel = label;
                 	filterStyle = style;
@@ -483,7 +486,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         manageBoolFilters: function () {
             (this.boolFilterList || []).forEach(function (item) {
                 if (this.bool[item]) {
-                	var label = this.translate(item, 'boolFilters', this.scope);
+                	var label = this.translate(item, 'boolFilters', this.entityType);
                 	this.currentFilterLabelList.push(label);
                 }
             }, this);

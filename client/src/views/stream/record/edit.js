@@ -161,7 +161,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
             this.createField('portals', 'views/fields/link-multiple', {});
-            this.createField('post', 'views/note/fields/post', {required: true});
+            this.createField('post', 'views/note/fields/post', {required: true, rows: 1});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
             this.listenTo(this.model, 'change', function () {

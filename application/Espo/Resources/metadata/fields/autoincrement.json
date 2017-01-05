@@ -7,5 +7,6 @@
       "type":"int",
       "autoincrement":true,
       "unique":true
-   }
+   },
+   "readOnly": true
 }

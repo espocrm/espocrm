@@ -67,7 +67,7 @@ Espo.define('cache', [], function () {
 
         _checkType: function (type) {
             if (typeof type === 'undefined' && toString.call(type) != '[object String]') {
-                throw new TypeError("Bad type \"" + type + "\" passed to Bull.Cacher().");
+                throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
             }
         },
 
@@ -77,25 +77,26 @@ Espo.define('cache', [], function () {
             var key = this._composeKey(type, name);
             var stored = localStorage.getItem(key);
             if (stored) {
-                var str = stored;
-                if (stored[0] == "{" || stored[0] == "[") {
-                    try    {
-                        str = JSON.parse(stored);
+                var result = stored;
+
+                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
+                    var jsonString = stored.substr(9);
+                    try {
+                        result = JSON.parse(jsonString);
                     } catch (error) {
-                        str = stored;
+                        result = stored;
                     }
-                    stored = str;
                 }
-                return stored;
+                return result;
             }
             return null;
         },
 
         set: function (type, name, value) {
             this._checkType(type);
-                var key = this._composeKey(type, name);
-            if (value instanceof Object) {
-                value = JSON.stringify(value);
+            var key = this._composeKey(type, name);
+            if (value instanceof Object || Array.isArray(value)) {
+                value = '__JSON__:' + JSON.stringify(value);
             }
             localStorage.setItem(key, value);
         },

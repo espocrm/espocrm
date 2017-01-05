@@ -54,6 +54,7 @@ class HasChildren extends Base
                         'entity' => $foreignEntityName,
                         'foreignKey' => $foreignLinkName.'Id',
                         'foreignType' => $foreignLinkName.'Type',
+                        'foreign' => $foreignLinkName
                     ),
                 ),
             ),

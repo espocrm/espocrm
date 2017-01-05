@@ -198,6 +198,13 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
 
+        if (array_key_exists('audited', $data)) {
+            $params['audited'] = $data['audited'];
+        }
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['auditedForeign'] = $data['auditedForeign'];
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
 
         if ($result) {
@@ -242,6 +249,13 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
 
+        if (array_key_exists('audited', $data)) {
+            $params['audited'] = $data['audited'];
+        }
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['auditedForeign'] = $data['auditedForeign'];
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->updateLink($params);
 
         if ($result) {
@@ -275,6 +289,24 @@ class EntityManager extends \Espo\Core\Controllers\Base
         } else {
             throw new Error();
         }
+
+        return true;
+    }
+
+    public function postActionFormula($params, $data, $request)
+    {
+        if (empty($data['scope'])) {
+            throw new BadRequest();
+        }
+        if (!array_key_exists('data', $data)) {
+            throw new BadRequest();
+        }
+
+        $formulaData = get_object_vars($data['data']);
+
+        $this->getContainer()->get('entityManagerUtil')->setFormulaData($data['scope'], $formulaData);
+
+        $this->getContainer()->get('dataManager')->clearCache();
 
         return true;
     }

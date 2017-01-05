@@ -89,14 +89,16 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .header'
+                el: '#main > .header',
+                scope: this.scope
             });
         },
 
         setupRecord: function () {
             var o = {
                 model: this.model,
-                el: '#main > .record'
+                el: '#main > .record',
+                scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
@@ -155,7 +157,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
             return this.buildHeaderHtml([
-                '<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                '<a href="#' + this.scope + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },

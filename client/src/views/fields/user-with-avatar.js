@@ -30,7 +30,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
     return Dep.extend({
 
-        listTemplate: 'fields/user-with-avatar/detail',
+        listTemplate: 'fields/user-with-avatar/list',
 
         detailTemplate: 'fields/user-with-avatar/detail',
 

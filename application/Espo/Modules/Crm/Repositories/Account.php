@@ -42,7 +42,7 @@ class Account extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function afterRelateContacts(Entity $entity, $foreign, $data)
+    protected function afterRelateContacts(Entity $entity, $foreign, $data, array $options = array())
     {
         if (!($foreign instanceof Entity)) return;
 
@@ -52,7 +52,7 @@ class Account extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    protected function afterUnrelateContacts(Entity $entity, $foreign, $data)
+    protected function afterUnrelateContacts(Entity $entity, $foreign, array $options = array())
     {
         if (!($foreign instanceof Entity)) return;
 

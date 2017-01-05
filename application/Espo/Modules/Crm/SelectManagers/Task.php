@@ -44,11 +44,18 @@ class Task extends \Espo\Core\SelectManagers\Base
     protected function filterActual(&$result)
     {
         $result['whereClause'][] = array(
-            'status!=' => ['Completed', 'Canceled']
+            'status!=' => ['Completed', 'Canceled', 'Deferred']
         );
     }
 
-    protected function filterActualNotDeferred(&$result)
+    protected function filterDeferred(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status=' => 'Deferred'
+        );
+    }
+
+    protected function filterActualStartingNotInPast(&$result)
     {
         $result['whereClause'][] = array(
             array(
@@ -64,12 +71,12 @@ class Task extends \Espo\Core\SelectManagers\Base
                         'OR' => array(
                             $this->convertDateTimeWhere(array(
                                 'type' => 'past',
-                                'field' => 'dateStart',
+                                'attribute' => 'dateStart',
                                 'timeZone' => $this->getUserTimeZone()
                             )),
                             $this->convertDateTimeWhere(array(
                                 'type' => 'today',
-                                'field' => 'dateStart',
+                                'attribute' => 'dateStart',
                                 'timeZone' => $this->getUserTimeZone()
                             ))
                         )
@@ -91,7 +98,7 @@ class Task extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = [
             $this->convertDateTimeWhere(array(
                 'type' => 'past',
-                'field' => 'dateEnd',
+                'attribute' => 'dateEnd',
                 'timeZone' => $this->getUserTimeZone()
             )),
             [
@@ -106,7 +113,7 @@ class Task extends \Espo\Core\SelectManagers\Base
     {
         $result['whereClause'][] = $this->convertDateTimeWhere(array(
             'type' => 'today',
-            'field' => 'dateEnd',
+            'attribute' => 'dateEnd',
             'timeZone' => $this->getUserTimeZone()
         ));
     }
@@ -118,16 +125,22 @@ class Task extends \Espo\Core\SelectManagers\Base
         if (empty($result)) {
             return null;
         }
-        $field = $item['field'];
+        $attribute = null;
+        if (!empty($item['field'])) { // for backward compatibility
+            $attribute = $item['field'];
+        }
+        if (!empty($item['attribute'])) {
+            $attribute = $item['attribute'];
+        }
 
-        if ($field != 'dateStart' && $field != 'dateEnd') {
+        if ($attribute != 'dateStart' && $attribute != 'dateEnd') {
             return $result;
         }
 
-        $fieldDate = $field . 'Date';
+        $attributeDate = $attribute . 'Date';
 
         $dateItem = array(
-            'field' => $fieldDate,
+            'attribute' => $attributeDate,
             'type' => $item['type']
         );
         if (!empty($item['value'])) {
@@ -138,7 +151,7 @@ class Task extends \Espo\Core\SelectManagers\Base
             'OR' => array(
                 'AND' => [
                     $result,
-                    $fieldDate . '=' => null
+                    $attributeDate . '=' => null
                 ],
                 $this->getWherePart($dateItem)
             )

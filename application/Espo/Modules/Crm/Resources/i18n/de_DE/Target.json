@@ -1,12 +1,12 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "emailAddress": "E-Mail",
     "title": "Funktion",
     "website": "Webseite",
     "accountName": "Firmenname",
     "phoneNumber": "Telefon",
-    "doNotCall": "Nicht anrufen",
+    "doNotCall": "Anrufe unerwünscht",
     "address": "Adresse",
     "description": "Beschreibung"
   },

@@ -85,6 +85,8 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
             this.fieldList = this.options.fieldList || this.fieldList || [];
+
+            this.recordViewObject = this.options.recordViewObject;
         },
 
         setup: function () {

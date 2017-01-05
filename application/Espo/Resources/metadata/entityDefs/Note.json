@@ -1,7 +1,8 @@
 {
     "fields": {
         "post": {
-            "type": "text"
+            "type": "text",
+            "rows": 8
         },
         "data": {
             "type": "jsonObject",
@@ -56,9 +57,6 @@
             "notStorable": true
         },
         "isInternal": {
-            "type": "bool"
-        },
-        "isToSelf": {
             "type": "bool"
         },
         "createdAt": {
@@ -123,33 +121,6 @@
         "sortBy": "number",
         "asc": false
     },
-    "streamRelated": {
-        "Account": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Contact": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Lead": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Opportunity": [
-            "meetings",
-            "calls",
-            "tasks"
-        ],
-        "Case": [
-            "meetings",
-            "calls",
-            "tasks"
-        ]
-    },
     "statusStyles": {
         "Lead": {
             "New" : "primary",
@@ -190,15 +161,6 @@
         "Call": {
             "Held": "success"
         }
-    },
-    "statusFields": {
-        "Lead": "status",
-        "Case": "status",
-        "Opportunity": "stage",
-        "Task": "status",
-        "Meeting": "status",
-        "Call": "status",
-        "Campaign": "status"
     },
     "indexes": {
         "createdAt": {

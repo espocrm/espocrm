@@ -56,6 +56,7 @@ class HasMany extends Base
                         'type' => $relationType,
                         'entity' => $foreignEntityName,
                         'foreignKey' => lcfirst($foreignLinkName.'Id'),
+                        'foreign' => $foreignLinkName
                     ),
                 ),
             ),

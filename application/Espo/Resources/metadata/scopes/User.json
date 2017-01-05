@@ -2,7 +2,8 @@
 	"entity": true,
 	"layouts": true,
 	"tab": true,
-	"acl": false,
+	"acl": true,
+    "aclActionList": ["read"],
 	"customizable": true,
     "object": true
 }

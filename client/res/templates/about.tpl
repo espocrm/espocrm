@@ -61,6 +61,7 @@
             <li>JQuery Timepicker by Jon Thornton</li>
             <li>gridstack.js by Pavel Reznikov</li>
             <li>vis.js by Almende B.V.</li>
+            <li>Ace</li>
         </ul>
         </section>
         <section style="margin-top: 30px;">
@@ -76,6 +77,7 @@
                 <li>php-semver by Lars Vierbergen</li>
                 <li>TCPDF</li>
                 <li>Lightncandy by Zordius</li>
+                <li>php-mime-mail-parser by Vincent Dauce</li>
             </ul>
         </section>
     </div>

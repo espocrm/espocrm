@@ -4,7 +4,7 @@
     "Details": "Details"
   },
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "status": "Status",
     "file": "Datei",
     "type": "Typ",
@@ -18,7 +18,8 @@
   "links": {
     "accounts": "Firmen",
     "opportunities": "Verkaufschancen",
-    "folder": "Ordner"
+    "folder": "Ordner",
+    "leads": "Interessenten"
   },
   "options": {
     "status": {
@@ -32,7 +33,7 @@
       "Contract": "Vertrag",
       "NDA": "NDA",
       "EULA": "EULA",
-      "License Agreement": "Lizenz Vereinbarung"
+      "License Agreement": "Lizenzvereinbarung"
     }
   },
   "presetFilters": {

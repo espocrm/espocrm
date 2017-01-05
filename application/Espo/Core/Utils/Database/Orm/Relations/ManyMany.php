@@ -36,6 +36,7 @@ class ManyMany extends Base
     protected function load($linkName, $entityName)
     {
         $foreignEntityName = $this->getForeignEntityName();
+        $foreignLinkName = $this->getForeignLinkName();
 
         $linkParams = $this->getLinkParams();
 
@@ -68,6 +69,7 @@ class ManyMany extends Base
                             lcfirst($entityName).'Id',
                             lcfirst($foreignEntityName).'Id',
                         ),
+                        'foreign' => $foreignLinkName
                     ),
                 ),
             ),

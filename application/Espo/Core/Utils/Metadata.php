@@ -37,13 +37,11 @@ class Metadata
 
     protected $objData = null;
 
-    private $config;
+    protected $useCache;
 
     private $unifier;
 
     private $fileManager;
-
-    private $converter;
 
     private $moduleConfig;
 
@@ -61,10 +59,6 @@ class Metadata
         'customPath' => 'custom/Espo/Custom/Resources/metadata',
     );
 
-    protected $ormData = null;
-
-    protected $ormCacheFile = 'data/cache/application/ormMetadata.php';
-
     private $moduleList = null;
 
     /**
@@ -77,15 +71,10 @@ class Metadata
 
     private $changedData = array();
 
-    public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, $useCache = false)
     {
-        $this->config = $config;
+        $this->useCache = $useCache;
         $this->fileManager = $fileManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
     }
 
     protected function getFileManager()
@@ -96,25 +85,16 @@ class Metadata
     protected function getUnifier()
     {
         if (!isset($this->unifier)) {
-            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this);
+            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this, false);
         }
 
         return $this->unifier;
     }
 
-    protected function getConverter()
-    {
-        if (!isset($this->converter)) {
-            $this->converter = new \Espo\Core\Utils\Database\Converter($this, $this->fileManager);
-        }
-
-        return $this->converter;
-    }
-
     protected function getModuleConfig()
     {
         if (!isset($this->moduleConfig)) {
-            $this->moduleConfig = new \Espo\Core\Utils\Module($this->config, $this->fileManager);
+            $this->moduleConfig = new \Espo\Core\Utils\Module($this->fileManager, $this->useCache);
         }
 
         return $this->moduleConfig;
@@ -131,7 +111,7 @@ class Metadata
 
     public function isCached()
     {
-        if (!$this->getConfig()->get('useCache')) {
+        if (!$this->useCache) {
             return false;
         }
 
@@ -150,7 +130,7 @@ class Metadata
      */
     public function init($reload = false)
     {
-        if (!$this->getConfig()->get('useCache')) {
+        if (!$this->useCache) {
             $reload = true;
         }
 
@@ -159,10 +139,9 @@ class Metadata
         } else {
             $this->clearVars();
             $this->data = $this->getUnifier()->unify('metadata', $this->paths, true);
-            $this->data = $this->setLanguageFromConfig($this->data);
             $this->data = $this->addAdditionalFields($this->data);
 
-            if ($this->getConfig()->get('useCache')) {
+            if ($this->useCache) {
                 $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($isSaved === false) {
                     $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
@@ -195,7 +174,8 @@ class Metadata
     */
     public function get($key = null, $default = null)
     {
-        return Util::getValueByKey($this->getData(), $key, $default);
+        $result = Util::getValueByKey($this->getData(), $key, $default);
+        return $result;
     }
 
     /**
@@ -216,33 +196,6 @@ class Metadata
             return Json::encode($this->data);
         }
         return $this->data;
-    }
-
-    /**
-     * todo: move to a separate file
-     * Set language list and default for Settings, Preferences metadata
-     *
-     * @param array $data Meta
-     * @return array $data
-     */
-    protected function setLanguageFromConfig($data)
-    {
-        $entityList = array(
-            'Settings',
-            'Preferences',
-        );
-
-        $languageList = $this->getConfig()->get('languageList');
-        $language = $this->getConfig()->get('language');
-
-        foreach ($entityList as $entityName) {
-            if (isset($data['entityDefs'][$entityName]['fields']['language'])) {
-                $data['entityDefs'][$entityName]['fields']['language']['options'] = $languageList;
-                $data['entityDefs'][$entityName]['fields']['language']['default'] = $language;
-            }
-        }
-
-        return $data;
     }
 
     /**
@@ -274,6 +227,28 @@ class Metadata
         }
 
         return $data;
+    }
+
+    protected function addAdditionalFieldsObj()
+    {
+        $data = &$this->data;
+
+        if (!isset($data->entityDefs)) return;
+
+        foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
+            if (!isset($entityDefsItem->fields)) continue;
+            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), Util::objectToArray($data->fields));
+                if (!$additionalFields) continue;
+                foreach ($additionalFields as $subFieldName => $subFieldParams) {
+                    if (isset($entityDefsItem->fields->$subFieldName)) {
+                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName);
+                    } else {
+                        $data->entityDefs->$entityType->fields->$subFieldName = Util::arrayToObject($subFieldParams);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -326,14 +301,14 @@ class Metadata
 
         $unsetData = array(
             $key1 => array(
-                $key2 => $normalizedData,
+                $key2 => $normalizedData
             )
         );
 
         $this->deletedData = Util::merge($this->deletedData, $unsetData);
-        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData);
+        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
 
-        $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData);
+        $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
     }
 
     /**
@@ -409,39 +384,6 @@ class Metadata
         $this->clearChanges();
 
         return (bool) $result;
-    }
-
-    public function getOrmMetadata($reload = false)
-    {
-        if (!empty($this->ormData) && is_array($this->ormData) && !$reload) {
-            return $this->ormData;
-        }
-
-        if (!file_exists($this->ormCacheFile) || !$this->getConfig()->get('useCache') || $reload) {
-            $this->getConverter()->process();
-        }
-
-        if (empty($this->ormData)) {
-            $this->ormData = $this->getFileManager()->getPhpContents($this->ormCacheFile);
-        }
-
-        return $this->ormData;
-    }
-
-    public function setOrmMetadata(array $ormData)
-    {
-        $result = true;
-
-        if ($this->getConfig()->get('useCache')) {
-            $result = $this->getFileManager()->putPhpContents($this->ormCacheFile, $ormData);
-            if ($result == false) {
-                throw new \Espo\Core\Exceptions\Error('Metadata::setOrmMetadata() - Cannot save ormMetadata to a file');
-            }
-        }
-
-        $this->ormData = $ormData;
-
-        return $result;
     }
 
     /**
@@ -545,6 +487,5 @@ class Metadata
     {
         $this->data = null;
         $this->moduleList = null;
-        $this->ormData = null;
     }
 }

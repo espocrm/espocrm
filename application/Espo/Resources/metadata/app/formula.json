@@ -1,0 +1,104 @@
+{
+    "functionList": [
+        {
+            "name": "ifThenElse",
+            "insertText": "ifThenElse(CONDITION, CONSEQUENT, ALTERNATIVE)"
+        },
+        {
+            "name": "ifThen",
+            "insertText": "ifThenElse(CONDITION, CONSEQUENT)"
+        },
+        {
+            "name": "string\\concatenate",
+            "insertText": "string\\concatenate(STRING_1, STRING_2)"
+        },
+        {
+            "name": "string\\substring",
+            "insertText": "string\\substring(STRING, START, LENGTH)"
+        },
+        {
+            "name": "string\\trim",
+            "insertText": "string\\trim(STRING)"
+        },
+        {
+            "name": "datetime\\today",
+            "insertText": "datetime\\today()"
+        },
+        {
+            "name": "datetime\\now",
+            "insertText": "datetime\\now()"
+        },
+        {
+            "name": "datetime\\format",
+            "insertText": "datetime\\format(VALUE)"
+        },
+        {
+            "name": "datetime\\addMinutes",
+            "insertText": "datetime\\addMinutes(VALUE, MINUTES)"
+        },
+        {
+            "name": "datetime\\addHours",
+            "insertText": "datetime\\addHours(VALUE, HOURS)"
+        },
+        {
+            "name": "datetime\\addDays",
+            "insertText": "datetime\\addDays(VALUE, DAYS)"
+        },
+        {
+            "name": "datetime\\addWeeks",
+            "insertText": "datetime\\addWeeks(VALUE, WEEKS)"
+        },
+        {
+            "name": "datetime\\addMonths",
+            "insertText": "datetime\\addMonths(VALUE, MONTHS)"
+        },
+        {
+            "name": "datetime\\addYears",
+            "insertText": "datetime\\addYears(VALUE, YEARS)"
+        },
+        {
+            "name": "number\\format",
+            "insertText": "number\\format(VALUE)"
+        },
+        {
+            "name": "entity\\isNew",
+            "insertText": "entity\\attribute()"
+        },
+        {
+            "name": "entity\\isAttributeChanged",
+            "insertText": "entity\\isAttributeChanged(ATTRIBUTE)"
+        },
+        {
+            "name": "entity\\isAttributeNotChanged",
+            "insertText": "entity\\isAttributeNotChanged(ATTRIBUTE)"
+        },
+        {
+            "name": "entity\\attribute",
+            "insertText": "entity\\attribute(ATTRIBUTE)"
+        },
+        {
+            "name": "entity\\attributeFetched",
+            "insertText": "entity\\attributeFetched(ATTRIBUTE)"
+        },
+        {
+            "name": "entity\\setAttribute",
+            "insertText": "entity\\setAttribute(ATTRIBUTE, VALUE)"
+        },
+        {
+            "name": "entity\\addLinkMultipleId",
+            "insertText": "entity\\addLinkMultipleId(LINK, ID)"
+        },
+        {
+            "name": "entity\\hasLinkMultipleId",
+            "insertText": "entity\\hasLinkMultipleId(LINK, ID)"
+        },
+        {
+            "name": "entity\\isRelated",
+            "insertText": "entity\\isRelated(LINK, ID)"
+        },
+        {
+            "name": "env\\userAttribute",
+            "insertText": "env\\userAttribute(ATTRIBUTE)"
+        }
+    ]
+}

@@ -33,7 +33,7 @@ class Module
 {
     private $fileManager;
 
-    private $config;
+    private $useCache;
 
     private $unifier;
 
@@ -47,12 +47,13 @@ class Module
         'customPath' => 'custom/Espo/Custom/Resources/module.json',
     );
 
-    public function __construct(Config $config, File\Manager $fileManager)
+    public function __construct(File\Manager $fileManager, $useCache = false)
     {
-        $this->config = $config;
         $this->fileManager = $fileManager;
 
         $this->unifier = new \Espo\Core\Utils\File\FileUnifier($this->fileManager);
+
+        $this->useCache = $useCache;
     }
 
     protected function getConfig()
@@ -90,12 +91,12 @@ class Module
 
     protected function init()
     {
-        if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
+        if (file_exists($this->cacheFile) && $this->useCache) {
             $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
             $this->data = $this->getUnifier()->unify($this->paths, true);
 
-            if ($this->getConfig()->get('useCache')) {
+            if ($this->useCache) {
                 $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($result == false) {
                     throw new \Espo\Core\Exceptions\Error('Module - Cannot save unified modules.');

@@ -143,6 +143,11 @@
             "description":"portals"
          },
          {
+            "url":"#PortalUser",
+            "label":"Portal Users",
+            "description":"portalUsers"
+         },
+         {
             "url":"#PortalRole",
             "label":"Portal Roles",
             "description":"portalRoles"

@@ -33,7 +33,8 @@
         "sentBy": "Sent by (User)",
         "folder": "Folder",
         "inboundEmails": "Group Accounts",
-        "emailAccounts": "Personal Accounts"
+        "emailAccounts": "Personal Accounts",
+        "hasAttachment": "Has Attachment"
     },
     "links": {
         "replied": "Replied",
@@ -99,6 +100,7 @@
         "markAsImportant": "Mark as Important",
         "markAsNotImportant": "Unmark Importance",
         "moveToTrash": "Move to Trash",
-        "moveToFolder": "Move to Folder"
+        "moveToFolder": "Move to Folder",
+        "retrieveFromTrash": "Retrieve from Trash"
     }
 }

@@ -12,12 +12,14 @@
         "description": "Description",
         "amountConverted": "Amount (converted)",
         "amountWeightedConverted": "Amount Weighted",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "originalLead": "Original Lead"
     },
     "links": {
         "contacts": "Contacts",
         "documents": "Documents",
-        "campaign": "Campaign"
+        "campaign": "Campaign",
+        "originalLead": "Original Lead"
     },
     "options": {
         "stage": {

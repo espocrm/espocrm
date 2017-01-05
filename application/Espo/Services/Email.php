@@ -250,41 +250,17 @@ class Email extends Record
 
     public function loadToField(Entity $entity)
     {
-        $entity->loadLinkMultipleField('toEmailAddresses');
-        $names = $entity->get('toEmailAddressesNames');
-        if (!empty($names)) {
-            $arr = array();
-            foreach ($names as $id => $address) {
-                $arr[] = $address;
-            }
-            $entity->set('to', implode(';', $arr));
-        }
+        $this->getEntityManager()->getRepository('Email')->loadToField($entity);
     }
 
     public function loadCcField(Entity $entity)
     {
-        $entity->loadLinkMultipleField('ccEmailAddresses');
-        $names = $entity->get('ccEmailAddressesNames');
-        if (!empty($names)) {
-            $arr = array();
-            foreach ($names as $id => $address) {
-                $arr[] = $address;
-            }
-            $entity->set('cc', implode(';', $arr));
-        }
+        $this->getEntityManager()->getRepository('Email')->loadCcField($entity);
     }
 
     public function loadBccField(Entity $entity)
     {
-        $entity->loadLinkMultipleField('bccEmailAddresses');
-        $names = $entity->get('bccEmailAddressesNames');
-        if (!empty($names)) {
-            $arr = array();
-            foreach ($names as $id => $address) {
-                $arr[] = $address;
-            }
-            $entity->set('bcc', implode(';', $arr));
-        }
+        $this->getEntityManager()->getRepository('Email')->loadBccField($entity);
     }
 
     public function getEntity($id = null)
@@ -610,7 +586,7 @@ class Email extends Record
         $searchByEmailAddress = false;
         if (!empty($params['where']) && is_array($params['where'])) {
             foreach ($params['where'] as $i => $p) {
-                if (!empty($p['field']) && $p['field'] == 'emailAddress') {
+                if (!empty($p['attribute']) && $p['attribute'] == 'emailAddress') {
                     $searchByEmailAddress = true;
                     $emailAddress = $p['value'];
                     unset($params['where'][$i]);

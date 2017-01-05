@@ -39,6 +39,13 @@
             "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"],
             "default": ""
         },
+        "industry": {
+            "type": "enum",
+            "view": "crm:views/lead/fields/industry",
+            "customizationOptionsDisabled": true,
+            "default": "",
+            "isSorted": true
+        },
         "opportunityAmount": {
             "type": "currency",
             "audited": true
@@ -130,12 +137,14 @@
         "createdContact": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/created-contact"
         },
         "createdOpportunity": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/created-opportunity"
         },
         "targetLists": {
             "type": "linkMultiple",
@@ -174,33 +183,32 @@
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
         },
-        "opportunities": {
-            "type": "hasMany",
-            "entity": "Opportunity",
-            "foreign": "leads"
-        },
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "leads",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "leads",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "layoutRelationshipsDisabled": true,
+            "audited": true
         },
         "cases": {
             "type": "hasMany",
             "entity": "Case",
-            "foreign": "lead"
+            "foreign": "lead",
+            "audited": true
         },
         "emails": {
             "type": "hasChildren",
@@ -211,17 +219,20 @@
         "createdAccount": {
             "type": "belongsTo",
             "entity": "Account",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "createdContact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity",
-            "noJoin": true
+            "noJoin": true,
+            "foreign": "originalLead"
         },
         "campaign": {
             "type": "belongsTo",
@@ -242,7 +253,8 @@
         "documents": {
             "type": "hasMany",
             "entity": "Document",
-            "foreign": "leads"
+            "foreign": "leads",
+            "audited": true
         }
     },
     "convertEntityList": [

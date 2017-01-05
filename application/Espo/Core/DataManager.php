@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core;
+
 class DataManager
 {
     private $container;
@@ -113,11 +114,11 @@ class DataManager
 
         $metadata->init(true);
 
-        $ormMeta = $metadata->getOrmMetadata(true);
+        $ormData = $this->getContainer()->get('ormMetadata')->getData(true);
 
         $this->updateCacheTimestamp();
 
-        return empty($ormMeta) ? false : true;
+        return empty($ormData) ? false : true;
     }
 
     /**

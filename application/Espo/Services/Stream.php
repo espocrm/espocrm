@@ -40,6 +40,10 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $statusFields = null;
 
+    protected $successDefaultStyleList = ['Held', 'Closed Won', 'Closed', 'Completed', 'Complete', 'Sold'];
+
+    protected $dangerDefaultStyleList = ['Not Held', 'Closed Lost', 'Dead'];
+
     protected function init()
     {
         parent::init();
@@ -62,22 +66,27 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getServiceFactory()
     {
-        return $this->injections['container']->get('serviceFactory');
+        return $this->getInjection('container')->get('serviceFactory');
     }
 
     protected function getAcl()
     {
-        return $this->injections['acl'];
+        return $this->getInjection('acl');
     }
 
     protected function getAclManager()
     {
-        return $this->injections['aclManager'];
+        return $this->getInjection('aclManager');
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->getInjection('metadata');
+    }
+
+    protected function getFieldManager()
+    {
+        return $this->getInjection('container')->get('fieldManager');
     }
 
     protected function getNotificationService()
@@ -98,8 +107,13 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getStatusFields()
     {
-        if (empty($this->statusFields)) {
-            $this->statusFields = $this->getMetadata()->get('entityDefs.Note.statusFields', array());
+        if (is_null($this->statusFields)) {
+            $this->statusFields = array();
+            $scopes = $this->getMetadata()->get('scopes', array());
+            foreach ($scopes as $scope => $data) {
+                if (empty($data['statusField'])) continue;
+                $this->statusFields[$scope] = $data['statusField'];
+            }
         }
         return $this->statusFields;
     }
@@ -802,7 +816,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $data = array();
 
-        if ($entity->get('assignedUserId') != $entity->get('createdById')) {
+        if ($entity->get('assignedUserId')) {
             if (!$entity->has('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
@@ -820,6 +834,12 @@ class Stream extends \Espo\Core\Services\Base
                 $style = 'default';
                 if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
                     $style = $statusStyles[$entityType][$value];
+                } else {
+                    if (in_array($value, $this->successDefaultStyleList)) {
+                        $style = 'success';
+                    } else if (in_array($value, $this->dangerDefaultStyleList)) {
+                        $style = 'danger';
+                    }
                 }
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
@@ -867,13 +887,19 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
-        if (!$entity->has('assignedUserName')) {
-            $this->loadAssignedUserName($entity);
+        if ($entity->get('assignedUserId')) {
+            if (!$entity->has('assignedUserName')) {
+                $this->loadAssignedUserName($entity);
+            }
+            $note->set('data', array(
+                'assignedUserId' => $entity->get('assignedUserId'),
+                'assignedUserName' => $entity->get('assignedUserName'),
+            ));
+        } else {
+            $note->set('data', array(
+                'assignedUserId' => null
+            ));
         }
-        $note->set('data', array(
-            'assignedUserId' => $entity->get('assignedUserId'),
-            'assignedUserName' => $entity->get('assignedUserName'),
-        ));
 
         $this->getEntityManager()->saveEntity($note);
     }
@@ -899,6 +925,12 @@ class Stream extends \Espo\Core\Services\Base
 
         if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
             $style = $statusStyles[$entityType][$value];
+        } else {
+            if (in_array($value, $this->successDefaultStyleList)) {
+                $style = 'success';
+            } else if (in_array($value, $this->dangerDefaultStyleList)) {
+                $style = 'danger';
+            }
         }
 
         $note->set('data', array(
@@ -910,7 +942,7 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    protected function getAuditedFields(Entity $entity)
+    protected function getAuditedFieldsData(Entity $entity)
     {
         $entityType = $entity->getEntityType();
 
@@ -924,23 +956,10 @@ class Stream extends \Espo\Core\Services\Base
                     if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
                         continue;
                     }
-
-                    $attributes = [];
-                    $fieldsDefs = $this->getMetadata()->get('fields.' . $d['type']);
-
-                    if (empty($fieldsDefs['actualFields'])) {
-                        $attributes[] = $field;
-                    } else {
-                        foreach ($fieldsDefs['actualFields'] as $part) {
-                            if (!empty($fieldsDefs['naming']) && $fieldsDefs['naming'] == 'prefix') {
-                                $attributes[] = $part . ucfirst($field);
-                            } else {
-                                $attributes[] = $field . ucfirst($part);
-                            }
-                        }
-                    }
-
-                    $auditedFields[$field] = $attributes;
+                    $auditedFields[$field] = array();
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['fieldType'] = $d['type'];
                 }
             }
             $this->auditedFieldsCache[$entityType] = $auditedFields;
@@ -951,37 +970,52 @@ class Stream extends \Espo\Core\Services\Base
 
     public function handleAudited($entity)
     {
-        $auditedFields = $this->getAuditedFields($entity);
+        $auditedFields = $this->getAuditedFieldsData($entity);
 
-        $updatedFields = array();
+        $updatedFieldList = [];
         $was = array();
         $became = array();
 
-        foreach ($auditedFields as $field => $attrs) {
+        foreach ($auditedFields as $field => $item) {
             $updated = false;
-            foreach ($attrs as $attr) {
-                if ($entity->get($attr) != $entity->getFetched($attr)) {
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->get($attribute) !== $entity->getFetched($attribute)) {
                     $updated = true;
                 }
             }
             if ($updated) {
-                $updatedFields[] = $field;
-                foreach ($attrs as $attr) {
-                    $was[$attr] = $entity->getFetched($attr);
-                    $became[$attr] = $entity->get($attr);
+                $updatedFieldList[] = $field;
+                foreach ($item['actualList'] as $attribute) {
+                    $was[$attribute] = $entity->getFetched($attribute);
+                    $became[$attribute] = $entity->get($attribute);
+                }
+                foreach ($item['notActualList'] as $attribute) {
+                    $was[$attribute] = $entity->getFetched($attribute);
+                    $became[$attribute] = $entity->get($attribute);
+                }
+
+                if ($item['fieldType'] === 'linkParent') {
+                    $wasParentType = $was[$field . 'Type'];
+                    $wasParentId = $was[$field . 'Id'];
+                    if ($wasParentType && $wasParentId) {
+                        $wasParent = $this->getEntityManager()->getEntity($wasParentType, $wasParentId);
+                        if ($wasParent) {
+                            $was[$field . 'Name'] = $wasParent->get('name');
+                        }
+                    }
                 }
             }
         }
 
-        if (!empty($updatedFields)) {
+        if (!empty($updatedFieldList)) {
             $note = $this->getEntityManager()->getEntity('Note');
 
             $note->set('type', 'Update');
             $note->set('parentId', $entity->id);
-            $note->set('parentType', $entity->getEntityName());
+            $note->set('parentType', $entity->getEntityType());
 
             $note->set('data', array(
-                'fields' => $updatedFields,
+                'fields' => $updatedFieldList,
                 'attributes' => array(
                     'was' => $was,
                     'became' => $became,

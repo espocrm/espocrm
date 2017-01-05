@@ -4,14 +4,15 @@
 		"slim/slim": "2.*",
 		"mtdowling/cron-expression": "1.0.*",
 		"zendframework/zend-validator": "2.*",
-		"zendframework/zend-mail": "2.*",
+		"zendframework/zend-mail": "2.5.2",
 		"zendframework/zend-ldap": "2.*",
 		"monolog/monolog": "1.*",
 		"yzalis/identicon": "*",
-		"tecnick.com/tcpdf": "6.*",
 		"zordius/lightncandy": "0.*",
 		"composer/semver": "^1.4",
-		"zendframework/zend-servicemanager": "^3.1"
+		"zendframework/zend-servicemanager": "2.6.0",
+		"tecnickcom/tcpdf": "^6.2",
+		"php-mime-mail-parser/php-mime-mail-parser": "^2.5"
 	},
 	"autoload": {
 		"psr-0": {

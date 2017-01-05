@@ -226,6 +226,18 @@ class InboundEmail extends \Espo\Services\Record
             $monitoredFolders = 'INBOX';
         }
 
+        $parserName = 'ZendMail';
+        if (extension_loaded('mailparse')) {
+            $parserName = 'PhpMimeMailParser';
+        }
+
+        if ($this->getConfig()->get('emailParser')) {
+            $parserName = $this->getConfig()->get('emailParser');
+        }
+
+        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
+        $parser = new $parserClassName($this->getEntityManager());
+
         $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
 
         $monitoredFoldersArr = explode(',', $monitoredFolders);
@@ -238,7 +250,6 @@ class InboundEmail extends \Espo\Services\Record
                 $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
                 continue;
             }
-
 
             $lastUID = 0;
             $lastDate = 0;
@@ -288,9 +299,11 @@ class InboundEmail extends \Espo\Services\Record
                 $message = null;
                 $email = null;
                 try {
-                    $message = $storage->getMessage($id);
-                    if ($message && isset($message->from)) {
-                        $fromString = $message->from;
+                    $message = new \Espo\Core\Mail\MessageWrapper($storage, $id, $parser);
+
+                    if ($message && $message->checkAttribute('from')) {
+                        $fromString = $message->getAttribute('from');
+
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             $toSkip = true;
                             try {
@@ -301,14 +314,12 @@ class InboundEmail extends \Espo\Services\Record
                         }
                     }
                     if (!$toSkip) {
-                        try {
-                            $email = $importer->importMessage($message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader);
-                        } catch (\Exception $e) {
-                            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .$e->getMessage());
-                        }
+                        $importMethodName = 'importWith' . $parserName;
+
+                        $email = $this->$importMethodName($importer, $emailAccount, $message, $teamIdList, $userId, $userIdList, $filterCollection, $fetchOnlyHeader, null);
                     }
                 } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage());
+                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
                 }
 
                 try {
@@ -335,10 +346,12 @@ class InboundEmail extends \Espo\Services\Record
                 }
 
                 if ($k == count($ids) - 1) {
-                    if ($message && isset($message->date)) {
+                    $lastUID = $storage->getUniqueId($id);
+
+                    if ($email && $email->get('dateSent')) {
                         $dt = null;
                         try {
-                            $dt = new \DateTime($message->date);
+                            $dt = new \DateTime($email->get('dateSent'));
                         } catch (\Exception $e) {}
 
                         if ($dt) {
@@ -365,6 +378,28 @@ class InboundEmail extends \Espo\Services\Record
         $storage->close();
 
         return true;
+    }
+
+    protected function importWithPhpMimeMailParser($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
+    {
+        $email = null;
+        try {
+            $email = $importer->importMessage('PhpMimeMailParser', $message, $userId, $teamIdList, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ php-mime-mail-parser): [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+        return $email;
+    }
+
+    protected function importWithZendMail($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
+    {
+        $email = null;
+        try {
+            $email = $importer->importMessage('ZendMail', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ zend-mail): [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+        return $email;
     }
 
     protected function noteAboutEmail($email)
@@ -643,9 +678,9 @@ class InboundEmail extends \Espo\Services\Record
         } catch (\Exception $e) {}
     }
 
-    protected function processBouncedMessage(\Zend\Mail\Storage\Message $message)
+    protected function processBouncedMessage($message)
     {
-        $content = $message->getContent();
+        $content = $message->getRawContent();
 
         $isHard = false;
         if (preg_match('/permanent[ ]*[error|failure]/', $content)) {

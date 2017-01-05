@@ -70,7 +70,7 @@ Espo.define('acl', [], function () {
                 return true
             }
             if (!(action in data)) {
-                return true;
+                return false;
             }
 
             var value = data[action];

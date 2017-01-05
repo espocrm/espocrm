@@ -75,7 +75,7 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
             model.name = 'Preferences';
 
             model.set('dashboardTabList', dashboardTabList);
-            this.createView('dashboardTabList', 'views/fields/array', {
+            this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
                 el: this.options.el + ' .field[data-name="dashboardTabList"]',
                 defs: {
                     name: 'dashboardTabList',
@@ -102,6 +102,17 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
 
             var attributes = {};
             attributes.dashboardTabList = dashboardTabListView.model.get('dashboardTabList');
+
+            var names = dashboardTabListView.model.get('translatedOptions');
+
+            var renameMap = {};
+            for (var name in names) {
+                if (name !== names[name]) {
+                    renameMap[name] = names[name];
+                }
+            }
+
+            attributes.renameMap = renameMap;
 
             this.trigger('after:save', attributes);
 

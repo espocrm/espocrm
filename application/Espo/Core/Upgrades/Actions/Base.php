@@ -311,6 +311,17 @@ abstract class Base
         return $this->getPath('packagePath', $isPackage);
     }
 
+    protected function getDeleteList($type = 'delete')
+    {
+        $manifest = $this->getManifest();
+
+        if (isset($manifest[$type])) {
+            return $manifest[$type];
+        }
+
+        return array();
+    }
+
     /**
      * Get a list of files defined in manifest.json
      *
@@ -318,13 +329,26 @@ abstract class Base
      */
     protected function getDeleteFileList()
     {
-        $manifest = $this->getManifest();
+        if (!isset($this->data['deleteFileList'])) {
+            $deleteFileList = array();
 
-        if (!empty($manifest['delete'])) {
-            return $manifest['delete'];
+            $deleteList = array_merge($this->getDeleteList('delete'), $this->getDeleteList('deleteBeforeCopy'));
+            foreach ($deleteList as $key => $itemPath) {
+                if (is_dir($itemPath)) {
+                    $fileList = $this->getFileManager()->getFileList($itemPath, true, '', true, true);
+                    $fileList = $this->concatStringWithArray($itemPath, $fileList);
+                    $deleteFileList = array_merge($deleteFileList, $fileList);
+
+                    continue;
+                }
+
+                $deleteFileList[] = $itemPath;
+            }
+
+            $this->data['deleteFileList'] = $deleteFileList;
         }
 
-        return array();
+        return $this->data['deleteFileList'];
     }
 
     /**
@@ -334,17 +358,28 @@ abstract class Base
      */
     protected function deleteFiles($withEmptyDirs = false)
     {
-        $deleteFileList = $this->getDeleteFileList();
+        $deleteList = $this->getDeleteList('delete');
 
-        //remove directories, leave only files
-        foreach ($deleteFileList as $key => $filePath) {
-            if (!is_file($filePath)) {
-                unset($deleteFileList[$key]);
-            }
+        if (!empty($deleteList)) {
+            return $this->getFileManager()->remove($deleteList, null, $withEmptyDirs);
         }
 
-        if (!empty($deleteFileList)) {
-            return $this->getFileManager()->remove($deleteFileList, null, $withEmptyDirs);
+        return true;
+    }
+
+    /**
+     * Deleted file/forder list before coppy the upgrade files
+     *
+     * @param  boolean $withEmptyDirs
+     *
+     * @return boolean
+     */
+    protected function deleteBeforeCopy($withEmptyDirs = false)
+    {
+        $deleteList = $this->getDeleteList('deleteBeforeCopy');
+
+        if (!empty($deleteList)) {
+            $this->getFileManager()->remove($deleteList, null, $withEmptyDirs);
         }
 
         return true;
@@ -570,5 +605,17 @@ abstract class Base
         $this->helper->setActionObject($this);
 
         return $this->helper;
+    }
+
+    protected function concatStringWithArray($string, array $array)
+    {
+        foreach ($array as &$value) {
+            if (substr($string, -1) != '/') {
+                $string .= '/';
+            }
+            $value = $string . $value;
+        }
+
+        return $array;
     }
 }

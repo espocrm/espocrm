@@ -28,22 +28,27 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
+
 use Espo\Core\Utils;
 
 class Unifier
 {
     private $fileManager;
+
     private $metadata;
 
-    protected $params = array(
-        'unsetFileName' => 'unset.json',
-        'defaultsPath' => 'application/Espo/Core/defaults',
-    );
+    protected $useObjects;
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null)
+
+    protected $unsetFileName = 'unset.json';
+
+    protected $pathToDefaults = 'application/Espo/Core/defaults';
+
+    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null, $useObjects = false)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
+        $this->useObjects = $useObjects;
     }
 
     protected function getFileManager()
@@ -102,9 +107,7 @@ class Unifier
         if (empty($dirPath) || !file_exists($dirPath)) {
             return false;
         }
-        $unsetFileName = $this->params['unsetFileName'];
 
-        //get matadata files
         $fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
 
         $dirName = $this->getFileManager()->getDirName($dirPath, false);
@@ -112,17 +115,21 @@ class Unifier
 
         $content = array();
         $unsets = array();
-        foreach($fileList as $dirName => $fileName) {
 
-            if (is_array($fileName)) {  /*get content from files in a sub directory*/
-                $content[$dirName]= $this->unifySingle(Utils\Util::concatPath($dirPath,$dirName), $type, false, $moduleName); //only first level of a sub directory
+        foreach ($fileList as $dirName => $fileName) {
+            if (is_array($fileName)) {
+                $content[$dirName]= $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName); //only first level of a sub directory
 
-            } else { /*get content from a single file*/
-                if ($fileName == $unsetFileName) {
+            } else {
+                if ($fileName === $this->unsetFileName) {
                     $fileContent = $this->getFileManager()->getContents(array($dirPath, $fileName));
-                    $unsets = Utils\Json::getArrayData($fileContent);
+                    if ($this->useObjects) {
+                        $unsets = Utils\Json::decode($fileContent);
+                    } else {
+                        $unsets = Utils\Json::getArrayData($fileContent);
+                    }
                     continue;
-                } /*END: Save data from unset.json*/
+                }
 
                 $mergedValues = $this->unifyGetContents(array($dirPath, $fileName), $defaultValues);
 
@@ -133,9 +140,11 @@ class Unifier
             }
         }
 
-        //unset content
-        $content = Utils\Util::unsetInArray($content, $unsets);
-        //END: unset content
+        if ($this->useObjects) {
+            $content = Utils\DataUtil::unsetByKey($content, $unsets);
+        } else {
+            $content = Utils\Util::unsetInArray($content, $unsets);
+        }
 
         return $content;
     }
@@ -152,11 +161,19 @@ class Unifier
     {
         $fileContent = $this->getFileManager()->getContents($paths);
 
-        $decoded = Utils\Json::getArrayData($fileContent, null);
+        if ($this->useObjects) {
+            $decoded = Utils\Json::decode($fileContent);
+        } else {
+            $decoded = Utils\Json::getArrayData($fileContent, null);
+        }
 
         if (!isset($decoded)) {
             $GLOBALS['log']->emergency('Syntax error in '.Utils\Util::concatPath($paths));
-            return array();
+            if ($this->useObjects) {
+                return (object) [];
+            } else {
+                return array();
+            }
         }
 
         return $decoded;
@@ -172,15 +189,19 @@ class Unifier
      */
     protected function loadDefaultValues($name, $type = 'metadata')
     {
-        $defaultPath = $this->params['defaultsPath'];
-
-        $defaultValue = $this->getFileManager()->getContents( array($defaultPath, $type, $name.'.json') );
+        $defaultValue = $this->getFileManager()->getContents(array($this->pathToDefaults, $type, $name.'.json') );
         if ($defaultValue !== false) {
-            //return default array
-            return Utils\Json::decode($defaultValue, true);
+            if ($this->useObjects) {
+                return Utils\Json::decode($defaultValue);
+            } else {
+                return Utils\Json::decode($defaultValue, true);
+            }
         }
-
-        return array();
+        if ($this->useObjects) {
+            return (object) [];
+        } else {
+            return array();
+        }
     }
 
 }

@@ -34,8 +34,6 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         template: 'crm:record/panels/activities',
 
-        scopeList: ['Meeting', 'Call'],
-
         sortBy: 'dateStart',
 
         serviceName: 'Activities',
@@ -46,64 +44,26 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         actionList: [
             {
-                action: 'createActivity',
-                label: 'Schedule Meeting',
-                data: {
-                    link: 'meetings',
-                    status: 'Planned',
-                },
-                acl: 'create',
-                aclScope: 'Meeting',
-            },
-            {
-                action: 'createActivity',
-                label: 'Schedule Call',
-                data: {
-                    link: 'calls',
-                    status: 'Planned',
-                },
-                acl: 'create',
-                aclScope: 'Call',
-            },
-            {
                 action: 'composeEmail',
                 label: 'Compose Email',
                 acl: 'create',
-                aclScope: 'Email',
+                aclScope: 'Email'
             }
         ],
 
-        listLayout: {
-            'Meeting': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
+        listLayout: {},
+
+        defaultListLayout: {
+            rows: [
+                [
+                    {name: 'ico', view: 'crm:views/fields/ico'},
+                    {name: 'name', link: true}
+                ],
+                [
+                    {name: 'assignedUser'},
+                    {name: 'dateStart'}
                 ]
-            },
-            'Call': {
-                rows: [
-                    [
-                        {name: 'ico', view: 'crm:views/fields/ico'},
-                        {
-                            name: 'name',
-                            link: true,
-                        },
-                    ],
-                    [
-                        {name: 'assignedUser'},
-                        {name: 'dateStart'},
-                    ]
-                ]
-            }
+            ]
         },
 
         currentScope: false,
@@ -141,8 +101,30 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
         },
 
         setup: function () {
-
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || 'all';
+
+            this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
+
+            this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
+            this.actionList = Espo.Utils.cloneDeep(this.actionList);
+
+            this.setupActionList();
+
+            var actionList = [];
+            this.actionList.forEach(function (o) {
+                if (o.aclScope) {
+                    if (this.getMetadata().get(['scopes', o.aclScope, 'disabled'])) return;
+                }
+                actionList.push(o);
+            }, this);
+
+            this.actionList = actionList;
+
+            this.scopeList.forEach(function (item) {
+                if (!(item in this.listLayout)) {
+                    this.listLayout[item] = this.defaultListLayout;
+                }
+            }, this);
 
             if (this.currentTab != 'all') {
                 this.currentScope = this.currentTab;
@@ -165,12 +147,49 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                 this.wait(false);
             }
 
-
             this.tabList = [];
             this.scopeList.forEach(function (item) {
-                if (this.getAcl().check(item)) {
-                    this.tabList.push(item);
+                if (!this.getAcl().check(item)) return;
+                if (this.getMetadata().get(['scopes', item, 'disabled'])) return;
+                this.tabList.push(item);
+            }, this);
+        },
+
+        setupActionList: function () {
+            this.scopeList.forEach(function (scope) {
+                if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) return;
+
+                var o = {
+                    action: 'createActivity',
+                    html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
+                    data: {},
+                    acl: 'create',
+                    aclScope: scope
+                };
+
+                var link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
+                if (link) {
+                    o.data.link = link;
+                    if (!this.model.hasLink(link)) return;
+                } else {
+                    o.data.scope = scope;
+                    if (
+                        this.model.name !== 'User'
+                        &&
+                        !this.checkParentTypeAvailability(scope, this.model.name)
+                    ) {
+                        return;
+                    }
                 }
+
+                o.data = o.data || {};
+                if (!o.data.status) {
+                    var statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
+                    if (statusList && statusList.length) {
+                        o.data.status = statusList[0];
+                    }
+                }
+                this.actionList.push(o);
             }, this);
         },
 
@@ -237,56 +256,83 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         },
 
-        getCreateActivityAttributes: function (data, callback) {
+        getCreateActivityAttributes: function (scope, data, callback) {
             data = data || {};
 
             var attributes = {
                 status: data.status
             };
 
-            if (this.model.name == 'Contact') {
-                if (this.model.get('accountId')) {
-                    attributes.parentType = 'Account',
-                    attributes.parentId = this.model.get('accountId');
-                    attributes.parentName = this.model.get('accountName');
-                }
-            } else if (this.model.name == 'Lead') {
-                attributes.parentType = 'Lead',
-                attributes.parentId = this.model.id
-                attributes.parentName = this.model.get('name');
-            }
-            if (this.model.name != 'Account' && this.model.has('contactsIds')) {
-                attributes.contactsIds = this.model.get('contactsIds');
-                attributes.contactsNames = this.model.get('contactsNames');
-            }
-
             if (this.model.name == 'User') {
                 attributes.assignedUserId = this.model.id;
                 attributes.assignedUserName = this.model.get('name');
+            } else {
+                if (this.model.name == 'Contact') {
+                    if (this.model.get('accountId')) {
+                        if (this.checkParentTypeAvailability(scope, 'Account')) {
+                            attributes.parentType = 'Account',
+                            attributes.parentId = this.model.get('accountId');
+                            attributes.parentName = this.model.get('accountName');
+                        }
+                    }
+                } else if (this.model.name == 'Lead') {
+                    if (this.checkParentTypeAvailability(scope, 'Lead')) {
+                        attributes.parentType = 'Lead',
+                        attributes.parentId = this.model.id;
+                        attributes.parentName = this.model.get('name');
+                    }
+                }
+                if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+                    attributes.contactsIds = this.model.get('contactsIds');
+                    attributes.contactsNames = this.model.get('contactsNames');
+                }
+
+                if (data.scope && !attributes.parentId) {
+                    if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                        attributes.parentType = this.model.name;
+                        attributes.parentId = this.model.id;
+                        attributes.parentName = this.model.get('name');
+                    }
+                }
             }
 
             callback.call(this, attributes);
         },
 
+        checkParentTypeAvailability: function (scope, parentType) {
+            return ~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
+        },
+
         actionCreateActivity: function (data) {
-            var self = this;
             var link = data.link;
-            var scope = this.model.defs['links'][link].entity;
-            var foreignLink = this.model.defs['links'][link].foreign;
+            var foreignLink;
+            var scope;
+
+            if (link) {
+                var scope = this.model.getLinkParam(link, 'entity');
+                var foreignLink = this.model.getLinkParam(link, 'foreign');
+            } else {
+                scope = data.scope;
+            }
+
+            var o = {
+                scope: scope
+            };
+
+            if (link) {
+                o.relate = {
+                    model: this.model,
+                    link: foreignLink
+                };
+            }
 
             this.notify('Loading...');
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-            this.getCreateActivityAttributes(data, function (attributes) {
-                this.createView('quickCreate', viewName, {
-                    scope: scope,
-                    relate: {
-                        model: this.model,
-                        link: foreignLink,
-                    },
-                    attributes: attributes,
-                }, function (view) {
+            this.getCreateActivityAttributes(scope, data, function (attributes) {
+                o.attributes = attributes;
+                this.createView('quickCreate', viewName, o , function (view) {
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', function () {
@@ -299,16 +345,46 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         },
 
-        getComposeEmailAttributes: function (data, callback) {
+        getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
             var attributes = {
                 status: 'Draft',
                 to: this.model.get('emailAddress')
             };
+
+            if (this.model.name == 'Contact') {
+                if (this.getConfig().get('b2cMode')) {
+                    attributes.parentType = 'Contact';
+                    attributes.parentName = this.model.get('name');
+                    attributes.parentId = this.model.id;
+                } else {
+                    if (this.model.get('accountId')) {
+                        attributes.parentType = 'Account',
+                        attributes.parentId = this.model.get('accountId');
+                        attributes.parentName = this.model.get('accountName');
+                    }
+                }
+            } else if (this.model.name == 'Lead') {
+                attributes.parentType = 'Lead',
+                attributes.parentId = this.model.id
+                attributes.parentName = this.model.get('name');
+            }
+            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
+                attributes.nameHash = {};
+                attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
+            }
+
+            if (scope && !attributes.parentId) {
+                if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                    attributes.parentType = this.model.name;
+                    attributes.parentId = this.model.id;
+                    attributes.parentName = this.model.get('name');
+                }
+            }
             callback.call(this, attributes);
         },
 
-        actionComposeEmail: function () {
+        actionComposeEmail: function (data) {
             var self = this;
             var link = 'emails';
             var scope = 'Email';
@@ -323,29 +399,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
             this.notify('Loading...');
 
-            this.getComposeEmailAttributes(null, function (attributes) {
-                if (this.model.name == 'Contact') {
-                    if (this.getConfig().get('b2cMode')) {
-                        attributes.parentType = 'Contact';
-                        attributes.parentName = this.model.get('name');
-                        attributes.parentId = this.model.id;
-                    } else {
-                        if (this.model.get('accountId')) {
-                            attributes.parentType = 'Account',
-                            attributes.parentId = this.model.get('accountId');
-                            attributes.parentName = this.model.get('accountName');
-                        }
-                    }
-                } else if (this.model.name == 'Lead') {
-                    attributes.parentType = 'Lead',
-                    attributes.parentId = this.model.id
-                    attributes.parentName = this.model.get('name');
-                }
-                if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
-                    attributes.nameHash = {};
-                    attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
-                }
-
+            this.getComposeEmailAttributes(scope, data, function (attributes) {
                 this.createView('quickCreate', 'views/modals/compose-email', {
                     relate: relate,
                     attributes: attributes

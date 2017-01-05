@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Betreff",
+    "name": "Name",
     "parent": "Bezieht sich auf",
     "status": "Status",
     "dateStart": "Startdatum",
@@ -39,6 +39,7 @@
   "presetFilters": {
     "actual": "Aktuell",
     "completed": "Abgeschlossen",
+    "deferred": "Zurückgestellt",
     "todays": "Heutige",
     "overdue": "Überfällig"
   }

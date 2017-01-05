@@ -54,5 +54,10 @@
             "name":"todays"
         }
     ],
-    "boolFilterList": ["onlyMy"]
+    "boolFilterList": ["onlyMy"],
+    "activityDefs": {
+        "link": "calls",
+        "activitiesCreate": true,
+        "historyCreate": true
+    }
 }

@@ -32,10 +32,21 @@ namespace Espo\Modules\Crm\Services;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\NotFound;
+use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Forbidden;
 
 class TargetList extends \Espo\Services\Record
 {
     protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
+    protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
+
+    protected $entityTypeLinkMap = array(
+        'Lead' => 'leads',
+        'Account' => 'accounts',
+        'Contact' => 'contacts',
+        'User' => 'users'
+    );
 
     public function loadAdditionalFields(Entity $entity)
     {
@@ -57,6 +68,75 @@ class TargetList extends \Espo\Services\Record
         $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'users');
         $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'accounts');
         $entity->set('entryCount', $count);
+    }
+
+    protected function afterCreate(Entity $entity, array $data = array())
+    {
+        if (array_key_exists('sourceCampaignId', $data) && !empty($data['includingActionList'])) {
+            $excludingActionList = [];
+            if (!empty($data['excludingActionList'])) {
+                $excludingActionList = $data['excludingActionList'];
+            }
+            $this->populateFromCampaignLog($entity, $data['sourceCampaignId'], $data['includingActionList'], $excludingActionList);
+        }
+    }
+
+    protected function populateFromCampaignLog(Entity $entity, $sourceCampaignId, $includingActionList, $excludingActionList)
+    {
+        if (empty($sourceCampaignId)) {
+            throw new BadRequest();
+        }
+        $campaign = $this->getEntityManager()->getEntity('Campaign', $sourceCampaignId);
+        if (!$campaign) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->check($campaign, 'read')) {
+            throw new Forbidden();
+        }
+
+        $selectManager = $this->getSelectManagerFactory()->create('CampaignLogRecord');
+        $selectParams = $selectManager->getEmptySelectParams();
+
+
+        $selectParams['whereClause'][] = array(
+            'isTest' => false
+        );
+        $selectParams['whereClause'][] = array(
+            'campaignId' => $sourceCampaignId
+        );
+
+        $selectParams['select'] = ['id', 'parentId', 'parentType'];
+
+        $notSelectParams = $selectParams;
+
+        $selectParams['whereClause'][] = array(
+            'action=' => $includingActionList
+        );
+        $selectParams['groupBy'] = ['parentId', 'parentType'];
+
+        $notSelectParams['whereClause'][] = array(
+            'action=' => $excludingActionList
+        );
+        $notSelectParams['select'] = ['id'];
+
+        $list = $this->getEntityManager()->getRepository('CampaignLogRecord')->find($selectParams);
+
+        foreach ($list as $logRecord) {
+            if (!$logRecord->get('parentType')) continue;
+            if (empty($this->entityTypeLinkMap[$logRecord->get('parentType')])) continue;
+
+            if (!empty($excludingActionList)) {
+                $clonedSelectParams = $notSelectParams;
+                $clonedSelectParams['whereClause'][] = [
+                    'parentType' => $logRecord->get('parentType'),
+                    'parentId' => $logRecord->get('parentId'),
+                ];
+                if ($this->getEntityManager()->getRepository('CampaignLogRecord')->findOne($clonedSelectParams)) continue;
+            }
+
+            $relation = $this->entityTypeLinkMap[$logRecord->get('parentType')];
+            $this->getRepository()->relate($entity, $relation, $logRecord->get('parentId'));
+        }
     }
 
     public function unlinkAll($id, $link)
@@ -225,6 +305,24 @@ class TargetList extends \Espo\Services\Record
         return $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
             'optedOut' => false
         ));
+    }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        $repository = $this->getRepository();
+
+        foreach ($this->duplicatingLinkList as $link) {
+            $linkedList = $repository->findRelated($duplicatingEntity, $link, array(
+                'additionalColumnsConditions' => array(
+                    'optedOut' => false
+                )
+            ));
+            foreach ($linkedList as $linked) {
+                $repository->relate($entity, $link, $linked, array(
+                    'optedOut' => false
+                ));
+            }
+        }
     }
 }
 

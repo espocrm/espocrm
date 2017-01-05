@@ -108,6 +108,7 @@ class Pdf extends \Espo\Core\Services\Base
 
         if ($template->get('printFooter')) {
             $htmlFooter = $htmlizer->render($entity, $template->get('footer'));
+            $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
             $pdf->setFooterPosition($template->get('footerPosition'));
             $pdf->setFooterHtml($htmlFooter);
         } else {

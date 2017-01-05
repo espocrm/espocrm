@@ -64,6 +64,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             return {
                 panelList: this.panelList,
                 scope: this.scope,
+                entityType: this.entityType
             };
         },
 
@@ -88,7 +89,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
         init: function () {
             this.panelList = this.options.panelList || this.panelList;
-            this.scope = this.options.model.name;
+            this.scope = this.entityType = this.options.model.name;
 
             this.recordHelper = this.options.recordHelper;
 
@@ -97,6 +98,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
+
+            this.recordViewObject = this.options.recordViewObject;
         },
 
         setupPanels: function () {
@@ -138,24 +141,27 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 return item;
             }, this);
 
-
             this.wait(true);
-            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.mode), function (layoutData) {
+            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
                 if (layoutData) {
-                    this.filterPanels(layoutData);
+                    this.alterPanels(layoutData);
                 }
                 this.setupPanelViews();
                 this.wait(false);
             }.bind(this));
         },
 
-        filterPanels: function (layoutData) {
+        alterPanels: function (layoutData) {
             layoutData = layoutData || {};
 
             var newList = [];
             this.panelList.forEach(function (item) {
-                if (item.name && (layoutData[item.name] || {}).disabled) {
-                    return;
+                if (item.name) {
+                    var itemData = layoutData[item.name] || {};
+                    if (itemData.disabled) return;
+                    for (var i in itemData) {
+                        item[i] = itemData[i];
+                    }
                 }
                 newList.push(item);
             }, this);
@@ -183,6 +189,13 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
             defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
 
+            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList', this.type]);
+
+            if (fieldList) {
+                defaultPanelDefs.options = defaultPanelDefs.options || {};
+                defaultPanelDefs.options.fieldList = fieldList;
+            }
+
             this.panelList.unshift(defaultPanelDefs);
         },
 
@@ -196,7 +209,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                     mode: this.mode,
                     recordHelper: this.recordHelper,
                     defs: p,
-                    disabled: p.hidden || false
+                    disabled: p.hidden || false,
+                    recordViewObject: this.recordViewObject
                 };
                 o = _.extend(o, p.options);
                 this.createView(p.name, p.view, o, function (view) {
@@ -253,6 +267,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         },
 
         showPanel: function (name, callback) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             var isFound = false;
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
@@ -261,8 +277,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
             }, this);
             if (!isFound) return;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             if (this.isRendered()) {
                 var view = this.getView(name);
@@ -283,6 +297,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         },
 
         hidePanel: function (name, callback) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
             var isFound = false;
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
@@ -291,8 +307,6 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
             }, this);
             if (!isFound) return;
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
             if (this.isRendered()) {
                 var view = this.getView(name);

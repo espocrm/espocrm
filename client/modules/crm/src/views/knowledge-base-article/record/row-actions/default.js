@@ -35,6 +35,13 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
 
             if (this.options.acl.edit && this.model.collection && this.model.collection.sortBy == 'order' && this.model.collection.asc) {
                 actionList.push({
+                    action: 'moveToTop',
+                    label: 'Move to Top',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                actionList.push({
                     action: 'moveUp',
                     label: 'Move Up',
                     data: {
@@ -44,6 +51,13 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/default', 'view
                 actionList.push({
                     action: 'moveDown',
                     label: 'Move Down',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+                actionList.push({
+                    action: 'moveToBottom',
+                    label: 'Move to Bottom',
                     data: {
                         id: this.model.id
                     }

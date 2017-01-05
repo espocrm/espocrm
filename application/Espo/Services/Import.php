@@ -268,7 +268,21 @@ class Import extends \Espo\Services\Record
         return true;
     }
 
-    public function import($scope, array $importFieldList, $attachmentId, array $params = array())
+    public function runIdleImport($data)
+    {
+        $entityType = $data['entityType'];
+
+        $params = json_decode(json_encode($data['params']), true);
+
+        $importFieldList = $data['importFieldList'];
+        $attachmentId = $data['attachmentId'];
+
+        $importId = $data['importId'];
+
+        $this->import($entityType, $importFieldList, $attachmentId, $params, $importId);
+    }
+
+    public function import($scope, array $importFieldList, $attachmentId, array $params = array(), $importId = null)
     {
         $delimiter = ',';
         if (!empty($params['fieldDelimiter'])) {
@@ -284,63 +298,104 @@ class Import extends \Espo\Services\Record
             throw new Error('Import error');
         }
 
-        $import = $this->getEntityManager()->getEntity('Import');
-        $import->set(array(
-            'entityType' => $scope,
-            'fileId' => $attachmentId
-        ));
+        if ($importId) {
+            $import = $this->getEntityManager()->getEntity('Import', $importId);
+            if (!$import) {
+                throw new Error('Import error: Could not find import record.');
+            }
+        } else {
+            $import = $this->getEntityManager()->getEntity('Import');
+            $import->set(array(
+                'entityType' => $scope,
+                'fileId' => $attachmentId
+            ));
+            $import->set('status', 'In Process');
+        }
+
         $this->getEntityManager()->saveEntity($import);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        if (!empty($params['idleMode'])) {
+            $params['idleMode'] = false;
 
+            $job = $this->getEntityManager()->getEntity('Job');
+            $job->set(array(
+                'serviceName' => 'Import',
+                'method' => 'runIdleImport',
+                'data' => array(
+                    'entityType' => $scope,
+                    'params' => $params,
+                    'attachmentId' => $attachmentId,
+                    'importFieldList' => $importFieldList,
+                    'importId' => $import->id
+                )
+            ));
+            $this->getEntityManager()->saveEntity($job);
 
-        $result = array(
-            'importedIds' => array(),
-            'updatedIds' => array(),
-            'duplicateIds' => array(),
-        );
-        $i = -1;
-
-        $contents = str_replace("\r\n", "\n", $contents);
-
-        while ($arr = $this->readCsvString($contents, $delimiter, $enclosure)) {
-            $i++;
-            if ($i == 0 && !empty($params['headerRow'])) {
-                continue;
-            }
-            if (count($arr) == 1 && empty($arr[0])) {
-                continue;
-            }
-            $r = $this->importRow($scope, $importFieldList, $arr, $params);
-            if (empty($r)) {
-                continue;
-            }
-            if (!empty($r['isImported'])) {
-                $result['importedIds'][] = $r['id'];
-            }
-            if (!empty($r['isUpdated'])) {
-                $result['updatedIds'][] = $r['id'];
-            }
-            if (!empty($r['isDuplicate'])) {
-                $result['duplicateIds'][] = $r['id'];
-            }
-            $sql = "
-                INSERT INTO import_entity
-                (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
-                VALUES
-                (:entityType, :entityId, :importId, :isImported, :isUpdated, :isDuplicate)
-            ";
-            $sth = $pdo->prepare($sql);
-            $sth->bindValue(':entityType', $scope);
-            $sth->bindValue(':entityId', $r['id']);
-            $sth->bindValue(':importId', $import->id);
-            $sth->bindValue(':isImported', !empty($r['isImported']), \PDO::PARAM_BOOL);
-            $sth->bindValue(':isUpdated', !empty($r['isUpdated']), \PDO::PARAM_BOOL);
-            $sth->bindValue(':isDuplicate', !empty($r['isDuplicate']), \PDO::PARAM_BOOL);
-
-            $sth->execute();
-
+            return array(
+                'id' => $import->id,
+                'countCreated' => 0,
+                'countUpdated' => 0
+            );
         }
+
+        try {
+            $pdo = $this->getEntityManager()->getPDO();
+
+            $result = array(
+                'importedIds' => array(),
+                'updatedIds' => array(),
+                'duplicateIds' => array()
+            );
+            $i = -1;
+
+            $contents = str_replace("\r\n", "\n", $contents);
+
+            while ($arr = $this->readCsvString($contents, $delimiter, $enclosure)) {
+                $i++;
+                if ($i == 0 && !empty($params['headerRow'])) {
+                    continue;
+                }
+                if (count($arr) == 1 && empty($arr[0])) {
+                    continue;
+                }
+                $r = $this->importRow($scope, $importFieldList, $arr, $params);
+                if (empty($r)) {
+                    continue;
+                }
+                if (!empty($r['isImported'])) {
+                    $result['importedIds'][] = $r['id'];
+                }
+                if (!empty($r['isUpdated'])) {
+                    $result['updatedIds'][] = $r['id'];
+                }
+                if (!empty($r['isDuplicate'])) {
+                    $result['duplicateIds'][] = $r['id'];
+                }
+                $sql = "
+                    INSERT INTO import_entity
+                    (entity_type, entity_id, import_id, is_imported, is_updated, is_duplicate)
+                    VALUES
+                    (:entityType, :entityId, :importId, :isImported, :isUpdated, :isDuplicate)
+                ";
+                $sth = $pdo->prepare($sql);
+                $sth->bindValue(':entityType', $scope);
+                $sth->bindValue(':entityId', $r['id']);
+                $sth->bindValue(':importId', $import->id);
+                $sth->bindValue(':isImported', !empty($r['isImported']), \PDO::PARAM_BOOL);
+                $sth->bindValue(':isUpdated', !empty($r['isUpdated']), \PDO::PARAM_BOOL);
+                $sth->bindValue(':isDuplicate', !empty($r['isDuplicate']), \PDO::PARAM_BOOL);
+
+                $sth->execute();
+            }
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('Import Error: '. $e->getMessage());
+            $import->set('status', 'Failed');
+        }
+
+        $import->set('status', 'Complete');
+
+        $this->getEntityManager()->saveEntity($import);
+
         return array(
             'id' => $import->id,
             'countCreated' => count($result['importedIds']),
@@ -359,7 +414,6 @@ class Import extends \Espo\Services\Record
         if (empty($importFieldList)) {
             return;
         }
-
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
@@ -399,7 +453,11 @@ class Import extends \Espo\Services\Record
 
 
         if (!empty($params['defaultValues'])) {
-            $v = get_object_vars($params['defaultValues']);
+            if (is_object($params['defaultValues'])) {
+                $v = get_object_vars($params['defaultValues']);
+            } else {
+                $v = $params['defaultValues'];
+            }
             $entity->set($v);
         }
 
@@ -417,6 +475,9 @@ class Import extends \Espo\Services\Record
 
         foreach ($importFieldList as $i => $field) {
             if (!empty($field)) {
+                if (!array_key_exists($i, $row)) {
+                    continue;
+                }
                 $value = $row[$i];
                 if ($field == 'id') {
                     if ($params['action'] == 'create') {
@@ -524,7 +585,13 @@ class Import extends \Espo\Services\Record
 
         try {
             if ($isNew) {
-                $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                $isDuplicate = false;
+                if (empty($params['skipDuplicateChecking'])) {
+                    $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                }
+            }
+            if ($entity->id) {
+                $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
             }
             $saveResult = $this->getEntityManager()->saveEntity($entity, array(
                 'noStream' => true,

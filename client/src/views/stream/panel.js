@@ -78,15 +78,18 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return data;
         },
 
-        controlTextareaHeight: function () {
+        controlTextareaHeight: function (lastHeight) {
             var scrollHeight = this.$textarea.prop('scrollHeight');
             var clientHeight = this.$textarea.prop('clientHeight');
-            if (this.$textarea.prop('scrollHeight') > clientHeight) {
-                this.$textarea.prop('rows', this.$textarea.prop('rows') + 1);
-                this.controlTextareaHeight();
+
+            if (clientHeight === lastHeight) return;
+
+            if (scrollHeight > clientHeight) {
+                this.$textarea.attr('rows', this.$textarea.prop('rows') + 1);
+                this.controlTextareaHeight(clientHeight);
             }
             if (this.$textarea.val().length === 0) {
-                this.$textarea.prop('rows', 1);
+                this.$textarea.attr('rows', 1);
             }
         },
 

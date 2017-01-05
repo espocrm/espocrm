@@ -37,6 +37,7 @@
         "actual": "En cours",
         "completed": "Terminés",
         "todays": "Aujourd'hui",
+        "deferred": "Reporté",
         "overdue": "En retard"
     }
 }

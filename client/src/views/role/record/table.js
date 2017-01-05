@@ -50,6 +50,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             'record': ['all', 'team', 'own', 'no']
         },
 
+        type: 'acl',
+
         levelList: ['yes', 'all', 'team', 'own', 'no'],
 
         booleanLevelList: ['yes', 'no'],
@@ -151,6 +153,18 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
                 if (this.aclTypeMap[scope] != 'boolean') {
                     this.actionList.forEach(function (action, j) {
+                        var allowedActionList = this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
+
+                        if (allowedActionList) {
+                            if (!~allowedActionList.indexOf(action)) {
+                                list.push({
+                                    action: action,
+                                    levelList: false,
+                                    level: null
+                                });
+                                return;
+                            }
+                        }
 
                         if (action === 'stream') {
                             if (!this.getMetadata().get('scopes.' + scope + '.stream')) {
@@ -162,6 +176,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 return;
                             }
                         }
+
                         var level = 'all';
                         if (~this.booleanActionList.indexOf(action)) {
                             level = 'yes';
@@ -186,7 +201,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                                 level = 'no';
                             }
                         }
-                        var levelList = this.levelListMap[type] || [];
+                        var levelList = this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) || this.levelListMap[type] || [];
                         if (~this.booleanActionList.indexOf(action)) {
                             levelList = this.booleanLevelList;
                         }
@@ -267,7 +282,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     this.scopeList.push(scope);
                     this.aclTypeMap[scope] = acl;
                     if (acl === true) {
-                        this.aclTypeMap[scope] = 'recordAllTeamOwnNo';
+                        this.aclTypeMap[scope] = 'record';
                     }
                 }
             }, this);

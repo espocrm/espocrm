@@ -20,7 +20,7 @@
     "action": {
       "Sent": "Gesendet",
       "Opened": "Geöffnet",
-      "Opted Out": "Keine E-Mails",
+      "Opted Out": "Opt-Out gesetzt",
       "Bounced": "Nicht zustellbar",
       "Clicked": "Geklickt",
       "Lead Created": "Interessent erstellt"
@@ -32,7 +32,7 @@
   "presetFilters": {
     "sent": "Gesendet",
     "opened": "Geöffnet",
-    "optedOut": "Keine E-Mails",
+    "optedOut": "Opt-Out gesetzt",
     "bounced": "Nicht zustellbar",
     "clicked": "Geklickt",
     "leadCreated": "Interessent erstellt"

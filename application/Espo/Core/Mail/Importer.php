@@ -64,56 +64,98 @@ class Importer
         return $this->filtersMatcher;
     }
 
-    public function importMessage($message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
+    public function importMessage($parserType = 'ZendMail', $message, $assignedUserId = null, $teamsIdList = [], $userIdList = [], $filterList = [], $fetchOnlyHeader = false, $folderData = null)
     {
-        try {
-            $email = $this->getEntityManager()->getEntity('Email');
+        $parser = $message->getParser();
+        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserType;
 
-            $email->set('isBeingImported', true);
+        if (!$parser || get_class($parser) !== $parserClassName) {
+            $parser = new $parserClassName($this->getEntityManager());
+        }
 
-            $subject = '';
-            if (isset($message->subject)) {
-                $subject = $message->subject;
-            }
-            if (!empty($subject) && is_string($subject)) {
-                $subject = trim($subject);
-            }
-            if ($subject !== '0' && empty($subject)) {
-                $subject = '(No Subject)';
-            }
+        $email = $this->getEntityManager()->getEntity('Email');
 
-            $email->set('isHtml', false);
-            $email->set('name', $subject);
-            $email->set('status', 'Archived');
-            $email->set('attachmentsIds', []);
+        $email->set('isBeingImported', true);
+
+        $subject = '';
+        if ($parser->checkMessageAttribute($message, 'subject')) {
+            $subject = $parser->getMessageAttribute($message, 'subject');
+        }
+        if (!empty($subject) && is_string($subject)) {
+            $subject = trim($subject);
+        }
+        if ($subject !== '0' && empty($subject)) {
+            $subject = '(No Subject)';
+        }
+
+        $email->set('isHtml', false);
+        $email->set('name', $subject);
+        $email->set('status', 'Archived');
+        $email->set('attachmentsIds', []);
+        if ($assignedUserId) {
+            $email->set('assignedUserId', $assignedUserId);
+            $email->addLinkMultipleId('assignedUsers', $assignedUserId);
+        }
+        $email->set('teamsIds', $teamsIdList);
+
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $uId) {
+                $email->addLinkMultipleId('users', $uId);
+            }
+        }
+
+        if ($parser->checkMessageAttribute($message, 'from')) {
+            $email->set('fromString', $parser->getMessageAttribute($message, 'from'));
+        }
+
+        if ($parser->checkMessageAttribute($message, 'reply-To')) {
+            $email->set('replyToString', $parser->getMessageAttribute($message, 'reply-To'));
+        }
+
+        $fromArr = $parser->getAddressListFromMessage($message, 'from');
+        $toArr = $parser->getAddressListFromMessage($message, 'to');
+        $ccArr = $parser->getAddressListFromMessage($message, 'cc');
+        $replyToArr = $parser->getAddressListFromMessage($message, 'reply-To');
+
+        if (count($fromArr)) {
+            $email->set('from', $fromArr[0]);
+        }
+        $email->set('to', implode(';', $toArr));
+        $email->set('cc', implode(';', $ccArr));
+        $email->set('replyTo', implode(';', $replyToArr));
+
+        if ($folderData) {
+            foreach ($folderData as $uId => $folderId) {
+                $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+            }
+        }
+
+        if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
+            return false;
+        }
+
+        if ($parser->checkMessageAttribute($message, 'message-Id') && $parser->getMessageAttribute($message, 'message-Id')) {
+            $messageId = $parser->getMessageMessageId($message);
+
+            $email->set('messageId', $messageId);
+            if ($parser->checkMessageAttribute($message, 'delivered-To')) {
+                $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
+            }
+            if (stripos($messageId, '@espo-system') !== false) {
+                return;
+            }
+        }
+
+        if ($duplicate = $this->findDuplicate($email)) {
             if ($assignedUserId) {
-                $email->set('assignedUserId', $assignedUserId);
-                $email->addLinkMultipleId('assignedUsers', $assignedUserId);
+                $duplicate->addLinkMultipleId('users', $assignedUserId);
+                $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
             }
-            $email->set('teamsIds', $teamsIdList);
-
             if (!empty($userIdList)) {
                 foreach ($userIdList as $uId) {
-                    $email->addLinkMultipleId('users', $uId);
+                    $duplicate->addLinkMultipleId('users', $uId);
                 }
             }
-
-            $fromArr = $this->getAddressListFromMessage($message, 'from');
-            if (isset($message->from)) {
-                $email->set('fromString', $message->from);
-            }
-            if (isset($message->replyTo)) {
-                $email->set('replyToString', $message->replyTo);
-            }
-
-            $toArr = $this->getAddressListFromMessage($message, 'to');
-            $ccArr = $this->getAddressListFromMessage($message, 'cc');
-            $replyToArr = $this->getAddressListFromMessage($message, 'replyTo');
-
-            $email->set('from', $fromArr[0]);
-            $email->set('to', implode(';', $toArr));
-            $email->set('cc', implode(';', $ccArr));
-            $email->set('replyTo', implode(';', $replyToArr));
 
             if ($folderData) {
                 foreach ($folderData as $uId => $folderId) {
@@ -121,185 +163,136 @@ class Importer
                 }
             }
 
-            if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
-                return false;
-            }
+            $duplicate->set('isBeingImported', true);
 
-            if (isset($message->messageId) && !empty($message->messageId)) {
-                $email->set('messageId', $message->messageId);
-                if (isset($message->deliveredTo)) {
-                    $email->set('messageIdInternal', $message->messageId . '-' . $message->deliveredTo);
-                }
-                if (stripos($message->messageId, '@espo-system') !== false) {
-                    return;
+            $this->getEntityManager()->saveEntity($duplicate);
+
+            if (!empty($teamsIdList)) {
+                foreach ($teamsIdList as $teamId) {
+                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
                 }
             }
+            return $duplicate;
+        }
 
-            if ($duplicate = $this->findDuplicate($email)) {
-                if ($assignedUserId) {
-                    $duplicate->addLinkMultipleId('users', $assignedUserId);
-                    $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
-                }
-                if (!empty($userIdList)) {
-                    foreach ($userIdList as $uId) {
-                        $duplicate->addLinkMultipleId('users', $uId);
-                    }
-                }
-
-                if ($folderData) {
-                    foreach ($folderData as $uId => $folderId) {
-                        $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-                    }
-                }
-
-                $duplicate->set('isBeingImported', true);
-
-                $this->getEntityManager()->saveEntity($duplicate);
-
-                if (!empty($teamsIdList)) {
-                    foreach ($teamsIdList as $teamId) {
-                        $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
-                    }
-                }
-                return $duplicate;
-            }
-
-            if (isset($message->date)) {
-                $dt = new \DateTime($message->date);
+        if ($parser->checkMessageAttribute($message, 'date')) {
+            try {
+                $dt = new \DateTime($parser->getMessageAttribute($message, 'date'));
                 if ($dt) {
                     $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('dateSent', $dateSent);
                 }
-            } else {
-                $email->set('dateSent', date('Y-m-d H:i:s'));
-            }
-            if (isset($message->deliveryDate)) {
-                $dt = new \DateTime($message->deliveryDate);
+            } catch (\Exception $e) {}
+        } else {
+            $email->set('dateSent', date('Y-m-d H:i:s'));
+        }
+        if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
+            try {
+                $dt = new \DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
                 if ($dt) {
                     $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-                    $email->set('deliveryDate', $deliveryDate);
+                    $email->set('delivery-Date', $deliveryDate);
                 }
+            } catch (\Exception $e) {}
+        }
+
+        if (!$fetchOnlyHeader) {
+            $parser->fetchContentParts($email, $message);
+
+            if ($this->getFiltersMatcher()->match($email, $filterList)) {
+                return false;
             }
+        } else {
+            $email->set('body', '(Not fetched)');
+            $email->set('isHtml', false);
+        }
 
-            $inlineIds = array();
+        $parentFound = false;
 
-            if (!$fetchOnlyHeader) {
-                if ($message->isMultipart()) {
-                    foreach (new \RecursiveIteratorIterator($message) as $part) {
-                        $this->importPartDataToEmail($email, $part, $inlineIds);
-                    }
-                } else {
-                    $this->importPartDataToEmail($email, $message, $inlineIds, 'text/plain');
-                }
+        $replied = null;
 
-                if (!$email->get('body') && $email->get('bodyPlain')) {
-                    $email->set('body', $email->get('bodyPlain'));
-                }
-
-                $body = $email->get('body');
-                if (!empty($body)) {
-                    foreach ($inlineIds as $cid => $attachmentId) {
-                        if (strpos($body, 'cid:' . $cid) !== false) {
-                            $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
-                        } else {
-                            $email->addLinkMultipleId('attachments', $attachmentId);
-                        }
-                    }
-                    $email->set('body', $body);
-                }
-
-                if ($this->getFiltersMatcher()->matchBody($email, $filterList)) {
-                    return false;
-                }
-            } else {
-                $email->set('body', '(Not fetched)');
-                $email->set('isHtml', false);
+        if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
+            $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
+            $inReplyTo = $arr[0];
+            $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                'messageId' => $inReplyTo
+            ))->findOne();
+            if ($replied) {
+                $email->set('repliedId', $replied->id);
             }
+        }
 
-            $parentFound = false;
-
-            $replied = null;
-            if (isset($message->inReplyTo) && !empty($message->inReplyTo)) {
-                $arr = explode(' ', $message->inReplyTo);
-                $inReplyTo = $arr[0];
-                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
-                    'messageId' => $inReplyTo
-                ))->findOne();
-                if ($replied) {
-                    $email->set('repliedId', $replied->id);
-                }
+        if ($parser->checkMessageAttribute($message, 'references') && $parser->getMessageAttribute($message, 'references')) {
+            $arr = explode(' ', $parser->getMessageAttribute($message, 'references'));
+            $reference = $arr[0];
+            $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
+            $parentType = $parentId = null;
+            $emailSent = PHP_INT_MAX;
+            $number = null;
+            $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+            if ($n != 4) {
+                $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
             }
-
-            if (isset($message->references) && !empty($message->references)) {
-                $arr = explode(' ', $message->references);
-                $reference = $arr[0];
-                $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
-                $parentType = $parentId = null;
-                $emailSent = PHP_INT_MAX;
-                $number = null;
-                $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
-                if ($n == 4 && $emailSent < time()) {
-                    if (!empty($parentType) && !empty($parentId)) {
-                        if ($parentType == 'Lead') {
-                            $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
-                            if ($parent && $parent->get('status') == 'Converted') {
-                                if ($parent->get('createdAccountId')) {
-                                    $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
-                                    if ($account) {
-                                        $parentType = 'Account';
-                                        $parentId = $account->id;
-                                    }
-                                } else {
-                                    if ($this->getConfig()->get('b2cMode')) {
-                                        if ($parent->get('createdContactId')) {
-                                            $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
-                                            if ($contact) {
-                                                $parentType = 'Contact';
-                                                $parentId = $contact->id;
-                                            }
+            if ($n == 4 && $emailSent < time()) {
+                if (!empty($parentType) && !empty($parentId)) {
+                    if ($parentType == 'Lead') {
+                        $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
+                        if ($parent && $parent->get('status') == 'Converted') {
+                            if ($parent->get('createdAccountId')) {
+                                $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
+                                if ($account) {
+                                    $parentType = 'Account';
+                                    $parentId = $account->id;
+                                }
+                            } else {
+                                if ($this->getConfig()->get('b2cMode')) {
+                                    if ($parent->get('createdContactId')) {
+                                        $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
+                                        if ($contact) {
+                                            $parentType = 'Contact';
+                                            $parentId = $contact->id;
                                         }
                                     }
                                 }
                             }
                         }
-                        $email->set('parentType', $parentType);
-                        $email->set('parentId', $parentId);
-                        $parentFound = true;
                     }
+                    $email->set('parentType', $parentType);
+                    $email->set('parentId', $parentId);
+                    $parentFound = true;
                 }
             }
+        }
 
-            if (!$parentFound) {
-                if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
-                    $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
-                    if ($parentFound) {
-                        $email->set('parentType', $replied->get('parentType'));
-                        $email->set('parentId', $replied->get('parentId'));
-                    }
+        if (!$parentFound) {
+            if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
+                $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
+                if ($parentFound) {
+                    $email->set('parentType', $replied->get('parentType'));
+                    $email->set('parentId', $replied->get('parentId'));
                 }
             }
-            if (!$parentFound) {
-                $from = $email->get('from');
-                if ($from) {
-                    $parentFound = $this->findParent($email, $from);
-                }
+        }
+        if (!$parentFound) {
+            $from = $email->get('from');
+            if ($from) {
+                $parentFound = $this->findParent($email, $from);
             }
-            if (!$parentFound) {
-                if (!empty($replyToArr)) {
-                    $parentFound = $this->findParent($email, $replyToArr[0]);
-                }
+        }
+        if (!$parentFound) {
+            if (!empty($replyToArr)) {
+                $parentFound = $this->findParent($email, $replyToArr[0]);
             }
-            if (!$parentFound) {
-                if (!empty($toArr)) {
-                    $parentFound = $this->findParent($email, $toArr[0]);
-                }
+        }
+        if (!$parentFound) {
+            if (!empty($toArr)) {
+                $parentFound = $this->findParent($email, $toArr[0]);
             }
+        }
 
-            $this->getEntityManager()->saveEntity($email);
+        $this->getEntityManager()->saveEntity($email);
 
-            return $email;
-
-        } catch (\Exception $e) {}
+        return $email;
     }
 
     protected function findParent(Entity $email, $emailAddress)
@@ -350,244 +343,5 @@ class Importer
                 return $duplicate;
             }
         }
-    }
-
-    protected function normilizeHeader($header)
-    {
-        if (is_a($header, 'ArrayIterator')) {
-            return $header->current();
-        } else {
-            return $header;
-        }
-    }
-
-    protected function getAddressListFromMessage($message, $type)
-    {
-        $addressList = array();
-        if (isset($message->$type)) {
-            $list = $this->normilizeHeader($message->getHeader($type))->getAddressList();
-            foreach ($list as $address) {
-                $addressList[] = $address->getEmail();
-            }
-        }
-        return $addressList;
-    }
-
-    protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array(), $defaultContentType = null)
-    {
-        try {
-            $type = null;
-
-            if ($part->getHeaders() && isset($part->contentType)) {
-                $type = strtok($part->contentType, ';');
-            }
-
-            $contentDisposition = false;
-            if (isset($part->ContentDisposition)) {
-                if (strpos(strtolower($part->ContentDisposition), 'attachment') === 0) {
-                    $contentDisposition = 'attachment';
-                } else if (strpos(strtolower($part->ContentDisposition), 'inline') === 0) {
-                    $contentDisposition = 'inline';
-                }
-            } else if (isset($part->contentID)) {
-                $contentDisposition = 'inline';
-            }
-
-            if (empty($type)) {
-                if (!empty($defaultContentType)) {
-                    $type = $defaultContentType;
-                } else {
-                    return;
-                }
-            }
-
-            $encoding = null;
-            $isAttachment = true;
-            if ($type == 'text/plain' || $type == 'text/html') {
-                if ($contentDisposition !== 'attachment') {
-                    $isAttachment = false;
-                    $content = $this->getContentFromPart($part);
-                    if ($type == 'text/plain') {
-                        $bodyPlain = '';
-                        if ($email->get('bodyPlain')) {
-                            $bodyPlain .= $email->get('bodyPlain') . "\n";
-                        }
-                        $bodyPlain .= $content;
-                        $email->set('bodyPlain', $bodyPlain);
-                    } else if ($type == 'text/html') {
-                        $body = '';
-                        if ($email->get('body')) {
-                            $body .= $email->get('body') . "<br>";
-                        }
-                        $body .= $content;
-                        $email->set('isHtml', true);
-                        $email->set('body', $body);
-                    }
-                }
-            }
-
-            if ($isAttachment) {
-                $content = $part->getContent();
-                $disposition = null;
-
-                $fileName = null;
-                $contentId = null;
-
-                if ($contentDisposition) {
-                    if ($contentDisposition === 'attachment') {
-                        $fileName = $this->fetchFileNameFromContentDisposition($part->ContentDisposition);
-                        if ($fileName) {
-                            $disposition = 'attachment';
-                        }
-                    } else if ($contentDisposition ===  'inline') {
-                        if (isset($part->contentID)) {
-                            $contentId = trim($part->contentID, '<>');
-                            $fileName = $contentId;
-                            $disposition = 'inline';
-                        } else {
-                            // for iOS attachments
-                            if (empty($fileName)) {
-                                $fileName = $this->fetchFileNameFromContentDisposition($part->ContentDisposition);
-                                if ($fileName) {
-                                    $disposition = 'attachment';
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (isset($part->contentTransferEncoding)) {
-                    $encoding = strtolower($this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'))->getTransferEncoding());
-                }
-
-                $attachment = $this->getEntityManager()->getEntity('Attachment');
-                $attachment->set('name', $fileName);
-                $attachment->set('type', $type);
-
-                if ($disposition == 'inline') {
-                    $attachment->set('role', 'Inline Attachment');
-                } else {
-                    $attachment->set('role', 'Attachment');
-                }
-
-                if ($encoding == 'base64') {
-                    $content = base64_decode($content);
-                }
-
-                $attachment->set('contents', $content);
-
-                $this->getEntityManager()->saveEntity($attachment);
-
-                if ($disposition == 'attachment') {
-                    $attachmentsIds = $email->get('attachmentsIds');
-                    $attachmentsIds[] = $attachment->id;
-                    $email->set('attachmentsIds', $attachmentsIds);
-                } else if ($disposition == 'inline') {
-                    $inlineIds[$contentId] = $attachment->id;
-                }
-            }
-        } catch (\Exception $e) {}
-    }
-
-    protected function decodeAttachmentFileName($fileName)
-    {
-        if ($fileName && stripos($fileName, "''") !== false) {
-            list($encoding, $fileName) = explode("''", $fileName);
-            $fileName = rawurldecode($fileName);
-            if (strtoupper($encoding) !== 'UTF-8') {
-                if ($encoding) {
-                    $fileName = mb_convert_encoding($fileName, 'UTF-8', $encoding);
-                }
-            }
-        }
-        return $fileName;
-    }
-
-    protected function fetchFileNameFromContentDisposition($contentDisposition)
-    {
-        $contentDisposition = preg_replace('/\\\\"/', "{{_!Q!U!O!T!E!_}}", $contentDisposition);
-
-        $fileName = false;
-        $m = array();
-
-        if (preg_match('/filename="([^"]+)";?/i', $contentDisposition, $m)) {
-            $fileName = $m[1];
-        } else if (preg_match('/filename=([^";]+);?/i', $contentDisposition, $m)) {
-            $fileName = $m[1];
-        } else if (preg_match('/filename\*="([^"]+)";?/i', $contentDisposition, $m)) {
-            $fileName = $m[1];
-            $fileName = $this->decodeAttachmentFileName($fileName);
-        } else if (preg_match('/filename\*=([^";]+);?/i', $contentDisposition, $m)) {
-            $fileName = $m[1];
-            $fileName = $this->decodeAttachmentFileName($fileName);
-        } else {
-            $fileName = '';
-            foreach (['0', '1'] as $i) {
-                if (preg_match('/filename\*'.$i.'[\*]?="([^"]+)";?/i', $contentDisposition, $m)) {
-                    $part = $m[1];
-                    $fileName .= $part;
-                } else if (preg_match('/filename\*'.$i.'[\*]?=([^";]+);?/i', $contentDisposition, $m)) {
-                    $part = $m[1];
-                    $fileName .= $part;
-                }
-            }
-
-            if ($fileName === '') {
-                $fileName = null;
-            } else {
-                $fileName = $this->decodeAttachmentFileName($fileName);
-            }
-        }
-
-        if ($fileName) {
-            $fileName = str_replace('{{_!Q!U!O!T!E!_}}', '"', $fileName);
-        }
-
-        return $fileName;
-    }
-
-    protected function getContentFromPart($part)
-    {
-        if ($part instanceof \Zend\Mime\Part) {
-            $content = $part->getRawContent();
-            if (strtolower($part->charset) != 'utf-8') {
-                $content = mb_convert_encoding($content, 'UTF-8', $part->charset);
-            }
-        } else {
-            $content = $part->getContent();
-
-            $encoding = null;
-
-            if (isset($part->contentTransferEncoding)) {
-                $cteHeader = $this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'));
-                $encoding = strtolower($cteHeader->getTransferEncoding());
-            }
-
-            if ($encoding == 'base64') {
-                $content = base64_decode($content);
-            }
-
-            $charset = 'UTF-8';
-
-            if (isset($part->contentType)) {
-                $ctHeader = $this->normilizeHeader($part->getHeader('Content-Type'));
-                $charsetParamValue = $ctHeader->getParameter('charset');
-                if (!empty($charsetParamValue)) {
-                    $charset = strtoupper($charsetParamValue);
-                }
-            }
-
-            if (isset($part->contentTransferEncoding)) {
-                $cteHeader = $this->normilizeHeader($part->getHeader('Content-Transfer-Encoding'));
-                if ($cteHeader->getTransferEncoding() == 'quoted-printable') {
-                    $content = quoted_printable_decode($content);
-                }
-            }
-
-            if ($charset !== 'UTF-8') {
-                $content = mb_convert_encoding($content, 'UTF-8', $charset);
-            }
-        }
-        return $content;
     }
 }

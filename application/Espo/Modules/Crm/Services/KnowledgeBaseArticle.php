@@ -89,6 +89,44 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         );
     }
 
+    public function moveToTop($id, $where = null)
+    {
+        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        if (!$entity) throw new NotFound();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        $currentIndex = $entity->get('order');
+
+        if (!is_int($currentIndex)) throw new Error();
+
+        if (!$where) {
+            $where = array();
+        }
+
+        $params = array(
+            'where' => $where
+        );
+
+        $selectManager = $this->getSelectManager();
+        $selectParams = $selectManager->buildSelectParams($params, true, true);
+
+        $selectParams['whereClause'][] = array(
+            'order<' => $currentIndex
+        );
+
+        $selectManager->applyOrder('order', false, $selectParams);
+
+        $previousEntity = $this->getRepository()->findOne($selectParams);
+
+        if (!$previousEntity) return;
+
+        $entity->set('order', $previousEntity->get('order'));
+        $previousEntity->set('order', $currentIndex);
+
+        $this->getEntityManager()->saveEntity($entity);
+        $this->getEntityManager()->saveEntity($previousEntity);
+    }
+
 
     public function moveUp($id, $where = null)
     {
@@ -165,5 +203,41 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($entity);
         $this->getEntityManager()->saveEntity($nextEntity);
     }
-}
+    public function moveToBottom($id, $where = null)
+    {
+        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        if (!$entity) throw new NotFound();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
 
+        $currentIndex = $entity->get('order');
+
+        if (!is_int($currentIndex)) throw new Error();
+
+        if (!$where) {
+            $where = array();
+        }
+
+        $params = array(
+            'where' => $where
+        );
+
+        $selectManager = $this->getSelectManager();
+        $selectParams = $selectManager->buildSelectParams($params, true, true);
+
+        $selectParams['whereClause'][] = array(
+            'order>' => $currentIndex
+        );
+
+        $selectManager->applyOrder('order', true, $selectParams);
+
+        $nextEntity = $this->getRepository()->findOne($selectParams);
+
+        if (!$nextEntity) return;
+
+        $entity->set('order', $nextEntity->get('order'));
+        $nextEntity->set('order', $currentIndex);
+
+        $this->getEntityManager()->saveEntity($entity);
+        $this->getEntityManager()->saveEntity($nextEntity);
+    }
+}

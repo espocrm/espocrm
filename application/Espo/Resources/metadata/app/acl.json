@@ -1,19 +1,6 @@
 {
     "mandatory": {
         "scopeLevel": {
-            "User": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "stream": "no",
-                "create": "no"
-            },
-            "Team": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "create": "no"
-            },
             "Note": {
                 "read": "own",
                 "edit": "own",
@@ -89,7 +76,7 @@
         "fieldLevel": {
         },
         "assignmentPermission": "all",
-        "userPermission": "no",
+        "userPermission": "all",
         "portalPermission": "no"
     },
     "scopeLevelTypesDefaults": {

@@ -61,15 +61,11 @@ class Language
 
     protected $useCache = false;
 
-    /**
-     * @var array
-     */
     private $paths = array(
         'corePath' => 'application/Espo/Resources/i18n',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
         'customPath' => 'custom/Espo/Custom/Resources/i18n',
     );
-
 
     public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false)
     {
@@ -187,6 +183,11 @@ class Language
         $options = $this->get($scope. '.options.' . $field);
         if (is_array($options) && array_key_exists($value, $options)) {
             return $options[$value];
+        } else if ($scope !== 'Global') {
+            $options = $this->get('Global.options.' . $field);
+            if (is_array($options) && array_key_exists($value, $options)) {
+                return $options[$value];
+            }
         }
         return $value;
     }

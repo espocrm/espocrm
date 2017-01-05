@@ -30,7 +30,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
     return Dep.extend({
 
-        dataAttributes: ['name', 'fullWidth'],
+        dataAttributeList: ['name', 'fullWidth'],
 
         dataAttributesDefs: {
             fullWidth: {

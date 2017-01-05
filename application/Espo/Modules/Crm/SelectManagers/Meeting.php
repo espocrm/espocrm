@@ -87,7 +87,7 @@ class Meeting extends \Espo\Core\SelectManagers\Base
     {
         $result['whereClause'][] = $this->convertDateTimeWhere(array(
         	'type' => 'today',
-        	'field' => 'dateStart',
+        	'attribute' => 'dateStart',
         	'timeZone' => $this->getUserTimeZone()
         ));
     }

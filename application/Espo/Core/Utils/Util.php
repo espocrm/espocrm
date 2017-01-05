@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use \Espo\Core\Exceptions\Error;
+
 class Util
 {
     /**
@@ -402,25 +404,32 @@ class Util
                     $unsetString = $rootKey . '.' . $unsetString;
                 }
 
-                $keyСhain = explode('.', $unsetString);
-                $keyChainCount = count($keyСhain) - 1;
+                $keyArr = explode('.', $unsetString);
+                $keyChainCount = count($keyArr) - 1;
 
-                $elem = & $content;
+                $elem = &$content;
+
+                $elementArr = [];
+                $elementArr[] = &$elem;
                 for ($i = 0; $i <= $keyChainCount; $i++) {
 
-                    if (is_array($elem) && array_key_exists($keyСhain[$i], $elem)) {
-
+                    if (is_array($elem) && array_key_exists($keyArr[$i], $elem)) {
                         if ($i == $keyChainCount) {
+                            unset($elem[$keyArr[$i]]);
 
-                            unset($elem[$keyСhain[$i]]);
-
-                            if ($unsetParentEmptyArray && is_array($elem) && empty($elem)) {
-                                unset($keyСhain[$i]);
-                                $content = static::unsetInArray($content, implode('.', $keyСhain), false);
+                            if ($unsetParentEmptyArray) {
+                                for ($j = count($elementArr); $j > 0; $j--) {
+                                    $pointer =& $elementArr[$j];
+                                    if (is_array($pointer) && empty($pointer)) {
+                                        $previous =& $elementArr[$j - 1];
+                                        unset($previous[$keyArr[$j - 1]]);
+                                    }
+                                }
                             }
 
-                        } else if (is_array($elem[$keyСhain[$i]])) {
-                            $elem = & $elem[$keyСhain[$i]];
+                        } else if (is_array($elem[$keyArr[$i]])) {
+                            $elem = &$elem[$keyArr[$i]];
+                            $elementArr[] = &$elem;
                         }
 
                     }
@@ -430,6 +439,7 @@ class Util
 
         return $content;
     }
+
 
     /**
      * Get class name from the file path
@@ -450,15 +460,15 @@ class Util
     /**
      * Return values of defined $key.
      *
-     * @param  array $array
+     * @param  mixed $data
      * @param  mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
      * @param  mixed $default
      * @return mixed
      */
-    public static function getValueByKey(array $array, $key = null, $default = null)
+    public static function getValueByKey($data, $key = null, $default = null)
     {
         if (!isset($key) || empty($key)) {
-            return $array;
+            return $data;
         }
 
         if (is_array($key)) {
@@ -467,16 +477,25 @@ class Util
             $keys = explode('.', $key);
         }
 
-        $lastItem = $array;
-        foreach($keys as $keyName) {
-            if (isset($lastItem[$keyName]) && is_array($lastItem)) {
-                $lastItem = $lastItem[$keyName];
-            } else {
-                return $default;
+        $item = $data;
+        foreach ($keys as $keyName) {
+            if (is_array($item)) {
+                if (isset($item[$keyName])) {
+                    $item = $item[$keyName];
+                } else {
+                    return $default;
+                }
+            } else if (is_object($item)) {
+                if (isset($item->$keyName)) {
+                    $item = $item->$keyName;
+                } else {
+                    return $default;
+                }
             }
+
         }
 
-        return $lastItem;
+        return $item;
     }
 
     /**

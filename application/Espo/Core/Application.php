@@ -222,7 +222,7 @@ class Application
             }
 
             try {
-                $controllerManager = new \Espo\Core\ControllerManager($container);
+                $controllerManager = $this->getContainer()->get('controllerManager');
                 $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request());
                 $container->get('output')->render($result);
             } catch (\Exception $e) {

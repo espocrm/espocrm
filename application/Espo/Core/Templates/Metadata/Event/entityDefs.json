@@ -41,6 +41,11 @@
         "description": {
             "type": "text"
         },
+        "reminders": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "view": "crm:views/meeting/fields/reminders"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

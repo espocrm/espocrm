@@ -7,7 +7,35 @@
       },
       {
          "name":"default",
-         "type":"varchar"
+         "type":"enum",
+         "view": "views/admin/field-manager/fields/date/default",
+         "options": [
+            "",
+            "javascript: return this.dateTime.getNow(1);",
+            "javascript: return this.dateTime.getNow(5);",
+            "javascript: return this.dateTime.getNow(15);",
+            "javascript: return this.dateTime.getNow(30);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);",
+            "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);"
+         ],
+         "translation": "FieldManager.options.dateTimeDefault"
       },
       {
          "name":"after",
@@ -19,6 +47,10 @@
       },
       {
          "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
          "type":"bool"
       }
    ],

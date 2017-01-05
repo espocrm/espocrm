@@ -135,6 +135,13 @@ class Container
         );
     }
 
+    protected function loadControllerManager()
+    {
+        return new \Espo\Core\ControllerManager(
+            $this
+        );
+    }
+
     protected function loadPreferences()
     {
         return $this->get('entityManager')->getEntity('Preferences', $this->get('user')->id);
@@ -181,7 +188,7 @@ class Container
 
     protected function loadNumber()
     {
-        return new \Espo\Core\Utils\Number(
+        return new \Espo\Core\Utils\NumberUtil(
             $this->get('config')->get('decimalMark'),
             $this->get('config')->get('thousandSeparator')
         );
@@ -209,8 +216,8 @@ class Container
     protected function loadMetadata()
     {
         return new \Espo\Core\Utils\Metadata(
-            $this->get('config'),
-            $this->get('fileManager')
+            $this->get('fileManager'),
+            $this->get('config')->get('useCache')
         );
     }
 
@@ -247,7 +254,17 @@ class Container
             $this->get('metadata'),
             $this->get('fileManager'),
             $this->get('entityManager'),
-            $this->get('classParser')
+            $this->get('classParser'),
+            $this->get('ormMetadata')
+        );
+    }
+
+    protected function loadOrmMetadata()
+    {
+        return new \Espo\Core\Utils\Metadata\OrmMetadata(
+            $this->get('metadata'),
+            $this->get('fileManager'),
+            $this->get('config')->get('useCache')
         );
     }
 
@@ -266,7 +283,7 @@ class Container
             \Espo\Core\Utils\Language::detectLanguage($this->get('config'), $this->get('preferences')),
             $this->get('fileManager'),
             $this->get('metadata'),
-            $this->get('useCache')
+            $this->get('config')->get('useCache')
         );
     }
 

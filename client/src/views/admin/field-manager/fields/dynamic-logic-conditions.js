@@ -32,121 +32,61 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
         editTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/edit',
 
+        events: {
+            'click [data-action="editConditions"]': function () {
+                this.edit();
+            }
+        },
+
         data: function () {
         },
 
         setup: function () {
-            var conditionGroup = (this.model.get(this.name) || {}).conditionGroup || [];
+            this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
+            this.scope = this.options.scope;
+            this.createStringView();
+        },
 
+        createStringView: function () {
             this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
+                el: this.getSelector() + ' .top-group-string-container',
                 itemData: {
-                    value: conditionGroup
+                    value: this.conditionGroup
                 },
                 operator: 'and',
+                scope: this.scope
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this);
+        },
+
+        edit: function () {
+            this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
+                conditionGroup: this.conditionGroup,
                 scope: this.options.scope
-            });
-        },
+            }, function (view) {
+                view.render();
 
-        getConditionsString: function () {
-            var data = (this.model.get(this.name) || {}).conditionGroup || [];
-            if (!data.length) {
-                return this.translate('None');
-            }
-            return this.stringifyConditionGroup(data);
-        },
+                this.listenTo(view, 'apply', function (conditionGroup) {
+                    this.conditionGroup = conditionGroup;
 
-        stringifyConditionGroup: function (group, type) {
-            type = type || 'and';
-            if (type === 'and' || type === 'or') {
-                var list = [];
-                (group || []).forEach(function (item) {
-                    list.push(this.stringifyConditionItem(item));
+                    this.createStringView();
                 }, this);
-                return list.join(' ' + this.translate('and', 'logicalOperators', 'Admin') + ' ');
-            } else if (type === 'not') {
-                return this.translate('not', 'logicalOperators', 'Admin') + ' (' + this.stringifyConditionItem(group) + ')';
-            }
+            }, this);
         },
 
-        stringifyConditionItem: function (item) {
-            if (!item) return '';
-            item = item || {};
-            var type = item.type || 'equals';
-            var value = item.value || null;
+        fetch: function () {
+            var data = {};
+            data[this.name] = this.conditionGroup;
 
-            if (~['and', 'or', 'not'].indexOf(type)) {
-                return '(' + this.stringifyConditionGroup(value, type) + ')';
+            if (data[this.name].length === 0) {
+                data[this.name] = null;
             }
 
-            var operator;
-            switch (type) {
-                case 'equals':
-                    operator = '=';
-                    break;
-                case 'notEquals':
-                    operator = '&ne;';
-                    break;
-                case 'greaterThan':
-                    operator = '&gt;';
-                    break;
-                case 'lessThan':
-                    operator = '&lt;';
-                    break;
-                case 'greaterThanOrEquals':
-                    operator = '&ge;';
-                    break;
-                case 'lessThanOrEquals':
-                    operator = '&le;';
-                    break;
-                case 'isEmpty':
-                    operator = '= &empty;';
-                    break;
-                case 'isNotEmpty':
-                    operator = '&ne; &empty;';
-                    break;
-                case 'in':
-                    operator = '&isin;';
-                case 'notIn':
-                    operator = '&notin;';
-                    break;
-                default:
-                    return '';
-            }
-
-            if (!item.attribute) return;
-
-            var attribute = item.attribute;
-
-            var part = attribute;
-
-            switch (type) {
-                case 'in':
-                case 'notIn':
-                    part = part + ' ' + operator + ' (' + (value || []).map(function (valueItem) {
-                       return this.stringifyValue(valueItem, item);
-                    }, this).join(', ') + ')';
-                    break;
-                case 'isEmpty':
-                case 'isNotEmpty':
-                    part = part + ' ' + operator;
-                    break;
-                default:
-                    part = part + ' ' + operator + ' ' + this.stringifyValue(value, item);
-            }
-
-            return part;
-        },
-
-        stringifyValue: function (value, item) {
-            var field = (item.data || {}).field || item.attribute;
-
-            var fieldType = this.getMetadata().get(['entityDefs', this.options.scope, 'fields', field]);
-
-            this.getLanguage().translateOption(item, item.attribute, this.options.scope);
-
-
-            return value;
-        },
+            return data;
+        }
     });
 
 });
