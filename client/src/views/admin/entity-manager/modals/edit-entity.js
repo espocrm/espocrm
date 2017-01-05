@@ -212,7 +212,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 });
 
                 var optionList = Object.keys(fieldDefs).filter(function (item) {
-                    if (!~['varchar', 'text', 'phone', 'email', 'personName'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
+                    if (!~['varchar', 'text', 'phone', 'email', 'personName', 'number'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
                         return false;
                     }
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) {
