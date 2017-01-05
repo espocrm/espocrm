@@ -56,7 +56,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     var attributes = this.getView('edit').fetch();
                     attributes = _.extend(attributes, this.getView('edit').model.toJSON());
                     model.set(attributes);
-                    this.createEdit(model, function (view) {
+                    this.createRecordView(model, function (view) {
                         view.render();
                         view.notify(false);
                     });
