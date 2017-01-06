@@ -60,7 +60,7 @@
     }
   },
   "tooltips": {
-    "audited": "Updates will be logged in stream.",
+    "audited": "Las actualizaciones se registrarán en la Historia.",
     "required": "Field will be mandatory. Can't be left empty.",
     "default": "Value will be set by default upon creating.",
     "min": "Valor mínimo aceptado.",

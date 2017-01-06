@@ -13,7 +13,7 @@
     "Extension": "Extensión",
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuenta de Correo Grupal",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Import": "Importar",
     "Template": "Plantilla",
     "Job": "Trabajo",
@@ -22,7 +22,7 @@
     "PortalRole": "Rol del Portal",
     "Attachment": "Archivo adjunto",
     "EmailFolder": "Carpeta de correo electrónico",
-    "PortalUser": "Portal de Usuario"
+    "PortalUser": "Usuarios del Portal"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -38,7 +38,7 @@
     "Extension": "Extensiones",
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuentas de Correo Grupales",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Import": "Importar Resultados",
     "Template": "Plantillas",
     "Job": "Trabajos",
@@ -141,7 +141,7 @@
     "Inactive": "Inactivo",
     "Write your comment here": "Escriba su comentario aquí",
     "Post": "Entrada",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Show more": "Mostrar mas",
     "Dashlet Options": "Opciones de Cajas",
     "Full Form": "Formulario Completo",
@@ -226,10 +226,10 @@
     "streamPostInfo": "Escriba <strong>@username</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n[nombre del enlace](url)",
     "writeYourCommentHere": "Escriba su comentario aquí",
     "writeMessageToUser": "Escribir un mensaje a {user}",
-    "writeMessageToSelf": "Escribir un mensaje a uno mismo",
+    "writeMessageToSelf": "Escribir un mensaje en tu Historia",
     "typeAndPressEnter": "Escriba y presione enter",
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
-    "checkForNewNotes": "Comprobar si hay actualizaciones de vapor",
+    "checkForNewNotes": "Comprobar si hay actualizaciones en la Historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
     "done": "Hecho"
   },
@@ -286,7 +286,7 @@
     "children": "Hijos"
   },
   "dashlets": {
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Emails": "Mi bandeja de entrada"
   },
   "notificationMessages": {

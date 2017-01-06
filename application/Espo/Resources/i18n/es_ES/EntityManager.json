@@ -11,7 +11,7 @@
     "type": "Tipo",
     "labelSingular": "Etiqueta en Singular",
     "labelPlural": "Etiqueta en Plural",
-    "stream": "Actividad",
+    "stream": "Historia",
     "label": "Etiqueta",
     "linkType": "Tipo de enlace",
     "entityForeign": "Entidad Foránea",
@@ -58,11 +58,11 @@
     "linkConflict": "Un enlace con el mismo nombra ya existe."
   },
   "tooltips": {
-    "statusField": "Updates of this field are logged in stream.",
+    "statusField": "Las actualizaciones de este campo se registran en la Historia.",
     "textFilterFields": "Fields used by text search.",
-    "stream": "Whether entity has a Stream.",
+    "stream": "Si la entidad tiene una Historia.",
     "disabled": "Check if you don't need this entity in your system.",
-    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
+    "linkAudited": "La creación de registros relacionados y vinculados con el registro existente, se registrarán en la Historia.",
     "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
     "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
   }
