@@ -3,7 +3,7 @@
     "parent": "Padre",
     "contacts": "Contactos",
     "opportunities": "Oportunidades",
-    "leads": "Potenciales",
+    "leads": "PosiblesClientes",
     "meetings": "Reuniones",
     "calls": "Llamadas",
     "tasks": "Tareas",
@@ -18,7 +18,7 @@
   "scopeNames": {
     "Account": "Cuenta",
     "Contact": "Contacto",
-    "Lead": "Potencial",
+    "Lead": "Posible Cliente",
     "Target": "Objetivo",
     "Opportunity": "Oportunidad",
     "Meeting": "Reunión",
@@ -41,7 +41,7 @@
   "scopeNamesPlural": {
     "Account": "Cuentas",
     "Contact": "Contactos",
-    "Lead": "Potenciales",
+    "Lead": "Posibles Clientes",
     "Target": "Objetivos",
     "Opportunity": "Oportunidades",
     "Meeting": "Reuniones",
@@ -62,7 +62,7 @@
     "CampaignLogRecord": "Campaign Log Records"
   },
   "dashlets": {
-    "Leads": "Mis Potenciales",
+    "Leads": "Mis Posibles Clientes",
     "Opportunities": "Mis Opportunidades",
     "Tasks": "Mis Tareas",
     "Cases": "Mis Casos",
@@ -70,7 +70,7 @@
     "Calls": "Mis Llamadas",
     "Meetings": "Mis Reuniones",
     "OpportunitiesByStage": "Oportunidades por Etapa",
-    "OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
+    "OpportunitiesByLeadSource": "Oportunidades por origen del Posible Cliente",
     "SalesByMonth": "Ventas por Mes",
     "SalesPipeline": "Canalización de ventas",
     "Activities": "Mis actividades"

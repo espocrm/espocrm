@@ -23,7 +23,7 @@
       "Opted Out": "optado por no",
       "Bounced": "Rebotados",
       "Clicked": "Cliqueados",
-      "Lead Created": "Potencial Creado"
+      "Lead Created": "Posible Cliente Creado"
     }
   },
   "labels": {
@@ -35,6 +35,6 @@
     "optedOut": "optado por no",
     "bounced": "Rebotados",
     "clicked": "Cliqueados",
-    "leadCreated": "Potencial Creado"
+    "leadCreated": "Posible Cliente Creado"
   }
 }
