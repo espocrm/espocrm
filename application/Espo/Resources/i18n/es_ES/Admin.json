@@ -22,6 +22,7 @@
     "Portal": "Portal",
     "Portals": "Portales",
     "Portal Roles": "Roles del Portal",
+    "Portal Users": "Usuarios del Portal",
     "Outbound Emails": "Correo Saliente",
     "Group Email Accounts": "Cuentas Grupales",
     "Personal Email Accounts": "Cuentas Personales",
@@ -64,7 +65,9 @@
     "massUpdate": "Actualización Masiva",
     "relationships": "Relaciones",
     "sidePanelsDetail": "Paneles laterales (Detalles)",
-    "sidePanelsEdit": "Paneles laterales (Editar)"
+    "sidePanelsEdit": "Paneles laterales (Editar)",
+    "sidePanelsDetailSmall": "Paneles laterales (Detalles Pequeño)",
+    "sidePanelsEditSmall": "Paneles laterales (Editar Pequeño)"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -141,7 +144,10 @@
     "disableFormatting": "Desactivar Formateo",
     "dynamicLogicVisible": "Condiciones que hacen el campo visible",
     "dynamicLogicReadOnly": "Condiciones que hacen el campo de solo lectura",
-    "dynamicLogicRequired": "Condiciones que hacen el campo requerido"
+    "dynamicLogicRequired": "Condiciones que hacen el campo requerido",
+    "dynamicLogicOptions": "Opciones condicionales",
+    "probabilityMap": "Probabilidades de la etapa (%)",
+    "readOnly": "Solo lectura"
   },
   "messages": {
     "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Esto Tomará algún tiempo.",
@@ -169,6 +175,7 @@
     "roles": "Gestión de roles",
     "portals": "Gestión de portales.",
     "portalRoles": "Roles para el portal.",
+    "portalUsers": "Usuarios del portal.",
     "outboundEmails": "Opciones SMTP para correo saliente.",
     "groupEmailAccounts": "Grupos de buzones. Importación de Correo. Correo a Caso y Autorespondedores.",
     "personalEmailAccounts": "Buzones personales de los usuarios.",

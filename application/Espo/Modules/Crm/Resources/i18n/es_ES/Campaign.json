@@ -11,7 +11,7 @@
     "sentCount": "Enviado",
     "openedCount": "Abierto",
     "clickedCount": "Cliqueados",
-    "optedOutCount": "optado por no",
+    "optedOutCount": "Opted Out",
     "bouncedCount": "Rebotados",
     "hardBouncedCount": "Rebotados Duro",
     "softBouncedCount": "Rebotado Suave",
@@ -58,7 +58,8 @@
     "Mass Emails": "Correos electrónicos masivos",
     "Email Templates": "Plantillas de correos",
     "Unsubscribe again": "Desuscribirse nuevamente",
-    "Subscribe again": "Suscribirse nuevamente"
+    "Subscribe again": "Suscribirse nuevamente",
+    "Create Target List": "Crear una lista de objetivos"
   },
   "presetFilters": {
     "active": "Activo"

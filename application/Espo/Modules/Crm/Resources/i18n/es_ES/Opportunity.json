@@ -12,12 +12,14 @@
     "description": "Descripción",
     "amountConverted": "Cantidad (convertido)",
     "amountWeightedConverted": "Cantidad Ponderada",
-    "campaign": "Campaña"
+    "campaign": "Campaña",
+    "originalLead": "Potencial Original"
   },
   "links": {
     "contacts": "Contactos",
     "documents": "Documentos",
-    "campaign": "Campaña"
+    "campaign": "Campaña",
+    "originalLead": "Potencial Original"
   },
   "options": {
     "stage": {

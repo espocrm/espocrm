@@ -35,7 +35,8 @@
     "CampaignTrackingUrl": "URL de seguimiento",
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Artículos de base de conocimientos",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos"
+    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
+    "CampaignLogRecord": "Campaign Log Record"
   },
   "scopeNamesPlural": {
     "Account": "Cuentas",
@@ -57,7 +58,8 @@
     "CampaignTrackingUrl": "URLs de Seguimiento",
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Base de conocimiento",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos"
+    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
+    "CampaignLogRecord": "Campaign Log Records"
   },
   "dashlets": {
     "Leads": "Mis Potenciales",

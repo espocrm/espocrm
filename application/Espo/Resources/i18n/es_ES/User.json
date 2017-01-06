@@ -35,7 +35,8 @@
     "portalRoles": "Roles del portal",
     "contact": "Contacto",
     "accounts": "Cuentas",
-    "account": "Cuenta (Primaria)"
+    "account": "Cuenta (Primaria)",
+    "tasks": "Tareas"
   },
   "labels": {
     "Create User": "Crear Usuario",
@@ -50,7 +51,8 @@
     "External Accounts": "Cuentas Externas",
     "Email Accounts": "Cuentas de Email",
     "Portal": "Portal",
-    "Create Portal User": "Crear usuario del portal"
+    "Create Portal User": "Crear usuario del portal",
+    "Proceed w/o Contact": "Proceed w/o Contact"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",

@@ -81,7 +81,10 @@
     "notificationSoundsDisabled": "Desactivar los sonidos de notificación",
     "applicationName": "Nombre de la aplicación",
     "calendarEntityList": "Lista de Entidades Calendario",
-    "mentionEmailNotifications": "Enviar notificaciones por correo electrónico acerca de menciones en los mensajes"
+    "mentionEmailNotifications": "Enviar notificaciones por correo electrónico acerca de menciones en los mensajes",
+    "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
+    "activitiesEntityList": "Activities Entity List",
+    "historyEntityList": "History Entity List"
   },
   "options": {
     "weekStart": {
@@ -103,6 +106,7 @@
     "ldapAuth": "Credenciales de acceso para el servidor LDAP.",
     "ldapUserNameAttribute": "El atributo para identificar al usuario.\nPor ejemplo: \"userPrincipalName\" o \"sAMAccountName\" para Active Directory, \"uid\" para OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass atributo para buscar usuarios.\nPor ejemplo: \"person\" para Active Directory, \"inetOrgPerson\" para OpenLDAP.",
+    "ldapAccountCanonicalForm": "The type of your account canonical form. There are 4 options:<br>- 'Dn' - the form in the format 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - the form 'tester'.<br>- 'Backslash' - the form 'COMPANY\\tester'.<br>- 'Principal' - the form 'tester@company.com'.",
     "ldapBindRequiresDn": "La opción para formatear el nombre de usuario en el formulario de DN.",
     "ldapBaseDn": "La base DN predeterminado utilizado para la búsqueda de los usuarios. E.g. \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "La opción de dividir un nombre de usuario con el dominio.",
@@ -117,7 +121,8 @@
     "ldapAccountDomainName": "The domain which is used for authorization to LDAP server.",
     "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
-    "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario."
+    "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
+    "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C."
   },
   "labels": {
     "System": "Sistema",
@@ -130,7 +135,8 @@
     "Currency Rates": "Tasas de conversion de Divisas",
     "Mass Email": "Email Masivo",
     "Test Connection": "Conexión de prueba",
-    "Connecting": "Conexión"
+    "Connecting": "Conexión",
+    "Activities": "Actividades"
   },
   "messages": {
     "ldapTestConnection": "La conexión fue establecida con éxito."

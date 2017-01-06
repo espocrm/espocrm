@@ -12,7 +12,8 @@
     "contacts": "Contactos",
     "leads": "Potenciales",
     "reminders": "Recordatorios",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "acceptanceStatus": "Acceptance Status"
   },
   "options": {
     "status": {

@@ -21,7 +21,8 @@
     "Portal": "Portal",
     "PortalRole": "Rol del Portal",
     "Attachment": "Archivo adjunto",
-    "EmailFolder": "Carpeta de correo electrónico"
+    "EmailFolder": "Carpeta de correo electrónico",
+    "PortalUser": "Portal de Usuario"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -45,7 +46,8 @@
     "Portal": "Portales",
     "PortalRole": "Roles del portal",
     "Attachment": "Archivos adjuntos",
-    "EmailFolder": "Carpetas de correo"
+    "EmailFolder": "Carpetas de correo",
+    "PortalUser": "Usuarios del Portal"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -183,7 +185,10 @@
     "Previous Entry": "Entrada anterior",
     "Next Entry": "Siguiente Entrada",
     "View List": "Ver lista Completa",
-    "Attach File": "Adjuntar archivo"
+    "Attach File": "Adjuntar archivo",
+    "Skip": "Saltar",
+    "Attribute": "Attribute",
+    "Function": "Función"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -266,7 +271,8 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos"
+    "children": "Hijos",
+    "id": "ID"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -314,9 +320,13 @@
     "createAssignedThis": "{user} crear este {entityType} asignado a {assignee}",
     "createAssigned": "{user} a creado el/la {entityType} {entity} asignado a {assignee}",
     "createAssignedYou": "{user} a creado {entityType} {entity} se le ha asignado",
+    "createAssignedThisSelf": "{user} creó este {entityType} autoasignado",
+    "createAssignedSelf": "{user} creó {entityType} {entity} autoasignado",
     "assign": "{user} a asignado el/la {entityType} {entity} a {assignee}",
     "assignThis": "{user} asignar este {entityType} a {assignee}",
     "assignYou": "{user} a asignado {entityType} {entity} para ti",
+    "assignThisVoid": "{user} unassigned this {entityType}",
+    "assignVoid": "{user} unassigned {entityType} {entity}",
     "assignThisSelf": "{user} auto-asignado este {entityType}",
     "assignSelf": "{user} auto-asignado {entityType} {entity}",
     "postThis": "{user} publicó",
@@ -500,12 +510,13 @@
       "lastSevenDays": "Últimos 7 Días",
       "lastXDays": "Últimos X Días",
       "nextXDays": "Próximos X Días",
-      "ever": "Nunca"
+      "ever": "Nunca",
+      "isEmpty": "Está Vacío"
     },
     "searchRanges": {
       "is": "Es",
       "isEmpty": "Está vacío",
-      "isNotEmpty": "No Está Vacío",
+      "isNotEmpty": "No está Vacío",
       "isOneOf": "Es Uno De",
       "isFromTeams": "Es de equipo"
     },
@@ -516,7 +527,7 @@
       "endsWith": "Termina con",
       "contains": "Contiene",
       "isEmpty": "Está vacío",
-      "isNotEmpty": "No Está Vacío"
+      "isNotEmpty": "No está Vacío"
     },
     "intSearchRanges": {
       "equals": "Equivale",
@@ -525,7 +536,9 @@
       "lessThan": "Menor que",
       "greaterThanOrEquals": "Mayor o igual que",
       "lessThanOrEquals": "Menor o igual que",
-      "between": "Entre"
+      "between": "Entre",
+      "isEmpty": "Está Vacío",
+      "isNotEmpty": "No está Vacío"
     },
     "autorefreshInterval": {
       "0": "Ninguno",

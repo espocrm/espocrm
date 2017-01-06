@@ -33,7 +33,8 @@
     "sentBy": "Enviado por (Usuario)",
     "folder": "Carpeta",
     "inboundEmails": "Cuentas Grupales",
-    "emailAccounts": "Cuentas Personales"
+    "emailAccounts": "Cuentas Personales",
+    "hasAttachment": "Tiene Adjunto"
   },
   "links": {
     "replied": "Respondió",
@@ -99,6 +100,7 @@
     "markAsImportant": "Marcar como Importante",
     "markAsNotImportant": "Marcar como No Importante",
     "moveToTrash": "Mover a la Papelera",
-    "moveToFolder": "Mover a la carpeta"
+    "moveToFolder": "Mover a la carpeta",
+    "retrieveFromTrash": "Recuperar de la Papelera"
   }
 }

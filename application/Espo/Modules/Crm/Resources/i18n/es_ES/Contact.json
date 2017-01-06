@@ -15,7 +15,8 @@
     "campaign": "Campaña",
     "targetLists": "Lista de Objetivos",
     "targetList": "Lista de Objetivos",
-    "portalUser": "Usuarios de portal"
+    "portalUser": "Usuarios de portal",
+    "originalLead": "Potencial Original"
   },
   "links": {
     "opportunities": "Oportunidades",
@@ -26,7 +27,9 @@
     "account": "Cuentas (Primaria)",
     "accounts": "Cuentas",
     "casesPrimary": "Casos (Primaria)",
-    "portalUser": "Usuarios de portal"
+    "portalUser": "Usuarios de portal",
+    "originalLead": "Potencial Original",
+    "documents": "Documentos"
   },
   "labels": {
     "Create Contact": "Crear Contacto"
