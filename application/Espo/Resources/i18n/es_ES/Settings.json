@@ -55,23 +55,23 @@
     "ldapUserDefaultTeam": "Equipo de usuario por defecto",
     "ldapUserPhoneNumberAttribute": "Número de teléfono del usuario Atributo",
     "exportDisabled": "Desactivar Exportar (Solo admin está permitido)",
-    "assignmentNotificationsEntityList": "Las entidades notificarán sobre la asignación",
-    "assignmentEmailNotifications": "Enviar Correos Electrónicos de notificación sobre Asignación",
+    "assignmentNotificationsEntityList": "Estas entidades notificarán al usuario cuando le sean asignadas",
+    "assignmentEmailNotifications": "Se notificará cuando se asigne un correo",
     "assignmentEmailNotificationsEntityList": "Entidades a Notificar",
-    "streamEmailNotifications": "Las notificaciones sobre actualizaciones en Actividades para los usuarios internos",
-    "portalStreamEmailNotifications": "Las notificaciones sobre actualizaciones en Actividades para los usuarios del portal",
-    "streamEmailNotificationsEntityList": "Notificaciones por correo electrónico corriente ámbitos",
+    "streamEmailNotifications": "Se notificará sobre las actualizaciones en la Historiar para los usuarios internos",
+    "portalStreamEmailNotifications": "Se notificará sobre actualizaciones en la Historia a los usuarios del portal",
+    "streamEmailNotificationsEntityList": "Se notificará por correo electrónico en ámbitos",
     "b2cMode": "Modo B2C",
     "avatarsDisabled": "Deshabilitar Avatares",
     "followCreatedEntities": "Seguir Endidades Creadas",
     "displayListViewRecordCount": "Mostrar Contador Total (en la vista de lista)",
     "theme": "Tema",
     "userThemesDisabled": "Deshabilitar Temas de Usuarios",
-    "emailMessageMaxSize": "Tamaño máximo del mensaje",
-    "massEmailMaxPerHourCount": "Número máximo de mensajes enviados por hora",
+    "emailMessageMaxSize": "Tamaño máximo del correo electrónico (Mb)",
+    "massEmailMaxPerHourCount": "Número máximo de correos electrónicos enviados por hora",
     "personalEmailMaxPortionSize": "Tamaño máximo de la porción de correo para recuperar de una cuenta personal",
     "inboundEmailMaxPortionSize": "Tamaño máximo de la porción de correo para recuperar de una cuenta grupal",
-    "maxEmailAccountCount": "Número máximo de cuentas de correo personal por usuario",
+    "maxEmailAccountCount": "El número máximo de cuentas personales de correo electrónico que se pueden crear por usuario",
     "authTokenLifetime": "Vida del Token de Autenticación (horas)",
     "authTokenMaxIdleTime": "Máximo tiempo de inactividad del Token de Autenticación (horas)",
     "dashboardLayout": "Diseño del Escritorio (por defecto)",
@@ -81,7 +81,10 @@
     "notificationSoundsDisabled": "Desactivar los sonidos de notificación",
     "applicationName": "Nombre de la aplicación",
     "calendarEntityList": "Lista de Entidades Calendario",
-    "mentionEmailNotifications": "Enviar notificaciones por correo electrónico acerca de menciones en los mensajes"
+    "mentionEmailNotifications": "Se enviarán notificaciones cuando sean mencionados en los mensajes",
+    "massEmailDisableMandatoryOptOutLink": "Deshabilitar la obligatoridad del enlace \"darse de baja\" ",
+    "activitiesEntityList": "Lista de Entidades de Actividades",
+    "historyEntityList": "Lista de Entidades de Historia"
   },
   "options": {
     "weekStart": {
@@ -92,7 +95,7 @@
   "tooltips": {
     "recordsPerPage": "Número de registros inicialmente representada en las vistas de lista.",
     "recordsPerPageSmall": "Contador de registros en los paneles de relación",
-    "outboundEmailIsShared": "Permitir a los usuarios enviar mensajes a través de esta SMTP.",
+    "outboundEmailIsShared": "Permitir a los usuarios enviar correos electrónicos a través de este SMTP.",
     "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos crearon.",
     "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán.",
     "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
@@ -103,6 +106,7 @@
     "ldapAuth": "Credenciales de acceso para el servidor LDAP.",
     "ldapUserNameAttribute": "El atributo para identificar al usuario.\nPor ejemplo: \"userPrincipalName\" o \"sAMAccountName\" para Active Directory, \"uid\" para OpenLDAP.",
     "ldapUserObjectClass": "ObjectClass atributo para buscar usuarios.\nPor ejemplo: \"person\" para Active Directory, \"inetOrgPerson\" para OpenLDAP.",
+    "ldapAccountCanonicalForm": "El tipo de su cuenta de forma canónica. Hay 4 opciones:<br><br>\n\n'Dn' - la forma en el formato 'CN=tester,OU=espocrm,DC=test,DC=lan'<br>\n'Username' - la forma 'tester'<br>\n'Backslash' - la forma \"COMPANY/tester'.<br>\n'Principal' - la forma 'tester@company.com '.",
     "ldapBindRequiresDn": "La opción para formatear el nombre de usuario en el formulario de DN.",
     "ldapBaseDn": "La base DN predeterminado utilizado para la búsqueda de los usuarios. E.g. \"OU=users,OU=espocrm,DC=test, DC=lan\".",
     "ldapTryUsernameSplit": "La opción de dividir un nombre de usuario con el dominio.",
@@ -117,7 +121,8 @@
     "ldapAccountDomainName": "The domain which is used for authorization to LDAP server.",
     "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
-    "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario."
+    "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
+    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C."
   },
   "labels": {
     "System": "Sistema",
@@ -125,12 +130,13 @@
     "SMTP": "SMTP",
     "Configuration": "Configuración",
     "In-app Notifications": "Notificaciones en el sistema",
-    "Email Notifications": "Notificaciones por Correo",
+    "Email Notifications": "Notificaciones de Correo",
     "Currency Settings": "Configuración Moneda",
     "Currency Rates": "Tasas de conversion de Divisas",
     "Mass Email": "Email Masivo",
     "Test Connection": "Conexión de prueba",
-    "Connecting": "Conexión"
+    "Connecting": "Conexión",
+    "Activities": "Actividades"
   },
   "messages": {
     "ldapTestConnection": "La conexión fue establecida con éxito."

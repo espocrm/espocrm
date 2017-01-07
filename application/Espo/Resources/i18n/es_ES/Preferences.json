@@ -20,7 +20,7 @@
     "exportDelimiter": "Exportar Delimitador",
     "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
     "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
-    "receiveStreamEmailNotifications": "notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
+    "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
     "autoFollowEntityTypeList": "Seguir automaticamente",
     "signature": "Firma de correo",
     "dashboardTabList": "Lista de Pestañas",
@@ -47,6 +47,6 @@
     "Locale": "Localización"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en las actividades y recibirá notificaciones."
+    "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en la Historia y recibirá notificaciones."
   }
 }

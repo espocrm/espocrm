@@ -5,12 +5,14 @@
     "entryCount": "Contador de entrada",
     "campaigns": "Campañas",
     "endDate": "Fecha de Fin",
-    "targetLists": "Lista de Objetivos"
+    "targetLists": "Lista de Objetivos",
+    "includingActionList": "Incluyendo",
+    "excludingActionList": "Excluyendo"
   },
   "links": {
     "accounts": "Cuentas",
     "contacts": "Contactos",
-    "leads": "Potenciales",
+    "leads": "Posibles Clientes",
     "campaigns": "Campañas",
     "massEmails": "Correos Masivos"
   },
@@ -25,7 +27,7 @@
   },
   "labels": {
     "Create TargetList": "Crear un objetivo de lista",
-    "Opted Out": "optado por no",
+    "Opted Out": "Se dieron de baja",
     "Cancel Opt-Out": "Cancelar Opt-Out",
     "Opt-Out": "Opt-Out"
   }
