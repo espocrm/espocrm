@@ -6,7 +6,7 @@
     "scheduling": "Programación\n(notación CRONTab)"
   },
   "links": {
-    "log": "Registro de Log"
+    "log": "Registros"
   },
   "labels": {
     "Create ScheduledJob": "Crear Tarea Programada"

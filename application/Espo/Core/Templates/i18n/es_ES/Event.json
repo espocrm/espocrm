@@ -20,7 +20,7 @@
   "labels": {
     "Create {entityType}": "Crear {entityTypeTranslated}",
     "Schedule {entityType}": "Programar {entityTypeTranslated}",
-    "Log {entityType}": "Log {entityTypeTranslated}",
+    "Log {entityType}": "Registros de {entityTypeTranslated}",
     "Set Held": "Establecer Celebrado",
     "Set Not Held": "Establecer No Celebrado"
   },

@@ -36,7 +36,7 @@
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Artículos de base de conocimientos",
     "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Campaign Log Record"
+    "CampaignLogRecord": "Registro del registro de la Campaña"
   },
   "scopeNamesPlural": {
     "Account": "Cuentas",
@@ -59,7 +59,7 @@
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Base de conocimiento",
     "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Campaign Log Records"
+    "CampaignLogRecord": "Registros del registro de la Campaña"
   },
   "dashlets": {
     "Leads": "Mis Posibles Clientes",
@@ -83,8 +83,8 @@
     "Schedule Meeting": "Reunión Programada",
     "Schedule Call": "Llamada Programada",
     "Compose Email": "Escribir Correo",
-    "Log Meeting": "Log de Reunión",
-    "Log Call": "Log de Llamada",
+    "Log Meeting": "Registros de la Reunión",
+    "Log Call": "Registros de la Llamada",
     "Archive Email": "Archivar Correo",
     "Create Task": "Crear Tarea",
     "Tasks": "Tareas"
