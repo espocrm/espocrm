@@ -1,13 +1,5 @@
 {
-  "fields": {
-    "address": "Dirección"
-  },
-  "links": {
-    "meetings": "Reuniones",
-    "calls": "Llamadas",
-    "tasks": "1"
-  },
-  "labels": {
-    "Create {entityType}": "Crear {entityTypeTranslated}"
-  }
+    "labels": {
+        "Create {entityType}": "Crear {entityTypeTranslated}"
+    }
 }

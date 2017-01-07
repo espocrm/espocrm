@@ -3,7 +3,7 @@
     "parent": "Padre",
     "contacts": "Contactos",
     "opportunities": "Oportunidades",
-    "leads": "PosiblesClientes",
+    "leads": "Potenciales",
     "meetings": "Reuniones",
     "calls": "Llamadas",
     "tasks": "Tareas",
@@ -18,7 +18,7 @@
   "scopeNames": {
     "Account": "Cuenta",
     "Contact": "Contacto",
-    "Lead": "Posible Cliente",
+    "Lead": "Potencial",
     "Target": "Objetivo",
     "Opportunity": "Oportunidad",
     "Meeting": "Reunión",
@@ -35,13 +35,12 @@
     "CampaignTrackingUrl": "URL de seguimiento",
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Artículos de base de conocimientos",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Registro del registro de la Campaña"
+    "KnowledgeBaseCategory": "Categoría de base de conocimientos"
   },
   "scopeNamesPlural": {
     "Account": "Cuentas",
     "Contact": "Contactos",
-    "Lead": "Posibles Clientes",
+    "Lead": "Potenciales",
     "Target": "Objetivos",
     "Opportunity": "Oportunidades",
     "Meeting": "Reuniones",
@@ -58,11 +57,10 @@
     "CampaignTrackingUrl": "URLs de Seguimiento",
     "Activities": "Ocupaciones",
     "KnowledgeBaseArticle": "Base de conocimiento",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Registros del registro de la Campaña"
+    "KnowledgeBaseCategory": "Categoría de base de conocimientos"
   },
   "dashlets": {
-    "Leads": "Mis Posibles Clientes",
+    "Leads": "Mis Potenciales",
     "Opportunities": "Mis Opportunidades",
     "Tasks": "Mis Tareas",
     "Cases": "Mis Casos",
@@ -70,21 +68,21 @@
     "Calls": "Mis Llamadas",
     "Meetings": "Mis Reuniones",
     "OpportunitiesByStage": "Oportunidades por Etapa",
-    "OpportunitiesByLeadSource": "Oportunidades por origen del Posible Cliente",
+    "OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
     "SalesByMonth": "Ventas por Mes",
     "SalesPipeline": "Canalización de ventas",
     "Activities": "Mis actividades"
   },
   "labels": {
-    "Create InboundEmail": "Crear Cuenta de Correo Grupal",
+    "Create InboundEmail": "Crear Correo Entrante",
     "Activities": "Actividades",
     "History": "Historia",
     "Attendees": "Los asistentes",
     "Schedule Meeting": "Reunión Programada",
     "Schedule Call": "Llamada Programada",
     "Compose Email": "Escribir Correo",
-    "Log Meeting": "Registros de la Reunión",
-    "Log Call": "Registros de la Llamada",
+    "Log Meeting": "Log de Reunión",
+    "Log Call": "Log de Llamada",
     "Archive Email": "Archivar Correo",
     "Create Task": "Crear Tarea",
     "Tasks": "Tareas"

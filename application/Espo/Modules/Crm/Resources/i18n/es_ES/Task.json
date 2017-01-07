@@ -12,8 +12,7 @@
     "isOverdue": "Atrasado",
     "account": "Cuenta",
     "dateCompleted": "Fecha de completado",
-    "attachments": "Adjuntos",
-    "reminders": "Recordatorios"
+    "attachments": "Adjuntos"
   },
   "links": {
     "attachments": "Adjuntos"

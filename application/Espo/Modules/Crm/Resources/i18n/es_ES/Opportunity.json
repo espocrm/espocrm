@@ -5,21 +5,19 @@
     "stage": "Etapa de Ventas",
     "amount": "Ingresos esperados",
     "probability": "Probabilidad de ganar (%)",
-    "leadSource": "Origen del Posible Cliente",
+    "leadSource": "Origen del cliente potencial",
     "doNotCall": "No Llamar",
     "closeDate": "Fecha esperada de cierre",
     "contacts": "Contactos",
     "description": "Descripción",
     "amountConverted": "Cantidad (convertido)",
     "amountWeightedConverted": "Cantidad Ponderada",
-    "campaign": "Campaña",
-    "originalLead": "Posible Cliente Original"
+    "campaign": "Campaña"
   },
   "links": {
     "contacts": "Contactos",
     "documents": "Documentos",
-    "campaign": "Campaña",
-    "originalLead": "Posible Cliente Original"
+    "campaign": "Campaña"
   },
   "options": {
     "stage": {

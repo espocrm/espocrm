@@ -1,15 +1,5 @@
 {
-  "fields": {
-    "billingAddress": "Dirección de Facturación",
-    "shippingAddress": "Dirección de Envío",
-    "website": "Sitio web"
-  },
-  "links": {
-    "meetings": "reuniones",
-    "calls": "Llamadas",
-    "tasks": "Tareas"
-  },
-  "labels": {
-    "Create {entityType}": "Crear {entityTypeTranslated}"
-  }
+    "labels": {
+        "Create {entityType}": "Crear {entityTypeTranslated}"
+    }
 }

@@ -10,10 +10,9 @@
     "description": "Descripción",
     "users": "Usuarios",
     "contacts": "Contactos",
-    "leads": "Posibles Clientes",
+    "leads": "Potenciales",
     "reminders": "Recordatorios",
-    "account": "Cuenta",
-    "acceptanceStatus": "Estado de Aceptación"
+    "account": "Cuenta"
   },
   "options": {
     "status": {

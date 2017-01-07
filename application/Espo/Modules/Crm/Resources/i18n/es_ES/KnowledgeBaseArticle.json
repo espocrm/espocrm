@@ -1,12 +1,10 @@
 {
   "labels": {
     "Create KnowledgeBaseArticle": "Crear artículo",
-    "Any": "Todos",
+    "Any": "Alguna",
     "Send in Email": "Enviar por correo electrónico",
     "Move Up": "Ascender",
-    "Move Down": "Mover hacia abajo",
-    "Move to Top": "Mover arriba",
-    "Move to Bottom": "Mover abajo"
+    "Move Down": "Mover hacia abajo"
   },
   "fields": {
     "name": "Nombre",
