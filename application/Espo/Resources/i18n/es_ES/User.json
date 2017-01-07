@@ -52,7 +52,7 @@
     "Email Accounts": "Cuentas de Email",
     "Portal": "Portal",
     "Create Portal User": "Crear usuario del portal",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Proceed w/o Contact": "Continuar sin contacto"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",

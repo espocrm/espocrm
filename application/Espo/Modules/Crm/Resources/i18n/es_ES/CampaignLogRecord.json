@@ -20,7 +20,7 @@
     "action": {
       "Sent": "Enviado",
       "Opened": "Abierto",
-      "Opted Out": "optado por no",
+      "Opted Out": "Se dieron de baja",
       "Bounced": "Rebotados",
       "Clicked": "Cliqueados",
       "Lead Created": "Posible Cliente Creado"
@@ -30,9 +30,9 @@
     "All": "Todos"
   },
   "presetFilters": {
-    "sent": "Enviado",
+    "sent": "Enviados",
     "opened": "Abierto",
-    "optedOut": "optado por no",
+    "optedOut": "Se dieron de baja",
     "bounced": "Rebotados",
     "clicked": "Cliqueados",
     "leadCreated": "Posible Cliente Creado"

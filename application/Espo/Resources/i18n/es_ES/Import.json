@@ -25,7 +25,7 @@
     "Skip": "Omitir",
     "Header Row Value": "Fila de encabezado Valor",
     "Field": "Campo",
-    "What to Import?": "¿Lo que hay que importar?",
+    "What to Import?": "¿Que importar?",
     "Entity Type": "Tipo de entidad",
     "What to do?": "¿Qué hacer?",
     "Properties": "Propiedades",
@@ -53,7 +53,7 @@
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
     "duplicatesRemoved": "Duplicados removidos",
-    "inIdle": "Execute in idle (for big data; via cron)"
+    "inIdle": "Ejecutar en segundo plano (para gran cantidad de datos, vía cron)"
   },
   "fields": {
     "file": "Archivo",

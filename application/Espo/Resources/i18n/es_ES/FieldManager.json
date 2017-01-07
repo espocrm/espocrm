@@ -62,14 +62,14 @@
   "tooltips": {
     "audited": "Las actualizaciones se registrarán en la Historia.",
     "required": "El campo será obligatorio. No se puede dejar vacío.",
-    "default": "Value will be set by default upon creating.",
+    "default": "El valor se establecerá de forma predeterminada al guardar.",
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",
-    "seeMoreDisabled": "If not checked then long texts will be shortened.",
-    "lengthOfCut": "How long text can be before it will be cut.",
-    "maxLength": "Max acceptable length of text.",
-    "before": "The date value should be before the date value of the specified field.",
-    "after": "The date value should be after the date value of the specified field.",
-    "readOnly": "Field value can't be specified by user. But can be calculated by formula."
+    "seeMoreDisabled": "Si no se marca, los textos largos se cortarán.",
+    "lengthOfCut": "Que largo tendrán los textos antes de ser cortados.",
+    "maxLength": "Longitud máxima aceptable del texto.",
+    "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",
+    "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
+    "readOnly": "El usuario no puede especificar el valor del campo. Pero se puede calcular por fórmula."
   }
 }
