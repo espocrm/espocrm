@@ -3,7 +3,7 @@
     "name": "Asunto",
     "parent": "Padre",
     "status": "Estado",
-    "dateSent": "Fecha de Envío",
+    "dateSent": "Enviado",
     "from": "De",
     "to": "Para",
     "cc": "CC",
@@ -33,12 +33,11 @@
     "sentBy": "Enviado por (Usuario)",
     "folder": "Carpeta",
     "inboundEmails": "Cuentas Grupales",
-    "emailAccounts": "Cuentas Personales",
-    "hasAttachment": "Tiene Adjunto"
+    "emailAccounts": "Cuentas Personales"
   },
   "links": {
-    "replied": "En respuesta a:",
-    "replies": "En respuesta a:",
+    "replied": "Respondió",
+    "replies": "Respuestas",
     "inboundEmails": "Cuentas de grupo",
     "emailAccounts": "Las cuentas personales"
   },
@@ -46,24 +45,24 @@
     "status": {
       "Draft": "Borrador",
       "Sending": "Enviando",
-      "Sent": "Enviados",
+      "Sent": "Enviado",
       "Archived": "Archivado",
       "Received": "Recibido",
       "Failed": "Falló"
     }
   },
   "labels": {
-    "Create Email": "Nuevo Correo Archivado",
-    "Archive Email": "Nuevo Correo Archivado",
+    "Create Email": "Correo Archivado",
+    "Archive Email": "Correo Archivado",
     "Compose": "Nuevo",
     "Reply": "Responder",
     "Reply to All": "Responder a Todos",
     "Forward": "Reenviar",
     "Original message": "Mensaje Original",
     "Forwarded message": "Mensaje reenviado",
-    "Email Accounts": "Ir a Cuentas de Correo Personales",
-    "Inbound Emails": "Ir a Cuentas de Correo Grupales",
-    "Email Templates": "Ir a Plantillas de Correo",
+    "Email Accounts": "Cuentas de Correo Personal",
+    "Inbound Emails": "Cuentas de Correo Grupales",
+    "Email Templates": "Plantillas de Correo",
     "Send Test Email": "Enviar correo electrónico de prueba",
     "Send": "Enviar",
     "Email Address": "Correo Electrónico",
@@ -77,17 +76,17 @@
     "Move to Trash": "Mover a la papelera",
     "Retrieve from Trash": "Recuperar de la Papelera",
     "Move to Folder": "Mover a la carpeta",
-    "Filters": "Ir a Filtros de Correo",
-    "Folders": "Ir a Carpetas de Correo"
+    "Filters": "Filtros",
+    "Folders": "Carpetas"
   },
   "messages": {
     "noSmtpSetup": "Sin configuración SMTP. {link}.",
     "testEmailSent": "La prueba de correo electrónico ha sido enviada.",
-    "emailSent": "El correo electrónico ha sido enviado",
+    "emailSent": "El correo ha sido enviado",
     "savedAsDraft": "Guardado como borrador"
   },
   "presetFilters": {
-    "sent": "Enviados",
+    "sent": "Enviado en (Fecha/Tiempo)",
     "archived": "Archivado",
     "inbox": "Bandeja de Entrada",
     "drafts": "Borradores",
@@ -100,7 +99,6 @@
     "markAsImportant": "Marcar como Importante",
     "markAsNotImportant": "Marcar como No Importante",
     "moveToTrash": "Mover a la Papelera",
-    "moveToFolder": "Mover a la carpeta",
-    "retrieveFromTrash": "Recuperar de la Papelera"
+    "moveToFolder": "Mover a la carpeta"
   }
 }

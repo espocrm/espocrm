@@ -17,8 +17,8 @@
       "self": "Para mí",
       "users": "Para determinado/s usuario/s",
       "teams": "Para determinado/s equipo/s",
-      "all": "Para todos los usuarios",
-      "portals": "Para los usuarios del portal"
+      "all": "A todos los usuarios",
+      "portals": "A los usuarios del portal"
     }
   },
   "messages": {
