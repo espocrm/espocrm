@@ -4,7 +4,7 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "None",
+      "": "Nada",
       "javascript: return this.dateTime.getNow(1);": "Ahora",
       "javascript: return this.dateTime.getNow(5);": "Ahora (5m)",
       "javascript: return this.dateTime.getNow(15);": "Ahora (15m)",
@@ -61,7 +61,7 @@
   },
   "tooltips": {
     "audited": "Las actualizaciones se registrarán en la Historia.",
-    "required": "Field will be mandatory. Can't be left empty.",
+    "required": "El campo será obligatorio. No se puede dejar vacío.",
     "default": "Value will be set by default upon creating.",
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",

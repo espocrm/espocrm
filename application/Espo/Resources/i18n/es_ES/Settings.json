@@ -82,7 +82,7 @@
     "applicationName": "Nombre de la aplicación",
     "calendarEntityList": "Lista de Entidades Calendario",
     "mentionEmailNotifications": "Enviar notificaciones por correo electrónico acerca de menciones en los mensajes",
-    "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
+    "massEmailDisableMandatoryOptOutLink": "Deshabilitar la obligatoridad del enlace \"darse de baja\" ",
     "activitiesEntityList": "Activities Entity List",
     "historyEntityList": "History Entity List"
   },
@@ -122,7 +122,7 @@
     "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
     "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
-    "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C."
+    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C."
   },
   "labels": {
     "System": "Sistema",
