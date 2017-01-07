@@ -45,7 +45,7 @@
     "connectionIsOk": "Conexión correcta"
   },
   "tooltips": {
-    "monitoredFolders": "Usted puede agregar la carpeta 'Enviado' para sincronizar los correos enviados desde el cliente externo.",
-    "storeSentEmails": "Los mensajes enviados se almacenan en el servidor IMAP. La dirección de email debe coincidir con la dirección de un correo electrónico que se envía desde."
+    "monitoredFolders": "Usted puede agregar la carpeta 'Enviado' para sincronizar los correos electrónicos enviados desde el cliente externo.",
+    "storeSentEmails": "Los correos electrónicos enviados se almacenaran en el servidor IMAP. La dirección de correo electrónico debe coincidir con la dirección desde la que se envía."
   }
 }

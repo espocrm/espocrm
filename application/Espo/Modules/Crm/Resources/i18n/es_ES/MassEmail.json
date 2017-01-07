@@ -43,7 +43,7 @@
   },
   "tooltips": {
     "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por darse de baja y no van a recibir ningún correo masivo.",
-    "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "targetLists": "Los objetivos a los que se enviarán los correos electrónicos.",
+    "excludingTargetLists": "Los objetivos a los que NO se enviarán los correos electrónicos."
   }
 }

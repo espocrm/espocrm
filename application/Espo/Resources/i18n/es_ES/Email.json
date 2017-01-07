@@ -3,7 +3,7 @@
     "name": "Asunto",
     "parent": "Padre",
     "status": "Estado",
-    "dateSent": "Enviado (fecha/tiempo)",
+    "dateSent": "Fecha de Envío",
     "from": "De",
     "to": "Para",
     "cc": "CC",
@@ -83,7 +83,7 @@
   "messages": {
     "noSmtpSetup": "Sin configuración SMTP. {link}.",
     "testEmailSent": "La prueba de correo electrónico ha sido enviada.",
-    "emailSent": "El correo ha sido enviado",
+    "emailSent": "El correo electrónico ha sido enviado",
     "savedAsDraft": "Guardado como borrador"
   },
   "presetFilters": {

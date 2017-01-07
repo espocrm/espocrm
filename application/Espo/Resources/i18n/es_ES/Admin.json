@@ -179,7 +179,7 @@
     "outboundEmails": "Opciones SMTP para correo saliente.",
     "groupEmailAccounts": "Grupos de buzones. Importación de Correo. Correo a Caso y Autorespondedores.",
     "personalEmailAccounts": "Buzones personales de los usuarios.",
-    "emailTemplates": "Plantillas para mensajes de correo electrónico salientes.",
+    "emailTemplates": "Plantillas para correos electrónicos salientes.",
     "import": "Importar datos desde CSV.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
     "entityManager": "Crear entidades personalizadas, editar las existentes. Administrar campo y las relaciones.",

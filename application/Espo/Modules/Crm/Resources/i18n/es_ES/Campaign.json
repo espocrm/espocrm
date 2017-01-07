@@ -69,7 +69,7 @@
     "subscribedAgain": "Te has suscripto nuevamente."
   },
   "tooltips": {
-    "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "targetLists": "Los objetivos a los que se enviarán los correos electrónicos.",
+    "excludingTargetLists": "Los objetivos a los NO que se enviarán los correos electrónicos."
   }
 }

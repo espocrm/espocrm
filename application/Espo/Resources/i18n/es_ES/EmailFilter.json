@@ -19,11 +19,11 @@
     }
   },
   "tooltips": {
-    "name": "Solo un nombre del filtro",
+    "name": "Nombre del filtro",
     "subject": "El uso de comodines *:\n\ntext* - comienza con el texto,\n*text* - contiene el texto,\n*text - termina con el texto.",
-    "bodyContains": "El cuerpo del mensaje contiene cualquiera de las palabras o frases especificadas",
-    "from": "Los correos enviados desde la dirección especificada. Dejar en blanco si no es necesario.",
-    "to": "Los correos electrónicos que se envían a la dirección especificada. Dejar en blanco si no es necesario.",
-    "isGlobal": "Se aplica este filtro a todos los mensajes entrantes al sistema."
+    "bodyContains": "El cuerpo del correo electrónico contiene cualquiera de las palabras o frases especificadas.",
+    "from": "Filtrar los correos electrónicos enviados desde esta dirección. Dejar en blanco si no es necesario.",
+    "to": "Filtrar los correos electrónicos que se envían a esta dirección. Dejar en blanco si no es necesario.",
+    "isGlobal": "Se aplica este filtro a todos los correos electrónicos entrantes al sistema."
   }
 }
