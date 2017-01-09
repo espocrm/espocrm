@@ -1,5 +1,10 @@
 {
-    "labels": {
-        "Create {entityType}": "Crear {entityTypeTranslated}"
-    }
+  "links": {
+    "meetings": "Reuniones",
+    "calls": "Llamadas",
+    "tasks": "Tareas"
+  },
+  "labels": {
+    "Create {entityType}": "Crear {entityTypeTranslated}"
+  }
 }

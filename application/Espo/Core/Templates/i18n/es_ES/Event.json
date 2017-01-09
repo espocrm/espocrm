@@ -1,5 +1,36 @@
 {
-    "labels": {
-        "Create {entityType}": "Crear {entityTypeTranslated}"
+  "fields": {
+    "parent": "Padre",
+    "dateStart": "Fecha de Inicio",
+    "dateEnd": "Fechad e Fin",
+    "duration": "Duración",
+    "status": "Estado",
+    "reminders": "Recordatorios"
+  },
+  "links": {
+    "parent": "Padre"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planificado",
+      "Held": "Celebrado",
+      "Not Held": "No Celebrado"
     }
+  },
+  "labels": {
+    "Create {entityType}": "Crear {entityTypeTranslated}",
+    "Schedule {entityType}": "Programar {entityTypeTranslated}",
+    "Log {entityType}": "Registros de {entityTypeTranslated}",
+    "Set Held": "Establecer Celebrado",
+    "Set Not Held": "Establecer No Celebrado"
+  },
+  "massActions": {
+    "setHeld": "Establecer Celebrado",
+    "setNotHeld": "Establecer No Celebrado"
+  },
+  "presetFilters": {
+    "planned": "Planificado",
+    "held": "Celebradas",
+    "todays": "De Hoy"
+  }
 }

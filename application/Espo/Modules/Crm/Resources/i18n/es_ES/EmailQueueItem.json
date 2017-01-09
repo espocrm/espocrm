@@ -3,7 +3,7 @@
     "name": "Nombre",
     "status": "Estado",
     "target": "Objetivo",
-    "sentAt": "Enviado",
+    "sentAt": "Fecha de Envío",
     "attemptCount": "Intentos",
     "emailAddress": "Correo Electrónico",
     "massEmail": "Email Masivo",

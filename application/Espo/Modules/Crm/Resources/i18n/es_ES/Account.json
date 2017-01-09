@@ -13,7 +13,8 @@
     "contactRole": "Título",
     "campaign": "Campaña",
     "targetLists": "Lista de Objetivos",
-    "targetList": "Lista de Objetivos"
+    "targetList": "Lista de Objetivos",
+    "originalLead": "Posible Cliente Original"
   },
   "links": {
     "contacts": "Contactos",
@@ -27,7 +28,8 @@
     "targetLists": "Lista de Objetivos",
     "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
-    "portalUsers": "Usuarios del portal"
+    "portalUsers": "Usuarios del portal",
+    "originalLead": "Posible Cliente Original"
   },
   "options": {
     "type": {
@@ -37,36 +39,55 @@
       "Reseller": "Revendedor"
     },
     "industry": {
+      "Aerospace": "Aeroespacio",
       "Agriculture": "Agricultura",
       "Advertising": "Publicidad",
       "Apparel & Accessories": "Ropa y Accesorios",
-      "Automotive": "Automotriz",
+      "Architecture": "Arquitectura",
+      "Automotive": "Automotor",
       "Banking": "Banca",
-      "Biotechnology": "Biotecnolodía",
+      "Biotechnology": "Biotecnología",
       "Building Materials & Equipment": "Materiales de construcción y equipamiento",
       "Chemical": "Química",
-      "Computer": "Computación",
+      "Construction": "Construcción",
+      "Computer": "Computadoras",
+      "Defense": "Defensa",
+      "Creative": "Creativa",
+      "Culture": "Cultural",
       "Education": "Educación",
       "Electronics": "Electrónicos",
+      "Electric Power": "Energía eléctrica",
       "Energy": "Energía",
       "Entertainment & Leisure": "Entretenimiento y Ocio",
       "Finance": "Finanzas",
-      "Food & Beverage": "Alimentación y bebidas",
+      "Food & Beverage": "Alimentos y bebidas",
       "Grocery": "Comestibles",
+      "Hospitality": "Hostelería",
       "Healthcare": "Cuidado de la Salud",
       "Insurance": "Seguros",
-      "Legal": "Jurídico",
+      "Legal": "Jurídica",
       "Manufacturing": "Fabricación",
+      "Mass Media": "Medios Masivos",
+      "Mining": "Minería",
+      "Music": "Musical",
+      "Marketing": "Marketing",
       "Publishing": "Publicaciones",
+      "Petroleum": "Petróleo",
       "Real Estate": "Bienes Raices",
+      "Retail": "Venta al por menor",
+      "Shipping": "Envíos",
       "Service": "Servicio",
+      "Support": "Soporte",
       "Sports": "Deportes",
       "Software": "Software",
       "Technology": "Tecnología",
       "Telecommunications": "Telecomunicaciones",
       "Television": "Televisión",
+      "Testing, Inspection & Certification": "Pruebas, inspección y certificación",
       "Transportation": "Transporte",
-      "Venture Capital": "Capital de Riesgo"
+      "Venture Capital": "Capital de Riesgo",
+      "Wholesale": "Venta al por mayor",
+      "Water": "Agua"
     }
   },
   "labels": {

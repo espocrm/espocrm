@@ -1,19 +1,22 @@
 {
   "labels": {
     "Fields": "Campos",
-    "Relationships": "Relaciones"
+    "Relationships": "Relaciones",
+    "Schedule": "Programar",
+    "Log": "Registros",
+    "Formula": "Fórmula"
   },
   "fields": {
     "name": "Nombre",
     "type": "Tipo",
     "labelSingular": "Etiqueta en Singular",
     "labelPlural": "Etiqueta en Plural",
-    "stream": "Actividad",
+    "stream": "Historia",
     "label": "Etiqueta",
-    "linkType": "Tipo de enlace",
+    "linkType": "Tipo de relación",
     "entityForeign": "Entidad Foránea",
-    "linkForeign": "Enlace Foráneo",
-    "link": "Enlace",
+    "linkForeign": "Relación Foránea",
+    "link": "Relación",
     "labelForeign": "Etiqueta Foránea",
     "sortBy": "Orden por defecto (campo)",
     "sortDirection": "Orden por defecto (dirección)",
@@ -21,7 +24,11 @@
     "linkMultipleField": "Enlaza Múltiples Campos",
     "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos",
     "disabled": "Deshabilitar",
-    "textFilterFields": "Los campos de filtro de texto"
+    "textFilterFields": "Los campos de filtro de texto",
+    "audited": "Auditado",
+    "auditedForeign": "Foráneo auditado",
+    "statusField": "Campo estado",
+    "beforeSaveCustomScript": "Antes de guardar la secuencia de comandos personalizada"
   },
   "options": {
     "type": {
@@ -29,7 +36,9 @@
       "Base": "Base",
       "Person": "Persona",
       "CategoryTree": "Árbol de Categorías",
-      "Event": "Evento"
+      "Event": "Evento",
+      "BasePlus": "Base Plus",
+      "Company": "Empresa"
     },
     "linkType": {
       "manyToMany": "Mucho-a-Muchos",
@@ -45,7 +54,16 @@
   },
   "messages": {
     "entityCreated": "La entidad ha sido creada",
-    "linkAlreadyExists": "Conflicto de nombres en el enlace.",
-    "linkConflict": "Un enlace con el mismo nombra ya existe."
+    "linkAlreadyExists": "Conflicto de nombres en la relación.",
+    "linkConflict": "Una relación con el mismo nombre ya existe."
+  },
+  "tooltips": {
+    "statusField": "Las actualizaciones de este campo se registran en la Historia.",
+    "textFilterFields": "Campos utilizados por la búsqueda de texto.",
+    "stream": "Markei si la entidad tiendrá una Historia.",
+    "disabled": "Marke si no necesita esta entidad en su sistema.",
+    "linkAudited": "La creación de registros relacionados y vinculados con el registro existente, se registrarán en la Historia.",
+    "linkMultipleField": "El campo de Relaciones Múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
+    "entityType": "Base Plus - tiene paneles de Actividades, Historia y Tareas.\n\nEvento - Disponible en Calendario y en el Panel de Actividades."
   }
 }

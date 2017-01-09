@@ -3,12 +3,23 @@
     "width": "Ancho (%)",
     "link": "Enlace",
     "notSortable": "No ordenable",
-    "align": "Alinear"
+    "align": "Alinear",
+    "panelName": "Nombre del Panel",
+    "style": "Estilo",
+    "sticked": "Pegado"
   },
   "options": {
     "align": {
       "left": "Izquierda",
       "right": "Derecha"
+    },
+    "style": {
+      "default": "Borrador",
+      "success": "Exito",
+      "danger": "Peligro",
+      "info": "Información",
+      "warning": "Advertencia",
+      "primary": "Primario"
     }
   }
 }

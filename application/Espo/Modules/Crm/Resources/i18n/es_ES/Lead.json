@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "Convertido a",
-    "Create Lead": "Crear Potencial",
+    "Create Lead": "Crear Posible Cliente",
     "Convert": "Convertir"
   },
   "fields": {
@@ -23,11 +23,12 @@
     "createdOpportunity": "Oportunidad",
     "campaign": "Campaña",
     "targetLists": "Lista de Objetivos",
-    "targetList": "Lista de Objetivos"
+    "targetList": "Lista de Objetivos",
+    "industry": "Industria"
   },
   "links": {
     "targetLists": "Lista de Objetivos",
-    "campaignLogRecords": "Registro de Campaña",
+    "campaignLogRecords": "Registros de la Campaña",
     "campaign": "Campaña",
     "createdAccount": "Cuenta",
     "createdContact": "Contacto",

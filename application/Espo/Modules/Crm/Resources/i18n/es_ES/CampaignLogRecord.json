@@ -20,21 +20,21 @@
     "action": {
       "Sent": "Enviado",
       "Opened": "Abierto",
-      "Opted Out": "optado por no",
+      "Opted Out": "Se dieron de baja",
       "Bounced": "Rebotados",
       "Clicked": "Cliqueados",
-      "Lead Created": "Potencial Creado"
+      "Lead Created": "Posible Cliente Creado"
     }
   },
   "labels": {
     "All": "Todos"
   },
   "presetFilters": {
-    "sent": "Enviado",
+    "sent": "Enviados",
     "opened": "Abierto",
-    "optedOut": "optado por no",
+    "optedOut": "Se dieron de baja",
     "bounced": "Rebotados",
     "clicked": "Cliqueados",
-    "leadCreated": "Potencial Creado"
+    "leadCreated": "Posible Cliente Creado"
   }
 }

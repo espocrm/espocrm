@@ -13,7 +13,7 @@
     "Extension": "Extensión",
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuenta de Correo Grupal",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Import": "Importar",
     "Template": "Plantilla",
     "Job": "Trabajo",
@@ -21,7 +21,8 @@
     "Portal": "Portal",
     "PortalRole": "Rol del Portal",
     "Attachment": "Archivo adjunto",
-    "EmailFolder": "Carpeta de correo electrónico"
+    "EmailFolder": "Carpeta de correo electrónico",
+    "PortalUser": "Usuarios del Portal"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -37,7 +38,7 @@
     "Extension": "Extensiones",
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuentas de Correo Grupales",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Import": "Importar Resultados",
     "Template": "Plantillas",
     "Job": "Trabajos",
@@ -45,7 +46,8 @@
     "Portal": "Portales",
     "PortalRole": "Roles del portal",
     "Attachment": "Archivos adjuntos",
-    "EmailFolder": "Carpetas de correo"
+    "EmailFolder": "Carpetas de correo",
+    "PortalUser": "Usuarios del Portal"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -139,7 +141,7 @@
     "Inactive": "Inactivo",
     "Write your comment here": "Escriba su comentario aquí",
     "Post": "Entrada",
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Show more": "Mostrar mas",
     "Dashlet Options": "Opciones de Cajas",
     "Full Form": "Formulario Completo",
@@ -183,7 +185,10 @@
     "Previous Entry": "Entrada anterior",
     "Next Entry": "Siguiente Entrada",
     "View List": "Ver lista Completa",
-    "Attach File": "Adjuntar archivo"
+    "Attach File": "Adjuntar archivo",
+    "Skip": "Saltar",
+    "Attribute": "Atributo",
+    "Function": "Función"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -221,10 +226,10 @@
     "streamPostInfo": "Escriba <strong>@username</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n[nombre del enlace](url)",
     "writeYourCommentHere": "Escriba su comentario aquí",
     "writeMessageToUser": "Escribir un mensaje a {user}",
-    "writeMessageToSelf": "Escribir un mensaje a uno mismo",
+    "writeMessageToSelf": "Escribir un mensaje en tu Historia",
     "typeAndPressEnter": "Escriba y presione enter",
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
-    "checkForNewNotes": "Comprobar si hay actualizaciones de vapor",
+    "checkForNewNotes": "Comprobar si hay actualizaciones en la Historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
     "done": "Hecho"
   },
@@ -266,7 +271,8 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos"
+    "children": "Hijos",
+    "id": "ID"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -280,7 +286,7 @@
     "children": "Hijos"
   },
   "dashlets": {
-    "Stream": "Actividad",
+    "Stream": "Historia",
     "Emails": "Mi bandeja de entrada"
   },
   "notificationMessages": {
@@ -314,9 +320,13 @@
     "createAssignedThis": "{user} crear este {entityType} asignado a {assignee}",
     "createAssigned": "{user} a creado el/la {entityType} {entity} asignado a {assignee}",
     "createAssignedYou": "{user} a creado {entityType} {entity} se le ha asignado",
+    "createAssignedThisSelf": "{user} creó este {entityType} autoasignado",
+    "createAssignedSelf": "{user} creó {entityType} {entity} autoasignado",
     "assign": "{user} a asignado el/la {entityType} {entity} a {assignee}",
     "assignThis": "{user} asignar este {entityType} a {assignee}",
     "assignYou": "{user} a asignado {entityType} {entity} para ti",
+    "assignThisVoid": "{user} desasignado este/a {entityType}",
+    "assignVoid": "{user} desasignado {entityType} {entity}",
     "assignThisSelf": "{user} auto-asignado este {entityType}",
     "assignSelf": "{user} auto-asignado {entityType} {entity}",
     "postThis": "{user} publicó",
@@ -424,7 +434,7 @@
       "el_GR": "Griego",
       "en_GB": "Inglés (UK)",
       "en_US": "Inglés (US)",
-      "es_ES": "Español (Spain)",
+      "es_ES": "Español (España)",
       "et_EE": "Estonio",
       "eu_ES": "Vasco",
       "fa_IR": "Persa",
@@ -500,12 +510,13 @@
       "lastSevenDays": "Últimos 7 Días",
       "lastXDays": "Últimos X Días",
       "nextXDays": "Próximos X Días",
-      "ever": "Nunca"
+      "ever": "Nunca",
+      "isEmpty": "Está Vacío"
     },
     "searchRanges": {
       "is": "Es",
       "isEmpty": "Está vacío",
-      "isNotEmpty": "No Está Vacío",
+      "isNotEmpty": "No está Vacío",
       "isOneOf": "Es Uno De",
       "isFromTeams": "Es de equipo"
     },
@@ -516,7 +527,7 @@
       "endsWith": "Termina con",
       "contains": "Contiene",
       "isEmpty": "Está vacío",
-      "isNotEmpty": "No Está Vacío"
+      "isNotEmpty": "No está Vacío"
     },
     "intSearchRanges": {
       "equals": "Equivale",
@@ -525,7 +536,9 @@
       "lessThan": "Menor que",
       "greaterThanOrEquals": "Mayor o igual que",
       "lessThanOrEquals": "Menor o igual que",
-      "between": "Entre"
+      "between": "Entre",
+      "isEmpty": "Está Vacío",
+      "isNotEmpty": "No está Vacío"
     },
     "autorefreshInterval": {
       "0": "Ninguno",

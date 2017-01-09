@@ -8,14 +8,14 @@
     "endDate": "Fecha de Fin",
     "targetLists": "Lista de Objetivos",
     "excludingTargetLists": "Lista de Objetivos Excluídos",
-    "sentCount": "Enviado",
+    "sentCount": "Enviados",
     "openedCount": "Abierto",
     "clickedCount": "Cliqueados",
-    "optedOutCount": "optado por no",
+    "optedOutCount": "Se dieron de baja",
     "bouncedCount": "Rebotados",
     "hardBouncedCount": "Rebotados Duro",
     "softBouncedCount": "Rebotado Suave",
-    "leadCreatedCount": "Potenciales Creados",
+    "leadCreatedCount": "Posibles Clientes Creados",
     "revenue": "Ingresos",
     "revenueConverted": "ingresos (convertido)",
     "budget": "Presupuesto",
@@ -26,9 +26,9 @@
     "excludingTargetLists": "Lista de Objetivos Excluídos",
     "accounts": "Cuentas",
     "contacts": "Contactos",
-    "leads": "Potenciales",
+    "leads": "Posibles Clientes",
     "opportunities": "Oportunidades",
-    "campaignLogRecords": "Registro de Log",
+    "campaignLogRecords": "Registros",
     "massEmails": "Emails Masivos",
     "trackingUrls": "URLs de Seguimiento"
   },
@@ -58,7 +58,8 @@
     "Mass Emails": "Correos electrónicos masivos",
     "Email Templates": "Plantillas de correos",
     "Unsubscribe again": "Desuscribirse nuevamente",
-    "Subscribe again": "Suscribirse nuevamente"
+    "Subscribe again": "Suscribirse nuevamente",
+    "Create Target List": "Crear una lista de objetivos"
   },
   "presetFilters": {
     "active": "Activo"
@@ -68,7 +69,7 @@
     "subscribedAgain": "Te has suscripto nuevamente."
   },
   "tooltips": {
-    "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "targetLists": "Los objetivos a los que se enviarán los correos electrónicos.",
+    "excludingTargetLists": "Los objetivos a los NO que se enviarán los correos electrónicos."
   }
 }
