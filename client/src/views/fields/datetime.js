@@ -36,7 +36,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         validations: ['required', 'datetime', 'after', 'before'],
 
-        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeOptions: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'beforeXDays', 'lastXDays', 'nextXDays', 'afterXDays', 'on', 'after', 'before', 'between'],
 
         timeFormatMap: {
             'HH:mm': 'H:i',

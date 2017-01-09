@@ -831,6 +831,14 @@ class Base
                 $where['value'] = [$from, $to];
 
                 break;
+            case 'beforeXDays':
+                $where['type'] = 'before';
+                $number = strval(intval($item['value']));
+                $dt->modify('-'.$number.' day');
+                $dt->setTime(0, 0, 0);
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
             case 'lastXDays':
                 $where['type'] = 'between';
 
@@ -866,6 +874,14 @@ class Base
 
                 $where['value'] = [$from, $to];
 
+                break;
+            case 'afterXDays':
+                $where['type'] = 'after';
+                $number = strval(intval($item['value']));
+                $dt->modify('+'.$number.' day');
+                $dt->setTime(0, 0, 0);
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
                 break;
             case 'on':
                 $where['type'] = 'between';
@@ -1028,6 +1044,12 @@ class Base
                         $attribute . '<=' => $dt1->format('Y-m-d'),
                     );
                     break;
+                case 'beforeXDays':
+                    $dt1 = new \DateTime();
+                    $number = strval(intval($item['value']));
+                    $dt1->modify('-'.$number.' day');
+                    $part[$item['field'] . '<'] = $dt1->format('Y-m-d');
+                    break;
                 case 'lastXDays':
                     $dt1 = new \DateTime();
                     $dt2 = clone $dt1;
@@ -1038,6 +1060,12 @@ class Base
                         $attribute . '>=' => $dt2->format('Y-m-d'),
                         $attribute . '<=' => $dt1->format('Y-m-d'),
                     );
+                    break;
+                case 'afterXDays':
+                    $dt1 = new \DateTime();
+                    $number = strval(intval($item['value']));
+                    $dt1->modify('+'.$number.' day');
+                    $part[$item['field'] . '>'] = $dt1->format('Y-m-d');
                     break;
                 case 'nextXDays':
                     $dt1 = new \DateTime();
