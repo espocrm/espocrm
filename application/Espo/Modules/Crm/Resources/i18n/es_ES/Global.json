@@ -73,19 +73,19 @@
     "OpportunitiesByLeadSource": "Oportunidades por origen del Posible Cliente",
     "SalesByMonth": "Ventas por Mes",
     "SalesPipeline": "Canalización de ventas",
-    "Activities": "Mis actividades"
+    "Activities": "Mis próximas actividades"
   },
   "labels": {
     "Create InboundEmail": "Crear Cuenta de Correo Grupal",
-    "Activities": "Actividades",
-    "History": "Historia",
+    "Activities": "Actividades planeadas",
+    "History": "Historial de actividades",
     "Attendees": "Los asistentes",
-    "Schedule Meeting": "Reunión Programada",
-    "Schedule Call": "Llamada Programada",
+    "Schedule Meeting": "Programar Reunión",
+    "Schedule Call": "Programar Llamada",
     "Compose Email": "Escribir Correo",
-    "Log Meeting": "Registros de la Reunión",
-    "Log Call": "Registros de la Llamada",
-    "Archive Email": "Archivar Correo",
+    "Log Meeting": "Registrar Reunión",
+    "Log Call": "Registrar Llamada",
+    "Archive Email": "Registrar Correo",
     "Create Task": "Crear Tarea",
     "Tasks": "Tareas"
   },

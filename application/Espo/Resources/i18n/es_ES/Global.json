@@ -231,7 +231,15 @@
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
     "checkForNewNotes": "Comprobar si hay actualizaciones en la Historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
-    "done": "Hecho"
+    "done": "Hecho",
+    "confirmMassFollow": "¿Está seguro que desea seguir los registros seleccionados?",
+    "confirmMassUnfollow": "¿Está seguro que desea dejar de seguir los registros seleccionados?",
+    "massFollowResult": "Se han seguido {count} registros",
+    "massUnfollowResult": "Se han dejado de seguir {count} registros",
+    "massFollowResultSingle": "Se han seguido {count} registro",
+    "massUnfollowResultSingle": "Se han dejado de seguir {count} registro",
+    "massFollowZeroResult": "Nada se siguió",
+    "massUnfollowZeroResult": "Nada se dejó de seguir"
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
@@ -245,7 +253,9 @@
     "remove": "Eliminar",
     "merge": "Unir",
     "massUpdate": "Actualización Masiva",
-    "export": "Exportar"
+    "export": "Exportar",
+    "follow": "Seguir",
+    "unfollow": "No Seguir"
   },
   "fields": {
     "name": "Nombre",
@@ -511,7 +521,8 @@
       "lastXDays": "Últimos X Días",
       "nextXDays": "Próximos X Días",
       "ever": "Nunca",
-      "isEmpty": "Está Vacío"
+      "isEmpty": "Está Vacío",
+      "olderThanXDays": "Más de X Días"
     },
     "searchRanges": {
       "is": "Es",
