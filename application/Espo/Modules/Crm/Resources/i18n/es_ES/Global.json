@@ -73,11 +73,11 @@
     "OpportunitiesByLeadSource": "Oportunidades por origen del Posible Cliente",
     "SalesByMonth": "Ventas por Mes",
     "SalesPipeline": "Canalización de ventas",
-    "Activities": "Mis actividades"
+    "Activities": "Mis próximas actividades"
   },
   "labels": {
     "Create InboundEmail": "Crear Cuenta de Correo Grupal",
-    "Activities": "Actividades",
+    "Activities": "Actividades planeadas",
     "History": "Historia",
     "Attendees": "Los asistentes",
     "Schedule Meeting": "Reunión Programada",

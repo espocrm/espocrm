@@ -64,6 +64,6 @@
     "disabled": "Marke si no necesita esta entidad en su sistema.",
     "linkAudited": "La creación de registros relacionados y vinculados con el registro existente, se registrarán en la Historia.",
     "linkMultipleField": "El campo de Relaciones Múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
-    "entityType": "Base Plus - tiene paneles de Actividades, Historia y Tareas.\n\nEvento - Disponible en Calendario y en el Panel de Actividades."
+    "entityType": "Base Plus - tiene paneles de Actividades planeadas, Historia y Tareas.\n\nEvento - Disponible en Calendario y en el Panel de Actividades."
   }
 }

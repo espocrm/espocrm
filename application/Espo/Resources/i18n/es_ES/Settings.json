@@ -136,7 +136,7 @@
     "Mass Email": "Email Masivo",
     "Test Connection": "Conexión de prueba",
     "Connecting": "Conexión",
-    "Activities": "Actividades"
+    "Activities": "Actividades planeadas"
   },
   "messages": {
     "ldapTestConnection": "La conexión fue establecida con éxito."
