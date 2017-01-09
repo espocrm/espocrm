@@ -867,6 +867,14 @@ class Base
                 $where['value'] = [$from, $to];
 
                 break;
+            case 'olderThanXDays':
+                $where['type'] = 'before';
+                $number = strval(intval($item['value']));
+                $dt->modify('-'.$number.' day');
+                $dt->setTime(0, 0, 0);
+                $dt->setTimezone(new \DateTimeZone('UTC'));
+                $where['value'] = $dt->format($format);
+                break;
             case 'on':
                 $where['type'] = 'between';
 
@@ -1048,6 +1056,12 @@ class Base
                         $attribute . '>=' => $dt1->format('Y-m-d'),
                         $attribute . '<=' => $dt2->format('Y-m-d'),
                     );
+                    break;
+                case 'olderThanXDays':
+                    $dt1 = new \DateTime();
+                    $number = strval(intval($item['value']));
+                    $dt1->modify('-'.$number.' days');
+                    $part[$attribute . '<'] = $dt1->format('Y-m-d');
                     break;
                 case 'currentMonth':
                     $dt = new \DateTime();

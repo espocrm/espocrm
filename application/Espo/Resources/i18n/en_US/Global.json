@@ -497,7 +497,8 @@
             "lastXDays": "Last X Days",
             "nextXDays": "Next X Days",
             "ever": "Ever",
-            "isEmpty": "Is Empty"
+            "isEmpty": "Is Empty",
+            "olderThanXDays": "Older Than X Days"
         },
         "searchRanges": {
             "is": "Is",

@@ -42,7 +42,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'date', 'after', 'before'],
 
-        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'on', 'after', 'before', 'between'],
+        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'olderThanXDays', 'on', 'after', 'before', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -187,7 +187,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
             if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
-            } else if (~['lastXDays', 'nextXDays'].indexOf(type)) {
+            } else if (~['lastXDays', 'nextXDays', 'olderThanXDays'].indexOf(type)) {
                 this.$el.find('div.additional-number').removeClass('hidden');
             } else if (type == 'between') {
                 this.$el.find('div.primary').removeClass('hidden');
@@ -229,7 +229,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     dateValue: value,
                     dateValueTo: valueTo
                 };
-            } else if (~['lastXDays', 'nextXDays'].indexOf(type)) {
+            } else if (~['lastXDays', 'nextXDays', 'olderThanXDays'].indexOf(type)) {
                 var number = this.$el.find('[name="' + this.name + '-number"]').val();
                 data = {
                     type: type,
