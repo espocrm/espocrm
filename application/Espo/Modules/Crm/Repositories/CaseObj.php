@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class CaseObj extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('serviceFactory');
+    }
+
     public function afterSave(Entity $entity, array $options = array())
     {
         $result = parent::afterSave($entity, $options);
@@ -46,9 +52,29 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
 
         if ($contactIdChanged) {
             $contactId = $entity->get('contactId');
+
+            if ($entity->getFetched('contactId')) {
+                $previousPortalUser = $this->getEntityManager()->getRepository('User')->where(array(
+                    'contactId' => $entity->getFetched('contactId'),
+                    'isPortal' => true
+                ))->findOne();
+                if ($previousPortalUser) {
+                    $this->getInjection('serviceFactory')->create('Stream')->unfollowEntity($entity, $previousPortalUser->id);
+                }
+            }
+
             if (empty($contactId)) {
                 $this->unrelate($entity, 'contacts', $entity->getFetched('contactId'));
                 return;
+            }
+
+            $portalUser = $this->getEntityManager()->getRepository('User')->where(array(
+                'contactId' => $contactId,
+                'isPortal' => true,
+                'isActive' => true
+            ))->findOne();
+            if ($portalUser) {
+                $this->getInjection('serviceFactory')->create('Stream')->followEntity($entity, $portalUser->id);
             }
         }
 
