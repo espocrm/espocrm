@@ -240,7 +240,8 @@
     "remove": "Löschen",
     "merge": "Zusammenführen",
     "massUpdate": "Massenänderung",
-    "export": "Exportieren"
+    "export": "Exportieren",
+    "follow": "Abonnieren"
   },
   "fields": {
     "name": "Name",
