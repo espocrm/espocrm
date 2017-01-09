@@ -1093,6 +1093,62 @@ class Record extends \Espo\Core\Services\Base
         return $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 
+    public function massFollow(array $params, $userId = null)
+    {
+        $resultIdList = [];
+
+        if (empty($userId)) {
+            $userId = $this->getUser()->id;
+        }
+
+        $streamService = $this->getStreamService();
+
+        if (array_key_exists('ids', $params)) {
+            $idList = $params['ids'];
+            foreach ($idList as $id) {
+                $entity = $this->getEntity($id);
+                if ($entity && $this->getAcl()->check($entity, 'stream')) {
+                    if ($streamService->followEntity($entity, $userId)) {
+                        $resultIdList[] = $entity->id;
+                    }
+                }
+            }
+        }
+
+        return array(
+            'ids' => $resultIdList,
+            'count' => count($resultIdList)
+        );
+    }
+
+    public function massUnfollow(array $params, $userId = null)
+    {
+        $resultIdList = [];
+
+        if (empty($userId)) {
+            $userId = $this->getUser()->id;
+        }
+
+        $streamService = $this->getStreamService();
+
+        if (array_key_exists('ids', $params)) {
+            $idList = $params['ids'];
+            foreach ($idList as $id) {
+                $entity = $this->getEntity($id);
+                if ($entity && $this->getAcl()->check($entity, 'stream')) {
+                    if ($streamService->unfollowEntity($entity, $userId)) {
+                        $resultIdList[] = $entity->id;
+                    }
+                }
+            }
+        }
+
+        return array(
+            'ids' => $resultIdList,
+            'count' => count($resultIdList)
+        );
+    }
+
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         return false;

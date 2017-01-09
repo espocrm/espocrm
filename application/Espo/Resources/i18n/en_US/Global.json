@@ -232,7 +232,15 @@
         "checkForNewNotifications": "Check for new notifications",
         "checkForNewNotes": "Check for stream updates",
         "internalPost": "Post will be seen only by internal users",
-        "done": "Done"
+        "done": "Done",
+        "confirmMassFollow": "Are you sure you want to follow selected records?",
+        "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
+        "massFollowResult": "{count} records now are followed",
+        "massUnfollowResult": "{count} records now are not followed",
+        "massFollowResultSingle": "{count} record now is followed",
+        "massUnfollowResultSingle": "{count} record now is not followed",
+        "massFollowZeroResult": "Nothing got followed",
+        "massUnfollowZeroResult": "Nothing got unfollowed"
     },
     "boolFilters": {
         "onlyMy": "Only My",
@@ -246,7 +254,9 @@
         "remove": "Remove",
         "merge": "Merge",
         "massUpdate": "Mass Update",
-        "export": "Export"
+        "export": "Export",
+        "follow": "Follow",
+        "unfollow": "Unfollow"
     },
     "fields": {
         "name": "Name",

@@ -314,9 +314,7 @@ class Record extends Base
             $params['ids'] = $data['ids'];
         }
 
-        $idsRemoved = $this->getRecordService()->massRemove($params);
-
-        return $idsRemoved;
+        return $this->getRecordService()->massRemove($params);
     }
 
     public function actionCreateLink($params, $data, $request)
@@ -463,6 +461,32 @@ class Record extends Base
         }
 
         return $this->getRecordService()->getDuplicateAttributes($data['id']);
+    }
+
+    public function postActionMassFollow($params, $data, $request)
+    {
+        if (!$this->getAcl()->check($this->name, 'stream')) {
+            throw new Forbidden();
+        }
+
+        if (array_key_exists('ids', $data)) {
+            $params['ids'] = $data['ids'];
+        }
+
+        return $this->getRecordService()->massFollow($params);
+    }
+
+    public function postActionMassUnfollow($params, $data, $request)
+    {
+        if (!$this->getAcl()->check($this->name, 'stream')) {
+            throw new Forbidden();
+        }
+
+        if (array_key_exists('ids', $data)) {
+            $params['ids'] = $data['ids'];
+        }
+
+        return $this->getRecordService()->massUnfollow($params);
     }
 }
 
