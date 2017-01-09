@@ -9,14 +9,14 @@
     "file": "Archivo",
     "type": "Tipo",
     "source": "Fuente",
-    "publishDate": "Publicar Fecha",
+    "publishDate": "Publicado el",
     "expirationDate": "Fecha de Expiración",
     "description": "Descripción",
     "accounts": "Cuentas",
     "folder": "Carpeta"
   },
   "links": {
-    "accounts": "Cuenats",
+    "accounts": "Cuentas",
     "opportunities": "Oportunidades",
     "folder": "Carpeta",
     "leads": "Posibles Clientes",
