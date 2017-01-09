@@ -7,7 +7,7 @@
     "billingAddress": "Dirección de Facturación",
     "shippingAddress": "Dirección de Envío",
     "description": "Descripción",
-    "sicCode": "Sic Code",
+    "sicCode": "Código SIC",
     "industry": "Industria",
     "type": "Tipo",
     "contactRole": "Título",
