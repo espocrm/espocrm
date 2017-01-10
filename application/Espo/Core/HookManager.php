@@ -228,7 +228,7 @@ class HookManager
 
         foreach ($hookData as $key => $hookList) {
             foreach ($hookList as $rowHookName) {
-                if (preg_match('/\\'.$class.'$/', $rowHookName)) {
+                if (preg_match('/\\\\'.$class.'$/', $rowHookName)) {
                     return true;
                 }
             }
