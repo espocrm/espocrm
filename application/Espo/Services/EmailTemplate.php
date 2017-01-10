@@ -193,10 +193,15 @@ class EmailTemplate extends Record
                 $value = implode(', ', $valueList);
                 $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
             } else {
-                if ($entity->fields[$field]['type'] == 'date') {
+                if (!isset($entity->fields[$field]['type'])) continue;
+                $attributeType = $entity->fields[$field]['type'];
+
+                if ($attributeType == 'date') {
                     $value = $this->getDateTime()->convertSystemDate($value);
-                } else if ($entity->fields[$field]['type'] == 'datetime') {
+                } else if ($attributeType == 'datetime') {
                     $value = $this->getDateTime()->convertSystemDateTime($value);
+                } else if ($attributeType == 'text') {
+                    $value = nl2br($value);
                 }
             }
             if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
