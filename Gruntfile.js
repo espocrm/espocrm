@@ -76,6 +76,22 @@ module.exports = function (grunt) {
                     'client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
                 }
             },
+            espoRtl: {
+                options: {
+                    yuicompress: true
+                },
+                files: {
+                    'client/css/espo-rtl.css': 'frontend/less/espo-rtl/main.less'
+                }
+            },
+            hazyblue: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'client/css/hazyblue.css': 'frontend/less/hazyblue/main.less',
+                }
+            },
             sakura: {
                 options: {
                     yuicompress: true,

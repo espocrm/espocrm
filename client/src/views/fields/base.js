@@ -429,7 +429,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
             var $saveLink = $('<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>');
-            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>').css('margin-left', '8px');
+            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>');
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
             $cell.find('.inline-edit-link').addClass('hidden');

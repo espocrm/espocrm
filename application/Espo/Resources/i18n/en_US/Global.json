@@ -648,10 +648,12 @@
     },
     "themes": {
         "Espo": "Espo",
+        "EspoRtl": "RTL Espo",
         "Sakura": "Sakura",
-        "EspoVertical": "Espo Vertical",
-        "SakuraVertical": "Sakura Vertical",
+        "EspoVertical": "Espo sidebarred",
+        "SakuraVertical": "Sakura sidebarred",
         "Violet": "Violet",
-        "VioletVertical": "Violet Vertical"
+        "VioletVertical": "Violet sidebarred",
+        "Hazyblue": "Hazyblue"
     }
 }

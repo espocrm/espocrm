@@ -98,6 +98,10 @@ label {
   min-height: 33px;
 }
 
+.page-header > .row {
+    min-height: 33px;
+}
+
 .modal-header {
     background-color: @default-heading-bg-color;
 }
@@ -446,7 +450,7 @@ select[multiple].input-sm {
 }
 
 .input-group-btn > select.form-control {
-    position: relative; 
+    position: relative;
     display: inline-block;
     width: auto;
     vertical-align: middle;
@@ -456,6 +460,10 @@ select[multiple].input-sm {
 .input-group-btn:last-child > select.form-control {
     margin-right: 0;
     margin-left: -1px;
+}
+
+.input-group > .middle-element {
+    margin-left: 0 !important;
 }
 
 .input-group .form-control:focus {
@@ -789,7 +797,7 @@ td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel {
-    border-width: 2px;
+    border-width: @panel-border-width;
 }
 
 .panel-heading > .btn-group > .btn {
@@ -839,13 +847,13 @@ td.cell[data-name="buttons"] > .btn-group {
 .stick-sub {
     position: fixed;
     top: 0;
-    margin: 44px 0 0;
+    margin: 44px 0 0 -@container-padding;
     z-index: 4;
 }
 
 .stick-sub.button-container {
     background-color: @body-bg;
-    padding: 3px @container-padding*2 3px 0;
+    padding: 3px @container-padding 0 @container-padding;
     width: 100%;
 }
 
@@ -959,7 +967,7 @@ body > footer > p a:visited {
 
 .record .middle > .panel:first-child {
     margin-top: 0;
-    border-top-width: 2px;
+    border-top-width: @panel-border-width;
 }
 
 .record .middle > .panel {
@@ -1255,7 +1263,9 @@ h5 {
     width: 270px;
 }
 
-
+.inline-cancel-link {
+    margin-left: 8px;
+}
 
 .dynamic-logic-expression-container {
     div.item-list {
@@ -1286,6 +1296,18 @@ h5 {
     .dynamic-logic-options-list-container {
         margin-bottom: 0;
     }
+}
+
+.input-group-addon:not(:first-child):not(:last-child),
+.input-group-btn:not(:first-child):not(:last-child),
+.input-group .form-control:not(:first-child):not(:last-child) {
+    margin-left: -1px;
+}
+
+.input-group > .input-group-btn > .btn:hover,
+.input-group > .input-group-btn > .btn:focus,
+.input-group > .input-group-btn > .btn.active {
+    z-index: 3;
 }
 
 @media screen and (min-width: @screen-sm-min) {

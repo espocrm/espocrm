@@ -92,7 +92,7 @@ Espo.define('views/main', 'view', function (Dep) {
                 a.push('<div class="pull-left">' + item + '</div>');
             }, this);
 
-            return '<div class="clearfix">' + a.join('<div class="pull-left breadcrumb-separator"> &raquo </div>') + '</div>';
+            return '<div class="clearfix header-breadcrumbs">' + a.join('<div class="pull-left breadcrumb-separator"> &raquo </div>') + '</div>';
         },
 
         actionShowModal: function (data) {

@@ -1,0 +1,6 @@
+{
+    "stylesheet": "client/css/espo-rtl.css",
+    "dashboardCellHeight": 155,
+    "dashboardCellMargin": 19,
+    "navbarHeight": 44
+}
