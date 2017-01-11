@@ -61,6 +61,10 @@ table.table {
     -moz-box-shadow: none;
 }
 
+#navbar .nav.navbar-nav.navbar-right {
+    background-color: @navbar-bg;
+}
+
 .list-container > .list,
 .panel,
 .dashlet-container,
@@ -68,6 +72,14 @@ table.table {
     -webkit-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
     -moz-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
     box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
+}
+
+#navbar .nav.navbar-nav.navbar-right,
+.stick-sub.button-container,
+#navbar .navbar.navbar-inverse {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
 }
 
 @media (min-width: 768px) {
@@ -110,4 +122,10 @@ table.table {
 #notifications-panel > .panel,
 #global-search-panel > .panel {
     border-width: 1px;
+}
+
+.record .stick-sub.button-container {
+    z-index: 3000;
+    background-color: @navbar-bg !important;
+    padding-bottom: 0;
 }
