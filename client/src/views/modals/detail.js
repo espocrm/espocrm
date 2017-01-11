@@ -50,6 +50,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         fitHeight: true,
 
+        className: 'dialog dialog-record',
+
         setup: function () {
 
             var self = this;

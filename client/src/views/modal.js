@@ -32,6 +32,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         cssName: 'modal-dialog',
 
+        className: 'dialog',
+
         header: false,
 
         dialog: null,
@@ -139,6 +141,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
                     draggable: this.isDraggable,
+                    className: this.className,
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)

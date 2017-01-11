@@ -46,6 +46,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
 
+        className: 'dialog dialog-record',
+
         data: function () {
             return {
                 createButton: this.createButton && this.getAcl().check(this.scope, 'create'),

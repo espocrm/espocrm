@@ -38,6 +38,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
         cssName: 'options-modal',
 
+        className: 'dialog dialog-record',
+
         fieldsMode: 'edit',
 
         data: function () {
