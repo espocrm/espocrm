@@ -650,10 +650,10 @@
         "Espo": "Espo",
         "EspoRtl": "RTL Espo",
         "Sakura": "Sakura",
-        "EspoVertical": "Espo sidebarred",
-        "SakuraVertical": "Sakura sidebarred",
+        "EspoVertical": "Espo (sidebar)",
+        "SakuraVertical": "Sakura (sidebar)",
         "Violet": "Violet",
-        "VioletVertical": "Violet sidebarred",
+        "VioletVertical": "Violet (sidebar)",
         "Hazyblue": "Hazyblue"
     }
 }
