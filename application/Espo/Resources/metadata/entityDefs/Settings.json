@@ -82,12 +82,11 @@
         "outboundEmailFromName": {
             "type": "varchar",
             "default": "EspoCRM",
-            "required": true
+            "trim": true
         },
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "required": true,
             "trim": true
         },
         "smtpServer": {
@@ -95,7 +94,6 @@
         },
         "smtpPort": {
             "type": "int",
-            "required": true,
             "min": 0,
             "max": 9999,
             "default": 25
