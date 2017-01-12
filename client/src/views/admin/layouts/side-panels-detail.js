@@ -30,13 +30,16 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style'],
+        dataAttributeList: ['name', 'style', 'sticked'],
 
         dataAttributesDefs: {
             style: {
                 type: 'enum',
                 options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
                 translation: 'LayoutManager.options.style'
+            },
+            sticked: {
+                type: 'bool'
             }
         },
 
@@ -85,7 +88,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
             this.rowLayout = [];
 
-            panelListAll.forEach(function (item) {
+            panelListAll.forEach(function (item, index) {
                 var disabled = false;
                 var itemData = layout[item] || {};
                 if (itemData.disabled) {
@@ -120,11 +123,14 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
                     for (var i in itemData) {
                         o[i] = itemData[i];
                     }
+                    o.index = ('index' in itemData) ? itemData.index : index;
                     this.rowLayout.push(o);
                 }
             }, this);
+            this.rowLayout.sort(function (v1, v2) {
+                return v1.index > v2.index;
+            });
         },
-
 
         fetch: function () {
             var layout = {};
@@ -146,6 +152,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
                     var value = $el.data(Espo.Utils.toDom(attribute)) || null;
                     o[attribute] = value;
                 });
+                o.index = i;
 
                 layout[name] = o;
             }.bind(this))

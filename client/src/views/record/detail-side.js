@@ -155,7 +155,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             layoutData = layoutData || {};
 
             var newList = [];
-            this.panelList.forEach(function (item) {
+            this.panelList.forEach(function (item, i) {
+                item.index = i;
                 if (item.name) {
                     var itemData = layoutData[item.name] || {};
                     if (itemData.disabled) return;
@@ -163,8 +164,13 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                         item[i] = itemData[i];
                     }
                 }
+
                 newList.push(item);
             }, this);
+
+            newList.sort(function (v1, v2) {
+                return v1.index > v2.index;
+            });
 
             this.panelList = newList;
         },
