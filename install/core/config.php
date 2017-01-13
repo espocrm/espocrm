@@ -36,7 +36,7 @@ return array(
 
 		'phpRequires' => array(
 			'JSON',
-			'mcrypt',
+			'openssl',
 			'pdo_mysql'
 		),
 
