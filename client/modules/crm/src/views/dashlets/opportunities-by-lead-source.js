@@ -41,7 +41,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
             for (var label in response) {
                 var value = response[label];
                 data.push({
-                    label: this.getLanguage().translateOption(label, 'leadSource', 'Opportunity'),
+                    label: this.getLanguage().translateOption(label, 'source', 'Lead'),
                     data: [[0, value]]
                 });
             }
