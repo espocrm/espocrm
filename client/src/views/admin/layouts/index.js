@@ -40,6 +40,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
             'listSmall',
             'detailSmall',
             'filters',
+            'exportFields',
             'massUpdate',
             'relationships',
             'sidePanelsDetail',

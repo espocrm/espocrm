@@ -107,6 +107,24 @@ class Layout
             $defaultPath = $this->params['defaultsPath'];
             $fileFullPath =  Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
 
+            if ($name === 'exportFields') {
+
+                $listLayoutPath = Util::concatPath($this->getLayoutPath($scope, true), 'list' . '.json');
+                if (!file_exists($listLayoutPath)) {
+                    $listLayoutPath = Util::concatPath($this->getLayoutPath($scope), 'list' . '.json');
+                }
+                if (!file_exists($listLayoutPath)) {
+                    $listLayoutPath =  Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
+                }
+
+                $listFields = json_decode($this->getFileManager()->getContents($listLayoutPath));
+                $defaultExportFields = array_map(function($e) {
+                    return $e->name;
+                }, $listFields);
+
+                return json_encode($defaultExportFields);
+            }
+
             if (!file_exists($fileFullPath)) {
                 return false;
             }
