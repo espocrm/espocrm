@@ -268,7 +268,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                     if (windowWidth < smallScreenWidth) {
                         $tabs.css('height', 'auto');
-                        $tabs.css('max-height', '');
+                        $more.css('max-height', '');
                     } else {
                         $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                         $more.css('max-height', windowHeight + 'px');
