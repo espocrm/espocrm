@@ -1,5 +1,5 @@
 {
-    "stylesheet": "client/css/hazyblue.css",
+    "stylesheet": "client/css/hazyblue-vertical.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,

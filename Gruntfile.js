@@ -84,12 +84,12 @@ module.exports = function (grunt) {
                     'client/css/espo-rtl.css': 'frontend/less/espo-rtl/main.less'
                 }
             },
-            hazyblue: {
+            hazyblueVertical: {
                 options: {
                     yuicompress: true,
                 },
                 files: {
-                    'client/css/hazyblue.css': 'frontend/less/hazyblue/main.less',
+                    'client/css/hazyblue-vertical.css': 'frontend/less/hazyblue-vertical/main.less',
                 }
             },
             sakura: {

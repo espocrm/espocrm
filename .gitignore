@@ -15,7 +15,7 @@
 /client/css/violet.css
 /client/css/violet-vertical.css
 /client/css/espo-rtl.css
-/client/css/hazyblue.css
+/client/css/hazyblue-vertical.css
 
 /tests/unit/testData/cache/*
 !/tests/unit/testData/cache/.data
