@@ -115,7 +115,6 @@
         },
         "tabList": {
             "type": "array",
-            "translation": "Global.scopeNamesPlural",
             "view": "views/settings/fields/tab-list"
         },
         "quickCreateList": {

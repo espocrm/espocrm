@@ -36,7 +36,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         data: function () {
             return {
-                tabListDefs: this.tabListDefs,
+                tabDefsList: this.tabDefsList,
                 title: this.options.title,
                 menu: this.getMenuDefs(),
                 quickCreateList: this.quickCreateList,
@@ -126,7 +126,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             this.setupGlobalSearch();
 
 
-            this.setupTabListDefs();
+            this.setupTabDefsList();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -192,15 +192,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     var windowWidth = window.innerWidth;
                     var moreWidth = $moreDd.width();
 
-                    $more.children('li').each(function (i, li) {
+                    $more.children('li.not-in-more').each(function (i, li) {
                         unhideOneTab();
                     });
-
-                    $more.parent().addClass('hidden');
 
                     if (windowWidth < smallScreenWidth) {
                         return;
                     }
+
+                    $more.parent().addClass('hidden');
 
                     var headerWidth = this.$el.width();
 
@@ -238,38 +238,48 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 };
 
-                if ($navbar.height() <= navbarNeededHeight) {
+                if ($navbar.height() <= navbarNeededHeight && $more.children().size() === 0) {
                     $more.parent().addClass('hidden');
                 }
 
                 processUpdateWidth();
 
-
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
                 var minHeight = $tabs.height() + navbarStaticItemsHeight;
+
+                var $more = $tabs.find('li.more > ul');
+
+                if ($more.children().size() === 0) {
+                    $more.parent().addClass('hidden');
+                }
+
                 $('body').css('minHeight', minHeight + 'px');
+
                 $window.on('scroll.navbar', function () {
                     $tabs.scrollTop($window.scrollTop());
+                    $more.scrollTop($window.scrollTop());
                 }.bind(this));
 
-                var updateHeight = function () {
+                var updateSizeForVertical = function () {
                     var windowHeight = window.innerHeight;
                     var windowWidth = window.innerWidth;
 
                     if (windowWidth < smallScreenWidth) {
-                        $tabs.css('height', 'none');
-                        return;
+                        $tabs.css('height', 'auto');
+                        $tabs.css('max-height', '');
+                    } else {
+                        $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
+                        $more.css('max-height', windowHeight + 'px');
                     }
 
-                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                 }.bind(this);
 
                 $(window).on('resize.navbar', function() {
-                    updateHeight();
+                    updateSizeForVertical();
                 });
-                updateHeight();
+                updateSizeForVertical();
             }
         },
 
@@ -329,19 +339,25 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
-        setupTabListDefs: function () {
-            var tabListDefs = [];
+        setupTabDefsList: function () {
+            var tabDefsList = [];
+            var moreIsMet = false;;
             this.tabList.forEach(function (tab, i) {
+                if (tab === '_delimiter_') {
+                    moreIsMet = true;
+                    return;
+                }
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
                 var o = {
                     link: '#' + tab,
                     label: label,
                     shortLabel: label.substr(0, 2),
-                    name: tab
+                    name: tab,
+                    isInMore: moreIsMet
                 };
-                tabListDefs.push(o);
+                tabDefsList.push(o);
             }, this);
-            this.tabListDefs = tabListDefs;
+            this.tabDefsList = tabDefsList;
         },
 
         getMenuDefs: function () {

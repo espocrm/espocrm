@@ -13,12 +13,20 @@
 
     <div class="collapse navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
-            {{#each tabListDefs}}
-            <li data-name="{{name}}"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
+            {{#each tabDefsList}}
+            {{#unless isInMore}}
+            <li data-name="{{name}}" class="not-in-more"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
+            {{/unless}}
             {{/each}}
             <li class="dropdown more">
-                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">{{translate 'More'}} <b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown"></ul>
+                <a id="nav-more-tabs-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="more-label">{{translate 'More'}} <b class="caret"></b></span><span class="glyphicon glyphicon glyphicon-option-horizontal more-icon"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
+                {{#each tabDefsList}}
+                {{#if isInMore}}
+                    <li data-name="{{name}}" class="in-more"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span></a></li>
+                {{/if}}
+                {{/each}}
+                </ul>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
