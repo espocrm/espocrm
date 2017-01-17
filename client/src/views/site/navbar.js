@@ -60,7 +60,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
             },
-            'click .navbar-header a.minimizer': function () {
+            'click a.minimizer': function () {
                 var $body = $('body');
                 if ($body.hasClass('minimized')) {
                     $body.removeClass('minimized');
@@ -246,6 +246,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             } else {
                 var $tabs = this.$el.find('ul.tabs');
+
+                console.log(navbarStaticItemsHeight);
 
                 var minHeight = $tabs.height() + navbarStaticItemsHeight;
 

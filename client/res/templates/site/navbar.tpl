@@ -1,8 +1,5 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <a class="minimizer" href="javascript:">
-            <span class="glyphicon glyphicon-menu-hamburger"></span>
-        </a>
         <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon glyphicon glyphicon-th-large" title="{{translate 'Home'}}"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
@@ -62,5 +59,9 @@
                 </ul>
             </li>
         </ul>
+        <a class="minimizer" href="javascript:">
+            <span class="glyphicon glyphicon glyphicon-menu-right right"></span>
+            <span class="glyphicon glyphicon glyphicon-menu-left left"></span>
+        </a>
     </div>
 </div>
