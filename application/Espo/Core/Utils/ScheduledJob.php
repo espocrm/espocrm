@@ -54,10 +54,10 @@ class ScheduledJob
     );
 
     protected $cronSetup = array(
-        'linux' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'windows' => '{PHP-BIN-DIR}.exe -f {CRON-FILE}',
-        'mac' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'default' => '* * * * * {PHP-BIN-DIR} -f {CRON-FILE}',
+        'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'windows' => '{PHP-BIN-DIR}.exe -f {FULL-CRON-PATH}',
+        'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
     );
 
     public function __construct(\Espo\Core\Container $container)
@@ -161,14 +161,21 @@ class ScheduledJob
         $language = $this->getContainer()->get('language');
 
         $OS = $this->getSystemUtil()->getOS();
-        $phpBin = $this->getSystemUtil()->getPhpBin();
-        $cronFile = Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile);
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
 
-        $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
+        $data = array(
+            'PHP-BIN-DIR' => $this->getSystemUtil()->getPhpBin(),
+            'CRON-FILE' => $this->cronFile,
+            'DOCUMENT_ROOT' => $this->getSystemUtil()->getRootDir(),
+            'FULL-CRON-PATH' => Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile),
+        );
 
+        $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
         $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
-        $command = str_replace(array('{PHP-BIN-DIR}', '{CRON-FILE}'), array($phpBin, $cronFile), $command);
+
+        foreach ($data as $name => $value) {
+            $command = str_replace('{'.$name.'}', $value, $command);
+        }
 
         return array(
             'message' => $message,
