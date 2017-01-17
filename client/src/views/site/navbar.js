@@ -247,8 +247,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
-                console.log(navbarStaticItemsHeight);
-
                 var minHeight = $tabs.height() + navbarStaticItemsHeight;
 
                 var $more = $tabs.find('li.more > ul');
