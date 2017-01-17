@@ -70,8 +70,10 @@ table.table {
     -moz-box-shadow: none;
 }
 
-#navbar .nav.navbar-nav.navbar-right {
-    background-color: @navbar-bg;
+@media screen and (min-width: @screen-sm-min) {
+    #navbar .nav.navbar-nav.navbar-right {
+        background-color: @navbar-bg;
+    }
 }
 
 .list-container > .list,
