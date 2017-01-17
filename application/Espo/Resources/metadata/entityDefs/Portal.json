@@ -34,7 +34,6 @@
         },
         "tabList": {
             "type": "array",
-            "translation": "Global.scopeNamesPlural",
             "view": "views/portal/fields/tab-list"
         },
         "quickCreateList": {
