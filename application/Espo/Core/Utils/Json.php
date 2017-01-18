@@ -36,12 +36,11 @@ class Json
      *
      * @param string $value
      * @param int $options Default 0
-     * @param int $depth Default 512
      * @return string
      */
-    public static function encode($value, $options = 0, $depth = 512)
+    public static function encode($value, $options = 0)
     {
-        $json = json_encode($value, $options, $depth);
+        $json = json_encode($value, $options);
 
         $error = self::getLastError();
         if ($json === null || !empty($error)) {
@@ -56,11 +55,9 @@ class Json
      *
      * @param string $json
      * @param bool $assoc Default false
-     * @param int $depth Default 512
-     * @param int $options Default 0
-     * @return object
+     * @return object|array
      */
-    public static function decode($json, $assoc = false, $depth = 512, $options = 0)
+    public static function decode($json, $assoc = false)
     {
         if (is_null($json) || $json === false) {
             return $json;
@@ -71,7 +68,7 @@ class Json
             return false;
         }
 
-        $json = json_decode($json, $assoc, $depth, $options);
+        $json = json_decode($json, $assoc);
 
         $error = self::getLastError();
         if ($error) {
@@ -117,54 +114,12 @@ class Json
         return $returns;
     }
 
-    protected static function getLastError($error = null)
+    protected static function getLastError()
     {
-        if (!isset($error)) {
-            $error = json_last_error();
+        $error = json_last_error();
+
+        if (!empty($error)) {
+            return json_last_error_msg();
         }
-
-        switch ($error) {
-            case JSON_ERROR_NONE:
-                return false;
-            break;
-
-            case JSON_ERROR_DEPTH:
-                return 'The maximum stack depth has been exceeded';
-            break;
-
-            case JSON_ERROR_STATE_MISMATCH:
-                return 'Invalid or malformed JSON';
-            break;
-
-            case JSON_ERROR_CTRL_CHAR:
-                return 'Control character error, possibly incorrectly encoded';
-            break;
-
-            case JSON_ERROR_SYNTAX:
-                return 'Syntax error, malformed JSON';
-            break;
-
-            case JSON_ERROR_UTF8:
-                return 'Malformed UTF-8 characters, possibly incorrectly encoded';
-            break;
-
-            /* Only for PHP 5.5.0
-            case JSON_ERROR_RECURSION:
-                return 'One or more recursive references in the value to be encoded';
-            break;
-            case JSON_ERROR_INF_OR_NAN:
-                return 'One or more NAN or INF values in the value to be encoded';
-            break;
-            case JSON_ERROR_UNSUPPORTED_TYPE:
-                return 'A value of a type that cannot be encoded was given';
-            break;
-            */
-
-            default:
-                return 'Unknown error';
-            break;
-          }
     }
-
 }
-
