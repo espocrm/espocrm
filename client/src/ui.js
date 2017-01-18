@@ -66,12 +66,26 @@ Espo.define('ui', [], function () {
         if (this.buttons.length) {
             this.contents += '<footer class="modal-footer">';
             this.buttons.forEach(function (o) {
+                if (o.pullLeft) return;
                 this.contents +=
                     '<button type="button" ' +
-                    'class="btn btn-' + (o.style || 'default') + (o.pullLeft ? ' pull-left' : '') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
-            }.bind(this));
+            }, this);
+            var leftPart = '';
+            this.buttons.forEach(function (o) {
+                if (!o.pullLeft) return;
+                leftPart +=
+                    '<button type="button" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
+                    (o.html || o.text) + '</button> ';
+            }, this);
+            if (leftPart !== '') {
+                leftPart = '<div class="pull-left btn-group">'+leftPart+'</div>';
+                this.contents += leftPart;
+            }
             this.contents += '</footer>';
         }
 
