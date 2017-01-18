@@ -155,22 +155,14 @@ class Manager
      * Reads entire file into a string
      *
      * @param  string | array  $path  Ex. 'path.php' OR array('dir', 'path.php')
-     * @param  boolean $useIncludePath
-     * @param  resource  $context
-     * @param  integer $offset
-     * @param  integer $maxlen
      * @return mixed
      */
-    public function getContents($path, $useIncludePath = false, $context = null, $offset = -1, $maxlen = null)
+    public function getContents($path)
     {
         $fullPath = $this->concatPaths($path);
 
         if (file_exists($fullPath)) {
-            if (isset($maxlen)) {
-                return file_get_contents($fullPath, $useIncludePath, $context, $offset, $maxlen);
-            } else {
-                return file_get_contents($fullPath, $useIncludePath, $context, $offset);
-            }
+            return file_get_contents($fullPath);
         }
 
         return false;
@@ -200,11 +192,10 @@ class Manager
      * @param  string | array  $path
      * @param  mixed  $data
      * @param  integer $flags
-     * @param  resource  $context
      *
      * @return bool
      */
-    public function putContents($path, $data, $flags = 0, $context = null)
+    public function putContents($path, $data, $flags = 0)
     {
         $fullPath = $this->concatPaths($path); //todo remove after changing the params
 
@@ -212,7 +203,7 @@ class Manager
             throw new Error('Permission denied for '. $fullPath);
         }
 
-        $res = (file_put_contents($fullPath, $data, $flags, $context) !== FALSE);
+        $res = (file_put_contents($fullPath, $data, $flags) !== FALSE);
         if ($res && function_exists('opcache_invalidate')) {
             opcache_invalidate($fullPath);
         }
