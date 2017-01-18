@@ -82,6 +82,7 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
     fileList.push('client/css/sakura-vertical.css');
     fileList.push('client/css/violet.css');
     fileList.push('client/css/violet-vertical.css');
+    fileList.push('client/css/hazyblue-vertical.css');
 
     fs.writeFileSync(diffFilePath, fileList.join('\n'));
 
