@@ -339,28 +339,39 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            var url = url || this.entityType + '/action/export';
+            var url = url || '/api/v1/' + this.scope + '/action/export';
 
             var o = {
                 scope: this.entityType
             };
             if (fieldList) {
+              // if fields are passed they've come from report export
                 o.fieldList = fieldList;
+            } else {
+              // populate fields from default export layout
             }
 
-            this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
-                view.render();
-                this.listenToOnce(view, 'proceed', function (dialogData) {
-                    if (dialogData.useCustomFieldList) {
-                        data.attributeList = dialogData.attributeList;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: JSON.stringify(data),
+                beforeSend: function () {
+                    var that = this;
+                    this.flashTimer = setInterval(function() {
+                        clearInterval(that.flashTimer);
+                        Espo.Ui.notify("Exporting in background...", "success");
+                    }, 750);
+                },
+                complete: function () {
+                    clearInterval(this.flashTimer);
+                    Espo.Ui.notify(false);
+                },
+                success: function (data) {
+                    if ('id' in data) {
+                        window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                     }
-                    this.ajaxPostRequest(url, data).then(function (data) {
-                        if ('id' in data) {
-                            window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                        }
-                    }.bind(this));
-                }, this);
-            }, this);
+                }.bind(this)
+            });
         },
 
         massAction: function (name) {
