@@ -199,6 +199,7 @@ class Installer
 			'language' => $language,
 			'siteUrl' => $siteUrl,
 			'passwordSalt' => $this->getPasswordHash()->generateSalt(),
+			'cryptKey' => $this->getContainer()->get('crypt')->generateKey()
 		);
 
 		$owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
