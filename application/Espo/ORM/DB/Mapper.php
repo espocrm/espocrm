@@ -267,6 +267,10 @@ abstract class Mapper implements IMapper
 
                 $params['relationName'] = $relOpt['relationName'];
 
+                if ($entity->getEntityType() === 'Account' && $relationName === 'contacts') {
+                  $params['customJoin'] = $params['customJoin']." AND account_contact.active = 1";
+                }
+
                 $sql = $this->query->createSelectQuery($relEntity->getEntityType(), $params);
 
                 $resultArr = [];

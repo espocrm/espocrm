@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-with-role', function (Dep) {
+Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-with-role-active', function (Dep) {
 
     return Dep.extend({
 
@@ -36,11 +36,49 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             'click [data-action="switchPrimary"]': function (e) {
                 $target = $(e.currentTarget);
                 var id = $target.data('id');
+                this.togglePrimary(e);
+            },
+            'click [data-action="markInactive"]': function (e) {
+                this.toggleActive(e);
+           },
+        },
 
-                if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]').removeClass('active').children().addClass('text-muted');
-                    $target.addClass('active').children().removeClass('text-muted');
-                    this.setPrimaryId(id);
+        togglePrimary: function(e) {
+            $target = $(e.currentTarget);
+            var id = $target.data('id');
+            if (id != this.primaryId) {
+                this.$el.find('button[data-action="switchPrimary"]').removeClass('active').children().addClass('text-muted');
+                $target.addClass('active').children().removeClass('text-muted');
+                this.setPrimaryId(id);
+            }
+        },
+
+        toggleActive: function(e) {
+            $target = $(e.currentTarget);
+            var id = $target.data('id');
+            var wasActive = this.columns[id]['active'];
+            var wasPrimary = (id == this.primaryId);
+            this.columns[id]['active'] = !wasActive;
+
+            if (wasActive) {
+                $target.removeClass('active').children().removeClass('text-muted');
+                // If primary & other active exist, set first of those primary
+                if (wasPrimary) {
+                    var otherActive = _.filter(this.columns, function (val, key) {
+                        return val.active;
+                    });
+
+                    if (otherActive.length) {
+                        let $newPrimary = this.$el.find('button[data-action="switchPrimary"]:first');
+                        this.$el.find('button[data-action="switchPrimary"]:not(.active):first').click();
+                    }
+                }
+
+            } else {
+                $target.addClass('active').children().addClass('text-muted');
+                // If NOT primary & primary exists and is inactive, set this to primary
+                if (!wasPrimary && this.primaryId && !this.columns[this.primaryId].active) {
+                    $target.siblings(':button').click();
                 }
             }
         },
@@ -76,17 +114,23 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             } else {
                 this.primaryName = null;
             }
-
-            this.trigger('change');
         },
 
         renderLinks: function () {
+
             if (this.primaryId) {
-                this.addLinkHtml(this.primaryId, this.primaryName);
+                this.addLinkHtml(this.primaryId, this.primaryName, false);
             }
+
             this.ids.forEach(function (id) {
-                if (id != this.primaryId) {
-                    this.addLinkHtml(id, this.nameHash[id]);
+                if (id != this.primaryId && this.columns[id] && this.columns[id]['active']) {
+                    this.addLinkHtml(id, this.nameHash[id], false);
+                }
+            }, this);
+
+            this.ids.forEach(function (id) {
+                if (id != this.primaryId && this.columns[id] && !this.columns[id]['active']) {
+                    this.addLinkHtml(id, this.nameHash[id], false);
                 }
             }, this);
         },
@@ -98,7 +142,12 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
                     names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
                 }
                 this.ids.forEach(function (id) {
-                    if (id != this.primaryId) {
+                    if (id != this.primaryId && this.columns[id]['active']) {
+                        names.push(this.getDetailLinkHtml(id));
+                    }
+                }, this);
+                this.ids.forEach(function (id) {
+                    if (id != this.primaryId && !this.columns[id]['active']) {
                         names.push(this.getDetailLinkHtml(id));
                     }
                 }, this);
@@ -118,7 +167,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             this.managePrimaryButton();
         },
 
-        addLinkHtml: function (id, name) {
+        addLinkHtml: function (id, name, update) {
             if (this.mode == 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
@@ -127,12 +176,31 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
             var isPrimary = (id == this.primaryId);
 
-            var iconHtml = '<span class="glyphicon glyphicon-star ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
-            var title = this.translate('Primary');
+            var isActive = typeof this.columns[id]['active'] == 'undefined' || this.columns[id]['active'];
+            var iconHtml = '<span class="glyphicon glyphicon-ban-circle ' + (isActive ? 'text-muted' : '') + '"></span>';
+            var title = 'Is Inactive';
+            var $hasActive = $('<button type="button" class="btn btn-link btn-sm pull-right ' + (isActive ? 'active' : '') + '" title="'+title+'" data-action="markInactive" data-id="'+id+'">'+iconHtml+'</button>');
+            $hasActive.insertAfter($el.children().first().children().first());
 
-            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
-            $primary.insertAfter($el.children().first().children().first());
+            iconHtml = '<span class="glyphicon glyphicon-star ' + (!isPrimary ? 'text-muted' : '') + (isPrimary ? 'active' : '') + '"></span>';
+            title = this.translate('Primary');
+
+            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hiddent ' + (isPrimary ? 'active' : '') + '" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
+
+            $primary.insertAfter($hasActive);
             this.managePrimaryButton();
+
+            if (!isPrimary && (typeof update !== 'boolean' || update)) {
+                var activeCols = _.filter(this.columns, function (val, key) {
+                    return val.active;
+                });
+
+                if (!activeCols.length) {
+                    this.$el.find('button[data-action="switchPrimary"]').removeClass('active').children().addClass('text-muted');
+                    $primary.addClass('active').children().removeClass('text-muted');
+                    this.setPrimaryId(id, false);
+                }
+            }
         },
 
         afterRender: function () {
@@ -145,14 +213,6 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
                 $primary.removeClass('hidden');
             } else {
                 $primary.addClass('hidden');
-            }
-
-            if ($primary.filter('.active').size() == 0) {
-                var $first = $primary.first();
-                if ($first.size()) {
-                    $first.addClass('active').children().removeClass('text-muted');
-                    this.setPrimaryId($first.data('id'));
-                }
             }
         },
 

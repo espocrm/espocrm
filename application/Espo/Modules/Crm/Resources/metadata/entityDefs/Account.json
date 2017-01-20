@@ -88,6 +88,11 @@
             "notStorable": true,
             "disabled": true
         },
+        "contactActive": {
+            "type": "bool",
+            "notStorable": true,
+            "disabled": true
+        },
         "billingAddress": {
             "type": "address"
         },

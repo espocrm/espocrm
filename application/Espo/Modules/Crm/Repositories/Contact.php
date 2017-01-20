@@ -41,9 +41,13 @@ class Contact extends \Espo\Core\ORM\Repositories\RDB
             $params['customJoin'] = '';
         }
 
+        //FIXME This avoids regular requests for Contacts without linked Account properties to work. Must be another solution though?
+        if (!in_array('account', $params['leftJoins'])) {
+            $params['leftJoins'][] = 'account';
+        }
         $params['customJoin'] .= "
             LEFT JOIN `account_contact` AS accountContact
-            ON accountContact.contact_id = contact.id AND accountContact.account_id = contact.account_id AND accountContact.deleted = 0
+            ON accountContact.contact_id = contact.id AND accountContact.account_id = account.id AND accountContact.active = 1 AND accountContact.deleted = 0
         ";
     }
 

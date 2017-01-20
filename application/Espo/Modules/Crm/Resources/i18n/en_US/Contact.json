@@ -4,6 +4,7 @@
         "emailAddress": "Email",
         "title": "Title",
         "account": "Account",
+        "accountActive": "Active Role",
         "accounts": "Accounts",
         "phoneNumber": "Phone",
         "accountType": "Account Type",

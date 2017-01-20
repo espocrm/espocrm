@@ -624,6 +624,15 @@ abstract class Base
     {
         $whereParts = array();
 
+        $accountActive = null;
+        if ($entity->getEntityType() === 'Contact') {
+            foreach ($whereClause as $field => $value) {
+                if ($field === 'accountId=') {
+                    $accountActive = true;
+                    break;
+                }
+            }
+        }
         foreach ($whereClause as $field => $value) {
 
             if (is_int($field)) {
@@ -717,6 +726,10 @@ abstract class Base
                             $params['distinct'] = true;
                         }
                         $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
+
+                        if (isset($accountActive)) {
+                          $whereParts[] = str_replace('{accountActive}', $this->pdo->quote($accountActive), array_pop($whereParts));
+                        }
                     } else {
                         if ($fieldDefs['type'] == IEntity::FOREIGN) {
                             $leftPart = '';

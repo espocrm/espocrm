@@ -20,14 +20,28 @@
         },
         "accountId": {
             "where": {
-                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id = {value})",
-                "<>": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id <> {value})",
-                "IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
-                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND account_id IN {value})",
+                "=": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND active = {accountActive} AND account_id = {value})",
+                "<>": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND active = {accountActive} AND account_id <> {value})",
+                "IN": "contact.id IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND active = {accountActive} AND account_id IN {value})",
+                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM account_contact WHERE deleted = 0 AND active = {accountActive} AND account_id IN {value})",
                 "IS NULL": "contact.account_id IS NULL",
                 "IS NOT NULL": "contact.account_id IS NOT NULL"
             },
             "disabled": true
+        },
+        "accountActive": {
+            "disabled": true,
+            "type": "bool",
+            "notStorable": true,
+            "select": "accountContact.active",
+            "orderBy": "accountContact.active {direction}",
+            "where": {
+                "=": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.active = {value}",
+                    "distinct": true
+                }
+            }
         },
         "title": {
             "type": "varchar",
@@ -105,7 +119,8 @@
             "type": "linkMultiple",
             "view": "crm:views/contact/fields/accounts",
             "columns": {
-                "role": "contactRole"
+                "role": "contactRole",
+                "active": "contactActive"
             }
         },
         "accountRole": {
@@ -226,6 +241,10 @@
                 "role": {
                     "type": "varchar",
                     "len": 50
+                },
+                "active": {
+                    "type": "bool",
+                    "default": true
                 }
             },
             "layoutRelationshipsDisabled": true
