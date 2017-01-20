@@ -43,6 +43,10 @@ class Notification extends \Espo\Core\Controllers\Record
         $maxSize = intval($request->get('maxSize'));
         $after = $request->get('after');
 
+        if (empty($maxSize)) {
+            $maxSize = self::MAX_SIZE_LIMIT;
+        }
+
         $params = array(
             'offset' => $offset,
             'maxSize' => $maxSize,
