@@ -139,6 +139,11 @@ Espo.define('ui', [], function () {
 
         this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
+            var headerHeight = this.$el.find('header.modal-header').outerHeight();
+            var footerHeight = this.$el.find('footer.modal-footer').outerHeight();
+
+            var diffHeight = headerHeight + footerHeight + options.modalBodyDiffHeight;
+
             if (this.fitHeight) {
                 var processResize = function () {
                     var windowHeight = $window.height();
@@ -150,7 +155,7 @@ Espo.define('ui', [], function () {
                         return;
                     }
                     this.$el.find('div.modal-body').css({
-                        'maxHeight': (windowHeight - 192) + 'px',
+                        'maxHeight': (windowHeight - diffHeight) + 'px',
                         'overflow': 'auto'
                     });
                 }.bind(this);

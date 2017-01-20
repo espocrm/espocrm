@@ -142,6 +142,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     fitHeight: this.fitHeight,
                     draggable: this.isDraggable,
                     className: this.className,
+                    modalBodyDiffHeight: this.getThemeManager().getParam('modalBodyDiffHeight') || 92,
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
