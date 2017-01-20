@@ -79,6 +79,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $exportAdditionalAttributeList = [];
 
+    protected $exportAllowedAttributeList = [];
+
     protected $checkForDuplicatesInUpdate = false;
 
     protected $duplicatingLinkList = [];
@@ -1174,6 +1176,25 @@ class Record extends \Espo\Core\Services\Base
         return false;
     }
 
+    public function checkAttributeIsAllowedForExport($entity, $attribute)
+    {
+        if (in_array($attribute, $this->internalAttributeList)) {
+            return false;
+        }
+
+        $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
+        if (!$isNotStorable) {
+            return true;
+        } else {
+            if (in_array($attribute, $this->exportAllowedAttributeList)) {
+                return true;
+            }
+            if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
+               return true;
+            }
+        }
+    }
+
     public function export(array $params)
     {
         $selectManager = $this->getSelectManager($this->getEntityType());
@@ -1226,10 +1247,6 @@ class Record extends \Espo\Core\Services\Base
             $attributeListToSkip[] = $attribute;
         }
 
-        foreach ($this->internalAttributeList as $attribute) {
-            $attributeListToSkip[] = $attribute;
-        }
-
         $attributeList = null;
         if (array_key_exists('attributeList', $params)) {
             $attributeList = [];
@@ -1238,13 +1255,8 @@ class Record extends \Espo\Core\Services\Base
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
-                $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
-                if (!$isNotStorable) {
+                if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
                     $attributeList[] = $attribute;
-                } else {
-                    if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
-                        $attributeList[] = $attribute;
-                    }
                 }
             }
         }
@@ -1256,13 +1268,8 @@ class Record extends \Espo\Core\Services\Base
                     if (in_array($attribute, $attributeListToSkip)) {
                         continue;
                     }
-
-                    if (empty($defs['notStorable'])) {
+                    if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
                         $attributeList[] = $attribute;
-                    } else {
-                        if (in_array($defs['type'], ['email', 'phone'])) {
-                            $attributeList[] = $attribute;
-                        }
                     }
                 }
                 foreach ($this->exportAdditionalAttributeList as $attribute) {

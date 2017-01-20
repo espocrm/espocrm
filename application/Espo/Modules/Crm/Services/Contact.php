@@ -39,6 +39,10 @@ class Contact extends \Espo\Services\Record
         'portalUserId'
     ];
 
+    protected $exportAllowedAttributeList = [
+        'title'
+    ];
+
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(
