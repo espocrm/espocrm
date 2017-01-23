@@ -1,1 +1,1 @@
-{{#if isNotEmpty}}<span class="complext-text">{{complexText value}}</span>{{else}}{{translate 'None'}}{{/if}}
+{{#if isNotEmpty}}<span class="complex-text">{{complexText value}}</span>{{else}}{{translate 'None'}}{{/if}}
