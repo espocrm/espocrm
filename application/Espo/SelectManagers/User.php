@@ -40,6 +40,14 @@ class User extends \Espo\Core\SelectManagers\Base
                 'isActive' => true
             );
         }
+        if ($this->getAcl()->get('portalPermission') !== 'yes') {
+            $result['whereClause'][] = array(
+                'OR' => [
+                    ['isPortalUser' => false],
+                    ['id' => $this->getUser()->id]
+                ]
+            );
+        }
         $result['whereClause'][] = array(
             'isSuperAdmin' => false
         );
@@ -85,6 +93,13 @@ class User extends \Espo\Core\SelectManagers\Base
     }
 
     protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'id' => $this->getUser()->id
+        );
+    }
+
+    protected function accessPortalOnlyOwn(&$result)
     {
         $result['whereClause'][] = array(
             'id' => $this->getUser()->id
