@@ -193,12 +193,16 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             var listViewName = this.getRecordViewName();
 
             this.createView('list', listViewName, o, function (view) {
-                if (!this.hasParentView()) return;
+                if (!this.hasParentView()) {
+                    view.undelegateEvents();
+                    return;
+                }
 
                 view.render();
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {
+                        view.undelegateEvents();
                         this.clearView('list');
                     }
                 }, this);
