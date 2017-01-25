@@ -32,7 +32,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         type: 'text',
 
-        listTemplate: 'fields/text/detail',
+        listTemplate: 'fields/text/list',
 
         detailTemplate: 'fields/text/detail',
 
