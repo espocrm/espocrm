@@ -268,8 +268,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                  .css('width', '100%')
                                  .css('max-width', '300px')
                                  .addClass('gray-box')
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
-                                 .append(removeLink);
+                                 .append(removeLink)
+                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'));
 
             var $container = $('<div>').append($att);
             $attachments.append($container);
