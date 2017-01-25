@@ -548,7 +548,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!$this->checkAssignment($entity)) {
-            throw new Forbidden();
+            throw new Forbidden('Assignment permission failure');
         }
 
         $this->processDuplicateCheck($entity, $data);
