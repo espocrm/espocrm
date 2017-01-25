@@ -319,9 +319,9 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             var $att = $('<div>').css('display', 'inline-block')
                                  .css('width', '100%')
                                  .css('max-width', '300px')
+                                 .append(removeLink)
                                  .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
-                                 .addClass('gray-box')
-                                 .append(removeLink);
+                                 .addClass('gray-box');
 
             var $container = $('<div>').append($att);
             this.$attachment.append($container);
