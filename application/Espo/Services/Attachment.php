@@ -43,6 +43,10 @@ class Attachment extends Record
 
         $entity = parent::createEntity($data);
 
+        if (!empty($data['file'])) {
+            $entity->clear('contents');
+        }
+
         return $entity;
     }
 }
