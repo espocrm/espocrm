@@ -20,6 +20,6 @@
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{
-      "notStorable":true
+      "skipOrmDefs": true
    }
 }
