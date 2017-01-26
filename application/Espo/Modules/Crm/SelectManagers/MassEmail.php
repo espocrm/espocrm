@@ -31,6 +31,20 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class MassEmail extends \Espo\Core\SelectManagers\Base
 {
+    protected function filterActual(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => ['Pending', 'Draft']
+        );
+    }
+
+    protected function filterComplete(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Complete'
+        );
+    }
+
     protected function acessOnlyOwn(&$result)
     {
         $result['whereClause'][] = array(
