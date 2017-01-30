@@ -1406,7 +1406,7 @@ class Record extends \Espo\Core\Services\Base
         return $this->doExcelOutput($arr, $exportFields, $this->entityType);
     }
 
-    protected function doExcelOutput($arr, $exportFields, $entityType) {
+    protected function doExcelOutput($arr, $exportFields, $entityType, $reportName = NULL) {
         $objPHPExcel = new \PHPExcel();
         $sheet = $objPHPExcel->setActiveSheetIndex(0);
         $sheet->setTitle($this->getLanguage()->translate($entityType, 'scopeNamesPlural'));
@@ -1419,16 +1419,30 @@ class Record extends \Espo\Core\Services\Base
         // Title
         $titleStyle = array(
             'alignment' => array(
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
             ),
             'font'  => array(
                 'bold'  => true,
                 'size'  => 18
             )
         );
-        $sheet->setCellValue("B1", $this->getLanguage()->translate($entityType, 'scopeNamesPlural') . " export");
+        $dateStyle = array(
+            'alignment' => array(
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
+            ),
+            'font'  => array(
+                'size'  => 16
+            )
+        );
+        if ($reportName) {
+            $sheet->setCellValue("B1", $this->getLanguage()->translate($entityType, 'scopeNamesPlural') . " report: '$reportName'");
+        } else {
+            $sheet->setCellValue("B1", $this->getLanguage()->translate($entityType, 'scopeNamesPlural') . " export");
+        }
+        $sheet->setCellValue("C1", 'Exported: '.date("D M j G:i:s Y"));
         $sheet->getRowDimension('1')->setRowHeight(40);
         $sheet->getStyle("B1")->applyFromArray($titleStyle);
+        $sheet->getStyle("C1")->applyFromArray($dateStyle);
 
         \PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
         \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
@@ -1481,7 +1495,9 @@ class Record extends \Espo\Core\Services\Base
                     if ($entityType == 'Contact') {
                         $sheet->setCellValue("$col$rowNumber", $row['name']);
                     } else {
-                        if ($row['firstName']) {
+                        if ($row['name']) {
+                            $sheet->setCellValue("$col$rowNumber", $row['name']);
+                        } else if ($row['firstName']) {
                             $personName = $row['firstName'];
                             if ($row['lastName']) {
                                 $personName .= " ".$row['lastName'];
