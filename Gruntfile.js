@@ -92,6 +92,14 @@ module.exports = function (grunt) {
                     'client/css/hazyblue-vertical.css': 'frontend/less/hazyblue-vertical/main.less',
                 }
             },
+            hazyblue: {
+                options: {
+                    yuicompress: true,
+                },
+                files: {
+                    'client/css/hazyblue.css': 'frontend/less/hazyblue/main.less',
+                }
+            },
             sakura: {
                 options: {
                     yuicompress: true,
