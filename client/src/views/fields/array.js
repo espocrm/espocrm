@@ -325,7 +325,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 arr.push({
                     type: 'like',
                     field: field,
-                    value: "%" + value + "%"
+                    value: "%" + value.replace(/\//, '\\\\/' ) + "%"
                 });
                 arrFront.push(value);
             });
