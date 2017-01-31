@@ -62,9 +62,9 @@
     "jobSchedulingMap": {
         "CheckInboundEmails": "*/4 * * * *",
         "CheckEmailAccounts": "*/5 * * * *",
-        "SendEmailReminders": "/2 * * * *",
+        "SendEmailReminders": "*/2 * * * *",
         "Cleanup": "1 1 * * 0",
         "AuthTokenControl": "*/6 * * * *",
-        "SendEmailNotifications": "/2 * * * *"
+        "SendEmailNotifications": "*/2 * * * *"
     }
 }
