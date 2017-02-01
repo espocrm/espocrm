@@ -332,6 +332,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                         event.start = event.end.clone();
                     }
                 }
+            } else {
+                if (!event.end || !event.start) return;
             }
 
             this.fillColor(event);
@@ -380,6 +382,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             var resultList = [];
             list.forEach(function (o) {
                 var event = this.convertEvent(o);
+                if (!event) return;
                 resultList.push(event);
             }, this);
             return resultList;
