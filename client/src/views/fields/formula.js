@@ -30,7 +30,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'fields/formula/edit',
+        detailTemplate: 'fields/formula/detail',
 
         editTemplate: 'fields/formula/edit',
 
