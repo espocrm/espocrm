@@ -62,7 +62,7 @@
         },
         {
             "name": "entity\\isNew",
-            "insertText": "entity\\attribute()"
+            "insertText": "entity\\isNew()"
         },
         {
             "name": "entity\\isAttributeChanged",
