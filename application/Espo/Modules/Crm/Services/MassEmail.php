@@ -394,6 +394,11 @@ class MassEmail extends \Espo\Services\Record
 
     protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], $campaign = null, $isTest = false)
     {
+        $queueItemFetched = $this->getEntityManager()->getEntity($queueItem->getEntityType(), $queueItem->id);
+        if ($queueItemFetched->get('status') !== 'Pending') {
+            return;
+        }
+
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
