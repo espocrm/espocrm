@@ -275,19 +275,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }
             }
 
-            var $previous = this.$el.find('footer button[data-name="previous"]');
-            var $next = this.$el.find('footer button[data-name="next"]');
-
             if (previousButtonEnabled) {
-                $previous.removeClass('disabled');
+                this.enableButton('previous');
             } else {
-                $previous.addClass('disabled');
+                this.disableButton('previous');
             }
 
             if (nextButtonEnabled) {
-                $next.removeClass('disabled');
+                this.enableButton('next');
             } else {
-                $next.addClass('disabled');
+                 this.disableButton('next');
             }
         },
 
@@ -392,14 +389,14 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
-                $buttons.addClass('disabled');
+                $buttons.addClass('disabled').attr('disabled', 'disabled');
                 model.destroy({
                     success: function () {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
                     }.bind(this),
                     error: function () {
-                        $buttons.removeClass('disabled');
+                        $buttons.removeClass('disabled').removeAttr('disabled');
                     }
                 });
             }

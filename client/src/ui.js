@@ -68,7 +68,7 @@ Espo.define('ui', [], function () {
             this.buttons.forEach(function (o) {
                 if (o.pullLeft) return;
                 this.contents +=
-                    '<button type="button" ' +
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
                     'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
@@ -77,7 +77,7 @@ Espo.define('ui', [], function () {
             this.buttons.forEach(function (o) {
                 if (!o.pullLeft) return;
                 leftPart +=
-                    '<button type="button" ' +
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
                     'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';

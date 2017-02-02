@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
+Espo.define('views/admin/upgrade/index', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin.upgrade.index',
+        template: 'admin/upgrade/index',
 
         packageContents: null,
 
@@ -44,7 +44,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
 
         events: {
             'change input[name="package"]': function (e) {
-                this.$el.find('button[data-action="upload"]').addClass('disabled');
+                this.$el.find('button[data-action="upload"]').addClass('disabled').attr('disabled', 'disabled');
                 this.$el.find('.message-container').html('');
                 var files = e.currentTarget.files;
                 if (files.length) {
@@ -64,7 +64,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
             var fileReader = new FileReader();
             fileReader.onload = function (e) {
                 this.packageContents = e.target.result;
-                this.$el.find('button[data-action="upload"]').removeClass('disabled');
+                this.$el.find('button[data-action="upload"]').removeClass('disabled').removeAttr('disabled');
             }.bind(this);
             fileReader.readAsDataURL(file);
         },
@@ -75,7 +75,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
         },
 
         upload: function () {
-            this.$el.find('button[data-action="upload"]').addClass('disabled');
+            this.$el.find('button[data-action="upload"]').addClass('disabled').attr('disabled', 'disabled');
             this.notify('Uploading...');
             $.ajax({
                 url: 'Admin/action/uploadUpgradePackage',
@@ -93,11 +93,11 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
                     return;
                 }
                 this.notify(false);
-                this.createView('popup', 'Admin.Upgrade.Ready', {
+                this.createView('popup', 'views/admin/upgrade/ready', {
                     upgradeData: data
                 }, function (view) {
                     view.render();
-                    this.$el.find('button[data-action="upload"]').removeClass('disabled');
+                    this.$el.find('button[data-action="upload"]').removeClass('disabled').removeAttr('disabled');
 
                     view.once('run', function () {
                         view.close();
@@ -134,7 +134,7 @@ Espo.define('Views.Admin.Upgrade.Index', 'View', function (Dep) {
                 if (cache) {
                     cache.clear();
                 }
-                this.createView('popup', 'Admin.Upgrade.Done', {
+                this.createView('popup', 'views/admin/upgrade/done', {
                     version: version
                 }, function (view) {
                     this.notify(false);
