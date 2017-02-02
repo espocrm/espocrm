@@ -139,12 +139,40 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Test', $result);
     }
 
-    function testAttributeFetched()
+    function testEntityAttribute()
+    {
+        $item = json_decode('
+            {
+                "type": "entity\\\\attribute",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "name"
+                    }
+                ]
+            }
+        ');
+
+        $this->setEntityAttributes($this->entity, array(
+            'name' => 'Test'
+        ));
+
+        $result = $this->formula->process($item, $this->entity);
+
+        $this->assertEquals('Test', $result);
+    }
+
+    function testEntityAttributeFetched()
     {
         $item = json_decode('
             {
                 "type": "entity\\\\attributeFetched",
-                "value": "name"
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "name"
+                    }
+                ]
             }
         ');
 
@@ -162,10 +190,12 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $item = json_decode('
             {
                 "type": "entity\\\\isAttributeChanged",
-                "value": {
-                    "type": "value",
-                    "value": "name"
-                }
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "name"
+                    }
+                ]
             }
         ');
 
@@ -188,10 +218,12 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $item = json_decode('
             {
                 "type": "entity\\\\isAttributeNotChanged",
-                "value": {
-                    "type": "value",
-                    "value": "name"
-                }
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "name"
+                    }
+                ]
             }
         ');
 

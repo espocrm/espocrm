@@ -32,7 +32,7 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 
-class AttributeFetchedType extends \Espo\Core\Formula\Functions\AttributeType
+class AttributeFetchedType extends AttributeType
 {
     protected function getAttributeValue($attribute)
     {
