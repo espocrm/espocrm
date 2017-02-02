@@ -40,30 +40,21 @@ class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
             throw new Error();
         }
 
-        $attributeList = [];
-        if (is_array($item->value)) {
-            $attributeList = $attribute;
-            foreach ($item->value as $value) {
-                $attribute = $this->evaluate($item->value);
-                $attributeList[] = $attribute;
-            }
-        } else {
-            $attribute = $this->evaluate($item->value);
-            $attributeList[] = $attribute;
+        if (!is_array($item->value)) {
+            throw new Error();
         }
 
-        return $this->check($attributeList);
+        if (count($item->value) < 1) {
+            throw new Error();
+        }
+
+        $attribute = $this->evaluate($item->value[0]);
+
+        return $this->check($attribute);
     }
 
-    protected function check(array $attributeList)
+    protected function check($attribute)
     {
-        $result = true;
-        foreach ($attributeList as $i => $attribute) {
-            if (!$this->getEntity()->isAttributeChanged($attribute)) {
-                $result = false;
-                break;
-            }
-        }
-        return $result;
+        return $this->getEntity()->isAttributeChanged($attribute);
     }
 }

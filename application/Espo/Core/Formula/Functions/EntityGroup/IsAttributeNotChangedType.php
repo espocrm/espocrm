@@ -33,8 +33,8 @@ use \Espo\ORM\Entity;
 
 class IsAttributeNotChangedType extends IsAttributeChangedType
 {
-    protected function check(array $attributeList)
+    protected function check($attribute)
     {
-        return !parent::check($attributeList);
+        return !parent::check($attribute);
     }
 }
