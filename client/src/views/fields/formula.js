@@ -96,6 +96,8 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
                 if (this.mode == 'detail') {
                     editor.setReadOnly(true);
+                    editor.renderer.$cursorLayer.element.style.display = "none";
+                    editor.renderer.setShowGutter(false);
                 }
 
                 editor.setShowPrintMargin(false);
