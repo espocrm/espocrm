@@ -1,7 +1,7 @@
 
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div id="{{containerId}}">{{{value}}}</div>
     </div>
 </div>
