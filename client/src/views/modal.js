@@ -190,7 +190,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
@@ -199,7 +199,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         addButton: function (o, toBeginnig, doNotReRender) {

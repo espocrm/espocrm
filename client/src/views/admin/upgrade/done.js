@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Admin.Upgrade.Done', 'Views.Modal', function (Dep) {
+Espo.define('views/admin/upgrade/done', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('Views.Admin.Upgrade.Done', 'Views.Modal', function (Dep) {
 
         header: false,
 
-        template: 'admin.upgrade.done',
+        template: 'admin/upgrade/done',
 
         createButton: true,
 
