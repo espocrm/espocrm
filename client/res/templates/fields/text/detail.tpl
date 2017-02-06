@@ -1,1 +1,7 @@
-{{#if isNotEmpty}}<span class="complex-text">{{complexText value}}</span>{{else}}{{translate 'None'}}{{/if}}
+{{#if isNotEmpty}}
+<div class="row">
+    <div class="col-md-12">
+        <div id="{{containerId}}">{{{value}}}</div>
+    </div>
+</div>
+{{else}}{{translate 'None'}}{{/if}}
