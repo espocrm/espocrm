@@ -153,7 +153,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             }
 
             Espo.require('EmailHelper', function (EmailHelper) {
-                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
+                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
 
                 this.notify('Please wait...');
 

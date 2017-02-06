@@ -261,16 +261,40 @@ Espo.define('email-helper', [], function () {
         },
 
         addReplyBodyAttrbutes: function (model, attributes) {
+            var format = this.getDateTime().getReadableShortDateTimeFormat();
+            var dateSent = model.get('dateSent');
+
+            var dateSentSting = null;
+            if (dateSent) {
+                var dateSentMoment = this.getDateTime().toMoment(dateSent);
+                dateSentSting =dateSentMoment.format(format);
+            }
+
+            var replyHeadString =
+                (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
+
+            var fromName = model.get('fromName');
+
+            if (!fromName && model.get('from')) {
+                fromName = (model.get('nameHash') || {})[model.get('from')];
+                if (fromName) {
+                    replyHeadString += ', ' + fromName;
+                }
+            }
+
+            replyHeadString += ':'
+
+
             if (model.get('isHtml')) {
                 var body = model.get('body');
-                body = '<br><blockquote>' + '------' + this.getLanguage().translate('Original message', 'labels', 'Email') + '------<br>' + body + '</blockquote>';
+                body = '<br>' +  replyHeadString + '<br><blockquote>' +  body + '</blockquote>';
 
                 attributes['body'] = body;
             } else {
                 var bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
                 var b = '\n\n';
-                b += '------' + this.getLanguage().translate('Original message', 'labels', 'Email') + '------' + '\n';
+                b += replyHeadString + '\n';
 
                 bodyPlain.split('\n').forEach(function (line) {
                     b += '> ' + line + '\n';
@@ -280,7 +304,7 @@ Espo.define('email-helper', [], function () {
                 attributes['body'] = bodyPlain;
                 attributes['bodyPlain'] = bodyPlain;
             }
-        },
+        }
 
     });
 
