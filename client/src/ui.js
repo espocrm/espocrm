@@ -44,7 +44,24 @@ Espo.define('ui', [], function () {
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'draggable', 'container', 'onRemove'];
+        this.options = options;
+
+        var params = [
+            'className',
+            'backdrop',
+            'keyboard',
+            'closeButton',
+            'header',
+            'body',
+            'width',
+            'height',
+            'fitHeight',
+            'buttons',
+            'removeOnClose',
+            'draggable',
+            'container',
+            'onRemove'
+        ];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -61,13 +78,17 @@ Espo.define('ui', [], function () {
                              '</header>';
         }
 
-        this.contents += '<div class="modal-body body">' + this.body + '</div>';
+        var body = '<div class="modal-body body">' + this.body + '</div>';
+
+        var footer = '';
 
         if (this.buttons.length) {
-            this.contents += '<footer class="modal-footer">';
+            footer += '<footer class="modal-footer">';
+
+            var rightPart = '';
             this.buttons.forEach(function (o) {
                 if (o.pullLeft) return;
-                this.contents +=
+                rightPart +=
                     '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
                     'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
@@ -83,10 +104,20 @@ Espo.define('ui', [], function () {
                     (o.html || o.text) + '</button> ';
             }, this);
             if (leftPart !== '') {
-                leftPart = '<div class="pull-left btn-group">'+leftPart+'</div>';
-                this.contents += leftPart;
+                leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
+                footer += leftPart;
             }
-            this.contents += '</footer>';
+            if (rightPart !== '') {
+                rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
+                footer += rightPart;
+            }
+            footer += '</footer>';
+        }
+
+        if (this.options.footerAtTheTop) {
+            this.contents += footer + body;
+        } else {
+            this.contents += body + footer;
         }
 
         this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
@@ -142,22 +173,40 @@ Espo.define('ui', [], function () {
             var headerHeight = this.$el.find('header.modal-header').outerHeight();
             var footerHeight = this.$el.find('footer.modal-footer').outerHeight();
 
-            var diffHeight = headerHeight + footerHeight + options.modalBodyDiffHeight;
+            var diffHeight = headerHeight + footerHeight;
 
-            if (this.fitHeight) {
+            if (!options.fullHeight) {
+                diffHeight = diffHeight - options.bodyDiffHeight
+            }
+
+            if (this.fitHeight || options.fullHeight) {
                 var processResize = function () {
                     var windowHeight = $window.height();
-                    if (windowHeight < 512) {
+                    var windowWidth = $window.width();
+
+                    if (!options.fullHeight && windowHeight < 512) {
                         this.$el.find('div.modal-body').css({
-                            'maxHeight': 'none',
-                            'overflow': 'auto'
+                            maxHeight: 'none',
+                            overflow: 'auto',
+                            height: 'none'
                         });
                         return;
                     }
-                    this.$el.find('div.modal-body').css({
-                        'maxHeight': (windowHeight - diffHeight) + 'px',
-                        'overflow': 'auto'
-                    });
+                    var cssParams = {
+                        overflow: 'auto'
+                    };
+                    if (options.fullHeight) {
+                        cssParams.height = (windowHeight - diffHeight) + 'px';
+                        this.$el.css('paddingRight', 0);
+                    } else {
+                        if (windowWidth <= options.screenWidthXs) {
+                            cssParams.maxHeight = 'none';
+                        } else {
+                            cssParams.maxHeight = (windowHeight - diffHeight) + 'px';
+                        }
+                    }
+
+                    this.$el.find('div.modal-body').css(cssParams);
                 }.bind(this);
                 $window.off('resize.modal-height');
                 $window.on('resize.modal-height', processResize);
@@ -180,6 +229,13 @@ Espo.define('ui', [], function () {
         });
         this.$el.find('.modal-content').removeClass('hidden');
 
+        var $modalBackdrop = $('.modal-backdrop');
+        $modalBackdrop.each(function (i, el) {
+            if (i < $modalBackdrop.size() - 1) {
+                $(el).addClass('hidden');
+            }
+        }.bind(this));
+
         this.$el.off('click.dismiss.bs.modal');
         this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
             this.close();
@@ -194,6 +250,8 @@ Espo.define('ui', [], function () {
         this.$el.find('.modal-content').addClass('hidden');
     };
     Dialog.prototype.close = function () {
+        var $modalBackdrop = $('.modal-backdrop');
+        $modalBackdrop.last().removeClass('hidden');
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     };

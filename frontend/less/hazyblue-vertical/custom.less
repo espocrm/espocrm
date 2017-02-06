@@ -103,7 +103,7 @@ table.table {
     -moz-box-shadow: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: @screen-sm-min) {
     .modal-dialog > .modal-content {
         -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         -moz-box-shadow: 0 5px 15px -3px rgba(0,0,0,0.5);
@@ -151,3 +151,29 @@ table.table {
     background-color: @navbar-bg !important;
     padding-bottom: 0;
 }
+
+.modal-footer > .main-btn-group {
+    float: left !important;
+}
+
+.modal-footer > .additional-btn-group {
+    float: right !important;
+}
+
+.modal-footer {
+    padding-top: @modal-title-padding;
+    padding-bottom: @modal-title-padding;
+}
+
+@media (min-width: @screen-sm-min) {
+    .modal-dialog {
+        margin: 0 0 0 auto;
+    }
+}
+
+@media (max-width: @screen-sm-min) {
+    .modal-dialog {
+        margin: 0 0 0 0;
+    }
+}
+

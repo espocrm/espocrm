@@ -43,9 +43,12 @@ blockquote {
     padding: @panel-padding @panel-padding @panel-padding;
 }
 
-.modal-footer .btn.pull-left {
-    margin-left: 0;
-    margin-right: 0;
+.modal-footer > .main-btn-group {
+    float: right;
+}
+
+.modal-footer > .additional-btn-group {
+    float: left;
 }
 
 .modal-dialog > .modal-content {
@@ -382,7 +385,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 @media screen and (max-width: @screen-sm-min) {
     .modal-dialog {
-        margin: 10px 0;
+        margin: 0 0;
     }
     .modal-dialog .image-container {
         margin-left: -@panel-padding;

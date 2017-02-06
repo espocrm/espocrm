@@ -131,6 +131,11 @@ Espo.define('views/modal', 'view', function (Dep) {
                     buttonListExt.push(o);
                 }, this);
 
+                var modalBodyDiffHeight = 92;
+                if (this.getThemeManager().getParam('modalBodyDiffHeight') !== null) {
+                    modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
+                }
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: this.header,
@@ -142,7 +147,11 @@ Espo.define('views/modal', 'view', function (Dep) {
                     fitHeight: this.fitHeight,
                     draggable: this.isDraggable,
                     className: this.className,
-                    modalBodyDiffHeight: this.getThemeManager().getParam('modalBodyDiffHeight') || 92,
+                    bodyDiffHeight: modalBodyDiffHeight,
+                    footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
+                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
+                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
+                    screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
