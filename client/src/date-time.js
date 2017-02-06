@@ -80,6 +80,14 @@ Espo.define('date-time', [], function () {
             return this.readableShortDateFormatMap[this.getDateFormat()] || 'MMM D';
         },
 
+        getReadableDateTimeFormat: function () {
+            return this.getReadableDateFormat() + ' ' + this.timeFormat;
+        },
+
+        getReadableShortDateTimeFormat: function () {
+            return this.getReadableShortDateFormat() + ' ' + this.timeFormat;
+        },
+
         fromDisplayDate: function (string) {
             if (!string) {
                 return null;
