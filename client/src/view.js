@@ -223,6 +223,18 @@ Espo.define('view', [], function () {
 
         ajaxGetRequest: function (url, data, options) {
             return this.ajaxRequest(url, 'GET', data, options);
+        },
+
+        confirm: function (o, callback, context) {
+            if (typeof o === 'string' || o instanceof String) {
+                var message = o;
+                var confirmText = this.translate('Yes');
+            } else {
+                o = o || {};
+                var message = o.message;
+                var confirmText = o.confirmText;
+            }
+            Espo.Ui.confirm(message, confirmText, this.translate('Cancel'), callback, context);
         }
     });
 

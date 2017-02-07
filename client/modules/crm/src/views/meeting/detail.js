@@ -79,7 +79,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         },
 
         actionSendInvitations: function () {
-            if (confirm(this.translate('confirmation', 'messages'))) {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
                  this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
                 $.ajax({
@@ -101,7 +101,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                         this.enableMenuItem('sendInvitations');
                     }.bind(this),
                 });
-            }
+            }, this);
         }
 
     });

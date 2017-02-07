@@ -44,7 +44,7 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
             'click [data-action="removeField"]': function (e) {
                 var field = $(e.currentTarget).data('name');
 
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.notify('Removing...');
                     $.ajax({
                         url: 'Admin/fieldManager/' + this.scope + '/' + field,
@@ -57,7 +57,7 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                             $(e.currentTarget).closest('tr').remove();
                         }.bind(this),
                     });
-                }
+                }, this);
             }
         },
 

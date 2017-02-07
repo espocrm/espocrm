@@ -343,56 +343,59 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         massAction: function (name) {
             var bypassConfirmation = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'bypassConfirmation']);
-
             var confirmationMsg = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'confirmationMessage']) || 'confirmation';
 
-            if (!bypassConfirmation && !confirm(this.translate(confirmationMsg, 'messages', this.scope))) {
-                return;
-            }
+            var proceed = function () {
+                var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'acl']);
+                var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'aclScope']);
 
-            var acl = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'acl']);
-            var aclScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'aclScope']);
-
-            if (acl || aclScope) {
-                if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                    this.notify('Access denied', 'error');
-                    return;
-                }
-            }
-
-            var idList = [];
-            var data = {};
-
-            if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
-                data.selectData = this.collection.data || {};
-                data.byWhere = true;
-            } else {
-                data.idList = idList;
-            }
-
-            for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
-            }
-
-            data.entityType = this.entityType;
-
-            var waitMessage = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
-            Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
-
-            var url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
-
-            this.ajaxPostRequest(url, data).then(function (result) {
-                var successMessage = result.successMessage || this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
-
-                this.collection.fetch().then(function () {
-                    var message = this.translate(successMessage, 'messages', this.scope);
-                    if ('count' in result) {
-                        message = message.replace('{count}', result.count);
+                if (acl || aclScope) {
+                    if (!this.getAcl().check(aclScope || this.scope, acl)) {
+                        this.notify('Access denied', 'error');
+                        return;
                     }
-                    Espo.Ui.success(message);
+                }
+
+                var idList = [];
+                var data = {};
+
+                if (this.allResultIsChecked) {
+                    data.where = this.collection.getWhere();
+                    data.selectData = this.collection.data || {};
+                    data.byWhere = true;
+                } else {
+                    data.idList = idList;
+                }
+
+                for (var i in this.checkedList) {
+                    idList.push(this.checkedList[i]);
+                }
+
+                data.entityType = this.entityType;
+
+                var waitMessage = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'waitMessage']) || 'pleaseWait';
+                Espo.Ui.notify(this.translate(waitMessage, 'messages', this.scope));
+
+                var url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']);
+
+                this.ajaxPostRequest(url, data).then(function (result) {
+                    var successMessage = result.successMessage || this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'successMessage']) || 'done';
+
+                    this.collection.fetch().then(function () {
+                        var message = this.translate(successMessage, 'messages', this.scope);
+                        if ('count' in result) {
+                            message = message.replace('{count}', result.count);
+                        }
+                        Espo.Ui.success(message);
+                    }.bind(this));
                 }.bind(this));
-            }.bind(this));
+            }
+
+            if (!bypassConfirmation) {
+                this.confirm(this.translate(confirmationMsg, 'messages', this.scope), proceed, this);
+            } else {
+                proceed.call(this);
+            }
         },
 
         massActionRemove: function () {
@@ -406,7 +409,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var self = this;
 
-            if (confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'), function () {
                 this.notify('Removing...');
 
                 var ids = [];
@@ -466,7 +469,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 	                    }
 	                }
                 }.bind(this));
-			}
+			}, this);
         },
 
         massActionFollow: function () {
@@ -478,7 +481,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             var confirmMsg = this.translate('confirmMassFollow', 'messages').replace('{count}', count.toString());
-            if (confirm(confirmMsg)) {
+            this.confirm(confirmMsg, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(this.entityType + '/action/massFollow', {
                     ids: idList
@@ -494,7 +497,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         Espo.Ui.warning(this.translate('massFollowZeroResult', 'messages'));
                     }
                 }.bind(this));
-            }
+            }, this);
         },
 
         massActionUnfollow: function () {
@@ -506,7 +509,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             var confirmMsg = this.translate('confirmMassUnfollow', 'messages').replace('{count}', count.toString());
-            if (confirm(confirmMsg)) {
+            this.confirm(confirmMsg, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(this.entityType + '/action/massUnfollow', {
                     ids: idList
@@ -522,7 +525,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         Espo.Ui.warning(this.translate('massUnfollowZeroResult', 'messages'));
                     }
                 }.bind(this));
-            }
+            }, this);
         },
 
         massActionMerge: function () {
@@ -1229,8 +1232,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify('Access denied', 'error');
                 return false;
             }
-            var self = this;
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
                 this.notify('Removing...');
@@ -1240,10 +1243,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.removeRecordFromList(id);
                     }.bind(this),
                     error: function () {
-                        self.notify('Error occured', 'error');
-                    }
+                        this.notify('Error occured', 'error');
+                    }.bind(this)
                 });
-            }
+            }, this);
         },
 
         removeRecordFromList: function (id) {

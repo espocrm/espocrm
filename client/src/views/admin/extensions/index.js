@@ -61,7 +61,7 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
                 var name = this.collection.get(id).get('name');
 
                 var self = this;
-                if (confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'))) {
+                this.confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'), function () {
                     Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
 
                     $.ajax({
@@ -79,7 +79,7 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
                         window.location.reload();
 
                     }.bind(this));
-                }
+                }, this);
             }
         },
 

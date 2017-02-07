@@ -57,9 +57,9 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
             },
             'click [data-action="removeEntity"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removeEntity(scope);
-                }
+                }, this);
             }
         },
 

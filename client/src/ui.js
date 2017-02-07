@@ -265,6 +265,37 @@ Espo.define('ui', [], function () {
 
         Dialog: Dialog,
 
+        confirm: function (message, okText, cancelText, callback, context) {
+            var dialog = new Dialog({
+                backdrop: false,
+                header: false,
+                className: 'dialog-confirm',
+                body: '<span class="confirm-message">' + message + '</a>',
+                buttons: [
+                    {
+                        text: ' ' + okText + ' ',
+                        name: 'confirm',
+                        onClick: function () {
+                            callback.call(context || this);
+                            dialog.close();
+                        },
+                        style: 'danger',
+                        pullLeft: true
+                    },
+                    {
+                        text: cancelText,
+                        name: 'cancel',
+                        onClick: function () {
+                            dialog.close();
+                        },
+                        pullRight: true
+                    }
+                ]
+            });
+
+            dialog.show();
+        },
+
         dialog: function (options) {
             return new Dialog(options);
         },

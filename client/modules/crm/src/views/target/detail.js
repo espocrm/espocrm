@@ -30,11 +30,11 @@ Espo.define('Crm:Views.Target.Detail', 'Views.Detail', function (Dep) {
 
     return Dep.extend({
 
-        actionConvertToLead: function () {            
+        actionConvertToLead: function () {
             var id = this.model.id;
             var self = this;
-            
-            if (confirm(this.translate('confirmation', 'messages'))) {
+
+            this.confirm(this.translate('confirmation', 'messages'), function () {
                 self.notify('Please wait...');
                 $.ajax({
                     url: 'Target/action/convert',
@@ -45,7 +45,7 @@ Espo.define('Crm:Views.Target.Detail', 'Views.Detail', function (Dep) {
                         self.notify('Converted', 'success');
                     }
                 });
-            }
+            }, this);
         },
 
     });

@@ -140,7 +140,7 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
         },
 
         actionCancelOptOut: function (data) {
-            if (confirm(this.translate('confirmation', 'messages'))) {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
                 $.ajax({
                     url: 'TargetList/action/cancelOptOut',
                     type: 'POST',
@@ -152,7 +152,7 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
                 }).done(function () {
                     this.collection.fetch();
                 }.bind(this));
-            }
+            }, this);
         }
 
     });

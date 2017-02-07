@@ -153,11 +153,19 @@ table.table {
 }
 
 .modal-footer > .main-btn-group {
-    float: left !important;
+    float: left;
 }
 
 .modal-footer > .additional-btn-group {
-    float: right !important;
+    float: right;
+}
+
+.dialog-confirm .modal-footer > .main-btn-group {
+    float: right;
+}
+
+.dialog-confirm .modal-footer > .additional-btn-group {
+    float: left;
 }
 
 .modal-footer {
@@ -171,6 +179,10 @@ table.table {
     }
     .modal-content .note-editor > .modal > .modal-dialog {
         margin: 0 0 0 -@container-padding;
+    }
+
+    .dialog-confirm > .modal-dialog {
+        margin: 0 auto;
     }
 }
 

@@ -232,9 +232,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
             },
             'click .dropdown-menu a[data-action="removePreset"]': function (e) {
                 var id = this.presetName;
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removePreset(id);
-                }
+                }, this);
             },
             'change .search-row ul.filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
                 e.stopPropagation();

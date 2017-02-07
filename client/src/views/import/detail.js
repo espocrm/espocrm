@@ -91,7 +91,7 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
         },
 
         actionRevert: function () {
-        	if (confirm(this.translate('confirmation', 'messages'))) {
+        	this.confirm(this.translate('confirmation', 'messages'), function () {
                 $btn = this.$el.find('button[data-action="revert"]');
                 $btn.addClass('disabled');
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
@@ -107,12 +107,11 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
 
 	        		this.getRouter().navigate('#Import/list', {trigger: true});
 	        	}.bind(this));
-        	}
+        	}, this);
         },
 
         actionRemoveDuplicates: function () {
-
-        	if (confirm(this.translate('confirmation', 'messages'))) {
+        	this.confirm(this.translate('confirmation', 'messages'), function () {
                 $btn = this.$el.find('button[data-action="removeDuplicates"]');
                 $btn.addClass('disabled');
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
@@ -128,7 +127,7 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
                     this.model.fetch();
                     Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
 	        	}.bind(this));
-        	}
+        	}, this);
         }
 
     });

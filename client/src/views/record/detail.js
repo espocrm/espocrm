@@ -393,7 +393,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         delete: function () {
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 this.trigger('before:delete');
                 this.trigger('delete');
 
@@ -419,7 +419,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.exit('delete');
                     }.bind(this),
                 });
-            }
+            }, this);
         },
 
         getFieldViews: function (withHidden) {

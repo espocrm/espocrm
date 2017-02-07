@@ -53,9 +53,9 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
             },
             'click [data-action="removeLink"]': function (e) {
                 var link = $(e.currentTarget).data('link');
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removeLink(link);
-                }
+                }, this);
             }
         },
 

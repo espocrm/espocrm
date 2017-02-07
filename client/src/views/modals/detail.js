@@ -387,7 +387,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         actionRemove: function () {
             var model = this.getView('record').model;
 
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
                 $buttons.addClass('disabled').attr('disabled', 'disabled');
                 model.destroy({
@@ -399,7 +399,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                         $buttons.removeClass('disabled').removeAttr('disabled');
                     }
                 });
-            }
+            }, this);
         },
 
         actionFullForm: function () {

@@ -44,9 +44,9 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
                 this.cancel();
             },
             'click button[data-action="resetToDefault"]': function () {
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.resetToDefault();
-                }
+                }, this)
             },
         },
 

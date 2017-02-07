@@ -287,7 +287,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var id = data.id;
 
             var self = this;
-            if (confirm(this.translate('unlinkRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('unlinkRecordConfirmation', 'messages'), function () {
                 var model = this.collection.get(id);
                 self.notify('Unlinking...');
                 $.ajax({
@@ -305,14 +305,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         self.notify('Error occurred', 'error');
                     },
                 });
-            }
+            }, this);
         },
 
         actionRemoveRelated: function (data) {
             var id = data.id;
 
             var self = this;
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 var model = this.collection.get(id);
                 self.notify('Removing...');
                 model.destroy({
@@ -321,11 +321,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         self.collection.fetch();
                     },
                 });
-            }
+            }, this);
         },
 
         actionUnlinkAllRelated: function (data) {
-            if (confirm(this.translate('unlinkAllConfirmation', 'messages'))) {
+            this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
                 $.ajax({
                     url: this.model.name + '/action/unlinkAll',
@@ -339,7 +339,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.notify('Unlinked', 'success');
                     this.collection.fetch();
                 }.bind(this));
-            }
+            }, this);
         },
     });
 });

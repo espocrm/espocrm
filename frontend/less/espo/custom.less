@@ -395,13 +395,20 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 @media screen and (min-width: @screen-sm-min) {
     .modal-dialog {
-        width: 740px !important;
+        width: 740px;
     }
 }
 @media screen and (min-width: @screen-md-min) {
     .modal-dialog {
-        width: 900px !important;
+        width: 900px;
     }
+    .dialog-confirm > .modal-dialog {
+        width: 550px;
+    }
+}
+
+.dialog-confirm > .modal-dialog > .modal-content {
+    text-align: center;
 }
 
 table.table > tbody td > .list-row-buttons button {

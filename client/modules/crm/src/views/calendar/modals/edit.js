@@ -139,7 +139,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
         actionRemove: function () {
             var model = this.getView('edit').model;
 
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
                 $buttons.addClass('disabled');
                 model.destroy({
@@ -151,7 +151,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                         $buttons.removeClass('disabled');
                     }
                 });
-            }
+            }, this);
         }
     });
 });
