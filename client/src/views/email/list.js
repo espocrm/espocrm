@@ -136,6 +136,15 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         applyFolder: function () {
             this.collection.data.folderId = this.selectedFolderId;
+        },
+
+        applyRoutingParams: function (params) {
+            var id = params.folder || 'inbox';
+            var foldersView = this.getView('folders');
+            if (foldersView) {
+                foldersView.actionSelectFolder(id);
+                foldersView.reRender();
+            }
         }
 
     });
