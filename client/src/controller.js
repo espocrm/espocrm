@@ -284,6 +284,9 @@ Espo.define('controller', [], function () {
                     if (this.hasStoredMainView(storedKey)) {
                         var main = this.getStoredMainView(storedKey);
                         process(main);
+                        if (main && typeof main.applyRoutingParams === 'function') {
+                            main.applyRoutingParams(options.params || {});
+                        }
                         return;
                     }
                 }

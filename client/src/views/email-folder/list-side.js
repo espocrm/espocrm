@@ -35,12 +35,8 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
         events: {
             'click [data-action="selectFolder"]': function (e) {
                 e.preventDefault();
-
                 var id = $(e.currentTarget).data('id');
-
-                this.$el.find('li.selected').removeClass('selected');
-                this.selectFolder(id);
-                this.$el.find('li[data-id="'+id+'"]').addClass('selected');
+                this.actionSelectFolder(id);
             }
         },
 
@@ -50,6 +46,12 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
             data.showEditLink = this.options.showEditLink;
             data.scope = this.scope;
             return data;
+        },
+
+        actionSelectFolder: function (id) {
+            this.$el.find('li.selected').removeClass('selected');
+            this.selectFolder(id);
+            this.$el.find('li[data-id="'+id+'"]').addClass('selected');
         },
 
         setup: function () {

@@ -157,6 +157,14 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                         this.$input.val('');
                     }.bind(this)
                 });
+
+                this.once('render', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
+
+                this.once('remove', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
             }
         },
 

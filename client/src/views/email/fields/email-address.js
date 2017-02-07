@@ -68,6 +68,13 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
                         this.$input.val(s.emailAddress);
                     }.bind(this)
                 });
+
+                this.once('render', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
+                this.once('remove', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
             }
         },
 
