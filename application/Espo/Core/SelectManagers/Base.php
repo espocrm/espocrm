@@ -1312,25 +1312,18 @@ class Base
     {
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
+        $moreThanMinLength = strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH;
         $d = array();
 
         foreach ($fieldList as $field) {
-            $expression = $textFilter . '%';
-            if (
-                strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
-                &&
-                (
-                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
-                    ||
-                    $this->getConfig()->get('textFilterUseContainsForVarchar')
-                )
-            ) {
+            if ($moreThanMinLength && in_array($fieldDefs[$field]['type'], ['text', 'varchar'])) {
                 $expression = '%' . $textFilter . '%';
             } else {
                 $expression = $textFilter . '%';
             }
             $d[$field . '*'] = $expression;
         }
+
         $result['whereClause'][] = array(
             'OR' => $d
         );
