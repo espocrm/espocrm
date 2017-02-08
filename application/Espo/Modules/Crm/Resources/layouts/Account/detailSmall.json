@@ -3,9 +3,10 @@
         "label":"",
         "rows":[
                 [{"name":"name", "fullWidth": true}],
-                [{"name":"website"}, {"name": "billingAddressCountry"}],
+                [{"name":"website", "fullWidth": true}],
                 [{"name":"emailAddress", "fullWidth": true}],
                 [{"name":"phoneNumber", "fullWidth": true}],
+                [{"name":"billingAddressCity"}, {"name": "billingAddressCountry"}],
                 [{"name":"type"}, {"name":"industry"}]
             ]
         }
