@@ -74,6 +74,23 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             return {
                 entityList: this.getEntityList(),
                 currencyList: this.getConfig().get('currencyList'),
+                dateFormatDataList: [
+                    {key: "YYYY-MM-DD", value: '2017-12-27'},
+                    {key: "DD-MM-YYYY", value: '27-12-2017'},
+                    {key: "MM-DD-YYYY", value: '12-27-2017'},
+                    {key: "MM/DD/YYYY", value: '12/27/2017'},
+                    {key: "DD/MM/YYYY", value: '27/12/2017'},
+                    {key: "DD.MM.YYYY", value: '27.12.2017'},
+                    {key: "MM.DD.YYYY", value: '12.27.2017'},
+                    {key: "YYYY.MM.DD", value: '2017.12.27'}
+                ],
+                timeFormatDataList: [
+                    {key: "HH:mm", value: '23:00'},
+                    {key: "hh:mm a", value: '11:00 pm'},
+                    {key: "hh:mma", value: '11:00pm'},
+                    {key: "hh:mm A", value: '11:00 PM'},
+                    {key: "hh:mmA", value: '11:00PM'}
+                ]
             };
         },
 

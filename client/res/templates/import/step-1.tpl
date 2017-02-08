@@ -68,14 +68,9 @@
                     <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'Date Format' scope='Import'}}</label>
                         <select class="form-control" id="import-date-format">
-                            <option value="YYYY-MM-DD">2014-12-27</option>
-                            <option value="DD-MM-YYYY">27-12-2014</option>
-                            <option value="MM-DD-YYYY">12-27-2014</option>
-                            <option value="MM/DD/YYYY">12/27/2014</option>
-                            <option value="DD/MM/YYYY">27/12/2014</option>
-                            <option value="DD.MM.YYYY">27.12.2014</option>
-                            <option value="MM.DD.YYYY">12.27.2014</option>
-                            <option value="YYYY.MM.DD">2014.12.27</option>
+                            {{#each dateFormatDataList}}
+                                <option value="{{key}}">{{value}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <div class="col-sm-4 form-group">
@@ -94,11 +89,9 @@
                     <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'Time Format' scope='Import'}}</label>
                         <select class="form-control" id="import-time-format">
-                            <option value="HH:mm">23:00</option>
-                            <option value="hh:mm a">11:00 pm</option>
-                            <option value="hh:mma">11:00pm</option>
-                            <option value="hh:mm A">11:00 PM</option>
-                            <option value="hh:mmA">11:00pm</option>
+                            {{#each timeFormatDataList}}
+                                <option value="{{key}}">{{value}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <div class="col-sm-4 form-group">
