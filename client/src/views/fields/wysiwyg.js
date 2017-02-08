@@ -84,7 +84,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             }.bind(this));
 
             this.once('remove', function () {
-                $('body > .tooltip').remove();
+                //$('body > .note-popover').remove();
+                this.$summernote.summernote('destroy');
+            });
+
+            this.on('inline-edit-off', function () {
+                this.$summernote.summernote('destroy');
             });
         },
 

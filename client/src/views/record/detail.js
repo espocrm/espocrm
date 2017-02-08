@@ -379,6 +379,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (fieldView.mode != 'detail') {
+                    if (fieldView.mode === 'edit') {
+                        fieldView.trigger('inline-edit-off');
+                    }
                     fieldView.setMode('detail');
                     fieldView.render();
                 }
