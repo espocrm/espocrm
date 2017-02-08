@@ -287,7 +287,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var id = data.id;
 
             var self = this;
-            this.confirm(this.translate('unlinkRecordConfirmation', 'messages'), function () {
+            this.confirm({
+                message: this.translate('unlinkRecordConfirmation', 'messages'),
+                confirmText: this.translate('Unlink')
+            }, function () {
                 var model = this.collection.get(id);
                 self.notify('Unlinking...');
                 $.ajax({
@@ -312,7 +315,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var id = data.id;
 
             var self = this;
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
+            this.confirm({
+                message: this.translate('removeRecordConfirmation', 'messages'),
+                confirmText: this.translate('Remove')
+            }, function () {
                 var model = this.collection.get(id);
                 self.notify('Removing...');
                 model.destroy({

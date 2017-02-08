@@ -409,7 +409,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var self = this;
 
-            this.confirm(this.translate('removeSelectedRecordsConfirmation', 'messages'), function () {
+            this.confirm({
+                message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
+                confirmText: this.translate('Remove')
+            }, function () {
                 this.notify('Removing...');
 
                 var ids = [];
@@ -481,7 +484,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             var confirmMsg = this.translate('confirmMassFollow', 'messages').replace('{count}', count.toString());
-            this.confirm(confirmMsg, function () {
+            this.confirm({
+                message: confirmMsg,
+                confirmText: this.translate('Follow')
+            }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(this.entityType + '/action/massFollow', {
                     ids: idList
@@ -509,7 +515,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             var confirmMsg = this.translate('confirmMassUnfollow', 'messages').replace('{count}', count.toString());
-            this.confirm(confirmMsg, function () {
+            this.confirm({
+                message: confirmMsg,
+                confirmText: this.translate('Unfollow')
+            }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(this.entityType + '/action/massUnfollow', {
                     ids: idList
@@ -1233,7 +1242,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return false;
             }
 
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
+            this.confirm({
+                message: this.translate('removeRecordConfirmation', 'messages'),
+                confirmText: this.translate('Remove')
+            }, function () {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
                 this.notify('Removing...');

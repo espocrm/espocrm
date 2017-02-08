@@ -393,7 +393,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         delete: function () {
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
+            this.confirm({
+                message: this.translate('removeRecordConfirmation', 'messages'),
+                confirmText: this.translate('Remove')
+            }, function () {
                 this.trigger('before:delete');
                 this.trigger('delete');
 

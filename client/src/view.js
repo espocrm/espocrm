@@ -226,6 +226,7 @@ Espo.define('view', [], function () {
         },
 
         confirm: function (o, callback, context) {
+            var confirmStyle = null;
             if (typeof o === 'string' || o instanceof String) {
                 var message = o;
                 var confirmText = this.translate('Yes');
@@ -233,8 +234,13 @@ Espo.define('view', [], function () {
                 o = o || {};
                 var message = o.message;
                 var confirmText = o.confirmText;
+                confirmStyle = o.confirmStyle || null;
             }
-            Espo.Ui.confirm(message, confirmText, this.translate('Cancel'), callback, context);
+            Espo.Ui.confirm(message, {
+                confirmText: confirmText,
+                cancelText: this.translate('Cancel'),
+                confirmStyle: confirmStyle
+            }, callback, context);
         }
     });
 
