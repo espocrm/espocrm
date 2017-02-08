@@ -655,8 +655,10 @@ class Import extends \Espo\Services\Record
                     }
                     break;
                 case Entity::DATETIME:
-                    $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value);
+                    $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
+                    $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
                     if ($dt) {
+                        $dt->setTimezone(new \DateTimeZone('UTC'));
                         return $dt->format('Y-m-d H:i');
                     }
                     break;

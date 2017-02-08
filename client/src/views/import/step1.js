@@ -90,7 +90,8 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                     {key: "hh:mma", value: '11:00pm'},
                     {key: "hh:mm A", value: '11:00 PM'},
                     {key: "hh:mmA", value: '11:00PM'}
-                ]
+                ],
+                timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
             };
         },
 
@@ -102,6 +103,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 textQualifier: '"',
                 dateFormat: 'YYYY-MM-DD',
                 timeFormat: 'HH:mm',
+                timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
             };
@@ -123,6 +125,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData.textQualifier = $('#import-text-qualifier').val();
             this.formData.dateFormat = $('#import-date-format').val();
             this.formData.timeFormat = $('#import-time-format').val();
+            this.formData.timezone = $('#import-timezone').val();
             this.formData.decimalMark = $('#import-decimal-mark').val();
             this.formData.currency = $('#import-currency').val();
             this.formData.personNameFormat = $('#import-person-name-format').val();
@@ -151,6 +154,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             $('#import-text-qualifier').val(this.formData.textQualifier);
             $('#import-date-format').val(this.formData.dateFormat);
             $('#import-time-format').val(this.formData.timeFormat);
+            $('#import-timezone').val(this.formData.timezone);
             $('#import-decimal-mark').val(this.formData.decimalMark);
             $('#import-person-name-format').val(this.formData.personNameFormat);
 

@@ -105,6 +105,20 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <label class="control-label">{{translate 'Timezone' scope='Import'}}</label>
+                        <select class="form-control" id="import-timezone">
+                            {{#each timezoneList}}
+                            <option value="{{./this}}">{{./this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group">
                         <label class="control-label">{{translate 'inIdle' scope='Import' category='messages'}}</label>
                         <div>
                             <input type="checkbox" id="import-idle-mode">

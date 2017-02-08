@@ -167,12 +167,18 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
+        $timezone = 'UTC';
+        if (isset($data['timezone'])) {
+           $timezone = $data['timezone'];
+        }
+
         $importParams = array(
             'headerRow' => !empty($data['headerRow']),
             'fieldDelimiter' => $data['fieldDelimiter'],
             'textQualifier' => $data['textQualifier'],
             'dateFormat' => $data['dateFormat'],
             'timeFormat' => $data['timeFormat'],
+            'timezone' => $timezone,
             'personNameFormat' => $data['personNameFormat'],
             'decimalMark' => $data['decimalMark'],
             'currency' => $data['currency'],
