@@ -203,17 +203,18 @@ class Htmlizer
 
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
-        $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
-            if (!$this->getEntityManager()) return $matches[0];
 
-            $id = $matches[1];
-            $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        if ($this->getEntityManager()) {
+            $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
+                $id = $matches[1];
+                $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 
-            if ($attachment) {
-                $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-                return $filePath;
-            }
-        }, $html);
+                if ($attachment) {
+                    $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+                    return $filePath;
+                }
+            }, $html);
+        }
 
         return $html;
     }
