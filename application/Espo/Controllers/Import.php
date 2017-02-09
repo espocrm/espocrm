@@ -68,9 +68,9 @@ class Import extends \Espo\Core\Controllers\Record
         throw new BadRequest();
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->getContainer()->get('fileManager');
+        return $this->getContainer()->get('fileStorageManager');
     }
 
     protected function getEntityManager()
@@ -92,7 +92,7 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment->set('name', 'import-file.csv');
         $this->getEntityManager()->saveEntity($attachment);
 
-        $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+        $this->getFileStorageManager()->putContents($attachment, $contents);
 
         return array(
             'attachmentId' => $attachment->id

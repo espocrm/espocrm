@@ -36,12 +36,12 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function init()
     {
         parent::init();
-        $this->addDependency('fileManager');
+        $this->addDependency('fileStorageManager');
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->getInjection('fileManager');
+        return $this->getInjection('fileStorageManager');
     }
 
     public function beforeSave(Entity $entity, array $options = array())
@@ -62,7 +62,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $this->getFileManager()->putContents($this->getFilePath($entity), $contents);
+                $this->getFileStorageManager()->putContents($entity, $contents);
             }
         }
 
@@ -72,7 +72,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        $this->getFileManager()->removeFile('data/upload/' . $entity->id);
+        $this->getFileStorageManager()->unlink($entity);
     }
 
     public function getCopiedAttachment(Entity $entity, $role = null)
@@ -97,15 +97,11 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
     public function getContents(Entity $entity)
     {
-        return $this->getFileManager()->getContents($this->getFilePath($entity));
+        return $this->getFileStorageManager()->getContents($entity);
     }
 
     public function getFilePath(Entity $entity)
     {
-        $sourceId = $entity->getSourceId();
-
-        return 'data/upload/' . $sourceId;
+        return $this->getFileStorageManager()->getLocalFilePath($entity);
     }
-
 }
-

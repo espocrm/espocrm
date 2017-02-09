@@ -39,6 +39,19 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
 {
     protected $readOnlyAttributeList = ['order'];
 
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'fileStorageManager'
+        ]);
+    }
+
+    protected function getFileStorageManager()
+    {
+        return $this->getInjection('fileStorageManager');
+    }
+
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
         $ids = array();
@@ -67,16 +80,17 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
                 $attachment->set('global', $source->get('global'));
                 $attachment->set('name', $source->get('name'));
                 $attachment->set('sourceId', $source->getSourceId());
+                $attachment->set('storage', $source->get('storage'));
 
                 if (!empty($parentType) && !empty($parentId)) {
                     $attachment->set('parentType', $parentType);
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileManager()->isFile('data/upload/' . $source->getSourceId())) {
+                if ($this->getFileStorageManager()->isFile($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
-
-                    $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+                    $contents = $this->getFileStorageManager()->getContents($source);
+                    $this->getFileStorageManager()->putContents($attachment, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');
                 }

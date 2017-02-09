@@ -52,6 +52,7 @@ class Pdf extends \Espo\Core\Services\Base
         $this->addDependency('serviceFactory');
         $this->addDependency('dateTime');
         $this->addDependency('number');
+        $this->addDependency('entityManager');
     }
 
     protected function getAcl()
@@ -94,7 +95,7 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl());
+        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl(), $this->getInjection('entityManager'));
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 

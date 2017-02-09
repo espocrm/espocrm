@@ -42,6 +42,11 @@
             "type": "varchar",
             "maxLength": 36
         },
+        "storage": {
+            "type": "varchar",
+            "maxLength": 24,
+            "default": null
+        },
         "global": {
             "type": "bool",
             "default": false

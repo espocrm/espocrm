@@ -52,7 +52,8 @@ class Record extends \Espo\Core\Services\Base
         'serviceFactory',
         'fileManager',
         'selectManagerFactory',
-        'preferences'
+        'preferences',
+        'fileStorageManager'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -1310,7 +1311,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($attachment);
 
         if (!empty($attachment->id)) {
-            $this->getInjection('fileManager')->putContents('data/upload/' . $attachment->id, $csv);
+            $this->getInjection('fileStorageManager')->putContents($attachment, $csv);
             // TODO cron job to remove file
             return $attachment->id;
         }

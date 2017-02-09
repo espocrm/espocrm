@@ -43,14 +43,14 @@ class EmailTemplate extends Record
     {
         parent::init();
 
-        $this->addDependency('fileManager');
+        $this->addDependency('fileStorageManager');
         $this->addDependency('dateTime');
         $this->addDependency('language');
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->injections['fileManager'];
+        return $this->injections['fileStorageManager'];
     }
 
     protected function getDateTime()
@@ -134,8 +134,9 @@ class EmailTemplate extends Record
                     unset($data['id']);
                     $clone->set($data);
                     $clone->set('sourceId', $attachment->getSourceId());
+                    $clone->set('storage', $attachment->get('storage'));
 
-                    if (!$this->getFileManager()->isFile('data/upload/' . $attachment->getSourceId())) {
+                    if (!$this->getFileStorageManager()->isFile($attachment)) {
                         continue;
                     }
                     $this->getEntityManager()->saveEntity($clone);

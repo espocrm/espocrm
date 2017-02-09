@@ -45,6 +45,7 @@ class Import extends \Espo\Services\Record
         $this->addDependency('serviceFactory');
         $this->addDependency('fileManager');
         $this->addDependency('selectManagerFactory');
+        $this->addDependency('fileStorageManager');
     }
 
     protected $dateFormatsMap = array(
@@ -71,6 +72,11 @@ class Import extends \Espo\Services\Record
     protected function getSelectManagerFactory()
     {
         return $this->injections['selectManagerFactory'];
+    }
+
+    protected function getFileStorageManager()
+    {
+        return $this->injections['fileStorageManager'];
     }
 
     protected function getFileManager()
@@ -293,7 +299,12 @@ class Import extends \Espo\Services\Record
             $enclosure = $params['textQualifier'];
         }
 
-        $contents = $this->getFileManager()->getContents('data/upload/' . $attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        if (!$attachment) {
+            throw new Error('Import error');
+        }
+
+        $contents = $this->getFileStorageManager()->getContents($attachment);
         if (empty($contents)) {
             throw new Error('Import error');
         }

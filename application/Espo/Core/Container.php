@@ -128,6 +128,14 @@ class Container
         return new \Espo\Core\Utils\Api\Slim();
     }
 
+    protected function loadFileStorageManager()
+    {
+        return new \Espo\Core\FileStorage\Manager(
+            $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
+            $this
+        );
+    }
+
     protected function loadFileManager()
     {
         return new \Espo\Core\Utils\File\Manager(

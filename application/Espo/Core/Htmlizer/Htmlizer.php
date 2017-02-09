@@ -48,17 +48,25 @@ class Htmlizer
 
     protected $acl;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null)
+    protected $entityManager;
+
+    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null, $entityManager = null)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
         $this->number = $number;
         $this->acl = $acl;
+        $this->entityManager = $entityManager;
     }
 
     protected function getAcl()
     {
         return $this->acl;
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 
     protected function format($value)
@@ -163,7 +171,8 @@ class Htmlizer
             'helpers' => [
                 'file' => function ($context, $options) {
                     if (count($context) && $context[0]) {
-                        return 'data/upload/'.$context[0];
+                        $id = $context[0];
+                        return "?entryPoint=attachment&id=" . $id;
                     }
                 }
             ]
@@ -192,8 +201,19 @@ class Htmlizer
 
         $html = $renderer($data);
 
+
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
-        $html = preg_replace('/\?entryPoint=attachment\&id=(.*)/', 'data/upload/$1', $html);
+        $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
+            if (!$this->getEntityManager()) return $matches[0];
+
+            $id = $matches[1];
+            $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+
+            if ($attachment) {
+                $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+                return $filePath;
+            }
+        }, $html);
 
         return $html;
     }

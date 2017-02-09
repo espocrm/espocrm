@@ -27,39 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Core\FileStorage\Storages;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Entities\Attachment;
 
-class Attachment extends \Espo\Core\Controllers\Record
+class EspoUploadDir extends Base
 {
-    public function actionUpload($params, $data, $request)
+    protected $dependencyList = ['fileManager'];
+
+    protected function getFileManager()
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
-            throw new Forbidden();
-        }
-
-        $arr = explode(',', $data);
-        if (count($arr) > 1) {
-            list($prefix, $contents) = $arr;
-            $contents = base64_decode($contents);
-        } else {
-            $contents = '';
-        }
-
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
-        $this->getEntityManager()->saveEntity($attachment);
-        $this->getContainer()->get('fileStorageManager')->putContents($attachment, $contents);
-
-        return array(
-            'attachmentId' => $attachment->id
-        );
+        return $this->getInjection('fileManager');
     }
 
-}
+    public function unlink(Attachment $attachment)
+    {
+        return $this->getFileManager()->unlink($this->getFilePath($attachment));
+    }
 
+    public function isFile(Attachment $attachment)
+    {
+        return $this->getFileManager()->isFile($this->getFilePath($attachment));
+    }
+
+    public function getContents(Attachment $attachment)
+    {
+        return $this->getFileManager()->getContents($this->getFilePath($attachment));
+    }
+
+    public function putContents(Attachment $attachment, $contents)
+    {
+        return $this->getFileManager()->putContents($this->getFilePath($attachment), $contents);
+    }
+
+    public function getLocalFilePath(Attachment $attachment)
+    {
+        return $this->getFilePath($attachment);
+    }
+
+    protected function getFilePath(Attachment $attachment)
+    {
+        $sourceId = $attachment->getSourceId();
+        return 'data/upload/' . $sourceId;
+    }
+}
