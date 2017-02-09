@@ -399,6 +399,9 @@ class MassEmail extends \Espo\Services\Record
             return;
         }
 
+        $queueItem->set('status', 'Sending');
+        $this->getEntityManager()->saveEntity($queueItem);
+
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');

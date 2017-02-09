@@ -6,7 +6,7 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Pending", "Sent", "Failed"],
+            "options": ["Pending", "Sent", "Failed", "Sending"],
             "readOnly": true
         },
         "attemptCount": {
