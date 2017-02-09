@@ -33,11 +33,10 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Metadata extends \Espo\Core\Controllers\Base
 {
+
     public function actionRead($params, $data)
     {
-        $data = $this->getMetadata()->getAll();
-        unset($data['formula']);
-        return $data;
+        return $this->getMetadata()->getAllForFrontend();
     }
 
     public function getActionGet($params, $data, $request)

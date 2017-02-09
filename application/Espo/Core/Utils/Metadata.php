@@ -61,6 +61,11 @@ class Metadata
 
     private $moduleList = null;
 
+    protected $frontendHiddenPathList = [
+        ['app', 'formula', 'functionClassNameMap'],
+        ['app', 'fileStorage', 'implementationClassNameMap']
+    ];
+
     /**
      * Default module order
      * @var integer
@@ -196,6 +201,36 @@ class Metadata
             return Json::encode($this->data);
         }
         return $this->data;
+    }
+
+    public function getAllForFrontend()
+    {
+        $data = $this->getAll();
+
+        foreach ($this->frontendHiddenPathList as $row) {
+            $p =& $data;
+            $path = [&$p];
+            foreach ($row as $i => $item) {
+                if (!array_key_exists($item, $p)) break;
+                if ($i == count($row) - 1) {
+                    unset($p[$item]);
+                    $o =& $p;
+                    for ($j = $i - 1; $j > 0; $j--) {
+                        if (is_array($o) && empty($o)) {
+                            $o =& $path[$j];
+                            $k = $row[$j];
+                            unset($o[$k]);
+                        } else {
+                            break;
+                        }
+                    }
+                } else {
+                    $p =& $p[$item];
+                    $path[] = &$p;
+                }
+            }
+        }
+        return $data;
     }
 
     /**
