@@ -440,6 +440,8 @@ class MassEmail extends \Espo\Services\Record
             $params['replyToName'] = $massEmail->get('replyToName');
         }
 
+        $isSent = false;
+
         try {
             $attemptCount = $queueItem->get('attemptCount');
             $attemptCount++;
@@ -453,6 +455,19 @@ class MassEmail extends \Espo\Services\Record
 
             $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmentList);
 
+            $isSent = true;
+        } catch (\Exception $e) {
+            if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
+                $queueItem->set('status', 'Failed');
+            } else {
+                $queueItem->set('status', 'Pending');
+            }
+            $this->getEntityManager()->saveEntity($queueItem);
+            $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
+            return false;
+        }
+
+        if ($isSent) {
             $emailObject = $emailTemplate;
             if ($massEmail->get('storeSentEmails') && !$isTest) {
                 $this->getEntityManager()->saveEntity($email);
@@ -468,14 +483,6 @@ class MassEmail extends \Espo\Services\Record
             if ($campaign) {
                 $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'), null, $queueItem->get('isTest'));
             }
-
-        } catch (\Exception $e) {
-            if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
-                $queueItem->set('status', 'Failed');
-            }
-            $this->getEntityManager()->saveEntity($queueItem);
-            $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
-            return false;
         }
 
         return true;
