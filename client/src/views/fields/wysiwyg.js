@@ -84,12 +84,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             }.bind(this));
 
             this.once('remove', function () {
-                //$('body > .note-popover').remove();
-                this.$summernote.summernote('destroy');
+                if (this.$summernote) {
+                    this.$summernote.summernote('destroy');
+                }
             });
 
             this.on('inline-edit-off', function () {
-                this.$summernote.summernote('destroy');
+                if (this.$summernote) {
+                    this.$summernote.summernote('destroy');
+                }
             });
         },
 
@@ -266,9 +269,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         disableWysiwygMode: function () {
-            this.$summernote.summernote('destroy');
-
-            this.$summernote.addClass('hidden');
+            if (this.$summernote) {
+                this.$summernote.summernote('destroy');
+                this.$summernote.addClass('hidden');
+            }
             this.$element.removeClass('hidden');
         },
 
