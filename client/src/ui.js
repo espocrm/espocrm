@@ -280,7 +280,11 @@ Espo.define('ui', [], function () {
                         text: ' ' + confirmText + ' ',
                         name: 'confirm',
                         onClick: function () {
-                            callback.call(context || this);
+                            if (context) {
+                                callback.call(context);
+                            } else {
+                                callback();
+                            }
                             dialog.close();
                         },
                         style: confirmStyle,
@@ -291,6 +295,13 @@ Espo.define('ui', [], function () {
                         name: 'cancel',
                         onClick: function () {
                             dialog.close();
+                            if (o.cancelCallback) {
+                                if (context) {
+                                    o.cancelCallback.call(context);
+                                } else {
+                                    o.cancelCallback();
+                                }
+                            }
                         },
                         pullRight: true
                     }

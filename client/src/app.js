@@ -203,6 +203,9 @@ Espo.define(
             this.viewHelper.router = this.router;
             this.baseController.setRouter(this.router);
             this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');
+            this.router.confirmLeaveOutConfirmText = this.language.translate('Yes');
+            this.router.confirmLeaveOutCancelText = this.language.translate('Cancel');
+
             this.router.on('routed', function (params) {
                 this.doAction(params);
             }.bind(this));

@@ -52,6 +52,10 @@ Espo.define('router', [], function () {
 
         confirmLeaveOutMessage: 'Are you sure?',
 
+        confirmLeaveOutConfirmText: 'Yes',
+
+        confirmLeaveOutCancelText: 'No',
+
         initialize: function () {
             this.history = [];
 
@@ -95,12 +99,16 @@ Espo.define('router', [], function () {
         checkConfirmLeaveOut: function (callback, context) {
             context = context || this;
             if (this.confirmLeaveOut) {
-                if (confirm(this.confirmLeaveOutMessage)) {
+                Espo.Ui.confirm(this.confirmLeaveOutMessage, {
+                    confirmText: this.confirmLeaveOutConfirmText,
+                    cancelText: this.confirmLeaveOutCancelText,
+                    cancelCallback: function () {
+                        this.navigateBack({trigger: false});
+                    }.bind(this)
+                }, function () {
                     this.confirmLeaveOut = false;
                     callback.call(context);
-                } else {
-                    this.navigateBack({trigger: false});
-                }
+                }.bind(this));
             } else {
                 callback.call(context);
             }
