@@ -231,6 +231,8 @@ class TargetList extends \Espo\Services\Record
             ORDER BY createdAt DESC
         ";
 
+        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+
         $sql = $query->limit($sql, $params['offset'], $params['maxSize']);
 
         $sth = $pdo->prepare($sql);
@@ -240,7 +242,6 @@ class TargetList extends \Espo\Services\Record
             $arr[] = $row;
         }
 
-        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
         $sth = $pdo->prepare($sqlCount);
         $sth->execute();
 
