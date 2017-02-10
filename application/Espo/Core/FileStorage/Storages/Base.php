@@ -73,6 +73,10 @@ abstract class Base implements Injectable
         return $this->dependencyList;
     }
 
+    abstract public function hasDownloadUrl(\Espo\Entities\Attachment $attachment);
+
+    abstract public function getDownloadUrl(\Espo\Entities\Attachment $attachment);
+
     abstract public function unlink(\Espo\Entities\Attachment $attachment);
 
     abstract public function getContents(\Espo\Entities\Attachment $attachment);

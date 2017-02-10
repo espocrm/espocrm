@@ -31,6 +31,8 @@ namespace Espo\Core\FileStorage\Storages;
 
 use \Espo\Entities\Attachment;
 
+use \Espo\Core\Exceptions\Error;
+
 class EspoUploadDir extends Base
 {
     protected $dependencyList = ['fileManager'];
@@ -69,5 +71,15 @@ class EspoUploadDir extends Base
     {
         $sourceId = $attachment->getSourceId();
         return 'data/upload/' . $sourceId;
+    }
+
+    public function getDownloadUrl(Attachment $attachment)
+    {
+        throw new Error();
+    }
+
+    public function hasDownloadUrl(Attachment $attachment)
+    {
+        return false;
     }
 }

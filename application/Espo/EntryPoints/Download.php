@@ -67,6 +67,12 @@ class Download extends \Espo\Core\EntryPoints\Base
 
         $sourceId = $attachment->getSourceId();
 
+        if ($this->getEntityManager()->getRepository('Attachment')->hasDownloadUrl($attachment)) {
+            $downloadUrl = $this->getEntityManager()->getRepository('Attachment')->getDownloadUrl($attachment);
+            header('Location: ' . $downloadUrl);
+            exit;
+        }
+
         $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 
         if (!file_exists($fileName)) {

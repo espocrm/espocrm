@@ -116,4 +116,14 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     {
         return $this->getFileStorageManager()->getLocalFilePath($entity);
     }
+
+    public function hasDownloadUrl(Entity $entity)
+    {
+        return $this->getFileStorageManager()->hasDownloadUrl($entity);
+    }
+
+    public function getDownloadUrl(Entity $entity)
+    {
+        return $this->getFileStorageManager()->getDownloadUrl($entity);
+    }
 }

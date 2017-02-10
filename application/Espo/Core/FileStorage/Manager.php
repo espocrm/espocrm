@@ -100,4 +100,16 @@ class Manager
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getLocalFilePath($attachment);
     }
+
+    public function hasDownloadUrl(Attachment $attachment)
+    {
+        $implementation = $this->getImplementation($attachment->get('storage'));
+        return $implementation->hasDownloadUrl($attachment);
+    }
+
+    public function getDownloadUrl(Attachment $attachment)
+    {
+        $implementation = $this->getImplementation($attachment->get('storage'));
+        return $implementation->getDownloadUrl($attachment);
+    }
 }
