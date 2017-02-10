@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use \Espo\ORM\Entity;
+
 class Attachment extends Record
 {
     protected $notFilteringAttributeList = ['contents'];
@@ -48,6 +50,22 @@ class Attachment extends Record
         }
 
         return $entity;
+    }
+
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        $storage = $entity->get('storage');
+        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+            $entity->clear('storage');
+        }
+    }
+
+    protected function beforeUpdate(Entity $entity, array $data = array())
+    {
+        $storage = $entity->get('storage');
+        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+            $entity->clear('storage');
+        }
     }
 }
 

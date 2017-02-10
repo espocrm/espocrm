@@ -47,6 +47,11 @@
             "maxLength": 24,
             "default": null
         },
+        "storageFilePath": {
+            "type": "varchar",
+            "maxLength": 260,
+            "default": null
+        },
         "global": {
             "type": "bool",
             "default": false

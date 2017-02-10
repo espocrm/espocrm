@@ -37,6 +37,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::init();
         $this->addDependency('fileStorageManager');
+        $this->addDependency('config');
     }
 
     protected function getFileStorageManager()
@@ -44,9 +45,20 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         return $this->getInjection('fileStorageManager');
     }
 
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
+    }
+
     public function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
+
+        $storage = $entity->get('storage');
+        if (!$storage) {
+            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
+        }
+
         if ($entity->isNew()) {
             if (!$entity->has('size') && $entity->has('contents')) {
                 $entity->set('size', mb_strlen($entity->has('contents')));
