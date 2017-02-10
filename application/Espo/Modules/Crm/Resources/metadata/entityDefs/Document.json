@@ -20,11 +20,6 @@
                 "Expired": "danger"
             }
         },
-        "source": {
-            "type": "enum",
-            "options": ["Espo"],
-            "default": "Espo"
-        },
         "type": {
             "type": "enum",
             "options": ["", "Contract", "NDA", "EULA", "License Agreement"]

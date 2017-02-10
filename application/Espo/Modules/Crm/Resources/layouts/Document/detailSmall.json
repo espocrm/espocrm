@@ -2,7 +2,7 @@
     {
         "label": "",
         "rows": [
-            [{"name":"file"}, {"name":"source"}],
+            [{"name":"file", "fullWidth": true}],
             [{"name":"name", "fullWidth": true}],
             [{"name":"status"}, {"name":"folder"}]
         ]
