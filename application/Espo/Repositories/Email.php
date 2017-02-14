@@ -222,6 +222,10 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         parent::beforeSave($entity, $options);
 
+        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+            $entity->addLinkMultipleId('users', $entity->get('createdById'));
+        }
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
         if (!empty($parentId) || !empty($parentType)) {
