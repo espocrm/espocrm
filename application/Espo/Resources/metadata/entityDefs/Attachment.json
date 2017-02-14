@@ -78,10 +78,5 @@
         "parent": {
             "columns": ["parentType", "parentId"]
         }
-    },
-    "sources": {
-        "Document": {
-            "insertModalView": ""
-        }
     }
 }

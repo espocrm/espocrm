@@ -156,7 +156,21 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.showPreviews = this.params.showPreviews;
             }
 
-            this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
+            var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
+
+            this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {
+                if (!(item in sourceDefs)) return true;
+                var defs = sourceDefs[item];
+                if (defs.configCheck) {
+                    var configCheck = defs.configCheck;
+                    if (configCheck) {
+                        var arr = configCheck.split('.');
+                        if (this.getConfig().getByPath(arr)) {
+                            return true;
+                        }
+                    }
+                }
+            }, this);
 
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -430,7 +444,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         insertFromSource: function (source) {
             var viewName =
-                this.getMetadata().get(['Attachment', 'sources', source, 'insertModalView']) ||
+                this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
                 this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
                 'views/modals/select-records';
 
@@ -454,11 +468,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         }
                     }
                 }
-                var boolFilterList = this.getMetadata().get(['Attachment', 'sources', source, 'boolFilterList']);
+                var boolFilterList = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
                 if (('getSelectBoolFilterList' + source) in this) {
                     boolFilterList = this['getSelectBoolFilterList' + source]();
                 }
-                var primaryFilterName = this.getMetadata().get(['Attachment', 'sources', source, 'primaryFilter']);
+                var primaryFilterName = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
                 if (('getSelectPrimaryFilterName' + source) in this) {
                     primaryFilterName = this['getSelectPrimaryFilterName' + source]();
                 }
