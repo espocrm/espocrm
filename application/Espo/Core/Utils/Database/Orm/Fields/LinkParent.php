@@ -48,6 +48,8 @@ class LinkParent extends Base
                     $fieldName.'Name' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
+                        'relation' => $fieldName,
+                        'isParentName' => true
                     ),
                 ),
             ),

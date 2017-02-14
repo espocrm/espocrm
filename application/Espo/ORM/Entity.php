@@ -383,6 +383,11 @@ abstract class Entity implements IEntity
         return null;
     }
 
+    public function hasFetched($attributeName)
+    {
+        return array_key_exists($attributeName, $this->fetchedValuesContainer);
+    }
+
     public function resetFetchedValues()
     {
         $this->fetchedValuesContainer = array();
