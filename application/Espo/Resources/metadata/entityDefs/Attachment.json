@@ -78,5 +78,6 @@
         "parent": {
             "columns": ["parentType", "parentId"]
         }
-    }
+    },
+    "sourceList": ["Document"]
 }

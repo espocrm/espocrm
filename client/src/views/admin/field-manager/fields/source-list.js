@@ -31,7 +31,7 @@ Espo.define('views/admin/field-manager/fields/source-list', 'views/fields/multi-
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(Object.keys(this.getMetadata().get('entityDefs.Attachment.sources') || {}));
+            this.params.options = Espo.Utils.clone(this.getMetadata().get('entityDefs.Attachment.sourceList') || []);
 
             this.translatedOptions = {};
             this.params.options.forEach(function (item) {
