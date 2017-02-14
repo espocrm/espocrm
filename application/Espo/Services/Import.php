@@ -427,9 +427,9 @@ class Import extends \Espo\Services\Record
         }
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
+            $updateByFieldList = [];
+            $whereClause = array();
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
-                $updateByFieldList = [];
-                $whereClause = array();
                 foreach ($params['updateBy'] as $i) {
                     if (array_key_exists($i, $importFieldList)) {
                         $updateByFieldList[] = $importFieldList[$i];

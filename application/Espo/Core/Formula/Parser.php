@@ -229,7 +229,11 @@ class Parser
                             $possibleRightOperator = trim($operator . $expression[$index + 1]);
                         }
                     }
-                    if ($possibleRightOperator && $possibleRightOperator != $operator && $this->operatorMap[$possibleRightOperator]) continue;
+                    if (
+                        $possibleRightOperator &&
+                        $possibleRightOperator != $operator &&
+                        !empty($this->operatorMap[$possibleRightOperator])
+                    ) continue;
 
                     $firstPart = substr($expression, 0, $index);
                     $secondPart = substr($expression, $index + strlen($operator));
