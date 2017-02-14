@@ -88,13 +88,23 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     view.render();
                 });
             },
+            'click a.action[data-action="insertFromSource"]': function (e) {
+                var name = $(e.currentTarget).data('name');
+                this.insertFromSource(name);
+            }
         },
 
         data: function () {
-            return _.extend({
+            var data =_.extend({
                 id: this.model.get(this.idName),
                 acceptAttribue: this.acceptAttribue
             }, Dep.prototype.data.call(this));
+
+            if (this.mode == 'edit') {
+                data.sourceList = this.sourceList;
+            }
+
+            return data;
         },
 
         validateRequired: function () {
@@ -112,6 +122,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
+
+            this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
 
             if ('showPreview' in this.params) {
                 this.showPreview = this.params.showPreview;
@@ -335,6 +347,76 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             return $att;
+        },
+
+        insertFromSource: function (source) {
+            var viewName =
+                this.getMetadata().get(['Attachment', 'sources', source, 'insertModalView']) ||
+                this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
+                'views/modals/select-records';
+
+            if (viewName) {
+                this.notify('Loading...');
+
+                var filters = null;
+                if (('getSelectFilters' + source) in this) {
+                    filters = this['getSelectFilters' + source]();
+
+                    if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
+                        if (this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link') {
+                            filters = {
+                                account: {
+                                    type: 'equals',
+                                    field: 'accountId',
+                                    value: this.model.get('parentId'),
+                                    valueName: this.model.get('parentName')
+                                }
+                            };
+                        }
+                    }
+                }
+                var boolFilterList = this.getMetadata().get(['Attachment', 'sources', source, 'boolFilterList']);
+                if (('getSelectBoolFilterList' + source) in this) {
+                    boolFilterList = this['getSelectBoolFilterList' + source]();
+                }
+                var primaryFilterName = this.getMetadata().get(['Attachment', 'sources', source, 'primaryFilter']);
+                if (('getSelectPrimaryFilterName' + source) in this) {
+                    primaryFilterName = this['getSelectPrimaryFilterName' + source]();
+                }
+                this.createView('insertFromSource', viewName, {
+                    scope: source,
+                    createButton: false,
+                    filters: filters,
+                    boolFilterList: boolFilterList,
+                    primaryFilterName: primaryFilterName,
+                    multiple: false
+                }, function (view) {
+                    view.render();
+                    this.notify(false);
+                    this.listenToOnce(view, 'select', function (modelList) {
+                        if (Object.prototype.toString.call(modelList) !== '[object Array]') {
+                            modelList = [modelList];
+                        }
+                        modelList.forEach(function (model) {
+                            if (model.name === 'Attachment') {
+                                this.setAttachment(model);
+                            } else {
+                                this.ajaxPostRequest(source + '/action/getAttachmentList', {
+                                    id: model.id
+                                }).done(function (attachmentList) {
+                                    attachmentList.forEach(function (item) {
+                                        this.getModelFactory().create('Attachment', function (attachment) {
+                                            attachment.set(item);
+                                            this.setAttachment(attachment, true);
+                                        }, this);
+                                    }, this);
+                                }.bind(this));
+                            }
+                        }, this);
+                    });
+                }, this);
+                return;
+            }
         },
 
         fetch: function () {
