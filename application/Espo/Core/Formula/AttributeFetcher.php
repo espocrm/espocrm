@@ -65,6 +65,13 @@ class AttributeFetcher
             $methodName = 'getFetched';
         }
 
+        if ($entity->getAttributeParam($attribute, 'isParentName') && $methodName == 'get') {
+            $relationName = $entity->getAttributeParam($attribute, 'relation');
+            if ($parent = $entity->get($relationName)) {
+                return $parent->get('name');
+            }
+        }
+
         return $entity->$methodName($attribute);
     }
 
