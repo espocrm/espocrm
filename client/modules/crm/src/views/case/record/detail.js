@@ -30,6 +30,8 @@ Espo.define('crm:views/case/record/detail', 'views/record/detail', function (Dep
 
     return Dep.extend({
 
+        selfAssignAction: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
             if (this.getAcl().checkModel(this.model, 'edit')) {
@@ -71,6 +73,16 @@ Espo.define('crm:views/case/record/detail', 'views/record/detail', function (Dep
                     }.bind(this),
                 });
         },
+
+        getSelfAssignAttributes: function () {
+            if (this.model.get('status') === 'New') {
+                if (~(this.getMetadata().get(['entityDefs', 'Case', 'fields', 'status', 'options']) || []).indexOf('Assigned')) {
+                    return {
+                        'status': 'Assigned'
+                    };
+                }
+            }
+        }
 
     });
 });

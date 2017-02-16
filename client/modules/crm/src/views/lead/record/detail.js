@@ -27,14 +27,26 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Lead.Record.Detail', 'Views.Record.Detail', function (Dep) {
+Espo.define('crm:views/lead/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'Crm:Lead.Record.DetailSide',
+        selfAssignAction: true,
+
+        sideView: 'crm:views/lead/record/detail-side',
 
         setup: function () {
             Dep.prototype.setup.call(this);
+        },
+
+        getSelfAssignAttributes: function () {
+            if (this.model.get('status') === 'New') {
+                if (~(this.getMetadata().get(['entityDefs', 'Lead', 'fields', 'status', 'options']) || []).indexOf('Assigned')) {
+                    return {
+                        'status': 'Assigned'
+                    };
+                }
+            }
         }
 
     });

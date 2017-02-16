@@ -110,6 +110,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         duplicateAction: true,
 
+        selfAssignAction: false,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -150,6 +152,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             $(window).scrollTop(0);
         },
 
+        actionSelfAssign: function () {
+            var attributes = {
+                assignedUserId: this.getUser().id,
+                assignedUserName: this.getUser().get('name')
+            };
+            if ('getSelfAssignAttributes' in this) {
+                var attributesAdditional = this.getSelfAssignAttributes();
+                if (attributesAdditional) {
+                    for (var i in attributesAdditional) {
+                        attributes[i] = attributesAdditional[i];
+                    }
+                }
+            }
+            this.model.save(attributes, {
+                patch: true
+            }).then(function () {
+                Espo.Ui.success(this.translate('Self-Assigned'));
+            }.bind(this));
+        },
+
+        getSelfAssignAttributes: function () {
+        },
+
         setupActionItems: function () {
             if (this.model.isNew()) {
                 this.isNew = true;
@@ -162,6 +187,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
+                }
+            }
+
+            if (this.selfAssignAction) {
+                if (
+                    this.getAcl().check(this.entityType, 'edit')
+                    &&
+                    !~this.getAcl().getScopeForbiddenFieldList(this.entityType).indexOf('assignedUser')
+                ) {
+                    if (this.model.has('assignedUserId')) {
+                        this.dropdownItemList.push({
+                            'label': 'Self-Assign',
+                            'name': 'selfAssign',
+                            'hidden': !!this.model.get('assignedUserId')
+                        });
+                        this.listenTo(this.model, 'change:assignedUserId', function () {
+                            if (!this.model.get('assignedUserId')) {
+                                this.showActionItem('selfAssign');
+                            } else {
+                                this.hideActionItem('selfAssign');
+                            }
+                        }, this);
+                    }
                 }
             }
         },
@@ -826,10 +874,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.duplicateAction) {
                     this.hideActionItem('duplicate');
                 }
+                if (this.selfAssignAction) {
+                    this.hideActionItem('selfAssign');
+                }
             } else {
                 this.showActionItem('edit');
                 if (this.duplicateAction) {
                     this.showActionItem('duplicate');
+                }
+                if (this.selfAssignAction) {
+                    this.hideActionItem('selfAssign');
+                    if (this.model.has('assignedUserId')) {
+                        if (!this.model.get('assignedUserId')) {
+                            this.showActionItem('selfAssign');
+                        }
+                    }
                 }
                 if (!this.readOnlyLocked) {
                     if (this.readOnly && second) {

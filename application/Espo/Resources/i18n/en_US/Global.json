@@ -189,7 +189,9 @@
         "Attach File": "Attach File",
         "Skip": "Skip",
         "Attribute": "Attribute",
-        "Function": "Function"
+        "Function": "Function",
+        "Self-Assign": "Self-Assign",
+        "Self-Assigned": "Self-Assigned"
     },
     "messages": {
         "pleaseWait": "Please wait...",
