@@ -436,9 +436,12 @@ class FieldManager
         /** Save links for a field. */
         $metaLinkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($scope, $fieldDefs);
         if (isset($linkDefs) || isset($metaLinkDefs)) {
-            $linkDefs = Util::merge((array) $metaLinkDefs, (array) $linkDefs);
+
+            $metaLinkDefs = isset($metaLinkDefs) ? $metaLinkDefs : array();
+            $linkDefs = isset($linkDefs) ? $linkDefs : array();
+
             $defs['links'] = array(
-                $fieldName => $linkDefs,
+                $fieldName => Util::merge($metaLinkDefs, $linkDefs),
             );
         }
 
