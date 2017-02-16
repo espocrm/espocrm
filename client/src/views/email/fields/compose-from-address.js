@@ -42,11 +42,10 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
             Dep.prototype.setup.call(this);
             this.list = [];
 
-            /*if (this.getUser().get('emailAddress') && this.getPreferences().get('smtpServer')) {
-                this.list.push(this.getUser().get('emailAddress'));
-            }*/
-
-            this.list.push(this.getUser().get('emailAddress'));
+            var primaryEmailAddress = this.getUser().get('emailAddress');
+            if (primaryEmailAddress) {
+                this.list.push(primaryEmailAddress);
+            }
 
             var emailAddressList = this.getUser().get('emailAddressList') || [];
             emailAddressList.forEach(function (item) {
