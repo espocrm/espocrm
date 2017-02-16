@@ -1,10 +1,10 @@
 
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-10 col-sm-10 col-xs-12">
         <div id="{{containerId}}">{{{value}}}</div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 col-sm-2 col-xs-12">
         <div class="button-container">
             <div class="btn-group">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span></button>
