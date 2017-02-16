@@ -446,11 +446,11 @@ class EmailNotification extends \Espo\Core\Services\Base
             if ($handler) {
                 $prepareEmailMethodName = 'prepareEmail';
                 if (method_exists($handler, $prepareEmailMethodName)) {
-                    $handler->$prepareEmailMethodName('notePost', $parent, $email);
+                    $handler->$prepareEmailMethodName('notePost', $parent, $email, $user);
                 }
                 $getSmtpParamsMethodName = 'getSmtpParams';
                 if (method_exists($handler, $getSmtpParamsMethodName)) {
-                    $smtpParams = $handler->$getSmtpParamsMethodName('notePost', $parent);
+                    $smtpParams = $handler->$getSmtpParamsMethodName('notePost', $parent, $user);
                 }
             }
         }

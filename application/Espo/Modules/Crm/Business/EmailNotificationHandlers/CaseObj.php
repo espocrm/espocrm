@@ -37,7 +37,7 @@ class CaseObj extends \Espo\Core\Injectable
 
     protected $inboundEmailEntityHash = array();
 
-    public function getSmtpParams($type, $case)
+    public function getSmtpParams($type, $case, $user = null)
     {
         $inboundEmailId = $case->get('inboundEmailId');
 
