@@ -144,7 +144,7 @@ class Base
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
                 if ($list && is_array($list) && count($list)) {
                     if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
-                        $list = asort($list);
+                        asort($list);
                     }
                     if ($desc) {
                         $list = array_reverse($list);
