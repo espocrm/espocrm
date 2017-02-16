@@ -146,7 +146,11 @@ class Util
     {
         $mergeIdentifier = '__APPEND__';
 
-        if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
+        if (is_array($currentArray) && !is_array($newArray)) {
+            return $currentArray;
+        } else if (!is_array($currentArray) && is_array($newArray)) {
+            return $newArray;
+        } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
             return array();
         }
 
