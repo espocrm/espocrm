@@ -351,6 +351,13 @@ class Container
         );
     }
 
+    protected function loadInjectableFactory()
+    {
+        return new \Espo\Core\InjectableFactory(
+            $this
+        );
+    }
+
     public function setUser(\Espo\Entities\User $user)
     {
         $this->set('user', $user);

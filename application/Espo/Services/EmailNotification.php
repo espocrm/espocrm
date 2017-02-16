@@ -48,11 +48,14 @@ class EmailNotification extends \Espo\Core\Services\Base
             'number',
             'fileManager',
             'selectManagerFactory',
-            'templateFileManager'
+            'templateFileManager',
+            'injectableFactory'
         ]);
     }
 
     protected $noteNotificationTypeList = ['Post', 'Status', 'EmailReceived'];
+
+    protected $emailNotificationEntityHandlerHash = array();
 
     protected function getMailSender()
     {
@@ -78,6 +81,7 @@ class EmailNotification extends \Espo\Core\Services\Base
     {
         return $this->getInjection('templateFileManager');
     }
+
     protected function getHtmlizer()
     {
         if (empty($this->htmlizer)) {
@@ -358,6 +362,22 @@ class EmailNotification extends \Espo\Core\Services\Base
         $this->$methodName($note, $user);
     }
 
+    protected function getEmailNotificationEntityHandler($entityType)
+    {
+        if (!array_key_exists($entityType, $this->emailNotificationEntityHandlerHash)) {
+            $this->emailNotificationEntityHandlerHash[$entityType] = null;
+            $className = $this->getMetadata()->get(['app', 'emailNotifications', 'handlerClassNameMap', $entityType]);
+            if ($className && class_exists($className)) {
+                $handler = $this->getInjection('injectableFactory')->createByClassName($className);
+                if ($handler) {
+                    $this->emailNotificationEntityHandlerHash[$entityType] = $handler;
+                }
+            }
+        }
+
+        return $this->emailNotificationEntityHandlerHash[$entityType];
+    }
+
     protected function processNotificationNotePost($note, $user)
     {
         $parentId = $note->get('parentId');
@@ -419,7 +439,26 @@ class EmailNotification extends \Espo\Core\Services\Base
                 'parentType' => $parentType
             ));
         }
+
+        $smtpParams = null;
+        if ($parentId && $parentType && !empty($parent)) {
+            $handler = $this->getEmailNotificationEntityHandler($parentType);
+            if ($handler) {
+                $prepareEmailMethodName = 'prepareEmail';
+                if (method_exists($handler, $prepareEmailMethodName)) {
+                    $handler->$prepareEmailMethodName('notePost', $parent, $email);
+                }
+                $getSmtpParamsMethodName = 'getSmtpParams';
+                if (method_exists($handler, $getSmtpParamsMethodName)) {
+                    $smtpParams = $handler->$getSmtpParamsMethodName('notePost', $parent);
+                }
+            }
+        }
+
         try {
+            if ($smtpParams) {
+                $this->getMailSender()->setParams($smtpParams);
+            }
             $this->getMailSender()->send($email);
         } catch (\Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
