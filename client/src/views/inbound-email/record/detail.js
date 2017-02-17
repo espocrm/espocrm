@@ -53,27 +53,75 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
 
         handleDistributionField: function () {
             var handleRequirement = function (model) {
-                if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
-                    this.getFieldView('team').setRequired();
+                if (model.get('createCase')) {
+                    this.showField('caseDistribution');
                 } else {
-                    this.getFieldView('team').setNotRequired();
+                    this.hideField('caseDistribution');
+                }
+
+                if (model.get('createCase') && ['Round-Robin', 'Least-Busy'].indexOf(model.get('caseDistribution')) != -1) {
+                    this.setFieldRequired('team');
+                    this.showField('targetUserPosition');
+                } else {
+                    this.setFieldNotRequired('team');
+                    this.hideField('targetUserPosition');
+                }
+                if (model.get('createCase') && 'Direct-Assignment' === model.get('caseDistribution')) {
+                    this.setFieldRequired('assignToUser');
+                    this.showField('assignToUser');
+                } else {
+                    this.setFieldNotRequired('assignToUser');
+                    this.hideField('assignToUser');
+                }
+                if (model.get('createCase') && model.get('createCase') !== '') {
+                    this.showField('team');
+                } else {
+                    this.hideField('team');
                 }
             }.bind(this);
 
-            this.listenTo(this.model, 'change:createCase', function (model) {
+            this.listenTo(this.model, 'change:createCase', function (model, value, o) {
+                handleRequirement(model);
+
+                if (!o.ui) return;
+
                 if (!model.get('createCase')) {
-                    if (this.model.get('caseDistribution') !== '') {
-                        this.model.set('caseDistribution', 'Direct-Assignment');
-                    }
+                    this.model.set({
+                        caseDistribution: '',
+                        teamId: null,
+                        teamName: null,
+                        assignToUserId: null,
+                        assignToUserName: null,
+                        targetUserPosition: ''
+                    });
                 }
             }, this);
 
-            this.on('render', function () {
-                handleRequirement(this.model);
-            }, this);
+            handleRequirement(this.model);
 
-            this.listenTo(this.model, 'change:caseDistribution', function (model) {
+            this.listenTo(this.model, 'change:caseDistribution', function (model, value, o) {
                 handleRequirement(model);
+
+                if (!o.ui) return;
+
+                setTimeout(function () {
+                    if (!this.model.get('caseDistribution')) {
+                        this.model.set({
+                            assignToUserId: null,
+                            assignToUserName: null,
+                            targetUserPosition: ''
+                        });
+                    } else if (this.model.get('caseDistribution') === 'Direct-Assignment') {
+                        this.model.set({
+                            targetUserPosition: ''
+                        });
+                    } else {
+                        this.model.set({
+                            assignToUserId: null,
+                            assignToUserName: null
+                        });
+                    }
+                }.bind(this), 10);
             });
         },
 

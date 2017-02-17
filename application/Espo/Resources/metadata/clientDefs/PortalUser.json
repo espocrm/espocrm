@@ -11,7 +11,7 @@
         "detailSmall":"views/user/record/detail-quick",
         "editSmall":"views/user/record/edit-quick"
     },
-    "defaultSidePanelFieldList": {
+    "defaultSidePanelFieldLists": {
         "detail": [
             "avatar"
         ],

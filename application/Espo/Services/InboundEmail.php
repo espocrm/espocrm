@@ -165,23 +165,29 @@ class InboundEmail extends \Espo\Services\Record
         if ($emailAccount->get('assignToUserId')) {
             $userId = $emailAccount->get('assignToUserId');
         }
-        $teamIdList = [];
         $userIdList = [];
-        if (!empty($teamId)) {
-            $teamIdList[] = $teamId;
+
+        $teamIdList = $emailAccount->getLinkMultipleIdList('teams');
+
+        if (!empty($teamIdList)) {
             if ($emailAccount->get('addAllTeamUsers')) {
-                $team = $this->getEntityManager()->getEntity('Team', $teamId);
-                if ($team) {
-                    $userList = $this->getEntityManager()->getRepository('Team')->findRelated($team, 'users', array(
-                        'whereClause' => array(
-                            'isActive' => true
-                        )
-                    ));
-                    foreach ($userList as $user) {
-                        $userIdList[] = $user->id;
-                    }
+                $userList = $this->getEntityManager()->getRepository('User')->find(array(
+                    'select' => ['id'],
+                    'whereClause' => array(
+                        'isActive' => true,
+                        'teamsMiddle.teamId' => $teamIdList
+                    ),
+                    'distrinct' => true,
+                    'joins' => ['teams']
+                ));
+                foreach ($userList as $user) {
+                    $userIdList[] = $user->id;
                 }
             }
+        }
+
+        if (!empty($teamId)) {
+            $teamIdList[] = $teamId;
         }
 
         $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([

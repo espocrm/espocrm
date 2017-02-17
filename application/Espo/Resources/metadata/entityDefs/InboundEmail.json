@@ -59,9 +59,14 @@
             "type": "link",
             "tooltip": true
         },
+        "teams": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
         "addAllTeamUsers": {
             "type": "bool",
-            "tooltip": true
+            "tooltip": true,
+            "default": true
         },
         "createCase": {
             "type": "bool",
@@ -120,6 +125,11 @@
         "modifiedBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "inboundEmails"
         },
         "assignToUser": {
             "type": "belongsTo",
