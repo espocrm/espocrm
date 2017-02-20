@@ -146,19 +146,15 @@ class Util
     {
         $mergeIdentifier = '__APPEND__';
 
-        if (is_array($currentArray) && (!is_array($newArray) || empty($newArray))) {
+        if (is_array($currentArray) && !is_array($newArray)) {
             return $currentArray;
-        } else if ((!is_array($currentArray) || empty($currentArray)) && is_array($newArray)) {
+        } else if (!is_array($currentArray) && is_array($newArray)) {
             return $newArray;
         } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
             return array();
         }
 
         foreach ($newArray as $newName => $newValue) {
-
-            if (is_array($newValue) && empty($newValue)) {
-                continue;
-            }
 
             if (is_array($newValue) && array_key_exists($newName, $currentArray) && is_array($currentArray[$newName])) {
 
