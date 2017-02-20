@@ -91,15 +91,16 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
 
             $document = $(document);
             $document.on('mouseup.global-search', function (e) {
+                if (e.which !== 1) return;
                 if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
                     setTimeout(function () {
                         this.closePanel();
                     }.bind(this), 100);
                     return;
                 }
-                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
                     this.closePanel();
-                   }
+                }
             }.bind(this));
         },
 
