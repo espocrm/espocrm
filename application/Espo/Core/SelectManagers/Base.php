@@ -1107,7 +1107,7 @@ class Base
                     $quarter--;
                     if ($quarter == 0) {
                         $quarter = 4;
-                        $dt->sub('P1Y');
+                        $dt->modify('-1 year');
                     }
                     $part['AND'] = array(
                         $attribute . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
