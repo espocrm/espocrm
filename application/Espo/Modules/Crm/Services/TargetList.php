@@ -112,7 +112,7 @@ class TargetList extends \Espo\Services\Record
         $selectParams['whereClause'][] = array(
             'action=' => $includingActionList
         );
-        $selectParams['groupBy'] = ['parentId', 'parentType'];
+        $selectParams['groupBy'] = ['parentId', 'parentType', 'id'];
 
         $notSelectParams['whereClause'][] = array(
             'action=' => $excludingActionList
