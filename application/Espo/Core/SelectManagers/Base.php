@@ -59,6 +59,8 @@ class Base
 
     protected $additionalFilterTypeList = ['linkedWith', 'inCategory', 'isUserFromTeams'];
 
+    protected $textFilterUseContainsAttributeList = [];
+
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config)
@@ -1322,6 +1324,9 @@ class Base
                 (
                     !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
                     ||
+                    !empty($this->textFilterUseContainsAttributeList[$field])
+                    ||
+                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'varchar' &&
                     $this->getConfig()->get('textFilterUseContainsForVarchar')
                 )
             ) {
