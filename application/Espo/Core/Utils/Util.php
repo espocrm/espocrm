@@ -553,5 +553,32 @@ class Util
         return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
 
+    /**
+     * Improved computing the difference of arrays
+     *
+     * @param  array  $array1
+     * @param  array  $array2
+     *
+     * @return array
+     */
+    public static function arrayDiff(array $array1, array $array2)
+    {
+        $diff = array();
+
+        foreach ($array1 as $key1 => $value1) {
+            if (array_key_exists($key1, $array2)) {
+                if ($value1 !== $array2[$key1]) {
+                    $diff[$key1] = $array2[$key1];
+                }
+                continue;
+            }
+
+            $diff[$key1] = $value1;
+        }
+
+        $diff = array_merge($diff, array_diff_key($array2, $array1));
+
+        return $diff;
+    }
 }
 
