@@ -34,7 +34,7 @@ class Environment extends \Slim\Environment
     /**
      * Define undefined $_SERVER variables
      */
-    private function setUndefinedVariables()
+    private static function setUndefinedVariables()
     {
         $list = array(
             'REQUEST_METHOD',
