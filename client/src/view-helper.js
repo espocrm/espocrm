@@ -185,7 +185,9 @@ Espo.define('view-helper', [], function () {
                 var style = options.hash.style || 'default';
                 var scope = options.hash.scope || null;
                 var label = options.hash.label || name;
-                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
+
+                var html = options.hash.label.html || self.language.translate(label, 'labels', scope);
+                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+html+'</button>');
             });
 
             Handlebars.registerHelper('hyphen', function (string) {
