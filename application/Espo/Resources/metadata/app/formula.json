@@ -61,6 +61,10 @@
             "insertText": "number\\format(VALUE)"
         },
         {
+            "name": "datetime\\diff",
+            "insertText": "datetime\\format(VALUE_1, VALUE_2, INTERVAL_TYPE)"
+        },
+        {
             "name": "entity\\isNew",
             "insertText": "entity\\isNew()"
         },

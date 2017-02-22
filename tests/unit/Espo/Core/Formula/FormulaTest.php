@@ -1092,6 +1092,75 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2017-10-20 02:15 pm', $actual);
     }
 
+    function testDatetimeDiff()
+    {
+        $item = json_decode('
+            {
+                "type": "datetime\\\\diff",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 14:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 14:20"
+                    },
+                    {
+                        "type": "value",
+                        "value": "minutes"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(-5, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\diff",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 14:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 11:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": "hours"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(3, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\diff",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 11:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": "2017-09-20"
+                    },
+                    {
+                        "type": "value",
+                        "value": "months"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(1, $actual);
+    }
+
     function testDatetimeOperations()
     {
         $item = json_decode('
