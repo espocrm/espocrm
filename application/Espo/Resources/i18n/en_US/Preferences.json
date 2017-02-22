@@ -31,7 +31,8 @@
         "emailReplyToAllByDefault": "Email Reply to All by Default",
         "dashboardLayout": "Dashboard Layout",
         "emailReplyForceHtml": "Email Reply in HTML",
-        "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required"
+        "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
+        "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
     },
     "links": {
     },

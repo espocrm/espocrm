@@ -315,6 +315,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.$textarea.prop('disabled', false);
                     this.disablePostingMode();
                     this.afterPost();
+
+                    if (this.getPreferences().get('followEntityOnStreamPost')) {
+                        this.model.set('isFollowed', true);
+                    }
                 }, this);
 
                 model.set('post', message);
