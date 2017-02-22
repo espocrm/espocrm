@@ -1048,6 +1048,23 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    function testNumberAbs()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\abs",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": -20
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(20, $actual);
+    }
+
     function testDatetime()
     {
         $item = json_decode('

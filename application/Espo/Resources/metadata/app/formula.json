@@ -61,6 +61,10 @@
             "insertText": "number\\format(VALUE)"
         },
         {
+            "name": "number\\abs",
+            "insertText": "number\\abs(VALUE)"
+        },
+        {
             "name": "datetime\\diff",
             "insertText": "datetime\\format(VALUE_1, VALUE_2, INTERVAL_TYPE)"
         },
