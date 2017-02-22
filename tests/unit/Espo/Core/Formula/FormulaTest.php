@@ -33,9 +33,6 @@ use \Espo\ORM\Entity;
 
 class FormulaTest extends \PHPUnit_Framework_TestCase
 {
-    protected $now = '2017-10-10 10:10:10';
-
-    protected $today = '2017-10-10 10:10:10';
 
     protected function setUp()
     {
@@ -48,23 +45,9 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->entityManager = $this->getMockBuilder('\\Espo\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
         $this->repository = $this->getMockBuilder('\\Espo\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
 
-        $this->dateTime = $this->getMockBuilder('\\Espo\\Core\\Utils\\DateTime')->disableOriginalConstructor()->getMock();
-        $this->dateTime
-            ->expects($this->any())
-            ->method('getInternalNowString')
-            ->will($this->returnValue($this->now));
-        $this->dateTime
-            ->expects($this->any())
-            ->method('getInternalTodayString')
-            ->will($this->returnValue($this->today));
-        $this->dateTime
-            ->expects($this->any())
-            ->method('getInternalDateTimeFormat')
-            ->will($this->returnValue('Y-m-d H:i:s'));
-        $this->dateTime
-            ->expects($this->any())
-            ->method('getInternalDateFormat')
-            ->will($this->returnValue('Y-m-d'));
+        date_default_timezone_set('UTC');
+
+        $this->dateTime = new \Espo\Core\Utils\DateTime();
 
         $this->user = new \tests\unit\testData\Entities\User();
 
@@ -1073,7 +1056,7 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             }
         ');
         $actual = $this->formula->process($item, $this->entity);
-        $this->assertEquals($this->now, $actual);
+        $this->assertEquals(date('Y-m-d H:i:s'), $actual);
 
         $item = json_decode('
             {
@@ -1081,7 +1064,32 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             }
         ');
         $actual = $this->formula->process($item, $this->entity);
-        $this->assertEquals($this->today, $actual);
+        $this->assertEquals(date('Y-m-d'), $actual);
+    }
+
+    function testDatetimeFormat()
+    {
+        $item = json_decode('
+            {
+                "type": "datetime\\\\format",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20 14:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": null
+                    },
+                    {
+                        "type": "value",
+                        "value": "YYYY-MM-DD hh:mm a"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('2017-10-20 02:15 pm', $actual);
     }
 
     function testDatetimeOperations()
