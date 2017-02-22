@@ -144,7 +144,7 @@ class DateTime
 
     public function convertSystemDateTime($string, $timezone = null, $format = null)
     {
-        if (strlen($string) === 16) {
+        if (is_string($string) && strlen($string) === 16) {
             $string .= ':00';
         }
         $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
