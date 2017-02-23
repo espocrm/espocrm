@@ -70,9 +70,9 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
-    protected function afterRemove(Entity $entity, array $data = array())
+    protected function afterRemove(Entity $massEmail, array $data = array())
     {
-        parent::afterRemove($entity, $data);
+        parent::afterRemove($massEmail, $data);
         $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => ['Pending', 'Failed'],
             'massEmailId' => $massEmail->id
