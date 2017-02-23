@@ -1,29 +1,36 @@
 {
-    "fields": {
-        "name": "Nom",
-        "status": "Statut",
-        "job": "Tâche",
-        "scheduling": "Plannification (crontab notation)"
+  "fields": {
+    "name": "Nom",
+    "status": "Statut",
+    "job": "Tâche",
+    "scheduling": "Planification (crontab notation)"
+  },
+  "links": {
+    "log": "Log"
+  },
+  "labels": {
+    "Create ScheduledJob": "Créer une tâche planifiée"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Nettoyer",
+      "CheckInboundEmails": "Vérifier les emails entrants",
+      "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
+      "SendEmailReminders": "Envoyer des notifications par email",
+      "AuthTokenControl": "Auth Token Control"
     },
-    "links": {
-        "log": "Log"
+    "cronSetup": {
+      "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
+      "mac": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
+      "windows": "Note: Créez un fichier de commandes avec les commandes suivantes pour exécuter des tâches planifiées Windows",
+      "default": "Note: Ajouter cette commande pour Cron (tâche planifiée):"
     },
-    "labels": {
-        "Create ScheduledJob": "Créer une tâche plannifiée"
-    },
-    "options": {
-        "job": {
-            "Cleanup": "Nettoyer"
-        },
-        "cronSetup": {
-            "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
-            "mac": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
-            "windows": "Note: Créez un fichier de commandes avec les commandes suivantes pour exécuter des tâches planifiées Windows",
-            "default": "Note: Ajouter cette commande pour Cron (tâche planifiée):"
-        },
-        "status": {
-            "Active": "Active",
-            "Inactive": "Inactive"
-        }
+    "status": {
+      "Active": "Actif",
+      "Inactive": "Inactif"
     }
+  },
+  "tooltips": {
+    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+  }
 }

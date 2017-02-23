@@ -1,6 +1,18 @@
 {
-    "fields": {
-        "post": "Poster",
-        "attachments": "Pièces-jointes"
-    }
+  "fields": {
+    "post": "Poster",
+    "attachments": "Pièces-jointes",
+    "targetType": "Cible",
+    "teams": "Équipes",
+    "users": "Utilisateurs",
+    "portals": "Portails"
+  },
+  "filters": {
+    "all": "Tous",
+    "posts": "Publications",
+    "updates": "Mises à jour"
+  },
+  "messages": {
+    "writeMessage": "Écrivez votre message ici"
+  }
 }

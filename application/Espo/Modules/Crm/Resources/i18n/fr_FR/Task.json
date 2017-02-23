@@ -1,43 +1,45 @@
 {
-    "fields": {
-        "name": "Nom",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateStart": "Date de début",
-        "dateEnd": "Date d'échéance",
-        "dateStartDate": "Date de début (toute la journée)",
-        "dateEndDate": "Date de fin (toute la journée)",
-        "priority": "Priorité",
-        "description": "Description",
-        "isOverdue": "En retard",
-        "account": "Compte"
+  "fields": {
+    "name": "Nom",
+    "parent": "Parent",
+    "status": "Statut",
+    "dateStart": "Date de début",
+    "dateEnd": "Date d'échéance",
+    "dateStartDate": "Date de début (toute la journée)",
+    "dateEndDate": "Date de fin (toute la journée)",
+    "priority": "Priorité",
+    "description": "Description",
+    "isOverdue": "En retard",
+    "account": "Compte",
+    "dateCompleted": "Date de Clôture",
+    "attachments": "Pièces jointes"
+  },
+  "links": {
+    "attachments": "Pièces jointes"
+  },
+  "options": {
+    "status": {
+      "Not Started": "N'a pas démarré",
+      "Started": "Démarré",
+      "Completed": "Terminé",
+      "Canceled": "Annulé",
+      "Deferred": "Reporté"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "N'a pas démarré",
-            "Started": "Démarré",
-            "Completed": "Terminé",
-            "Canceled": "Annulé",
-            "Deferred": "Reporté"
-        },
-        "priority" : {
-            "Low": "Basse",
-            "Normal": "Normale",
-            "High": "Haute",
-            "Urgent": "Urgente"
-        }
-    },
-    "labels": {
-        "Create Task": "Créer une Tâche",
-        "Complete": "Terminer"
-    },
-    "presetFilters": {
-        "actual": "En cours",
-        "completed": "Terminés",
-        "todays": "Aujourd'hui",
-        "deferred": "Reporté",
-        "overdue": "En retard"
+    "priority": {
+      "Low": "Basse",
+      "Normal": "Normale",
+      "High": "Haute",
+      "Urgent": "Urgente"
     }
+  },
+  "labels": {
+    "Create Task": "Créer une tâche",
+    "Complete": "Clôturer"
+  },
+  "presetFilters": {
+    "actual": "En cours",
+    "completed": "Terminés",
+    "todays": "Aujourd'hui",
+    "overdue": "En retard"
+  }
 }

@@ -1,40 +1,46 @@
 {
-    "fields": {
-        "dateFormat": "Format de la date",
-        "timeFormat": "Format de l'heure",
-        "timeZone": "Fuseau horaire",
-        "weekStart": "Premier jour de la semaine",
-        "thousandSeparator": "Séparateur de milliers",
-        "decimalMark": "Symbole décimal",
-        "defaultCurrency": "Devise par défaut",
-        "currencyList": "Liste des devises",
-        "language": "Langage",
-        "smtpServer": "Serveur",
-        "smtpPort": "Port",
-        "smtpAuth": "Auth",
-        "smtpSecurity": "Sécurité",
-        "smtpUsername": "Nom d'utilisateur",
-        "emailAddress": "Email",
-        "smtpPassword": "Mot de passe",
-        "smtpEmailAddress": "Adresse email",
-        "exportDelimiter": "Délimitant pour l'export",
-        "receiveAssignmentEmailNotifications": "Recevoir des notifications par email lors d'assignations",
-        "autoFollowEntityTypeList": "Suivi-auto",
-        "signature": "Signature email",
-        "dashboardTabList": "Liste des onglets"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Dimanche",
-            "1": "Lundi"
-        }
-    },
-    "labels": {
-        "Notifications": "Notifications"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "L'utilisateur suivra automatiquement tous les nouveaux enregistrements des types d'entités sélectionnées, verra les informations dans le flux et recevra des notifications."
+  "fields": {
+    "dateFormat": "Format de la date",
+    "timeFormat": "Format de l'heure",
+    "timeZone": "Fuseau horaire",
+    "weekStart": "Premier jour de la semaine",
+    "thousandSeparator": "Séparateur de milliers",
+    "decimalMark": "Symbole décimal",
+    "defaultCurrency": "Devise par défaut",
+    "currencyList": "Liste des devises",
+    "language": "Langage",
+    "smtpServer": "Serveur",
+    "smtpPort": "Port",
+    "smtpAuth": "Auth",
+    "smtpSecurity": "Sécurité",
+    "smtpUsername": "Nom d'utilisateur",
+    "emailAddress": "Email",
+    "smtpPassword": "Mot de passe",
+    "smtpEmailAddress": "Adresse email",
+    "exportDelimiter": "Délimitant pour l'export",
+    "autoFollowEntityTypeList": "Suivi-auto",
+    "signature": "Signature email",
+    "dashboardTabList": "Liste des onglets",
+    "tabList": "Liste des onglets",
+    "defaultReminders": "Notifications par défaut",
+    "theme": "Thème",
+    "useCustomTabList": "Liste d'onglets personnalisé",
+    "emailReplyToAllByDefault": "Répondre à tous par défaut dans les Emails"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Dimanche",
+      "1": "Lundi"
     }
+  },
+  "labels": {
+    "Notifications": "Notifications",
+    "User Interface": "Interface utilisateurs",
+    "SMTP": "SMTP",
+    "Misc": "Divers",
+    "Locale": "Locale"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "L'utilisateur suivra automatiquement tous les nouveaux enregistrements des types d'entités sélectionnées, verra les informations dans le flux et recevra des notifications."
+  }
 }

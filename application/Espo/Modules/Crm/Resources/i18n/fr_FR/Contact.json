@@ -1,36 +1,46 @@
 {
-    "fields": {
-        "name": "Nom",
-        "emailAddress": "Email",
-        "title": "Titre",
-        "account": "Compte",
-        "accounts": "Comptes",
-        "phoneNumber": "Téléphone",
-        "accountType": "Type de compte",
-        "doNotCall": "Ne pas appeler",
-        "address": "Adresse",
-        "opportunityRole": "Rôle d'opportunité",
-        "accountRole": "Titre",
-        "description": "Description",
-        "campaign": "Campagne",
-        "targetLists": "Listes de cibles",
-        "targetList": "Liste de cibles"
-    },
-    "links": {
-        "opportunities": "Opportunités",
-        "cases": "Tickets",
-        "targetLists": "Listes de cibles",
-        "campaignLogRecords": "Rapporter une campagne"
-    },
-    "labels": {
-        "Create Contact": "Créer un Contact"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--Aucun--",
-            "Decision Maker": "Décisionnaire",
-            "Evaluator": "Évaluateur",
-            "Influencer": "Influenceur"
-        }
+  "fields": {
+    "name": "Nom",
+    "emailAddress": "Email",
+    "title": "Titre",
+    "accountRole": "Titre",
+    "account": "Compte",
+    "accounts": "Comptes",
+    "phoneNumber": "Téléphone",
+    "accountType": "Type de compte",
+    "doNotCall": "Ne pas appeler",
+    "address": "Adresse",
+    "opportunityRole": "Rôle d'opportunité",
+    "description": "Description",
+    "campaign": "Campagne",
+    "targetLists": "Listes de cibles",
+    "targetList": "Liste de cibles",
+    "portalUser": "Utilisateur Portail"
+  },
+  "links": {
+    "opportunities": "Opportunités",
+    "cases": "Tickets",
+    "targetLists": "Listes de cibles",
+    "campaignLogRecords": "Rapporter une campagne",
+    "campaign": "Campagne",
+    "account": "Compte (principal)",
+    "accounts": "Comptes",
+    "casesPrimary": "Tickets (principal)",
+    "portalUser": "Utilisateur Portail"
+  },
+  "labels": {
+    "Create Contact": "Créer un Contact"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Aucun--",
+      "Decision Maker": "Décisionnaire",
+      "Evaluator": "Évaluateur",
+      "Influencer": "Influenceur"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Utilisateurs Portail",
+    "notPortalUsers": "N'est pas un utilisateur Portail"
+  }
 }

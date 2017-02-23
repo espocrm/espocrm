@@ -1,28 +1,32 @@
 {
-    "fields": {
-        "name": "Nom",
-        "description": "Description",
-        "entryCount": "Compteur d'entrées",
-        "campaigns": "Campagnes",
-        "endDate": "Date de fin",
-        "targetLists": "Listes de cibles"
-    },
-    "links": {
-        "accounts": "Comptes",
-        "contacts": "Contacts",
-        "leads": "Prospects",
-        "campaigns": "Campagnes"
-    },
-    "options": {
-        "type": {
-            "Email": "Email",
-            "Web": "Web",
-            "Television": "Télévision",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter"
-        }
-    },
-    "labels": {
-        "Create TargetList": "Créer une liste de cibles"
+  "fields": {
+    "name": "Nom",
+    "description": "Description",
+    "entryCount": "Compteur d'entrées",
+    "campaigns": "Campagnes",
+    "endDate": "Date de fin",
+    "targetLists": "Listes de cibles"
+  },
+  "links": {
+    "accounts": "Comptes",
+    "contacts": "Contacts",
+    "leads": "Prospects",
+    "campaigns": "Campagnes",
+    "massEmails": "Emails groupés"
+  },
+  "options": {
+    "type": {
+      "Email": "Email",
+      "Web": "Web",
+      "Television": "Télévision",
+      "Radio": "Radio",
+      "Newsletter": "Newsletter"
     }
+  },
+  "labels": {
+    "Create TargetList": "Créer une liste de cibles",
+    "Opted Out": "Opted Out",
+    "Cancel Opt-Out": "Cancel Opt-Out",
+    "Opt-Out": "Opt-Out"
+  }
 }

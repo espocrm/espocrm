@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "width": "Largeur (%)",
+    "link": "Lien",
+    "notSortable": "Not Sortable",
+    "align": "Align"
+  },
+  "options": {
+    "align": {
+      "left": "Gauche",
+      "right": "Droite"
+    }
+  }
+}

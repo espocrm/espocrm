@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Nom",
+    "status": "Statut",
+    "target": "Cible",
+    "sentAt": "Date d'envoi",
+    "attemptCount": "Tentatives",
+    "emailAddress": "Adresse email",
+    "massEmail": "Emails groupé",
+    "isTest": "Test"
+  },
+  "links": {
+    "target": "Cible",
+    "massEmail": "Emails groupé"
+  },
+  "options": {
+    "status": {
+      "Pending": "En cours",
+      "Sent": "Envoyé",
+      "Failed": "Echec"
+    }
+  },
+  "presetFilters": {
+    "pending": "En cours",
+    "sent": "Envoyé",
+    "failed": "Échec"
+  }
+}

@@ -1,54 +1,71 @@
 {
-    "fields": {
-        "name": "Nom",
-        "description": "Description",
-        "status": "Statut",
-        "type": "Type",
-        "startDate": "Date de début",
-        "endDate": "Date de fin",
-        "targetLists": "Listes de cibles",
-        "sentCount": "Envoyé",
-        "openedCount": "Ouvert",
-        "clickedCount": "Cliqué",
-        "optedOutCount": "Désinscrit",
-        "bouncedCount": "Renvoyé",
-        "hardBouncedCount": "Rejeté fortement",
-        "softBouncedCount": "Rejeté",
-        "leadCreatedCount": "Prospects créés",
-        "revenue": "Revenu"
+  "fields": {
+    "name": "Nom",
+    "description": "Description",
+    "status": "Statut",
+    "type": "Type",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "targetLists": "Listes de cibles",
+    "excludingTargetLists": "Exclure les listes de cibles",
+    "sentCount": "Envoyé",
+    "openedCount": "Ouvert",
+    "clickedCount": "Cliqué",
+    "optedOutCount": "Désinscrit",
+    "bouncedCount": "Renvoyé",
+    "hardBouncedCount": "Rejeté fortement",
+    "softBouncedCount": "Rejeté",
+    "leadCreatedCount": "Prospects créés",
+    "revenue": "Revenu",
+    "revenueConverted": "Revenu (converti)",
+    "budget": "Budget",
+    "budgetConverted": "Budget (converti)"
+  },
+  "links": {
+    "targetLists": "Listes de cibles",
+    "excludingTargetLists": "Excluant les listes de cibles",
+    "accounts": "Comptes",
+    "contacts": "Contacts",
+    "leads": "Prospects",
+    "opportunities": "Opportunités",
+    "campaignLogRecords": "Enregistrer",
+    "massEmails": "Emails groupés",
+    "trackingUrls": "Tracking URLs"
+  },
+  "options": {
+    "type": {
+      "Email": "Email",
+      "Web": "Web",
+      "Television": "Télévision",
+      "Radio": "Radio",
+      "Newsletter": "Newsletter",
+      "Mail": "Mail"
     },
-    "links": {
-        "targetLists": "Listes de cibles",
-        "accounts": "Comptes",
-        "contacts": "Contacts",
-        "leads": "Prospects",
-        "opportunities": "Opportunités",
-        "campaignLogRecords": "Enregistrer"
-    },
-    "options": {
-        "type": {
-            "Email": "Email",
-            "Web": "Web",
-            "Television": "Télévision",
-            "Radio": "Radio",
-            "Newsletter": "Newsletter",
-            "Mail": "Mail"
-        },
-        "status": {
-            "Planning": "Planning",
-            "Active": "Actif",
-            "Inactive": "Inactif",
-            "Complete": "Terminer"
-        }
-    },
-    "labels": {
-        "Create Campaign": "Créer une Campagne",
-        "Target Lists": "Listes de cibles",
-        "Statistics": "Statistiques",
-        "hard": "fort",
-        "soft": "faible"
-    },
-    "presetFilters": {
-        "active": "Actif"
+    "status": {
+      "Planning": "Planning",
+      "Active": "Actif",
+      "Inactive": "Inactif",
+      "Complete": "Terminer"
     }
+  },
+  "labels": {
+    "Create Campaign": "Créer une campagne",
+    "Target Lists": "Listes de cibles",
+    "Statistics": "Statistiques",
+    "hard": "fort",
+    "soft": "faible",
+    "Unsubscribe": "Se désinscrire",
+    "Mass Emails": "Emails groupés",
+    "Email Templates": "Modèles d'email"
+  },
+  "presetFilters": {
+    "active": "Actif"
+  },
+  "messages": {
+    "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi"
+  },
+  "tooltips": {
+    "targetLists": "Cibles devant recevoir les messages",
+    "excludingTargetLists": "Cibles ne devant pas recevoir les messages"
+  }
 }

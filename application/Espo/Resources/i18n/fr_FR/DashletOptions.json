@@ -1,18 +1,23 @@
 {
-    "fields": {
-        "title": "Titre",
-        "dateFrom": "Date de",
-        "dateTo": "Date à",
-        "autorefreshInterval": "Auto-refresh Interval",
-        "displayRecords": "Afficher les enregistrements",
-        "isDoubleHeight": "Hauteur 2x",
-        "mode": "Mode"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Semaine (agenda)",
-    		"basicWeek": "Semaine",
-    		"month": "Mois"
-    	}
+  "fields": {
+    "title": "Titre",
+    "dateFrom": "Début",
+    "dateTo": "Fin",
+    "autorefreshInterval": "Intervalle de rafraîchissement automatique",
+    "displayRecords": "Afficher les enregistrements",
+    "isDoubleHeight": "Hauteur 2x",
+    "mode": "Mode",
+    "enabledScopeList": "Afficher",
+    "users": "Utilisateurs"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Semaine (agenda)",
+      "basicWeek": "Semaine",
+      "month": "Mois",
+      "basicDay": "Jour",
+      "agendaDay": "Jour (calendrier)",
+      "timeline": "Plage de temps"
     }
+  }
 }

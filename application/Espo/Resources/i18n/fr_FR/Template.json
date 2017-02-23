@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nom",
+    "body": "Corps de texte",
+    "entityType": "Type d’entité",
+    "header": "Entête",
+    "footer": "Pied de page",
+    "leftMargin": "Marge gauche",
+    "topMargin": "Marge du haut",
+    "rightMargin": "Marge droite",
+    "bottomMargin": "Marge du bas",
+    "printFooter": "Imprimer les pieds de page",
+    "footerPosition": "Position des pieds de page"
+  },
+  "labels": {
+    "Create Template": "Créer un modèle"
+  },
+  "tooltips": {
+    "footer": "Utiliser {pageNumber} pour imprimer la page."
+  }
+}

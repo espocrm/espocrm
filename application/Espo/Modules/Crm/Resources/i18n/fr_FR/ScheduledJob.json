@@ -1,10 +1,8 @@
 {
-
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Vérifier les emails entrants",
-            "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
-            "SendEmailReminders": "Envoyer des emails de rappel"
-        }
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Envoyer emails groupés",
+      "ControlKnowledgeBaseArticleStatus": "Control Knowledge Base Article Status"
     }
+  }
 }

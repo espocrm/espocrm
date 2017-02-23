@@ -1,44 +1,46 @@
 {
-    "fields": {
-        "name": "Nom",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateStart": "Date de début",
-        "dateEnd": "Date de fin",
-        "duration": "Durée",
-        "description": "Description",
-        "users": "Utilisateurs",
-        "contacts": "Contacts",
-        "leads": "Prospects",
-        "reminders": "Rappels",
-        "account": "Compte"
+  "fields": {
+    "name": "Nom",
+    "parent": "Parent",
+    "status": "Statut",
+    "dateStart": "Date de début",
+    "dateEnd": "Date de fin",
+    "duration": "Durée",
+    "description": "Description",
+    "users": "Utilisateurs",
+    "contacts": "Contacts",
+    "leads": "Prospects",
+    "reminders": "Notifications",
+    "account": "Compte"
+  },
+  "options": {
+    "status": {
+      "Planned": "Prévu",
+      "Held": "Effectué",
+      "Not Held": "Non effectué"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Prévu",
-            "Held": "Tenu",
-            "Not Held": "Non tenu"
-        },
-        "acceptanceStatus": {
-            "None": "Aucun",
-            "Accepted": "Accepté",
-            "Declined": "Décliné",
-            "Tentative": "Tentative"
-        }
-    },
-    "labels": {
-        "Create Meeting": "Créer un Rendez-vous",
-        "Set Held": "Qualifier en tenu",
-        "Set Not Held": "Qualifier en non tenu",
-        "Send Invitations": "Envoyer des Invitations",
-        "on time": "à l'heure",
-        "before": "en avance"
-    },
-    "presetFilters": {
-        "planned": "Prévu",
-        "held": "Tenu",
-        "todays": "Aujourd'hui"
+    "acceptanceStatus": {
+      "None": "Aucun",
+      "Accepted": "Accepté",
+      "Declined": "Décliné",
+      "Tentative": "Tentative"
     }
+  },
+  "massActions": {
+    "setHeld": "Définir comme effectué",
+    "setNotHeld": "Définir comme non effectué"
+  },
+  "labels": {
+    "Create Meeting": "Créer un Rendez-vous",
+    "Set Held": "Définir comme effectué",
+    "Set Not Held": "Définir comme non effectué",
+    "Send Invitations": "Envoyer des Invitations",
+    "on time": "à l'heure",
+    "before": "en avance"
+  },
+  "presetFilters": {
+    "planned": "Prévu",
+    "held": "Effectué",
+    "todays": "Aujourd'hui"
+  }
 }

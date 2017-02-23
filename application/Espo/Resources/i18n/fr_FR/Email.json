@@ -1,63 +1,90 @@
 {
-    "fields": {
-        "name": "Objet",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateSent": "Date d'envoi",
-        "from": "De",
-        "to": "À",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Html",
-        "body": "Corps",
-        "subject": "Objet",
-        "attachments": "Pièces-jointes",
-        "selectTemplate": "Sélectionner un modèle",
-        "fromEmailAddress": "Depuis l'adresse",
-        "toEmailAddresses": "À l'adresse",
-        "emailAddress": "Adresse email",
-        "deliveryDate": "Date de remise",
-        "account": "Compte"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Brouillon",
-        "Sending": "Envoi",
-        "Sent": "Envoyé",
-        "Archived": "Archivé",
-        "Received": "Reçu"
-    },
-    "labels": {
-        "Create Email": "Créer l'Email",
-        "Archive Email": "Archiver l'Email",
-        "Compose": "Composer",
-        "Reply": "Répondre",
-        "Reply to All": "Répondre à tous",
-        "Forward": "Transférer",
-        "Original message": "Message d'origine",
-        "Forwarded message": "Message transféré",
-        "Email Accounts": "Comptes emails",
-        "Send Test Email": "Envoyer un email test",
-        "Send": "Envoyer",
-        "Email Address": "Adresse email",
-        "Mark Read": "Marquer comme lu",
-        "Sending...": "Envoi en cours...",
-        "Save Draft": "Sauvegarder le brouillon",
-        "Mark all as read": "Marquer tout comme lu"
-    },
-    "messages": {
-        "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
-        "testEmailSent": "L'email test a été envoyé",
-        "emailSent": "L'email a été envoyé",
-        "savedAsDraft": "Sauvegardé en tant que brouillon"
-    },
-    "presetFilters": {
-        "sent": "Envoyé",
-        "archived": "Archivé",
-        "draft": "Brouillon"
-    },
-    "massActions": {
-        "markAsRead": "Marquer commer lu"
+  "fields": {
+    "parent": "Parent",
+    "status": "Statut",
+    "dateSent": "Date d'envoi",
+    "from": "De",
+    "to": "À",
+    "cc": "CC",
+    "bcc": "BCC",
+    "replyTo": "Répondre à",
+    "replyToString": "Répondre à (texte)",
+    "isHtml": "Html",
+    "body": "Corps",
+    "subject": "Objet",
+    "attachments": "Pièces-jointes",
+    "selectTemplate": "Sélectionner un modèle",
+    "fromEmailAddress": "Depuis l'adresse",
+    "toEmailAddresses": "À l'adresse",
+    "emailAddress": "Adresse email",
+    "deliveryDate": "Date de remise",
+    "account": "Compte",
+    "users": "Utilisateurs",
+    "replied": "Répondu",
+    "replies": "Réponses",
+    "isRead": "Lu",
+    "isNotRead": "Non lu",
+    "isImportant": "Important",
+    "isUsers": "Utilisateurs",
+    "inTrash": "Supprimé"
+  },
+  "links": {
+    "replied": "Répondu",
+    "replies": "Réponses"
+  },
+  "options": {
+    "status": {
+      "Draft": "Brouillon",
+      "Sending": "En cours d'envoi",
+      "Sent": "Envoyé",
+      "Archived": "Archivé",
+      "Received": "Reçu",
+      "Failed": "Echec"
     }
+  },
+  "labels": {
+    "Create Email": "Archiver l'Email",
+    "Archive Email": "Archiver l'Email",
+    "Compose": "Composer",
+    "Reply": "Répondre",
+    "Reply to All": "Répondre à tous",
+    "Forward": "Transférer",
+    "Original message": "Message d'origine",
+    "Forwarded message": "Message transféré",
+    "Email Accounts": "Comptes emails",
+    "Inbound Emails": "Comptes email communs",
+    "Email Templates": "Modèles d'email",
+    "Send Test Email": "Envoyer un email test",
+    "Send": "Envoyer",
+    "Email Address": "Adresse email",
+    "Mark Read": "Marquer comme lu",
+    "Sending...": "Envoi en cours...",
+    "Save Draft": "Sauvegarder le brouillon",
+    "Mark all as read": "Marquer tout comme lu",
+    "Show Plain Text": "Afficher texte brut",
+    "Mark as Important": "Marquer comme important",
+    "Unmark Importance": "Marquer comme non important",
+    "Move to Trash": "Mettre à la corbeille",
+    "Retrieve from Trash": "Enlever de la corbeille"
+  },
+  "messages": {
+    "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
+    "testEmailSent": "L'email test a été envoyé",
+    "emailSent": "L'email a été envoyé",
+    "savedAsDraft": "Sauvegardé en tant que brouillon"
+  },
+  "presetFilters": {
+    "sent": "Envoyé",
+    "archived": "Archivé",
+    "inbox": "Boite de réception",
+    "drafts": "Brouillons",
+    "trash": "Corbeille"
+  },
+  "massActions": {
+    "markAsRead": "Marquer commer lu",
+    "markAsNotRead": "Marquer comme non-lu",
+    "markAsImportant": "Marquer comme important",
+    "markAsNotImportant": "Marquer comme non important",
+    "moveToTrash": "Mettre à la corbeille"
+  }
 }

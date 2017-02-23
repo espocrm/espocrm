@@ -1,16 +1,22 @@
 {
-    "fields": {
-        "name": "Nom",
-        "status": "Statut",
-        "isHtml": "Html",
-        "body": "Corps",
-        "subject": "Objet",
-        "attachments": "Pièces-jointes",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Créer un modèle d'email"
-    }
+  "fields": {
+    "name": "Nom",
+    "status": "Statut",
+    "isHtml": "Html",
+    "body": "Corps",
+    "subject": "Objet",
+    "attachments": "Pièces-jointes",
+    "insertField": "Ajouter un champ",
+    "oneOff": "Une seule fois"
+  },
+  "labels": {
+    "Create EmailTemplate": "Créer un modèle d'email",
+    "Info": "Info"
+  },
+  "tooltips": {
+    "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
+  },
+  "presetFilters": {
+    "actual": "Réel"
+  }
 }

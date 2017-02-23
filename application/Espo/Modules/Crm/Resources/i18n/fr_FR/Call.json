@@ -1,47 +1,49 @@
 {
-    "fields": {
-        "name": "Nom",
-        "parent": "Parent",
-        "status": "Statut",
-        "dateStart": "Date de début",
-        "dateEnd": "Date de fin",
-        "direction": "Direction",
-        "duration": "Durée",
-        "description": "Description",
-        "users": "Utilisateurs",
-        "contacts": "Contacts",
-        "leads": "Prospects",
-        "reminders": "Rappels",
-        "account": "Compte"
+  "fields": {
+    "name": "Nom",
+    "parent": "Parent",
+    "status": "Statut",
+    "dateStart": "Date de début",
+    "dateEnd": "Date de fin",
+    "direction": "Direction",
+    "duration": "Durée",
+    "description": "Description",
+    "users": "Utilisateurs",
+    "contacts": "Contacts",
+    "leads": "Prospects",
+    "reminders": "Notifications",
+    "account": "Compte"
+  },
+  "options": {
+    "status": {
+      "Planned": "Prévu",
+      "Held": "Effectué",
+      "Not Held": "Non effectué"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Sortant",
+      "Inbound": "Entrant"
     },
-    "options": {
-        "status": {
-            "Planned": "Prévu",
-            "Held": "Tenu",
-            "Not Held": "Non tenu"
-        },
-        "direction": {
-            "Outbound": "Sortant",
-            "Inbound": "Entrant"
-        },
-        "acceptanceStatus": {
-            "None": "Aucun",
-            "Accepted": "Accepté",
-            "Declined": "Décliné",
-            "Tentative": "Tentative"
-        }
-    },
-    "labels": {
-        "Create Call": "Créer un Appel",
-        "Set Held": "Qualifier en Tenu",
-        "Set Not Held": "Qualifier en Non tenu",
-        "Send Invitations": "Envoyer les invitations"
-    },
-    "presetFilters": {
-        "planned": "Prévu",
-        "held": "Tenu",
-        "todays": "Aujourd'hui"
+    "acceptanceStatus": {
+      "None": "Aucun",
+      "Accepted": "Accepté",
+      "Declined": "Décliné",
+      "Tentative": "Tentative"
     }
+  },
+  "massActions": {
+    "setHeld": "Définir comme effectué",
+    "setNotHeld": "Définir comme non effectué"
+  },
+  "labels": {
+    "Create Call": "Créer un appel",
+    "Set Held": "Définir comme effectué",
+    "Set Not Held": "Définir comme non effectué",
+    "Send Invitations": "Envoyer les invitations"
+  },
+  "presetFilters": {
+    "planned": "Prévu",
+    "held": "Effectué",
+    "todays": "Aujourd'hui"
+  }
 }

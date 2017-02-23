@@ -1,42 +1,44 @@
 {
-    "fields": {
-        "name": "Nom",
-        "account": "Compte",
-        "stage": "Etape",
-        "amount": "Montant",
-        "probability": "Probabilité, %",
-        "leadSource": "Source du prospect",
-        "doNotCall": "Ne pas appeler",
-        "closeDate": "Date de fermeture",
-        "contacts": "Contacts",
-        "description": "Description",
-        "amountConverted": "Montant (converti)",
-        "amountWeightedConverted": "Montant pondéré",
-        "campaign": "Campagne"
-    },
-    "links": {
-        "contacts": "Contacts",
-        "documents": "Documents"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Prospection",
-            "Qualification": "Qualification",
-            "Needs Analysis": "Analyse des besoins",
-            "Value Proposition": "Valeur de la proposition",
-            "Id. Decision Makers": "Id. Decisionnaire",
-            "Perception Analysis": "Analyse de la perception",
-            "Proposal/Price Quote": "Proposition/devis",
-            "Negotiation/Review": "Négociation/évaluation",
-            "Closed Won": "Conclusion gagnante",
-            "Closed Lost": "Conclusion perdante"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Créer une opportunité"
-    },
-    "presetFilters": {
-        "open": "Ouvrir",
-        "won": "Gagné"
+  "fields": {
+    "name": "Nom",
+    "account": "Compte",
+    "stage": "Etape",
+    "amount": "Montant",
+    "probability": "Probabilité, %",
+    "leadSource": "Source du prospect",
+    "doNotCall": "Ne pas appeler",
+    "closeDate": "Date de fermeture",
+    "contacts": "Contacts",
+    "description": "Description",
+    "amountConverted": "Montant (converti)",
+    "amountWeightedConverted": "Montant pondéré",
+    "campaign": "Campagne"
+  },
+  "links": {
+    "contacts": "Contacts",
+    "documents": "Documents",
+    "campaign": "Campagne"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospection",
+      "Qualification": "Qualification",
+      "Needs Analysis": "Analyse des besoins",
+      "Value Proposition": "Valeur de la proposition",
+      "Id. Decision Makers": "Id. Decisionnaire",
+      "Perception Analysis": "Analyse de la perception",
+      "Proposal/Price Quote": "Proposition/devis",
+      "Negotiation/Review": "Négociation/évaluation",
+      "Closed Won": "Conclusion gagnante",
+      "Closed Lost": "Conclusion perdante"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Créer une opportunité"
+  },
+  "presetFilters": {
+    "open": "Ouvert",
+    "won": "Gagné",
+    "lost": "Perdu"
+  }
 }

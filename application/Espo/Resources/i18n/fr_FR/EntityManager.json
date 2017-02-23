@@ -1,37 +1,50 @@
 {
-    "labels": {
-        "Fields": "Champs",
-        "Relationships": "Relations"
+  "labels": {
+    "Fields": "Champs",
+    "Relationships": "Relations"
+  },
+  "fields": {
+    "name": "Nom",
+    "type": "Type",
+    "labelSingular": "Libellé singulier",
+    "labelPlural": "Libellé pluriel",
+    "stream": "Flux",
+    "label": "Libellé",
+    "linkType": "Type de lien",
+    "entityForeign": "Entité étrangère",
+    "linkForeign": "Lien étranger",
+    "link": "Lien",
+    "labelForeign": "Libellé étranger",
+    "sortBy": "Tri par défaut (champs)",
+    "sortDirection": "Tri par défaut (sens)",
+    "relationName": "Nom de table intermédiaire",
+    "linkMultipleField": "Lier un champ multiple",
+    "linkMultipleFieldForeign": "Lier un champ multiple étranger",
+    "disabled": "Désactivé",
+    "textFilterFields": "Champs de filtre textuel"
+  },
+  "options": {
+    "type": {
+      "": "Aucun",
+      "Base": "Base",
+      "Person": "Personne",
+      "CategoryTree": "Arborescence catégories"
     },
-    "fields": {
-        "name": "Nom",
-        "type": "Type",
-        "labelSingular": "Libélé Singulier",
-        "labelPlural": "Libélé Pluriel",
-        "stream": "Flux",
-        "label": "Libélé",
-        "linkType": "Type de lien",
-        "entityForeign": "Entité étrangère",
-        "linkForeign": "Lien étranger",
-        "link": "Lien",
-        "labelForeign": "Libélé étranger"
+    "linkType": {
+      "manyToMany": "Plusieurs-à-Plusieurs",
+      "oneToMany": "Un-à-Plusieurs",
+      "manyToOne": "Plusieurs-à-Un",
+      "parentToChildren": "Parent-Enfant",
+      "childrenToParent": "Enfant-Parent"
     },
-    "options": {
-        "type": {
-            "": "Aucun",
-            "Base": "Base",
-            "Person": "Personne"
-        },
-        "linkType": {
-            "manyToMany": "Plusieurs-à-Plusieurs",
-            "oneToMany": "Un-à-Plusieurs",
-            "manyToOne": "Plusieurs-à-Un",
-            "parentToChildren": "Parent-Enfant",
-            "childrenToParent": "Enfant-Parent"
-        }
-    },
-    "messages": {
-        "entityCreated": "L'entité a bien été créée",
-        "linkAlreadyExists": "Conflit: lien déjà existant."
+    "sortDirection": {
+      "asc": "Croissant",
+      "desc": "Décroissant"
     }
+  },
+  "messages": {
+    "entityCreated": "L'entité a bien été créée",
+    "linkAlreadyExists": "Conflit: lien déjà existant.",
+    "linkConflict": "Conflit de nom : un lien ou un champ portant ce nom existe déjà. "
+  }
 }
