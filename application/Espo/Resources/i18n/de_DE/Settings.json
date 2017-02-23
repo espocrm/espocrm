@@ -121,7 +121,8 @@
     "ldapAccountDomainName": "Domäne, die für die Anmeldung am LDAP Verzeichnis verwendet wird.",
     "ldapAccountDomainNameShort": "Kurzform der Domäne, die für die Anmeldung am LDAP Verzeichnis verwendet wird.",
     "ldapUserTeams": "Teams für den erstellen Benutzer. Weitere Informationen siehe Benutzerprofil.",
-    "ldapUserDefaultTeam": "Standard-Team für erstellten Benutzer. Weitere Informationen siehe Benutzerprofil."
+    "ldapUserDefaultTeam": "Standard-Team für erstellten Benutzer. Weitere Informationen siehe Benutzerprofil.",
+    "b2cMode": "Standardmäßig ist EspoCRM für B2B angepasst. Sie können es auf B2C umschalten."
   },
   "labels": {
     "System": "System",

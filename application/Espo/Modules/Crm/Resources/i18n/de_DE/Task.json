@@ -12,7 +12,8 @@
     "isOverdue": "Ist überfällig",
     "account": "Firma",
     "dateCompleted": "Datum erledigt",
-    "attachments": "Anhänge"
+    "attachments": "Anhänge",
+    "reminders": "Erinnerungen"
   },
   "links": {
     "attachments": "Anhänge"

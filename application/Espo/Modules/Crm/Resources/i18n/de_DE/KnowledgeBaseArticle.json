@@ -4,7 +4,9 @@
     "Any": "Beliebig",
     "Send in Email": "In E-Mail senden",
     "Move Up": "Aufwärts",
-    "Move Down": "Abwärts"
+    "Move Down": "Abwärts",
+    "Move to Top": "zu Anfang",
+    "Move to Bottom": "zum Ende"
   },
   "fields": {
     "name": "Name",

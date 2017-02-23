@@ -12,7 +12,8 @@
     "contacts": "Kontakte",
     "leads": "Interessenten",
     "reminders": "Erinnerungen",
-    "account": "Firma"
+    "account": "Firma",
+    "acceptanceStatus": "Akzeptanzstatus"
   },
   "options": {
     "status": {

@@ -22,6 +22,7 @@
     "Portal": "Portal",
     "Portals": "Portale",
     "Portal Roles": "Portal-Rollen",
+    "Portal Users": "Portal Benutzer",
     "Outbound Emails": "Ausgehende E-Mails",
     "Group Email Accounts": "Gruppen E-Mail Konten",
     "Personal Email Accounts": "Persönliche E-Mail Konten",
@@ -64,7 +65,9 @@
     "massUpdate": "Massenänderung",
     "relationships": "Beziehungen",
     "sidePanelsDetail": "Seitenleisten (Detail)",
-    "sidePanelsEdit": "Seitenleisten (Bearbeiten)"
+    "sidePanelsEdit": "Seitenleisten (Bearbeiten)",
+    "sidePanelsDetailSmall": "Seitenleisten (Detail klein)",
+    "sidePanelsEditSmall": "Seitenleisten (Bearbeiten klein)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -72,10 +75,11 @@
     "foreign": "Fremdbezug",
     "duration": "Dauer",
     "password": "Passwort",
-    "parsonName": "Name Person",
+    "personName": "Person Name",
     "autoincrement": "Automatisch hochzählen",
     "bool": "Bool",
     "currency": "Währung",
+    "currencyConverted": "Währung (konvertiert)",
     "date": "Datum",
     "datetime": "Datum/Zeit",
     "datetimeOptional": "Datum/Datum-Zeit",
@@ -142,7 +146,9 @@
     "dynamicLogicVisible": "Bedingungen die ein Feld sichtbar machen",
     "dynamicLogicReadOnly": "Bedingungen die ein Feld schreibgeschützt machen",
     "dynamicLogicRequired": "Bedingungen die ein Feld erforderlich machen",
-    "dynamicLogicOptions": "Bedingungsoptionen"
+    "dynamicLogicOptions": "Bedingungsoptionen",
+    "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
+    "readOnly": "nur lesen"
   },
   "messages": {
     "upgradeVersion": "Ihr EspoCRM wird nun auf Version <strong>{version}</strong> aktualisiert. Dies kann einige Zeit dauern.",
@@ -170,6 +176,7 @@
     "roles": "Rollenverwaltung.",
     "portals": "Portalverwaltung",
     "portalRoles": "Rollen für Portale.",
+    "portalUsers": "Benutzer des Portals",
     "outboundEmails": "SMTP Einstellungen für ausgehende E-Mails.",
     "groupEmailAccounts": "IMAP Gruppenkonten. E-Mail Import und E-Mails für Fälle.",
     "personalEmailAccounts": "E-Mail Konten der Benutzer.",
