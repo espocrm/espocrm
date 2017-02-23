@@ -78,6 +78,7 @@ class EmailNotification extends \Espo\Core\Services\Base
     {
         return $this->getInjection('templateFileManager');
     }
+
     protected function getHtmlizer()
     {
         if (empty($this->htmlizer)) {
@@ -85,6 +86,8 @@ class EmailNotification extends \Espo\Core\Services\Base
         }
         return $this->htmlizer;
     }
+
+    protected $userIdPortalCacheMap = array();
 
     public function notifyAboutAssignmentJob($data)
     {
@@ -267,6 +270,8 @@ class EmailNotification extends \Espo\Core\Services\Base
         $userId = $notification->get('userId');
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
+        if (!$user) return;
+
         $emailAddress = $user->get('emailAddress');
         if (!$emailAddress) return;
 
@@ -288,12 +293,12 @@ class EmailNotification extends \Espo\Core\Services\Base
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!$parent) return;
 
-            $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
         } else {
-            $data['url'] = $this->getConfig()->getSiteUrl() . '/#Notification';
+            $data['url'] = $this->getSiteUrl($user) . '/#Notification';
         }
 
         $data['userName'] = $note->get('createdByName');
@@ -344,6 +349,8 @@ class EmailNotification extends \Espo\Core\Services\Base
         $userId = $notification->get('userId');
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
+        if (!$user) return;
+
         $emailAddress = $user->get('emailAddress');
         if (!$emailAddress) return;
 
@@ -375,7 +382,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!$parent) return;
 
-            $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
@@ -393,7 +400,7 @@ class EmailNotification extends \Espo\Core\Services\Base
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject-' . $parentType, $data, true);
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body-' . $parentType, $data, true);
         } else {
-            $data['url'] = $this->getConfig()->getSiteUrl() . '/#Notification';
+            $data['url'] = $this->getSiteUrl($user) . '/#Notification';
 
             $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'subject');
             $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'body');
@@ -426,6 +433,41 @@ class EmailNotification extends \Espo\Core\Services\Base
         }
     }
 
+    protected function getSiteUrl(\Espo\Entities\User $user)
+    {
+        if ($user->get('isPortalUser')) {
+            if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
+                $this->userIdPortalCacheMap[$user->id] = null;
+
+                $portalIdList = $user->getLinkMultipleIdList('portals');
+                $defaultPortalId = $this->getConfig()->get('defaultPortalId');
+
+                $portalId = null;
+
+                if (in_array($defaultPortalId, $portalIdList)) {
+                    $portalId = $defaultPortalId;
+                } else if (count($portalIdList)) {
+                    $portalId = $portalIdList[0];
+                }
+
+                if ($portalId) {
+                    $portal = $this->getEntityManager()->getEntity('Portal', $portalId);
+                    $this->getEntityManager()->getRepository('Portal')->loadUrlField($portal);
+                    $this->userIdPortalCacheMap[$user->id] = $portal;
+                }
+            } else {
+                $portal = $this->userIdPortalCacheMap[$user->id];
+            }
+
+            if ($portal) {
+                $url = $portal->get('url');
+                $url = rtrim($url, '/');
+                return $url;
+            }
+        }
+        return $this->getConfig()->getSiteUrl();
+    }
+
     protected function processNotificationNoteStatus($note, $user)
     {
         $parentId = $note->get('parentId');
@@ -441,7 +483,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
         if (!$parent) return;
 
-        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+        $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
         $data['parentName'] = $parent->get('name');
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
@@ -527,7 +569,7 @@ class EmailNotification extends \Espo\Core\Services\Base
         $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
         if (!$parent) return;
 
-        $data['url'] = $this->getConfig()->getSiteUrl() . '/#' . $parentType . '/view/' . $parentId;
+        $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
         $data['parentName'] = $parent->get('name');
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
