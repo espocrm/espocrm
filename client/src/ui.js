@@ -176,7 +176,7 @@ Espo.define('ui', [], function () {
             var diffHeight = headerHeight + footerHeight;
 
             if (!options.fullHeight) {
-                diffHeight = diffHeight - options.bodyDiffHeight
+                diffHeight = diffHeight + options.bodyDiffHeight;
             }
 
             if (this.fitHeight || options.fullHeight) {

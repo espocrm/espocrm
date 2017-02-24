@@ -150,7 +150,6 @@ Espo.define('views/modal', 'view', function (Dep) {
                     bodyDiffHeight: modalBodyDiffHeight,
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
                     fullHeight: this.getThemeManager().getParam('modalFullHeight'),
-                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     onRemove: function () {
                         this.onDialogClose();
