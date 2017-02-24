@@ -252,8 +252,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         fetchFromDom: function () {
             var selected = [];
             this.$el.find('.list-group .list-group-item').each(function (i, el) {
-                var value = $(el).data('value');
-                value = $(el).data('value').toString();
+                var value = $(el).data('value').toString();
                 selected.push(value);
             });
             this.selected = selected;
