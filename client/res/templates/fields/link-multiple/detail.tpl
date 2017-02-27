@@ -1,6 +1,10 @@
 {{#if value}}
     {{{value}}}
 {{else}}
-    {{{translate 'None'}}}
+    {{#if valueIsSet}}
+        {{{translate 'None'}}}
+    {{else}}
+        ...
+    {{/if}}
 {{/if}}
 
