@@ -364,6 +364,19 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             ]);
         },
 
+        actionNavigateToRoot: function (data, e) {
+            e.stopPropagation();
+
+            this.getRouter().checkConfirmLeaveOut(function () {
+                var options = {
+                    isReturn: true,
+                    isReturnThroughLink: true
+                };
+                this.getRouter().dispatch(this.scope, null, options);
+                this.getRouter().navigate('#' + this.scope, {trigger: false});
+            }, this);
+        },
+
     });
 });
 
