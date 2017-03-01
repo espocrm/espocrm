@@ -390,7 +390,7 @@ class InboundEmail extends \Espo\Services\Record
     {
         $email = null;
         try {
-            $email = $importer->importMessage('PhpMimeMailParser', $message, $userId, $teamIdList, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData);
+            $email = $importer->importMessage('PhpMimeMailParser', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
         } catch (\Exception $e) {
             $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ php-mime-mail-parser): [' . $e->getCode() . '] ' .$e->getMessage());
         }
