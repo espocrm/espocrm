@@ -50,7 +50,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 selected: this.selected,
                 translatedOptions: this.translatedOptions,
                 hasOptions: this.params.options ? true : false,
-                itemHtmlList: itemHtmlList
+                itemHtmlList: itemHtmlList,
+                isEmpty: (this.selected || []).length === 0
             }, Dep.prototype.data.call(this));
         },
 
