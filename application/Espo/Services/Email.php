@@ -283,7 +283,7 @@ class Email extends Record
             $this->prepareEntityForOutput($entity);
         }
 
-        if (!empty($entity) && !empty($id)) {
+        if (!empty($entity) && !empty($id) && !$entity->get('isRead')) {
             $this->markAsRead($entity->id);
         }
         return $entity;
