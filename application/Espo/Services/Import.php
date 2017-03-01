@@ -61,6 +61,7 @@ class Import extends \Espo\Services\Record
 
     protected $timeFormatsMap = array(
         'HH:mm' => 'H:i',
+        'HH:mm:ss' => 'H:i:s',
         'hh:mm a' => 'h:i a',
         'hh:mma' => 'h:ia',
         'hh:mm A' => 'h:iA',
@@ -670,7 +671,7 @@ class Import extends \Espo\Services\Record
                     $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
                     if ($dt) {
                         $dt->setTimezone(new \DateTimeZone('UTC'));
-                        return $dt->format('Y-m-d H:i');
+                        return $dt->format('Y-m-d H:i:s');
                     }
                     break;
                 case Entity::FLOAT:
