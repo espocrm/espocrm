@@ -57,16 +57,16 @@
             "insertText": "datetime\\addYears(VALUE, YEARS)"
         },
         {
+            "name": "datetime\\diff",
+            "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)"
+        },
+        {
             "name": "number\\format",
             "insertText": "number\\format(VALUE)"
         },
         {
             "name": "number\\abs",
             "insertText": "number\\abs(VALUE)"
-        },
-        {
-            "name": "datetime\\diff",
-            "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)"
         },
         {
             "name": "entity\\isNew",
