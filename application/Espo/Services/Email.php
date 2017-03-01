@@ -372,6 +372,18 @@ class Email extends Record
                 user_id = " . $pdo->quote($userId) . "
         ";
         $pdo->query($sql);
+
+        $sql = "
+            UPDATE notification SET `read` = 1
+            WHERE
+                `deleted` = 0 AND
+                `type` = 'EmailReceived' AND
+                `related_type` = 'Email' AND
+                `read` = 0 AND
+                `user_id` = " . $pdo->quote($userId) . "
+        ";
+        $pdo->query($sql);
+
         return true;
     }
 
@@ -389,6 +401,20 @@ class Email extends Record
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
+
+        $sql = "
+            UPDATE notification SET `read` = 1
+            WHERE
+                `deleted` = 0 AND
+                `type` = 'EmailReceived' AND
+                `related_type` = 'Email' AND
+                `related_id` = " . $pdo->quote($id) ." AND
+                `read` = 0 AND
+                `user_id` = " . $pdo->quote($userId) . "
+        ";
+
+        $pdo->query($sql);
+
         return true;
     }
 
