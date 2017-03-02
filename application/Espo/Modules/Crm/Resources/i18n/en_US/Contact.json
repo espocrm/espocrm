@@ -16,7 +16,8 @@
         "targetLists": "Target Lists",
         "targetList": "Target List",
         "portalUser": "Portal User",
-        "originalLead": "Original Lead"
+        "originalLead": "Original Lead",
+        "acceptanceStatus": "Acceptance Status"
     },
     "links": {
         "opportunities": "Opportunities",

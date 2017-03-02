@@ -1,4 +1,7 @@
 {
+    "fields": {
+        "acceptanceStatus": "Acceptance Status"
+    },
     "links": {
         "targetLists": "Target Lists"
     }

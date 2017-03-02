@@ -24,7 +24,8 @@
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List",
-        "industry": "Industry"
+        "industry": "Industry",
+        "acceptanceStatus": "Acceptance Status"
     },
     "links": {
         "targetLists": "Target Lists",
