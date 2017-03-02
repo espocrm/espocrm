@@ -33,7 +33,7 @@
             "options": [900, 1800, 3600, 7200, 10800, 86400],
             "default": 3600,
             "notStorable": true,
-            "select": "TIMESTAMPDIFF(SECOND, date_start, date_end)",
+            "select": "TIMESTAMPDIFF(SECOND, meeting.date_start, meeting.date_end)",
             "orderBy": "duration {direction}"
         },
         "reminders": {

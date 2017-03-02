@@ -68,6 +68,13 @@ class EntityManager
         return $this->metadata;
     }
 
+    protected function getEntityManager()
+    {
+        if (!$this->container) return;
+
+        return $this->container->get('entityManager');
+    }
+
     protected function getLanguage()
     {
         return $this->language;
@@ -210,6 +217,7 @@ class EntityManager
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
+        $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
         $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
