@@ -50,7 +50,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Result'}}</a></li>
+                            <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Results'}}</a></li>
                         </ul>
                     </div>
                     {{/unless}}
