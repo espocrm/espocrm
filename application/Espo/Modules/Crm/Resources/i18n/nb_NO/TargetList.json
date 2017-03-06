@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "Navn",
+    "description": "Beskrivelse",
+    "entryCount": "Antall enheter",
+    "campaigns": "Kampanjer",
+    "endDate": "Sluttdato",
+    "targetLists": "Målgrupper",
+    "includingActionList": "Inkludert",
+    "excludingActionList": "Eksludert"
+  },
+  "links": {
+    "accounts": "Konti",
+    "contacts": "Kontakter",
+    "leads": "Ledetråder",
+    "campaigns": "Kampanjer",
+    "massEmails": "Masseutsendte eposter"
+  },
+  "options": {
+    "type": {
+      "Email": "Epost",
+      "Web": "Nettside",
+      "Television": "Fjernsyn",
+      "Radio": "Radio",
+      "Newsletter": "Nyhetsbrev"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Opprett målgruppe",
+    "Opted Out": "Avmeldt",
+    "Cancel Opt-Out": "Angre avmelding",
+    "Opt-Out": "Avmeld"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "URL",
+    "urlToUse": "Kode for å sette inn URL",
+    "campaign": "Kampanje"
+  },
+  "links": {
+    "campaign": "Kampanje"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Opprett sporings-URL"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "Adresse"
+  },
+  "links": {
+    "meetings": "Møter",
+    "calls": "Samtaler",
+    "tasks": "Oppgaver"
+  },
+  "labels": {
+    "Create {entityType}": "Opprett {entityTypeTranslated}"
+  }
+}

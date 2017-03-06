@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Navn",
+    "body": "Brødtekst",
+    "entityType": "Enhetstype",
+    "header": "Overskrift",
+    "footer": "Footer",
+    "leftMargin": "Venstremarg",
+    "topMargin": "Toppmarg",
+    "rightMargin": "Høyremarg",
+    "bottomMargin": "Bunnmarg",
+    "printFooter": "Skriv ut footer",
+    "footerPosition": "Footer-posisjon"
+  },
+  "labels": {
+    "Create Template": "Opprett mal"
+  },
+  "tooltips": {
+    "footer": "Bruk {pageNumber} for å skrive ut sidenummer"
+  }
+}

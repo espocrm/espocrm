@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Navn",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
+    "portalRoles": "Roller",
+    "isActive": "Er aktiv",
+    "isDefault": "Er forvalg",
+    "tabList": "Liste over dashlet-samlinger",
+    "quickCreateList": "Opprett liste raskt",
+    "theme": "Stiltema",
+    "language": "Språk",
+    "dashboardLayout": "Dashbordoppsett",
+    "dateFormat": "Datoformat",
+    "timeFormat": "Tidsformat",
+    "timeZone": "Tidssone",
+    "weekStart": "Første dag i uken",
+    "defaultCurrency": "Forvalgt valuta",
+    "customUrl": "Egendefinert URL",
+    "customId": "Egendefinert ID"
+  },
+  "links": {
+    "users": "Brukere",
+    "portalRoles": "Roller",
+    "notes": "Notater"
+  },
+  "tooltips": {
+    "portalRoles": "Spesifiserte portalroller vil gjelde for alle brukere i denne portalen."
+  },
+  "labels": {
+    "Create Portal": "Opprett portal",
+    "User Interface": "Brukergrensesnitt",
+    "General": "Generelt",
+    "Settings": "Innstillinger"
+  }
+}

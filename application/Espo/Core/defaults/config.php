@@ -70,6 +70,7 @@ return array (
         'fr_FR',
         'id_ID',
         'it_IT',
+        'nb_NO',
         'nl_NL',
         'tr_TR',
         'ro_RO',

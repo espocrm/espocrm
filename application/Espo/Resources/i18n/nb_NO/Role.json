@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Navn",
+    "roles": "Roller",
+    "assignmentPermission": "Tildelingsrettigheter",
+    "userPermission": "Brukerrettigheter",
+    "portalPermission": "Portalrettigheter"
+  },
+  "links": {
+    "users": "Brukere",
+    "teams": "Grupper"
+  },
+  "tooltips": {
+    "assignmentPermission": "Gjør det mulig å begrense tildeling av oppføringer og å poste meldinger til andre brukere.\n\nAlle – ingen restriksjoner\n\nGruppe – kan tildele og poste til medlemmer av gruppen\n\nIngen – kan kun tildele og poste til seg selv",
+    "userPermission": "Gjør det mulig å avgrense om brukere skal kunne se aktiviteter, kalenderen og strømmen til andre brukere.\n\nAlle – kan se alt\n\nGruppe – viser kun informasjon fra deltagere i gruppen\n\nIngen – får ikke se noe",
+    "portalPermission": "Definerer tilgangen til portalinformasjon, muligheten til å poste meldinger og til å konvertere kontakter til portalbrukere."
+  },
+  "labels": {
+    "Access": "Tilgang",
+    "Create Role": "Opprett rolle",
+    "Scope Level": "Omfangsnivå",
+    "Field Level": "Feltnivå"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "udefinert",
+      "enabled": "aktivert",
+      "disabled": "deaktivert"
+    },
+    "levelList": {
+      "all": "alle",
+      "team": "gruppe",
+      "account": "konto",
+      "contact": "kontakt",
+      "own": "eie",
+      "no": "nei",
+      "yes": "ja",
+      "not-set": "udefinert"
+    }
+  },
+  "actions": {
+    "read": "Les",
+    "edit": "Rediger",
+    "delete": "Slett",
+    "stream": "Strøm",
+    "create": "Opprett"
+  },
+  "messages": {
+    "changesAfterClearCache": "Endringer i tillgangskontrollen vil først tre i kraft etter at hurtigminne er tømt."
+  }
+}

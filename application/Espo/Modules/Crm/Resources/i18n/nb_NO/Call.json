@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Navn",
+    "parent": "Forelder",
+    "status": "Status",
+    "dateStart": "Startdato",
+    "dateEnd": "Sluttdato",
+    "direction": "Rettning",
+    "duration": "Varighet",
+    "description": "Beskrivelse",
+    "users": "Brukere",
+    "contacts": "Kontakter",
+    "leads": "Ledetråder",
+    "reminders": "Påminnelser",
+    "account": "Konto",
+    "acceptanceStatus": "Akseptstatus"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlagt",
+      "Held": "Gjennomført",
+      "Not Held": "Ikke gjennomført"
+    },
+    "direction": {
+      "Outbound": "Utgående",
+      "Inbound": "Inngående"
+    },
+    "acceptanceStatus": {
+      "None": "Ingen",
+      "Accepted": "Akseptert",
+      "Declined": "Avslått",
+      "Tentative": "Forsøkt"
+    }
+  },
+  "massActions": {
+    "setHeld": "Merk som gjennomført",
+    "setNotHeld": "Merk som ikke gjennomført"
+  },
+  "labels": {
+    "Create Call": "Opprett samtale",
+    "Set Held": "Merk som gjennomført",
+    "Set Not Held": "Merk som ikke gjennomført",
+    "Send Invitations": "Send invitasjoner"
+  },
+  "presetFilters": {
+    "planned": "Planlagt",
+    "held": "Gjennomført",
+    "todays": "Dagens"
+  }
+}
