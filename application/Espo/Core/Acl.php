@@ -69,6 +69,11 @@ class Acl
         return $this->getAclManager()->get($this->getUser(), $permission);
     }
 
+    public function checkReadNo($scope)
+    {
+        return $this->getAclManager()->checkReadNo($this->getUser(), $scope);
+    }
+
     public function checkReadOnlyTeam($scope)
     {
         return $this->getAclManager()->checkReadOnlyTeam($this->getUser(), $scope);

@@ -133,6 +133,15 @@ class AclManager
         return $this->getTable($user)->get($permission);
     }
 
+    public function checkReadNo(User $user, $scope)
+    {
+        if ($user->isAdmin()) {
+            return false;
+        }
+        $data = $this->getTable($user)->getScopeData($scope);
+        return $this->getImplementation($scope)->checkReadNo($user, $data);
+    }
+
     public function checkReadOnlyTeam(User $user, $scope)
     {
         if ($user->isAdmin()) {

@@ -430,6 +430,8 @@ class Base
                 if (!$this->getUser()->isAdmin()) {
                     if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
                         $this->accessOnlyTeam($result);
+                    } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                        $this->accessNo($result);
                     }
                 }
             }
@@ -442,10 +444,19 @@ class Base
                 } else {
                     if ($this->getAcl()->checkReadOnlyContact($this->getEntityType())) {
                         $this->accessPortalOnlyContact($result);
+                    } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                        $this->accessNo($result);
                     }
                 }
             }
         }
+    }
+
+    protected function accessNo(&$result)
+    {
+        $result['whereClause'][] = array(
+            'id' => null
+        );
     }
 
     protected function accessOnlyOwn(&$result)
