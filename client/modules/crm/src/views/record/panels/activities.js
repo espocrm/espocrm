@@ -150,6 +150,7 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
             this.tabList = [];
             this.scopeList.forEach(function (item) {
                 if (!this.getAcl().check(item)) return;
+                if (!this.getAcl().check(item, 'read')) return;
                 if (this.getMetadata().get(['scopes', item, 'disabled'])) return;
                 this.tabList.push(item);
             }, this);
