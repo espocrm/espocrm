@@ -234,6 +234,7 @@
         "checkForNewNotifications": "Check for new notifications",
         "checkForNewNotes": "Check for stream updates",
         "internalPost": "Post will be seen only by internal users",
+        "internalPostTitle": "Post is seen only by internal users",
         "done": "Done",
         "confirmMassFollow": "Are you sure you want to follow selected records?",
         "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
