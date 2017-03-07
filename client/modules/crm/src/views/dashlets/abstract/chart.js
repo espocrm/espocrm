@@ -38,7 +38,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         colors: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
 
-        successColor: '#5ABD37',
+        successColor: '#85b75f',
 
         outlineColor: '#333',
 
