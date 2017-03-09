@@ -57,7 +57,9 @@ class Parser extends \PhpMimeMailParser\Parser
                 && substr($part['content-type'], 0, 10) !== 'multipart/'
                 ) {
                 // if we cannot get it by getMessageBody(), we assume it is an attachment
-                $disposition = 'attachment';
+                if ($disposition !== 'inline') {
+                    $disposition = 'attachment';
+                }
             }
 
             if (in_array($disposition, $dispositions) === true && isset($filename) === true) {
