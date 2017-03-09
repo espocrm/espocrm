@@ -96,25 +96,30 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
 
             var addressHtml = '<span>' + address + '</span>';
 
-            var lineHtml;
+            var lineHtml = '';
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
-            } else if (name) {
-                lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
             } else {
-                lineHtml = addressHtml;
-            }
-            if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {
                     lineHtml += this.getCreateHtml(address);
                 }
+                if (name) {
+                    lineHtml += '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
+                } else {
+                    lineHtml += addressHtml;
+                }
             }
+            /*if (!id) {
+                if (this.getAcl().check('Contact', 'edit')) {
+                    lineHtml += this.getCreateHtml(address);
+                }
+            }*/
             lineHtml = '<div>' + lineHtml + '</div>';
             return lineHtml;
         },
 
         getCreateHtml: function (address) {
-            var html = '<span class="dropdown email-address-create-dropdown">' +
+            var html = '<span class="dropdown email-address-create-dropdown pull-right">' +
                 '<button class="dropdown-toggle btn btn-link btn-sm" data-toggle="dropdown">' +
                     '<span class="caret text-muted"></span>' +
                 '</button>' +
