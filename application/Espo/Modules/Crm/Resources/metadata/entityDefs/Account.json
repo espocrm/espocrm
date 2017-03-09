@@ -270,8 +270,7 @@
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true,
-            "audited": true
+            "layoutRelationshipsDisabled": true
         },
         "emails": {
             "type": "hasChildren",
