@@ -346,7 +346,7 @@ abstract class Base
         return $select;
     }
 
-    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null)
+    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null)
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
@@ -356,7 +356,9 @@ abstract class Base
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
-        $alias = $this->getAlias($entity, $relationName);
+        if (!$alias) {
+            $alias = $this->getAlias($entity, $relationName);
+        }
 
         if ($alias) {
             return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
@@ -922,7 +924,7 @@ abstract class Base
                 return $join;
 
             case IEntity::BELONGS_TO:
-                return $pre . $this->getBelongsToJoin($entity, $relationName);
+                return $pre . $this->getBelongsToJoin($entity, $relationName, null, $joinAlias);
         }
 
         return false;
