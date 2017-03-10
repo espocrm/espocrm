@@ -29,7 +29,6 @@
     "createCase": "Opprett sak automatisk for inngående eposter.",
     "replyToAddress": "Spesifiser epostadressen til denne postkassen for at svar skal bli sendt hit.",
     "caseDistribution": "Hvordan saker vil bli tildelt – direkte til en bruker eller til gruppen.",
-    "targetUserPosition": "Definer posisjonen til brukerne som vil distribueres med sakene.",
     "assignToUser": "Brukere som sakene tildeles til.",
     "team": "Gruppes som sakene tildeles til.",
     "teams": "Grupper som eposter tildeles til.",

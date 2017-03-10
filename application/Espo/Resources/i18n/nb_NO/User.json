@@ -77,8 +77,7 @@
     "forbidden": "Ikke tillat, prøv igjen senere",
     "uniqueLinkHasBeenSent": "Den unike lenken er sendt til den angitte epostadressen.",
     "passwordChangedByRequest": "Passordet er endret.",
-    "setupSmtpBefore": "For å sende ut passord via epost må du først sette opp en <a href=\"{url}\">SMTP-tjener</a>.",
-    "passwordChangeLinkEmailBody": "Du kan bytte passord ved å følge denne lenken {link}. Denne unike lenken vil utgå etter kort tid."
+    "setupSmtpBefore": "For å sende ut passord via epost må du først sette opp en <a href=\"{url}\">SMTP-tjener</a>."
   },
   "boolFilters": {
     "onlyMyTeam": "Bare min gruppe"
