@@ -1,0 +1,20 @@
+{
+  "modes": {
+    "month": "Måned",
+    "week": "Uge",
+    "agendaWeek": "Uge",
+    "day": "Dag",
+    "agendaDay": "Dag",
+    "timeline": "Tidslinje"
+  },
+  "labels": {
+    "Today": "Idag",
+    "Create": "Opret",
+    "Shared": "Delt",
+    "Add User": "Tilføj Bruger",
+    "current": "Aktuel",
+    "time": "Tid",
+    "User List": "Brugerliste",
+    "Manage Users": "Administrer Brugere"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Opret Kategori",
+    "Manage Categories": "Administrer Kategorier",
+    "Articles": "Artikler"
+  },
+  "links": {
+    "articles": "Artikler"
+  }
+}

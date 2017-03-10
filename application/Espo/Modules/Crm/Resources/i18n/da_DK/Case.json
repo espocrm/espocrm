@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "Navn",
+    "number": "Nummer",
+    "status": "Status",
+    "account": "Konto",
+    "contact": "Kontakt",
+    "contacts": "Kontakter",
+    "priority": "Prioritet",
+    "type": "Type",
+    "description": "Beskrivelse",
+    "inboundEmail": "Ingående Email",
+    "lead": "Lead"
+  },
+  "links": {
+    "inboundEmail": "Indgående Email",
+    "account": "Konto",
+    "contact": "Kontakt (Primær)",
+    "Contacts": "Kontakter",
+    "meetings": "Møder",
+    "calls": "Opkald",
+    "tasks": "Opgaver",
+    "emails": "Emails",
+    "articles": "Vidensbase Artikler",
+    "lead": "Lead"
+  },
+  "options": {
+    "status": {
+      "New": "Ny",
+      "Assigned": "Tildelt",
+      "Pending": "Venter",
+      "Closed": "Lukket",
+      "Rejected": "Afvist",
+      "Duplicate": "Dublet"
+    },
+    "priority": {
+      "Low": "Lav",
+      "Normal": "Normal",
+      "High": "Høj",
+      "Urgent": "Vigtig"
+    },
+    "type": {
+      "Question": "Spørgsmål",
+      "Incident": "Hændelse",
+      "Problem": "Problem"
+    }
+  },
+  "labels": {
+    "Create Case": "Opret Sag",
+    "Close": "Luk",
+    "Reject": "Afvis",
+    "Closed": "Lukket",
+    "Rejected": "Afvist"
+  },
+  "presetFilters": {
+    "open": "Åben",
+    "closed": "Lukket"
+  }
+}

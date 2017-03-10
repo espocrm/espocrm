@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Navn",
+    "version": "Version",
+    "description": "Beskrivelse",
+    "isInstalled": "Installeret"
+  },
+  "labels": {
+    "Uninstall": "Afinstaller",
+    "Install": "Installer"
+  },
+  "messages": {
+    "uninstalled": "Udvidelse {name} er blevet afinstalleret"
+  }
+}

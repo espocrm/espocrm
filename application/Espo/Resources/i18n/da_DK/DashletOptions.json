@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "title": "Titel",
+    "dateFrom": "Dato fra.",
+    "dateTo": "Dato til.",
+    "autorefreshInterval": "Genindlæsningsinterval",
+    "displayRecords": "Antal viste linier.",
+    "isDoubleHeight": "Dobbelt højde.",
+    "mode": "Mode",
+    "enabledScopeList": "Hvad skal vises.",
+    "users": "Brugere"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Uge (agenda)",
+      "basicWeek": "Uge",
+      "month": "Måned",
+      "basicDay": "Dag",
+      "agendaDay": "Dag (agenda)",
+      "timeline": "Tidslinie"
+    }
+  }
+}

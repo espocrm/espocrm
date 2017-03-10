@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Navn",
+    "parent": "Henviser til",
+    "status": "Status",
+    "dateStart": "Startdato",
+    "dateEnd": "Slutdato",
+    "duration": "Varighed",
+    "description": "Beskrivelse",
+    "users": "Brugere",
+    "contacts": "Kontakter",
+    "leads": "leads",
+    "reminders": "Påmindelser",
+    "account": "Konto",
+    "acceptanceStatus": "Acceptstatus"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlagt",
+      "Held": "Gennemført",
+      "Not Held": "Ikke Gennemført"
+    },
+    "acceptanceStatus": {
+      "None": "Ingen",
+      "Accepted": "Accepteret",
+      "Declined": "Nægtet",
+      "Tentative": "Forsøgt"
+    }
+  },
+  "massActions": {
+    "setHeld": "Marker som Gennemført",
+    "setNotHeld": "Marker som Ikke Gennemført"
+  },
+  "labels": {
+    "Create Meeting": "Opret Møde",
+    "Set Held": "Marker som Gennemført",
+    "Set Not Held": "Marker som Ikke Gennemført",
+    "Send Invitations": "Send Invitationer",
+    "on time": "Til Tiden",
+    "before": "Før"
+  },
+  "presetFilters": {
+    "planned": "Planlagt",
+    "held": "Gennemført",
+    "todays": "Dagens"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Intet blev sendt"
+  }
+}
