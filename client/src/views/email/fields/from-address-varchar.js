@@ -250,12 +250,19 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
+            var filters = {};
+            if (name) {
+                filters['name'] = {
+                    type: 'equals',
+                    field: 'name',
+                    value: name
+                };
+            }
+
             this.createView('dialog', viewName, {
                 scope: scope,
                 createButton: false,
-                /*filters: {
-
-                }*/
+                filters: filters
             }, function (view) {
                 view.render();
                 Espo.Ui.notify(false);
