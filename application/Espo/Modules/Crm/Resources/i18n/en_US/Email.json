@@ -2,6 +2,8 @@
     "labels": {
         "Create Lead": "Create Lead",
         "Create Contact": "Create Contact",
+        "Add to Contact": "Add to Contact",
+        "Add to Lead": "Add to Lead",
         "Create Task": "Create Task",
         "Create Case": "Create Case"
     }

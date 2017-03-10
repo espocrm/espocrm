@@ -43,6 +43,18 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             'click [data-action="createContact"]': function (e) {
                 var address = $(e.currentTarget).data('address');
                 this.createPerson('Contact', address);
+            },
+            'click [data-action="createLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                this.createPerson('Lead', address);
+            },
+            'click [data-action="addToContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                this.addToPerson('Contact', address);
+            },
+            'click [data-action="addToLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                this.addToPerson('Lead', address);
             }
         },
 
@@ -100,7 +112,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
-                if (this.getAcl().check('Contact', 'edit')) {
+                if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
                     lineHtml += this.getCreateHtml(address);
                 }
                 if (name) {
@@ -109,11 +121,6 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                     lineHtml += addressHtml;
                 }
             }
-            /*if (!id) {
-                if (this.getAcl().check('Contact', 'edit')) {
-                    lineHtml += this.getCreateHtml(address);
-                }
-            }*/
             lineHtml = '<div>' + lineHtml + '</div>';
             return lineHtml;
         },
@@ -124,9 +131,24 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                     '<span class="caret text-muted"></span>' +
                 '</button>' +
                 '<ul class="dropdown-menu" role="menu">' +
-                    '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+this.translate('Create Contact', 'labels', 'Email')+'</a></li>' +
-                '</ul>' +
+            '';
+
+            if (this.getAcl().check('Contact', 'create')) {
+                html += '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+this.translate('Create Contact', 'labels', 'Email')+'</a></li>';
+            }
+            if (this.getAcl().check('Lead', 'create')) {
+                html += '<li><a href="javascript:" data-action="createLead" data-address="'+address+'">'+this.translate('Create Lead', 'labels', 'Email')+'</a></li>';
+            }
+            if (this.getAcl().check('Contact', 'edit')) {
+                html += '<li><a href="javascript:" data-action="addToContact" data-address="'+address+'">'+this.translate('Add to Contact', 'labels', 'Email')+'</a></li>';
+            }
+            if (this.getAcl().check('Contact', 'edit')) {
+                html += '<li><a href="javascript:" data-action="addToLead" data-address="'+address+'">'+this.translate('Add to Lead', 'labels', 'Email')+'</a></li>';
+            }
+
+            html += '</ul>' +
             '</span>';
+
             return html;
         },
 
@@ -202,6 +224,87 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 }, this);
             }.bind(this));
         },
+
+        addToPerson: function (scope, address) {
+            var address = address;
+
+            var fromString = this.model.get('fromString') || this.model.get('fromName');
+            var name = this.nameHash[address] || null;
+
+            if (!name) {
+                if (this.name == 'from') {
+                    name = this.parseNameFromStringAddress(fromString) || null;
+                }
+            }
+
+            var attributes = {
+                emailAddress: address
+            };
+
+            if (this.model.get('accountId') && scope == 'Contact') {
+                attributes.accountId = this.model.get('accountId');
+                attributes.accountName = this.model.get('accountName');
+            }
+
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
+
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            this.createView('dialog', viewName, {
+                scope: scope,
+                createButton: false,
+                /*filters: {
+
+                }*/
+            }, function (view) {
+                view.render();
+                Espo.Ui.notify(false);
+                this.listenToOnce(view, 'select', function (model) {
+                    var afterSave = function () {
+                        var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
+                        var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
+                        var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+
+                        idHash[address] = model.id;
+                        nameHash[address] = model.get('name');
+                        typeHash[address] = scope;
+
+                        this.idHash = idHash;
+                        this.nameHash = nameHash;
+                        this.typeHash = typeHash;
+
+                        var attributes = {
+                            nameHash: nameHash,
+                            idHash: idHash,
+                            typeHash: typeHash
+                        };
+
+                        setTimeout(function () {
+                            this.model.set(attributes);
+                        }.bind(this), 50);
+                    }.bind(this);
+
+                    if (!model.get('emailAddress')) {
+                        model.save({
+                            'emailAddress': address
+                        }, {patch: true}).then(afterSave);
+                    } else {
+                        model.fetch().then(function () {
+                            var emailAddressData = model.get('emailAddressData') || [];
+                            var item = {
+                                emailAddress: address,
+                                primary: emailAddressData.length === 0
+                            };
+                            emailAddressData.push(item);
+                            model.save({
+                                'emailAddressData': emailAddressData
+                            }, {patch: true}).then(afterSave);
+                        }.bind(this));
+                    }
+
+                }, this);
+            }.bind(this));
+        }
 
     });
 

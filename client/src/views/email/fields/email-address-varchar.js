@@ -66,6 +66,18 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             'click [data-action="createContact"]': function (e) {
                 var address = $(e.currentTarget).data('address');
                 From.prototype.createPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="createLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.createPerson.call(this, 'Lead', address);
+            },
+            'click [data-action="addToContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="addToLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Lead', address);
             }
         },
 
