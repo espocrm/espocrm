@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Navn",
+    "roles": "Roller",
+    "positionList": "Stillingsbetegnelse"
+  },
+  "links": {
+    "users": "Brugere",
+    "notes": "Notater",
+    "roles": "Roller",
+    "inboundEmails": "Gruppe-email konti"
+  },
+  "tooltips": {
+    "roles": "Brugere i dette team arver alle adgangsrettigheder fra de valgte roller.",
+    "positionList": "Stillinger til rådighed i dette team. F.eks. Sælger, Manager osv."
+  },
+  "labels": {
+    "Create Team": "Opret Team"
+  }
+}

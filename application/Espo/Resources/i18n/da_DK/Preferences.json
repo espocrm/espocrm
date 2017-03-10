@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "dateFormat": "Datoformat",
+    "timeFormat": "Tidsformat",
+    "timeZone": "Tidszone",
+    "weekStart": "Første Dag i Ugen",
+    "thousandSeparator": "Tusindtalsseparator",
+    "decimalMark": "Decimaltegn",
+    "defaultCurrency": "Standardvaluta",
+    "currencyList": "Valutaliste",
+    "language": "Sprog",
+    "smtpServer": "Server",
+    "smtpPort": "Port",
+    "smtpAuth": "Auth",
+    "smtpSecurity": "Sikkerhed",
+    "smtpUsername": "Brugernavn",
+    "emailAddress": "Email",
+    "smtpPassword": "Kodeord",
+    "smtpEmailAddress": "Emailadresse",
+    "exportDelimiter": "Eksportbegrænser",
+    "autoFollowEntityTypeList": "Auto-følg",
+    "signature": "Emailsignatur",
+    "dashboardTabList": "Menuliste",
+    "tabList": "Menuliste",
+    "defaultReminders": "Standard for Underretninger",
+    "theme": "Tema",
+    "useCustomTabList": "Brugerdefineret Menuliste",
+    "emailReplyToAllByDefault": "Emailsvar til Alle som Standard",
+    "receiveAssignmentEmailNotifications": "Email notifikationer efter tildeling",
+    "receiveMentionEmailNotifications": "Email notifikationer når du nævnes i poster.",
+    "receiveStreamEmailNotifications": "Email notifikationer om post- og statusopdateringer",
+    "dashboardLayout": "Dashboard Layout",
+    "emailReplyForceHtml": "Email Svar i HTML",
+    "doNotFillAssignedUserIfNotRequired": "Udfyld ikke Tildelt Bruger, hvis det ikke er påkrævet.",
+    "followEntityOnStreamPost": "Auto-følg entitet efter at have postet i liste."
+  },
+  "options": {
+    "weekStart": {
+      "0": "Søndag",
+      "1": "Mandag"
+    }
+  },
+  "labels": {
+    "Notifications": "Notifikationer",
+    "User Interface": "Brugergrænseflade",
+    "SMTP": "SMTP",
+    "Misc": "Forskelligt",
+    "Locale": "Landestandard"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Bruger vil automatisk følge alle nye poster i de valgte entitetstyper, vil se nyheder i aktiviteter og modtage notifikationer."
+  }
+}

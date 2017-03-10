@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "status": "Status",
+    "executeTime": "Udfør når",
+    "attempts": "Forsøg tilbage",
+    "failedAttempts": "Fejlede forsøg",
+    "serviceName": "Service",
+    "method": "Metode",
+    "scheduledJob": "Planlagt job",
+    "data": "Data"
+  },
+  "options": {
+    "status": {
+      "Pending": "Afventer",
+      "Success": "Succes",
+      "Running": "Kører",
+      "Failed": "Fejlet"
+    }
+  }
+}

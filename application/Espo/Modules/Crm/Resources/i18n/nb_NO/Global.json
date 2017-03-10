@@ -6,7 +6,7 @@
     "leads": "Ledetråder",
     "meetings": "Møter",
     "calls": "Samtaler",
-    "tasks": "Oppgaver",
+    "tasks": "Gjøremål",
     "emails": "Eposter",
     "accounts": "Konti",
     "cases": "Saker",
@@ -24,7 +24,7 @@
     "Meeting": "Møte",
     "Calendar": "Kalender",
     "Call": "Samtale",
-    "Task": "Oppgave",
+    "Task": "Gjøremål",
     "Case": "Sak",
     "Document": "Dokument",
     "DocumentFolder": "Dokumentmappe",
@@ -47,7 +47,7 @@
     "Meeting": "Møter",
     "Calendar": "Kalender",
     "Call": "Samtaler",
-    "Task": "Oppgaver",
+    "Task": "Gjøremål",
     "Case": "Saker",
     "Document": "Dokumenter",
     "DocumentFolder": "Dokumentmapper",
@@ -64,7 +64,7 @@
   "dashlets": {
     "Leads": "Mine ledetråder",
     "Opportunities": "Mine muligheter",
-    "Tasks": "Mine oppgaver",
+    "Tasks": "Mine gjøremål",
     "Cases": "Mine saker",
     "Calendar": "Kalender",
     "Calls": "Mine samtaler",
@@ -86,8 +86,8 @@
     "Log Meeting": "Logg møte",
     "Log Call": "Logg samtale",
     "Archive Email": "Arkiver epost",
-    "Create Task": "Opprett oppgave",
-    "Tasks": "Oppgaver"
+    "Create Task": "Opprett gjøremål",
+    "Tasks": "Gjøremål"
   },
   "fields": {
     "billingAddressCity": "By",

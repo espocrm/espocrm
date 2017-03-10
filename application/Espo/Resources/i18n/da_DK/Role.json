@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Navn",
+    "roles": "Roller",
+    "assignmentPermission": "Tilladelse til tildeling",
+    "userPermission": "Brugertilladelse",
+    "portalPermission": "Portaltilladelse"
+  },
+  "links": {
+    "users": "Brugere",
+    "teams": "Teams"
+  },
+  "tooltips": {
+    "assignmentPermission": "Tillader at begrænse mulighed for at tildele optegnelser og sende meddelelser til andre brugere.\n\nalle - ingen begrænsninger\n\nteam - kan kun tildele og sende til andre teammedlemmer\n\nnej - kan kun tildele og sende til sig selv",
+    "userPermission": "Tillader at begrænse brugeres mulighed for at se andre brugeres aktiviteter og kalender.\n\nalle - kan se alt\n\nteam - kan kun se teammedlemmers aktiviteter\n\nnej - kan ikke se",
+    "portalPermission": "Definerer adgang til portalinformation, mulighed for at konvertere kontakter til portalbrugere og sende meddelelser til portalbrugere."
+  },
+  "labels": {
+    "Access": "Adgang",
+    "Create Role": "Opret Rolle",
+    "Scope Level": "Adgangsniveau",
+    "Field Level": "Feltniveau"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "Ikke angivet",
+      "enabled": "Aktiv",
+      "disabled": "Inaktiv"
+    },
+    "levelList": {
+      "all": "Alle",
+      "team": "team",
+      "account": "Konto",
+      "contact": "Kontakt",
+      "own": "Egne",
+      "no": "nej",
+      "yes": "ja",
+      "not-set": "Ikke angivet"
+    }
+  },
+  "actions": {
+    "read": "Læs",
+    "edit": "Rediger",
+    "delete": "Slet",
+    "stream": "Aktiviteter",
+    "create": "Opret"
+  },
+  "messages": {
+    "changesAfterClearCache": "Alle ændringer i adgangskontrol bliver aktiveret efter cache er tømt."
+  }
+}

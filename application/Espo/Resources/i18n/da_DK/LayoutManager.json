@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Bredde (%)",
+    "link": "Link",
+    "notSortable": "Kan ikke sorteres",
+    "align": "Tilpas",
+    "panelName": "Panelnavn",
+    "style": "Stil",
+    "sticked": "Fæstnet"
+  },
+  "options": {
+    "align": {
+      "left": "Venstre",
+      "right": "Højre"
+    },
+    "style": {
+      "default": "Standard",
+      "success": "Succes",
+      "danger": "Fare",
+      "info": "Info",
+      "warning": "Advarsel",
+      "primary": "Primær"
+    }
+  }
+}

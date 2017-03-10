@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "Betalingsadresse",
+    "shippingAddress": "Leveringsadresse",
+    "website": "Website"
+  },
+  "links": {
+    "meetings": "Møder",
+    "calls": "Opkald",
+    "tasks": "Opgaver"
+  },
+  "labels": {
+    "Create {entityType}": "Opret {entityTypeTranslated} "
+  }
+}
