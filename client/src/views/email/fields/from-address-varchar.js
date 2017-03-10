@@ -142,7 +142,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             if (this.getAcl().check('Contact', 'edit')) {
                 html += '<li><a href="javascript:" data-action="addToContact" data-address="'+address+'">'+this.translate('Add to Contact', 'labels', 'Email')+'</a></li>';
             }
-            if (this.getAcl().check('Contact', 'edit')) {
+            if (this.getAcl().check('Lead', 'edit')) {
                 html += '<li><a href="javascript:" data-action="addToLead" data-address="'+address+'">'+this.translate('Add to Lead', 'labels', 'Email')+'</a></li>';
             }
 
