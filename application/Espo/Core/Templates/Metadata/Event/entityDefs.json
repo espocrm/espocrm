@@ -38,7 +38,7 @@
         },
         "parent": {
             "type": "linkParent",
-            "entityList": ["Account", "Lead"]
+            "entityList": ["Account", "Lead", "Contact"]
         },
         "description": {
             "type": "text"
