@@ -47,7 +47,7 @@
         },
         "parent": {
             "type": "linkParent",
-            "entityList": ["Account", "Lead", "Opportunity", "Case"]
+            "entityList": ["Account", "Lead", "Contact", "Opportunity", "Case"]
         },
         "account": {
             "type": "link",
