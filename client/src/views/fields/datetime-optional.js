@@ -108,6 +108,41 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             return data;
         },
 
+        validateAfter: function () {
+            var field = this.model.getFieldParam(this.name, 'after');
+            if (field) {
+                var fieldDate  = field + 'Date';
+                var value = this.model.get(this.name) || this.model.get(this.nameDate);
+                var otherValue = this.model.get(field) || this.model.get(fieldDate);
+                if (value && otherValue) {
+                    if (moment(value).unix() <= moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+
+                        this.showValidationMessage(msg);
+                        return true;
+                    }
+                }
+            }
+        },
+
+        validateBefore: function () {
+            var field = this.model.getFieldParam(this.name, 'before');
+            if (field) {
+                var fieldDate  = field + 'Date';
+                var value = this.model.get(this.name) || this.model.get(this.nameDate);
+                var otherValue = this.model.get(field) || this.model.get(fieldDate);
+                if (value && otherValue) {
+                    if (moment(value).unix() >= moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        this.showValidationMessage(msg);
+                        return true;
+                    }
+                }
+            }
+        },
+
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
