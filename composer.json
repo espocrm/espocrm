@@ -12,7 +12,8 @@
 		"composer/semver": "^1.4",
 		"zendframework/zend-servicemanager": "2.6.0",
 		"tecnickcom/tcpdf": "^6.2",
-		"php-mime-mail-parser/php-mime-mail-parser": "^2.5"
+		"php-mime-mail-parser/php-mime-mail-parser": "^2.5",
+		"zbateson/mail-mime-parser": "^0.4.1"
 	},
 	"autoload": {
 		"psr-0": {

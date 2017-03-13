@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e599a4ab425b29d1e585685684a0bffd",
-    "content-hash": "81595e763c766d29eca4a5b03a007f2f",
+    "hash": "6e1e3327b6081f402280ed7ad0c324f3",
+    "content-hash": "c98074c42af6b9e3396ae058bc602bea",
     "packages": [
         {
             "name": "composer/semver",
@@ -962,6 +962,57 @@
                 "image"
             ],
             "time": "2014-07-13 09:19:12"
+        },
+        {
+            "name": "zbateson/mail-mime-parser",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/MailMimeParser.git",
+                "reference": "63dec759b5933cd858302e058ebb954f7c48e522"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/63dec759b5933cd858302e058ebb954f7c48e522",
+                "reference": "63dec759b5933cd858302e058ebb954f7c48e522",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "evert/phpdoc-md": "~0.1.1",
+                "phing/phing": "2.*",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\MailMimeParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson",
+                    "email": "zbateson@users.noreply.github.com"
+                }
+            ],
+            "description": "MIME email message parser",
+            "homepage": "https://github.com/zbateson/MailMimeParser",
+            "keywords": [
+                "email",
+                "mail",
+                "mime",
+                "parser",
+                "php-imap"
+            ],
+            "time": "2017-03-05 22:50:58"
         },
         {
             "name": "zendframework/zend-crypt",

@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Mail\Parsers;
 
-class PhpMimeMailParser
+class MailMimeParser
 {
     private $entityManager;
 
-    private $parserHash = array();
+    private $parser = array();
+
+    protected $messageHash = array();
 
     public function __construct($entityManager)
     {
@@ -45,39 +47,46 @@ class PhpMimeMailParser
         return $this->entityManager;
     }
 
-    protected function getParser($message)
+    protected function getParser()
     {
-        $key = spl_object_hash($message);
-        if (!array_key_exists($key, $this->parserHash)) {
-            $this->parserHash[$key] = new PhpMimeMailParser\Parser();
-            $raw = $message->getRawHeader();
-            if (!$raw) {
-                $raw = $message->getFullRawContent();
-            }
-            $this->parserHash[$key]->setText($raw);
+        if (!$this->parser) {
+            $this->parser = new \ZBateson\MailMimeParser\MailMimeParser();
         }
 
-        return $this->parserHash[$key];
+        return $this->parser;
     }
 
     protected function loadContent($message)
     {
-        $this->getParser($message);
-
         $raw = $message->getFullRawContent();
-        $this->getParser($message)->setText($raw);
+        $key = spl_object_hash($message);
+        $this->messageHash[$key] = $this->getParser()->parse($raw);
+    }
+
+    protected function getMessage($message)
+    {
+        $key = spl_object_hash($message);
+        if (!array_key_exists($key, $this->messageHash)) {
+            $raw = $message->getRawHeader();
+            if (!$raw) {
+                $raw = $message->getFullRawContent();
+            }
+            $this->messageHash[$key] = $this->getParser()->parse($raw);
+        }
+
+        return $this->messageHash[$key];
     }
 
     public function checkMessageAttribute($message, $attribute)
     {
-        return $this->getParser($message)->getHeader($attribute) !== false;
+        return $this->getMessage($message)->getHeaderValue($attribute) !== null;
     }
 
     public function getMessageAttribute($message, $attribute)
     {
         if (!$this->checkMessageAttribute($message, $attribute)) return null;
 
-        return $this->getParser($message)->getHeader($attribute);
+        return $this->getMessage($message)->getHeaderValue($attribute);
     }
 
     public function getMessageMessageId($message)
@@ -90,16 +99,16 @@ class PhpMimeMailParser
         $map = (object) [];
 
         foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
-            if ($this->checkMessageAttribute($message, $type)) {
-                $list = $this->getParser($message)->getAddresses($type);
+            $header = $this->getMessage($message)->getHeader($type);
+            if ($header) {
+                $list = $header->getAddresses();
                 foreach ($list as $item) {
-                    $name = $list[0]['display'];
-                    $address = $list[0]['address'];
-                    if ($name && $address && $name !== $address) {
+                    $address = $item->getEmail();
+                    $name = $item->getName();
+                    if ($name && $address) {
                         $map->$address = $name;
                     }
                 }
-
             }
         }
 
@@ -109,12 +118,12 @@ class PhpMimeMailParser
     public function getAddressDataFromMessage($message, $type)
     {
         $addressList = [];
-        if ($this->checkMessageAttribute($message, $type)) {
-            $list = $this->getParser($message)->getAddresses($type);
-            if (count($list)) {
+        $header = $this->getMessage($message)->getHeader($type);
+        if ($header) {
+            foreach ($header->getAddresses() as $item) {
                 return [
-                    'address' => $list[0]['address'],
-                    'name' => $list[0]['display'],
+                    'address' => $item->getEmail(),
+                    'name' => $item->getName()
                 ];
             }
         }
@@ -124,10 +133,11 @@ class PhpMimeMailParser
     public function getAddressListFromMessage($message, $type)
     {
         $addressList = [];
-        if ($this->checkMessageAttribute($message, $type)) {
-            $list = $this->getParser($message)->getAddresses($type);
+        $header = $this->getMessage($message)->getHeader($type);
+        if ($header) {
+            $list = $header->getAddresses();
             foreach ($list as $address) {
-                $addressList[] = $address['address'];
+                $addressList[] = $address->getEmail();
             }
         }
         return $addressList;
@@ -137,8 +147,8 @@ class PhpMimeMailParser
     {
         $this->loadContent($message);
 
-        $bodyPlain = $this->getParser($message)->getMessageBody('text');
-        $bodyHtml = $this->getParser($message)->getMessageBody('html');
+        $bodyPlain = $this->getMessage($message)->getTextContent();
+        $bodyHtml = $this->getMessage($message)->getHtmlContent();
 
         if ($bodyHtml) {
             $email->set('isHtml', true);
@@ -153,20 +163,25 @@ class PhpMimeMailParser
             $email->set('body', $email->get('bodyPlain'));
         }
 
-        $attachmentObjList = $this->getParser($message)->getAttachments();
+        $attachmentObjList = $this->getMessage($message)->getAllAttachmentParts();
         $inlineIds = array();
 
         foreach ($attachmentObjList as $attachmentObj) {
             $attachment = $this->getEntityManager()->getEntity('Attachment');
 
             $content = $attachmentObj->getContent();
-            $disposition = $attachmentObj->getContentDisposition();
+
+            $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
 
             $attachment = $this->getEntityManager()->getEntity('Attachment');
-            $attachment->set('name', $attachmentObj->getFileName());
-            $attachment->set('type', $attachmentObj->getContentType());
+            $attachment->set('name', $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', 'unnamed'));
+            $attachment->set('type', $attachmentObj->getHeaderValue('Content-Type'));
 
-            $contentId = $attachmentObj->getContentID();
+            $contentId = $attachmentObj->getHeaderValue('Content-ID');
+
+            if ($contentId) {
+                $contentId = trim($contentId, '<>');
+            }
 
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');

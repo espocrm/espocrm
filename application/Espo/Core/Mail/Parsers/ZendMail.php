@@ -72,6 +72,45 @@ class ZendMail
         return $messageId;
     }
 
+    public function getAddressNameMap($message)
+    {
+        $map = (object) [];
+
+        $zendMessage = $message->getZendMessage();
+
+        foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
+            if (isset($zendMessage->$type)) {
+                $list = $this->normilizeHeader($zendMessage->getHeader($type))->getAddressList();
+                foreach ($list as $item) {
+                    $name = $item->getName();
+                    $address = $item->getEmail();
+                    if ($name && $address && $name !== $address) {
+                        $map->$address = $name;
+                    }
+                }
+            }
+        }
+
+        return $map;
+    }
+
+    public function getAddressDataFromMessage($message, $type)
+    {
+        $zendMessage = $message->getZendMessage();
+
+        $addressList = array();
+        if (isset($zendMessage->$type)) {
+            $list = $this->normilizeHeader($zendMessage->getHeader($type))->getAddressList();
+            foreach ($list as $address) {
+                return [
+                    'address' => $address->getEmail(),
+                    'name' => $address->getName()
+                ];
+            }
+        }
+        return null;
+    }
+
     public function getAddressListFromMessage($message, $type)
     {
         $zendMessage = $message->getZendMessage();
@@ -227,6 +266,13 @@ class ZendMail
                     $attachmentsIds = $email->get('attachmentsIds');
                     $attachmentsIds[] = $attachment->id;
                     $email->set('attachmentsIds', $attachmentsIds);
+
+                    if (isset($part->contentID)) {
+                        $contentId = trim($part->contentID, '<>');
+                        if ($contentId) {
+                            $inlineIds[$contentId] = $attachment->id;
+                        }
+                    }
                 } else if ($disposition == 'inline') {
                     $inlineIds[$contentId] = $attachment->id;
                 }

@@ -232,7 +232,7 @@ class InboundEmail extends \Espo\Services\Record
             $monitoredFolders = 'INBOX';
         }
 
-        $parserName = 'ZendMail';
+        $parserName = 'MailMimeParser';
         if (extension_loaded('mailparse')) {
             $parserName = 'PhpMimeMailParser';
         }
@@ -320,9 +320,7 @@ class InboundEmail extends \Espo\Services\Record
                         }
                     }
                     if (!$toSkip) {
-                        $importMethodName = 'importWith' . $parserName;
-
-                        $email = $this->$importMethodName($importer, $emailAccount, $message, $teamIdList, $userId, $userIdList, $filterCollection, $fetchOnlyHeader, null);
+                        $email = $this->importMessage($parserName, $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList, $filterCollection, $fetchOnlyHeader, null);
                     }
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
@@ -386,24 +384,13 @@ class InboundEmail extends \Espo\Services\Record
         return true;
     }
 
-    protected function importWithPhpMimeMailParser($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
+    protected function importMessage($parserName, $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
     {
         $email = null;
         try {
-            $email = $importer->importMessage('PhpMimeMailParser', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
+            $email = $importer->importMessage($parserName, $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
         } catch (\Exception $e) {
-            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ php-mime-mail-parser): [' . $e->getCode() . '] ' .$e->getMessage());
-        }
-        return $email;
-    }
-
-    protected function importWithZendMail($importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [], $filterCollection, $fetchOnlyHeader, $folderData = null)
-    {
-        $email = null;
-        try {
-            $email = $importer->importMessage('ZendMail', $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData);
-        } catch (\Exception $e) {
-            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ zend-mail): [' . $e->getCode() . '] ' .$e->getMessage());
+            $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Import Message w/ '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage());
         }
         return $email;
     }
