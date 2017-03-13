@@ -276,7 +276,11 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
-                lineHtml = addressHtml;
+                if (name) {
+                    lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
+                } else {
+                    lineHtml = addressHtml;
+                }
             }
             if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {

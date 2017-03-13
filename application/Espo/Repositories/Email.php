@@ -154,8 +154,17 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
             if ($p) {
                 $nameHash->$address = $p->get('name');
-                $typeHash->$address = $p->getEntityName();
+                $typeHash->$address = $p->getEntityType();
                 $idHash->$address = $p->id;
+            }
+        }
+
+        $addressNameMap = $entity->get('addressNameMap');
+        if (is_object($addressNameMap)) {
+            foreach (get_object_vars($addressNameMap) as $key => $value) {
+                if (!isset($nameHash->$key)) {
+                    $nameHash->$key = $value;
+                }
             }
         }
 
