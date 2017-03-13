@@ -78,6 +78,7 @@
                 <li>TCPDF</li>
                 <li>Lightncandy by Zordius</li>
                 <li>php-mime-mail-parser by Vincent Dauce</li>
+                <li>MailMimeParser by Zaahid Bateson</li>
             </ul>
         </section>
     </div>
