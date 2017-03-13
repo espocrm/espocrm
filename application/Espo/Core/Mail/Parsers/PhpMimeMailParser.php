@@ -130,9 +130,10 @@ class PhpMimeMailParser
             $attachment->set('name', $attachmentObj->getFileName());
             $attachment->set('type', $attachmentObj->getContentType());
 
+            $contentId = $attachmentObj->getContentID();
+
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');
-                $contentId = $attachmentObj->getContentID();
             } else {
                 $attachment->set('role', 'Attachment');
             }
@@ -142,9 +143,11 @@ class PhpMimeMailParser
             $this->getEntityManager()->saveEntity($attachment);
 
             if ($disposition == 'attachment') {
-                $attachmentsIds = $email->get('attachmentsIds');
-                $attachmentsIds[] = $attachment->id;
-                $email->set('attachmentsIds', $attachmentsIds);
+                $email->addLinkMultipleId('attachments', $attachment->id);
+
+                if ($contentId) {
+                    $inlineIds[$contentId] = $attachment->id;
+                }
             } else if ($disposition == 'inline') {
                 $inlineIds[$contentId] = $attachment->id;
             }
