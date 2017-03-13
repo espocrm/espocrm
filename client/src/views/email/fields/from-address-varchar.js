@@ -102,7 +102,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
 
-            var name = this.nameHash[address];// || this.parseNameFromStringAddress(fromString) || null;
+            var name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
