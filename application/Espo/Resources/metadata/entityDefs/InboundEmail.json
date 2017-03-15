@@ -14,24 +14,22 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Inactive"]
+            "options": ["Active", "Inactive"],
+            "default": "Active"
         },
         "host": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "port": {
             "type": "varchar",
-            "default": "143",
-            "required": true
+            "default": "143"
         },
         "ssl": {
             "type": "bool"
         },
         "username": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "password": {
@@ -39,7 +37,6 @@
         },
         "monitoredFolders": {
             "type": "varchar",
-            "required": true,
             "default": "INBOX",
             "view": "views/inbound-email/fields/folders"
         },

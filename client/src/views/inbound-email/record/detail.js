@@ -32,7 +32,7 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.handleDistributionField();
+            this.setupFieldsBehaviour();
         },
 
         afterRender: function () {
@@ -51,7 +51,27 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
             return false;
         },
 
-        handleDistributionField: function () {
+        controlStatusField: function () {
+            var list = ['username', 'port', 'host', 'monitoredFolders'];
+            if (this.model.get('status') === 'Active') {
+                list.forEach(function (item) {
+                    this.setFieldRequired(item);
+                }, this);
+            } else {
+                list.forEach(function (item) {
+                    this.setFieldNotRequired(item);
+                }, this);
+            }
+        },
+
+        setupFieldsBehaviour: function () {
+            this.controlStatusField();
+            this.listenTo(this.model, 'change:status', function (model, value, o) {
+                if (o.ui) {
+                    this.controlStatusField();
+                }
+            }, this);
+
             var handleRequirement = function (model) {
                 if (model.get('createCase')) {
                     this.showField('caseDistribution');
