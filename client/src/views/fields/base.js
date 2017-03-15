@@ -259,12 +259,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 });
             }, this);
 
-            if (this.mode == 'edit' && this.isRequired()) {
-                this.once('after:render', function () {
-                    //this.showRequiredSign();
-                }, this);
-            }
-
             this.on('after:render', function () {
                 if (this.mode === 'edit') {
                     if (this.isRequired()) {
@@ -348,7 +342,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if ($label.size() && !$sign.size()) {
                 $text = $label.find('span.label-text');
                 $('<span class="required-sign"> *</span>').insertAfter($text);
-                //$label.append('<span class="required-sign"> *</span>');
                 $sign = $label.find('span.required-sign');
             }
             $sign.show();
