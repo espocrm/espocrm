@@ -149,8 +149,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
                     view.close();
-                }.bind(this));
-            }.bind(this));
+                }, this);
+            }, this);
         },
 
         actionCreateCase: function () {
