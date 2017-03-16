@@ -128,7 +128,7 @@ Espo.define('router', [], function () {
         navigateBack: function (options) {
             var url;
             if (this.history.length > 1) {
-                url = this.history[this.history.length - 1];
+                url = this.history[this.history.length - 2];
             } else {
                 url = this.history[0];
             }

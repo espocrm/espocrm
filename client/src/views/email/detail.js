@@ -135,7 +135,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
             attributes.emailId = this.model.id;
 
-            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
@@ -149,8 +149,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
                     view.close();
-                }.bind(this));
-            }.bind(this));
+                }, this);
+            }, this);
         },
 
         actionCreateCase: function () {
