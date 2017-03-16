@@ -213,11 +213,12 @@ Espo.define('ui', [], function () {
                 processResize();
             }
         }.bind(this));
+
+        var $body = $(document.body);
+
         this.$el.on('hidden.bs.modal', function (e) {
-            if ($('.modal:visible').length > 0) {
-                setTimeout(function() {
-                    $(document.body).addClass('modal-open');
-                }, 0);
+            if ($('.modal:visible').size() > 0) {
+                $body.addClass('modal-open');
             }
         });
 
