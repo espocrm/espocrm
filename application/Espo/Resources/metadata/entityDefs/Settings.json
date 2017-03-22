@@ -126,7 +126,8 @@
             "type": "enum",
             "options": ["en_US"],
             "default": "en_US",
-            "view": "views/settings/fields/language"
+            "view": "views/settings/fields/language",
+            "isSorted": true
         },
         "globalSearchEntityList": {
             "type": "multiEnum",
