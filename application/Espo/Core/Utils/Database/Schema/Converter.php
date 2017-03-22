@@ -157,6 +157,12 @@ class Converter
 
             $tables[$entityName] = $schema->createTable($tableName);
 
+            if (isset($entityParams['params']) && is_array($entityParams['params'])) {
+                foreach ($entityParams['params'] as $paramName => $paramValue) {
+                    $tables[$entityName]->addOption($paramName, $paramValue);
+                }
+            }
+
             $primaryColumns = array();
             $uniqueColumns = array();
             $indexList = array(); //list of indexes like array( array(comlumn1, column2), array(column3))
