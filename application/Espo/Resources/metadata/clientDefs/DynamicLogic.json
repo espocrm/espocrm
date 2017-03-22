@@ -78,7 +78,15 @@
         },
         "notContains": {
             "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
-            "operatorString": "&notni"
+            "operatorString": "&notni;"
+        },
+        "has": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-enum",
+            "operatorString": "&niv;"
+        },
+        "notHas": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-enum",
+            "operatorString": "&notni;"
         }
     },
     "fieldTypes": {
@@ -135,8 +143,16 @@
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         },
         "id": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "view": "views/admin/dynamic-logic/conditions/field-types/enum",
             "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "multiEnum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "array": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
         }
     },
     "conditionTypes": {
@@ -190,6 +206,12 @@
         },
         "isToday": {
             "valueType": "empty"
+        },
+        "has": {
+            "valueType": "field"
+        },
+        "notHas": {
+            "valueType": "field"
         }
     }
 }
