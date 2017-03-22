@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "命名",
+    "status": "状态",
+    "job": "职责",
+    "scheduling": "日程表"
+  },
+  "links": {
+    "log": "记录"
+  },
+  "labels": {
+    "Create ScheduledJob": "创建日程作业"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "清除",
+      "CheckInboundEmails": "核对组邮箱账号",
+      "CheckEmailAccounts": "核对个人邮件账号",
+      "SendEmailReminders": "发送邮件提醒",
+      "AuthTokenControl": "身份验证令牌控制",
+      "SendEmailNotifications": "发送邮件通知"
+    },
+    "cronSetup": {
+      "linux": "注意:添加这条线到定时任务文件来运行Espo完成预定作业",
+      "mac": "注意:添加这条线到定时任务文件来运行Espo完成预定作业",
+      "windows": "提醒：用下列命令新建批处理文件去运行使用Windows计划任务的Espo计划任务：",
+      "default": "注意:添加这个任务到任务计划里（预定任务）"
+    },
+    "status": {
+      "Active": "活跃的",
+      "Inactive": "不活跃"
+    }
+  },
+  "tooltips": {
+    "scheduling": "定时任务提醒 定义工作的运行频率。.\n\n*/5 * * * * - 每5分钟\n\n0 */2 * * * - 每2小时\n\n30 1 * * * - 在 01:30一天一次 \n\n0 0 1 * * - 在每个月的第一天"
+  }
+}

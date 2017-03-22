@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "命名",
+    "number": "数字",
+    "status": "身份",
+    "account": "账号",
+    "contact": "联系",
+    "contacts": "联系人",
+    "priority": "优先",
+    "type": "种类",
+    "description": "说明书",
+    "inboundEmail": "接收电子邮件",
+    "lead": "引领"
+  },
+  "links": {
+    "inboundEmail": "接收电子邮件",
+    "account": "账号",
+    "contact": "联系（主要的）",
+    "Contacts": "联系人",
+    "meetings": "会议",
+    "calls": "电话",
+    "tasks": "任务",
+    "emails": "邮箱",
+    "articles": "知识库文章",
+    "lead": "引领"
+  },
+  "options": {
+    "status": {
+      "New": "新的",
+      "Assigned": "指定的",
+      "Pending": "待定",
+      "Closed": "关闭",
+      "Rejected": "反对",
+      "Duplicate": "复制"
+    },
+    "priority": {
+      "Low": "低的",
+      "Normal": "正常的",
+      "High": "高度",
+      "Urgent": "紧急的"
+    },
+    "type": {
+      "Question": "问题",
+      "Incident": "事件",
+      "Problem": "问题"
+    }
+  },
+  "labels": {
+    "Create Case": "新建事例",
+    "Close": "关闭",
+    "Reject": "反对",
+    "Closed": "关闭",
+    "Rejected": "反对"
+  },
+  "presetFilters": {
+    "open": "打开",
+    "closed": "关闭"
+  }
+}

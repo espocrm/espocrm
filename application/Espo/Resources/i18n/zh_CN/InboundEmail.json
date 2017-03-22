@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "命名",
+    "emailAddress": "邮箱地址",
+    "status": "状态",
+    "assignToUser": "分配给用户",
+    "host": "主机",
+    "username": "用户名",
+    "password": "密码",
+    "port": "端口",
+    "monitoredFolders": "监控文件夹",
+    "trashFolder": "垃圾文件夹",
+    "ssl": "加密套接字协议层",
+    "createCase": "创建案例",
+    "reply": "自动回复",
+    "caseDistribution": "格分布",
+    "replyEmailTemplate": "回复邮件模板",
+    "replyFromAddress": "来自地址..的回复",
+    "replyToAddress": "回复给地址...",
+    "replyFromName": "回复来自于名字",
+    "targetUserPosition": "目标用户的位置",
+    "fetchSince": "获取自",
+    "addAllTeamUsers": "给所有队用户名"
+  },
+  "tooltips": {
+    "reply": "提醒邮件发送者他们的邮件已经被接收。\n\n 在防止循环期间只有一份邮件将会被发送给一位特殊的收件人那里",
+    "createCase": "从传入的邮件里自动创建事例",
+    "replyToAddress": "指定这个邮箱的邮箱地址作出回应",
+    "caseDistribution": "案例将会被怎么指派。被直接指派给用户或者队里"
+  },
+  "links": {
+    "filters": "筛选器",
+    "emails": "邮箱"
+  },
+  "options": {
+    "status": {
+      "Active": "活跃的",
+      "Inactive": "不活跃的"
+    },
+    "caseDistribution": {
+      "": "无",
+      "Direct-Assignment": "直接任务",
+      "Round-Robin": "循环赛",
+      "Least-Busy": "最小繁忙"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "创建邮件账号",
+    "IMAP": "消息访问协议",
+    "Actions": "动作",
+    "Main": "主要的"
+  },
+  "messages": {
+    "couldNotConnectToImap": "无法连接到消息访问协议服务器"
+  }
+}

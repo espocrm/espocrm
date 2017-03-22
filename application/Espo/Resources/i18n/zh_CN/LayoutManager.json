@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "width": "宽度（%）",
+    "link": "链接",
+    "notSortable": "无适合的",
+    "align": "使平行"
+  },
+  "options": {
+    "align": {
+      "left": "左边",
+      "right": "右边"
+    }
+  }
+}

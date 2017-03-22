@@ -79,7 +79,8 @@ return array (
         'pl_PL',
         'pt_BR',
         'uk_UA',
-        'vi_VN'
+        'vi_VN',
+        'zh_CN'
     ],
     'language' => 'en_US',
     'logger' =>

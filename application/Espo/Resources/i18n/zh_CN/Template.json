@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "名字",
+    "body": "主体",
+    "entityType": "主体类型",
+    "header": "页眉",
+    "footer": "页脚",
+    "leftMargin": "左边距",
+    "topMargin": "上边距",
+    "rightMargin": "右边距",
+    "bottomMargin": "下边距",
+    "printFooter": "打印页脚",
+    "footerPosition": "页脚位置"
+  },
+  "labels": {
+    "Create Template": "创建模板"
+  },
+  "tooltips": {
+    "footer": "用户{页码}去打印页码"
+  }
+}

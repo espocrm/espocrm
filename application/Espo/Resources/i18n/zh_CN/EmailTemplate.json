@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "命名",
+    "status": "状态",
+    "isHtml": "是超文本标记语言",
+    "body": "主体",
+    "subject": "主题",
+    "attachments": "福建",
+    "insertField": "插入域",
+    "oneOff": "一次完成的"
+  },
+  "labels": {
+    "Create EmailTemplate": "新建邮件模板",
+    "Info": "消息"
+  },
+  "messages": {
+    "infoText": "可用变量:\n\n{排除地址} &#8211;统一资源定位地址为一个退订链接;\n\n{排除链接} &#8211;一个退订链接"
+  },
+  "tooltips": {
+    "oneOff": "确定你是否只使用一次这个模板，例如：应用于许多邮件"
+  },
+  "presetFilters": {
+    "actual": "真实的"
+  }
+}

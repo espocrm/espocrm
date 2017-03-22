@@ -1,0 +1,20 @@
+{
+  "modes": {
+    "month": "月",
+    "week": "周",
+    "agendaWeek": "周",
+    "day": "日",
+    "agendaDay": "日",
+    "timeline": "时间轴"
+  },
+  "labels": {
+    "Today": "今天",
+    "Create": "创建",
+    "Shared": "已分享",
+    "Add User": "添加用户",
+    "current": "现行的",
+    "time": "时间",
+    "User List": "用户清单",
+    "Manage Users": "管理用户"
+  }
+}

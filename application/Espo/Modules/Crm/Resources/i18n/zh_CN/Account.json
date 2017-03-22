@@ -1,0 +1,81 @@
+{
+  "fields": {
+    "name": "名字",
+    "emailAddress": "邮件",
+    "website": "网站",
+    "phoneNumber": "手机",
+    "billingAddress": "账单地址",
+    "shippingAddress": "运输地址",
+    "description": "说明书",
+    "sicCode": "标准产业分类代码",
+    "industry": "工业",
+    "type": "种类",
+    "contactRole": "标题",
+    "campaign": "活动",
+    "targetLists": "目标清单",
+    "targetList": "目标清单"
+  },
+  "links": {
+    "contacts": "联系",
+    "opportunities": "机会",
+    "cases": "事例",
+    "documents": "文件",
+    "meetingsPrimary": "会议（扩展的）",
+    "callsPrimary": "电话（扩展的）",
+    "tasksPrimary": "任务（扩展）",
+    "emailsPrimary": "邮件（扩展）",
+    "targetLists": "目标清单",
+    "campaignLogRecords": "活动日志",
+    "campaign": "活动",
+    "portalUsers": "门户用户"
+  },
+  "options": {
+    "type": {
+      "Customer": "客户",
+      "Investor": "投资者",
+      "Partner": "伙伴",
+      "Reseller": "转销商"
+    },
+    "industry": {
+      "Agriculture": "农业",
+      "Advertising": "广告",
+      "Apparel & Accessories": "服装&装饰品",
+      "Automotive": "汽车的",
+      "Banking": "银行业",
+      "Biotechnology": "生物技术",
+      "Building Materials & Equipment": "建筑材料&器材",
+      "Chemical": "化学",
+      "Computer": "电脑",
+      "Education": "教育",
+      "Electronics": "电子工业",
+      "Energy": "能源",
+      "Entertainment & Leisure": "休闲娱乐",
+      "Finance": "金融",
+      "Food & Beverage": "食物&饮料",
+      "Grocery": "食品杂货",
+      "Healthcare": "医疗保健",
+      "Insurance": "保险",
+      "Legal": "合法的",
+      "Manufacturing": "制造业",
+      "Publishing": "印刷业",
+      "Real Estate": "实际资产",
+      "Service": "服务",
+      "Sports": "运动",
+      "Software": "软件",
+      "Technology": "工业",
+      "Telecommunications": "通信业",
+      "Television": "电视",
+      "Transportation": "交通",
+      "Venture Capital": "风险投资"
+    }
+  },
+  "labels": {
+    "Create Account": "新建账号",
+    "Copy Billing": "复制账单"
+  },
+  "presetFilters": {
+    "customers": "客户",
+    "partners": "伙伴",
+    "recentlyCreated": "最近被创建的"
+  }
+}

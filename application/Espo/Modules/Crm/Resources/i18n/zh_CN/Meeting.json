@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "名字",
+    "parent": "父本",
+    "status": "身份",
+    "dateStart": "日期开始",
+    "dateEnd": "日期结束",
+    "duration": "时长",
+    "description": "说明书",
+    "users": "用户",
+    "contacts": "联系人",
+    "leads": "引领",
+    "reminders": "提醒",
+    "account": "账号"
+  },
+  "options": {
+    "status": {
+      "Planned": "计划",
+      "Held": "进行",
+      "Not Held": "不进行"
+    },
+    "acceptanceStatus": {
+      "None": "无",
+      "Accepted": "接受",
+      "Declined": "拒绝",
+      "Tentative": "暂定的"
+    }
+  },
+  "massActions": {
+    "setHeld": "设置进行",
+    "setNotHeld": "设置不进行"
+  },
+  "labels": {
+    "Create Meeting": "创建会议",
+    "Set Held": "设置进行",
+    "Set Not Held": "设置不进行",
+    "Send Invitations": "发送邀请",
+    "on time": "按时",
+    "before": "之前"
+  },
+  "presetFilters": {
+    "planned": "计划",
+    "held": "进行",
+    "todays": "今天的"
+  }
+}

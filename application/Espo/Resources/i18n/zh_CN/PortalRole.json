@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "用户"
+  },
+  "labels": {
+    "Access": "获取",
+    "Create PortalRole": "创建门户角色",
+    "Scope Level": "瞄准镜水准器",
+    "Field Level": "字段级"
+  }
+}

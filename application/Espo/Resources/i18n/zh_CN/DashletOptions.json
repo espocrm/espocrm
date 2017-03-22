@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "title": "标题",
+    "dateFrom": "日期来自于",
+    "dateTo": "结束日期",
+    "autorefreshInterval": "自动刷新时间间隔",
+    "displayRecords": "播放录音",
+    "isDoubleHeight": "2倍高度",
+    "mode": "方式/模式",
+    "enabledScopeList": "演示什么",
+    "users": "用户"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "周（日历）",
+      "basicWeek": "周",
+      "month": "月",
+      "basicDay": "天",
+      "agendaDay": "天（日历）",
+      "timeline": "时间轴"
+    }
+  }
+}

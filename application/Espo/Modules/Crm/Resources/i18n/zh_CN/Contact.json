@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "命名",
+    "emailAddress": "邮件",
+    "title": "标题",
+    "accountRole": "标题",
+    "account": "账号",
+    "accounts": "账号",
+    "phoneNumber": "手机",
+    "accountType": "账号种类",
+    "doNotCall": "不呼叫",
+    "address": "地址",
+    "opportunityRole": "机会角色",
+    "description": "说明书",
+    "campaign": "运动",
+    "targetLists": "目标清单",
+    "targetList": "目标清单",
+    "portalUser": "门户用户"
+  },
+  "links": {
+    "opportunities": "机会",
+    "cases": "事例",
+    "targetLists": "目标清单",
+    "campaignLogRecords": "活动记录",
+    "campaign": "运动",
+    "account": "账号（主要的）",
+    "accounts": "账号",
+    "casesPrimary": "案件（主要的）",
+    "portalUser": "门户用户"
+  },
+  "labels": {
+    "Create Contact": "创建联系"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "无",
+      "Decision Maker": "决策者",
+      "Evaluator": "评估",
+      "Influencer": "影响者"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "门户用户",
+    "notPortalUsers": "不是门户用户"
+  }
+}

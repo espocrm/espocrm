@@ -1,0 +1,64 @@
+{
+  "labels": {
+    "Converted To": "转为",
+    "Create Lead": "创建领导",
+    "Convert": "转为"
+  },
+  "fields": {
+    "name": "命名",
+    "emailAddress": "邮件",
+    "title": "标题",
+    "website": "网页",
+    "phoneNumber": "手机",
+    "accountName": "账号名字",
+    "doNotCall": "不呼叫",
+    "address": "地址",
+    "status": "身份",
+    "source": "资源",
+    "opportunityAmount": "机会总数",
+    "opportunityAmountConverted": "机会总数（已转为）",
+    "description": "说明书",
+    "createdAccount": "账号",
+    "createdContact": "联系",
+    "createdOpportunity": "机会",
+    "campaign": "运动",
+    "targetLists": "目标清单",
+    "targetList": "目标清单"
+  },
+  "links": {
+    "targetLists": "目标清单",
+    "campaignLogRecords": "活动日志",
+    "campaign": "运动",
+    "createdAccount": "账号",
+    "createdContact": "联系",
+    "createdOpportunity": "机会",
+    "cases": "案件",
+    "documents": "文档"
+  },
+  "options": {
+    "status": {
+      "New": "新的",
+      "Assigned": "指定的",
+      "In Process": "进程中",
+      "Converted": "转为",
+      "Recycled": "回收的",
+      "Dead": "废弃的"
+    },
+    "source": {
+      "": "无",
+      "Call": "电话",
+      "Email": "邮件",
+      "Existing Customer": "存在客户",
+      "Partner": "伙伴",
+      "Public Relations": "公共关系",
+      "Web Site": "网址",
+      "Campaign": "活动",
+      "Other": "其他的"
+    }
+  },
+  "presetFilters": {
+    "active": "活跃的",
+    "actual": "真实的",
+    "converted": "转为"
+  }
+}

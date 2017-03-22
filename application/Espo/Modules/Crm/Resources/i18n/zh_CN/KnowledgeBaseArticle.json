@@ -1,0 +1,45 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "新建文章",
+    "Any": "任何",
+    "Send in Email": "用邮件发送",
+    "Move Up": "提升",
+    "Move Down": "下降"
+  },
+  "fields": {
+    "name": "名字",
+    "status": "身份",
+    "type": "种类",
+    "attachments": "附件",
+    "publishDate": "发布日期",
+    "expirationDate": "截止日期",
+    "description": "说明书",
+    "body": "主体",
+    "categories": "栏目",
+    "language": "语言",
+    "portals": "门户"
+  },
+  "links": {
+    "cases": "案件",
+    "opportunities": "机会",
+    "categories": "栏目",
+    "portals": "门户"
+  },
+  "options": {
+    "status": {
+      "In Review": "检查中",
+      "Draft": "草稿",
+      "Archived": "已存档",
+      "Published": "公布的"
+    },
+    "type": {
+      "Article": "文章"
+    }
+  },
+  "tooltips": {
+    "portals": "如果不是空的那么这篇文章将只能在指定门户可用。如果是空的那么在所有门户她都可用"
+  },
+  "presetFilters": {
+    "published": "公布的"
+  }
+}

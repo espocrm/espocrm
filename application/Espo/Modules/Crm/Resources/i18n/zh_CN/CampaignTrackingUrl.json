@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "统一资源定位地址",
+    "urlToUse": "插入替代全球资源定位器的代码",
+    "campaign": "运动"
+  },
+  "links": {
+    "campaign": "活动"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "创建追踪统一资源定位地址"
+  }
+}

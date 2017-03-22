@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "活动",
+    "actionDate": "日期",
+    "data": "数据",
+    "campaign": "运动",
+    "parent": "目标",
+    "object": "客体",
+    "application": "应用",
+    "queueItem": "队列项",
+    "stringData": "字符串数据",
+    "stringAdditionalData": "字符串附加数据"
+  },
+  "links": {
+    "queueItem": "加入播放列表",
+    "parent": "父本",
+    "object": "客体"
+  },
+  "options": {
+    "action": {
+      "Sent": "已发送",
+      "Opened": "已打开",
+      "Opted Out": "决定退出",
+      "Bounced": "跳回",
+      "Clicked": "点击",
+      "Lead Created": "领导创建的"
+    }
+  },
+  "labels": {
+    "All": "所有的"
+  },
+  "presetFilters": {
+    "sent": "已发送",
+    "opened": "已打开的",
+    "optedOut": "决定推出",
+    "bounced": "退回",
+    "clicked": "点击的",
+    "leadCreated": "领导创建的"
+  }
+}
