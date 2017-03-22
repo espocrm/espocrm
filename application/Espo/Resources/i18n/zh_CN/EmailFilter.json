@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "from": "来自于",
+    "to": "给",
+    "subject": "主题",
+    "bodyContains": "包含主体",
+    "action": "活动",
+    "isGlobal": "是全球的",
+    "emailFolder": "文件夹"
+  },
+  "labels": {
+    "Create EmailFilter": "新建邮件筛选器",
+    "Emails": "邮件"
+  },
+  "options": {
+    "action": {
+      "Skip": "忽略",
+      "Move to Folder": "放入文件夹"
+    }
+  },
+  "tooltips": {
+    "from": "从指定地址发送电子邮件。如果不需要就清空。你可以使用通配符",
+    "to": "电子邮件发送至指定地址，如果不需要就清空。你可以使用通配符",
+    "isGlobal": "把这个筛选器应用到系统中所有的邮件"
+  }
+}

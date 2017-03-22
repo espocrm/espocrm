@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "名字",
+    "account": "账号",
+    "stage": "平台",
+    "amount": "总数",
+    "probability": "可能性，%",
+    "leadSource": "铅源",
+    "doNotCall": "不呼叫",
+    "closeDate": "关闭日期",
+    "contacts": "联系人",
+    "description": "说明书",
+    "amountConverted": "总数（转为）",
+    "amountWeightedConverted": "量加权",
+    "campaign": "活动"
+  },
+  "links": {
+    "contacts": "联系人",
+    "documents": "文档",
+    "campaign": "活动"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "可能性",
+      "Qualification": "合格",
+      "Needs Analysis": "需要分析",
+      "Value Proposition": "价值定位",
+      "Id. Decision Makers": "Id.决策者",
+      "Perception Analysis": "感性分析",
+      "Proposal/Price Quote": "方案/价格报价",
+      "Negotiation/Review": "协议/回顾",
+      "Closed Won": "已关闭并赢得客户",
+      "Closed Lost": "已结束但客户流失"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "打开机会"
+  },
+  "presetFilters": {
+    "open": "打开",
+    "won": "赢",
+    "lost": "丢失"
+  }
+}

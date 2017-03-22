@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "名字",
+    "status": "身份",
+    "storeSentEmails": "储存已发送的邮件",
+    "startAt": "日期开始",
+    "fromAddress": "来自地址",
+    "fromName": "来自名字",
+    "replyToAddress": "回复地址",
+    "replyToName": "回复名字",
+    "campaign": "活动",
+    "emailTemplate": "邮件模板",
+    "inboundEmail": "邮件账号",
+    "targetLists": "目标清单",
+    "excludingTargetLists": "不包括目标列表",
+    "optOutEntirely": "全部退出"
+  },
+  "links": {
+    "targetLists": "目标清单",
+    "excludingTargetLists": "不包括目标清单",
+    "queueItems": "队列项",
+    "campaign": "活动",
+    "emailTemplate": "邮件模板",
+    "inboundEmail": "邮件账号"
+  },
+  "options": {
+    "status": {
+      "Draft": "草稿",
+      "Pending": "待定",
+      "In Process": "进程中",
+      "Complete": "完成",
+      "Canceled": "取消",
+      "Failed": "失败"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "新建大量邮件",
+    "Send Test": "发送编辑"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "至少选中一个目标",
+    "testSent": "编辑要发送的"
+  },
+  "tooltips": {
+    "optOutEntirely": "取消订阅的收信人地址将会被标记为排除，他们将不会再接收到此类邮件",
+    "targetLists": "应该接收信息的目标",
+    "excludingTargetLists": "不应接收信息的目标"
+  }
+}

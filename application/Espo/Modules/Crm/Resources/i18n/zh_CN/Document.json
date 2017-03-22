@@ -1,0 +1,42 @@
+{
+  "labels": {
+    "Create Document": "新建文档",
+    "Details": "细节"
+  },
+  "fields": {
+    "name": "名字",
+    "status": "身份",
+    "file": "文件",
+    "type": "种类",
+    "publishDate": "公布日期",
+    "expirationDate": "截止日期",
+    "description": "说明书",
+    "accounts": "账号",
+    "folder": "文件夹"
+  },
+  "links": {
+    "accounts": "账号",
+    "opportunities": "机会",
+    "folder": "文件夹",
+    "leads": "领先程度"
+  },
+  "options": {
+    "status": {
+      "Active": "活跃的",
+      "Draft": "草稿",
+      "Expired": "失效的",
+      "Canceled": "取消"
+    },
+    "type": {
+      "": "无",
+      "Contract": "联系",
+      "NDA": "保密协议",
+      "EULA": "最终用户许可协议",
+      "License Agreement": "许可证协议"
+    }
+  },
+  "presetFilters": {
+    "active": "活跃",
+    "draft": "草稿"
+  }
+}

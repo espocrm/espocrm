@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "命名",
+    "emailAddress": "邮件",
+    "title": "标题",
+    "website": "网页",
+    "accountName": "账号名称",
+    "phoneNumber": "手机",
+    "doNotCall": "不呼叫",
+    "address": "地址",
+    "description": "说明书"
+  },
+  "labels": {
+    "Create Target": "创建目标",
+    "Convert to Lead": "转为领导"
+  }
+}

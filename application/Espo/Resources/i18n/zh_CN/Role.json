@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "命名",
+    "roles": "作用",
+    "assignmentPermission": "任务许可",
+    "userPermission": "用户允许",
+    "portalPermission": "门户允许"
+  },
+  "links": {
+    "users": "用户",
+    "teams": "队"
+  },
+  "tooltips": {
+    "assignmentPermission": "允许限制分配记录和发布信息给其他用户。\n\n所有 - 没有限制\n\n队 - 可以只指派和发送给队友\n\n没有 - 可以只指派和发送给自己",
+    "userPermission": "允许限制用户查看活动，日历和其他用户流。\n\n所有 - 可以查看所有\n\n队 - 只能查看队友的活动\n\n没有 - 无法查看",
+    "portalPermission": "定义访问门户信息，将来联系人转为门户用户，发送信息给门户用户"
+  },
+  "labels": {
+    "Access": "获取",
+    "Create Role": "创建角色",
+    "Scope Level": "瞄准镜水准器",
+    "Field Level": "字段级"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "没有设置",
+      "enabled": "可用",
+      "disabled": "禁用"
+    },
+    "levelList": {
+      "all": "所有",
+      "team": "队",
+      "account": "账号",
+      "contact": "联系",
+      "own": "自己的",
+      "no": "不",
+      "yes": "是的",
+      "not-set": "不设置"
+    }
+  },
+  "actions": {
+    "read": "读",
+    "edit": "编辑",
+    "delete": "删除",
+    "stream": "流",
+    "create": "创建"
+  },
+  "messages": {
+    "changesAfterClearCache": "当缓存被清空时，所有更改的访问控制将被控制"
+  }
+}

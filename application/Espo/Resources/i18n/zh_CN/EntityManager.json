@@ -1,0 +1,51 @@
+{
+  "labels": {
+    "Fields": "域",
+    "Relationships": "关系"
+  },
+  "fields": {
+    "name": "命名",
+    "type": "种类",
+    "labelSingular": "特殊标签",
+    "labelPlural": "复数标签",
+    "stream": "一系列",
+    "label": "标签",
+    "linkType": "连接种类",
+    "entityForeign": "外部整体",
+    "linkForeign": "外国链接",
+    "link": "连接",
+    "labelForeign": "外国标签",
+    "sortBy": "默认顺序（域）",
+    "sortDirection": "缺省顺序（方向）",
+    "relationName": "居中表名",
+    "linkMultipleField": "链接多个领域",
+    "linkMultipleFieldForeign": "对外链接多个领域",
+    "disabled": "禁用",
+    "textFilterFields": "文本过滤字段"
+  },
+  "options": {
+    "type": {
+      "": "无",
+      "Base": "基础",
+      "Person": "个人",
+      "CategoryTree": "分类树",
+      "Event": "时间"
+    },
+    "linkType": {
+      "manyToMany": "多对多",
+      "oneToMany": "一对多",
+      "manyToOne": "多对一",
+      "parentToChildren": "父母到孩子",
+      "childrenToParent": "孩子到父母"
+    },
+    "sortDirection": {
+      "asc": "升序",
+      "desc": "降序"
+    }
+  },
+  "messages": {
+    "entityCreated": "主题已经创建",
+    "linkAlreadyExists": "链接名称冲突",
+    "linkConflict": "名称冲突：有相同名字的链接名或者域名已经存在"
+  }
+}

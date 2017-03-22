@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "dateFormat": "日期格式",
+    "timeFormat": "时间格式",
+    "timeZone": "时区",
+    "weekStart": "一周的第一天",
+    "thousandSeparator": "千分离器",
+    "decimalMark": "小数点",
+    "defaultCurrency": "默认通行",
+    "currencyList": "通行清单",
+    "language": "语言",
+    "smtpServer": "服务",
+    "smtpPort": "端口",
+    "smtpAuth": "授权",
+    "smtpSecurity": "安全",
+    "smtpUsername": "用户名",
+    "emailAddress": "邮件",
+    "smtpPassword": "密码",
+    "smtpEmailAddress": "邮件地址",
+    "exportDelimiter": "导出分隔符",
+    "receiveAssignmentEmailNotifications": "任务邮件提醒",
+    "receiveMentionEmailNotifications": "邮寄时提及的邮件提醒",
+    "receiveStreamEmailNotifications": "关于邮寄和更新状态的邮件提醒",
+    "autoFollowEntityTypeList": "自动跟踪",
+    "signature": "邮件签名",
+    "dashboardTabList": "选项卡列表",
+    "tabList": "选项卡列表",
+    "defaultReminders": "默认提醒",
+    "theme": "主题",
+    "useCustomTabList": "自定义选项卡列表",
+    "emailReplyToAllByDefault": "默认回复邮件给所有人",
+    "dashboardLayout": "仪表板布局",
+    "emailReplyForceHtml": "超文本语言回复邮件",
+    "doNotFillAssignedUserIfNotRequired": "如果不需要就不用填写指定用户"
+  },
+  "options": {
+    "weekStart": {
+      "0": "周日",
+      "1": "周一"
+    }
+  },
+  "labels": {
+    "Notifications": "通知",
+    "User Interface": "用户界面",
+    "SMTP": "简单邮件传输协议",
+    "Misc": "杂项",
+    "Locale": "现场"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "用户将会自动跟踪所选实体类型的所有新记录，用户可以在流中看到信息和接收提醒"
+  }
+}

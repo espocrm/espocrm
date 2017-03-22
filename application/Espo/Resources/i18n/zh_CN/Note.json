@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "post": "邮件",
+    "attachments": "附件",
+    "targetType": "目标",
+    "teams": "队",
+    "users": "用户名",
+    "portals": "门户"
+  },
+  "filters": {
+    "all": "所有的",
+    "posts": "邮寄",
+    "updates": "更新"
+  },
+  "options": {
+    "targetType": {
+      "self": "给我自己",
+      "users": "给特殊用户",
+      "teams": "给特殊对",
+      "all": "所有内部门户",
+      "portals": "给门户用户"
+    }
+  },
+  "messages": {
+    "writeMessage": "在这里写下信息"
+  }
+}

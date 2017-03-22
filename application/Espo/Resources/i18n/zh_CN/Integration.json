@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "禁止",
+    "clientId": "客服ID",
+    "clientSecret": "客户端密码",
+    "redirectUri": "回调地址",
+    "apiKey": "接口密匙"
+  },
+  "titles": {
+    "GoogleMaps": "谷歌地图"
+  },
+  "messages": {
+    "selectIntegration": "从菜单中选择一个综合",
+    "noIntegrations": "没有可用的集成"
+  },
+  "help": {
+    "Google": "<p><b>从谷歌开发者控制台获得OAuth 2.0证书。</b></p><p>访问 <a href=\"https://console.developers.google.com/project\">谷歌开发者控制台</a> 获得OAuth 2.0证书 例如谷歌和EspoCRM应用都所知的用户ID和用户密码。</p>",
+    "GoogleMaps": "<p>获得应用程序界面密匙 <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
+  }
+}
