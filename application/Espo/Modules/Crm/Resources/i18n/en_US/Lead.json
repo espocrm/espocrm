@@ -25,7 +25,8 @@
         "targetLists": "Target Lists",
         "targetList": "Target List",
         "industry": "Industry",
-        "acceptanceStatus": "Acceptance Status"
+        "acceptanceStatus": "Acceptance Status",
+        "opportunityAmountCurrency": "Opportunity Amount Currency"
     },
     "links": {
         "targetLists": "Target Lists",
