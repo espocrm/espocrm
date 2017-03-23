@@ -13,7 +13,8 @@
         "amountConverted": "Amount (converted)",
         "amountWeightedConverted": "Amount Weighted",
         "campaign": "Campaign",
-        "originalLead": "Original Lead"
+        "originalLead": "Original Lead",
+        "amountCurrency": "Amount Currency"
     },
     "links": {
         "contacts": "Contacts",
