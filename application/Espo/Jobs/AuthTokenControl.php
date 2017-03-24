@@ -42,7 +42,9 @@ class AuthTokenControl extends \Espo\Core\Jobs\Base
             return;
         }
 
-        $whereClause = array();
+        $whereClause = array(
+            'isActive' => true
+        );
 
         if ($authTokenLifetime) {
             $dt = new \DateTime();
@@ -60,10 +62,11 @@ class AuthTokenControl extends \Espo\Core\Jobs\Base
             $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
         }
 
-        $tokenList = $this->getEntityManager()->getRepository('AuthToken')->where($whereClause)->limit(0, 100)->find();
+        $tokenList = $this->getEntityManager()->getRepository('AuthToken')->where($whereClause)->limit(0, 500)->find();
 
         foreach ($tokenList as $token) {
-            $this->getEntityManager()->removeEntity($token);
+            $token->set('isActive', false);
+            $this->getEntityManager()->saveEntity($token);
         }
     }
 }

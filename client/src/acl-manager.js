@@ -96,6 +96,14 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             this.setEmpty();
         },
 
+        checkScopeHasAcl: function (scope) {
+            var data = (this.data.table || {})[scope];
+            if (typeof data === 'undefined') {
+                return false;
+            }
+            return true;
+        },
+
         checkScope: function (scope, action, precise) {
             var data = (this.data.table || {})[scope];
             if (typeof data === 'undefined') {

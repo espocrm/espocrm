@@ -52,6 +52,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         className: 'dialog dialog-record',
 
+        sideDisabled: false,
+
+        bottomDisabled: false,
+
         setup: function () {
 
             var self = this;
@@ -233,7 +237,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 inlineEditDisabled: true,
-                exit: function () {},
+                sideDisabled: this.sideDisabled,
+                bottomDisabled: this.bottomDisabled,
+                exit: function () {}
             };
             this.createView('record', viewName, options, callback);
         },

@@ -69,6 +69,17 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     $body.addClass('minimized');
                     this.getStorage().set('state', 'layoutMinimized', true);
                 }
+            },
+            'click a.action': function (e) {
+                var $el = $(e.currentTarget);
+
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof this[method] == 'function') {
+                    var data = $el.data();
+                    this[method](data, e);
+                    e.preventDefault();
+                }
             }
         },
 
@@ -364,29 +375,47 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var menuDefs = [
                 {
                     link: '#Preferences',
-                    label: this.getLanguage().translate('Preferences'),
-                },
-                {
-                    link: '#About',
-                    label: this.getLanguage().translate('About'),
-                },
+                    label: this.getLanguage().translate('Preferences')
+                }
+            ];
+
+            if (!this.getConfig().get('actionHistoryDisabled')) {
+                    menuDefs.push({
+                        action: 'showLastViewed',
+                        link: '#LastViewed',
+                        label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
+                    });
+                if (this.getAcl().checkScope('ActionHistoryRecord', 'read')) {
+                    menuDefs.push({
+                        action: 'showHistory',
+                        link: '#ActionHistoryRecord',
+                        label: this.getLanguage().translate('ActionHistoryRecord', 'scopeNamesPlural')
+                    });
+                }
+            }
+
+            menuDefs = menuDefs.concat([
                 {
                     divider: true,
                 },
                 {
                     link: '#clearCache',
-                    label: this.getLanguage().translate('Clear Local Cache'),
+                    label: this.getLanguage().translate('Clear Local Cache')
+                },
+                {
+                    link: '#About',
+                    label: this.getLanguage().translate('About')
                 },
                 {
                     link: '#logout',
-                    label: this.getLanguage().translate('Log Out'),
-                },
-            ];
+                    label: this.getLanguage().translate('Log Out')
+                }
+            ]);
 
             if (this.getUser().isAdmin()) {
                 menuDefs.unshift({
                     link: '#Admin',
-                    label: this.getLanguage().translate('Administration'),
+                    label: this.getLanguage().translate('Administration')
                 });
             }
             return menuDefs;
@@ -402,6 +431,24 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
                 view.render();
             });
+        },
+
+        actionShowLastViewed: function () {
+            this.createView('dialog', 'views/modals/last-viewed', {}, function (view) {
+                view.render();
+                this.listenTo(view, 'close', function () {
+                    this.clearView('dialog');
+                }, this);
+            }, this);
+        },
+
+        actionShowHistory: function () {
+            this.createView('dialog', 'views/modals/action-history', {}, function (view) {
+                view.render();
+                this.listenTo(view, 'close', function () {
+                    this.clearView('dialog');
+                }, this);
+            }, this);
         }
     });
 

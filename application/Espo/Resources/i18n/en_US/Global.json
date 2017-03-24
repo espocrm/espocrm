@@ -22,7 +22,13 @@
         "PortalRole": "Portal Role",
         "Attachment": "Attachment",
         "EmailFolder": "Email Folder",
-        "PortalUser": "Portal User"
+        "PortalUser": "Portal User",
+        "ScheduledJobLogRecord": "Scheduled Job Log Record",
+        "PasswordChangeRequest": "Password Change Request",
+        "ActionHistoryRecord": "Action History Record",
+        "AuthToken": "Auth Token",
+        "UniqueId": "Unique ID",
+        "LastViewed": "Last Viewed"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -47,7 +53,13 @@
         "PortalRole": "Portal Roles",
         "Attachment": "Attachments",
         "EmailFolder": "Email Folders",
-        "PortalUser": "Portal Users"
+        "PortalUser": "Portal Users",
+        "ScheduledJobLogRecord": "Scheduled Job Log Records",
+        "PasswordChangeRequest": "Password Change Requests",
+        "ActionHistoryRecord": "Action History",
+        "AuthToken": "Auth Tokens",
+        "UniqueId": "Unique IDs",
+        "LastViewed": "Last Viewed"
     },
     "labels": {
         "Misc": "Misc",

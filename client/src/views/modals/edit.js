@@ -50,6 +50,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
         className: 'dialog dialog-record',
 
+        sideDisabled: false,
+
+        bottomDisabled: false,
+
         setup: function () {
 
             var self = this;
@@ -144,6 +148,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
                 buttonsPosition: false,
+                sideDisabled: this.sideDisabled,
+                bottomDisabled: this.bottomDisabled,
                 exit: function () {}
             };
             this.createView('edit', viewName, options, callback);

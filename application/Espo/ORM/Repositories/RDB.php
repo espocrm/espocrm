@@ -511,6 +511,18 @@ class RDB extends \Espo\ORM\Repository
         return $this;
     }
 
+    public function select($select)
+    {
+        $this->listParams['select'] = $select;
+        return $this;
+    }
+
+    public function groupBy($groupBy)
+    {
+        $this->listParams['groupBy'] = $groupBy;
+        return $this;
+    }
+
     public function setListParams(array $params = array())
     {
         $this->listParams = $params;

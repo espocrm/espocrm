@@ -27,7 +27,7 @@
                     {{/each}}
                 </ul>
             </div>
-            <input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">
+            {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon" data-action="search">
                     <span class="glyphicon glyphicon-search"></span>

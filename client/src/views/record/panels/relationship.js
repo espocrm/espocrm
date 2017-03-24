@@ -105,14 +105,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            var type = 'listSmall';
+            var layoutName = 'listSmall';
             var listLayout = null;
             var layout = this.defs.layout || null;
             if (layout) {
                 if (typeof layout == 'string') {
-                     type = layout;
+                     layoutName = layout;
                 } else {
-                     type = 'listRelationship';
+                     layoutName = 'listRelationshipCustom';
                      listLayout = layout;
                 }
              }
@@ -152,7 +152,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.once('sync', function () {
                         this.createView('list', viewName, {
                             collection: collection,
-                            type: type,
+                            layoutName: layoutName,
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),

@@ -54,7 +54,8 @@
         "Notifications": "Notifications",
         "Jobs": "Jobs",
         "Reset to Default": "Reset to Default",
-        "Email Filters": "Email Filters"
+        "Email Filters": "Email Filters",
+        "Action History": "Action History"
     },
     "layouts": {
         "list": "List",
@@ -192,7 +193,8 @@
         "integrations": "Integration with third-party services.",
         "notifications": "In-app and email notification settings.",
         "inboundEmails": "Settings for incoming emails.",
-        "emailFilters": "Emails messages that match specified filter won't be imported."
+        "emailFilters": "Emails messages that match specified filter won't be imported.",
+        "actionHistory": "Log of actions done by users."
     },
     "options": {
         "previewSize": {

@@ -91,6 +91,11 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                 arr.push(this.getLanguage().translate('create'));
             } else {
                 var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+
+                if (name === '') {
+                    name = this.model.id;
+                }
+
                 if (this.options.noHeaderLinks) {
                     arr.push(name);
                 } else {

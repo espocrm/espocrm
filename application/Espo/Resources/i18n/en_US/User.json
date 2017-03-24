@@ -25,7 +25,8 @@
         "sendAccessInfo": "Send Email with Access Info to User",
         "portal": "Portal",
         "gender": "Gender",
-        "position": "Position in Team"
+        "position": "Position in Team",
+        "ipAddress": "IP Address"
     },
     "links": {
         "teams": "Teams",

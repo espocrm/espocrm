@@ -1,0 +1,10 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "recordViews": {
+        "list": "views/action-history-record/record/list"
+    },
+    "modalViews": {
+        "detail": "views/action-history-record/modals/detail"
+    }
+}

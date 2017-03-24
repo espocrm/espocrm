@@ -98,6 +98,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         bottomView: 'views/record/detail-bottom',
 
+        sideDisabled: false,
+
+        bottomDisabled: false,
+
         editModeDisabled: false,
 
         navigateButtonsDisabled: false,
@@ -658,6 +662,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.bottomView = this.options.bottomView;
             }
 
+            this.sideDisabled = this.options.sideDisabled || this.sideDisabled;
+            this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
+
             this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
 
@@ -1141,7 +1148,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         build: function (callback) {
-            if (this.sideView) {
+            if (!this.sideDisabled && this.sideView) {
                 this.createSideView();
             }
 
@@ -1149,7 +1156,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.createMiddleView(callback);
             }
 
-            if (this.bottomView) {
+            if (!this.bottomDisabled && this.bottomView) {
                 this.once('after:render', function () {
                     this.createBottomView();
                 }, this);

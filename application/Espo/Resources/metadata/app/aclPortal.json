@@ -36,6 +36,7 @@
             "EmailFolder": false,
             "EmailAccount": false,
             "EmailTemplate": false,
+            "ActionHistoryRecord": false,
             "Preferences": {
                 "read": "own",
                 "edit": "own",

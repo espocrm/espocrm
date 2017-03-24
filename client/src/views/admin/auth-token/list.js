@@ -30,8 +30,6 @@ Espo.define('views/admin/auth-token/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        searchPanel: false,
-
         setup: function () {
             Dep.prototype.setup.call(this);
 

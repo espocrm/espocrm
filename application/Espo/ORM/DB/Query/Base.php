@@ -728,7 +728,11 @@ abstract class Base
 
                                     $alias = $this->getAlias($entity, $relationName);
                                     if ($alias) {
-                                        $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                        if (!is_array($fieldDefs['foreign'])) {
+                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                        } else {
+                                            $leftPart = $this->getFieldPath($entity, $field);
+                                        }
                                     }
                                 }
                             }

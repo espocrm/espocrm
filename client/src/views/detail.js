@@ -156,6 +156,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         getHeader: function () {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
+            if (name === '') {
+                name = this.model.id;
+            }
+
             return this.buildHeaderHtml([
                 '<a href="#' + this.scope + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
                 name

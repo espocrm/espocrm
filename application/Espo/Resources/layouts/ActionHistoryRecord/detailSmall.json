@@ -1,0 +1,22 @@
+[
+    {
+        "label":"",
+        "rows": [
+            [
+                {"name": "user"},
+                {"name": "authToken"}
+            ],
+            [
+                {"name": "action"},
+                {"name": "ipAddress"}
+            ],
+            [
+                {"name": "targetType"},
+                {"name": "createdAt"}
+            ],
+            [
+                {"name": "target", "fullWidth": true}
+            ]
+        ]
+    }
+]

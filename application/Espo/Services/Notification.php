@@ -38,6 +38,8 @@ use Espo\Core\Utils\Json;
 
 class Notification extends \Espo\Services\Record
 {
+    protected $actionHistoryDisabled = true;
+
     public function notifyAboutMentionInPost($userId, $noteId)
     {
         $notification = $this->getEntityManager()->getEntity('Notification');

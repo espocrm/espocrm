@@ -53,6 +53,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         rowActionsView: 'views/record/row-actions/default',
 
+        rowActionsDisabled: false,
+
         scope: null,
 
         _internalLayoutType: 'list-row',
@@ -64,6 +66,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
         rowActionsColumnWidth: 25,
 
         buttonList: [],
+
+        headerDisabled: false,
+
+        massActionsDisabled: false,
 
         events: {
             'click a.link': function (e) {
@@ -248,12 +254,28 @@ Espo.define('views/record/list', 'view', function (Dep) {
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
             this.type = this.options.type || this.type;
-            this.header = _.isUndefined(this.options.header) ? this.header : this.options.header;
+
+            this.layoutName = this.options.layoutName || this.layoutName || this.type;
+
+            this.headerDisabled = this.options.headerDisabled || this.headerDisabled;
+            if (!this.headerDisabled) {
+                this.header = _.isUndefined(this.options.header) ? this.header : this.options.header;
+            } else {
+                this.header = false;
+            }
             this.pagination = _.isUndefined(this.options.pagination) ? this.pagination : this.options.pagination;
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
+
+            this.massActionsDisabled = this.options.massActionsDisabled || this.massActionsDisabled;
+
+            if (this.massActionsDisabled) {
+                this.checkboxes = false;
+            }
+
+            this.rowActionsDisabled = this.options.rowActionsDisabled || this.rowActionsDisabled;
 
             if ('buttonsDisabled' in this.options) {
                 this.buttonsDisabled = this.options.buttonsDisabled;
@@ -766,7 +788,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.layoutIsBeingLoaded) return;
 
             this.layoutIsBeingLoaded = true;
-            this._helper.layoutManager.get(this.collection.name, this.type, function (listLayout) {
+
+            var layoutName = this.layoutName;
+
+            this._helper.layoutManager.get(this.collection.name, layoutName, function (listLayout) {
                 this.layoutLoadCallbackList.forEach(function (c) {
                     c(listLayout)
                     this.layoutLoadCallbackList = [];
@@ -805,9 +830,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
                 defs.push(item);
             };
-            if (this.rowActionsView) {
+            if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
-                    width: this.rowActionsColumnWidth,
+                    width: this.rowActionsColumnWidth
                 });
             }
             return defs;
@@ -838,20 +863,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     options: {
                         defs: {
                             name: col.name,
-                            params: col.params || {},
+                            params: col.params || {}
                         },
                         mode: 'list'
                     }
                 };
+                if (col.width) {
+                    item.options.defs.width = col.width;
+                }
+                if (col.widthPx) {
+                    item.options.defs.widthPx = col.widthPx;
+                }
+
                 if (col.link) {
                     item.options.mode = 'listLink';
                 }
                 if (col.align) {
-                    item.options.defs.params.align = col.align;
+                    item.options.defs.align = col.align;
                 }
                 layout.push(item);
             }
-            if (this.rowActionsView) {
+            if (this.rowActionsView && !this.rowActionsDisabled) {
                 layout.push(this.getRowActionsDefs());
             }
             return layout;
@@ -992,7 +1024,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     noCache: true,
                     _layout: {
                         type: this._internalLayoutType,
-                        layout: internalLayout,
+                        layout: internalLayout
                     },
                     name: this.type + '-' + model.name
                 }, callback);

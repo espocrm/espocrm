@@ -156,6 +156,7 @@ return array (
     "calendarEntityList" => ["Meeting", "Call", "Task"],
     "activitiesEntityList" => ["Meeting", "Call"],
     "historyEntityList" => ["Meeting", "Call", "Email"],
-    'isInstalled' => false,
+    "lastViewedCount" => 20,
+    'isInstalled' => false
 );
 

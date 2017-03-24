@@ -50,6 +50,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         disableSavePreset: false,
 
+        textFilterDisabled: false,
+
         data: function () {
             return {
                 scope: this.scope,
@@ -61,7 +63,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 filterList: this.getFilterList(),
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
-                leftDropdown: this.isLeftDropdown()
+                leftDropdown: this.isLeftDropdown(),
+                textFilterDisabled: this.textFilterDisabled
             };
         },
 
@@ -70,6 +73,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.scope = this.options.scope || this.entityType;
 
             this.searchManager = this.options.searchManager;
+
+            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled;
 
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;
@@ -613,7 +618,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         fetch: function () {
-            this.textFilter = this.$el.find('input[name="textFilter"]').val().trim();
+            (this.textFilter = this.$el.find('input[name="textFilter"]').val() || '').trim();
 
             this.bool = {};
 

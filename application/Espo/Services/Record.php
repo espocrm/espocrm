@@ -84,7 +84,11 @@ class Record extends \Espo\Core\Services\Base
 
     protected $checkForDuplicatesInUpdate = false;
 
+    protected $actionHistoryDisabled = false;
+
     protected $duplicatingLinkList = [];
+
+    protected $listCountQueryDisabled = false;
 
     const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
 
@@ -168,9 +172,40 @@ class Record extends \Espo\Core\Services\Base
         return $service;
     }
 
-    protected function prepareEntity($entity)
+    protected function processActionHistoryRecord($action, Entity $entity)
     {
+        if ($this->actionHistoryDisabled) return;
+        if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
+        $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+
+        $historyRecord->set('action', $action);
+        $historyRecord->set('userId', $this->getUser()->id);
+        $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
+        $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+
+        if ($entity) {
+            $historyRecord->set(array(
+                'targetType' => $entity->getEntityType(),
+                'targetId' => $entity->id
+            ));
+        }
+
+        $this->getEntityManager()->saveEntity($historyRecord);
+    }
+
+    public function readEntity($id)
+    {
+        if (empty($id)) {
+            throw new Error();
+        }
+        $entity = $this->getEntity($id);
+
+        if ($entity) {
+            $this->processActionHistoryRecord('read', $entity);
+        }
+
+        return $entity;
     }
 
     public function getEntity($id = null)
@@ -558,6 +593,9 @@ class Record extends \Espo\Core\Services\Base
             $this->afterCreate($entity, $data);
             $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
+
+            $this->processActionHistoryRecord('create', $entity);
+
             return $entity;
         }
 
@@ -617,6 +655,9 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterUpdate($entity, $data);
             $this->prepareEntityForOutput($entity);
+
+            $this->processActionHistoryRecord('update', $entity);
+
             return $entity;
         }
 
@@ -676,6 +717,9 @@ class Record extends \Espo\Core\Services\Base
         $result = $this->getRepository()->remove($entity);
         if ($result) {
             $this->afterDelete($entity);
+
+            $this->processActionHistoryRecord('delete', $entity);
+
             return $result;
         }
     }
@@ -690,7 +734,11 @@ class Record extends \Espo\Core\Services\Base
     public function findEntities($params)
     {
         $disableCount = false;
-        if (in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
+        if (
+            $this->listCountQueryDisabled
+            ||
+            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+        ) {
             $disableCount = true;
         }
 
@@ -752,7 +800,9 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $disableCount = false;
-        if (in_array($foreignEntityName, $this->getConfig()->get('disabledCountQueryEntityList', array()))) {
+        if (
+            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+        ) {
             $disableCount = true;
         }
 
@@ -959,6 +1009,8 @@ class Record extends \Espo\Core\Services\Base
                         if ($repository->save($entity)) {
                             $idsUpdated[] = $entity->id;
                             $count++;
+
+                            $this->processActionHistoryRecord('update', $entity);
                         }
                     }
                 }
@@ -987,6 +1039,8 @@ class Record extends \Espo\Core\Services\Base
                         if ($repository->save($entity)) {
                             $idsUpdated[] = $entity->id;
                             $count++;
+
+                            $this->processActionHistoryRecord('update', $entity);
                         }
                     }
                 }
@@ -1022,6 +1076,8 @@ class Record extends \Espo\Core\Services\Base
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;
+
+                        $this->processActionHistoryRecord('delete', $entity);
                     }
                 }
             }
@@ -1047,6 +1103,8 @@ class Record extends \Espo\Core\Services\Base
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;
+
+                        $this->processActionHistoryRecord('delete', $entity);
                     }
                 }
             }

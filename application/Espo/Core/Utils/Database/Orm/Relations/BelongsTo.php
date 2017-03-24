@@ -38,6 +38,18 @@ class BelongsTo extends Base
         $foreignEntityName = $this->getForeignEntityName();
         $foreignLinkName = $this->getForeignLinkName();
 
+
+        $noForeignName = false;
+        if (!empty($linkParams['noForeignName'])) {
+            $noForeignName = true;
+        } else {
+            if (!empty($linkParams['foreignName'])) {
+                $foreign = $linkParams['foreignName'];
+            } else {
+                $foreign = $this->getForeignField('name', $foreignEntityName);
+            }
+        }
+
         if (!empty($linkParams['noJoin'])) {
             $fieldNameDefs = array(
                 'type' => 'varchar',
@@ -49,15 +61,14 @@ class BelongsTo extends Base
             $fieldNameDefs = array(
                 'type' => 'foreign',
                 'relation' => $linkName,
-                'foreign' => $this->getForeignField('name', $foreignEntityName),
+                'foreign' => $foreign,
                 'notStorable' => false
             );
         }
 
-        return array (
+        $data = array (
             $entityName => array (
                 'fields' => array(
-                    $linkName.'Name' => $fieldNameDefs,
                     $linkName.'Id' => array(
                         'type' => 'foreignId',
                         'index' => true
@@ -74,6 +85,12 @@ class BelongsTo extends Base
                 )
             )
         );
+
+        if (!$noForeignName) {
+            $data[$entityName]['fields'][$linkName.'Name'] = $fieldNameDefs;
+        }
+
+        return $data;
     }
 
 }
