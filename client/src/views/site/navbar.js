@@ -380,11 +380,14 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             ];
 
             if (!this.getConfig().get('actionHistoryDisabled')) {
-                    menuDefs.push({
-                        action: 'showLastViewed',
-                        link: '#LastViewed',
-                        label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
-                    });
+                menuDefs.push({
+                    divider: true
+                });
+                menuDefs.push({
+                    action: 'showLastViewed',
+                    link: '#LastViewed',
+                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
+                });
                 if (this.getAcl().checkScope('ActionHistoryRecord', 'read')) {
                     menuDefs.push({
                         action: 'showHistory',
@@ -396,11 +399,14 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             menuDefs = menuDefs.concat([
                 {
-                    divider: true,
+                    divider: true
                 },
                 {
                     link: '#clearCache',
                     label: this.getLanguage().translate('Clear Local Cache')
+                },
+                {
+                    divider: true
                 },
                 {
                     link: '#About',
