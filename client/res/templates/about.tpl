@@ -9,7 +9,7 @@
             <p>
                 Copyright &copy; 2014-2017 EspoCRM: Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko.
                 <br>
-                Website: <a href="http://www.espocrm.com">http://www.espocrm.com</a>.
+                Website: <a href="https://www.espocrm.com" target="_BLANK">www.espocrm.com</a>.
             </p>
             <p>
                 EspoCRM is free software: you can redistribute it and/or modify
