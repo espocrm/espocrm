@@ -62,6 +62,13 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
+
+            if (!data[this.name].length) {
+                data[this.name] = false;
+                data.translatedOptions = {};
+                return;
+            }
+
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
                 valueSanitized = this.getHelper().stripTags(value).replace(/"/g, '&quot;');
