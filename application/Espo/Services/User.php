@@ -97,7 +97,7 @@ class User extends Record
         return $result;
     }
 
-    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword)
+    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
