@@ -41,16 +41,19 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
         },
 
         getItemHtml: function (value) {
-            var translatedValue = this.translatedOptions[value] || value;
+            var valueSanitized = this.getHelper().stripTags(value);
+            var translatedValue = this.translatedOptions[value] || valueSanitized;
+
+            var valueSanitized = valueSanitized.replace(/"/g, '&quot;');
 
             var html = '' +
-            '<div class="list-group-item link-with-role form-inline" data-value="' + value + '">' +
+            '<div class="list-group-item link-with-role form-inline" data-value="' + valueSanitized + '">' +
                 '<div class="pull-left" style="width: 92%; display: inline-block;">' +
-                    '<input name="translatedValue" data-value="' + value + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' + 
-                    '<div>' + value + '</div>' +
+                    '<input name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm pull-right" value="'+valueSanitized+'">' +
+                    '<div>' + valueSanitized + '</div>' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
-                    '<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
+                    '<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
                 '</div><br style="clear: both;" />' +
             '</div>';
 
@@ -61,7 +64,10 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             var data = Dep.prototype.fetch.call(this);
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
-                data.translatedOptions[value] = this.$el.find('input[name="translatedValue"][data-value="'+value+'"]').val() || value;
+                valueSanitized = this.getHelper().stripTags(value).replace(/"/g, '&quot;');
+
+                data.translatedOptions[value] = this.$el.find('input[name="translatedValue"][data-value="'+valueSanitized+'"]').val() || value;
+                data.translatedOptions[value] = data.translatedOptions[value].toString();
             }, this);
 
             return data;

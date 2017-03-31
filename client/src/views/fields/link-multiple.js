@@ -258,7 +258,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         addLinkHtml: function (id, name) {
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
-            $el.html(name + '&nbsp');
+            $el.html(this.getHelper().stripTags(name) + '&nbsp');
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>');
             $container.append($el);
 
@@ -266,7 +266,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         getDetailLinkHtml: function (id) {
-            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.nameHash[id] + '</a>';
+            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(this.nameHash[id]) + '</a>';
         },
 
         getValueForDisplay: function () {

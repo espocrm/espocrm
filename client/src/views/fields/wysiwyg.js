@@ -104,6 +104,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         sanitizeHtml: function (value) {
             if (value) {
                 value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
+                value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
             }
             return value || '';
         },
