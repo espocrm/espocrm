@@ -1007,6 +1007,11 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
+    protected function checkEntityForMassRemove(Entity $entity)
+    {
+        return true;
+    }
+
     public function massRemove(array $params)
     {
         $idsRemoved = array();
@@ -1018,7 +1023,7 @@ class Record extends \Espo\Core\Services\Base
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'delete')) {
+                if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;
@@ -1043,7 +1048,7 @@ class Record extends \Espo\Core\Services\Base
             $collection = $repository->find($selectParams);
 
             foreach ($collection as $entity) {
-                if ($this->getAcl()->check($entity, 'delete')) {
+                if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
                         $count++;

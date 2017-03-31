@@ -459,6 +459,17 @@ class User extends Record
         return parent::deleteEntity($id);
     }
 
+    protected function checkEntityForMassRemove(Entity $entity)
+    {
+        if ($entity->id == 'system') {
+            return false;
+        }
+        if ($entity->id == $this->getUser()->id) {
+            return false;
+        }
+        return true;
+    }
+
     public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
