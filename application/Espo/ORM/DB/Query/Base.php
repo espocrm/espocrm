@@ -626,6 +626,10 @@ abstract class Base
     {
         $whereParts = array();
 
+        if (!is_array($whereClause)) {
+            $whereClause = array();
+        }
+
         foreach ($whereClause as $field => $value) {
 
             if (is_int($field)) {

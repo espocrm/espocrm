@@ -57,7 +57,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         events: {
             'click [data-action="removeValue"]': function (e) {
-                var value = $(e.currentTarget).data('value');
+                var value = $(e.currentTarget).data('value').toString();
                 this.removeValue(value);
             },
             'click [data-action="showAddModal"]': function () {
@@ -68,7 +68,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                         options.push(item);
                     }
                 }, this);
-                this.createView('addModal', 'Modals.ArrayFieldAdd', {
+                this.createView('addModal', 'views/modals/array-field-add', {
                     options: options,
                     translatedOptions: this.translatedOptions
                 }, function (view) {
@@ -184,7 +184,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 if (!this.params.options) {
                     $select.on('keypress', function (e) {
                         if (e.keyCode == 13) {
-                            var value = $select.val();
+                            var value = $select.val().toString();
                             if (this.noEmptyString) {
                                 if (value == '') {
                                     return;
@@ -263,10 +263,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             return this.selected.map(function (item) {
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
-                        return this.translatedOptions[item];
+                        return this.getHelper().stripTags(this.translatedOptions[item]);
                     }
                 }
-                return item;
+                return this.getHelper().stripTags(item);
             }, this).join(', ');
         },
 
@@ -280,12 +280,20 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 }
             }
 
-            var label = value;
+            value = value.toString();
+
+            var valueSanitized = this.getHelper().stripTags(value);
+            var valueSanitized = valueSanitized.replace(/"/g, '&quot;');
+
+            var label = valueSanitized;
             if (this.translatedOptions) {
-                label = ((value in this.translatedOptions) ? this.translatedOptions [value]: value);
+                label = ((value in this.translatedOptions) ? this.translatedOptions[value] : label);
+                label = this.getHelper().stripTags(label);
+                label = label.replace(/"/g, '&quot;');
             }
-            var html = '<div class="list-group-item" data-value="' + value + '" style="cursor: default;">' + label +
-            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
+
+            var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
+            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
             '</div>';
 
             return html;
@@ -301,7 +309,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         removeValue: function (value) {
-            this.$list.children('[data-value="' + value + '"]').remove();
+            var valueSanitized = this.getHelper().stripTags(value).replace(/"/g, '\\"');
+
+            this.$list.children('[data-value="' + valueSanitized + '"]').remove();
             var index = this.selected.indexOf(value);
             this.selected.splice(index, 1);
             this.trigger('change');
@@ -353,7 +363,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     return true;
                 }
             }
-        },
+        }
 
     });
 });

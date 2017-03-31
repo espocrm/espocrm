@@ -66,6 +66,14 @@ Espo.define('view-helper', [], function () {
 
         language: null,
 
+        stripTags: function (text) {
+            text = text || '';
+            if (typeof text === 'string' || text instanceof String) {
+                return text.replace(/<\/?[^>]+(>|$)/g, '');
+            }
+            return text;
+        },
+
         tranformTextMarkdown: function (text) {
             var newline = text.indexOf('\r\n') != -1 ? '\r\n' : text.indexOf('\n') != -1 ? '\n' : '';
 

@@ -97,7 +97,7 @@ class User extends Record
         return $result;
     }
 
-    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword)
+    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -457,6 +457,17 @@ class User extends Record
             throw new Forbidden();
         }
         return parent::deleteEntity($id);
+    }
+
+    protected function checkEntityForMassRemove(Entity $entity)
+    {
+        if ($entity->id == 'system') {
+            return false;
+        }
+        if ($entity->id == $this->getUser()->id) {
+            return false;
+        }
+        return true;
     }
 
     public function afterUpdate(Entity $entity, array $data = array())
