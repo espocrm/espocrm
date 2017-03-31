@@ -287,9 +287,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             var label = valueSanitized;
             if (this.translatedOptions) {
-                label = ((value in this.translatedOptions) ? this.translatedOptions[value]: label);
-                var label = this.getHelper().stripTags(label);
-                var label = valueSanitized.replace(/"/g, '&quot;');
+                label = ((value in this.translatedOptions) ? this.translatedOptions[value] : label);
+                label = this.getHelper().stripTags(label);
+                label = label.replace(/"/g, '&quot;');
             }
 
             var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
