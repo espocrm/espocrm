@@ -40,6 +40,12 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
 
         backdrop: true,
 
+        events: _.extend({
+            'click .list .cell > a': function () {
+                this.close();
+            },
+        }, Dep.prototype.events),
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
