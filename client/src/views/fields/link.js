@@ -107,9 +107,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (model) {
+                            this.clearView('dialog');
                             this.select(model);
                         }, this);
-                    }.bind(this));
+                    }, this);
                 });
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
@@ -133,6 +134,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (models) {
+                            this.clearView('dialog');
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
