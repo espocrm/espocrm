@@ -127,6 +127,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         dialog.render();
                         self.notify(false);
                         this.listenToOnce(dialog, 'select', function (models) {
+                            this.clearView('dialog');
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
