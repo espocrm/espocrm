@@ -388,13 +388,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     link: '#LastViewed',
                     label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
                 });
-                if (this.getAcl().checkScope('ActionHistoryRecord', 'read')) {
-                    menuDefs.push({
-                        action: 'showHistory',
-                        link: '#ActionHistoryRecord',
-                        label: this.getLanguage().translate('ActionHistoryRecord', 'scopeNamesPlural')
-                    });
-                }
             }
 
             menuDefs = menuDefs.concat([

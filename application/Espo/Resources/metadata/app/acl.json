@@ -50,7 +50,7 @@
                 "create": "no"
             },
             "ActionHistoryRecord": {
-                "read": "own",
+                "read": "no",
                 "edit": "no",
                 "delete": "no",
                 "create": "no"
