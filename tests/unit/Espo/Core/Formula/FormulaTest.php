@@ -1176,6 +1176,28 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item, $this->entity);
         $this->assertEquals(1, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\diff",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-09-20 12:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "2017-09-20 11:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": "minutes"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(75, $actual);
     }
 
     function testDatetimeOperations()

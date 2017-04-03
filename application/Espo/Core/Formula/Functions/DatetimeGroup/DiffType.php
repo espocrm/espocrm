@@ -16,7 +16,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU General Public Licenseвін
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
  * The interactive user interfaces in modified source and object code versions
@@ -38,7 +38,7 @@ class DiffType extends \Espo\Core\Formula\Functions\Base
         $this->addDependency('dateTime');
     }
 
-   protected $intevalTypePropertyMap = array(
+    protected $intevalTypePropertyMap = array(
         'years' => 'y', 'months' => 'm', 'days' => 'd', 'hours' => 'h', 'minutes' => 'i', 'seconds' => 's'
     );
 
@@ -88,7 +88,6 @@ class DiffType extends \Espo\Core\Formula\Functions\Base
             throw new Error('Not supported interval type' . $intervalType);
         }
 
-        $property = $this->intevalTypePropertyMap[$intervalType];
 
         $isTime = false;
         if (strlen($dateTime1String) > 10) {
@@ -102,12 +101,30 @@ class DiffType extends \Espo\Core\Formula\Functions\Base
             return null;
         }
 
-        $interval = $dateTime2->diff($dateTime1);
+        $t1 = $dateTime1->getTimestamp();
+        $t2 = $dateTime2->getTimestamp();
 
-        $number = $interval->$property;
+        $secondsDiff = $t1 - $t2;
 
-        if ($interval->invert) {
-            $number *= -1;
+        if ($intervalType === 'seconds') {
+            $number = $secondsDiff;
+        } else if ($intervalType === 'minutes') {
+            $number = floor($secondsDiff / 60);
+        } else if ($intervalType === 'hours') {
+            $number = floor($secondsDiff / (60 * 60));
+        } else if ($intervalType === 'days') {
+            $number = floor($secondsDiff / (60 * 60 * 24));
+        } else {
+            $property = $this->intevalTypePropertyMap[$intervalType];
+            $interval = $dateTime2->diff($dateTime1);
+            $number = $interval->$property;
+            if ($interval->invert) {
+                $number *= -1;
+            }
+
+            if ($intervalType === 'months') {
+                $number += $interval->y * 12;
+            }
         }
 
         return $number;
