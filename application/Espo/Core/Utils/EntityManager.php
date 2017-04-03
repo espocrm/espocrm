@@ -663,7 +663,7 @@ class EntityManager
         }
 
         if (
-            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('audited', $params)) {
                 $audited = $params['audited'];
@@ -680,7 +680,7 @@ class EntityManager
         }
 
         if (
-           $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('auditedForeign', $params)) {
                 $auditedForeign = $params['auditedForeign'];
