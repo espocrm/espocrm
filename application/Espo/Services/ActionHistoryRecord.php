@@ -39,7 +39,7 @@ class ActionHistoryRecord extends Record
 
     protected $listCountQueryDisabled = true;
 
-    public function loadParentNameFields(Entity $entity)
+    public function loadParentNameFields(\Espo\ORM\Entity $entity)
     {
         if ($entity->get('targetId') && $entity->get('targetType')) {
             $repository = $this->getEntityManager()->getRepository($entity->get('targetType'));

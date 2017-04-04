@@ -98,8 +98,8 @@ return array (
         'Lead',
         'Opportunity',
     ),
-    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
-    "quickCreateList" => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
+    'tabList' => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
+    'quickCreateList' => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
     'exportDisabled' => false,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
@@ -153,10 +153,12 @@ return array (
             ]
         ]
     ],
-    "calendarEntityList" => ["Meeting", "Call", "Task"],
-    "activitiesEntityList" => ["Meeting", "Call"],
-    "historyEntityList" => ["Meeting", "Call", "Email"],
-    "lastViewedCount" => 20,
+    'calendarEntityList' => ['Meeting', 'Call', 'Task'],
+    'activitiesEntityList' => ['Meeting', 'Call'],
+    'historyEntityList' => ['Meeting', 'Call', 'Email'],
+    'lastViewedCount' => 20,
+    'cleanupJobPeriod' => '-1 month',
+    'cleanupActionHistoryPeriod' => '-15 days',
     'isInstalled' => false
 );
 

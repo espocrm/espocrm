@@ -33,7 +33,9 @@ use \Espo\Core\Exceptions;
 
 class Cleanup extends \Espo\Core\Jobs\Base
 {
-    protected $period = '-1 month';
+    protected $cleanupJobPeriod = '-1 month';
+
+    protected $cleanupActionHistoryPeriod = '-15 days';
 
     public function run()
     {
@@ -43,11 +45,12 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupEmails();
         $this->cleanupNotes();
         $this->cleanupNotifications();
+        $this->cleanupActionHistory();
     }
 
     protected function cleanupJobs()
     {
-        $query = "DELETE FROM `job` WHERE DATE(modified_at) < '".$this->getCleanupFromDate()."' AND status <> 'Pending'";
+        $query = "DELETE FROM `job` WHERE DATE(modified_at) < '".$this->getCleanupJobFromDate()."' AND status <> 'Pending'";
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
@@ -71,20 +74,32 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
             $delSql = "DELETE FROM `scheduled_job_log_record`
                     WHERE scheduled_job_id = '".$id."'
-                    AND DATE(created_at) < '".$this->getCleanupFromDate()."'
+                    AND DATE(created_at) < '".$this->getCleanupJobFromDate()."'
                     AND id NOT IN ('".implode("', '", $lastRowIds)."')
                 ";
             $pdo->query($delSql);
         }
     }
 
-    protected function getCleanupFromDate()
+    protected function cleanupActionHistory()
     {
-        $format = 'Y-m-d';
-
+        $period = $this->getConfig()->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
         $datetime = new \DateTime();
-        $datetime->modify($this->period);
-        return $datetime->format($format);
+        $datetime->modify($period);
+
+        $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < '" . $datetime->format('Y-m-d') . "'";
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+    }
+
+    protected function getCleanupJobFromDate()
+    {
+        $period = $this->getConfig()->get('cleanupJobPeriod', $this->cleanupJobPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
+        return $datetime->format('Y-m-d');
     }
 
     protected function cleanupAttachments()
