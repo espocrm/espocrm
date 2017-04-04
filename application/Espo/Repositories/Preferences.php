@@ -75,21 +75,29 @@ class Preferences extends \Espo\Core\ORM\Repository
         return $this->getInjection('config');
     }
 
-    protected function getFilePath($id)
-    {
-        return 'data/preferences/' . $id . '.json';
-    }
-
     public function get($id = null)
     {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
             $entity->id = $id;
             if (empty($this->data[$id])) {
-                $fileName = $this->getFilePath($id);
-                if (file_exists($fileName)) {
-                    $d = Json::decode($this->getFileManager()->getContents($fileName));
-                    $this->data[$id] = get_object_vars($d);
+                $pdo = $this->getEntityManger()->getPDO();
+                $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
+                $ps = $pdo->query($sql);
+
+                $data = null;
+
+                $sth = $pdo->prepare($sql);
+                $sth->execute();
+
+                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                    $data = Json::decode($row['data']);
+                    $data = get_object_vars($data);
+                    break;
+                }
+
+                if ($data) {
+                    $this->data[$id] = $data;
                 } else {
                     $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
                     $defaults = array();
@@ -116,19 +124,18 @@ class Preferences extends \Espo\Core\ORM\Repository
                     foreach ($this->defaultAttributeListFromSettings as $attr) {
                         $defaults[$attr] = $this->getConfig()->get($attr);
                     }
+
                     $this->data[$id] = $defaults;
+                    $entity->set($defaults);
                 }
             }
 
             $entity->set($this->data[$id]);
 
-
             $this->fetchAutoFollowEntityTypeList($entity);
-
 
             $entity->setAsFetched($this->data[$id]);
 
-            $d = $entity->toArray();
             return $entity;
         }
     }
@@ -187,45 +194,62 @@ class Preferences extends \Espo\Core\ORM\Repository
         }
     }
 
-    public function save(Entity $entity)
+    public function save(Entity $entity, array $options = array())
     {
-        if ($entity->id) {
-            $this->data[$entity->id] = $entity->toArray();
+        if (!$entity->id) return;
 
-            $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+        $this->data[$entity->id] = $entity->toArray();
 
-            $data = array();
-            foreach ($this->data[$entity->id] as $field => $value) {
-                if (empty($fields[$field]['notStorable'])) {
-                    $data[$field] = $value;
-                }
+        $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+
+        $data = array();
+        foreach ($this->data[$entity->id] as $field => $value) {
+            if (empty($fields[$field]['notStorable'])) {
+                $data[$field] = $value;
             }
-
-            $fileName = $this->getFilePath($entity->id);
-            $this->getFileManager()->putContents($fileName, Json::encode($data, \JSON_PRETTY_PRINT));
-
-            $user = $this->getEntityManger()->getEntity('User', $entity->id);
-            if ($user && !$user->get('isPortalUser')) {
-                $this->storeAutoFollowEntityTypeList($entity);
-            }
-
-            return $entity;
         }
+
+        $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
+
+        $pdo = $this->getEntityManger()->getPDO();
+
+        $sql = "
+            INSERT INTO `preferences` (`id`, `data`) VALUES (".$pdo->quote($entity->id).", ".$pdo->quote($dataString).")
+            ON DUPLICATE KEY UPDATE `data` = ".$pdo->quote($dataString)."
+        ";
+
+        $pdo->query($sql);
+
+        $user = $this->getEntityManger()->getEntity('User', $entity->id);
+        if ($user && !$user->get('isPortalUser')) {
+            $this->storeAutoFollowEntityTypeList($entity);
+        }
+
+        return $entity;
     }
 
-    public function remove(Entity $entity)
+    public function deleteFromDb($id)
     {
-        $fileName = $this->getFilePath($id);
-        unlink($fileName);
-        if (!file_exists($fileName)) {
-            return true;
+        $pdo = $this->getEntityManger()->getPDO();
+        $sql = "DELETE  FROM `preferences` WHERE `id` = " . $pdo->quote($id);
+        $ps = $pdo->query($sql);
+    }
+
+    public function remove(Entity $entity, array $options = array())
+    {
+        if (!$entity->id) return;
+        $this->deleteFromDb($entity->id);
+        if (isset($this->data[$userId])) {
+            unset($this->data[$userId]);
         }
     }
 
     public function resetToDefaults($userId)
     {
-        $fileName = $this->getFilePath($userId);
-        $this->getFileManager()->unlink($fileName);
+        $this->deleteFromDb($userId);
+        if (isset($this->data[$userId])) {
+            unset($this->data[$userId]);
+        }
         if ($entity = $this->get($userId)) {
             return $entity->toArray();
         }
@@ -247,4 +271,3 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
     }
 }
-
