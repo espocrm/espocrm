@@ -59,6 +59,11 @@
         "isInternal": {
             "type": "bool"
         },
+        "isPinned": {
+            "type": "bool",
+            "default": false,
+            "tooltipText": "Pinned notes appear at the top of the activity panel"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

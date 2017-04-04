@@ -8,7 +8,8 @@
                 }
             ],
             [
-                {"name":"attachments"}
+                {"name":"attachments"},
+                {"name":"isPinned"}
             ]
         ]
     }

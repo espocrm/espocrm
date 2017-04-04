@@ -38,11 +38,14 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
         isRemovable: true,
 
+        isPinned: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
             data.showPost = !!this.model.get('post');
             data.isInternal = this.isInternal;
+            data.isPinned = this.isPinned;
             return data;
         },
 
@@ -52,6 +55,7 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
             this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
 
             this.isInternal = this.model.get('isInternal');
+            this.isPinned = this.model.get('isPinned');
 
             if (!this.model.get('post') && this.model.get('parentId')) {
                 this.messageName = 'attach';
@@ -62,6 +66,10 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
             this.listenTo(this.model, 'change', function () {
                 if (this.model.hasChanged('post') || this.model.hasChanged('attachmentsIds')) {
+                    this.reRender();
+                }
+                if (this.model.hasChanged('isPinned')) {
+                    this.isPinned = this.model.get('isPinned');
                     this.reRender();
                 }
             }, this);

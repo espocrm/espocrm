@@ -2,6 +2,7 @@
     "fields": {
         "post": "Post",
         "attachments": "Attachments",
+        "isPinned": "Pinned to top",
         "targetType": "Target",
         "teams": "Teams",
         "users": "Users",

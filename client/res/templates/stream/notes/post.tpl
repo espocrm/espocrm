@@ -3,6 +3,10 @@
     {{#unless noEdit}}
     <div class="pull-right right-container">
     {{{right}}}
+    {{#if isPinned}}
+        <span class="label label-info">Pinned</span>
+        <span class="glyphicon glyphicon-pushpin danger"></span>
+    {{/if}}
     </div>
     {{/unless}}
 
@@ -19,6 +23,7 @@
         <div class="stream-head-text-container">
             <span class="text-muted message">{{{message}}}</span>
         </div>
+
     </div>
 
     {{#if showPost}}

@@ -638,8 +638,10 @@ class Stream extends \Espo\Core\Services\Base
             'whereClause' => $where,
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
-            'orderBy' => 'number',
-            'order' => 'DESC'
+            'orderBy' => [
+                ['isPinned', 'desc'],
+                ['number', 'desc']
+            ]
         ));
 
 

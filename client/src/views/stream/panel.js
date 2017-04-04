@@ -226,6 +226,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 collection.fetch();
             }
 
+            this.listenTo(collection, 'change', function() {
+                collection.fetch();
+            });
+
             var assignmentPermission = this.getAcl().get('assignmentPermission');
 
             var buildUserListUrl = function (term) {
