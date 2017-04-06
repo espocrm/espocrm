@@ -612,7 +612,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
-            var collection = this.model.collection;
+            var collection = this.collection = this.model.collection;
             if (collection) {
                 this.listenTo(this.model, 'destroy', function () {
                     collection.remove(this.model.id);
@@ -1174,6 +1174,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.returnUrl) {
                 url = this.returnUrl;
             } else {
+                if (after) {
+                    var methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
+                    if (methodName in this) {
+                        this[methodName]();
+                        return;
+                    }
+                }
                 if (after == 'delete') {
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true
