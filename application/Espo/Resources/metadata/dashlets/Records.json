@@ -57,11 +57,7 @@
                     [
                         {"name": "title"}
                     ],
-                    [
-                        {"name": "displayRecords"},
-                        {"name": "autorefreshInterval"}
-                    ],
-                    [
+                      [
                         {"name": "entityType"},
                         false
                     ],
@@ -72,6 +68,10 @@
                     [
                         {"name": "boolFilterList"},
                         {"name": "sortDirection"}
+                    ],
+                    [
+                        {"name": "displayRecords"},
+                        {"name": "autorefreshInterval"}
                     ]
                 ]
             }
