@@ -87,6 +87,13 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 this.collection = collection;
                 collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
                 collection.asc = this.getOption('asc') || this.collection.asc;
+
+                if (this.getOption('sortDirection') === 'asc') {
+                    collection.asc = true;
+                } else if (this.getOption('sortDirection') === 'desc') {
+                    collection.asc = false;
+                }
+
                 collection.maxSize = this.getOption('displayRecords');
                 collection.where = searchManager.getWhere();
 

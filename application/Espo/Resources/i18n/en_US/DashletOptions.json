@@ -11,7 +11,9 @@
         "users": "Users",
         "entityType": "Entity Type",
         "primaryFilter": "Primary Filter",
-        "boolFilterList": "Filters"
+        "boolFilterList": "Additional Filters",
+        "sortBy": "Order (field)",
+        "sortDirection": "Order (direction)"
     },
     "options": {
     	"mode": {

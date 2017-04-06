@@ -25,6 +25,16 @@
             "boolFilterList": {
                 "type": "multiEnum",
                 "view": "views/dashlets/fields/records/bool-filter-list"
+            },
+            "sortBy": {
+                "type": "enum",
+                "view": "views/dashlets/fields/records/sort-by"
+            },
+            "sortDirection": {
+                "type": "enum",
+                "view": "views/dashlets/fields/records/sort-direction",
+                "options": ["asc", "desc"],
+                "translation": "EntityManager.options.sortDirection"
             }
         },
         "defaults": {
@@ -57,7 +67,11 @@
                     ],
                     [
                         {"name": "primaryFilter"},
-                        {"name": "boolFilterList"}
+                        {"name": "sortBy"}
+                    ],
+                    [
+                        {"name": "boolFilterList"},
+                        {"name": "sortDirection"}
                     ]
                 ]
             }
