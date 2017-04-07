@@ -391,7 +391,7 @@ Espo.define(
                 this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
                 this.storage.set('user', 'auth', this.auth);
 
-                this.setCookieAuthToken(data.auth.token);
+                this.setCookieAuth(data.auth.userName, data.auth.token);
 
                 this.initUserData(data, function () {
                     this.trigger('auth');
@@ -426,21 +426,24 @@ Espo.define(
             this.doAction({action: 'login'});
             this.language.clearCache();
 
-            this.unsetCookieAuthToken();
+            this.unsetCookieAuth();
 
             xhr = new XMLHttpRequest;
-            xhr.open('GET', this.url + '/', true, 'logout', 'logout');
+            xhr.open('GET', this.url + '/');
+            xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
         },
 
-        setCookieAuthToken: function (token) {
+        setCookieAuth: function (username, token) {
             var date = new Date();
             date.setTime(date.getTime() + (1000 * 24*60*60*1000));
+            document.cookie = 'auth-username='+username+'; expires='+date.toGMTString()+'; path=/';
             document.cookie = 'auth-token='+token+'; expires='+date.toGMTString()+'; path=/';
         },
 
-        unsetCookieAuthToken: function () {
+        unsetCookieAuth: function () {
+            document.cookie = 'auth-username' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
             document.cookie = 'auth-token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
         },
 
@@ -485,14 +488,19 @@ Espo.define(
                     return;
                 }
 
-                var arr = Base64.decode(this.auth).split(':');
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', this.basePath + this.url + '/', true, arr[0], arr[1]);
+
+                xhr.open('GET', this.basePath + this.url + '/');
+                xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+
+                xhr.onreadystatechange = function () {
+                    if (callback) {
+                        callback();
+                    }
+                }
+
                 xhr.send('');
 
-                if (callback) {
-                    callback();
-                }
             }.bind(this));
         },
 
