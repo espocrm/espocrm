@@ -72,44 +72,50 @@ service apache2 restart',
 		'APACHE3' => 'service apache2 restart',
 		'APACHE4' => '# RewriteBase /',
 		'APACHE5' => 'RewriteBase {ESPO_PATH}{API_PATH}',
-		'NGINX' => 'location /api/v1/ {
-    if (!-e $request_filename){
-        rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;
-    }
-}
+		'NGINX' => 'server {
+    # ...
 
-location ~ /reset/?$ {
-    try_files /reset.html =404;
-}
+    client_max_body_size 50M;
 
-location ^~ (data|api)/ {
-    if (-e $request_filename){
-        return 403;
+    location /api/v1/ {
+        if (!-e $request_filename){
+            rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;
+        }
     }
-}
-location ^~ /data/logs/ {
-    deny all;
-}
-location ^~ /data/config.php {
-    deny all;
-}
-location ^~ /data/cache/ {
-    deny all;
-}
-location ^~ /data/upload/ {
-    deny all;
-}
-location ^~ /application/ {
-    deny all;
-}
-location ^~ /custom/ {
-    deny all;
-}
-location ^~ /vendor/ {
-    deny all;
-}
-location ~ /\.ht {
-    deny all;
+
+    location ~ /reset/?$ {
+        try_files /reset.html =404;
+    }
+
+    location ^~ (data|api)/ {
+        if (-e $request_filename){
+            return 403;
+        }
+    }
+    location ^~ /data/logs/ {
+        deny all;
+    }
+    location ^~ /data/config.php {
+        deny all;
+    }
+    location ^~ /data/cache/ {
+        deny all;
+    }
+    location ^~ /data/upload/ {
+        deny all;
+    }
+    location ^~ /application/ {
+        deny all;
+    }
+    location ^~ /custom/ {
+        deny all;
+    }
+    location ^~ /vendor/ {
+        deny all;
+    }
+    location ~ /\.ht {
+        deny all;
+    }
 }',
 	),
 
