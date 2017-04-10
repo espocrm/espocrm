@@ -271,7 +271,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.massActionsDisabled = this.options.massActionsDisabled || this.massActionsDisabled;
 
-            if (this.massActionsDisabled) {
+            if (this.massActionsDisabled && !this.selectable) {
                 this.checkboxes = false;
             }
 
