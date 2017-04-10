@@ -42,17 +42,14 @@ class HookManager
     protected $cacheFile = 'data/cache/application/hooks.php';
 
     /**
-     * List of defined hooks
+     * List of ignored hook methods
      *
      * @var array
      */
-    protected $hookList = array(
-        'beforeSave',
-        'afterSave',
-        'beforeRemove',
-        'afterRemove',
-        'afterRelate',
-        'afterUnrelate'
+    protected $ignoredMethods = array(
+        '__construct',
+        'getDependencyList',
+        'inject',
     );
 
     protected $paths = array(
@@ -170,9 +167,12 @@ class HookManager
                         $hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
                         $className = Util::getClassName($hookFilePath);
 
-                        foreach($this->hookList as $hookName) {
+                        $classMethods = get_class_methods($className);
+                        $hookMethods = array_diff($classMethods, $this->ignoredMethods);
+
+                        foreach($hookMethods as $hookName) {
                             $entityHookData = isset($hookData[$scopeName][$hookName]) ? $hookData[$scopeName][$hookName] : array();
-                            if (method_exists($className, $hookName) && !$this->isHookExists($className, $entityHookData)) {
+                            if (!$this->isHookExists($className, $entityHookData)) {
                                 $hookData[$normalizedScopeName][$hookName][$className::$order][] = $className;
                             }
                         }
