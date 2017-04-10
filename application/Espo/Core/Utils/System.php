@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 class System
 {
     /**
@@ -105,7 +106,17 @@ class System
      */
     public function getPhpBin()
     {
-        return (defined("PHP_BINDIR"))? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : 'php';
+        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+    }
+
+    /**
+     * Get PHP binary
+     *
+     * @return string
+     */
+    public function getPhpBinary()
+    {
+        return defined("PHP_BINARY") ? PHP_BINARY : 'php';
     }
 
     /**

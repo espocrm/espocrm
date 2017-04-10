@@ -125,11 +125,23 @@ class Converter
         //check if exist files in "Tables" directory and merge with ormMetadata
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
+        if (isset($ormMeta['unsetIgnore'])) {
+            $protectedOrmMeta = array();
+            foreach ($ormMeta['unsetIgnore'] as $protectedKey) {
+                $protectedOrmMeta = Util::merge( $protectedOrmMeta, Util::fillArrayKeys($protectedKey, Util::getValueByKey($ormMeta, $protectedKey)) );
+            }
+            unset($ormMeta['unsetIgnore']);
+        }
+
         //unset some keys in orm
         if (isset($ormMeta['unset'])) {
             $ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
             unset($ormMeta['unset']);
         } //END: unset some keys in orm
+
+        if (isset($protectedOrmMeta)) {
+            $ormMeta = Util::merge($ormMeta, $protectedOrmMeta);
+        }
 
         if (isset($entityList)) {
             $entityList = is_string($entityList) ? (array) $entityList : $entityList;
