@@ -55,7 +55,7 @@ class ScheduledJob
 
     protected $cronSetup = array(
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'windows' => '{PHP-BIN-DIR}.exe -f {FULL-CRON-PATH}',
+        'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
         'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
     );
@@ -165,6 +165,7 @@ class ScheduledJob
 
         $data = array(
             'PHP-BIN-DIR' => $this->getSystemUtil()->getPhpBin(),
+            'PHP-BINARY' => $this->getSystemUtil()->getPhpBinary(),
             'CRON-FILE' => $this->cronFile,
             'DOCUMENT_ROOT' => $this->getSystemUtil()->getRootDir(),
             'FULL-CRON-PATH' => Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile),
