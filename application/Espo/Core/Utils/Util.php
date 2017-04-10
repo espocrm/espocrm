@@ -580,5 +580,27 @@ class Util
 
         return $diff;
     }
+
+    /**
+     * Fill array with specified keys
+     *
+     * @param  array|string $keys
+     * @param  mixed $value
+     *
+     * @return array
+     */
+    public static function fillArrayKeys($keys, $value)
+    {
+        $arrayKeys = is_array($keys) ? $keys : explode('.', $keys);
+
+        $array = array();
+        foreach (array_reverse($arrayKeys) as $i => $key) {
+            $array = array(
+                $key => ($i == 0) ? $value : $array,
+            );
+        }
+
+        return $array;
+    }
 }
 
