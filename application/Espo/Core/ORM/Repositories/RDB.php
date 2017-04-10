@@ -189,6 +189,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
     }
 
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    {
+        $options['params'] = $params;
+
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options);
+    }
+
     public function remove(Entity $entity, array $options = array())
     {
         $result = parent::remove($entity, $options);

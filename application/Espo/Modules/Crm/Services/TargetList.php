@@ -48,6 +48,14 @@ class TargetList extends \Espo\Services\Record
         'User' => 'users'
     );
 
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'hookManager'
+        ]);
+    }
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -178,6 +186,7 @@ class TargetList extends \Espo\Services\Record
         }
         if ($sql) {
             if ($pdo->query($sql)) {
+                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, array('link' => $link));
                 return true;
             }
         }
