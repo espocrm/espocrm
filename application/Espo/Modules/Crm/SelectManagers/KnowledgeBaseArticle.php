@@ -50,9 +50,6 @@ class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
             $this->addOrWhere(array(
                 array(
                     'portals.id' => $this->getUser()->get('portalId')
-                ),
-                array(
-                    'portals.id' => null
                 )
             ), $result);
         }

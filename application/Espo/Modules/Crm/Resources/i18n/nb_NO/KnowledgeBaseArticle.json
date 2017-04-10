@@ -39,7 +39,6 @@
     }
   },
   "tooltips": {
-    "portals": "Vil vises i alle portaler hvis den forblir tom. Vil kun vises i valgte portaler hvis utfylt."
   },
   "presetFilters": {
     "published": "Publisert"

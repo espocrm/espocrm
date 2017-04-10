@@ -39,7 +39,6 @@
     }
   },
   "tooltips": {
-    "portals": "Wenn in diesem Feld etwas eingetragen ist, wird dieser Artikel nur in den gewählten Portalen angezeigt. Ist das Feld leer ist der Artikel in allen Portalen zu sehen."
   },
   "presetFilters": {
     "published": "Publiziert"

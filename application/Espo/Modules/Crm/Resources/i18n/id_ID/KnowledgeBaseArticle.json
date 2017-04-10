@@ -35,7 +35,6 @@
     }
   },
   "tooltips": {
-    "portals": "Jika tidak kosong maka artikel ini akan tersedia hanya dalam portal yang ditentukan. Jika kosong maka akan tersedia di semua portal."
   },
   "presetFilters": {
     "published": "Diterbitkan"
