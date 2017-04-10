@@ -61,6 +61,13 @@ class Auth extends \Slim\Middleware
             list($authUsername, $authPassword) = explode(':', base64_decode($espoAuth));
         }
 
+        if (!isset($authUsername)) {
+            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
+                $authUsername = $_COOKIE['auth-username'];
+                $authPassword = $_COOKIE['auth-token'];
+            }
+        }
+
         $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');
         if (empty($espoCgiAuth)) {
             $espoCgiAuth = $req->headers('REDIRECT_HTTP_ESPO_CGI_AUTH');

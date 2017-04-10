@@ -354,22 +354,26 @@ class RDB extends \Espo\ORM\Repository
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
     {
-
     }
 
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
     {
-
     }
 
     protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
     {
-
     }
 
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
     {
+    }
 
+    protected function beforeMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    {
+    }
+
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    {
     }
 
     public function updateRelation(Entity $entity, $relationName, $foreign, $data)
@@ -391,12 +395,18 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function massRelate(Entity $entity, $relationName, array $params = array())
+    public function massRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
     {
         if (!$entity->id) {
             return;
         }
-        return $this->getMapper()->massRelate($entity, $relationName, $params);
+        $this->beforeMassRelate($entity, $relationName, $params, $options);
+
+        $result = $this->getMapper()->massRelate($entity, $relationName, $params);
+        if ($result) {
+            $this->afterMassRelate($entity, $relationName, $params, $options);
+        }
+        return $result;
     }
 
     public function getAll()

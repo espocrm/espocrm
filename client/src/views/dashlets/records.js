@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,39 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', function (Dep) {
 
-class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
-{
-    protected function filterPublished(&$result)
-    {
-        $result['whereClause'][] = array(
-            'status' => 'Published'
-        );
-    }
+    return Dep.extend({
 
-    protected function access(&$result)
-    {
-        parent::access($result);
+        name: 'Records',
 
-        if ($this->checkIsPortal()) {
-            $this->filterPublished($result);
+        scope: null,
 
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('portals', $result);
-            $this->addOrWhere(array(
-                array(
-                    'portals.id' => $this->getUser()->get('portalId')
-                )
-            ), $result);
-        }
-    }
+        rowActionsView: 'views/record/row-actions/view-and-edit',
 
-    public function applyAdditional(&$result)
-    {
-        if ($this->checkIsPortal()) {
+        listView: 'views/email/record/list-expanded',
 
-        }
-    }
- }
+        init: function () {
+            Dep.prototype.init.call(this);
+            this.scope = this.getOption('entityType');
+        },
+
+        getSearchData: function () {
+            var data = {
+                primary: this.getOption('primaryFilter')
+            };
+
+            var bool = {};
+            (this.getOption('boolFilterList') || []).forEach(function (item) {
+                bool[item] = true;
+            }, this);
+
+            data.bool = bool;
+
+            return data;
+        },
+
+        setupActionList: function () {
+            var scope = this.getOption('entityType');
+            if (scope && this.getAcl().checkScope(scope, 'create')) {
+                this.actionList.unshift({
+                    name: 'create',
+                    html: this.translate('Create ' + scope, 'labels', scope),
+                    iconHtml: '<span class="glyphicon glyphicon-plus"></span>',
+                    url: '#' + scope + '/create'
+                });
+            }
+        },
+
+    });
+});
 

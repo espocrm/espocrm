@@ -37,7 +37,6 @@
     }
   },
   "tooltips": {
-    "portals": "如果不是空的那么这篇文章将只能在指定门户可用。如果是空的那么在所有门户她都可用"
   },
   "presetFilters": {
     "published": "公布的"

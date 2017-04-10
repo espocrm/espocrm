@@ -60,9 +60,20 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             return this.getAcl().check(this.scope, 'read');
         },
 
+        getSearchData: function () {
+            return this.getOption('searchData');
+        },
+
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
-                var searchManager = this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), this.getOption('searchData'));
+                var searchData = this.getSearchData();
+
+                var searchManager = this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), searchData);
+
+                if (!this.scope) {
+                    this.$el.find('.list-container').html(this.translate('selectEntityType', 'messages', 'DashletOptions'));
+                    return;
+                }
 
                 if (!this.checkAccess()) {
                     this.$el.find('.list-container').html(this.translate('No Access'));
@@ -76,6 +87,13 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 this.collection = collection;
                 collection.sortBy = this.getOption('sortBy') || this.collection.sortBy;
                 collection.asc = this.getOption('asc') || this.collection.asc;
+
+                if (this.getOption('sortDirection') === 'asc') {
+                    collection.asc = true;
+                } else if (this.getOption('sortDirection') === 'desc') {
+                    collection.asc = false;
+                }
+
                 collection.maxSize = this.getOption('displayRecords');
                 collection.where = searchManager.getWhere();
 
@@ -102,7 +120,7 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         },
 
         setupActionList: function () {
-            if (this.getAcl().checkScope(this.scope, 'create')) {
+            if (this.scope && this.getAcl().checkScope(this.scope, 'create')) {
                 this.actionList.unshift({
                     name: 'create',
                     html: this.translate('Create ' + this.scope, 'labels', this.scope),
@@ -113,6 +131,8 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         },
 
         actionRefresh: function () {
+            if (!this.collection) return;
+
             this.collection.where = this.searchManager.getWhere();
             this.collection.fetch();
         },

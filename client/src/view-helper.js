@@ -43,7 +43,7 @@ Espo.define('view-helper', [], function () {
         this.mdReplace = [
             '<a href="$2">$1</a>',
             function (s, string) {
-                return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+                return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
             },
             function (s, string) {
                 return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';

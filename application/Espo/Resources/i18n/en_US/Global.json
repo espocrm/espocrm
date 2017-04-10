@@ -313,7 +313,8 @@
     },
     "dashlets": {
         "Stream": "Stream",
-        "Emails": "My Inbox"
+        "Emails": "My Inbox",
+        "Records": "Record List"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",

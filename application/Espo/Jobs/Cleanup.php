@@ -33,9 +33,11 @@ use \Espo\Core\Exceptions;
 
 class Cleanup extends \Espo\Core\Jobs\Base
 {
-    protected $cleanupJobPeriod = '-1 month';
+    protected $cleanupJobPeriod = '1 month';
 
-    protected $cleanupActionHistoryPeriod = '-15 days';
+    protected $cleanupActionHistoryPeriod = '15 days';
+
+    protected $cleanupAuthTokenPeriod = '1 month';
 
     public function run()
     {
@@ -46,6 +48,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupNotes();
         $this->cleanupNotifications();
         $this->cleanupActionHistory();
+        $this->cleanupAuthToken();
     }
 
     protected function cleanupJobs()
@@ -83,7 +86,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupActionHistory()
     {
-        $period = $this->getConfig()->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
+        $period = '-' . $this->getConfig()->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
@@ -94,9 +97,22 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $sth->execute();
     }
 
+    protected function cleanupAuthToken()
+    {
+        $period = '-' . $this->getConfig()->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
+
+        $query = "DELETE FROM `auth_token` WHERE DATE(modified_at) < '" . $datetime->format('Y-m-d') . "' AND is_active = 0";
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+    }
+
     protected function getCleanupJobFromDate()
     {
-        $period = $this->getConfig()->get('cleanupJobPeriod', $this->cleanupJobPeriod);
+        $period = '-' . $this->getConfig()->get('cleanupJobPeriod', $this->cleanupJobPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
         return $datetime->format('Y-m-d');

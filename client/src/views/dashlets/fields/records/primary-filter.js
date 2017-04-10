@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,40 +25,44 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+Espo.define('views/dashlets/fields/records/primary-filter', 'views/fields/enum', function (Dep) {
 
-namespace Espo\Modules\Crm\SelectManagers;
+    return Dep.extend({
 
-class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
-{
-    protected function filterPublished(&$result)
-    {
-        $result['whereClause'][] = array(
-            'status' => 'Published'
-        );
-    }
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-    protected function access(&$result)
-    {
-        parent::access($result);
+            this.listenTo(this.model, 'change:entityType', function () {
+                this.setupOptions();
+                this.reRender();
+            }, this);
+        },
 
-        if ($this->checkIsPortal()) {
-            $this->filterPublished($result);
+        setupOptions: function () {
+            var entityType = this.model.get('entityType');
+            if (!entityType) {
+                this.params.options = [];
+                return;
+            }
+            var filterList = this.getMetadata().get(['clientDefs', entityType, 'filterList']) || [];
+            this.params.options = [];
 
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('portals', $result);
-            $this->addOrWhere(array(
-                array(
-                    'portals.id' => $this->getUser()->get('portalId')
-                )
-            ), $result);
+            filterList.forEach(function (item) {
+                if (typeof item === 'object' && item.name) {
+                    this.params.options.push(item.name);
+                    return;
+                }
+                this.params.options.push(item);
+            }, this);
+
+            this.params.options.unshift('all');
+
+            this.translatedOptions = {};
+            this.params.options.forEach(function (item) {
+                this.translatedOptions[item] = this.translate(item, 'presetFilters', entityType);
+            }, this);
         }
-    }
 
-    public function applyAdditional(&$result)
-    {
-        if ($this->checkIsPortal()) {
+    });
 
-        }
-    }
- }
-
+});

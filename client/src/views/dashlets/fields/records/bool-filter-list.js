@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,40 +25,37 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+Espo.define('views/dashlets/fields/records/bool-filter-list', 'views/fields/multi-enum', function (Dep) {
 
-namespace Espo\Modules\Crm\SelectManagers;
+    return Dep.extend({
 
-class KnowledgeBaseArticle extends \Espo\Core\SelectManagers\Base
-{
-    protected function filterPublished(&$result)
-    {
-        $result['whereClause'][] = array(
-            'status' => 'Published'
-        );
-    }
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-    protected function access(&$result)
-    {
-        parent::access($result);
+            this.listenTo(this.model, 'change:entityType', function () {
+                this.setupOptions();
+                this.reRender();
+            }, this);
+        },
 
-        if ($this->checkIsPortal()) {
-            $this->filterPublished($result);
+        setupOptions: function () {
+            var entityType = this.model.get('entityType');
+            if (!entityType) {
+                this.params.options = [];
+                return;
+            }
+            this.params.options = this.getMetadata().get(['clientDefs', entityType, 'boolFilterList']) || [];
 
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('portals', $result);
-            $this->addOrWhere(array(
-                array(
-                    'portals.id' => $this->getUser()->get('portalId')
-                )
-            ), $result);
+            if (this.getMetadata().get(['scopes', entityType, 'stream']) && this.getAcl().checkScope(entityType, 'stream')) {
+                this.params.options.push('followed');
+            }
+
+            this.translatedOptions = {};
+            this.params.options.forEach(function (item) {
+                this.translatedOptions[item] = this.translate(item, 'boolFilters', entityType);
+            }, this);
         }
-    }
 
-    public function applyAdditional(&$result)
-    {
-        if ($this->checkIsPortal()) {
+    });
 
-        }
-    }
- }
-
+});

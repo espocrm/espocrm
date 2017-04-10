@@ -46,10 +46,10 @@ class HookManager
      *
      * @var array
      */
-    protected $ignoredMethods = array(
+    protected $ignoredMethodList = array(
         '__construct',
         'getDependencyList',
-        'inject',
+        'inject'
     );
 
     protected $paths = array(
@@ -168,7 +168,7 @@ class HookManager
                         $className = Util::getClassName($hookFilePath);
 
                         $classMethods = get_class_methods($className);
-                        $hookMethods = array_diff($classMethods, $this->ignoredMethods);
+                        $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
                         foreach($hookMethods as $hookName) {
                             $entityHookData = isset($hookData[$scopeName][$hookName]) ? $hookData[$scopeName][$hookName] : array();
