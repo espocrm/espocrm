@@ -35,20 +35,17 @@
                 "view": "views/dashlets/fields/records/sort-direction",
                 "options": ["asc", "desc"],
                 "translation": "EntityManager.options.sortDirection"
+            },
+            "expandedLayout": {
+                "type": "base",
+                "view": "views/dashlets/fields/records/expanded-layout"
             }
         },
         "defaults": {
             "displayRecords": 10,
             "autorefreshInterval": 0.5,
             "expandedLayout": {
-                "rows": [
-                    [
-                        {
-                            "name": "name",
-                            "link": true
-                        }
-                    ]
-                ]
+                "rows": []
             }
         },
         "layout": [
@@ -72,6 +69,9 @@
                     [
                         {"name": "displayRecords"},
                         {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "expandedLayout", "fullWidth": true}
                     ]
                 ]
             }

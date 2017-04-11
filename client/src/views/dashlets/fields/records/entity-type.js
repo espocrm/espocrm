@@ -40,6 +40,9 @@ Espo.define('views/dashlets/fields/records/entity-type', 'views/fields/enum', fu
                     sortBy: null,
                     sortDirection: 'asc'
                 };
+                o.expandedLayout = {
+                    rows: []
+                };
                 var entityType = this.model.get('entityType');
                 if (entityType) {
                     o.title = this.translate(entityType, 'scopeNamesPlural');
@@ -50,6 +53,9 @@ Espo.define('views/dashlets/fields/records/entity-type', 'views/fields/enum', fu
                     } else {
                         o.sortDirection = 'desc';
                     }
+                    o.expandedLayout = {
+                        rows: [[{name: "name", link: true, scope: entityType}]]
+                    };
                 }
 
                 this.model.set(o);

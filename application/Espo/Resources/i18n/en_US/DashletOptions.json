@@ -13,7 +13,8 @@
         "primaryFilter": "Primary Filter",
         "boolFilterList": "Additional Filters",
         "sortBy": "Order (field)",
-        "sortDirection": "Order (direction)"
+        "sortDirection": "Order (direction)",
+        "expandedLayout": "Layout"
     },
     "options": {
     	"mode": {
