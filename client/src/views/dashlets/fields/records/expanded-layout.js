@@ -59,6 +59,8 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
 
             rowList.push([]);
 
+            var fieldDataList = this.getFieldDataList();
+
             rowList.forEach(function (row, i) {
                 var rowHtml = this.getRowHtml(row, i);
 
@@ -69,7 +71,7 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
                 $input = $row.find('input');
 
                 $input.selectize({
-                    options: this.getFieldDataList(),
+                    options: fieldDataList,
                     delimiter: this.delimiter,
                     labelField: 'label',
                     valueField: 'value',
@@ -102,8 +104,11 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
             var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
 
             var fieldList = Object.keys(fields).sort(function (v1, v2) {
-                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v1, 'fields', scope));
-            }.bind(this));
+                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+            }.bind(this)).filter(function (item) {
+                if (fields[item].disabled || fields[item].listLayoutDisabled) return false;
+                return true;
+            }, this);
 
             var dataList = [];
 
