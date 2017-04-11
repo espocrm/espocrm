@@ -49,6 +49,8 @@ class FieldManager
 
     protected $customOptionName = 'isCustom';
 
+    protected $forbiddenFieldNameList = ['id', 'deleted'];
+
     public function __construct(Metadata $metadata, Language $language, Container $container = null)
     {
         $this->metadata = $metadata;
@@ -96,6 +98,9 @@ class FieldManager
         $existingField = $this->getFieldDefs($scope, $name);
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
+        }
+        if (in_array($name, $this->forbiddenFieldNameList)) {
+            throw new Conflict('Field ['.$name.'] is not allowed');
         }
 
         return $this->update($scope, $name, $fieldDefs, true);
