@@ -577,6 +577,10 @@ class Record extends \Espo\Core\Services\Base
 
         $entity->set($data);
 
+        if (!$this->getAcl()->check($entity, 'create')) {
+            throw new Forbidden();
+        }
+
         $this->beforeCreate($entity, $data);
 
         if (!$this->isValid($entity)) {
