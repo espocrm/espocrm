@@ -98,7 +98,7 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
         },
 
         getFieldDataList: function () {
-            var scope = this.model.get('entityType');
+            var scope = this.model.get('entityType') || this.getMetadata().get(['dashlets', this.model.dashletName, 'entityType']);
             if (!scope) return [];
 
             var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};

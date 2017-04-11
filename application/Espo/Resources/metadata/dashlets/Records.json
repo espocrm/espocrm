@@ -71,7 +71,8 @@
                         {"name": "autorefreshInterval"}
                     ],
                     [
-                        {"name": "expandedLayout", "fullWidth": true}
+                        {"name": "expandedLayout"},
+                        false
                     ]
                 ]
             }
