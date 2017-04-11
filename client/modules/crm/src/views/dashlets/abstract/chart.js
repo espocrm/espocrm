@@ -99,6 +99,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 $container.css('height', height);
 
                 setTimeout(function () {
+                    if (!$container.size()) return;
                     this.drow();
                 }.bind(this), 1);
             });
