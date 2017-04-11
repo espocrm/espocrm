@@ -38,6 +38,12 @@
         "modifiedBy": {
             "type": "link",
             "readOnly": true
+        },
+        "isInternal": {
+            "type": "bool",
+            "readOnly": true,
+            "disabled": true,
+            "default": false
         }
     },
     "links": {
