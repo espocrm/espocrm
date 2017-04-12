@@ -186,7 +186,7 @@ class TargetList extends \Espo\Services\Record
         }
         if ($sql) {
             if ($pdo->query($sql)) {
-                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, array('link' => $link));
+                $this->getInjection('hookManager')->process('TargetList', 'afterUnlinkAll', $entity, array(), array('link' => $link));
                 return true;
             }
         }

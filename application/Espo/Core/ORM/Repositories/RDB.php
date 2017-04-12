@@ -191,9 +191,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
     {
-        $options['params'] = $params;
+        $hookData = array(
+            'relationName' => $relationName,
+            'relationParams' => $params
+        );
 
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
     }
 
     public function remove(Entity $entity, array $options = array())
