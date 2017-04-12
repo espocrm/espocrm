@@ -193,7 +193,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         $options['params'] = $params;
 
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options);
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $relationName, $options);
     }
 
     public function remove(Entity $entity, array $options = array())
