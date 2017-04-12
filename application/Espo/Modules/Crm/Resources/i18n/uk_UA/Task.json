@@ -1,46 +1,47 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "parent": "Джерело",
-        "status": "Статус",
-        "dateStart": "Дата початку",
-        "dateEnd": "Належна дата",
-        "dateStartDate": "Date Start (all day)",
-        "dateEndDate": "Date End (all day)",
-        "priority": "Пріоритет",
-        "description": "Опис",
-        "isOverdue": "Прострочено",
-        "account": "Контрагент",
-        "dateCompleted": "Date Completed",
-        "attachments": "Вкладення"
+  "fields": {
+    "name": "Ім'я",
+    "parent": "Джерело",
+    "status": "Статус",
+    "dateStart": "Дата початку",
+    "dateEnd": "Належна дата",
+    "dateStartDate": "Date Start (all day)",
+    "dateEndDate": "Date End (all day)",
+    "priority": "Пріоритет",
+    "description": "Опис",
+    "isOverdue": "Прострочено",
+    "account": "Контрагент",
+    "dateCompleted": "Date Completed",
+    "attachments": "Вкладення",
+    "reminders": "Нагадування"
+  },
+  "links": {
+    "attachments": "Вкладення"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Не почалося",
+      "Started": "Почалося",
+      "Completed": "Завершено",
+      "Canceled": "Скасовано",
+      "Deferred": "Відстрочено"
     },
-    "links": {
-        "attachments": "Вкладення"
-    },
-    "options": {
-        "status": {
-            "Not Started": "Не почалося",
-            "Started": "Почалося",
-            "Completed": "Завершено",
-            "Canceled": "Скасовано",
-            "Deferred": "Відстрочено"
-        },
-        "priority" : {
-            "Low": "Низько",
-            "Normal": "Нормальний",
-            "High": "Високо",
-            "Urgent": "Терміново"
-        }
-    },
-    "labels": {
-        "Create Task": "Створити завдання",
-        "Complete": "Завершити"
-    },
-    "presetFilters": {
-        "actual": "Актуальні",
-        "completed": "Завершені",
-        "todays": "Сьогоднішні",
-        "deferred": "Відстрочені",
-        "overdue": "Прострочені"
+    "priority": {
+      "Low": "Низько",
+      "Normal": "Нормальний",
+      "High": "Високо",
+      "Urgent": "Терміново"
     }
+  },
+  "labels": {
+    "Create Task": "Створити завдання",
+    "Complete": "Завершити"
+  },
+  "presetFilters": {
+    "actual": "Актуальні",
+    "completed": "Завершені",
+    "todays": "Сьогоднішні",
+    "overdue": "Прострочені",
+    "deferred": "Відстрочені"
+  }
 }

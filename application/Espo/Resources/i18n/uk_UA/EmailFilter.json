@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Від",
+    "to": "До",
+    "subject": "Об'єкт",
+    "bodyContains": "Тіло містить",
+    "action": "Action",
+    "isGlobal": "Is Global",
+    "emailFolder": "Папка"
+  },
+  "labels": {
+    "Create EmailFilter": "Створення фільтра електронної пошти",
+    "Emails": "Emails"
+  },
+  "tooltips": {
+    "from": "Листи надсилаються із визначеної адреси. Залиште порожнім якщо не потрібно. Можете скористатися шаблоном *.",
+    "to": "Листи надсилаються із визначеної адреси. Залиште порожнім якщо не потрібно. Можете скористатися шаблоном *.",
+    "name": "Give the filter a descriptive name.",
+    "subject": "Use a wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
+    "bodyContains": "Body of the email contains any of the specified words or phrases.",
+    "isGlobal": "Applies this filter to all emails incoming to system."
+  },
+  "options": {
+    "action": {
+      "Skip": "Знехтувати",
+      "Move to Folder": "Покласти до папки"
+    }
+  }
+}

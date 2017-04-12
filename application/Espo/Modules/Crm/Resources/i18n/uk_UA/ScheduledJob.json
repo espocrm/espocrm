@@ -1,10 +1,8 @@
 {
-
-    "options": {
-        "job": {
-            "CheckInboundEmails": "Перевірити пошту",
-            "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
-            "SendEmailReminders": "Відправити нагадування емейлом"
-        }
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Send Mass Emails",
+      "ControlKnowledgeBaseArticleStatus": "Control Knowledge Base Article Status"
     }
+  }
 }

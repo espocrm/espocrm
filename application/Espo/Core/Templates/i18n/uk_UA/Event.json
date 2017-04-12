@@ -1,5 +1,36 @@
 {
-    "labels": {
-        "Create {entityType}": "Створити {entityTypeTranslated}"
+  "fields": {
+    "parent": "Джерело",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата завершення",
+    "duration": "Тривалість",
+    "status": "Статус",
+    "reminders": "Нагадування"
+  },
+  "links": {
+    "parent": "Джерело"
+  },
+  "options": {
+    "status": {
+      "Planned": "Плановий",
+      "Held": "Вміщений",
+      "Not Held": "Не вміщений"
     }
+  },
+  "labels": {
+    "Create {entityType}": "Створити {entityTypeTranslated}",
+    "Schedule {entityType}": "Розклад {entityTypeTranslated} ",
+    "Log {entityType}": "Log {entityTypeTranslated}",
+    "Set Held": "Set Held",
+    "Set Not Held": "Set Not Held"
+  },
+  "massActions": {
+    "setHeld": "Set Held",
+    "setNotHeld": "Set Not Held"
+  },
+  "presetFilters": {
+    "planned": "Планований",
+    "held": "Вміщений ",
+    "todays": "Сьогоднішні"
+  }
 }

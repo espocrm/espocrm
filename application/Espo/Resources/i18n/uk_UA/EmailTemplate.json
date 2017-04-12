@@ -1,16 +1,25 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "status": "Статус",
-        "isHtml": "HTML-код",
-        "body": "Тіло",
-        "subject": "Тема",
-        "attachments": "Вкладення",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Створити шаблон листа"
-    }
+  "fields": {
+    "name": "Ім'я",
+    "status": "Статус",
+    "isHtml": "HTML-код",
+    "body": "Тіло",
+    "subject": "Тема",
+    "attachments": "Вкладення",
+    "insertField": "Додати поле",
+    "oneOff": "Одноразовий"
+  },
+  "labels": {
+    "Create EmailTemplate": "Створити шаблон листа",
+    "Info": "Інфо"
+  },
+  "tooltips": {
+    "oneOff": "Позначте, якщо будете користуватись цим шаблоном лише раз. Наприклад для масової розсилки."
+  },
+  "presetFilters": {
+    "actual": "Актуально"
+  },
+  "messages": {
+    "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
+  }
 }

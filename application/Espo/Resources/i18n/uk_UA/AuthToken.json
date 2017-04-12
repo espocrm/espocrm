@@ -1,9 +1,8 @@
 {
-    "fields": {
-        "user": "Користувач",
-        "ipAddress": "IP-адреса",
-        "lastAccess": "Дата останнього доступу",
-        "createdAt": "Дата входу"
-
-    }
+  "fields": {
+    "user": "Користувач",
+    "ipAddress": "IP-адреса",
+    "lastAccess": "Дата останнього доступу",
+    "createdAt": "Дата входу"
+  }
 }

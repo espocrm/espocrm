@@ -1,7 +1,8 @@
 {
-    "labels": {
-        "Create Lead": "Створили лід",
-        "Create Contact": "Створити контакт",
-        "Create Task": "Створити завдання"
-    }
+  "labels": {
+    "Create Lead": "Створили лід",
+    "Create Contact": "Створити контакт",
+    "Create Task": "Створити завдання",
+    "Create Case": "Створити випадок"
+  }
 }

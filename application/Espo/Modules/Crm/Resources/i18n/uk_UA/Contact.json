@@ -1,36 +1,49 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "emailAddress": "Емейл",
-        "title": "Посада",
-        "account": "Контрагент",
-        "accounts": "Контрагенти",
-        "phoneNumber": "Телефон",
-        "accountType": "Тип контрагента",
-        "doNotCall": "Не дзвонити",
-        "address": "Адреса",
-        "opportunityRole": "Роль угоди",
-        "accountRole": "Посада",
-        "description": "Опис",
-        "campaign": "Кампанія",
-        "targetLists": "Цільові списки",
-        "targetList": "Цільовий список"
-    },
-    "links": {
-        "opportunities": "Угоди",
-        "cases": "Звернення",
-        "targetLists": "Цільові списки",
-        "campaignLogRecords": "Журнал кампанія"
-    },
-    "labels": {
-        "Create Contact": "Створити контакт"
-    },
-    "options": {
-        "opportunityRole": {
-            "": "--Немає--",
-            "Decision Maker": "Приймає рішення",
-            "Evaluator": "Оцінювач",
-            "Influencer": "Впливає"
-        }
+  "fields": {
+    "name": "Ім'я",
+    "emailAddress": "Емейл",
+    "title": "Посада",
+    "accountRole": "Посада",
+    "account": "Контрагент",
+    "accounts": "Контрагенти",
+    "phoneNumber": "Телефон",
+    "accountType": "Тип контрагента",
+    "doNotCall": "Не дзвонити",
+    "address": "Адреса",
+    "opportunityRole": "Роль угоди",
+    "description": "Опис",
+    "campaign": "Кампанія",
+    "targetLists": "Цільові списки",
+    "targetList": "Цільовий список",
+    "portalUser": "Користувач порталів",
+    "originalLead": "Original Lead"
+  },
+  "links": {
+    "opportunities": "Угоди",
+    "cases": "Звернення",
+    "targetLists": "Цільові списки",
+    "campaignLogRecords": "Журнал кампанія",
+    "campaign": "Кампанія",
+    "account": "Обліковий запис (основний)",
+    "accounts": "Облікові записи",
+    "casesPrimary": "Випадки (Основні)",
+    "portalUser": "Користувач порталів",
+    "originalLead": "Original Lead",
+    "documents": "Документи"
+  },
+  "labels": {
+    "Create Contact": "Створити контакт"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Немає--",
+      "Decision Maker": "Приймає рішення",
+      "Evaluator": "Оцінювач",
+      "Influencer": "Впливає"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Користувачі порталів",
+    "notPortalUsers": "Not Portal Users"
+  }
 }

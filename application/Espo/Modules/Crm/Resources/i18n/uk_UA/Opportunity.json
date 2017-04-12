@@ -1,42 +1,46 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "account": "Контрагент",
-        "stage": "Стадія",
-        "amount": "Сума",
-        "probability": "Імовірність, %",
-        "leadSource": "Джерело ліда",
-        "doNotCall": "Не дзвонити",
-        "closeDate": "Дата закриття",
-        "contacts": "Контакти",
-        "description": "Опис",
-        "amountConverted": "Сума (конвертирована)",
-        "amountWeightedConverted": "Зважена сума",
-        "campaign": "Кампанія"
-    },
-    "links": {
-        "contacts": "Контакти",
-        "documents": "Документи"
-    },
-    "options": {
-        "stage": {
-            "Prospecting": "Проспектінг",
-            "Qualification": "Кваліфікація",
-            "Needs Analysis": "Вимагає аналізу",
-            "Value Proposition": "Цінова пропозиція",
-            "Id. Decision Makers": "Визначення осіб, приймаючих рішення",
-            "Perception Analysis": "Аналізу сприйняття",
-            "Proposal/Price Quote": "Квота пропозицій/цін",
-            "Negotiation/Review": "Заперечення/перегляд",
-            "Closed Won": "Закрито переможно",
-            "Closed Lost": "Закрито провалом"
-        }
-    },
-    "labels": {
-        "Create Opportunity": "Створити угоду"
-    },
-    "presetFilters": {
-        "open": "Відкрити",
-        "won": "Переможні"
+  "fields": {
+    "name": "Ім'я",
+    "account": "Контрагент",
+    "stage": "Стадія",
+    "amount": "Сума",
+    "probability": "Імовірність, %",
+    "leadSource": "Джерело ліда",
+    "doNotCall": "Не дзвонити",
+    "closeDate": "Дата закриття",
+    "contacts": "Контакти",
+    "description": "Опис",
+    "amountConverted": "Сума (конвертирована)",
+    "amountWeightedConverted": "Зважена сума",
+    "campaign": "Кампанія",
+    "originalLead": "Original Lead"
+  },
+  "links": {
+    "contacts": "Контакти",
+    "documents": "Документи",
+    "campaign": "Кампанія",
+    "originalLead": "Original Lead"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Проспектінг",
+      "Qualification": "Кваліфікація",
+      "Needs Analysis": "Вимагає аналізу",
+      "Value Proposition": "Цінова пропозиція",
+      "Id. Decision Makers": "Визначення осіб, приймаючих рішення",
+      "Perception Analysis": "Аналізу сприйняття",
+      "Proposal/Price Quote": "Квота пропозицій/цін",
+      "Negotiation/Review": "Заперечення/перегляд",
+      "Closed Won": "Закрито переможно",
+      "Closed Lost": "Закрито провалом"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Створити угоду"
+  },
+  "presetFilters": {
+    "open": "Відкрити",
+    "won": "Переможні",
+    "lost": "Втрачений"
+  }
 }

@@ -1,6 +1,6 @@
 {
-    "layouts": {
-        "detailConvert": "Конвертувати лід",
-        "listForAccount": "List (for Account)"
-    }
+  "layouts": {
+    "detailConvert": "Конвертувати лід",
+    "listForAccount": "List (for Account)"
+  }
 }

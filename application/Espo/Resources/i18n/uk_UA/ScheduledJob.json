@@ -1,29 +1,37 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "status": "Статус",
-        "job": "Завдання",
-        "scheduling": "Планування (оповіщення crontab)"
+  "fields": {
+    "name": "Ім'я",
+    "status": "Статус",
+    "job": "Завдання",
+    "scheduling": "Планування (оповіщення crontab)"
+  },
+  "links": {
+    "log": "Лоґ"
+  },
+  "labels": {
+    "Create ScheduledJob": "Створити планове завдання"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Почистити",
+      "CheckInboundEmails": "Перевірити пошту",
+      "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
+      "SendEmailReminders": "Відправити нагадування емейлом",
+      "AuthTokenControl": "Auth Token Control",
+      "SendEmailNotifications": "Send Email Notifications"
     },
-    "links": {
-        "log": "Лоґ"
+    "cronSetup": {
+      "linux": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",
+      "mac": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",
+      "windows": "Замітка: Створити пакетний файл з наступними командами для запуску Планувальника Завдань Espo, використовуючи Планувальник Задач Windows:",
+      "default": "Замітка: Додайте цю команду до Cron Job (Планувальник Задач):"
     },
-    "labels": {
-        "Create ScheduledJob": "Створити планове завдання"
-    },
-    "options": {
-        "job": {
-            "Cleanup": "Почистити"
-        },
-        "cronSetup": {
-            "linux": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",
-            "mac": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",
-            "windows": "Замітка: Створити пакетний файл з наступними командами для запуску Планувальника Завдань Espo, використовуючи Планувальник Задач Windows:",
-            "default": "Замітка: Додайте цю команду до Cron Job (Планувальник Задач):"
-        },
-        "status": {
-            "Active": "Активний",
-            "Inactive": "Неактивний"
-        }
+    "status": {
+      "Active": "Активний",
+      "Inactive": "Неактивний"
     }
+  },
+  "tooltips": {
+    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+  }
 }

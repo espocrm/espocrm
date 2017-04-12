@@ -1,18 +1,23 @@
 {
-    "fields": {
-        "title": "Посада",
-        "dateFrom": "Дата від",
-        "dateTo": "Дата до",
-        "autorefreshInterval": "Інтервал авто-оновлення",
-        "displayRecords": "Відобразити записи",
-        "isDoubleHeight": "Висота 2x",
-        "mode": "Mode"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Week (agenda)",
-    		"basicWeek": "тиждень",
-    		"month": "місяць"
-    	}
+  "fields": {
+    "title": "Посада",
+    "dateFrom": "Дата від",
+    "dateTo": "Дата до",
+    "autorefreshInterval": "Інтервал авто-оновлення",
+    "displayRecords": "Відобразити записи",
+    "isDoubleHeight": "Висота 2x",
+    "mode": "Mode",
+    "enabledScopeList": "що відображати",
+    "users": "Користувачі"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Week (agenda)",
+      "basicWeek": "тиждень",
+      "month": "місяць",
+      "basicDay": "День",
+      "agendaDay": "День (порядок денний)",
+      "timeline": "Графік"
     }
+  }
 }

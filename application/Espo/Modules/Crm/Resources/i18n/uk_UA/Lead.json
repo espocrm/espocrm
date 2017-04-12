@@ -1,56 +1,65 @@
 {
-    "labels": {
-        "Converted To": "Перетворено на",
-        "Create Lead": "Створили лід",
-        "Convert": "Конвертувати"
+  "labels": {
+    "Converted To": "Перетворено на",
+    "Create Lead": "Створили лід",
+    "Convert": "Конвертувати"
+  },
+  "fields": {
+    "name": "Ім'я",
+    "emailAddress": "Емейл",
+    "title": "Посада",
+    "website": "Вебсайт",
+    "phoneNumber": "Телефон",
+    "accountName": "Ім'я контрагента",
+    "doNotCall": "Не дзвонити",
+    "address": "Адреса",
+    "status": "Статус",
+    "source": "Джерело",
+    "opportunityAmount": "Сума угоди",
+    "opportunityAmountConverted": "Сума угоди (конвертована)",
+    "description": "Опис",
+    "createdAccount": "Контрагент",
+    "createdContact": "Контакт",
+    "createdOpportunity": "Угода",
+    "campaign": "Кампанія",
+    "targetLists": "Цільові списки",
+    "targetList": "Цільовий список",
+    "industry": "Промисловість"
+  },
+  "links": {
+    "targetLists": "Цільові списки",
+    "campaignLogRecords": "Журнал кампанія",
+    "campaign": "Кампанія",
+    "createdAccount": "Акаунт",
+    "createdContact": "Контакт",
+    "createdOpportunity": "Можливість",
+    "cases": "Випадки",
+    "documents": "Документи"
+  },
+  "options": {
+    "status": {
+      "New": "Новий",
+      "Assigned": "На розгляді",
+      "In Process": "У процесі",
+      "Converted": "Конвертована",
+      "Recycled": "У кошику",
+      "Dead": "Мертве"
     },
-    "fields": {
-        "name": "Ім'я",
-        "emailAddress": "Емейл",
-        "title": "Посада",
-        "website": "Вебсайт",
-        "phoneNumber": "Телефон",
-        "accountName": "Ім'я контрагента",
-        "doNotCall": "Не дзвонити",
-        "address": "Адреса",
-        "status": "Статус",
-        "source": "Джерело",
-        "opportunityAmount": "Сума угоди",
-        "opportunityAmountConverted": "Сума угоди (конвертована)",
-        "description": "Опис",
-        "createdAccount": "Контрагент",
-        "createdContact": "Контакт",
-        "createdOpportunity": "Угода",
-        "campaign": "Кампанія",
-        "targetLists": "Цільові списки",
-        "targetList": "Цільовий список"
-    },
-    "links": {
-        "targetLists": "Цільові списки",
-        "campaignLogRecords": "Журнал кампанія"
-    },
-    "options": {
-        "status": {
-            "New": "Новий",
-            "Assigned": "На розгляді",
-            "In Process": "У процесі",
-            "Converted": "Конвертована",
-            "Recycled": "У кошику",
-            "Dead": "Мертве"
-        },
-        "source": {
-            "Call": "Дзвінок",
-            "Email": "Емейл",
-            "Existing Customer": "Існуючі замовники",
-            "Partner": "Партнер",
-            "Public Relations": "Зв'язки із громадськістю",
-            "Web Site": "Вебсайт",
-            "Campaign": "Кампанія",
-            "Other": "Додатково"
-        }
-    },
-    "presetFilters": {
-        "active": "Активний",
-        "converted": "Конвертована"
+    "source": {
+      "": "Жоден",
+      "Call": "Дзвінок",
+      "Email": "Емейл",
+      "Existing Customer": "Існуючі замовники",
+      "Partner": "Партнер",
+      "Public Relations": "Зв'язки із громадськістю",
+      "Web Site": "Вебсайт",
+      "Campaign": "Кампанія",
+      "Other": "Додатково"
     }
+  },
+  "presetFilters": {
+    "active": "Активний",
+    "actual": "Актуальний",
+    "converted": "Конвертована"
+  }
 }

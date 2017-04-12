@@ -1,28 +1,34 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "description": "Опис",
-        "entryCount": "Облік записа",
-        "campaigns": "Кампанії",
-        "endDate": "Дата Закінчення",
-        "targetLists": "Цільові списки"
-    },
-    "links": {
-        "accounts": "Контрагенти",
-        "contacts": "Контакти",
-        "leads": "Ліди",
-        "campaigns": "Кампанії"
-    },
-    "options": {
-        "type": {
-            "Email": "Емейл",
-            "Web": "Веб",
-            "Television": "Телебачення",
-            "Radio": "Радіо",
-            "Newsletter": "Розсилка"
-        }
-    },
-    "labels": {
-        "Create TargetList": "Створити цільовий список"
+  "fields": {
+    "name": "Ім'я",
+    "description": "Опис",
+    "entryCount": "Облік записа",
+    "campaigns": "Кампанії",
+    "endDate": "Дата Закінчення",
+    "targetLists": "Цільові списки",
+    "includingActionList": "Включаючи",
+    "excludingActionList": "Виключаючи"
+  },
+  "links": {
+    "accounts": "Контрагенти",
+    "contacts": "Контакти",
+    "leads": "Ліди",
+    "campaigns": "Кампанії",
+    "massEmails": "Mass Emails"
+  },
+  "options": {
+    "type": {
+      "Email": "Емейл",
+      "Web": "Веб",
+      "Television": "Телебачення",
+      "Radio": "Радіо",
+      "Newsletter": "Розсилка"
     }
+  },
+  "labels": {
+    "Create TargetList": "Створити цільовий список",
+    "Opted Out": "Відмовився",
+    "Cancel Opt-Out": "Відмінити відмову",
+    "Opt-Out": "Відмовитися"
+  }
 }

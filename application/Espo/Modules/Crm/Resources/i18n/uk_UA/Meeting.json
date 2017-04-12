@@ -1,48 +1,50 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "parent": "Джерело",
-        "status": "Статус",
-        "dateStart": "Дата початку",
-        "dateEnd": "Дата закінчення",
-        "duration": "Тривалість",
-        "description": "Опис",
-        "users": "Користувачі",
-        "contacts": "Контакти",
-        "leads": "Ліди",
-        "reminders": "Нагадування",
-        "account": "Контраґент"
+  "fields": {
+    "name": "Ім'я",
+    "parent": "Джерело",
+    "status": "Статус",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата закінчення",
+    "duration": "Тривалість",
+    "description": "Опис",
+    "users": "Користувачі",
+    "contacts": "Контакти",
+    "leads": "Ліди",
+    "reminders": "Нагадування",
+    "account": "Контраґент",
+    "acceptanceStatus": "Статус підтвердження"
+  },
+  "options": {
+    "status": {
+      "Planned": "Заплановано",
+      "Held": "Виконано",
+      "Not Held": "Не відбулося"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Заплановано",
-            "Held": "Виконано",
-            "Not Held": "Не відбулося"
-        },
-        "acceptanceStatus": {
-            "None": "Нема",
-            "Accepted": "Прийнято",
-            "Declined": "Відхилено",
-            "Tentative": "Попереднє"
-        }
-    },
-    "massActions": {
-        "setHeld": "Позначити виконаним",
-        "setNotHeld": "Позначити невиконаним"
-    },
-    "labels": {
-        "Create Meeting": "Створити зустріч",
-        "Set Held": "Позначити виконаним",
-        "Set Not Held": "Позначити невиконаним",
-        "Send Invitations": "Відправити запрошення",
-        "on time": "на час",
-        "before": "перед"
-    },
-    "presetFilters": {
-        "planned": "Заплановано",
-        "held": "Виконано",
-        "todays": "Сьогоднішнє"
+    "acceptanceStatus": {
+      "None": "Нема",
+      "Accepted": "Прийнято",
+      "Declined": "Відхилено",
+      "Tentative": "Попереднє"
     }
+  },
+  "massActions": {
+    "setHeld": "Позначити виконаним",
+    "setNotHeld": "Позначити невиконаним"
+  },
+  "labels": {
+    "Create Meeting": "Створити зустріч",
+    "Set Held": "Позначити виконаним",
+    "Set Not Held": "Позначити невиконаним",
+    "Send Invitations": "Відправити запрошення",
+    "on time": "на час",
+    "before": "перед"
+  },
+  "presetFilters": {
+    "planned": "Заплановано",
+    "held": "Виконано",
+    "todays": "Сьогоднішнє"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Нічого не надіслано"
+  }
 }

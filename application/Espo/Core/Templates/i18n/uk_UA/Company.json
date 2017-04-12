@@ -1,5 +1,15 @@
 {
-    "labels": {
-        "Create {entityType}": "Створити {entityTypeTranslated}"
-    }
+  "fields": {
+    "billingAddress": "Billing Address",
+    "shippingAddress": "Адреса доставки",
+    "website": "Вебсайт"
+  },
+  "links": {
+    "meetings": "Зустрічі",
+    "calls": "Дзвінки",
+    "tasks": "Завдання"
+  },
+  "labels": {
+    "Create {entityType}": "Створити {entityTypeTranslated}"
+  }
 }
