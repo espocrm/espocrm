@@ -522,7 +522,10 @@
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty",
             "isOneOf": "Is One Of",
-            "isFromTeams": "Is From Team"
+            "isFromTeams": "Is From Team",
+            "isNot": "Is Not",
+            "isNotOneOf": "Is Not One Of",
+            "anyOf": "Any Of"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

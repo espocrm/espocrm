@@ -58,6 +58,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         sortable: false,
 
+        searchTypeList: ['anyOf'],
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -143,6 +145,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     this.deleteLink(id);
                 };
             }
+        },
+
+        setupSearch: function () {
+            this.searchParams.typeFront = this.searchParams.typeFront || 'anyOf';
         },
 
         getAutocompleteUrl: function () {
@@ -311,15 +317,22 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var values = this.ids || [];
+            var type = this.$el.find('select.search-type').val();
 
-            var data = {
-                type: 'linkedWith',
-                value: values,
-                nameHash: this.nameHash
-            };
-            return data;
-        },
+            if (type === 'anyOf') {
+                var values = this.ids || [];
+
+                var data = {
+                    type: 'linkedWith',
+                    value: this.ids || [],
+                    nameHash: this.nameHash,
+                    data: {
+                        typeFront: type
+                    }
+                };
+                return data;
+            }
+        }
 
     });
 });
