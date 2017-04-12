@@ -285,9 +285,21 @@ class TargetList extends \Espo\Services\Record
         }
         $link = $map[$targetType];
 
-        return $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
+        $result = $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
             'optedOut' => true
         ));
+
+        if ($result) {
+            $hookData = [
+               'link' => $link,
+               'targetId' => $targetId,
+               'targetType' => $targetType
+            ];
+
+            $this->getInjection('hookManager')->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
+            return true;
+        }
+        return false;
     }
 
     public function cancelOptOut($id, $targetType, $targetId)
@@ -312,9 +324,21 @@ class TargetList extends \Espo\Services\Record
         }
         $link = $map[$targetType];
 
-        return $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
+        $result = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
             'optedOut' => false
         ));
+
+        if ($result) {
+            $hookData = [
+               'link' => $link,
+               'targetId' => $targetId,
+               'targetType' => $targetType
+            ];
+
+            $this->getInjection('hookManager')->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+            return true;
+        }
+        return false;
     }
 
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
