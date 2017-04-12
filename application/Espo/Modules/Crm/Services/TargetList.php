@@ -324,7 +324,7 @@ class TargetList extends \Espo\Services\Record
         }
         $link = $map[$targetType];
 
-        $result = $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
+        $result = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
             'optedOut' => false
         ));
 
