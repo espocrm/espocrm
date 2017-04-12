@@ -69,6 +69,10 @@
             "insertText": "number\\abs(VALUE)"
         },
         {
+            "name": "number\\round",
+            "insertText": "number\\round(VALUE, PRECISION)"
+        },
+        {
             "name": "entity\\isNew",
             "insertText": "entity\\isNew()"
         },

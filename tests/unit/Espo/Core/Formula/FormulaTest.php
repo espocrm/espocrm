@@ -1065,6 +1065,41 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(20, $actual);
     }
 
+    function testNumberRound()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\round",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 1.12
+                    },
+                    {
+                        "type": "value",
+                        "value": 1
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(1.1, $actual);
+
+        $item = json_decode('
+            {
+                "type": "number\\\\round",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 2.65
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(3, $actual);
+    }
+
     function testDatetime()
     {
         $item = json_decode('
