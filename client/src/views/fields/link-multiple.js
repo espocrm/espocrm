@@ -58,7 +58,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         sortable: false,
 
-        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
         data: function () {
             var ids = this.model.get(this.idsName);
@@ -148,7 +148,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         handleSearchType: function (type) {
-            if (~['anyOf'].indexOf(type)) {
+            if (~['anyOf', 'noneOf'].indexOf(type)) {
                 this.$el.find('div.link-group-container').removeClass('hidden');
             } else {
                 this.$el.find('div.link-group-container').addClass('hidden');
@@ -342,6 +342,18 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 var data = {
                     type: 'linkedWith',
+                    value: this.ids || [],
+                    nameHash: this.nameHash,
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type === 'noneOf') {
+                var values = this.ids || [];
+
+                var data = {
+                    type: 'notLinkedWith',
                     value: this.ids || [],
                     nameHash: this.nameHash,
                     data: {

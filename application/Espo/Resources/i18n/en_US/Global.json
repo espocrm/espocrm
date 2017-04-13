@@ -525,7 +525,8 @@
             "isFromTeams": "Is From Team",
             "isNot": "Is Not",
             "isNotOneOf": "Is Not One Of",
-            "anyOf": "Any Of"
+            "anyOf": "Any Of",
+            "noneOf": "None Of"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

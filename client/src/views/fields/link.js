@@ -432,8 +432,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     value: [
                         {
                             type: 'notIn',
-                            attribute: this.searchData.oneOfIdList,
-                            value: value
+                            attribute: this.idName,
+                            value: this.searchData.oneOfIdList
                         },
                         {
                             type: 'isNull',

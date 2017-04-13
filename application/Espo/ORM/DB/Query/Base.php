@@ -850,6 +850,48 @@ abstract class Base
         return implode(' ', $joinsArr);
     }
 
+    protected function buildJoinConditionStatement($alias, $f, $v)
+    {
+        $join = '';
+
+        $operator = '=';
+
+        if (!preg_match('/^[a-z0-9]+$/i', $f)) {
+            foreach (self::$comparisonOperators as $op => $opDb) {
+                if (strpos($f, $op) !== false) {
+                    $f = trim(str_replace($op, '', $f));
+                    $operator = $opDb;
+                    break;
+                }
+            }
+        }
+
+        $join .= " AND {$alias}." . $this->toDb($this->sanitize($f)) . "";
+        if (is_array($v)) {
+            $arr = [];
+            foreach ($v as $item) {
+                $arr[] = $this->pdo->quote($item);
+            }
+            $operator = "IN";
+            if ($operator == '<>') {
+                $operator = 'NOT IN';
+            }
+            if (count($arr)) {
+                $join .= " " . $operator . " (" . implode(', ', $arr) . ")";
+            } else {
+                if ($operator === 'IN') {
+                    $join .= " IS NULL";
+                } else {
+                    $join .= " IS NOT NULL";
+                }
+            }
+        } else {
+            $join .= " " . $operator . " " . $this->pdo->quote($v);
+        }
+
+        return $join;
+    }
+
     protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array(), $joinAlias = null)
     {
         $relOpt = $entity->relations[$relationName];
@@ -890,7 +932,7 @@ abstract class Base
                     $conditions = array_merge($conditions, $relOpt['conditions']);
                 }
                 foreach ($conditions as $f => $v) {
-                    $join .= " AND {$midAlias}." . $this->toDb($this->sanitize($f)) . " = " . $this->pdo->quote($v);
+                    $join .= $this->buildJoinConditionStatement($midAlias, $f, $v);
                 }
 
                 $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
@@ -906,12 +948,14 @@ abstract class Base
 
                 $alias = $joinAlias;
 
-                // TODO conditions
-
                 $join =
                     "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+
+                foreach ($conditions as $f => $v) {
+                    $join .= $this->buildJoinConditionStatement($alias, $f, $v);
+                }
 
                 return $join;
 
