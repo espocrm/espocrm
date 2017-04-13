@@ -58,7 +58,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         sortable: false,
 
-        searchTypeList: ['anyOf'],
+        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty'],
 
         data: function () {
             var ids = this.model.get(this.idsName);
@@ -147,8 +147,21 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        handleSearchType: function (type) {
+            if (~['anyOf'].indexOf(type)) {
+                this.$el.find('div.link-group-container').removeClass('hidden');
+            } else {
+                this.$el.find('div.link-group-container').addClass('hidden');
+            }
+        },
+
         setupSearch: function () {
-            this.searchParams.typeFront = this.searchParams.typeFront || 'anyOf';
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});
         },
 
         getAutocompleteUrl: function () {
@@ -227,6 +240,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             }.bind(this)
                         });
                     }
+                }
+
+                if (this.mode == 'search') {
+                    var type = this.$el.find('select.search-type').val();
+                    this.handleSearchType(type);
                 }
             }
         },
@@ -327,11 +345,31 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     value: this.ids || [],
                     nameHash: this.nameHash,
                     data: {
-                        typeFront: type
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type === 'isEmpty') {
+                var data = {
+                    type: 'isNotLinked',
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type === 'isNotEmpty') {
+                var data = {
+                    type: 'isLinked',
+                    data: {
+                        type: type
                     }
                 };
                 return data;
             }
+        },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
         }
 
     });

@@ -57,7 +57,7 @@ class Base
 
     private $userTimeZone = null;
 
-    protected $additionalFilterTypeList = ['linkedWith', 'inCategory', 'isUserFromTeams'];
+    protected $additionalFilterTypeList = ['inCategory', 'isUserFromTeams'];
 
     protected $textFilterUseContainsAttributeList = [];
 
@@ -212,7 +212,7 @@ class Base
         foreach ($where as $item) {
             $type = $item['type'];
             if (!in_array($type, $ignoreTypeList)) {
-                $part = $this->getWherePart($item);
+                $part = $this->getWherePart($item, $result);
                 if (!empty($part)) {
                     $whereClause[] = $part;
                 }
@@ -259,13 +259,18 @@ class Base
 
         $defs = $relDefs[$link];
         if ($relationType == 'manyMany') {
-            $this->addJoin([$link, $link . 'Filter'], $result);
+            $this->addLeftJoin([$link, $link . 'Filter'], $result);
             $midKeys = $seed->getRelationParam($link, 'midKeys');
 
             if (!empty($midKeys)) {
                 $key = $midKeys[1];
                 $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
             }
+        } else if ($relationType == 'hasMany') {
+            $alias = $link . 'Filter';
+            $this->addLeftJoin([$link, $alias], $result);
+
+            $part[$alias . '.id'] = $idsValue;
         } else if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
             if (!empty($key)) {
@@ -737,7 +742,7 @@ class Base
                 $attribute = $w['attribute'];
             }
             if ($attribute) {
-                if (isset($w['type']) && $w['type'] === 'linkedWith') {
+                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'isUserFromTeams'])) {
                     if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
@@ -941,7 +946,7 @@ class Base
         return $result;
     }
 
-    protected function getWherePart($item)
+    protected function getWherePart($item, &$result = null)
     {
         $part = array();
 
@@ -957,16 +962,19 @@ class Base
             $methodName = 'getWherePart' . ucfirst($attribute) . ucfirst($item['type']);
             if (method_exists($this, $methodName)) {
                 $value = null;
-                if (!empty($item['value'])) {
+                if (array_key_exists('value', $item)) {
                     $value = $item['value'];
                 }
-                return $this->$methodName($value);
+                return $this->$methodName($value, $result);
             }
         }
 
-
         if (!empty($item['dateTime'])) {
             return $this->convertDateTimeWhere($item);
+        }
+
+        if (!array_key_exists('value', $item)) {
+            $item['value'] = null;
         }
 
         if (!empty($item['type'])) {
@@ -976,7 +984,7 @@ class Base
                     if (is_array($item['value'])) {
                         $arr = array();
                         foreach ($item['value'] as $i) {
-                            $a = $this->getWherePart($i);
+                            $a = $this->getWherePart($i, $result);
                             foreach ($a as $left => $right) {
                                 if (!empty($right) || is_null($right) || $right === '') {
                                     $arr[] = array($left => $right);
@@ -1149,6 +1157,56 @@ class Base
                         );
                     }
                     break;
+                case 'isNotLinked':
+                    if (!$result) break;
+                    $alias = $attribute . 'IsNotLinkedFilter';
+                    $part[$alias . '.id'] = null;
+                    $this->setDistinct(true, $result);
+                    $this->addLeftJoin([$attribute, $alias], $result);
+                    break;
+                case 'isLinked':
+                    if (!$result) break;
+                    $alias = $attribute . 'IsLinkedFilter';
+                    $part[$alias . '.id!='] = null;
+                    $this->setDistinct(true, $result);
+                    $this->addLeftJoin([$attribute, $alias], $result);
+                    break;
+                case 'linkedWith':
+                    $seed = $this->getSeed();
+                    $link = $attribute;
+                    if (!$seed->hasRelation($link)) break;
+
+                    $value = $item['value'];
+
+                    if (is_null($value)) break;
+
+                    $relationType = $seed->getRelationType($link);
+
+                    if ($relationType == 'manyMany') {
+                        $this->addLeftJoin([$link, $link . 'Filter'], $result);
+                        $midKeys = $seed->getRelationParam($link, 'midKeys');
+
+                        if (!empty($midKeys)) {
+                            $key = $midKeys[1];
+                            $part[$link . 'Filter' . 'Middle.' . $key] = $value;
+                        }
+                    } else if ($relationType == 'hasMany') {
+                        $alias = $link . 'Filter';
+                        $this->addLeftJoin([$link, $alias], $result);
+
+                        $part[$alias . '.id'] = $value;
+                    } else if ($relationType == 'belongsTo') {
+                        $key = $seed->getRelationParam($link, 'key');
+                        if (!empty($key)) {
+                            $part[$key] = $value;
+                        }
+                    } else if ($relationType == 'hasOne') {
+                        $this->addLeftJoin([$link, $link . 'Filter'], $result);
+                        $part[$link . 'Filter' . '.id'] = $value;
+                    } else {
+                        return;
+                    }
+                    $this->setDistinct(true, $result);
             }
         }
 
