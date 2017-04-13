@@ -40,6 +40,11 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
+    private function getHookManager()
+    {
+        return $this->getContainer()->get('hookManager');
+    }
+
     public function run()
     {
         if (empty($_GET['id'])) {
@@ -96,9 +101,17 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
                         $targetListList = $massEmail->get('targetLists');
 
                         foreach ($targetListList as $targetList) {
-                            $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
+                            $optedInResult = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
                                 'optedOut' => false
                             ));
+                            if ($optedInResult) {
+                                $hookData = [
+                                   'link' => $link,
+                                   'targetId' => $targetId,
+                                   'targetType' => $targetType
+                                ];
+                                $this->getHookManager()->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+                            }
                         }
                         echo $this->getLanguage()->translate('subscribedAgain', 'messages', 'Campaign');
                         echo '<br><br>';
