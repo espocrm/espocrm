@@ -58,7 +58,7 @@ class LastViewed extends \Espo\Core\Services\Base
             'userId' => $this->getUser()->id,
             'action' => 'read',
             'targetType' => $targetTypeList,
-        ))->order('number', true)->limit(0, $maxSize)->select(['targetId', 'targetType'])->distinct()->find();
+        ))->order('number', true)->limit(0, $maxSize)->select(['targetId', 'targetType', 'number'])->distinct()->find();
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
