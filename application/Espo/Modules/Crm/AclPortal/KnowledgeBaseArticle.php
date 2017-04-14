@@ -41,6 +41,8 @@ class KnowledgeBaseArticle extends \Espo\Core\AclPortal\Base
             return false;
         }
 
+        if ($entity->get('status') !== 'Published') return false;
+
         $portalIdList = $entity->getLinkMultipleIdList('portals');
 
         if ($user->get('portalId') && !in_array($user->get('portalId'), $portalIdList)) {
