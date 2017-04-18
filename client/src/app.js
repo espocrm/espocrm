@@ -494,10 +494,13 @@ Espo.define(
                 xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
 
                 xhr.onreadystatechange = function () {
-                    if (callback) {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
+                        var arr = Base64.decode(this.auth).split(':');
+                        this.setCookieAuth(arr[0], arr[1]);
                         callback();
                     }
-                }
+                }.bind(this);
 
                 xhr.send('');
 
