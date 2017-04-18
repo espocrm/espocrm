@@ -845,7 +845,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (this.checkboxes) {
                 layout.push({
-                    name: 'checkbox',
+                    name: 'r-checkbox',
                     template: 'record.list-checkbox'
                 });
             }

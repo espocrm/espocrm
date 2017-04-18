@@ -42,8 +42,7 @@
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="40">
-                    <input type="checkbox" class="select-all">
+                <th width="40" data-name="r-checkbox">
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
                         <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -54,6 +53,7 @@
                         </ul>
                     </div>
                     {{/unless}}
+                    <div class="select-all-container"><input type="checkbox" class="select-all"></div>
                 </th>
                 {{/if}}
                 {{#each headerDefs}}

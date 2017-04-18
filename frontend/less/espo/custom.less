@@ -122,8 +122,7 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 
 .list .checkbox-dropdown {
     margin-right: -10px;
-    top: 1px;
-    margin-top: -2px;
+    float: right;
 }
 
 .list .checkbox-dropdown > a {
@@ -695,6 +694,20 @@ table.list th {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.list > table td[data-name="r-checkbox"] {
+    overflow: visible;
+}
+
+
+.list > table th[data-name="r-checkbox"] {
+    white-space: nowrap;
+    .select-all-container {
+        line-height: @line-height-base;
+        height: unit(@line-height-base, em);
+    }
+}
+
 
 .list > table td > div.field {
     white-space: normal;
