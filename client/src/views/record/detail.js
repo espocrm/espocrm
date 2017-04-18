@@ -405,6 +405,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setEditMode: function () {
+            this.trigger('before:set-edit-mode');
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
@@ -421,9 +422,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
             this.mode = 'edit';
+            this.trigger('after:set-edit-mode');
         },
 
         setDetailMode: function () {
+            this.trigger('before:set-detail-mode');
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
 
@@ -439,6 +442,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
             this.mode = 'detail';
+            this.trigger('after:set-detail-mode');
         },
 
         cancelEdit: function () {

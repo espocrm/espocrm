@@ -10,7 +10,8 @@
         "rightMargin": "Right Margin",
         "bottomMargin": "Bottom Margin",
         "printFooter": "Print Footer",
-        "footerPosition": "Footer Position"
+        "footerPosition": "Footer Position",
+        "variables": "Available Placeholders"
     },
     "links": {
     },
@@ -18,6 +19,7 @@
         "Create Template": "Create Template"
     },
     "tooltips": {
-        "footer": "Use {pageNumber} to print page number."
+        "footer": "Use {pageNumber} to print page number.",
+        "variables": "Copy-paste needed placeholder to Header, Body or Footer."
     }
 }
