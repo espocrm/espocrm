@@ -31,7 +31,9 @@ Espo.define('views/preferences/fields/language', 'views/fields/enum', function (
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList'));
+            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList')).sort(function (v1, v2) {
+                return this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language'));
+            }.bind(this));
 
             this.params.options.unshift('');
 

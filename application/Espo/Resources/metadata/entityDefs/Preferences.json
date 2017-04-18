@@ -89,8 +89,7 @@
         "language": {
             "type": "enum",
             "default": "",
-            "view": "views/preferences/fields/language",
-            "isSorted": true
+            "view": "views/preferences/fields/language"
         },
         "exportDelimiter": {
             "type": "varchar",
