@@ -120,15 +120,6 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     border-left: 0;
 }
 
-.list .checkbox-dropdown {
-    margin-right: -10px;
-    float: right;
-}
-
-.list .checkbox-dropdown > a {
-    padding: 0;
-}
-
 .list > table.table td > span.glyphicon,
 .list > ul.list-group > li.list-row .cell > span.glyphicon {
     line-height: @line-height-computed;
@@ -699,15 +690,22 @@ table.list th {
     overflow: visible;
 }
 
-
 .list > table th[data-name="r-checkbox"] {
     white-space: nowrap;
     .select-all-container {
         line-height: @line-height-base;
         height: unit(@line-height-base, em);
+        float: left;
     }
 }
 
+.list .checkbox-dropdown {
+    margin-left: 2px;
+}
+
+.list .checkbox-dropdown > a {
+    padding: 0;
+}
 
 .list > table td > div.field {
     white-space: normal;
