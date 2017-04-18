@@ -35,7 +35,16 @@ blockquote {
 }
 
 .modal-header .close {
-    margin-top: 3px;
+    font-size: 31px;
+    font-weight: normal;
+    margin-top: -4px;
+    max-height: @font-size-h3;
+    > span {
+        position: relative;
+        max-height: @font-size-h3;
+        height: @font-size-h3;
+        display: inline-block;
+    }
 }
 
 .modal-footer {
