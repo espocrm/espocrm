@@ -1,41 +1,44 @@
 {
   "fields": {
-    "name": "命名",
-    "emailAddress": "邮件",
+    "name": "名称",
+    "emailAddress": "电子邮件",
     "title": "标题",
     "accountRole": "标题",
-    "account": "账号",
-    "accounts": "账号",
-    "phoneNumber": "手机",
-    "accountType": "账号种类",
-    "doNotCall": "不呼叫",
+    "account": "帐户",
+    "accounts": "客户",
+    "phoneNumber": "电话",
+    "accountType": "帐户类型",
+    "doNotCall": "不要电联",
     "address": "地址",
-    "opportunityRole": "机会角色",
-    "description": "说明书",
-    "campaign": "运动",
-    "targetLists": "目标清单",
-    "targetList": "目标清单",
-    "portalUser": "门户用户"
+    "opportunityRole": "商机角色",
+    "description": "描述",
+    "campaign": "营销活动",
+    "targetLists": "目标列表",
+    "targetList": "目标列表",
+    "portalUser": "门户网站用户",
+    "originalLead": "原始线索"
   },
   "links": {
-    "opportunities": "机会",
-    "cases": "事例",
-    "targetLists": "目标清单",
-    "campaignLogRecords": "活动记录",
-    "campaign": "运动",
-    "account": "账号（主要的）",
-    "accounts": "账号",
-    "casesPrimary": "案件（主要的）",
-    "portalUser": "门户用户"
+    "opportunities": "商机",
+    "cases": "案例",
+    "targetLists": "目标列表",
+    "campaignLogRecords": "营销活动日志",
+    "campaign": "营销活动",
+    "account": "帐户（主要）",
+    "accounts": "客户",
+    "casesPrimary": "案例（主要）",
+    "portalUser": "门户用户",
+    "originalLead": "原始线索",
+    "documents": "文件"
   },
   "labels": {
-    "Create Contact": "创建联系"
+    "Create Contact": "建立联系"
   },
   "options": {
     "opportunityRole": {
-      "": "无",
+      "": "- 没有 - ",
       "Decision Maker": "决策者",
-      "Evaluator": "评估",
+      "Evaluator": "评估者",
       "Influencer": "影响者"
     }
   },

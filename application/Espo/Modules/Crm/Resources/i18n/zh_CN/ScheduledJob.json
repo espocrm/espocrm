@@ -1,8 +1,8 @@
 {
   "options": {
     "job": {
-      "ProcessMassEmail": "发送大量邮件",
-      "ControlKnowledgeBaseArticleStatus": "控制知识库文章身份"
+      "ProcessMassEmail": "发送大量电子邮件",
+      "ControlKnowledgeBaseArticleStatus": "控制知识库文章状态"
     }
   }
 }

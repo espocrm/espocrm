@@ -1,19 +1,20 @@
 {
   "fields": {
-    "name": "命名",
-    "roles": "作用",
+    "name": "名称",
+    "roles": "角色",
     "positionList": "位置列表"
   },
   "links": {
     "users": "用户",
-    "notes": "注意",
-    "roles": "作用"
+    "notes": "笔记",
+    "roles": "角色",
+    "inboundEmails": "组电子邮件帐户"
   },
   "tooltips": {
-    "roles": "访问角色。这个队的用户从选择好的角色中获取访问控制等级",
-    "positionList": "在这个队可用的职位。例如售货员，经理"
+    "roles": "访问角色。此团队的用户从选定的角色获取访问控制级别。",
+    "positionList": "在这个团队中可用的位置。例如。销售员，经理。"
   },
   "labels": {
-    "Create Team": "创建队"
+    "Create Team": "创建团队"
   }
 }

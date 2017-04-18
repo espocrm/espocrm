@@ -1,56 +1,56 @@
 {
   "fields": {
-    "name": "命名",
-    "number": "数字",
-    "status": "身份",
-    "account": "账号",
-    "contact": "联系",
+    "name": "名称",
+    "number": "数",
+    "status": "状态",
+    "account": "帐户",
+    "contact": "联系人",
     "contacts": "联系人",
     "priority": "优先",
-    "type": "种类",
-    "description": "说明书",
-    "inboundEmail": "接收电子邮件",
-    "lead": "引领"
+    "type": "类型",
+    "description": "描述",
+    "inboundEmail": "入站邮件",
+    "lead": "线索"
   },
   "links": {
-    "inboundEmail": "接收电子邮件",
-    "account": "账号",
-    "contact": "联系（主要的）",
+    "inboundEmail": "入站电子邮件",
+    "account": "帐户",
+    "contact": "联系人（主）",
     "Contacts": "联系人",
-    "meetings": "会议",
-    "calls": "电话",
+    "meetings": "会晤",
+    "calls": "通话",
     "tasks": "任务",
-    "emails": "邮箱",
+    "emails": "电子邮件",
     "articles": "知识库文章",
-    "lead": "引领"
+    "lead": "线索"
   },
   "options": {
     "status": {
-      "New": "新的",
-      "Assigned": "指定的",
+      "New": "新",
+      "Assigned": "已指派",
       "Pending": "待定",
       "Closed": "关闭",
-      "Rejected": "反对",
-      "Duplicate": "复制"
+      "Rejected": "拒绝",
+      "Duplicate": "重复"
     },
     "priority": {
-      "Low": "低的",
-      "Normal": "正常的",
-      "High": "高度",
-      "Urgent": "紧急的"
+      "Low": "低",
+      "Normal": "正常",
+      "High": "高",
+      "Urgent": "紧急"
     },
     "type": {
-      "Question": "问题",
+      "Question": "询问",
       "Incident": "事件",
       "Problem": "问题"
     }
   },
   "labels": {
-    "Create Case": "新建事例",
-    "Close": "关闭",
-    "Reject": "反对",
+    "Create Case": "创建案例",
+    "Close": "关",
+    "Reject": "拒绝",
     "Closed": "关闭",
-    "Rejected": "反对"
+    "Rejected": "拒绝"
   },
   "presetFilters": {
     "open": "打开",

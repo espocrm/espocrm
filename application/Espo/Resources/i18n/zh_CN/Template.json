@@ -1,14 +1,14 @@
 {
   "fields": {
-    "name": "名字",
-    "body": "主体",
-    "entityType": "主体类型",
-    "header": "页眉",
+    "name": "名称",
+    "body": "正文",
+    "entityType": "实体类型",
+    "header": "标题",
     "footer": "页脚",
     "leftMargin": "左边距",
-    "topMargin": "上边距",
+    "topMargin": "顶部margin",
     "rightMargin": "右边距",
-    "bottomMargin": "下边距",
+    "bottomMargin": "底部边缘",
     "printFooter": "打印页脚",
     "footerPosition": "页脚位置"
   },
@@ -16,6 +16,6 @@
     "Create Template": "创建模板"
   },
   "tooltips": {
-    "footer": "用户{页码}去打印页码"
+    "footer": "使用{pageNumber}打印页码。"
   }
 }

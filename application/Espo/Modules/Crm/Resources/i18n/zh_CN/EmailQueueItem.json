@@ -1,28 +1,29 @@
 {
   "fields": {
-    "name": "名字",
-    "status": "身份",
+    "name": "名称",
+    "status": "状态",
     "target": "目标",
-    "sentAt": "已发送日期",
-    "attemptCount": "试图",
-    "emailAddress": "邮件地址",
-    "massEmail": "大量邮件",
+    "sentAt": "发送日期",
+    "attemptCount": "尝试",
+    "emailAddress": "电子邮件地址",
+    "massEmail": "群发电子邮件",
     "isTest": "是测试"
   },
   "links": {
     "target": "目标",
-    "massEmail": "大量邮件"
+    "massEmail": "群发电子邮件"
   },
   "options": {
     "status": {
-      "Pending": "待定",
-      "Sent": "已发送",
-      "Failed": "失败"
+      "Pending": "有待",
+      "Sent": "发送",
+      "Failed": "失败",
+      "Sending": "发送中"
     }
   },
   "presetFilters": {
-    "pending": "待定",
-    "sent": "已发送",
+    "pending": "有待",
+    "sent": "发送",
     "failed": "失败"
   }
 }

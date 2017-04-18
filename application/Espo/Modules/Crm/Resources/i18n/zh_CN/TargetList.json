@@ -1,31 +1,33 @@
 {
   "fields": {
-    "name": "名字",
-    "description": "说明书",
-    "entryCount": "记录数",
-    "campaigns": "活动",
+    "name": "名称",
+    "description": "说明",
+    "entryCount": "条目计数",
+    "campaigns": "营销活动",
     "endDate": "结束日期",
-    "targetLists": "目标清单"
+    "targetLists": "目标列表",
+    "includingActionList": "包含",
+    "excludingActionList": "排除"
   },
   "links": {
-    "accounts": "账号",
+    "accounts": "帐户",
     "contacts": "联系人",
-    "leads": "引领",
-    "campaigns": "活动",
-    "massEmails": "大量邮件"
+    "leads": "线索",
+    "campaigns": "营销活动",
+    "massEmails": "群发电子邮件"
   },
   "options": {
     "type": {
-      "Email": "邮件",
-      "Web": "网",
+      "Email": "电子邮件",
+      "Web": "Web",
       "Television": "电视",
       "Radio": "广播",
-      "Newsletter": "新信件"
+      "Newsletter": "新闻稿"
     }
   },
   "labels": {
-    "Create TargetList": "新建目标清单",
-    "Opted Out": "决定退出",
+    "Create TargetList": "创建目标列表",
+    "Opted Out": "选择退出",
     "Cancel Opt-Out": "取消退出",
     "Opt-Out": "退出"
   }

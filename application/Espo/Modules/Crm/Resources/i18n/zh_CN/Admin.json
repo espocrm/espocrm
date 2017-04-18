@@ -1,6 +1,6 @@
 {
   "layouts": {
-    "detailConvert": "转为领导",
-    "listForAccount": "请单（为账号）"
+    "detailConvert": "转换线索",
+    "listForAccount": "列表（帐户）"
   }
 }

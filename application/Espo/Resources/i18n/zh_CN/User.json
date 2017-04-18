@@ -1,81 +1,90 @@
 {
   "fields": {
-    "name": "名字",
+    "name": "名称",
     "userName": "用户名",
     "title": "标题",
-    "isAdmin": "是管理者",
-    "defaultTeam": "默认队",
-    "emailAddress": "邮件",
-    "phoneNumber": "手机",
-    "roles": "作用",
+    "isAdmin": "是管理员",
+    "defaultTeam": "默认团队",
+    "emailAddress": "电子邮件",
+    "phoneNumber": "电话",
+    "roles": "角色",
     "portals": "门户",
-    "portalRoles": "门户作用",
+    "portalRoles": "门户角色",
     "teamRole": "位置",
     "password": "密码",
-    "currentPassword": "通用密码",
-    "passwordConfirm": "确定密码",
+    "currentPassword": "当前密码",
+    "passwordConfirm": "确认密码",
     "newPassword": "新密码",
-    "newPasswordConfirm": "确定新密码",
-    "avatar": "图表",
-    "isActive": "是活跃的",
+    "newPasswordConfirm": "确认新密码",
+    "avatar": "头像",
+    "isActive": "活跃",
     "isPortalUser": "是门户用户",
-    "contact": "联系",
-    "accounts": "账号",
-    "account": "账号（主要的）",
-    "sendAccessInfo": "发送有用户访问信息的邮件到用户",
-    "portal": "门户",
+    "contact": "联系人",
+    "accounts": "客户",
+    "account": "帐户（小学）",
+    "sendAccessInfo": "使用访问信息向用户发送电子邮件",
+    "portal": "门户网站",
     "gender": "性别",
     "position": "在队中的位置"
   },
   "links": {
-    "teams": "队",
-    "roles": "作用",
-    "notes": "注意",
+    "teams": "团队",
+    "roles": "角色",
+    "notes": "笔记",
     "portals": "门户",
-    "portalRoles": "门户作用",
-    "contact": "联系",
-    "accounts": "账号",
-    "account": "账号（主要的）"
+    "portalRoles": "门户角色",
+    "contact": "联系人",
+    "accounts": "客户",
+    "account": "帐户（小学）",
+    "tasks": "任务"
   },
   "labels": {
     "Create User": "创建用户",
-    "Generate": "产生",
-    "Access": "获取",
-    "Preferences": "偏好",
-    "Change Password": "改变密码",
-    "Teams and Access Control": "队和获取控制",
-    "Forgot Password?": "忘记密码",
+    "Generate": "生成",
+    "Access": "访问",
+    "Preferences": "优先",
+    "Change Password": "更改密码",
+    "Teams and Access Control": "团队和访问控制",
+    "Forgot Password?": "忘记密码？",
     "Password Change Request": "密码更改请求",
-    "Email Address": "邮件地址",
-    "External Accounts": "外部账号",
-    "Email Accounts": "邮件账号",
+    "Email Address": "电子邮件地址",
+    "External Accounts": "外部帐户",
+    "Email Accounts": "电子邮件帐户",
     "Portal": "门户",
-    "Create Portal User": "新建门户用户"
+    "Create Portal User": "创建门户用户",
+    "Proceed w/o Contact": "Proceed w/o Contact"
   },
   "tooltips": {
-    "defaultTeam": "由此用户所做的所有记录将会默认连接到这个队",
-    "userName": "字母a到z,数字0到9，点，连字号，@符号和下划线时可以使用的",
-    "isAdmin": "管理者用户柯以获取所有",
-    "isActive": "如果验证不通过，用户将无法登录",
-    "teams": "这个用户属于的队。从队角色中得到的存取控制等级",
-    "roles": "额外的获取角色。如果用户不属于任何队或者你需要扩展存取控制等级就使用它",
-    "portalRoles": "额外的门户角色。使用它专门为这个用户扩展存取控制等级",
-    "portals": "此用户可以访问的门户"
+    "defaultTeam": "默认情况下，此用户创建的所有记录都将与此小组相关。",
+    "userName": "字母A-Z，数字0-9，点，连字符，@ -signs和下划线是允许的。",
+    "isAdmin": "管理员用户可以访问一切。",
+    "isActive": "如果取消选中则用户将无法登录。",
+    "teams": "该用户所属的团队。访问控制级别从团队角色继承。",
+    "roles": "其他访问角色。如果用户不属于任何团队，或者需要为此用户专门扩展访问控制级别，请使用此角色。",
+    "portalRoles": "其他门户网站角色。使用它来为此用户专门扩展访问控制级别。",
+    "portals": "此用户有权访问的门户。\""
   },
   "messages": {
-    "passwordWillBeSent": "密码将会发送至用户的邮件地址里",
-    "accountInfoEmailSubject": "EspoCRM 用户访问信息",
-    "accountInfoEmailBody": "你获取的信息:\n\n用户名: {用户名}\n密码: {密码}\n\n{网站地址}",
+    "passwordWillBeSent": "密码将发送到用户的电子邮件地址。",
+    "accountInfoEmailSubject": "EspoCRM用户访问信息",
+    "accountInfoEmailBody": "您的访问信息：\n\n用户名：{userName}\n密码：{password}\n\n{siteUrl} ",
     "passwordChangeLinkEmailSubject": "更改密码请求",
-    "passwordChanged": "密码已改",
-    "userCantBeEmpty": "用户名可能不存在",
-    "wrongUsernamePasword": "错误的用户名/密码",
-    "emailAddressCantBeEmpty": "邮件地址可能不存在",
-    "userNameEmailAddressNotFound": "用户名/邮件地址未找到",
-    "forbidden": "禁止。稍后再试",
-    "uniqueLinkHasBeenSent": "这个唯一的统一资源定位地址已经被发送到指定的邮箱地址",
-    "passwordChangedByRequest": "密码已更改",
-    "setupSmtpBefore": "你需要安装 <a href=\"{全球资源定位器}\">简单邮件传输协议 设置</a> 使系统能够用邮件发送密码"
+    "passwordChanged": "密码已被更改",
+    "userCantBeEmpty": "用户名不能为空",
+    "wrongUsernamePasword": "用户名/密码错误",
+    "emailAddressCantBeEmpty": "电子邮件地址不能为空",
+    "userNameEmailAddressNotFound": "用户名/电子邮件地址未找到",
+    "forbidden": "禁止访问，请稍后再试",
+    "uniqueLinkHasBeenSent": "唯一网址已发送到指定的电子邮件地址。",
+    "passwordChangedByRequest": "密码已被更改。",
+    "setupSmtpBefore": "您需要设置<a href=\"{url}\"> SMTP设置</a>，以使系统能够在电子邮件中发送密码。"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "只有我的团队"
+  },
+  "presetFilters": {
+    "active": "活性",
+    "activePortal": "门户活动"
   },
   "options": {
     "gender": {
@@ -84,12 +93,5 @@
       "Female": "女士",
       "Neutral": "中立的"
     }
-  },
-  "boolFilters": {
-    "onlyMyTeam": "只有我的队"
-  },
-  "presetFilters": {
-    "active": "活跃的",
-    "activePortal": "门户活跃"
   }
 }

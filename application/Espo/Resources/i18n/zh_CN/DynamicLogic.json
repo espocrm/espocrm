@@ -20,7 +20,9 @@
       "isEmpty": "是空的",
       "isNotEmpty": "不是空的",
       "contains": "包含",
-      "notContains": "不包含"
+      "has": "包含",
+      "notContains": "不包含",
+      "notHas": "不包含"
     }
   }
 }

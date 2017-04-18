@@ -1,42 +1,43 @@
 {
   "labels": {
-    "Create Document": "新建文档",
+    "Create Document": "创建文档",
     "Details": "细节"
   },
   "fields": {
-    "name": "名字",
-    "status": "身份",
+    "name": "名称",
+    "status": "状态",
     "file": "文件",
-    "type": "种类",
-    "publishDate": "公布日期",
+    "type": "类型",
+    "publishDate": "发布日期",
     "expirationDate": "截止日期",
-    "description": "说明书",
-    "accounts": "账号",
-    "folder": "文件夹"
+    "description": "描述",
+    "accounts": "客户\n",
+    "folder": "夹"
   },
   "links": {
-    "accounts": "账号",
-    "opportunities": "机会",
-    "folder": "文件夹",
-    "leads": "领先程度"
+    "accounts": "客户\n",
+    "opportunities": "商机",
+    "folder": "夹",
+    "leads": "线索",
+    "contacts": "联系人"
   },
   "options": {
     "status": {
-      "Active": "活跃的",
-      "Draft": "草稿",
-      "Expired": "失效的",
+      "Active": "活性",
+      "Draft": "草案",
+      "Expired": "已过期",
       "Canceled": "取消"
     },
     "type": {
-      "": "无",
-      "Contract": "联系",
-      "NDA": "保密协议",
-      "EULA": "最终用户许可协议",
-      "License Agreement": "许可证协议"
+      "": "没有",
+      "Contract": "合同",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "许可协议"
     }
   },
   "presetFilters": {
-    "active": "活跃",
-    "draft": "草稿"
+    "active": "活性",
+    "draft": "草案"
   }
 }

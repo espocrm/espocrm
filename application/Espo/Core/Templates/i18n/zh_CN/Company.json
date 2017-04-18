@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "账单地址",
+    "shippingAddress": "邮寄地址",
+    "website": "网站"
+  },
+  "links": {
+    "meetings": "会晤",
+    "calls": "通话",
+    "tasks": "任务"
+  },
+  "labels": {
+    "Create {entityType}": "创建 {entityTypeTranslated}"
+  }
+}

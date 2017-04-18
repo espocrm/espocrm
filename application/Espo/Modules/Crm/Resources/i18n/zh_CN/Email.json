@@ -1,8 +1,8 @@
 {
   "labels": {
-    "Create Lead": "创建领导",
-    "Create Contact": "新建联系",
-    "Create Task": "新建任务",
-    "Create Case": "新建案件"
+    "Create Lead": "新建线索",
+    "Create Contact": "创建联系人",
+    "Create Task": "创建任务",
+    "Create Case": "创建案例"
   }
 }

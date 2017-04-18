@@ -1,13 +1,13 @@
 {
   "fields": {
-    "url": "统一资源定位地址",
-    "urlToUse": "插入替代全球资源定位器的代码",
-    "campaign": "运动"
+    "url": "网址",
+    "urlToUse": "要插入代码而不是网址",
+    "campaign": "营销活动"
   },
   "links": {
-    "campaign": "活动"
+    "campaign": "营销活动"
   },
   "labels": {
-    "Create CampaignTrackingUrl": "创建追踪统一资源定位地址"
+    "Create CampaignTrackingUrl": "创建跟踪网址"
   }
 }

@@ -1,16 +1,19 @@
 {
   "fields": {
-    "post": "邮件",
+    "post": "帖子",
     "attachments": "附件",
     "targetType": "目标",
-    "teams": "队",
-    "users": "用户名",
+    "teams": "团队",
+    "users": "用户",
     "portals": "门户"
   },
   "filters": {
-    "all": "所有的",
-    "posts": "邮寄",
+    "all": "所有",
+    "posts": "帖子",
     "updates": "更新"
+  },
+  "messages": {
+    "writeMessage": "在这里写信息"
   },
   "options": {
     "targetType": {
@@ -20,8 +23,5 @@
       "all": "所有内部门户",
       "portals": "给门户用户"
     }
-  },
-  "messages": {
-    "writeMessage": "在这里写下信息"
   }
 }

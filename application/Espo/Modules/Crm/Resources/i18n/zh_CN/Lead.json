@@ -1,64 +1,65 @@
 {
   "labels": {
-    "Converted To": "转为",
-    "Create Lead": "创建领导",
-    "Convert": "转为"
+    "Converted To": "已转换为",
+    "Create Lead": "创建线索",
+    "Convert": "转换"
   },
   "fields": {
-    "name": "命名",
-    "emailAddress": "邮件",
+    "name": "名称",
+    "emailAddress": "电子邮件",
     "title": "标题",
-    "website": "网页",
-    "phoneNumber": "手机",
-    "accountName": "账号名字",
-    "doNotCall": "不呼叫",
+    "website": "网站",
+    "phoneNumber": "电话",
+    "accountName": "单位名称",
+    "doNotCall": "不要电联",
     "address": "地址",
-    "status": "身份",
+    "status": "状态",
     "source": "资源",
-    "opportunityAmount": "机会总数",
-    "opportunityAmountConverted": "机会总数（已转为）",
-    "description": "说明书",
-    "createdAccount": "账号",
-    "createdContact": "联系",
-    "createdOpportunity": "机会",
-    "campaign": "运动",
-    "targetLists": "目标清单",
-    "targetList": "目标清单"
+    "opportunityAmount": "商机金额",
+    "opportunityAmountConverted": "商机金额（转换）",
+    "description": "描述",
+    "createdAccount": "客户",
+    "createdContact": "联系人",
+    "createdOpportunity": "商机",
+    "campaign": "营销活动",
+    "targetLists": "目标列表",
+    "targetList": "目标列表",
+    "industry": "行业"
   },
   "links": {
-    "targetLists": "目标清单",
-    "campaignLogRecords": "活动日志",
-    "campaign": "运动",
-    "createdAccount": "账号",
-    "createdContact": "联系",
-    "createdOpportunity": "机会",
-    "cases": "案件",
-    "documents": "文档"
+    "targetLists": "目标列表",
+    "campaignLogRecords": "营销活动日志",
+    "campaign": "营销活动",
+    "createdAccount": "客户",
+    "createdContact": "联系人",
+    "createdOpportunity": "商机",
+    "cases": "案例",
+    "documents": "文件"
   },
   "options": {
     "status": {
-      "New": "新的",
-      "Assigned": "指定的",
-      "In Process": "进程中",
-      "Converted": "转为",
-      "Recycled": "回收的",
-      "Dead": "废弃的"
+      "New": "新",
+      "Assigned": "指派",
+      "In Process": "处理中",
+      "Converted": "已转换",
+      "Recycled": "已回收",
+      "Dead": "没机会"
     },
     "source": {
       "": "无",
-      "Call": "电话",
-      "Email": "邮件",
-      "Existing Customer": "存在客户",
+      "Call": "通话",
+      "Email": "电子邮件",
+      "Existing Customer": "现有客户",
       "Partner": "伙伴",
       "Public Relations": "公共关系",
-      "Web Site": "网址",
-      "Campaign": "活动",
-      "Other": "其他的"
+      "Web Site": "网站",
+      "Campaign": "营销活动",
+      "Other": "其他"
     }
   },
   "presetFilters": {
-    "active": "活跃的",
-    "actual": "真实的",
-    "converted": "转为"
+    "active": "活性",
+    "actual": "实际",
+    "converted": "已转换"
   }
 }

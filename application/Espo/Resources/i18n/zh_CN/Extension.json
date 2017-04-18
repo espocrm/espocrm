@@ -1,15 +1,15 @@
 {
   "fields": {
-    "name": "命名",
+    "name": "名称",
     "version": "版本",
-    "description": "说明书",
+    "description": "描述",
     "isInstalled": "已安装"
   },
   "labels": {
-    "Uninstall": "未安装",
+    "Uninstall": "卸载",
     "Install": "安装"
   },
   "messages": {
-    "uninstalled": "扩展名已经被卸载"
+    "uninstalled": "扩展名{name}已卸载"
   }
 }
