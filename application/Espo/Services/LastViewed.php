@@ -57,10 +57,12 @@ class LastViewed extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
             'userId' => $this->getUser()->id,
             'action' => 'read',
-            'targetType' => $targetTypeList,
-        ))->order('number', true)->limit(0, $maxSize)->select([
-            'targetId', 'targetType', 'number'
-        ])->groupBy(['targetId', 'targetType'])->find();
+            'targetType' => $targetTypeList
+        ))->order(3, true)->limit(0, $maxSize)->select([
+            'targetId', 'targetType', 'MAX:number'
+        ])->groupBy([
+            'targetId', 'targetType'
+        ])->find();
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
