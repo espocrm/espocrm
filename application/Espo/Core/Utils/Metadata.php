@@ -326,6 +326,26 @@ class Metadata
             $unsets = (array) $unsets;
         }
 
+        switch ($key1) {
+            case 'entityDefs':
+                //unset related additional fields, e.g. a field with "address" type
+                $unsetList = $unsets;
+                foreach ($unsetList as $unsetItem) {
+                    if (preg_match('/fields\.([^\.]+)/', $unsetItem, $matches) && isset($matches[1])) {
+                        $fieldName = $matches[1];
+                        $fieldPath = [$key1, $key2, 'fields', $fieldName];
+
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath));
+                        if (is_array($additionalFields)) {
+                            foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
+                                $unsets[] = 'fields.' . $additionalFieldName;
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+
         $normalizedData = array(
             '__APPEND__',
         );
