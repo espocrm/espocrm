@@ -164,10 +164,10 @@ Espo.define('views/record/merge', 'view', function (Dep) {
             this.fields = differentFieldList;
 
             this.fields.forEach(function (field) {
-                var type = Espo.Utils.upperCaseFirst(this.models[0].getFieldParam(field, 'type'));
+                var type = this.models[0].getFieldParam(field, 'type');
 
                 this.models.forEach(function (model) {
-                    var viewName = model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                    var viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
 
                     this.createView(model.id + '-' + field, viewName, {
                         model: model,
