@@ -581,7 +581,7 @@ class Import extends \Espo\Services\Record
                             if ($found) {
                                 $entity->set($relation . 'Id', $found->id);
                             } else {
-                                if (!in_array($scope, 'User', 'Team')) {
+                                if (!in_array($scope, ['User', 'Team'])) {
                                     // TODO create related record with name $name and relate
                                 }
                             }
