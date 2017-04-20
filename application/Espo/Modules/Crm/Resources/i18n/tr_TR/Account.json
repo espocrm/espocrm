@@ -1,40 +1,103 @@
 {
-    "fields": {
-        "name": "İsim",
-        "emailAddress": "Eposta",
-        "website": "Website",
-        "phone": "Telefon",
-        "fax": "Faks",
-        "billingAddress": "Fatura Adresi",
-        "shippingAddress": "Teslimat Adresi",
-        "description": "açıklama",
-        "sicCode": "Firma Kodu",
-        "industry": "Sektör",
-        "type": "Tür"        
+  "fields": {
+    "name": "İsim",
+    "emailAddress": "Eposta",
+    "website": "Website",
+    "phoneNumber": "Telefon",
+    "billingAddress": "Fatura Adresi",
+    "shippingAddress": "Teslimat Adresi",
+    "description": "açıklama",
+    "sicCode": "Firma Kodu",
+    "industry": "Sektör",
+    "type": "Tür",
+    "contactRole": "Başlık",
+    "campaign": "Kampanya",
+    "targetLists": "Hedef Listeler",
+    "targetList": "Hedef Liste",
+    "originalLead": "Orijinal Rehber"
+  },
+  "links": {
+    "contacts": "Bağlantılar",
+    "opportunities": "Fırsatlar",
+    "cases": "Dosyalar",
+    "documents": "Belgeler",
+    "meetingsPrimary": "Toplantılar (genişletildi)",
+    "callsPrimary": "Aramalar (genişletildi)",
+    "tasksPrimary": "Görevler (genişletildi)",
+    "emailsPrimary": "E-postalar (genişletildi)",
+    "targetLists": "Hedef Listeler",
+    "campaignLogRecords": "Kampanya Günlüğü",
+    "campaign": "Kampanya",
+    "portalUsers": "Portal Kullanıcıları",
+    "originalLead": "Orijinal Rehber"
+  },
+  "options": {
+    "type": {
+      "Customer": "Müşteri",
+      "Investor": "Yatırımcı",
+      "Partner": "Ortak",
+      "Reseller": "Satıcı"
     },
-    "links": {
-        "contacts": "Bağlantılar",
-        "opportunities": "Fırsatlar",
-        "cases": "Dosyalar"
-    },
-    "options": {
-        "type": {
-            "Customer": "Müşteri",
-            "Investor": "Yatırımcı",
-            "Partner": "Ortak",
-            "Reseller": "Satıcı"
-        },
-        "industry": {
-            "Apparel": "Konfeksiyon",
-            "Banking": "Bankacılık",
-            "Computer Software": "Bilgisayar Yazılımı",
-            "Education": "Eğitim",
-            "Electronics": "Elektronik",
-            "Finance": "Finans",
-            "Insurance": "Sigortacılık"
-        }
-    },
-    "labels": {
-        "Create Account": "Hesap Oluştur"
+    "industry": {
+      "Agriculture": "Tarım",
+      "Advertising": "Reklamcılık",
+      "Apparel & Accessories": "Giyim ve Aksesuar",
+      "Automotive": "Otomotiv",
+      "Banking": "Bankacılık",
+      "Biotechnology": "Biyoteknoloji",
+      "Building Materials & Equipment": "Yapı Malzemeleri ve Ekipmanları",
+      "Chemical": "Kimyasal",
+      "Computer": "Bilgisayar",
+      "Education": "Eğitim",
+      "Electronics": "Elektronik",
+      "Energy": "Enerji",
+      "Entertainment & Leisure": "Eğlence ve Eğlence",
+      "Finance": "Finans",
+      "Food & Beverage": "Yiyecek ve İçecek",
+      "Grocery": "Bakkal",
+      "Healthcare": "Sağlık Hizmeti",
+      "Insurance": "Sigortacılık",
+      "Legal": "Hukuk",
+      "Manufacturing": "Imalat",
+      "Publishing": "Yayınlama",
+      "Real Estate": "Gayrimenkul",
+      "Service": "Hizmet",
+      "Sports": "Spor",
+      "Software": "Yazılım",
+      "Technology": "Teknoloji",
+      "Telecommunications": "Telekomünikasyon",
+      "Television": "Televizyon!",
+      "Transportation": "Taşımacılık ",
+      "Venture Capital": "Risk Sermayesi",
+      "Aerospace": "Havacılık",
+      "Architecture": "Mimarlık",
+      "Construction": "İnşaat",
+      "Defense": "Savunma",
+      "Creative": "Yaratıcı",
+      "Culture": "Kültür",
+      "Consulting": "Danışmanlık",
+      "Electric Power": "Elektrik Gücü",
+      "Hospitality": "Ağırlama",
+      "Mass Media": "Kitle İletişim Araçları",
+      "Mining": "Madencilik",
+      "Music": "Müzik",
+      "Marketing": "PAZARLAMA",
+      "Petroleum": "Petrol",
+      "Retail": "Perakende",
+      "Shipping": "Nakliye",
+      "Support": "Destek ",
+      "Testing, Inspection & Certification": "Test, Muayene ve Belgelendirme",
+      "Wholesale": "Toptan",
+      "Water": "Su"
     }
+  },
+  "labels": {
+    "Create Account": "Hesap Oluştur",
+    "Copy Billing": "Faturalamayı Kopyala"
+  },
+  "presetFilters": {
+    "customers": "Müşteriler",
+    "partners": "İş Ortaklarımı",
+    "recentlyCreated": "Yakın Zamanda Oluşturuldu"
+  }
 }

@@ -1,5 +1,13 @@
 {
-    "labels": {
-        "Create {entityType}": "{entityTypeTranslated} Oluştur"
-    }
+  "fields": {
+    "address": "Adres "
+  },
+  "links": {
+    "meetings": "Toplantılar",
+    "calls": "(Seslenme)",
+    "tasks": "Görevler"
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} oluştur"
+  }
 }

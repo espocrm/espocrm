@@ -1,22 +1,49 @@
 {
-    "fields": {
-        "name": "İsim",
-        "emailAddress": "Eposta",
-        "title": "Başlık",
-        "account": "Hesap",
-        "phone": "Telefon",
-        "phoneOffice": "Phone (Office)",
-        "fax": "Faks",
-        "accountType": "Hesap Türü",
-        "doNotCall": "Arama Yapma",
-        "address": "Adres",
-        "description": "açıklama"    
-    },
-    "links": {
-        "opportunities": "Fırsatlar",
-        "cases": "Dosyalar"
-    },
-    "labels": {
-        "Create Contact": "Bağlantı Oluştur"
+  "fields": {
+    "name": "İsim",
+    "emailAddress": "Eposta",
+    "title": "Başlık",
+    "accountRole": "Başlık",
+    "account": "Hesap",
+    "accounts": "Hesaplar",
+    "phoneNumber": "Telefon ",
+    "accountType": "Hesap Türü",
+    "doNotCall": "Arama Yapma",
+    "address": "Adres",
+    "opportunityRole": "Fırsat Rolü",
+    "description": "açıklama",
+    "campaign": "Kampanya",
+    "targetLists": "Hedef Listeler",
+    "targetList": "Hedef Liste",
+    "portalUser": "Portal Kullanıcı",
+    "originalLead": "Orijinal Rehber"
+  },
+  "links": {
+    "opportunities": "Fırsatlar",
+    "cases": "Dosyalar",
+    "targetLists": "Hedef Listeler",
+    "campaignLogRecords": "Kampanya Günlüğü",
+    "campaign": "Kampanya",
+    "account": "Hesap (Birincil)",
+    "accounts": "Hesaplar",
+    "casesPrimary": "Dosyalar (Birincil)",
+    "portalUser": "Portal Kullanıcı",
+    "originalLead": "Orijinal Rehber",
+    "documents": "Belgeler"
+  },
+  "labels": {
+    "Create Contact": "Bağlantı Oluştur"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "Yok",
+      "Decision Maker": "Karar verici",
+      "Evaluator": "Değerlendirici",
+      "Influencer": "Etki Eden"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Portal Kullanıcıları",
+    "notPortalUsers": "Portal Kullanıcıları Değildir"
+  }
 }

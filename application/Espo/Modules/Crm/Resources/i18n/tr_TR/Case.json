@@ -1,38 +1,59 @@
 {
-    "fields": {
-        "name": "İsim",
-        "number": "Numara",
-        "status": "Durum",
-        "account": "Hesap",
-        "contact": "Bağlantı",
-        "priority": "Öncelik",
-        "type": "Tür",
-        "description": "açıklama"
+  "fields": {
+    "name": "İsim",
+    "number": "Numara",
+    "status": "Durum",
+    "account": "Hesap",
+    "contact": "Bağlantı",
+    "contacts": "İletişim ",
+    "priority": "Öncelik",
+    "type": "Tür",
+    "description": "açıklama",
+    "inboundEmail": "Gelen E-posta",
+    "lead": "Talep"
+  },
+  "links": {
+    "inboundEmail": "Gelen E-posta",
+    "account": "Hesap",
+    "contact": "İletişim (Birincil)",
+    "Contacts": "İletişim kişileri",
+    "meetings": "Toplantılar",
+    "calls": "Aramalar",
+    "tasks": "Görevler",
+    "emails": "E-postalar ",
+    "articles": "Bilgi Bankası Makaleleri",
+    "lead": "Rehber"
+  },
+  "options": {
+    "status": {
+      "New": "Yeni",
+      "Assigned": "Atanmış",
+      "Pending": "Beklemede",
+      "Closed": "Kapandı",
+      "Rejected": "Reddedildi",
+      "Duplicate": "Kopyala"
     },
-    "links": {
+    "priority": {
+      "Low": "Düşük",
+      "Normal": "Normal",
+      "High": "Yüksek",
+      "Urgent": "Acil"
     },
-    "options": {
-        "status": {
-            "New": "Yeni",
-            "Assigned": "Atanmış",
-            "Pending": "Beklemede",
-            "Closed": "Kapandı",
-            "Rejected": "Reddedildi",
-            "Duplicate": "Kopyala"
-        },
-        "priority" : {
-            "Low": "Düşük",
-            "Normal": "Normal",
-            "High": "Yüksek",
-            "Urgent": "Acil"
-        },
-        "type": {
-            "Question": "Soru",
-            "Incident": "Olay",
-            "Problem": "sorun"
-        }
-    },
-    "labels": {
-        "Create Case": "Dosya Oluştur"
+    "type": {
+      "Question": "Soru",
+      "Incident": "Olay",
+      "Problem": "sorun"
     }
+  },
+  "labels": {
+    "Create Case": "Dosya Oluştur",
+    "Close": "Kapat ",
+    "Reject": "Reddet  ",
+    "Closed": "Kapalı ",
+    "Rejected": "Reddedildi"
+  },
+  "presetFilters": {
+    "open": "Aç ",
+    "closed": "Kapalı "
+  }
 }

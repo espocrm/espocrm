@@ -1,34 +1,50 @@
 {
-    "fields": {
-        "name": "İsim",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateStart": "Başlangıç Tarihi",
-        "dateEnd": "Bitiş Tarihi",
-        "direction": "Yönlendirme",
-        "duration": "Süre",
-        "description": "açıklama",
-        "users": "Kullanıcılar",
-        "contacts": "Bağlantılar",
-        "leads": "Müşteri Adayları"
+  "fields": {
+    "name": "İsim",
+    "parent": "Üst Seçenek",
+    "status": "Durum",
+    "dateStart": "Başlangıç Tarihi",
+    "dateEnd": "Bitiş Tarihi",
+    "direction": "Yönlendirme",
+    "duration": "Süre",
+    "description": "açıklama",
+    "users": "Kullanıcılar",
+    "contacts": "Bağlantılar",
+    "leads": "Müşteri Adayları",
+    "reminders": "Hatırlatıcılar",
+    "account": "Hesap",
+    "acceptanceStatus": "Kabul Durumu"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlanmış",
+      "Held": "Elde Tutulanlar",
+      "Not Held": "Elde Tutulmayanlar"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Giden",
+      "Inbound": "Gelen"
     },
-    "options": {
-        "status": {
-            "Planned": "Planlanmış",
-            "Held": "Elde Tutulanlar",
-            "Not Held": "Elde Tutulmayanlar"
-        },
-        "direction": {
-            "Outbound": "Giden",
-            "Inbound": "Gelen"
-        }
-    },
-    "labels": {
-        "Create Call": "Arama Oluştur",
-        "Set Held": "SET HELDXXX",
-        "Set Not Held": "SET NOT HELD XXXX",
-        "Send Invitations": "Davetleri Gönder"        
+    "acceptanceStatus": {
+      "None": "Yok",
+      "Accepted": "Kabul edilmiş",
+      "Declined": "Red edilmiş",
+      "Tentative": "Geçici"
     }
+  },
+  "massActions": {
+    "setHeld": "Düzenlendi",
+    "setNotHeld": "Düzenlenmedi olarak ayarla"
+  },
+  "labels": {
+    "Create Call": "Arama Oluştur",
+    "Set Held": "SET HELDXXX",
+    "Set Not Held": "SET NOT HELD XXXX",
+    "Send Invitations": "Davetleri Gönder"
+  },
+  "presetFilters": {
+    "planned": "Planlandı",
+    "held": "Düzenlendi",
+    "todays": "Bugünün"
+  }
 }

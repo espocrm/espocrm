@@ -1,5 +1,36 @@
 {
-    "labels": {
-        "Create {entityType}": "{entityTypeTranslated} Oluştur"
+  "fields": {
+    "parent": "Üst",
+    "dateStart": "Başlangıç ​​Tarihi",
+    "dateEnd": "Son Tarih",
+    "duration": "Süre ",
+    "status": "Durum ",
+    "reminders": "Hatırlatıcılar"
+  },
+  "links": {
+    "parent": "Üst"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlandı",
+      "Held": "Düzenlenen",
+      "Not Held": "Düzenlenmedi"
     }
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} oluştur",
+    "Schedule {entityType}": "Zamanlama {entityTypeTranslated}",
+    "Log {entityType}": "{EntityTypeTranslated} günlüğünü kaydet",
+    "Set Held": "Düzenlendi",
+    "Set Not Held": "Düzenlenmedi olarak ayarla"
+  },
+  "massActions": {
+    "setHeld": "Düzenlendi",
+    "setNotHeld": "Düzenlenmedi olarak ayarla"
+  },
+  "presetFilters": {
+    "planned": "Planlandı",
+    "held": "Düzenlenen",
+    "todays": "Bugünün"
+  }
 }

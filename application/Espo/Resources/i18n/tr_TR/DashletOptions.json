@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "title": "Başlık",
+    "dateFrom": "Başlangıç Tarih",
+    "dateTo": "Bitiş Tarih",
+    "autorefreshInterval": "Oto-Tazeleme Aralığı",
+    "displayRecords": "Kayıtları Göster",
+    "isDoubleHeight": "Yükseklik 2x",
+    "mode": "Mod",
+    "enabledScopeList": "Görüntülenecek Olan",
+    "users": "Kullanıcılar"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Hafta (ajanda)",
+      "basicWeek": "Hafta",
+      "month": "Ay",
+      "basicDay": "Gün",
+      "agendaDay": "Gün (ajanda)",
+      "timeline": "Zaman Tüneli"
+    }
+  }
+}

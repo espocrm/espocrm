@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "İsim ",
+    "version": "Versiyon",
+    "description": "Açıklama",
+    "isInstalled": "Yüklendi"
+  },
+  "labels": {
+    "Uninstall": "Sil",
+    "Install": "Yükle"
+  },
+  "messages": {
+    "uninstalled": "{name} eklentisi silindi"
+  }
+}

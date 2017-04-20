@@ -1,16 +1,25 @@
 {
-    "fields": {
-        "name": "İsim",
-        "status": "Durum",
-        "isHtml": "Html olarak gönder",
-        "body": "Mesaj",
-        "subject": "Konu",
-        "attachments": "Dosya Ekle",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Eposta Şablonu Oluştur"
-    }
+  "fields": {
+    "name": "İsim",
+    "status": "Durum",
+    "isHtml": "Html olarak gönder",
+    "body": "Mesaj",
+    "subject": "Konu",
+    "attachments": "Dosya Ekle",
+    "insertField": "Alan Ekle",
+    "oneOff": "Bir defalık"
+  },
+  "labels": {
+    "Create EmailTemplate": "Eposta Şablonu Oluştur",
+    "Info": "Bilgi"
+  },
+  "tooltips": {
+    "oneOff": "Taslağı sadece bir defa kullanacak iseniz işaretleyiniz. Ör. Toplu Mail için"
+  },
+  "presetFilters": {
+    "actual": "Güncel "
+  },
+  "messages": {
+    "infoText": "Kullanılabilir değişkenler: \\ n \\ n {optOutUrl} & # 8211; Bir araştırmacı olmayan kişi bağlantısı için URL; \\ n \\ n {optOutLink} & # 8211; Bir üyelikten çıkma bağlantısı."
+  }
 }

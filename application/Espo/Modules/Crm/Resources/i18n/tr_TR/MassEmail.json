@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "İsim",
+    "status": "Durum ",
+    "storeSentEmails": "Gönderilen E-postaları Sakla",
+    "startAt": "Başlangıç ​​Tarihi",
+    "fromAddress": "Gönderen Adresi",
+    "fromName": "İsimden",
+    "replyToAddress": "Yanıtlama Adresiniz",
+    "replyToName": "Yanıtla İsim",
+    "campaign": "Kampanya",
+    "emailTemplate": "E-posta Şablonu",
+    "inboundEmail": "E-posta hesabı",
+    "targetLists": "Hedef Listeler",
+    "excludingTargetLists": "Hariç Tutulan Hedef Listeleri",
+    "optOutEntirely": "Tamamından Vazgeç"
+  },
+  "links": {
+    "targetLists": "Hedef Listeler",
+    "excludingTargetLists": "Hariç Tutulan Hedef Listeleri",
+    "queueItems": "Sıra Öğeleri",
+    "campaign": "Kampanya",
+    "emailTemplate": "E-posta Şablonu",
+    "inboundEmail": "E-posta hesabı"
+  },
+  "options": {
+    "status": {
+      "Draft": "Taslak",
+      "Pending": "kadar",
+      "In Process": "Süreç İçinde",
+      "Complete": "Tamamlandı",
+      "Canceled": "İptal edildi",
+      "Failed": "Başarısız"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Toplu E-posta Oluştur",
+    "Send Test": "Test Gönder"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "En az bir hedef seçin.",
+    "testSent": "Gönderilmesi beklenen e-posta (lar) testi"
+  },
+  "tooltips": {
+    "optOutEntirely": "Aboneliğini kaldıran alıcıların e-posta adresleri devre dışı bırakılmış olarak işaretlenecek ve artık toplu e-postalar almazlar.",
+    "targetLists": "Mesaj alması gereken hedefler.",
+    "excludingTargetLists": "Mesaj almaması gereken hedefler."
+  },
+  "presetFilters": {
+    "actual": "Gerçek",
+    "complete": "Tamamlandı"
+  }
+}

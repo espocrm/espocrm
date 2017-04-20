@@ -1,29 +1,50 @@
 {
-    "fields": {
-        "name": "İsim",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateStart": "Başlangıç Tarihi",
-        "dateEnd": "Bitiş Tarihi",
-        "duration": "Süre",
-        "description": "açıklama",
-        "users": "Kullanıcılar",
-        "contacts": "Bağlantılar",
-        "leads": "Müşteri Adayları"
+  "fields": {
+    "name": "İsim",
+    "parent": "Üst Seçenek",
+    "status": "Durum",
+    "dateStart": "Başlangıç Tarihi",
+    "dateEnd": "Bitiş Tarihi",
+    "duration": "Süre",
+    "description": "açıklama",
+    "users": "Kullanıcılar",
+    "contacts": "Bağlantılar",
+    "leads": "Müşteri Adayları",
+    "reminders": "Hatırlatıcılar",
+    "account": "Hesap",
+    "acceptanceStatus": "Kabul Durumu"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlanmış",
+      "Held": "Elde Tutulanlar",
+      "Not Held": "Elde Tutulmayanlar"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Planned": "Planlanmış",
-            "Held": "Elde Tutulanlar",
-            "Not Held": "Elde Tutulmayanlar"
-        }
-    },
-    "labels": {
-        "Create Meeting": "Toplantı Oluştur ",
-        "Set Held": "SET HELDXXX",
-        "Set Not Held": "SET NOT HELD XXXX",
-        "Send Invitations": "Davetleri Gönder"
+    "acceptanceStatus": {
+      "None": "Yok",
+      "Accepted": "Kabul edilmiş",
+      "Declined": "Red Edilmiş",
+      "Tentative": "Geçici"
     }
+  },
+  "massActions": {
+    "setHeld": "Düzenlendi",
+    "setNotHeld": "Düzenlenmedi olarak ayarla"
+  },
+  "labels": {
+    "Create Meeting": "Toplantı Oluştur ",
+    "Set Held": "SET HELDXXX",
+    "Set Not Held": "SET NOT HELD XXXX",
+    "Send Invitations": "Davetleri Gönder",
+    "on time": "Zamanında",
+    "before": "Önce"
+  },
+  "presetFilters": {
+    "planned": "Planlandı",
+    "held": "Düzenlenen",
+    "todays": "Bugünün"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Hiçbir şey gönderilmedi"
+  }
 }

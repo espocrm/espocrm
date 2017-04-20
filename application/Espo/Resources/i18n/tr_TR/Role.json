@@ -1,32 +1,51 @@
 {
-    "fields": {
-        "name": "İsim",
-        "roles": "Görevler"
+  "fields": {
+    "name": "İsim",
+    "roles": "Görevler",
+    "assignmentPermission": "Görevlendirme Yetkisi",
+    "userPermission": "Kullanıcı Yetkisi",
+    "portalPermission": "Portal Yetkisi"
+  },
+  "links": {
+    "users": "Kullanıcılar",
+    "teams": "Takımlar"
+  },
+  "tooltips": {
+    "assignmentPermission": "Kayıtları atama ve diğer kullanıcılara mesaj gönderme yeteneğini kısıtlamaya izin verir. \\ N \\ n - kısıtlama yok \\ n \\ nteam - yalnızca takım arkadaşlarına atayabilir ve yayınlayabilir \\ n \\ nno - yalnızca kendine atayabilir ve kendisine gönderebilir",
+    "userPermission": "Kullanıcıların diğer kullanıcıların etkinliklerini, takvimlerini ve akışlarını görüntüleme olanağını kısıtlamasına izin verir. \\ N \\ n - hepsini görüntüleyebilir \\ n \\ nteam - yalnızca takım arkadaşlarının etkinliklerini görüntüleyebilir \\ n \\ n - görüntüleyemezsiniz.",
+    "portalPermission": "Portal bilgilerine bir erişimi, kişileri portal kullanıcılarına dönüştürme yeteneğini ve portal kullanıcılarına mesaj göndermeyi tanımlar."
+  },
+  "labels": {
+    "Access": "Giriş",
+    "Create Role": "Görev Oluştur",
+    "Scope Level": "Kapsam Düzeyi",
+    "Field Level": "Alan Düzeyi"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "ayarlanmadı",
+      "enabled": "etkinleştirildi",
+      "disabled": "devre dışı bırakıldı"
     },
-    "links": {
-        "users": "Kullanıcılar",
-        "teams": "Takımlar"
-    },
-    "labels": {
-        "Access": "Giriş",
-        "Create Role": "Görev Oluştur"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "ayarlanmadı",
-            "enabled": "etkinleştirildi",
-            "disabled": "devre dışı bırakıldı"
-        },
-        "levelList": {
-            "all": "tümü",
-            "team": "takım",
-            "own": "kendi",
-            "no": "NO"
-        }
-    },
-    "actions": {
-        "read": "Oku",
-        "edit": "Düzenle",
-        "delete": "Sil"
+    "levelList": {
+      "all": "tümü",
+      "team": "takım",
+      "account": "Hesap",
+      "contact": "Kişi",
+      "own": "kendi",
+      "no": "NO",
+      "yes": "Evet",
+      "not-set": "Ayarlanmamış"
     }
+  },
+  "actions": {
+    "read": "Oku",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "stream": "Akış",
+    "create": "Oluştur"
+  },
+  "messages": {
+    "changesAfterClearCache": "Erişim kontrolündeki tüm değişiklikler, önbellek silindikten sonra uygulanır."
+  }
 }

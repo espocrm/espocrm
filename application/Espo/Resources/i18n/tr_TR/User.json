@@ -1,32 +1,97 @@
 {
-    "fields": {
-        "name": "İsim",
-        "userName": "Kullanıcı Adı",
-        "title": "Başlık",
-        "isAdmin": "Yönetici",
-        "defaultTeam": "Varsayılan Takım",
-        "emailAddress": "Eposta",
-        "phone": "Telefon",
-        "roles": "Görevler",        
-        "password": "Şifre",
-        "passwordConfirm": "Şifreyi Doğrulayın",
-        "newPassword": "New Password"
-    },
-    "links": {
-        "teams": "Takımlar",
-        "roles": "Görevler"
-    },
-    "labels": {
-        "Create User": "Kullanıcı Oluştur",
-        "Generate": "Generate",
-        "Access": "Giriş",
-        "Preferences": "Seçenekler",
-        "Change Password": "Change Password"
-    },
-    "messages": {
-        "passwordWillBeSent": "Password will be sent to user's email address.",
-        "accountInfoEmailSubject": "Account info",
-        "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChanged": "Password has been changed"
+  "fields": {
+    "name": "İsim",
+    "userName": "Kullanıcı Adı",
+    "title": "Başlık",
+    "isAdmin": "Yönetici",
+    "defaultTeam": "Varsayılan Takım",
+    "emailAddress": "Eposta",
+    "phoneNumber": "Telefon",
+    "roles": "Görevler",
+    "portals": "Portallar",
+    "portalRoles": "Portal Rolleri",
+    "teamRole": "Pozisyon ",
+    "password": "Şifre",
+    "currentPassword": "Şuan ki Şifre",
+    "passwordConfirm": "Şifreyi Doğrulayın",
+    "newPassword": "New Password",
+    "newPasswordConfirm": "Yeni şifreyi onayla",
+    "avatar": "Resim",
+    "isActive": "Aktif",
+    "isPortalUser": "Portal kullanıcısı mı",
+    "contact": "İletişim",
+    "accounts": "Hesaplar",
+    "account": "Hesap (Birincil)",
+    "sendAccessInfo": "Kullanıcıya Erişim Bilgisiyle E-posta Gönder",
+    "portal": "Portal",
+    "gender": "Cinsiyet",
+    "position": "Takım halinde pozisyon"
+  },
+  "links": {
+    "teams": "Takımlar",
+    "roles": "Görevler",
+    "notes": "Notlar",
+    "portals": "Portallar",
+    "portalRoles": "Portal Rolleri",
+    "contact": "Temas",
+    "accounts": "Hesaplar",
+    "account": "Hesap (Birincil)",
+    "tasks": "Görevler"
+  },
+  "labels": {
+    "Create User": "Kullanıcı Oluştur",
+    "Generate": "Generate",
+    "Access": "Giriş",
+    "Preferences": "Seçenekler",
+    "Change Password": "Change Password",
+    "Teams and Access Control": "Takımlar ve Erişim Kontrolü",
+    "Forgot Password?": "Şifremi unuttum?",
+    "Password Change Request": "Şifre Değiştirme İsteği",
+    "Email Address": "E-Posta Adresi ",
+    "External Accounts": "Dış Hesaplar",
+    "Email Accounts": "E-posta hesapları",
+    "Portal": "Internet anakapısı",
+    "Create Portal User": "Portal Kullanıcısı Yarat",
+    "Proceed w/o Contact": "İletişimsiz olarak devam et"
+  },
+  "tooltips": {
+    "defaultTeam": "Bu kullanıcı tarafından oluşturulan tüm kayıtlar varsayılan olarak bu takımla ilişkilendirilir.",
+    "userName": "Harf az, sayı 0-9, nokta, tire, @ işaret ve alt çizgiye izin verilir.",
+    "isAdmin": "Yönetici kullanıcısı her şeye erişebilir.",
+    "isActive": "İşaretlenmezse, kullanıcı giriş yapamaz.",
+    "teams": "Bu kullanıcının bağlı olduğu takımlar. Erişim kontrol seviyesi takımın rollerinden devralınmıştır.",
+    "roles": "Ek erişim rolleri. Kullanıcı herhangi bir ekibe üye değilse veya bu kullanıcı için yalnızca erişim denetimi düzeyini genişletmeniz gerekiyorsa kullanın.",
+    "portalRoles": "Ek portal rolleri. Bu kullanıcı için erişim denetimi düzeyini yalnızca mülkten genişletmek için kullanın.",
+    "portals": "Bu kullanıcının erişebildiği portallar."
+  },
+  "messages": {
+    "passwordWillBeSent": "Password will be sent to user's email address.",
+    "accountInfoEmailSubject": "Account info",
+    "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Parola Talebini Değiştir",
+    "passwordChanged": "Password has been changed",
+    "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
+    "wrongUsernamePasword": "Yanlış kullanıcı adı / şifre",
+    "emailAddressCantBeEmpty": "E-posta Adresi boş olamaz",
+    "userNameEmailAddressNotFound": "Kullanıcı adı / e-posta adresi bulunamadı",
+    "forbidden": "Yasak, lütfen daha sonra deneyin",
+    "uniqueLinkHasBeenSent": "Benzersiz URL belirtilen e-posta adresine gönderilmiştir.",
+    "passwordChangedByRequest": "Şifre değiştirildi.",
+    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Yalnızca Ekibim"
+  },
+  "presetFilters": {
+    "active": "Aktif ",
+    "activePortal": "Portal Aktif"
+  },
+  "options": {
+    "gender": {
+      "": "Ayarlanmadı",
+      "Male": "Erkek",
+      "Female": "Kadın",
+      "Neutral": "Belirtilmedi"
     }
+  }
 }

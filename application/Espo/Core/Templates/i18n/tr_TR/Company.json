@@ -1,5 +1,15 @@
 {
-    "labels": {
-        "Create {entityType}": "{entityTypeTranslated} Oluştur"
-    }
+  "fields": {
+    "billingAddress": "Fatura Adresi",
+    "shippingAddress": "Teslimat Adresi",
+    "website": "Web sitesi "
+  },
+  "links": {
+    "meetings": "Toplantılar",
+    "calls": "(Seslenme)",
+    "tasks": "Görevler"
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} oluştur"
+  }
 }
