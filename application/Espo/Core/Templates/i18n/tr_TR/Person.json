@@ -8,6 +8,6 @@
     "tasks": "Görevler"
   },
   "labels": {
-    "Create {entityType}": "{EntityTypeTranslated} oluştur"
+    "Create {entityType}": "{entityTypeTranslated} oluştur"
   }
 }

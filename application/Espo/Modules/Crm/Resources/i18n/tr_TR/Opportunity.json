@@ -5,7 +5,7 @@
     "stage": "Aşama",
     "amount": "Tutar",
     "probability": "Olasılık, %",
-    "leadSource": "Aday Müşteri Kaynağı",
+    "leadSource": "Müşteri Potansiyeli Kaynağı",
     "doNotCall": "Arama Yapma",
     "closeDate": "Kapanış Tarii",
     "contacts": "Kişiler",
@@ -13,13 +13,13 @@
     "amountConverted": "Tutar (dönüştürülen)",
     "amountWeightedConverted": "Ağırlıklı Tutar",
     "campaign": "Kampanya",
-    "originalLead": "Orijinal Rehber"
+    "originalLead": "Orijinal Müşteri Potansiyeli"
   },
   "links": {
     "contacts": "Bağlantılar",
     "documents": "Belgeler",
     "campaign": "Kampanya",
-    "originalLead": "Orijinal Rehber"
+    "originalLead": "Orijinal Müşteri Potansiyeli"
   },
   "options": {
     "stage": {

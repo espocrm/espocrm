@@ -344,16 +344,16 @@
     "emailReceivedInitial": "Email alındı: {entitiyType} {entity} oluşturuldu",
     "emailSent": "{by} {entityType} {entity} ile ilgili email gönderdi",
     "emailSentThis": "{by} email gönderdi",
-    "postTargetSelf": "{User} kendi gönderdi",
-    "postTargetSelfAndOthers": "{User}, {target} alanına ve kendisine gönderdi",
-    "createAssignedYou": "{User} size atanan {entityType} {entity} oluşturdu",
-    "createAssignedThisSelf": "{User}, bu {entityType} kendinden atanmış oluşturdu",
-    "createAssignedSelf": "{User}, {entityType} {entity} kendinden atanmış oluşturdu",
-    "assignYou": "{User}, size {entityType} {entity} atadı",
-    "assignThisVoid": "{User}, bu {entityType} öğesinin atamasını kaldırdı",
-    "assignVoid": "{User} atanmamış {entityType} {entity}",
-    "assignThisSelf": "{User} kendisine bu {entityType} atadı",
-    "assignSelf": "{User} kendine atanan {entityType} {entity}"
+    "postTargetSelf": "{user} kendi gönderdi",
+    "postTargetSelfAndOthers": "{user}, {target} alanına ve kendisine gönderdi",
+    "createAssignedYou": "{user} size atanan {entityType} {entity} oluşturdu",
+    "createAssignedThisSelf": "{user}, bu {entityType} kendinden atanmış oluşturdu",
+    "createAssignedSelf": "{user}, {entityType} {entity} kendinden atanmış oluşturdu",
+    "assignYou": "{user}, size {entityType} {entity} atadı",
+    "assignThisVoid": "{user}, bu {entityType} öğesinin atamasını kaldırdı",
+    "assignVoid": "{user} atanmamış {entityType} {entity}",
+    "assignThisSelf": "{user} kendisine bu {entityType} atadı",
+    "assignSelf": "{user} kendine atanan {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -673,9 +673,9 @@
     "HazyblueVertical": "Hazyblue w / kenar çubuğu"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{User}, {target} ve kendisine gönderildi"
+    "postTargetSelfAndOthers": "{user}, {target} ve kendisine gönderildi"
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{User}, {target} ve kendisine yayınladı"
+    "postTargetSelfAndOthers": "{user}, {target} ve kendisine yayınladı"
   }
 }

@@ -3,7 +3,7 @@
     "parent": "Ebeveyn",
     "contacts": "Bağlantılar",
     "opportunities": "Fırsatlar",
-    "leads": "Müşteri Adayları",
+    "leads": "Müşteri Potansiyelleri",
     "meetings": "Toplantılar",
     "calls": "Aramalar",
     "tasks": "Görevler",
@@ -18,7 +18,7 @@
   "scopeNames": {
     "Account": "Hesap",
     "Contact": "Bağlantı",
-    "Lead": "Müşteri Adayı",
+    "Lead": "Müşteri Potansiyeli",
     "Target": "Hedef",
     "Opportunity": "Fırsat",
     "Meeting": "Toplantı",
@@ -41,7 +41,7 @@
   "scopeNamesPlural": {
     "Account": "Hesaplar",
     "Contact": "Bağlantılar",
-    "Lead": "Müşteri Adayları",
+    "Lead": "Müşteri Potansiyelleri",
     "Target": "Hedefler",
     "Opportunity": "Fırsatlar",
     "Meeting": "Toplantılar",
@@ -62,7 +62,7 @@
     "CampaignLogRecord": "Kampanya Günlük Kayıtları"
   },
   "dashlets": {
-    "Leads": "Müşteri Adaylarım",
+    "Leads": "Müşteri Potansiyellerim",
     "Opportunities": "Fırsatlarım",
     "Tasks": "Görevleri",
     "Cases": "Dosyalarım",
@@ -70,7 +70,7 @@
     "Calls": "Çağrılarım",
     "Meetings": "Toplantılarım",
     "OpportunitiesByStage": "Aşamaya Göre Fırstalar",
-    "OpportunitiesByLeadSource": "Aday Müşterilere Göre Fırsatlar",
+    "OpportunitiesByLeadSource": "Müşteri Potansiyeli Kaynağına Göre Fırsatlar",
     "SalesByMonth": "Aylık Satışlar",
     "SalesPipeline": "Satış Öngörüleri",
     "Activities": "faaliyetlerim"
