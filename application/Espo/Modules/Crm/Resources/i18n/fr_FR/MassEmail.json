@@ -7,7 +7,7 @@
     "fromAddress": "Adresse de l’émetteur",
     "fromName": "Nom de l'expéditeur",
     "replyToAddress": "Addresse de réponse",
-    "replyToName": "Reply-to Name",
+    "replyToName": "Nom pour répondre",
     "campaign": "Campagne",
     "emailTemplate": "Modèle d'email",
     "inboundEmail": "Compte email",
@@ -39,7 +39,7 @@
   },
   "messages": {
     "selectAtLeastOneTarget": "Sélectionner au moins une cible",
-    "testSent": "Test email(s) supposed to be sent"
+    "testSent": "Le message de test est supposé être envoyé"
   },
   "tooltips": {
     "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
