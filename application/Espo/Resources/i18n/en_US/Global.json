@@ -521,10 +521,10 @@
             "is": "Is",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty",
-            "isOneOf": "Is One Of",
+            "isOneOf": "Any Of",
             "isFromTeams": "Is From Team",
             "isNot": "Is Not",
-            "isNotOneOf": "Is Not One Of",
+            "isNotOneOf": "None Of",
             "anyOf": "Any Of",
             "noneOf": "None Of"
         },
