@@ -32,7 +32,7 @@
   "presetFilters": {
     "sent": "Envoyé",
     "opened": "Ouvert",
-    "optedOut": "Opted Out",
+    "optedOut": "Désinscrit",
     "bounced": "Bounced",
     "clicked": "Cliqué",
     "leadCreated": "Prospect créé"

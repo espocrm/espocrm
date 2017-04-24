@@ -54,12 +54,12 @@
     "Campaign": "Campagnes",
     "TargetList": "Listes de cibles",
     "MassEmail": "Emails groupés",
-    "EmailQueueItem": "Email Queue Items",
+    "EmailQueueItem": "File d'attente",
     "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Base de connaissance",
     "KnowledgeBaseCategory": "Catégories de la base de connaissance",
-    "CampaignLogRecord": "Campaign Log Records"
+    "CampaignLogRecord": "Logs"
   },
   "dashlets": {
     "Leads": "Mes prospects",
