@@ -1,5 +1,8 @@
 {
   "links": {
     "targetLists": "Listes de cibles"
+  },
+  "fields": {
+    "acceptanceStatus": "Acceptance Status"
   }
 }

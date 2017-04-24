@@ -13,7 +13,8 @@
     "contactRole": "Titre",
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles"
+    "targetList": "Liste de cibles",
+    "originalLead": "Original Lead"
   },
   "links": {
     "contacts": "Contacts",
@@ -27,7 +28,8 @@
     "targetLists": "Listes de cible",
     "campaignLogRecords": "Log de campagne",
     "campaign": "Campagne",
-    "portalUsers": "Utilisateurs Portail"
+    "portalUsers": "Utilisateurs Portail",
+    "originalLead": "Original Lead"
   },
   "options": {
     "type": {
@@ -66,7 +68,27 @@
       "Telecommunications": "Télécommunications",
       "Television": "Télévision",
       "Transportation": "Transport",
-      "Venture Capital": "Investissement"
+      "Venture Capital": "Investissement",
+      "Aerospace": "Aerospace",
+      "Architecture": "Architecture",
+      "Construction": "Construction",
+      "Defense": "Defense",
+      "Creative": "Creative",
+      "Culture": "Culture",
+      "Consulting": "Consulting",
+      "Electric Power": "Electric Power",
+      "Hospitality": "Hospitality",
+      "Mass Media": "Mass Media",
+      "Mining": "Mining",
+      "Music": "Music",
+      "Marketing": "Marketing",
+      "Petroleum": "Petroleum",
+      "Retail": "Retail",
+      "Shipping": "Shipping",
+      "Support": "Support",
+      "Testing, Inspection & Certification": "Testing, Inspection & Certification",
+      "Wholesale": "Wholesale",
+      "Water": "Water"
     }
   },
   "labels": {
@@ -75,6 +97,7 @@
   },
   "presetFilters": {
     "customers": "Clients",
-    "partners": "Partenaires"
+    "partners": "Partenaires",
+    "recentlyCreated": "Recently Created"
   }
 }

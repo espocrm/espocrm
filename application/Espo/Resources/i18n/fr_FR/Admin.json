@@ -53,7 +53,9 @@
     "Notifications": "Notifications",
     "Jobs": "Travaux",
     "Reset to Default": "Valeurs par défaut",
-    "Email Filters": "Filtres email"
+    "Email Filters": "Filtres email",
+    "Portal Users": "Portal Users",
+    "Action History": "Action History"
   },
   "layouts": {
     "list": "Liste",
@@ -61,7 +63,12 @@
     "listSmall": "Liste (réduite)",
     "detailSmall": "Détail (réduit)",
     "filters": "Filtres de recherche",
-    "massUpdate": "Mise à jour groupée"
+    "massUpdate": "Mise à jour groupée",
+    "relationships": "Relationship Panels",
+    "sidePanelsDetail": "Side Panels (Detail)",
+    "sidePanelsEdit": "Side Panels (Edit)",
+    "sidePanelsDetailSmall": "Side Panels (Detail Small)",
+    "sidePanelsEditSmall": "Side Panels (Edit Small)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -98,7 +105,9 @@
     "rangeFloat": "Intervalle réel",
     "rangeCurrency": "Plage de devises",
     "wysiwyg": "Wysiwyg",
-    "map": "Carte"
+    "map": "Carte",
+    "currencyConverted": "Currency (Converted)",
+    "number": "Number"
   },
   "fields": {
     "type": "Type",
@@ -129,7 +138,18 @@
     "typeList": "Liste de types",
     "rows": "Nombre de lignes de la zone de texte",
     "lengthOfCut": "Longueur de coupe",
-    "sourceList": "Liste des sources"
+    "sourceList": "Liste des sources",
+    "tooltipText": "Tooltip Text",
+    "prefix": "Prefix",
+    "nextNumber": "Next Number",
+    "padLength": "Pad Length",
+    "disableFormatting": "Disable Formatting",
+    "dynamicLogicVisible": "Conditions making field visible",
+    "dynamicLogicReadOnly": "Conditions making field read-only",
+    "dynamicLogicRequired": "Conditions making field required",
+    "dynamicLogicOptions": "Conditional options",
+    "probabilityMap": "Stage Probabilities (%)",
+    "readOnly": "Read-only"
   },
   "messages": {
     "upgradeVersion": "EspoCRM va être mis à jour vers la version <strong>{version}</strong>. Cette opération peut prendre un moment.",
@@ -171,7 +191,10 @@
     "integrations": "Intégration avec des services tiers.",
     "notifications": "Paramètres des notifications emails et internes au CRM.",
     "inboundEmails": "Group IMAP email accouts. Email import and Email-to-Case.",
-    "emailFilters": "Les messages correspondant au filtre ne seront pas importé"
+    "emailFilters": "Les messages correspondant au filtre ne seront pas importé",
+    "portalUsers": "Users of portal.",
+    "entityManager": "Create custom entities, edit existing ones. Manage fields and relationships.",
+    "actionHistory": "Log of actions done by users."
   },
   "options": {
     "previewSize": {
@@ -180,5 +203,10 @@
       "medium": "Moyen",
       "large": "Large"
     }
+  },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
   }
 }

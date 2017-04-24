@@ -12,7 +12,8 @@
     "isOverdue": "En retard",
     "account": "Compte",
     "dateCompleted": "Date de Clôture",
-    "attachments": "Pièces jointes"
+    "attachments": "Pièces jointes",
+    "reminders": "Reminders"
   },
   "links": {
     "attachments": "Pièces jointes"
@@ -40,6 +41,7 @@
     "actual": "En cours",
     "completed": "Terminés",
     "todays": "Aujourd'hui",
-    "overdue": "En retard"
+    "overdue": "En retard",
+    "deferred": "Deferred"
   }
 }

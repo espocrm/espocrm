@@ -25,7 +25,14 @@
     "defaultReminders": "Notifications par défaut",
     "theme": "Thème",
     "useCustomTabList": "Liste d'onglets personnalisé",
-    "emailReplyToAllByDefault": "Répondre à tous par défaut dans les Emails"
+    "emailReplyToAllByDefault": "Répondre à tous par défaut dans les Emails",
+    "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
+    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
+    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
+    "dashboardLayout": "Dashboard Layout",
+    "emailReplyForceHtml": "Email Reply in HTML",
+    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
+    "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
   },
   "options": {
     "weekStart": {

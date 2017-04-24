@@ -26,11 +26,21 @@
     "isNotRead": "Non lu",
     "isImportant": "Important",
     "isUsers": "Utilisateurs",
-    "inTrash": "Supprimé"
+    "inTrash": "Supprimé",
+    "name": "Name (Subject)",
+    "isReplied": "Is Replied",
+    "isNotReplied": "Is Not Replied",
+    "sentBy": "Sent by (User)",
+    "folder": "Folder",
+    "inboundEmails": "Group Accounts",
+    "emailAccounts": "Personal Accounts",
+    "hasAttachment": "Has Attachment"
   },
   "links": {
     "replied": "Répondu",
-    "replies": "Réponses"
+    "replies": "Réponses",
+    "inboundEmails": "Group Accounts",
+    "emailAccounts": "Personal Accounts"
   },
   "options": {
     "status": {
@@ -65,7 +75,10 @@
     "Mark as Important": "Marquer comme important",
     "Unmark Importance": "Marquer comme non important",
     "Move to Trash": "Mettre à la corbeille",
-    "Retrieve from Trash": "Enlever de la corbeille"
+    "Retrieve from Trash": "Enlever de la corbeille",
+    "Move to Folder": "Move to Folder",
+    "Filters": "Filters",
+    "Folders": "Folders"
   },
   "messages": {
     "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
@@ -78,13 +91,16 @@
     "archived": "Archivé",
     "inbox": "Boite de réception",
     "drafts": "Brouillons",
-    "trash": "Corbeille"
+    "trash": "Corbeille",
+    "important": "Important"
   },
   "massActions": {
     "markAsRead": "Marquer commer lu",
     "markAsNotRead": "Marquer comme non-lu",
     "markAsImportant": "Marquer comme important",
     "markAsNotImportant": "Marquer comme non important",
-    "moveToTrash": "Mettre à la corbeille"
+    "moveToTrash": "Mettre à la corbeille",
+    "moveToFolder": "Move to Folder",
+    "retrieveFromTrash": "Retrieve from Trash"
   }
 }
