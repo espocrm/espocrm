@@ -1,7 +1,7 @@
 {
   "fields": {
     "parent": "Parent",
-    "dateStart": "Date Start",
+    "dateStart": "Date de début",
     "dateEnd": "Date End",
     "duration": "Duration",
     "status": "Status",

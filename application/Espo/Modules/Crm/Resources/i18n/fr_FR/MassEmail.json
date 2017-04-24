@@ -2,25 +2,25 @@
   "fields": {
     "name": "Nom",
     "status": "Statut",
-    "storeSentEmails": "Store Sent Emails",
-    "startAt": "Date Start",
-    "fromAddress": "From Address",
-    "fromName": "From Name",
-    "replyToAddress": "Reply-to Address",
+    "storeSentEmails": "Conserver les emails envoyés",
+    "startAt": "Date de début",
+    "fromAddress": "Adresse de l’émetteur",
+    "fromName": "Nom de l'expéditeur",
+    "replyToAddress": "Addresse de réponse",
     "replyToName": "Reply-to Name",
     "campaign": "Campagne",
-    "emailTemplate": "modèle d'email",
+    "emailTemplate": "Modèle d'email",
     "inboundEmail": "Compte email",
-    "targetLists": "listes de cibles",
-    "excludingTargetLists": "Excluding Target Lists",
-    "optOutEntirely": "Opt-Out Entirely"
+    "targetLists": "Listes de cibles",
+    "excludingTargetLists": "Liste des cibles à exclure",
+    "optOutEntirely": "Désinscription email globale"
   },
   "links": {
-    "targetLists": "listes de cibles",
-    "excludingTargetLists": "Excluding Target Lists",
-    "queueItems": "Queue Items",
+    "targetLists": "Listes de cibles",
+    "excludingTargetLists": "Liste des cibles à exclure",
+    "queueItems": "File d'attente",
     "campaign": "Campagne",
-    "emailTemplate": "modèle d'email",
+    "emailTemplate": "Modèle d'email",
     "inboundEmail": "Compte email"
   },
   "options": {
