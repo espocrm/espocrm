@@ -42,6 +42,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         translatedOptions: null,
 
+        searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
@@ -157,13 +159,35 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
         },
 
+        setupSearch: function () {
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    this.handleSearchType($(e.currentTarget).val());
+                },
+            }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            var $inputContainer = this.$el.find('div.input-container');
+
+            if (~['anyOf', 'noneOf'].indexOf(type)) {
+                $inputContainer.removeClass('hidden');
+            } else {
+                $inputContainer.addClass('hidden');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode == 'search') {
+
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
 
-                var valueList = this.searchParams.value || [];
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
+
+                var valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
                 this.$element.val(valueList.join(':,:'));
 
                 var data = [];
@@ -220,21 +244,102 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         fetchSearch: function () {
+            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+
             var list = this.$element.val().split(':,:');
-            if (list.length == 1 && list[0] == '') {
+            if (list.length === 1 && list[0] == '') {
                 list = [];
             }
 
-            if (list.length == 0) {
-                return false;
-            }
 
-            var data = {
-                type: 'in',
-                value: list
-            };
-            return data;
+
+            if (type === 'anyOf') {
+                if (list.length === 0) {
+                    return {
+                        data: {
+                            type: 'anyOf',
+                            valueList: list
+                        }
+                    };
+                }
+                return {
+                    type: 'in',
+                    value: list,
+                    data: {
+                        type: 'anyOf',
+                        valueList: list
+                    }
+                };
+            } else if (type === 'noneOf') {
+                if (list.length === 0) {
+                    return {
+                        data: {
+                            type: 'noneOf',
+                            valueList: list
+                        }
+                    };
+                }
+                return {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'isNull',
+                            attribute: this.name
+                        },
+                        {
+                            type: 'notIn',
+                            value: list,
+                            attribute: this.name
+                        }
+                    ],
+                    data: {
+                        type: 'noneOf',
+                        valueList: list
+                    }
+                };
+            } else if (type === 'isEmpty') {
+                return {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'isNull',
+                            attribute: this.name
+                        },
+                        {
+                            type: 'equals',
+                            value: '',
+                            attribute: this.name
+                        }
+                    ],
+                    data: {
+                        type: 'isEmpty'
+                    }
+                };
+            } else if (type === 'isNotEmpty') {
+                return {
+                    type: 'and',
+                    value: [
+                        {
+                            type: 'isNotNull',
+                            attribute: this.name
+                        },
+                        {
+                            type: 'notEquals',
+                            value: '',
+                            attribute: this.name
+                        }
+                    ],
+                    data: {
+                        type: 'isNotEmpty'
+                    }
+                };
+            }
         },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || 'anyOf';
+        }
+
     });
 });
 
