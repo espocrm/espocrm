@@ -17,7 +17,8 @@
     "status": {
       "Pending": "En cours",
       "Sent": "Envoyé",
-      "Failed": "Echec"
+      "Failed": "Echec",
+      "Sending": "Sending"
     }
   },
   "presetFilters": {

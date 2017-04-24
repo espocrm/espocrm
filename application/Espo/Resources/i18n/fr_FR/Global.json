@@ -20,7 +20,15 @@
     "EmailFilter": "Filtre email",
     "Portal": "Portail",
     "PortalRole": "Rôle Portail",
-    "Attachment": "Pièce jointe"
+    "Attachment": "Pièce jointe",
+    "EmailFolder": "Email Folder",
+    "PortalUser": "Portal User",
+    "ScheduledJobLogRecord": "Scheduled Job Log Record",
+    "PasswordChangeRequest": "Password Change Request",
+    "ActionHistoryRecord": "Action History Record",
+    "AuthToken": "Auth Token",
+    "UniqueId": "Unique ID",
+    "LastViewed": "Last Viewed"
   },
   "scopeNamesPlural": {
     "Email": "Emails",
@@ -43,7 +51,15 @@
     "EmailFilter": "Filtres Email",
     "Portal": "Portails",
     "PortalRole": "Roles Portail",
-    "Attachment": "Pièces jointes"
+    "Attachment": "Pièces jointes",
+    "EmailFolder": "Email Folders",
+    "PortalUser": "Portal Users",
+    "ScheduledJobLogRecord": "Scheduled Job Log Records",
+    "PasswordChangeRequest": "Password Change Requests",
+    "ActionHistoryRecord": "Action History",
+    "AuthToken": "Auth Tokens",
+    "UniqueId": "Unique IDs",
+    "LastViewed": "Last Viewed"
   },
   "labels": {
     "Misc": "Divers",
@@ -165,7 +181,6 @@
     "Close": "Fermer",
     "Yes": "Oui",
     "No": "Non",
-    "Select All Results": "Sélectionner tous les résultats",
     "Value": "Valeur",
     "Current version": "Version actuelle",
     "List View": "Vue en liste",
@@ -181,7 +196,14 @@
     "Previous Entry": "Précédent",
     "Next Entry": "Suivant",
     "View List": "Vue en liste",
-    "Attach File": "Attacher un fichier"
+    "Attach File": "Attacher un fichier",
+    "Skip": "Skip",
+    "Attribute": "Attribute",
+    "Function": "Function",
+    "Self-Assign": "Self-Assign",
+    "Self-Assigned": "Self-Assigned",
+    "Return to Application": "Return to Application",
+    "Select All Results": "Select All Results"
   },
   "messages": {
     "pleaseWait": "Veuillez patienter...",
@@ -189,11 +211,6 @@
     "confirmLeaveOutMessage": "Êtes-vous sûr de vouloir quitter le formulaire?",
     "notModified": "Vous n'avez pas modifié l'enregistrement",
     "fieldIsRequired": "{field} est requis",
-    "fieldShouldBeEmail": "{field} doit être un email valide",
-    "fieldShouldBeFloat": "{field} doit être un nombre décimal valide",
-    "fieldShouldBeInt": "{field} doit être un nombre entier valide",
-    "fieldShouldBeDate": "{field} doit être une date valide",
-    "fieldShouldBeDatetime": "{field} doit être une date et heure valide",
     "fieldShouldAfter": "{field} doit être après {otherField}",
     "fieldShouldBefore": "{field} doit être avant {otherField}",
     "fieldShouldBeBetween": "{field} doit être compris entre {min} et {max}",
@@ -217,7 +234,28 @@
     "writeYourCommentHere": "Écrivez votre commentaire ici",
     "writeMessageToUser": "Écrire un message à {user}",
     "typeAndPressEnter": "Écrivez puis appuyez sur la touche Entrée",
-    "checkForNewNotifications": "Vérifier les nouvelles notifications"
+    "checkForNewNotifications": "Vérifier les nouvelles notifications",
+    "duplicate": "The record you are creating might already exist",
+    "dropToAttach": "Drop to attach",
+    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[link text](url)",
+    "writeMessageToSelf": "Write a message on your stream",
+    "checkForNewNotes": "Check for stream updates",
+    "internalPost": "Post will be seen only by internal users",
+    "done": "Done",
+    "confirmMassFollow": "Are you sure you want to follow selected records?",
+    "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
+    "massFollowResult": "{count} records now are followed",
+    "massUnfollowResult": "{count} records now are not followed",
+    "massFollowResultSingle": "{count} record now is followed",
+    "massUnfollowResultSingle": "{count} record now is not followed",
+    "massFollowZeroResult": "Nothing got followed",
+    "massUnfollowZeroResult": "Nothing got unfollowed",
+    "fieldShouldBeEmail": "{field} should be a valid email",
+    "fieldShouldBeFloat": "{field} should be a valid float",
+    "fieldShouldBeInt": "{field} should be a valid integer",
+    "fieldShouldBeDate": "{field} should be a valid date",
+    "fieldShouldBeDatetime": "{field} should be a valid date/time",
+    "internalPostTitle": "Post is seen only by internal users"
   },
   "boolFilters": {
     "onlyMy": "Perso",
@@ -231,7 +269,9 @@
     "remove": "Supprimer",
     "merge": "Fusionner",
     "massUpdate": "Mise à jour groupée",
-    "export": "Export"
+    "export": "Export",
+    "follow": "Follow",
+    "unfollow": "Unfollow"
   },
   "fields": {
     "name": "Nom",
@@ -257,7 +297,8 @@
     "phoneNumberOther": "Téléphone (Autre)",
     "order": "Tri",
     "parent": "Parent",
-    "children": "Enfants"
+    "children": "Enfants",
+    "id": "ID"
   },
   "links": {
     "assignedUser": "Utilisateur assigné",
@@ -272,7 +313,8 @@
   },
   "dashlets": {
     "Stream": "Flux",
-    "Emails": "Ma boite de réception"
+    "Emails": "Ma boite de réception",
+    "Records": "Record List"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} vous a été assigné",
@@ -322,7 +364,17 @@
     "emailReceived": "Email reçu relié à {entityType} {entity}",
     "emailReceivedInitial": "Email reçu: {entityType} {entity} créé",
     "emailSent": "{by} a envoyé un email lié à {entityType} {entity}",
-    "emailSentThis": "{by} a envoyé un email"
+    "emailSentThis": "{by} a envoyé un email",
+    "postTargetSelf": "{user} self-posted",
+    "postTargetSelfAndOthers": "{user} posted to {target} and themself",
+    "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
+    "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
+    "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
+    "assignYou": "{user} assigned {entityType} {entity} to you",
+    "assignThisVoid": "{user} unassigned this {entityType}",
+    "assignVoid": "{user} unassigned {entityType} {entity}",
+    "assignThisSelf": "{user} self-assigned this {entityType}",
+    "assignSelf": "{user} self-assigned {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -479,14 +531,21 @@
       "lastSevenDays": "7 derniers jours",
       "lastXDays": "Derniers X jours",
       "nextXDays": "Prochains X jours",
-      "ever": "Toujours"
+      "ever": "Toujours",
+      "isEmpty": "Is Empty",
+      "olderThanXDays": "Older Than X Days",
+      "afterXDays": "After X Days"
     },
     "searchRanges": {
       "is": "Est",
       "isEmpty": "Est vide",
       "isNotEmpty": "Non vide",
-      "isOneOf": "Fait partie de",
-      "isFromTeams": "Provient de l’équipe"
+      "isFromTeams": "Provient de l’équipe",
+      "isOneOf": "Any Of",
+      "anyOf": "Any Of",
+      "isNot": "Is Not",
+      "isNotOneOf": "None Of",
+      "noneOf": "None Of"
     },
     "varcharSearchRanges": {
       "equals": "Égale",
@@ -504,7 +563,9 @@
       "lessThan": "Moins grand que",
       "greaterThanOrEquals": "Plus grand que ou égale",
       "lessThanOrEquals": "Moins grand que ou égale",
-      "between": "Entre"
+      "between": "Entre",
+      "isEmpty": "Is Empty",
+      "isNotEmpty": "Is Not Empty"
     },
     "autorefreshInterval": {
       "0": "Aucun",
@@ -628,6 +689,18 @@
   "themes": {
     "Espo": "Espo",
     "Sakura": "Sakura",
-    "Violet": "Violet"
+    "Violet": "Violet",
+    "EspoRtl": "RTL Espo",
+    "EspoVertical": "Espo w/ sidebar",
+    "SakuraVertical": "Sakura w/ sidebar",
+    "VioletVertical": "Violet w/ sidebar",
+    "Hazyblue": "Hazyblue",
+    "HazyblueVertical": "Hazyblue w/ sidebar"
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} posted to {target} and himself"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} posted to {target} and herself"
   }
 }

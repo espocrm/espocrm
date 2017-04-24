@@ -17,7 +17,8 @@
     "timeZone": "Fuseau",
     "weekStart": "Premier jour de la semaine",
     "defaultCurrency": "Devise par défaut",
-    "customUrl": "Lien personnalisé"
+    "customUrl": "Lien personnalisé",
+    "customId": "Custom ID"
   },
   "links": {
     "users": "Utilisateurs",

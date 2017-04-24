@@ -12,12 +12,15 @@
     "description": "Description",
     "amountConverted": "Montant (converti)",
     "amountWeightedConverted": "Montant pondéré",
-    "campaign": "Campagne"
+    "campaign": "Campagne",
+    "originalLead": "Original Lead",
+    "amountCurrency": "Amount Currency"
   },
   "links": {
     "contacts": "Contacts",
     "documents": "Documents",
-    "campaign": "Campagne"
+    "campaign": "Campagne",
+    "originalLead": "Original Lead"
   },
   "options": {
     "stage": {

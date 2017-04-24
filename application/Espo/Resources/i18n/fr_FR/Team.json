@@ -7,7 +7,8 @@
   "links": {
     "users": "Utilisateurs",
     "notes": "Notes",
-    "roles": "Rôles"
+    "roles": "Rôles",
+    "inboundEmails": "Group Email Accounts"
   },
   "tooltips": {
     "roles": "Permissions. Les utilisateurs de cette équipe obtiennent le niveau d'accès des rôles sélectionnés.",

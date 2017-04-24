@@ -12,7 +12,8 @@
     "contacts": "Contacts",
     "leads": "Prospects",
     "reminders": "Notifications",
-    "account": "Compte"
+    "account": "Compte",
+    "acceptanceStatus": "Acceptance Status"
   },
   "options": {
     "status": {

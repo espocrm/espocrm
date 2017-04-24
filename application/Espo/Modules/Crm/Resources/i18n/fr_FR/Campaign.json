@@ -56,13 +56,17 @@
     "soft": "faible",
     "Unsubscribe": "Se désinscrire",
     "Mass Emails": "Emails groupés",
-    "Email Templates": "Modèles d'email"
+    "Email Templates": "Modèles d'email",
+    "Unsubscribe again": "Unsubscribe again",
+    "Subscribe again": "Subscribe again",
+    "Create Target List": "Create Target List"
   },
   "presetFilters": {
     "active": "Actif"
   },
   "messages": {
-    "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi"
+    "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi",
+    "subscribedAgain": "You are subscribed again."
   },
   "tooltips": {
     "targetLists": "Cibles devant recevoir les messages",

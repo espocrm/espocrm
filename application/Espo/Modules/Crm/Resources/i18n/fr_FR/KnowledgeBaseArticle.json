@@ -2,7 +2,11 @@
   "labels": {
     "Create KnowledgeBaseArticle": "Créer un article",
     "Any": "Any",
-    "Send in Email": "Send in Email"
+    "Send in Email": "Send in Email",
+    "Move Up": "Move Up",
+    "Move Down": "Move Down",
+    "Move to Top": "Move to Top",
+    "Move to Bottom": "Move to Bottom"
   },
   "fields": {
     "name": "Nom",
@@ -34,10 +38,10 @@
       "Article": "Article"
     }
   },
-  "tooltips": {
-    
-  },
   "presetFilters": {
     "published": "Publié"
+  },
+  "tooltips": {
+    "portals": "Article will be available only in specified portals."
   }
 }

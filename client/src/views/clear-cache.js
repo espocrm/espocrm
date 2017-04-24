@@ -25,42 +25,41 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/base', 'controller', function (Dep) {
+
+Espo.define('views/clear-cache', 'view', function (Dep) {
 
     return Dep.extend({
 
-        login: function () {
-            this.entire('views/login', {}, function (login) {
-                login.render();
-                login.on('login', function (data) {
-                    this.trigger('login', data);
-                }.bind(this));
-            }.bind(this));
+        template: 'clear-cache',
+
+        el: '> body',
+
+        events: {
+            'click .action[data-action="clearLocalCache"]': function () {
+                this.clearLocalCache();
+            },
+            'click .action[data-action="rerurnToApplication"]': function () {
+                this.rerurnToApplication();
+            }
         },
 
-        logout: function () {
-            this.trigger('logout');
+        data: function () {
+            return {
+                cacheIsEnabled: !!this.options.cache
+            };
         },
 
-        clearCache: function (options) {
-            this.entire('views/clear-cache', {
-                cache: this.getCache()
-            }, function (view) {
-                view.render();
-            });
+        clearLocalCache: function () {
+            this.options.cache.clear();
+            this.$el.find('.action[data-action="clearLocalCache"]').remove();
+            this.$el.find('.message-container').removeClass('hidden');
+            this.$el.find('.message-container span').html(this.translate('Cache has been cleared'));
+            this.$el.find('.action[data-action="rerurnToApplication"]').removeClass('hidden');
         },
 
-        error404: function () {
-            this.entire('views/base', {template: 'errors/404'}, function (view) {
-                view.render();
-            });
-        },
-
-        error403: function () {
-            this.entire('views/base', {template: 'errors/403'}, function (view) {
-                view.render();
-            });
-        },
+        rerurnToApplication: function () {
+            this.getRouter().navigate('', {trigger: true});
+        }
 
     });
 });

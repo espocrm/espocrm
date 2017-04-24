@@ -23,7 +23,10 @@
     "accounts": "Comptes",
     "account": "Compte (principal)",
     "sendAccessInfo": "Envoyer un email avec ses accès à l'utilisateur",
-    "portal": "Portail"
+    "portal": "Portail",
+    "gender": "Gender",
+    "position": "Position in Team",
+    "ipAddress": "IP Address"
   },
   "links": {
     "teams": "Équipes",
@@ -33,7 +36,8 @@
     "portalRoles": "Rôles Portail",
     "contact": "Contact",
     "accounts": "Comptes",
-    "account": "Compte (principal)"
+    "account": "Compte (principal)",
+    "tasks": "Tasks"
   },
   "labels": {
     "Create User": "Créer un utilisateur",
@@ -48,7 +52,8 @@
     "External Accounts": "Comptes externes",
     "Email Accounts": "Comptes email",
     "Portal": "Portail",
-    "Create Portal User": "Créer un utilisateur de Portail"
+    "Create Portal User": "Créer un utilisateur de Portail",
+    "Proceed w/o Contact": "Proceed w/o Contact"
   },
   "tooltips": {
     "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
@@ -73,7 +78,8 @@
     "forbidden": "Erreur, veuillez réessayer plus tard.",
     "uniqueLinkHasBeenSent": "Un lien unique et temporaire a été envoyé à votre adresse email.",
     "passwordChangedByRequest": "Le mot de passe a été modifié.",
-    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
+    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
+    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
   },
   "boolFilters": {
     "onlyMyTeam": "De mon équipe"
@@ -81,5 +87,13 @@
   "presetFilters": {
     "active": "Actif",
     "activePortal": "Portail actif"
+  },
+  "options": {
+    "gender": {
+      "": "Not Set",
+      "Male": "Male",
+      "Female": "Female",
+      "Neutral": "Neutral"
+    }
   }
 }

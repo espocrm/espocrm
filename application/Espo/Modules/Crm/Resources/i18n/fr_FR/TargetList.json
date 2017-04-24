@@ -5,7 +5,9 @@
     "entryCount": "Compteur d'entrées",
     "campaigns": "Campagnes",
     "endDate": "Date de fin",
-    "targetLists": "Listes de cibles"
+    "targetLists": "Listes de cibles",
+    "includingActionList": "Including",
+    "excludingActionList": "Excluding"
   },
   "links": {
     "accounts": "Comptes",
