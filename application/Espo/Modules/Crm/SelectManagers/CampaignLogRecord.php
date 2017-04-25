@@ -86,6 +86,13 @@ class CampaignLogRecord extends \Espo\Core\SelectManagers\Base
         );
     }
 
+    protected function filterOptedIn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'action' => 'Opted In'
+        );
+    }
+
     protected function filterOptedOut(&$result)
     {
         $result['whereClause'][] = array(
