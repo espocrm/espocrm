@@ -985,6 +985,7 @@ class Base
             switch ($item['type']) {
                 case 'or':
                 case 'and':
+                case 'not':
                     if (is_array($item['value'])) {
                         $arr = array();
                         foreach ($item['value'] as $i) {

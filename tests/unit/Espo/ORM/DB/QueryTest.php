@@ -224,6 +224,59 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectWithSubquery()
+    {
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'post.id=s' => array(
+                    'entityType' => 'Post',
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => array(
+                            'name' => 'test'
+                        )
+                    )
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'post.id!=s' => array(
+                    'entityType' => 'Post',
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => array(
+                            'name' => 'test'
+                        )
+                    )
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'NOT'=> array(
+                    'name' => 'test',
+                    'post.createdById' => '1'
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.created_by_id = '1' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testOrderBy()
     {
         $sql = $this->query->createSelectQuery('Comment', array(

@@ -243,4 +243,34 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2016-10-10', $selectParams['whereClause'][1]['OR'][0]['date=']);
         $this->assertEquals('2016-10-10 10:10:00', $selectParams['whereClause'][1]['OR'][1]['dateTime>']);
     }
+
+    function testBuildSelectParamsNot()
+    {
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager->setEntityType('Test2');
+
+        $params = array(
+            'where' => array(
+                array(
+                    'type' => 'not',
+                    'value' => array(
+                        array(
+                            'type' => 'equals',
+                            'field'=> 'date',
+                            'value' => '2016-10-10'
+                        ),
+                        array(
+                            'type' => 'after',
+                            'field'=> 'dateTime',
+                            'value' => '2016-10-10 10:10:00'
+                        )
+                    )
+                )
+            )
+        );
+
+        $selectParams = $selectManager->buildSelectParams($params);
+
+        $this->assertEquals('2016-10-10', $selectParams['whereClause'][0]['NOT'][0]['date=']);
+    }
 }

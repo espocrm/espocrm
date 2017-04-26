@@ -62,13 +62,15 @@ abstract class Base
     );
 
     protected static $comparisonOperators = array(
+        '!=s' => 'NOT IN',
+        '=s' => 'IN',
         '!=' => '<>',
         '*' => 'LIKE',
         '>=' => '>=',
         '<=' => '<=',
         '>' => '>',
         '<' => '<',
-        '=' => '=',
+        '=' => '='
     );
 
     protected $entityFactory;
@@ -636,11 +638,21 @@ abstract class Base
                 $field = 'AND';
             }
 
+            if ($field === 'NOT') {
+                $field = 'id!=s';
+                $value = array(
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => $value
+                    )
+                );
+            }
 
             if (!in_array($field, self::$sqlOperators)) {
                 $isComplex = false;
 
                 $operator = '=';
+                $operatorOrm = '=';
 
                 $leftPart = null;
 
@@ -648,6 +660,7 @@ abstract class Base
                     foreach (self::$comparisonOperators as $op => $opDb) {
                         if (strpos($field, $op) !== false) {
                             $field = trim(str_replace($op, '', $field));
+                            $operatorOrm = $op;
                             $operator = $opDb;
                             break;
                         }
@@ -745,9 +758,27 @@ abstract class Base
                         }
                     }
                 }
-
                 if (!empty($leftPart)) {
-                    if (!is_array($value)) {
+
+                    if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+                        if (!is_array($value)) {
+                            continue;
+                        }
+                        if (!empty($value['entityType'])) {
+                            $subQueryEntityType = $value['entityType'];
+                        } else {
+                            $subQueryEntityType = $entity->getEntityType();
+                        }
+                        $subQuerySelectParams = array();
+                        if (!empty($value['selectParams'])) {
+                            $subQuerySelectParams = $value['selectParams'];
+                        }
+                        $withDeleted = false;
+                        if (!empty($value['withDeleted'])) {
+                            $withDeleted = true;
+                        }
+                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
+                    } else if (!is_array($value)) {
                         if (!is_null($value)) {
                             $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
                         } else {
@@ -757,7 +788,6 @@ abstract class Base
                                 $whereParts[] = $leftPart . " IS NOT NULL";
                             }
                         }
-
                     } else {
                         $valArr = $value;
                         foreach ($valArr as $k => $v) {
