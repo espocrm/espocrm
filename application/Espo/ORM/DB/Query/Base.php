@@ -652,6 +652,9 @@ abstract class Base
                 if (!empty($params['leftJoins'])) {
                     $value['selectParams']['leftJoins'] = $params['leftJoins'];
                 }
+                if (!empty($params['customJoin'])) {
+                    $value['selectParams']['customJoin'] = $params['customJoin'];
+                }
             }
 
             if (!in_array($field, self::$sqlOperators)) {
