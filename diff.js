@@ -35,7 +35,7 @@ var acceptedVersionName = process.argv[3] || versionFrom;
 
 var path = require('path');
 var fs = require('fs');
-var sys = require('sys')
+var sys = require('util')
 
 var version = (require('./package.json') || {}).version;
 
