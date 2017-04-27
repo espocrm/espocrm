@@ -646,6 +646,12 @@ abstract class Base
                         'whereClause' => $value
                     )
                 );
+                if (!empty($params['joins'])) {
+                    $value['selectParams']['joins'] = $params['joins'];
+                }
+                if (!empty($params['leftJoins'])) {
+                    $value['selectParams']['leftJoins'] = $params['leftJoins'];
+                }
             }
 
             if (!in_array($field, self::$sqlOperators)) {
