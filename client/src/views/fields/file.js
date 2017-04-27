@@ -187,6 +187,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDetailPreview: function (name, type, id) {
+            name = Handlebars.Utils.escapeExpression(name);
             var preview = name;
 
             switch (type) {
@@ -199,6 +200,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getEditPreview: function (name, type, id) {
+            name = Handlebars.Utils.escapeExpression(name);
             var preview = name;
 
             switch (type) {
@@ -226,7 +228,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
                     string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
                 } else {
-                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' + name + '</a>';
+                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
                 }
                 return string;
             }
@@ -332,6 +334,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
+
+            name = Handlebars.Utils.escapeExpression(name);
 
             var self = this;
 
