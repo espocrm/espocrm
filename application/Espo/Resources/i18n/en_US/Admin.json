@@ -156,7 +156,7 @@
         "upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>.",
         "upgradeBackup": "We recommend to make a backup of your EspoCRM files and data before upgrade.",
         "thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
-        "userHasNoEmailAddress": "User has not email address.",
+        "userHasNoEmailAddress": "User has no email address.",
         "selectEntityType": "Select entity type in the left menu.",
         "selectUpgradePackage": "Select upgrade package",
         "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
