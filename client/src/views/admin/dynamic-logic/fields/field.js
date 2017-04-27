@@ -64,6 +64,13 @@ Espo.define('views/admin/dynamic-logic/fields/field', 'views/fields/multi-enum',
 
             this.params.options = this.getFieldList();
             this.setupTranslatedOptions();
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            if (this.$element && this.$element[0] && this.$element[0].selectize) {
+                this.$element[0].selectize.focus();
+            }
         }
 
     });
