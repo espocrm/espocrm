@@ -53,7 +53,9 @@ class Record extends \Espo\Core\Services\Base
         'fileManager',
         'selectManagerFactory',
         'preferences',
-        'fileStorageManager'
+        'fileStorageManager',
+        'layout',
+        'language'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -148,6 +150,16 @@ class Record extends \Espo\Core\Services\Base
     protected function getPreferences()
     {
         return $this->injections['preferences'];
+    }
+
+    protected function getLayout()
+    {
+        return $this->injections['layout'];
+    }
+
+    protected function getLanguage()
+    {
+        return $this->injections['language'];
     }
 
     protected function getMetadata()
@@ -345,6 +357,13 @@ class Record extends \Espo\Core\Services\Base
 
     public function loadAdditionalFieldsForExport(Entity $entity)
     {
+        $this->loadLinkFields($entity);
+        $this->loadLinkMultipleFields($entity);
+        $this->loadParentNameFields($entity);
+        $this->loadIsFollowed($entity);
+        $this->loadEmailAddressField($entity);
+        $this->loadPhoneNumberField($entity);
+        $this->loadNotJoinedLinkFields($entity);
     }
 
     protected function loadEmailAddressField(Entity $entity)
@@ -1263,7 +1282,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function export(array $params)
+    public function prepareExport(array $params)
     {
         $selectManager = $this->getSelectManager($this->getEntityType());
         if (array_key_exists('ids', $params)) {
@@ -1291,10 +1310,8 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
-        $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
-        $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
-        if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $desc, $selectParams);
+        if ($params['orderBy']) {
+            $selectManager->applyOrder($params['orderBy'], $params['order'] == 'DESC', $selectParams);
         }
 
         $collection = $this->getRepository()->find($selectParams);
@@ -1316,27 +1333,34 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $attributeList = null;
-        if (array_key_exists('attributeList', $params)) {
-            $attributeList = [];
-            $entity = $this->getEntityManager()->getEntity($this->getEntityType());
-            foreach ($params['attributeList'] as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
-                if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-        }
+        // not allowing custom lists
+        /* if (array_key_exists('attributeList', $params)) { */
+        /*     $attributeList = []; */
+        /*     $entity = $this->getEntityManager()->getEntity($this->getEntityType()); */
+        /*     foreach ($params['attributeList'] as $attribute) { */
+        /*         if (in_array($attribute, $attributeListToSkip)) { */
+        /*             continue; */
+        /*         } */
+        /*         if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) { */
+        /*             $attributeList[] = $attribute; */
+        /*         } */
+        /*     } */
+        /* } */
 
         foreach ($collection as $entity) {
+            $this->loadAdditionalFieldsForExport($entity);
             if (is_null($attributeList)) {
                 $attributeList = [];
                 foreach ($entity->getAttributes() as $attribute => $defs) {
                     if (in_array($attribute, $attributeListToSkip)) {
                         continue;
                     }
-                    if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
+
+                    if ($attribute == 'accountRole' || $attribute == 'title') {
+                        $attributeList[] = 'title';
+                    } else if ($defs['type'] == 'accountRole') {
+                        $attributeList[] = 'title';
+                    } else if (in_array($defs['type'], ['email', 'phone'])) {
                         $attributeList[] = $attribute;
                     }
                 }
@@ -1345,7 +1369,6 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->loadAdditionalFieldsForExport($entity);
             $row = array();
             foreach ($attributeList as $attribute) {
                 $value = $this->getAttributeFromEntityForExport($entity, $attribute);
@@ -1353,32 +1376,266 @@ class Record extends \Espo\Core\Services\Base
             }
             $arr[] = $row;
         }
+        return $arr;
+    }
 
-        $delimiter = $this->getPreferences()->get('exportDelimiter');
-        if (empty($delimiter)) {
-            $delimiter = $this->getConfig()->get('exportDelimiter', ';');
+    public function export(array $params)
+    {
+        $collectionParams = $this->getMetadata()->get('entityDefs.' . $this->entityType . '.collection', array());
+
+        $params['orderBy']  = $collectionParams['sortBy'];
+        $params['order']  = $collectionParams['asc'] ? 'ASC' : 'DESC';
+
+        $arr = $this->prepareExport($params);
+
+        $layoutFields = json_decode($this->getLayout()->get($this->entityType, 'exportFields'));
+
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $this->entityType . '.fields', array());
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $this->entityType . '.links', array());
+
+        $exportFields = [];
+        // for passed field list as params
+        foreach ($layoutFields as $layoutField)  {
+            $label = $this->getLanguage()->translate($layoutField, 'fields', $this->entityType);
+            $def = [];
+            if (array_key_exists($layoutField, $linkDefs)) {
+                $def = $linkDefs[$layoutField];
+            } else if (array_key_exists($layoutField, $fieldDefs)) {
+                $def = $fieldDefs[$layoutField];
+            }
+            $def['label'] = $label;
+            $exportFields[$layoutField] = $def;
         }
 
-        $fp = fopen('php://temp', 'w');
-        fputcsv($fp, array_keys($arr[0]), $delimiter);
+        return $this->doExcelOutput($arr, $exportFields, $this->entityType);
+    }
+
+    protected function doExcelOutput($arr, $exportFields, $entityType, $reportName = NULL) {
+        $objPHPExcel = new \PHPExcel();
+        $sheet = $objPHPExcel->setActiveSheetIndex(0);
+        $sheet->setTitle($this->getLanguage()->translate($entityType, 'scopeNamesPlural'));
+
+        $exportFields = array_merge([ 'id' => [
+            'label' => 'Id',
+            'type' => 'varchar'
+        ]], $exportFields);
+
+        // Title
+        $titleStyle = array(
+            'alignment' => array(
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
+            ),
+            'font'  => array(
+                'bold'  => true,
+                'size'  => 18
+            )
+        );
+        $dateStyle = array(
+            'alignment' => array(
+                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
+            ),
+            'font'  => array(
+                'size'  => 16
+            )
+        );
+        if ($reportName) {
+            $sheet->setCellValue("B1", $this->getLanguage()->translate($entityType, 'scopeNamesPlural') . " report: '$reportName'");
+        } else {
+            $sheet->setCellValue("B1", $this->getLanguage()->translate($entityType, 'scopeNamesPlural') . " export");
+        }
+        $sheet->setCellValue("C1", 'Exported: '.date("D M j G:i:s Y"));
+        $sheet->getRowDimension('1')->setRowHeight(40);
+        $sheet->getStyle("B1")->applyFromArray($titleStyle);
+        $sheet->getStyle("C1")->applyFromArray($dateStyle);
+
+        \PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
+        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+
+        // Column Headers
+        $col = 'A';
+        $rowNumber = 2;
+        $linkColumns = [];
+        foreach ($exportFields as $name => $defs) {
+            $sheet ->setCellValue($col.$rowNumber, $defs['label']);
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+            if ($defs['type'] == 'phone'
+                || $defs['type'] == 'email'
+                || $defs['type'] == 'url'
+                || $defs['type'] == 'link'
+                || $defs['type'] == 'linkParent'
+                || $defs['type'] == 'belongsTo'
+                || $defs['type'] == 'belongsToParent') {
+                $linkColumns[] = $col;
+            } else if ($name == 'name') {
+                $linkColumns[] = $col;
+            }
+            $col++;
+        }
+        $col = chr(ord($col) - 1);
+        $headerStyle = array(
+            'font'  => array(
+                'bold'  => true,
+                'size'  => 12
+            )
+        );
+        $sheet->getStyle("A$rowNumber:$col$rowNumber")->applyFromArray($headerStyle);
+        $sheet->setAutoFilter("A$rowNumber:$col$rowNumber");
+
+        // Data Section
+        $rowNumber++;
         foreach ($arr as $row) {
-            fputcsv($fp, $row, $delimiter);
-        }
-        rewind($fp);
-        $csv = stream_get_contents($fp);
-        fclose($fp);
+            $col = 'A';
+            foreach ($exportFields as $name => $defs) {
+                $link = null;
 
-        $fileName = "Export_{$this->entityType}.csv";
+                // Values //////////////////
+                if ($defs['type'] == 'link' || $defs['type'] == 'linkParent') {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                } else if ($defs['type'] == 'belongsTo') {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                } else if ($defs['type'] == 'belongsToParent') {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                } else if ($defs['type'] == 'personName') {
+                    if ($entityType == 'Contact') {
+                        $sheet->setCellValue("$col$rowNumber", $row['name']);
+                    } else {
+                        if ($row['name']) {
+                            $sheet->setCellValue("$col$rowNumber", $row['name']);
+                        } else if ($row['firstName']) {
+                            $personName = $row['firstName'];
+                            if ($row['lastName']) {
+                                $personName .= " ".$row['lastName'];
+                            }
+                            $sheet->setCellValue("$col$rowNumber", $personName);
+                        } else if ($row['lastName']) {
+                            $sheet->setCellValue("$col$rowNumber", $row['lastName']);
+                        }
+                    }
+                } else if ($defs['type'] == 'int') {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
+                } else if ($defs['type'] == 'date') {
+                    if (isset($row[$name])) {
+                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
+                    }
+                } else if ($defs['type'] == 'datetime' || $defs['type'] == 'datetimeOptional') {
+                    if (isset($row[$name])) {
+                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
+                    }
+                } else {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name]);
+                }
+
+                // Links ///////////////////
+                if ($name == 'name') {
+                    $link = $this->getConfig()->get('siteUrl')."/#".$entityType."/view/".$row['id'];
+                } else if ($defs['type'] == 'url' && filter_var($row[$name], FILTER_VALIDATE_URL)) {
+                    $link = $row[$name];
+                } else if ($defs['type'] == 'link' || $defs['type'] == 'linkParent') {
+                    $link = $this->getConfig()->get('siteUrl')."/#".$defs['entity']."/view/".$row[$name.'Id'];
+                } else if ($defs['type'] == 'belongsTo') {
+                    $link = $this->getConfig()->get('siteUrl')."/#".$defs['entity']."/view/".$row[$name.'Id'];
+                } else if ($defs['type'] == 'belongsToParent') {
+                    $link = $this->getConfig()->get('siteUrl')."/#".$row[$name.'Type']."/view/".$row[$name.'Id'];
+                } else if ($defs['type'] == 'phone') {
+                    $link = "tel:".$row[$name];
+                } else if ($defs['type'] == 'email') {
+                    $link = "mailto:".$row[$name];
+                }
+
+                if ($link) {
+                    $sheet->getCell("$col$rowNumber")->getHyperlink()->setUrl($link);
+                    $sheet->getCell("$col$rowNumber")->getHyperlink()->setTooltip($link);
+                }
+                $col++;
+            }
+            $rowNumber++;
+        }
+
+        // Set format of columns
+        // EntityId column always text
+        $col = 'A';
+        foreach ($exportFields as $name => $defs) {
+            if ($col == 'A') {
+                $sheet->getStyle("A2:A$rowNumber")
+                    ->getNumberFormat()
+                    ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+            } else {
+                switch($defs['type']) {
+                    case 'currency': {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('£#,##0_-');
+                    } break;
+
+                    case 'int': {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('0');
+                    } break;
+
+                    case 'date': {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('dd/mm/yyyy');
+                    } break;
+
+                    case 'datetime': {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('h:mm dd/mm/yyyy');
+                    } break;
+
+                    case 'datetimeOptional': {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('h:mm dd/mm/yyyy');
+                    } break;
+
+                    default: {
+                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                            ->getNumberFormat()
+                            ->setFormatCode('@');
+                    } break;
+                }
+            }
+            $col++;
+        }
+
+        $linkStyle = [
+            'font'  => [
+                'color' => ['rgb' => '0000FF'],
+                'underline' => 'single'
+            ]
+        ];
+        foreach ($linkColumns as $linkColumn) {
+            $sheet->getStyle($linkColumn.'3:'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
+        }
+
+        // Hide Id Column
+        $sheet->getColumnDimension('A')->setVisible(false);
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $tempOutput = tempnam('/tmp/', 'ESPO');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save($tempOutput);
+
+        $fp = fopen($tempOutput, 'r');
+        $xlsx = stream_get_contents($fp);
+        fclose($fp);
+        unlink($tempOutput);
+
+        $todayDate = date('j_F_Hi');
+        $fileName = "Export_{$entityType}_{$todayDate}.xlsx";
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
-        $attachment->set('type', 'text/csv');
+        $attachment->set('type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
         $this->getEntityManager()->saveEntity($attachment);
 
         if (!empty($attachment->id)) {
-            $this->getInjection('fileStorageManager')->putContents($attachment, $csv);
+            $this->getInjection('fileStorageManager')->putContents($attachment, $xlsx);
             // TODO cron job to remove file
             return $attachment->id;
         }

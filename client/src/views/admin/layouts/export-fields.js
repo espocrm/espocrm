@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/layouts/filters', 'views/admin/layouts/rows', function (Dep) {
+Espo.define('views/admin/layouts/export-fields', 'views/admin/layouts/rows', function (Dep) {
 
     return Dep.extend({
 
@@ -113,7 +113,7 @@ Espo.define('views/admin/layouts/filters', 'views/admin/layouts/rows', function 
             if (this.ignoreList.indexOf(name) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutFiltersDisabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutExportsDisabled');
         }
 
     });

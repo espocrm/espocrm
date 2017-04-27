@@ -63,6 +63,7 @@
         "listSmall": "List (Small)",
         "detailSmall": "Detail (Small)",
         "filters": "Search Filters",
+        "exportFields": "Export Fields",
         "massUpdate": "Mass Update",
         "relationships": "Relationship Panels",
         "sidePanelsDetail": "Side Panels (Detail)",
