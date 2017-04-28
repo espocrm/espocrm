@@ -86,10 +86,14 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                         return;
                     }
                     var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
-                    if (!type) return;
-                    this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
-                        attributeList.push(attribute);
-                    }, this);
+                    if (type) {;
+                        this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
+                            attributeList.push(attribute);
+                        }, this);
+                    }
+                    if (!item.indexOf('_')) {
+                        attributeList.push(item);
+                    }
                 }, this);
                 returnData.attributeList = attributeList;
                 returnData.fieldList = data.fieldList;
