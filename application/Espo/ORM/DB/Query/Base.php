@@ -624,7 +624,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array())
+    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
     {
         $whereParts = array();
 
@@ -639,6 +639,8 @@ abstract class Base
             }
 
             if ($field === 'NOT') {
+                if ($level > 1) break;
+
                 $field = 'id!=s';
                 $value = array(
                     'selectParams' => array(
@@ -816,7 +818,7 @@ abstract class Base
                     }
                 }
             } else {
-                $internalPart = $this->getWhere($entity, $value, $field, $params);
+                $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
                 if ($internalPart) {
                     $whereParts[] = "(" . $internalPart . ")";
                 }
