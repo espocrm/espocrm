@@ -77,9 +77,23 @@ service apache2 restart',
 
     client_max_body_size 50M;
 
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
     location /api/v1/ {
         if (!-e $request_filename){
             rewrite ^/api/v1/(.*)$ /api/v1/index.php last; break;
+        }
+    }
+
+    location /portal/ {
+        try_files $uri $uri/ /portal/index.php?$query_string;
+    }
+
+    location /api/v1/portal-access {
+        if (!-e $request_filename){
+            rewrite ^/api/v1/(.*)$ /api/v1/portal-access/index.php last; break;
         }
     }
 
