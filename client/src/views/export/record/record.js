@@ -67,6 +67,22 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             this.createField('useCustomFieldList', 'views/fields/bool', {
             });
 
+            var setFieldList = this.model.get('fieldList') || [];
+            setFieldList.forEach(function (item) {
+                if (~fieldList.indexOf(item)) return;
+                if (!~item.indexOf('_')) return;
+
+                var arr = item.split('_');
+
+                fieldList.push(item);
+
+                var foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
+                if (!foreignScope) return;
+                translatedOptions[item] = this.getLanguage().translate(arr[0], 'links', this.scope) + '.' + this.getLanguage().translate(arr[1], 'fields', foreignScope);
+
+            }, this);
+
+
             this.createField('fieldList', 'views/fields/multi-enum', {
                 required: true,
                 translatedOptions: translatedOptions,
