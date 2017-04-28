@@ -1266,7 +1266,7 @@ class Record extends \Espo\Core\Services\Base
     public function exportCollection(array $params, $collection)
     {
         $params['collection'] = $collection;
-        $this->export($params);
+        return $this->export($params);
     }
 
     public function export(array $params)
