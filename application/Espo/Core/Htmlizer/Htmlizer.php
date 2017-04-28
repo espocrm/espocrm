@@ -199,7 +199,7 @@ class Htmlizer
             $data[$k] = $value;
         }
 
-        $html = $renderer($data);
+        $html = call_user_func($renderer, $data);
 
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
