@@ -1263,41 +1263,51 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    public function exportCollection(array $params, $collection)
+    {
+        $params['collection'] = $collection;
+        $this->export($params);
+    }
+
     public function export(array $params)
     {
-        $selectManager = $this->getSelectManager($this->getEntityType());
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-            $where = array(
-                array(
-                    'type' => 'in',
-                    'field' => 'id',
-                    'value' => $ids
-                )
-            );
-            $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
-        } else if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-
-            $p = array();
-            $p['where'] = $where;
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-            $selectParams = $this->getSelectParams($p);
+        if (array_key_exists('collection', $params)) {
+            $collection = $params['collection'];
         } else {
-            throw new BadRequest();
-        }
+            $selectManager = $this->getSelectManager($this->getEntityType());
+            if (array_key_exists('ids', $params)) {
+                $ids = $params['ids'];
+                $where = array(
+                    array(
+                        'type' => 'in',
+                        'field' => 'id',
+                        'value' => $ids
+                    )
+                );
+                $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
+            } else if (array_key_exists('where', $params)) {
+                $where = $params['where'];
 
-        $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
-        $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
-        if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $desc, $selectParams);
-        }
+                $p = array();
+                $p['where'] = $where;
+                if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                    foreach ($params['selectData'] as $k => $v) {
+                        $p[$k] = $v;
+                    }
+                }
+                $selectParams = $this->getSelectParams($p);
+            } else {
+                throw new BadRequest();
+            }
 
-        $collection = $this->getRepository()->find($selectParams);
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
+            $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
+            if ($orderBy) {
+                $selectManager->applyOrder($orderBy, $desc, $selectParams);
+            }
+
+            $collection = $this->getRepository()->find($selectParams);
+        }
 
         $arr = array();
 
