@@ -64,7 +64,7 @@
   "dashlets": {
     "Leads": "Müşteri Potansiyellerim",
     "Opportunities": "Fırsatlarım",
-    "Tasks": "Görevleri",
+    "Tasks": "Görevlerim",
     "Cases": "Dosyalarım",
     "Calendar": "Takvim",
     "Calls": "Çağrılarım",
@@ -73,7 +73,7 @@
     "OpportunitiesByLeadSource": "Müşteri Potansiyeli Kaynağına Göre Fırsatlar",
     "SalesByMonth": "Aylık Satışlar",
     "SalesPipeline": "Satış Öngörüleri",
-    "Activities": "faaliyetlerim"
+    "Activities": "Faaliyetlerim"
   },
   "labels": {
     "Create InboundEmail": "Gelen Eposta Oluştur",

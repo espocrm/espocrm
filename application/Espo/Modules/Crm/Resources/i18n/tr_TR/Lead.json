@@ -17,14 +17,16 @@
     "source": "Kaynak",
     "opportunityAmount": "Fırsat Tutarı",
     "opportunityAmountConverted": "Fırsat Tutarı (dönüştürülmüş)",
-    "description": "açıklama",
+    "description": "Açıklama",
     "createdAccount": "Hesap",
     "createdContact": "Bağlantı",
     "createdOpportunity": "Fırsat",
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
-    "industry": "Endüstri"
+    "industry": "Endüstri",
+    "acceptanceStatus": "Kabul Durumu",
+    "opportunityAmountCurrency": "Fırsat Döviz Tutarı"
   },
   "links": {
     "targetLists": "Hedef Listeler",

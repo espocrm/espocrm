@@ -8,7 +8,13 @@
     "isDoubleHeight": "Yükseklik 2x",
     "mode": "Mod",
     "enabledScopeList": "Görüntülenecek Olan",
-    "users": "Kullanıcılar"
+    "users": "Kullanıcılar",
+    "entityType": "Varlık Tipi",
+    "primaryFilter": "Birincil Filtre",
+    "boolFilterList": "Ek Filtreler",
+    "sortBy": "Sırala (alan)",
+    "sortDirection": "Sırala (yön)",
+    "expandedLayout": "Yerleşim"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Gün (ajanda)",
       "timeline": "Zaman Tüneli"
     }
+  },
+  "messages": {
+    "selectEntityType": "Gösterge paneli ayarlarından varlık tipini seçin"
   }
 }

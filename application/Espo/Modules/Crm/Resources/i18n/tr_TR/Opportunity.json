@@ -9,11 +9,12 @@
     "doNotCall": "Arama Yapma",
     "closeDate": "Kapanış Tarii",
     "contacts": "Kişiler",
-    "description": "açıklama",
+    "description": "Açıklama",
     "amountConverted": "Tutar (dönüştürülen)",
     "amountWeightedConverted": "Ağırlıklı Tutar",
     "campaign": "Kampanya",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "amountCurrency": "Döviz Tutarı"
   },
   "links": {
     "contacts": "Bağlantılar",
