@@ -1,0 +1,41 @@
+{
+    "fields"       : {
+        "name"       : "שם",
+        "number"     : "מספר",
+        "status"     : "סטטוס",
+        "account"    : "חשבון",
+        "contact"    : "איש קשר",
+        "priority"   : "עדיפות",
+        "type"       : "סוג",
+        "description": "תיאור"
+    },
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "New"      : "חדש",
+            "Assigned" : "משוייך",
+            "Pending"  : "ממתין",
+            "Closed"   : "סגור",
+            "Rejected" : "נדחה",
+            "Duplicate": "כפול"
+        },
+        "priority": {
+            "Low"   : "נמוך",
+            "Normal": "רגיל",
+            "High"  : "גבוה",
+            "Urgent": "דחוף"
+        },
+        "type"    : {
+            "Question": "שאלה",
+            "Incident": "תקלה",
+            "Problem" : "בעיה"
+        }
+    },
+    "labels"       : {
+        "Create Case": "יצירת מקרה"
+    },
+    "presetFilters": {
+        "open"  : "פתוח",
+        "closed": "סגור"
+    }
+}

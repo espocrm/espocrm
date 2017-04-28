@@ -1,0 +1,31 @@
+{
+    "fields" : {
+        "name"           : "שם",
+        "emailAddress"   : "דוא\"ל",
+        "title"          : "כותרת",
+        "account"        : "חשבון",
+        "accounts"       : "חשבונות",
+        "phoneNumber"    : "טלפון",
+        "accountType"    : "סוג חשבון",
+        "doNotCall"      : "לא להתקשר",
+        "address"        : "כתובת",
+        "opportunityRole": "הרשאת הזדמנות",
+        "accountRole"    : "הרשאה",
+        "description"    : "תיאור"
+    },
+    "links"  : {
+        "opportunities": "הזדמנויות",
+        "cases"        : "מקרים"
+    },
+    "labels" : {
+        "Create Contact": "צור איש קשר"
+    },
+    "options": {
+        "opportunityRole": {
+            ""              : "--ללא--",
+            "Decision Maker": "מקבל החלטות",
+            "Evaluator"     : "בודק",
+            "Influencer"    : "משפיע"
+        }
+    }
+}

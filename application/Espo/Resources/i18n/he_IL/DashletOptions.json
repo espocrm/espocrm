@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "title": "כותרת",
+        "dateFrom": "תאריך תחילה",
+        "dateTo": "תאריך סיום",
+        "autorefreshInterval": "מרווח רענון",
+        "displayRecords": "מספר רשומות להצגה",
+        "isDoubleHeight": "גובה 2x"
+    }
+}

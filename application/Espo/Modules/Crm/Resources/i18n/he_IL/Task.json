@@ -1,0 +1,37 @@
+{
+    "fields"       : {
+        "name"       : "שם",
+        "parent"     : "אב",
+        "status"     : "סטטוס",
+        "dateStart"  : "תאריך תחילה",
+        "dateEnd"    : "תאריך סיום",
+        "priority"   : "עדיפות",
+        "description": "תיאור",
+        "isOverdue"  : "באיחור"
+    },
+    "links"        : {},
+    "options"      : {
+        "status"  : {
+            "Not Started": "לא החל",
+            "Started"    : "החל",
+            "Completed"  : "הסתיים",
+            "Canceled"   : "בוטל"
+        },
+        "priority": {
+            "Low"   : "נמוך",
+            "Normal": "רגיל",
+            "High"  : "גבוה",
+            "Urgent": "חירום"
+        }
+    },
+    "labels"       : {
+        "Create Task": "יצירת משימה",
+        "Complete"   : "סיום"
+    },
+    "presetFilters": {
+        "actual"   : "בפועל",
+        "completed": "הסתיים",
+        "todays"   : "מהיום",
+        "overdue"  : "באיחור"
+    }
+}

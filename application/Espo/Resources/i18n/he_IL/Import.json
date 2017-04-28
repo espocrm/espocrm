@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Revert"          : "ביטול פעולה",
+        "Return to Import": "חזרה לייבוא",
+        "Run Import"      : "הרץ ייבוא",
+        "Back"            : "חזרה",
+        "Field Mapping"   : "מיפוי שדות",
+        "Default Values"  : "ערכי ברירת מחדל",
+        "Add Field"       : "הוספת שדה",
+        "Created"         : "תאריך יצירה",
+        "Updated"         : "תאריך עדכון",
+        "Result"          : "תוצאה",
+        "Show records"    : "הצגת רשומות"
+    }
+}

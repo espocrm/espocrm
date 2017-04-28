@@ -1,0 +1,43 @@
+{
+    "fields"       : {
+        "name"       : "שם",
+        "parent"     : "אב",
+        "status"     : "סטטוס",
+        "dateStart"  : "תאריך תחילה",
+        "dateEnd"    : "תאריך סיום",
+        "direction"  : "כיוון",
+        "duration"   : "משך",
+        "description": "תיאור",
+        "users"      : "משתמשים",
+        "contacts"   : "אנשי קשר",
+        "leads"      : "כיוונים"
+    },
+    "links"        : {},
+    "options"      : {
+        "status"          : {
+            "Planned" : "בתכנון",
+            "Held"    : "בהמתנה",
+            "Not Held": "לא בהמתנה"
+        },
+        "direction"       : {
+            "Outbound": "יוצא",
+            "Inbound" : "נכנס"
+        },
+        "acceptanceStatus": {
+            "None"    : "ללא",
+            "Accepted": "אושר",
+            "Declined": "נדחה"
+        }
+    },
+    "labels"       : {
+        "Create Call"     : "יצירת שיחה",
+        "Set Held"        : "הגדר כבהמתנה",
+        "Set Not Held"    : "הגדר כלא בהמתנה",
+        "Send Invitations": "שלח הזמנות"
+    },
+    "presetFilters": {
+        "planned": "בתכנון",
+        "held"   : "בהמתנה",
+        "todays" : "מהיום"
+    }
+}

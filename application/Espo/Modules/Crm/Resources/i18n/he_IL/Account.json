@@ -1,0 +1,42 @@
+{
+    "fields" : {
+        "name"           : "שם",
+        "emailAddress"   : "דוא\"ל",
+        "website"        : "אתר אינטרנט",
+        "phoneNumber"    : "טלפון",
+        "billingAddress" : "כתובת חיוב",
+        "shippingAddress": "כתובת משלוח",
+        "description"    : "תיאור",
+        "sicCode"        : "Sic Code",
+        "industry"       : "תעשיה",
+        "type"           : "סוג",
+        "contactRole"    : "הרשאה"
+    },
+    "links"  : {
+        "contacts"     : "אנשי קשר",
+        "opportunities": "הזדמנויות",
+        "cases"        : "מקרים",
+        "documents"    : "מסמכים"
+    },
+    "options": {
+        "type"    : {
+            "Customer": "לקוח",
+            "Investor": "משקיע",
+            "Partner" : "שותף",
+            "Reseller": "משווק"
+        },
+        "industry": {
+            "Apparel"          : "ביגוד",
+            "Banking"          : "בנקים",
+            "Computer Software": "מחשוב",
+            "Education"        : "למידה",
+            "Electronics"      : "אלקטרוניקה",
+            "Finance"          : "פיננסי",
+            "Insurance"        : "ביטוח"
+        }
+    },
+    "labels" : {
+        "Create Account": "יצירת חשבון",
+        "Copy Billing"  : "העתקת כתובת חיוב"
+    }
+}

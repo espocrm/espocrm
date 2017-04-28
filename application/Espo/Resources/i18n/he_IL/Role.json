@@ -1,0 +1,35 @@
+{
+    "fields"  : {
+        "name" : "שם",
+        "roles": "הרשאות"
+    },
+    "links"   : {
+        "users": "משתמשים",
+        "teams": "צוותים"
+    },
+    "labels"  : {
+        "Access"     : "גישה",
+        "Create Role": "יצירת הרשאה"
+    },
+    "options" : {
+        "accessList": {
+            "not-set" : "לא מוגדר",
+            "enabled" : "פעיל",
+            "disabled": "מושבת"
+        },
+        "levelList" : {
+            "all" : "הכל",
+            "team": "צוות",
+            "own" : "אישי",
+            "no"  : "לא"
+        }
+    },
+    "actions" : {
+        "read"  : "קריאה",
+        "edit"  : "עריכה",
+        "delete": "מחיקה"
+    },
+    "messages": {
+        "changesAfterClearCache": "כל השינויים במערכת ההרשאות יחולו לאחר ניקוי מטמון."
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "name": "שם",
+        "status": "סטטוס",
+        "isHtml": "הינו HTML",
+        "body": "תוכן",
+        "subject": "נושא",
+        "attachments": "קבצים מצורפים",
+        "insertField": ""
+    },
+    "links": {
+    },
+    "labels": {
+        "Create EmailTemplate": "צור תבנית חדשה"
+    }
+}

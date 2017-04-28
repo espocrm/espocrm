@@ -1,0 +1,49 @@
+{
+    "labels"       : {
+        "Converted To": "המרה אל",
+        "Create Lead" : "יצירת כיוון",
+        "Convert"     : "המרה"
+    },
+    "fields"       : {
+        "name"                      : "שם",
+        "emailAddress"              : "דוא\"ל",
+        "title"                     : "כותרת",
+        "website"                   : "אתר אינטרנט",
+        "phoneNumber"               : "טלפון",
+        "accountName"               : "שם חשבון",
+        "doNotCall"                 : "לא להתקשר",
+        "address"                   : "כתובת",
+        "status"                    : "סטטוס",
+        "source"                    : "מקור",
+        "opportunityAmount"         : "כמות הצעה",
+        "opportunityAmountConverted": "כמות הצעה (מומר)",
+        "description"               : "תיאור",
+        "createdAccount"            : "חשבון",
+        "createdContact"            : "איש קשר",
+        "createdOpportunity"        : "הזדמנות"
+    },
+    "links"        : {},
+    "options"      : {
+        "status": {
+            "New"       : "חדש",
+            "Assigned"  : "משוייך",
+            "In Process": "בתהליך",
+            "Converted" : "הומר",
+            "Recycled"  : "ממוחזר",
+            "Dead"      : "מת"
+        },
+        "source": {
+            "Call"             : "שיחה",
+            "Email"            : "מייל",
+            "Existing Customer": "לקוח קיים",
+            "Partner"          : "שותף",
+            "Public Relations" : "קשרים ציבוריים",
+            "Web Site"         : "אתר אינטרנט",
+            "Campaign"         : "קמפיין",
+            "Other"            : "אחר"
+        }
+    },
+    "presetFilters": {
+        "active": "פעיל"
+    }
+}

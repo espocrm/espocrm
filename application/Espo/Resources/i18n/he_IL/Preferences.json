@@ -1,0 +1,36 @@
+{
+    "fields" : {
+        "dateFormat"       : "פורמט תאריך",
+        "timeFormat"       : "פורמט שעה",
+        "timeZone"         : "אזור זמן",
+        "weekStart"        : "יום ראשון בשבוע",
+        "thousandSeparator": "מפריד אלפים",
+        "decimalMark"      : "סימן דצימלי",
+        "defaultCurrency"  : "מטבע ברירת מחדל",
+        "currencyList"     : "רשימת מטבעות",
+        "language"         : "שפה",
+
+        "smtpServer"      : "שרת",
+        "smtpPort"        : "יציאה",
+        "smtpAuth"        : "אימות",
+        "smtpSecurity"    : "אבטחה",
+        "smtpUsername"    : "שם משתמש",
+        "emailAddress"    : "דוא\"ל",
+        "smtpPassword"    : "סיסמא",
+        "smtpEmailAddress": "כתובת דוא\"ל",
+
+        "exportDelimiter": "מפריד ייצוא",
+
+        "receiveAssignmentEmailNotifications": "קבל התראות בדוא\"ל על שיוכים"
+    },
+    "links"  : {},
+    "options": {
+        "weekStart": {
+            "0": "ראשון",
+            "1": "שנני"
+        }
+    },
+    "labels" : {
+        "Notifications": "התראות"
+    }
+}
