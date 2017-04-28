@@ -92,6 +92,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                     }, this);
                 }, this);
                 returnData.attributeList = attributeList;
+                returnData.fieldList = data.fieldList;
             }
 
             this.trigger('proceed', returnData);

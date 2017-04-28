@@ -361,6 +361,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.listenToOnce(view, 'proceed', function (dialogData) {
                     if (dialogData.useCustomFieldList) {
                         data.attributeList = dialogData.attributeList;
+                        data.fieldList = dialogData.fieldList;
                     }
                     this.ajaxPostRequest(url, data).then(function (data) {
                         if ('id' in data) {
