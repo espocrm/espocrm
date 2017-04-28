@@ -91,7 +91,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                             attributeList.push(attribute);
                         }, this);
                     }
-                    if (!item.indexOf('_')) {
+                    if (~item.indexOf('_')) {
                         attributeList.push(item);
                     }
                 }, this);
