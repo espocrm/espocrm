@@ -1364,6 +1364,63 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2017-01-01 19:30:00', $actual);
     }
 
+    function testArrayIncludes()
+    {
+        $item = json_decode('
+            {
+                "type": "array\\\\includes",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": ["Test", "Hello"]
+                    },
+                    {
+                        "type": "value",
+                        "value": "Test"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertTrue($actual);
+
+        $item = json_decode('
+            {
+                "type": "array\\\\includes",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": false
+                    },
+                    {
+                        "type": "value",
+                        "value": ""
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
+
+        $item = json_decode('
+            {
+                "type": "array\\\\includes",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": ["Test", "Hello"]
+                    },
+                    {
+                        "type": "value",
+                        "value": "Yok"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
+    }
+
     function testEnvUserAttribute()
     {
         $item = json_decode('
