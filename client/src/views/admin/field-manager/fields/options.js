@@ -49,7 +49,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             var html = '' +
             '<div class="list-group-item link-with-role form-inline" data-value="' + valueSanitized + '">' +
                 '<div class="pull-left" style="width: 92%; display: inline-block;">' +
-                    '<input name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm pull-right" value="'+valueSanitized+'">' +
+                    '<input name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
                     '<div>' + valueSanitized + '</div>' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
