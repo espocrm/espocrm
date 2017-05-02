@@ -59,7 +59,11 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             if (this.options.fieldList) {
                 this.model.set('fieldList', this.options.fieldList);
-                this.model.set('useCustomFieldList', true);
+                this.model.set('exportAllFields', false);
+                this.model.set('format', 'csv');
+            } else {
+                this.model.set('exportAllFields', true);
+                this.model.set('format', 'csv');
             }
 
             this.createView('record', 'views/export/record/record', {
@@ -75,10 +79,11 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             if (this.getView('record').validate()) return;
 
             var returnData = {
-                useCustomFieldList: data.useCustomFieldList
+                exportAllFields: data.exportAllFields,
+                format: data.format
             };
 
-            if (data.useCustomFieldList) {
+            if (!data.exportAllFields) {
                 var attributeList = [];
                 data.fieldList.forEach(function (item) {
                     if (item === 'id') {

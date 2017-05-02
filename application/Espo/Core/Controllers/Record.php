@@ -258,6 +258,14 @@ class Record extends Base
             $params['attributeList'] = $data['attributeList'];
         }
 
+        if (isset($data['fieldList'])) {
+            $params['fieldList'] = $data['fieldList'];
+        }
+
+        if (isset($data['format'])) {
+            $params['format'] = $data['format'];
+        }
+
         return array(
             'id' => $this->getRecordService()->export($params)
         );

@@ -64,7 +64,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 translatedOptions[item] = this.getLanguage().translate(item, 'fields', this.scope);
             }, this);
 
-            this.createField('useCustomFieldList', 'views/fields/bool', {
+            this.createField('exportAllFields', 'views/fields/bool', {
             });
 
             var setFieldList = this.model.get('fieldList') || [];
@@ -79,7 +79,6 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 var foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
                 if (!foreignScope) return;
                 translatedOptions[item] = this.getLanguage().translate(arr[0], 'links', this.scope) + '.' + this.getLanguage().translate(arr[1], 'fields', foreignScope);
-
             }, this);
 
 
@@ -89,17 +88,24 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 options: fieldList
             });
 
-            this.controlVisibility();
-            this.listenTo(this.model, 'change:useCustomFieldList', function () {
-                this.controlVisibility();
+            this.createField('format', 'views/fields/enum', {
+                options: this.getMetadata().get('app.export.formatList')
+            });
+
+            this.controlAllFields();
+            this.listenTo(this.model, 'change:exportAllFields', function () {
+                this.controlAllFields();
             }, this);
         },
 
-        controlVisibility: function () {
-            if (this.model.get('useCustomFieldList')) {
+        controlAllFields: function () {
+            if (!this.model.get('exportAllFields')) {
                 this.showField('fieldList');
+                //this.setFieldOptionList('format', this.getMetadata().get('app.export.formatList'));
             } else {
                 this.hideField('fieldList');
+                //this.model.set('format', 'csv');
+                //this.setFieldOptionList('format', ['csv']);
             }
         }
 

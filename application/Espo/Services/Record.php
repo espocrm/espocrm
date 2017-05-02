@@ -53,7 +53,8 @@ class Record extends \Espo\Core\Services\Base
         'fileManager',
         'selectManagerFactory',
         'preferences',
-        'fileStorageManager'
+        'fileStorageManager',
+        'injectableFactory'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -1271,6 +1272,16 @@ class Record extends \Espo\Core\Services\Base
 
     public function export(array $params)
     {
+        if (array_key_exists('format', $params)) {
+            $format = $params['format'];
+        } else {
+            $format = 'csv';
+        }
+
+        if (!in_array($format, $this->getMetadata()->get(['app', 'export', 'formatList']))) {
+            throw new Error('Not supported export format.');
+        }
+
         if (array_key_exists('collection', $params)) {
             $collection = $params['collection'];
         } else {
@@ -1364,31 +1375,46 @@ class Record extends \Espo\Core\Services\Base
             $arr[] = $row;
         }
 
-        $delimiter = $this->getPreferences()->get('exportDelimiter');
-        if (empty($delimiter)) {
-            $delimiter = $this->getConfig()->get('exportDelimiter', ';');
+        if (is_null($attributeList)) {
+            $attributeList = [];
         }
 
-        $fp = fopen('php://temp', 'w');
-        fputcsv($fp, array_keys($arr[0]), $delimiter);
-        foreach ($arr as $row) {
-            fputcsv($fp, $row, $delimiter);
+        if (!array_key_exists('fieldList', $params)) {
+            $fieldList = array_keys($fieldList);
+            array_unshift($fieldList, 'id');
+        } else {
+            $fieldList = $params['fieldList'];
         }
-        rewind($fp);
-        $csv = stream_get_contents($fp);
-        fclose($fp);
 
-        $fileName = "Export_{$this->entityType}.csv";
+        $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
+        $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
+        $fileName = "Export_{$this->entityType}." . $fileExtension;
+
+        $className = $this->getMetadata()->get(['app', 'export', 'exportFormatClassNameMap', $format]);
+        if (empty($className)) {
+            throw new Error();
+        }
+        $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
+        $exportParams = array(
+            'attributeList' => $attributeList,
+            'fileName ' => $fileName
+        );
+
+        $exportParams['fieldList'] = $fieldList;
+        if (array_key_exists('exportName', $params)) {
+            $exportParams['exportName'] = $params['exportName'];
+        }
+        $contents = $exportObj->process($this->entityType, $exportParams, $arr);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
-        $attachment->set('type', 'text/csv');
+        $attachment->set('type', $mimeType);
 
         $this->getEntityManager()->saveEntity($attachment);
 
         if (!empty($attachment->id)) {
-            $this->getInjection('fileStorageManager')->putContents($attachment, $csv);
+            $this->getInjection('fileStorageManager')->putContents($attachment, $contents);
             // TODO cron job to remove file
             return $attachment->id;
         }
