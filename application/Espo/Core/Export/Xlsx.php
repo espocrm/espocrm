@@ -94,13 +94,18 @@ class Xlsx extends \Espo\Core\Injectable
         $sheet->getStyle('B1')->applyFromArray($titleStyle);
         $sheet->getStyle('C1')->applyFromArray($dateStyle);
 
-        //\PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/msttcorefonts/');
-        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-
         $azRange = range('A', 'Z');
+        $azRangeCopied = $azRange;
+        foreach ($azRangeCopied as $char1) {
+            foreach ($azRangeCopied as $char2) {
+                $azRange[] = $char1 . $char2;
+            }
+        }
 
         $rowNumber = 2;
-        $linkColumns = [];
+        $linkColList = [];
+
+        $lastIndex = 0;
 
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
@@ -122,14 +127,18 @@ class Xlsx extends \Espo\Core\Injectable
                 || $defs['type'] == 'linkParent'
                 || $defs['type'] == 'belongsTo'
                 || $defs['type'] == 'belongsToParent') {
-                $linkColumns[] = $col;
+                $linkColList[] = $col;
             } else if ($name == 'name') {
                 if (in_array('id', $fieldList)) {
-                    $linkColumns[] = $col;
+                    $linkColList[] = $col;
                 }
             }
+            $lastIndex = $i;
         }
-        $col = chr(ord($col) - 1);
+        $i = chr(ord($lastIndex) - 1);
+
+        $col = $azRange[$i];
+
         $headerStyle = array(
             'font'  => array(
                 'bold'  => true,
@@ -151,12 +160,14 @@ class Xlsx extends \Espo\Core\Injectable
                     $defs['type'] = 'base';
                 }
                 $link = null;
-                if ($defs['type'] == 'link' || $defs['type'] == 'linkParent') {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
-                } else if ($defs['type'] == 'belongsTo') {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
-                } else if ($defs['type'] == 'belongsToParent') {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                if ($defs['type'] == 'link') {
+                    if (array_key_exists($name.'Name', $row)) {
+                        $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                    }
+                } else if ($defs['type'] == 'linkParent') {
+                    if (array_key_exists($name.'Name', $row)) {
+                        $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                    }
                 } else if ($defs['type'] == 'int') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
                 } else if ($defs['type'] == 'personName') {
@@ -285,7 +296,7 @@ class Xlsx extends \Espo\Core\Injectable
                 'underline' => 'single'
             ]
         ];
-        foreach ($linkColumns as $linkColumn) {
+        foreach ($linkColList as $linkColumn) {
             $sheet->getStyle($linkColumn.'3:'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
         }
 
@@ -297,6 +308,5 @@ class Xlsx extends \Espo\Core\Injectable
         unlink($tempOutput);
 
         return $xlsx;
-
     }
 }

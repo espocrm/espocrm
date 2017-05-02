@@ -1380,11 +1380,13 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!array_key_exists('fieldList', $params)) {
-            $fieldList = array_keys($fieldList);
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
+            $fieldList = array_keys($fieldDefs);
             array_unshift($fieldList, 'id');
         } else {
             $fieldList = $params['fieldList'];
         }
+
 
         $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);

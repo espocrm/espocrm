@@ -101,11 +101,8 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
         controlAllFields: function () {
             if (!this.model.get('exportAllFields')) {
                 this.showField('fieldList');
-                //this.setFieldOptionList('format', this.getMetadata().get('app.export.formatList'));
             } else {
                 this.hideField('fieldList');
-                //this.model.set('format', 'csv');
-                //this.setFieldOptionList('format', ['csv']);
             }
         }
 
