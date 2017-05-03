@@ -1,5 +1,5 @@
 {{#if value}}
-    {{value}} {{currencyValue}}
+    {{value}}
 {{else}}
     {{translate 'None'}}
 {{/if}}
