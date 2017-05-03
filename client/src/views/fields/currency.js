@@ -72,7 +72,7 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             if (this.mode == 'detail' || this.mode == 'list') {
                 var prop = 'detailTemplate' + this.getCurrencyFormat().toString();
                 if (this.options.hideCurrency) {
-                    prop = detailTemplateNoCurrency;
+                    prop = 'detailTemplateNoCurrency';
                 }
 
                 if (prop in this) {
