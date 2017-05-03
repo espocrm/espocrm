@@ -388,6 +388,16 @@
             "readOnly": true,
             "view": "views/settings/fields/address-preview"
         },
+        "currencyFormat": {
+            "type": "enumInt",
+            "options": [1, 2]
+        },
+        "currencyDecimalPlaces": {
+            "type": "int",
+            "tooltip": true,
+            "min": 0,
+            "max": 20
+        },
         "notificationSoundsDisabled": {
             "type": "bool"
         },

@@ -12,10 +12,12 @@
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [false, {"name": "thousandSeparator"}],
-            [{"name": "language"}, {"name": "decimalMark"}],
+            [{"name": "language"}, false],
+            [{"name": "currencyFormat"}, {"name": "thousandSeparator"}],
+            [{"name": "currencyDecimalPlaces"}, {"name": "decimalMark"}],
             [{"name": "addressFormat"}, false],
             [{"name": "addressPreview"}, false]
+
         ]
     },
     {
