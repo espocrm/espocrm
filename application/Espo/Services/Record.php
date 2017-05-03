@@ -1247,6 +1247,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function checkAttributeIsAllowedForExport($entity, $attribute)
     {
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+
         if (in_array($attribute, $this->internalAttributeList)) {
             return false;
         }
@@ -1281,6 +1283,12 @@ class Record extends \Espo\Core\Services\Base
         if (!in_array($format, $this->getMetadata()->get(['app', 'export', 'formatList']))) {
             throw new Error('Not supported export format.');
         }
+
+        $className = $this->getMetadata()->get(['app', 'export', 'exportFormatClassNameMap', $format]);
+        if (empty($className)) {
+            throw new Error();
+        }
+        $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
 
         if (array_key_exists('collection', $params)) {
             $collection = $params['collection'];
@@ -1339,34 +1347,54 @@ class Record extends \Espo\Core\Services\Base
         $attributeList = null;
         if (array_key_exists('attributeList', $params)) {
             $attributeList = [];
-            $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+            $seed = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($params['attributeList'] as $attribute) {
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
-                if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
+                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
         }
 
-        foreach ($collection as $entity) {
-            if (is_null($attributeList)) {
-                $attributeList = [];
-                foreach ($entity->getAttributes() as $attribute => $defs) {
-                    if (in_array($attribute, $attributeListToSkip)) {
-                        continue;
-                    }
-                    if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
-                        $attributeList[] = $attribute;
-                    }
+        if (!array_key_exists('fieldList', $params)) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
+            $fieldList = array_keys($fieldDefs);
+            array_unshift($fieldList, 'id');
+        } else {
+            $fieldList = $params['fieldList'];
+        }
+
+        if (is_null($attributeList)) {
+            $attributeList = [];
+            $seed = $this->getEntityManager()->getEntity($this->entityType);
+            foreach ($seed->getAttributes() as $attribute => $defs) {
+                if (in_array($attribute, $attributeListToSkip)) {
+                    continue;
                 }
-                foreach ($this->exportAdditionalAttributeList as $attribute) {
+                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
+            foreach ($this->exportAdditionalAttributeList as $attribute) {
+                $attributeList[] = $attribute;
+            }
+        }
+
+        if (method_exists($exportObj, 'addAdditionalAttributes')) {
+            $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
+        }
+
+        foreach ($collection as $entity) {
+            if (is_null($attributeList)) {
+
+            }
 
             $this->loadAdditionalFieldsForExport($entity);
+            if (method_exists($exportObj, 'loadAdditionalFields')) {
+                $exportObj->loadAdditionalFields($entity, $fieldList);
+            }
             $row = array();
             foreach ($attributeList as $attribute) {
                 $value = $this->getAttributeFromEntityForExport($entity, $attribute);
@@ -1379,24 +1407,12 @@ class Record extends \Espo\Core\Services\Base
             $attributeList = [];
         }
 
-        if (!array_key_exists('fieldList', $params)) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
-            $fieldList = array_keys($fieldDefs);
-            array_unshift($fieldList, 'id');
-        } else {
-            $fieldList = $params['fieldList'];
-        }
-
 
         $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
         $fileName = "Export_{$this->entityType}." . $fileExtension;
 
-        $className = $this->getMetadata()->get(['app', 'export', 'exportFormatClassNameMap', $format]);
-        if (empty($className)) {
-            throw new Error();
-        }
-        $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
+
         $exportParams = array(
             'attributeList' => $attributeList,
             'fileName ' => $fileName

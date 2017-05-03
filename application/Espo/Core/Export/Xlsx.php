@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Export;
 
+use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\Error;
 
 class Xlsx extends \Espo\Core\Injectable
@@ -36,7 +37,8 @@ class Xlsx extends \Espo\Core\Injectable
     protected $dependencyList = [
         'language',
         'metadata',
-        'config'
+        'config',
+        'dateTime'
     ];
 
     protected function getConfig()
@@ -47,6 +49,43 @@ class Xlsx extends \Espo\Core\Injectable
     protected function getMetadata()
     {
         return $this->getInjection('metadata');
+    }
+
+    public function loadAdditionalFields(Entity $entity, $fieldList)
+    {
+        foreach ($entity->getRelationList() as $link) {
+            if ($entity->getRelationType($link) === 'belongsToParent') {
+                if (in_array($link, $fieldList)) {
+                    $parent = $entity->get($link);
+                    if ($parent instanceof Entity) {
+                        $entity->set($link . 'Name', $parent->get('name'));
+                    }
+                }
+            }
+        }
+    }
+
+    public function addAdditionalAttributes($entityType, &$attributeList, $fieldList)
+    {
+        $parentList = [];
+
+        if (!in_array('id', $attributeList)) {
+            $attributeList[] = 'id';
+        }
+
+        $linkDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'links']);
+        if (is_array($linkDefs)) {
+            foreach ($linkDefs as $link => $defs) {
+                if ($defs['type'] === 'belongsToParent') {
+                    $parentList[] = $link;
+                }
+            }
+        }
+        foreach ($parentList as $item) {
+            if (in_array($item, $fieldList) && !in_array($item . 'Name', $attributeList)) {
+                $attributeList[] = $item . 'Name';
+            }
+        }
     }
 
     public function process($entityType, $params, $dataList)
@@ -69,40 +108,41 @@ class Xlsx extends \Espo\Core\Injectable
         $fieldList = $params['fieldList'];
 
         $titleStyle = array(
-            'alignment' => array(
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
-            ),
             'font' => array(
-                'bold' => true,
-                 'size' => 18
+               'bold' => true,
+               'size' => 12
             )
         );
         $dateStyle = array(
-            'alignment' => array(
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
-            ),
             'font'  => array(
-               'size' => 16
+               'size' => 12
             )
         );
 
-        $sheet->setCellValue('B1', $exportName);
+        $sheet->setCellValue('A1', $exportName);
 
-        $sheet->setCellValue('C1', date('D M j G:i:s Y'));
+        $sheet->setCellValue('B1', \PHPExcel_Shared_Date::PHPToExcel(strtotime(date('Y-m-d H:i:s'))));
 
-        $sheet->getRowDimension('1')->setRowHeight(40);
-        $sheet->getStyle('B1')->applyFromArray($titleStyle);
-        $sheet->getStyle('C1')->applyFromArray($dateStyle);
+
+        $sheet->getStyle('A1')->applyFromArray($titleStyle);
+        $sheet->getStyle('B1')->applyFromArray($dateStyle);
+
+        $sheet->getStyle('B1')->getNumberFormat()
+                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
 
         $azRange = range('A', 'Z');
         $azRangeCopied = $azRange;
-        foreach ($azRangeCopied as $char1) {
-            foreach ($azRangeCopied as $char2) {
+        foreach ($azRangeCopied as $i => $char1) {
+            foreach ($azRangeCopied as $j => $char2) {
                 $azRange[] = $char1 . $char2;
+                if ($i * count($azRange) + $j === count($fieldList)) {
+                    break 2;
+                }
             }
         }
 
-        $rowNumber = 2;
+        $rowNumber = 3;
+
         $linkColList = [];
 
         $lastIndex = 0;
@@ -120,18 +160,16 @@ class Xlsx extends \Espo\Core\Injectable
 
             $sheet->setCellValue($col . $rowNumber, $label);
             $sheet->getColumnDimension($col)->setAutoSize(true);
-            if ($defs['type'] == 'phone'
+            if (
+                $defs['type'] == 'phone'
                 || $defs['type'] == 'email'
                 || $defs['type'] == 'url'
                 || $defs['type'] == 'link'
                 || $defs['type'] == 'linkParent'
-                || $defs['type'] == 'belongsTo'
-                || $defs['type'] == 'belongsToParent') {
+            ) {
                 $linkColList[] = $col;
             } else if ($name == 'name') {
-                if (in_array('id', $fieldList)) {
-                    $linkColList[] = $col;
-                }
+                $linkColList[] = $col;
             }
             $lastIndex = $i;
         }
@@ -170,6 +208,16 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                 } else if ($defs['type'] == 'int') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
+                } else if ($defs['type'] == 'currency') {
+                    if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
+                        $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
+                        $currency = $row[$name . 'Currency'];
+                        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
+
+                        $sheet->getStyle("$col$rowNumber")
+                            ->getNumberFormat()
+                            ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
+                    }
                 } else if ($defs['type'] == 'personName') {
                     if (!empty($row['name'])) {
                         $sheet->setCellValue("$col$rowNumber", $row['name']);
@@ -242,6 +290,8 @@ class Xlsx extends \Espo\Core\Injectable
             $rowNumber++;
         }
 
+        $startingRowNumber = 4;
+
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
 
@@ -257,32 +307,30 @@ class Xlsx extends \Espo\Core\Injectable
             } else {
                 switch($defs['type']) {
                     case 'currency': {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode('£#,##0_-');
+
                     } break;
                     case 'int': {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                             ->getNumberFormat()
                             ->setFormatCode('0');
                     } break;
                     case 'date': {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                             ->getNumberFormat()
-                            ->setFormatCode('dd/mm/yyyy');
+                            ->setFormatCode($this->getInjection('dateTime')->getDateFormat());
                     } break;
                     case 'datetime': {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                             ->getNumberFormat()
-                            ->setFormatCode('h:mm dd/mm/yyyy');
+                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
                     } break;
                     case 'datetimeOptional': {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                             ->getNumberFormat()
-                            ->setFormatCode('h:mm dd/mm/yyyy');
+                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
                     } break;
                     default: {
-                        $sheet->getStyle($col.'3:'.$col.$rowNumber)
+                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                             ->getNumberFormat()
                             ->setFormatCode('@');
                     } break;
@@ -292,12 +340,12 @@ class Xlsx extends \Espo\Core\Injectable
 
         $linkStyle = [
             'font'  => [
-                'color' => ['rgb' => '0000FF'],
+                'color' => ['rgb' => '345b7c'],
                 'underline' => 'single'
             ]
         ];
         foreach ($linkColList as $linkColumn) {
-            $sheet->getStyle($linkColumn.'3:'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
+            $sheet->getStyle($linkColumn.$startingRowNumber.':'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
         }
 
         $tempOutput = tempnam('/tmp/', 'ESPO');

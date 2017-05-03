@@ -93,6 +93,16 @@ class DateTime
         $this->timezone = new \DateTimeZone($timeZone);
     }
 
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
+    }
+
+    public function getDateTimeFormat()
+    {
+        return $this->dateFormat . ' ' . $this->timeFormat;
+    }
+
     public function getInternalDateTimeFormat()
     {
         return $this->internalDateTimeFormat;
