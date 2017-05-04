@@ -38,7 +38,9 @@ class Xlsx extends \Espo\Core\Injectable
         'language',
         'metadata',
         'config',
-        'dateTime'
+        'dateTime',
+        'entityManager',
+        'fileStorageManager'
     ];
 
     protected function getConfig()
@@ -49,6 +51,11 @@ class Xlsx extends \Espo\Core\Injectable
     protected function getMetadata()
     {
         return $this->getInjection('metadata');
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->getInjection('entityManager');
     }
 
     public function loadAdditionalFields(Entity $entity, $fieldList)
@@ -173,7 +180,6 @@ class Xlsx extends \Espo\Core\Injectable
             }
             $lastIndex = $i;
         }
-        $i = chr(ord($lastIndex) - 1);
 
         $col = $azRange[$i];
 
@@ -243,9 +249,32 @@ class Xlsx extends \Espo\Core\Injectable
                         $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
                     }
                 } else if ($defs['type'] == 'image') {
+                    if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
+                        $attachment = $this->getEntityManager()->getEntity('Attachment', $row[$name . 'Id']);
+
+                        if ($attachment) {
+                            $objDrawing = new \PHPExcel_Worksheet_Drawing();
+                            $filePath = $this->getInjection('fileStorageManager')->getLocalFilePath($attachment);
+
+                            if ($filePath && file_exists($filePath)) {
+                                $objDrawing->setPath($filePath);
+                                $objDrawing->setHeight(100);
+                                $objDrawing->setCoordinates("$col$rowNumber");
+                                $objDrawing->setWorksheet($sheet);
+                                $sheet->getRowDimension($rowNumber)->setRowHeight(100);
+                            }
+                        }
+                    }
 
                 } else if ($defs['type'] == 'file') {
-
+                    if (array_key_exists($name.'Name', $row)) {
+                        $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                    }
+                } else if ($defs['type'] == 'enum') {
+                    if (array_key_exists($name, $row)) {
+                        $value = $this->getInjection('language')->translateOption($row[$name], $name, $entityType);
+                        $sheet->setCellValue("$col$rowNumber", $value);
+                    }
                 } else {
                     if (array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name]);
@@ -268,6 +297,10 @@ class Xlsx extends \Espo\Core\Injectable
                         if ($foreignEntity) {
                             $link = $this->getConfig()->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
                         }
+                    }
+                } else if ($defs['type'] == 'file') {
+                    if (array_key_exists($name.'Id', $row)) {
+                        $link = $this->getConfig()->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
                     }
                 } else if ($defs['type'] == 'linkParent') {
                     if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
