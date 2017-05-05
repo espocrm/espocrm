@@ -220,6 +220,9 @@ abstract class Base
             case 'YEAR_NUMBER':
                 $function = 'YEAR';
                 break;
+            case 'DAYOFWEEK_NUMBER':
+                $function = 'DAYOFWEEK';
+                break;
         }
         if ($distinct) {
             $idPart = $this->toDb($entityName) . ".id";
