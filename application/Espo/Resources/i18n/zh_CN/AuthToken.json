@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "user": "用户",
+    "ipAddress": "IP地址",
+    "lastAccess": "最近访问日期",
+    "createdAt": "登录日期"
+  }
+}

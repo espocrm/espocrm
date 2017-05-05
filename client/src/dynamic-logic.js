@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -167,10 +167,10 @@ Espo.define('dynamic-logic', [], function () {
                 return !!setValue;
             } else if (type === 'isFalse') {
                 return !setValue;
-            } else if (type === 'contains') {
+            } else if (type === 'contains' || type === 'has') {
                 if (!setValue) return false;
                 return !!~setValue.indexOf(value);
-            } else if (type === 'notContains') {
+            } else if (type === 'notContains' || type === 'hasNot') {
                 if (!setValue) return true;
                 return !~setValue.indexOf(value);
             } else if (type === 'greaterThan') {

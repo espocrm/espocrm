@@ -9,5 +9,6 @@
     "targetLists",
 	"type",
     "teams",
-    "shippingAddress"
+    "shippingAddress",
+    "website"
 ]

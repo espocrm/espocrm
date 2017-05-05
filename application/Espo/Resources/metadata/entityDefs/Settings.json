@@ -82,12 +82,11 @@
         "outboundEmailFromName": {
             "type": "varchar",
             "default": "EspoCRM",
-            "required": true
+            "trim": true
         },
         "outboundEmailFromAddress": {
             "type": "varchar",
             "default": "crm@example.com",
-            "required": true,
             "trim": true
         },
         "smtpServer": {
@@ -95,7 +94,6 @@
         },
         "smtpPort": {
             "type": "int",
-            "required": true,
             "min": 0,
             "max": 9999,
             "default": 25
@@ -117,7 +115,6 @@
         },
         "tabList": {
             "type": "array",
-            "translation": "Global.scopeNamesPlural",
             "view": "views/settings/fields/tab-list"
         },
         "quickCreateList": {
@@ -129,7 +126,8 @@
             "type": "enum",
             "options": ["en_US"],
             "default": "en_US",
-            "view": "views/settings/fields/language"
+            "view": "views/settings/fields/language",
+            "isSorted": true
         },
         "globalSearchEntityList": {
             "type": "multiEnum",
@@ -390,6 +388,16 @@
             "readOnly": true,
             "view": "views/settings/fields/address-preview"
         },
+        "currencyFormat": {
+            "type": "enumInt",
+            "options": [1, 2]
+        },
+        "currencyDecimalPlaces": {
+            "type": "int",
+            "tooltip": true,
+            "min": 0,
+            "max": 20
+        },
         "notificationSoundsDisabled": {
             "type": "bool"
         },
@@ -410,6 +418,13 @@
         },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
+        },
+        "lastViewedCount": {
+            "type": "int",
+            "min": 1,
+            "max": 200,
+            "default": 20,
+            "required": true
         }
     }
 }

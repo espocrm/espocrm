@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -79,7 +79,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         },
 
         actionSendInvitations: function () {
-            if (confirm(this.translate('confirmation', 'messages'))) {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
                  this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
                 $.ajax({
@@ -101,7 +101,7 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                         this.enableMenuItem('sendInvitations');
                     }.bind(this),
                 });
-            }
+            }, this);
         }
 
     });

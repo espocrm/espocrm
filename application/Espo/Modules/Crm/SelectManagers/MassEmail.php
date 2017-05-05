@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,6 +31,20 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class MassEmail extends \Espo\Core\SelectManagers\Base
 {
+    protected function filterActual(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => ['Pending', 'Draft']
+        );
+    }
+
+    protected function filterComplete(&$result)
+    {
+        $result['whereClause'][] = array(
+            'status' => 'Complete'
+        );
+    }
+
     protected function acessOnlyOwn(&$result)
     {
         $result['whereClause'][] = array(

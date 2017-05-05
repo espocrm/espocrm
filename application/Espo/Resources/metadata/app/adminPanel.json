@@ -76,6 +76,11 @@
             "url":"#Admin/authTokens",
             "label":"Auth Tokens",
             "description":"authTokens"
+         },
+         {
+            "url": "#ActionHistoryRecord",
+            "label": "Action History",
+            "description": "actionHistory"
          }
       ]
    },

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "İsim",
+    "emailAddress": "E-posta   ",
+    "title": "Başlık",
+    "website": "Web sitesi ",
+    "accountName": "Hesap adı-",
+    "phoneNumber": "Telefon ",
+    "doNotCall": "Arama!",
+    "address": "Adres",
+    "description": "Açıklama"
+  },
+  "labels": {
+    "Create Target": "Hedef Oluştur",
+    "Convert to Lead": "Müşteri Potansiyeline Dönüştür"
+  }
+}

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -44,7 +44,24 @@ Espo.define('ui', [], function () {
         this.container = 'body'
         this.onRemove = function () {};
 
-        var params = ['className', 'backdrop', 'keyboard', 'closeButton', 'header', 'body', 'width', 'height', 'fitHeight', 'buttons', 'removeOnClose', 'draggable', 'container', 'onRemove'];
+        this.options = options;
+
+        var params = [
+            'className',
+            'backdrop',
+            'keyboard',
+            'closeButton',
+            'header',
+            'body',
+            'width',
+            'height',
+            'fitHeight',
+            'buttons',
+            'removeOnClose',
+            'draggable',
+            'container',
+            'onRemove'
+        ];
         params.forEach(function (param) {
             if (param in options) {
                 this[param] = options[param];
@@ -61,18 +78,46 @@ Espo.define('ui', [], function () {
                              '</header>';
         }
 
-        this.contents += '<div class="modal-body body">' + this.body + '</div>';
+        var body = '<div class="modal-body body">' + this.body + '</div>';
+
+        var footer = '';
 
         if (this.buttons.length) {
-            this.contents += '<footer class="modal-footer">';
+            footer += '<footer class="modal-footer">';
+
+            var rightPart = '';
             this.buttons.forEach(function (o) {
-                this.contents +=
-                    '<button type="button" ' +
-                    'class="btn btn-' + (o.style || 'default') + (o.pullLeft ? ' pull-left' : '') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                if (o.pullLeft) return;
+                rightPart +=
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
-            }.bind(this));
-            this.contents += '</footer>';
+            }, this);
+            var leftPart = '';
+            this.buttons.forEach(function (o) {
+                if (!o.pullLeft) return;
+                leftPart +=
+                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + '" ' +
+                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
+                    (o.html || o.text) + '</button> ';
+            }, this);
+            if (leftPart !== '') {
+                leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
+                footer += leftPart;
+            }
+            if (rightPart !== '') {
+                rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
+                footer += rightPart;
+            }
+            footer += '</footer>';
+        }
+
+        if (this.options.footerAtTheTop) {
+            this.contents += footer + body;
+        } else {
+            this.contents += body + footer;
         }
 
         this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
@@ -125,31 +170,55 @@ Espo.define('ui', [], function () {
 
         this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
-            if (this.fitHeight) {
+            var headerHeight = this.$el.find('header.modal-header').outerHeight();
+            var footerHeight = this.$el.find('footer.modal-footer').outerHeight();
+
+            var diffHeight = headerHeight + footerHeight;
+
+            if (!options.fullHeight) {
+                diffHeight = diffHeight + options.bodyDiffHeight;
+            }
+
+            if (this.fitHeight || options.fullHeight) {
                 var processResize = function () {
                     var windowHeight = $window.height();
-                    if (windowHeight < 512) {
+                    var windowWidth = $window.width();
+
+                    if (!options.fullHeight && windowHeight < 512) {
                         this.$el.find('div.modal-body').css({
-                            'maxHeight': 'none',
-                            'overflow': 'auto'
+                            maxHeight: 'none',
+                            overflow: 'auto',
+                            height: 'none'
                         });
                         return;
                     }
-                    this.$el.find('div.modal-body').css({
-                        'maxHeight': (windowHeight - 192) + 'px',
-                        'overflow': 'auto'
-                    });
+                    var cssParams = {
+                        overflow: 'auto'
+                    };
+                    if (options.fullHeight) {
+                        cssParams.height = (windowHeight - diffHeight) + 'px';
+                        this.$el.css('paddingRight', 0);
+                    } else {
+                        if (windowWidth <= options.screenWidthXs) {
+                            cssParams.maxHeight = 'none';
+                        } else {
+                            cssParams.maxHeight = (windowHeight - diffHeight) + 'px';
+                        }
+                    }
+
+                    this.$el.find('div.modal-body').css(cssParams);
                 }.bind(this);
                 $window.off('resize.modal-height');
                 $window.on('resize.modal-height', processResize);
                 processResize();
             }
         }.bind(this));
+
+        var $body = $(document.body);
+
         this.$el.on('hidden.bs.modal', function (e) {
-            if ($('.modal:visible').length > 0) {
-                setTimeout(function() {
-                    $(document.body).addClass('modal-open');
-                }, 0);
+            if ($('.modal:visible').size() > 0) {
+                $body.addClass('modal-open');
             }
         });
 
@@ -160,6 +229,13 @@ Espo.define('ui', [], function () {
              keyboard: this.keyboard
         });
         this.$el.find('.modal-content').removeClass('hidden');
+
+        var $modalBackdrop = $('.modal-backdrop');
+        $modalBackdrop.each(function (i, el) {
+            if (i < $modalBackdrop.size() - 1) {
+                $(el).addClass('hidden');
+            }
+        }.bind(this));
 
         this.$el.off('click.dismiss.bs.modal');
         this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
@@ -175,6 +251,8 @@ Espo.define('ui', [], function () {
         this.$el.find('.modal-content').addClass('hidden');
     };
     Dialog.prototype.close = function () {
+        var $modalBackdrop = $('.modal-backdrop');
+        $modalBackdrop.last().removeClass('hidden');
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     };
@@ -187,6 +265,52 @@ Espo.define('ui', [], function () {
     var Ui = Espo.Ui = Espo.ui = {
 
         Dialog: Dialog,
+
+        confirm: function (message, o, callback, context) {
+            var confirmText = o.confirmText;
+            var cancelText = o.cancelText;
+            var confirmStyle = o.confirmStyle || 'danger';
+
+            var dialog = new Dialog({
+                backdrop: false,
+                header: false,
+                className: 'dialog-confirm',
+                body: '<span class="confirm-message">' + message + '</a>',
+                buttons: [
+                    {
+                        text: ' ' + confirmText + ' ',
+                        name: 'confirm',
+                        onClick: function () {
+                            if (context) {
+                                callback.call(context);
+                            } else {
+                                callback();
+                            }
+                            dialog.close();
+                        },
+                        style: confirmStyle,
+                        pullLeft: true
+                    },
+                    {
+                        text: cancelText,
+                        name: 'cancel',
+                        onClick: function () {
+                            dialog.close();
+                            if (o.cancelCallback) {
+                                if (context) {
+                                    o.cancelCallback.call(context);
+                                } else {
+                                    o.cancelCallback();
+                                }
+                            }
+                        },
+                        pullRight: true
+                    }
+                ]
+            });
+
+            dialog.show();
+        },
 
         dialog: function (options) {
             return new Dialog(options);

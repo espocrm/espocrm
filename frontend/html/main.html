@@ -34,7 +34,7 @@
             $(function () {
                 Espo.require('app', function (App) {
                     var app = new App({
-                        useCache: false,
+                        useCache: {{useCacheInDeveloperMode}},
                         cacheTimestamp: {{cacheTimestamp}},
                         url: 'api/v1',
                         basePath: '{{basePath}}'
@@ -48,7 +48,7 @@
     <body>
         <div class="container content"></div>
         <footer>
-            <p class="credit small">&copy; 2016 <a href="http://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
+            <p class="credit small">&copy; 2017 <a href="http://www.espocrm.com" title="Powered by EspoCRM" alt="Visit official EspoCRM website">EspoCRM</a></p>
         </footer>
     </body>
 </html>

@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Navn",
+    "emailAddress": "Epost",
+    "title": "Tittel",
+    "accountRole": "Tittel",
+    "account": "Konto",
+    "accounts": "Konti",
+    "phoneNumber": "Telefon",
+    "accountType": "Kontotype",
+    "doNotCall": "Ikke ring!",
+    "address": "Adresse",
+    "opportunityRole": "Mulighetsrolle",
+    "description": "Beskrivelse",
+    "campaign": "Kampanje",
+    "targetLists": "Målgrupper",
+    "targetList": "Målgruppe",
+    "portalUser": "Portalbruker",
+    "originalLead": "Original ledetråd"
+  },
+  "links": {
+    "opportunities": "Muligheter",
+    "cases": "Saker",
+    "targetLists": "Målgrupper",
+    "campaignLogRecords": "Kampanjelogg",
+    "campaign": "Kampanje",
+    "account": "Konto (primær)",
+    "accounts": "Konti",
+    "casesPrimary": "Saker (primær)",
+    "portalUser": "Portalbruker",
+    "originalLead": "Original ledetråd",
+    "documents": "Dokumenter"
+  },
+  "labels": {
+    "Create Contact": "Opprett kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Ingen--",
+      "Decision Maker": "Beslutningstager",
+      "Evaluator": "Evaluator",
+      "Influencer": "Påvirker"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Portalbrukere",
+    "notPortalUsers": "Ikke portalbrukere"
+  }
+}

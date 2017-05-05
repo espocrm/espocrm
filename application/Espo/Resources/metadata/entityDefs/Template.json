@@ -65,6 +65,11 @@
         "modifiedBy": {
             "type": "link",
             "readOnly": true
+        },
+        "variables": {
+            "type": "base",
+            "notStorable": true,
+            "tooltip": true
         }
     },
     "links": {

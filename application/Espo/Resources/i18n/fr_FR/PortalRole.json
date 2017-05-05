@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "Utilisateurs"
+  },
+  "labels": {
+    "Access": "Accès",
+    "Create PortalRole": "Créer un rôle Portail",
+    "Scope Level": "Scope Level",
+    "Field Level": "Field Level"
+  }
+}

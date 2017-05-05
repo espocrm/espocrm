@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Назва",
+    "status": "Статус",
+    "storeSentEmails": "Перелік відправлених повідомлень електронної пошти",
+    "startAt": "Дата початку",
+    "fromAddress": "Адреса відправника",
+    "fromName": "Від імені",
+    "replyToAddress": "Відповідь на адресу",
+    "replyToName": "Відповідь до назви",
+    "campaign": "Кампанія",
+    "emailTemplate": "Шаблон повідомлення електронної пошти",
+    "inboundEmail": "Обліковий запис електронної пошти",
+    "targetLists": "Target Lists",
+    "excludingTargetLists": "Excluding Target Lists",
+    "optOutEntirely": "Цілковита відмова"
+  },
+  "links": {
+    "targetLists": "Target Lists",
+    "excludingTargetLists": "Excluding Target Lists",
+    "queueItems": "Черговість предметів",
+    "campaign": "Кампанія",
+    "emailTemplate": "Email Template",
+    "inboundEmail": "Обліковий запис поштової скриньки"
+  },
+  "options": {
+    "status": {
+      "Draft": "Проект",
+      "Pending": "В очікуванні",
+      "In Process": "В процесі",
+      "Complete": "Закінчений",
+      "Canceled": "Скасований",
+      "Failed": "Не вдалося"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Create Mass Email",
+    "Send Test": "Відправити тест"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Select at least one target.",
+    "testSent": "Test email(s) supposed to be sent"
+  },
+  "tooltips": {
+    "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
+    "targetLists": "Targets that should receive messages.",
+    "excludingTargetLists": "Targets that should not receive messages."
+  },
+  "presetFilters": {
+    "actual": "Актуально",
+    "complete": "Готово"
+  }
+}

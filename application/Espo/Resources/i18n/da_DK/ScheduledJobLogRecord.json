@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Status",
+    "executionTime": "Tid for udførelse",
+    "target": "Mål"
+  }
+}

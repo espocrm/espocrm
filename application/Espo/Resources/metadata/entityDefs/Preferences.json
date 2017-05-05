@@ -135,7 +135,6 @@
         },
         "tabList": {
             "type": "array",
-            "translation": "Global.scopeNamesPlural",
             "view": "views/preferences/fields/tab-list"
         },
         "emailReplyToAllByDefault": {
@@ -152,6 +151,10 @@
         },
         "doNotFillAssignedUserIfNotRequired": {
             "type": "bool"
+        },
+        "followEntityOnStreamPost": {
+            "type": "bool",
+            "default": true
         }
     }
 }

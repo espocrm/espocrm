@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -261,16 +261,40 @@ Espo.define('email-helper', [], function () {
         },
 
         addReplyBodyAttrbutes: function (model, attributes) {
+            var format = this.getDateTime().getReadableShortDateTimeFormat();
+            var dateSent = model.get('dateSent');
+
+            var dateSentSting = null;
+            if (dateSent) {
+                var dateSentMoment = this.getDateTime().toMoment(dateSent);
+                dateSentSting =dateSentMoment.format(format);
+            }
+
+            var replyHeadString =
+                (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
+
+            var fromName = model.get('fromName');
+
+            if (!fromName && model.get('from')) {
+                fromName = (model.get('nameHash') || {})[model.get('from')];
+                if (fromName) {
+                    replyHeadString += ', ' + fromName;
+                }
+            }
+
+            replyHeadString += ':'
+
+
             if (model.get('isHtml')) {
                 var body = model.get('body');
-                body = '<br><blockquote>' + '------' + this.getLanguage().translate('Original message', 'labels', 'Email') + '------<br>' + body + '</blockquote>';
+                body = '<br>' +  replyHeadString + '<br><blockquote>' +  body + '</blockquote>';
 
                 attributes['body'] = body;
             } else {
                 var bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
                 var b = '\n\n';
-                b += '------' + this.getLanguage().translate('Original message', 'labels', 'Email') + '------' + '\n';
+                b += replyHeadString + '\n';
 
                 bodyPlain.split('\n').forEach(function (line) {
                     b += '> ' + line + '\n';
@@ -280,7 +304,7 @@ Espo.define('email-helper', [], function () {
                 attributes['body'] = bodyPlain;
                 attributes['bodyPlain'] = bodyPlain;
             }
-        },
+        }
 
     });
 

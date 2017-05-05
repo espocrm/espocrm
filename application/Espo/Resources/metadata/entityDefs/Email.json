@@ -22,6 +22,11 @@
         "replyToString": {
             "type": "varchar"
         },
+        "addressNameMap": {
+            "type": "jsonObject",
+            "disabled": true,
+            "readOnly": true
+        },
         "from": {
             "type": "varchar",
             "notStorable": true,
@@ -406,7 +411,8 @@
     },
     "collection": {
         "sortBy": "dateSent",
-        "asc": false
+        "asc": false,
+        "textFilterFields": ["name", "bodyPlain", "body"]
     },
     "indexes": {
         "dateSentAssignedUser": {

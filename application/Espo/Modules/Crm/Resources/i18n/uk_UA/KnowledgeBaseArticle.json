@@ -1,0 +1,44 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Створити статтю",
+    "Any": "Будь-який",
+    "Send in Email": "Send in Email",
+    "Move Up": "Підсунути",
+    "Move Down": "Вниз",
+    "Move to Top": "На початок",
+    "Move to Bottom": "Переміститися вниз"
+  },
+  "fields": {
+    "name": "Назва",
+    "status": "Статус",
+    "type": "Тип",
+    "attachments": "Вкладення",
+    "publishDate": "Дата публікації",
+    "expirationDate": "Термін придатності",
+    "description": "Опис",
+    "body": "Тіло",
+    "categories": "Категорії",
+    "language": "Мова",
+    "portals": "Портали"
+  },
+  "links": {
+    "cases": "Випадки",
+    "opportunities": "Можливості",
+    "categories": "Категорії",
+    "portals": "Портали"
+  },
+  "options": {
+    "status": {
+      "In Review": "В огляді",
+      "Draft": "Проект",
+      "Archived": "Читальний зал",
+      "Published": "Опублікований"
+    },
+    "type": {
+      "Article": "Стаття"
+    }
+  },
+  "presetFilters": {
+    "published": "Опублікований "
+  }
+}

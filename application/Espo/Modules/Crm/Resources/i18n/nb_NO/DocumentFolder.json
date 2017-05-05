@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Opprett dokumentmappe",
+    "Manage Categories": "Administrer mapper",
+    "Documents": "Dokumenter"
+  },
+  "links": {
+    "documents": "Dokumenter"
+  }
+}

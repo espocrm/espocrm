@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -98,6 +98,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         bottomView: 'views/record/detail-bottom',
 
+        sideDisabled: false,
+
+        bottomDisabled: false,
+
         editModeDisabled: false,
 
         navigateButtonsDisabled: false,
@@ -109,6 +113,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         dependencyDefs: {},
 
         duplicateAction: true,
+
+        selfAssignAction: false,
+
+        inlineEditDisabled: false,
 
         events: {
             'click .button-container .action': function (e) {
@@ -150,6 +158,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             $(window).scrollTop(0);
         },
 
+        actionSelfAssign: function () {
+            var attributes = {
+                assignedUserId: this.getUser().id,
+                assignedUserName: this.getUser().get('name')
+            };
+            if ('getSelfAssignAttributes' in this) {
+                var attributesAdditional = this.getSelfAssignAttributes();
+                if (attributesAdditional) {
+                    for (var i in attributesAdditional) {
+                        attributes[i] = attributesAdditional[i];
+                    }
+                }
+            }
+            this.model.save(attributes, {
+                patch: true
+            }).then(function () {
+                Espo.Ui.success(this.translate('Self-Assigned'));
+            }.bind(this));
+        },
+
+        getSelfAssignAttributes: function () {
+        },
+
         setupActionItems: function () {
             if (this.model.isNew()) {
                 this.isNew = true;
@@ -162,6 +193,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
+                }
+            }
+
+            if (this.selfAssignAction) {
+                if (
+                    this.getAcl().check(this.entityType, 'edit')
+                    &&
+                    !~this.getAcl().getScopeForbiddenFieldList(this.entityType).indexOf('assignedUser')
+                ) {
+                    if (this.model.has('assignedUserId')) {
+                        this.dropdownItemList.push({
+                            'label': 'Self-Assign',
+                            'name': 'selfAssign',
+                            'hidden': !!this.model.get('assignedUserId')
+                        });
+                        this.listenTo(this.model, 'change:assignedUserId', function () {
+                            if (!this.model.get('assignedUserId')) {
+                                this.showActionItem('selfAssign');
+                            } else {
+                                this.hideActionItem('selfAssign');
+                            }
+                        }, this);
+                    }
                 }
             }
         },
@@ -353,6 +407,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setEditMode: function () {
+            this.trigger('before:set-edit-mode');
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
@@ -369,9 +424,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
             this.mode = 'edit';
+            this.trigger('after:set-edit-mode');
         },
 
         setDetailMode: function () {
+            this.trigger('before:set-detail-mode');
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
 
@@ -379,11 +436,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (fieldView.mode != 'detail') {
+                    if (fieldView.mode === 'edit') {
+                        fieldView.trigger('inline-edit-off');
+                    }
                     fieldView.setMode('detail');
                     fieldView.render();
                 }
             }
             this.mode = 'detail';
+            this.trigger('after:set-detail-mode');
         },
 
         cancelEdit: function () {
@@ -393,7 +454,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         delete: function () {
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm({
+                message: this.translate('removeRecordConfirmation', 'messages'),
+                confirmText: this.translate('Remove')
+            }, function () {
                 this.trigger('before:delete');
                 this.trigger('delete');
 
@@ -419,7 +483,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.exit('delete');
                     }.bind(this),
                 });
-            }
+            }, this);
         },
 
         getFieldViews: function (withHidden) {
@@ -554,7 +618,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
-            var collection = this.model.collection;
+            var collection = this.collection = this.model.collection;
             if (collection) {
                 this.listenTo(this.model, 'destroy', function () {
                     collection.remove(this.model.id);
@@ -604,8 +668,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.bottomView = this.options.bottomView;
             }
 
+            this.sideDisabled = this.options.sideDisabled || this.sideDisabled;
+            this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
+
             this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
+
+            this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
@@ -820,10 +889,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.duplicateAction) {
                     this.hideActionItem('duplicate');
                 }
+                if (this.selfAssignAction) {
+                    this.hideActionItem('selfAssign');
+                }
             } else {
                 this.showActionItem('edit');
                 if (this.duplicateAction) {
                     this.showActionItem('duplicate');
+                }
+                if (this.selfAssignAction) {
+                    this.hideActionItem('selfAssign');
+                    if (this.model.has('assignedUserId')) {
+                        if (!this.model.get('assignedUserId')) {
+                            this.showActionItem('selfAssign');
+                        }
+                    }
                 }
                 if (!this.readOnlyLocked) {
                     if (this.readOnly && second) {
@@ -1076,7 +1156,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         build: function (callback) {
-            if (this.sideView) {
+            if (!this.sideDisabled && this.sideView) {
                 this.createSideView();
             }
 
@@ -1084,7 +1164,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.createMiddleView(callback);
             }
 
-            if (this.bottomView) {
+            if (!this.bottomDisabled && this.bottomView) {
                 this.once('after:render', function () {
                     this.createBottomView();
                 }, this);
@@ -1102,6 +1182,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.returnUrl) {
                 url = this.returnUrl;
             } else {
+                if (after) {
+                    var methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
+                    if (methodName in this) {
+                        this[methodName]();
+                        return;
+                    }
+                }
                 if (after == 'delete') {
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -60,6 +60,12 @@ class Metadata
     );
 
     private $moduleList = null;
+
+    protected $frontendHiddenPathList = [
+        ['app', 'formula', 'functionClassNameMap'],
+        ['app', 'fileStorage', 'implementationClassNameMap'],
+        ['app', 'emailNotifications', 'handlerClassNameMap']
+    ];
 
     /**
      * Default module order
@@ -198,6 +204,36 @@ class Metadata
         return $this->data;
     }
 
+    public function getAllForFrontend()
+    {
+        $data = $this->getAll();
+
+        foreach ($this->frontendHiddenPathList as $row) {
+            $p =& $data;
+            $path = [&$p];
+            foreach ($row as $i => $item) {
+                if (!array_key_exists($item, $p)) break;
+                if ($i == count($row) - 1) {
+                    unset($p[$item]);
+                    $o =& $p;
+                    for ($j = $i - 1; $j > 0; $j--) {
+                        if (is_array($o) && empty($o)) {
+                            $o =& $path[$j];
+                            $k = $row[$j];
+                            unset($o[$k]);
+                        } else {
+                            break;
+                        }
+                    }
+                } else {
+                    $p =& $p[$item];
+                    $path[] = &$p;
+                }
+            }
+        }
+        return $data;
+    }
+
     /**
      * todo: move to a separate file
      * Add additional fields defined from metadata -> fields
@@ -288,6 +324,26 @@ class Metadata
     {
         if (!is_array($unsets)) {
             $unsets = (array) $unsets;
+        }
+
+        switch ($key1) {
+            case 'entityDefs':
+                //unset related additional fields, e.g. a field with "address" type
+                $unsetList = $unsets;
+                foreach ($unsetList as $unsetItem) {
+                    if (preg_match('/fields\.([^\.]+)/', $unsetItem, $matches) && isset($matches[1])) {
+                        $fieldName = $matches[1];
+                        $fieldPath = [$key1, $key2, 'fields', $fieldName];
+
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath));
+                        if (is_array($additionalFields)) {
+                            foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
+                                $unsets[] = 'fields.' . $additionalFieldName;
+                            }
+                        }
+                    }
+                }
+                break;
         }
 
         $normalizedData = array(

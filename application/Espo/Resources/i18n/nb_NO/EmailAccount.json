@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "host": "Tjener",
+    "username": "Brukernavn",
+    "password": "Passord",
+    "port": "Port",
+    "monitoredFolders": "Overvåkede mapper",
+    "ssl": "SSL",
+    "fetchSince": "Hent fra dato",
+    "emailAddress": "Epostadresse",
+    "sentFolder": "Sendt-mappe",
+    "storeSentEmails": "Lagre sendte eposter",
+    "keepFetchedEmailsUnread": "Vis hentede eposter som ulest",
+    "emailFolder": "Legg i mappe",
+    "useSmtp": "Bruk SMTP",
+    "smtpHost": "SMTP-tjener",
+    "smtpPort": "SMTP-tjener",
+    "smtpAuth": "SMTP-autentisering",
+    "smtpSecurity": "SMTP-sikkerhet",
+    "smtpUsername": "SMTP-brukernavn",
+    "smtpPassword": "SMTP-passord"
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Eposter"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktive",
+      "Inactive": "Inaktive"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Ny epostkonto",
+    "IMAP": "IMAP-innstillinger",
+    "Main": "Hovedinnstillinger",
+    "Test Connection": "Test tilkobling",
+    "Send Test Email": "Send testepost",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kunne ikke koble til IMAP-tjener",
+    "connectionIsOk": "Tilkoblingen er OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Du kan legge til en 'Sendt'-mappe for å synkroniskere eposter sendt fra eksterne klienter.",
+    "storeSentEmails": "Sendte eposter vil lagres på IMAP-tjeneren. Epostadressefeltet må matche adressen epostene vil sendes fra."
+  }
+}

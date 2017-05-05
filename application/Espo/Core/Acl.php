@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -67,6 +67,11 @@ class Acl
     public function get($permission)
     {
         return $this->getAclManager()->get($this->getUser(), $permission);
+    }
+
+    public function checkReadNo($scope)
+    {
+        return $this->getAclManager()->checkReadNo($this->getUser(), $scope);
     }
 
     public function checkReadOnlyTeam($scope)

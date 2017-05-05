@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -64,6 +64,9 @@ class App extends \Espo\Core\Controllers\Base
         foreach ($this->getConfig()->get('userItems') as $item) {
             $settings->$item = $this->getConfig()->get($item);
         }
+
+        unset($userData['authTokenId']);
+        unset($userData['password']);
 
         return array(
             'user' => $userData,

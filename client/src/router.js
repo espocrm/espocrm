@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -52,6 +52,10 @@ Espo.define('router', [], function () {
 
         confirmLeaveOutMessage: 'Are you sure?',
 
+        confirmLeaveOutConfirmText: 'Yes',
+
+        confirmLeaveOutCancelText: 'No',
+
         initialize: function () {
             this.history = [];
 
@@ -95,12 +99,16 @@ Espo.define('router', [], function () {
         checkConfirmLeaveOut: function (callback, context) {
             context = context || this;
             if (this.confirmLeaveOut) {
-                if (confirm(this.confirmLeaveOutMessage)) {
+                Espo.Ui.confirm(this.confirmLeaveOutMessage, {
+                    confirmText: this.confirmLeaveOutConfirmText,
+                    cancelText: this.confirmLeaveOutCancelText,
+                    cancelCallback: function () {
+                        this.navigateBack({trigger: false});
+                    }.bind(this)
+                }, function () {
                     this.confirmLeaveOut = false;
                     callback.call(context);
-                } else {
-                    this.navigateBack({trigger: false});
-                }
+                }.bind(this));
             } else {
                 callback.call(context);
             }
@@ -120,7 +128,7 @@ Espo.define('router', [], function () {
         navigateBack: function (options) {
             var url;
             if (this.history.length > 1) {
-                url = this.history[this.history.length - 1];
+                url = this.history[this.history.length - 2];
             } else {
                 url = this.history[0];
             }

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
-        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'],
+        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
         data: function () {
             return _.extend({
@@ -107,9 +107,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (model) {
+                            this.clearView('dialog');
                             this.select(model);
                         }, this);
-                    }.bind(this));
+                    }, this);
                 });
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
@@ -133,6 +134,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (models) {
+                            this.clearView('dialog');
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
@@ -165,6 +167,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         setupSearch: function () {
             this.searchData.oneOfIdList = this.searchParams.oneOfIdList || [];
             this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
+            this.searchData.idValue = this.searchParams.idValue || this.searchParams.value;
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -175,13 +178,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         handleSearchType: function (type) {
-            if (~['is'].indexOf(type)) {
+            if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
             } else {
                 this.$el.find('div.primary').addClass('hidden');
             }
 
-            if (type === 'isOneOf') {
+            if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.one-of-container').removeClass('hidden');
             } else {
                 this.$el.find('div.one-of-container').addClass('hidden');
@@ -327,7 +330,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
 
-                if (type == 'isOneOf') {
+                if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
                     this.searchData.oneOfIdList.forEach(function (id) {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     }, this);
@@ -423,7 +426,79 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 };
                 return data;
-
+            } else if (type == 'isNotOneOf') {
+                var data = {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'notIn',
+                            attribute: this.idName,
+                            value: this.searchData.oneOfIdList
+                        },
+                        {
+                            type: 'isNull',
+                            attribute: this.idName
+                        }
+                    ],
+                    field: this.idName,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type == 'isNotOneOfAndIsNotEmpty') {
+                var data = {
+                    type: 'notIn',
+                    field: this.idName,
+                    value: this.searchData.oneOfIdList,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            }  else if (type == 'isNot') {
+                if (!value) {
+                    return false;
+                }
+                var data = {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'notEquals',
+                            attribute: this.idName,
+                            value: value
+                        },
+                        {
+                            type: 'isNull',
+                            attribute: this.idName
+                        }
+                    ],
+                    field: this.idName,
+                    idValue: value,
+                    valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type == 'isNotAndIsNotEmpty') {
+                if (!value) {
+                    return false;
+                }
+                var data = {
+                    type: 'notEquals',
+                    field: this.idName,
+                    value: value,
+                    valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
             } else {
                 if (!value) {
                     return false;

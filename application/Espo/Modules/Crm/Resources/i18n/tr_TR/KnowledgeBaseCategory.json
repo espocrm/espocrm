@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Kategori oluştur",
+    "Manage Categories": "Kategorileri Yönet ",
+    "Articles": "Makaleler"
+  },
+  "links": {
+    "articles": "Makaleler"
+  }
+}

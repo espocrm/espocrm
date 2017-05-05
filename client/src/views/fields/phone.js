@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -78,7 +78,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             return _.extend({
-                phoneNumberData: phoneNumberData
+                phoneNumberData: phoneNumberData,
+                doNotCall: this.model.get('doNotCall')
             }, Dep.prototype.data.call(this));
         },
 
@@ -211,6 +212,14 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
         setup: function () {
             this.dataFieldName = this.name + 'Data';
             this.defaultType = this.defaultType || this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
+
+            if (this.model.has('doNotCall')) {
+                this.listenTo(this.model, 'change:doNotCall', function (model, value, o) {
+                    if (this.mode !== 'detail' && this.mode !== 'list') return;
+                    if (!o.ui) return;
+                    this.reRender();
+                }, this);
+            }
         },
 
         fetchPhoneNumberData: function () {

@@ -32,12 +32,15 @@
             "end": "dateEnd",
             "options": [300, 600, 900, 1800, 2700, 3600, 7200],
             "default": 300,
-            "notStorable": true
+            "notStorable": true,
+            "select": "TIMESTAMPDIFF(SECOND, call.date_start, call.date_end)",
+            "orderBy": "duration {direction}"
         },
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
-            "view": "crm:views/meeting/fields/reminders"
+            "view": "crm:views/meeting/fields/reminders",
+            "layoutListDisabled": true
         },
         "direction": {
             "type": "enum",
@@ -49,7 +52,7 @@
         },
         "parent": {
             "type": "linkParent",
-            "entityList": ["Account", "Lead", "Opportunity", "Case"]
+            "entityList": ["Account", "Lead", "Contact", "Opportunity", "Case"]
         },
         "account": {
             "type": "link",

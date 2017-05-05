@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "user": "Kullanıcı",
+    "ipAddress": "IP Adresi",
+    "lastAccess": "Son Erişim Tarihi",
+    "createdAt": "Giriş Tarihi"
+  }
+}

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -100,7 +100,8 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
 
                             model.set(data[scope] || {}, {silent: true});
 
-                            this.createView(scope, 'views/record/edit', {
+                            var convertEntityViewName = this.getMetadata().get(['clientDefs', scope, 'recordViews', 'edit']) || 'views/record/edit';
+                            this.createView(scope, convertEntityViewName, {
                                 model: model,
                                 el: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                 buttonsPosition: false,

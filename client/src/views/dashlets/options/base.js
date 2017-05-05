@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -37,6 +37,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
         template: 'dashlets/options/base',
 
         cssName: 'options-modal',
+
+        className: 'dialog dialog-record',
 
         fieldsMode: 'edit',
 
@@ -100,6 +102,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             };
             model.set(this.optionsData);
 
+            model.dashletName = this.name;
+
             this.createView('record', 'views/record/detail-middle', {
                 model: model,
                 recordHelper: this.recordHelper,
@@ -111,7 +115,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 layoutData: {
                     model: model,
                     columnCount: 2,
-                },
+                }
             });
 
             this.header = this.getLanguage().translate('Dashlet Options') + ': ' + this.getLanguage().translate(this.name, 'dashlets');

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -146,19 +146,15 @@ class Util
     {
         $mergeIdentifier = '__APPEND__';
 
-        if (is_array($currentArray) && (!is_array($newArray) || empty($newArray))) {
+        if (is_array($currentArray) && !is_array($newArray)) {
             return $currentArray;
-        } else if ((!is_array($currentArray) || empty($currentArray)) && is_array($newArray)) {
+        } else if (!is_array($currentArray) && is_array($newArray)) {
             return $newArray;
         } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
             return array();
         }
 
         foreach ($newArray as $newName => $newValue) {
-
-            if (is_array($newValue) && empty($newValue)) {
-                continue;
-            }
 
             if (is_array($newValue) && array_key_exists($newName, $currentArray) && is_array($currentArray[$newName])) {
 
@@ -557,5 +553,54 @@ class Util
         return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
 
+    /**
+     * Improved computing the difference of arrays
+     *
+     * @param  array  $array1
+     * @param  array  $array2
+     *
+     * @return array
+     */
+    public static function arrayDiff(array $array1, array $array2)
+    {
+        $diff = array();
+
+        foreach ($array1 as $key1 => $value1) {
+            if (array_key_exists($key1, $array2)) {
+                if ($value1 !== $array2[$key1]) {
+                    $diff[$key1] = $array2[$key1];
+                }
+                continue;
+            }
+
+            $diff[$key1] = $value1;
+        }
+
+        $diff = array_merge($diff, array_diff_key($array2, $array1));
+
+        return $diff;
+    }
+
+    /**
+     * Fill array with specified keys
+     *
+     * @param  array|string $keys
+     * @param  mixed $value
+     *
+     * @return array
+     */
+    public static function fillArrayKeys($keys, $value)
+    {
+        $arrayKeys = is_array($keys) ? $keys : explode('.', $keys);
+
+        $array = array();
+        foreach (array_reverse($arrayKeys) as $i => $key) {
+            $array = array(
+                $key => ($i == 0) ? $value : $array,
+            );
+        }
+
+        return $array;
+    }
 }
 

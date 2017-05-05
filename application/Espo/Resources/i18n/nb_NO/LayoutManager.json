@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Bredde (%)",
+    "link": "Lenke",
+    "notSortable": "Ikke sorterbar",
+    "align": "Plassering",
+    "panelName": "Panelnavn",
+    "style": "Stil",
+    "sticked": "Festet"
+  },
+  "options": {
+    "align": {
+      "left": "Venstre",
+      "right": "Høyre"
+    },
+    "style": {
+      "default": "Forvalg",
+      "success": "Suksess",
+      "danger": "Fare",
+      "info": "Info",
+      "warning": "Varsel",
+      "primary": "Primær"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "名称",
+    "description": "描述",
+    "status": "状态",
+    "type": "类型",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "targetLists": "目标列表",
+    "excludingTargetLists": "剔除目标列表",
+    "sentCount": "发送",
+    "openedCount": "开业",
+    "clickedCount": "点击",
+    "optedOutCount": "选择退出",
+    "bouncedCount": "退回",
+    "hardBouncedCount": "硬弹跳",
+    "softBouncedCount": "软弹跳",
+    "leadCreatedCount": "已创建的线索",
+    "revenue": "收入",
+    "revenueConverted": "收入（转换）",
+    "budget": "预算",
+    "budgetConverted": "预算（转换）"
+  },
+  "links": {
+    "targetLists": "目标列表",
+    "excludingTargetLists": "剔除目标列表",
+    "accounts": "帐号",
+    "contacts": "联系人",
+    "leads": "线索",
+    "opportunities": "商机",
+    "campaignLogRecords": "日志",
+    "massEmails": "群发电子邮件",
+    "trackingUrls": "追踪网址"
+  },
+  "options": {
+    "type": {
+      "Email": "电子邮件",
+      "Web": "网址",
+      "Television": "电视",
+      "Radio": "无线电",
+      "Newsletter": "通讯",
+      "Mail": "邮件"
+    },
+    "status": {
+      "Planning": "规划",
+      "Active": "活性",
+      "Inactive": "非活动",
+      "Complete": "完成"
+    }
+  },
+  "labels": {
+    "Create Campaign": "创建营销活动",
+    "Target Lists": "目标列表",
+    "Statistics": "统计",
+    "hard": "硬",
+    "soft": "柔软的",
+    "Unsubscribe": "取消订阅",
+    "Mass Emails": "群发电子邮件",
+    "Email Templates": "电子邮件模板",
+    "Unsubscribe again": "再次退订",
+    "Subscribe again": "再次订阅",
+    "Create Target List": "创建目标列表"
+  },
+  "presetFilters": {
+    "active": "活性"
+  },
+  "messages": {
+    "unsubscribed": "您已取消订阅我们的邮寄名单。",
+    "subscribedAgain": "你订阅了"
+  },
+  "tooltips": {
+    "targetLists": "目标应该接收的消息。",
+    "excludingTargetLists": "目标不应该接收消息。"
+  }
+}

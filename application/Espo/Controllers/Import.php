@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -68,9 +68,9 @@ class Import extends \Espo\Core\Controllers\Record
         throw new BadRequest();
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->getContainer()->get('fileManager');
+        return $this->getContainer()->get('fileStorageManager');
     }
 
     protected function getEntityManager()
@@ -92,7 +92,7 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment->set('name', 'import-file.csv');
         $this->getEntityManager()->saveEntity($attachment);
 
-        $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+        $this->getFileStorageManager()->putContents($attachment, $contents);
 
         return array(
             'attachmentId' => $attachment->id
@@ -167,12 +167,18 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
+        $timezone = 'UTC';
+        if (isset($data['timezone'])) {
+           $timezone = $data['timezone'];
+        }
+
         $importParams = array(
             'headerRow' => !empty($data['headerRow']),
             'fieldDelimiter' => $data['fieldDelimiter'],
             'textQualifier' => $data['textQualifier'],
             'dateFormat' => $data['dateFormat'],
             'timeFormat' => $data['timeFormat'],
+            'timezone' => $timezone,
             'personNameFormat' => $data['personNameFormat'],
             'decimalMark' => $data['decimalMark'],
             'currency' => $data['currency'],

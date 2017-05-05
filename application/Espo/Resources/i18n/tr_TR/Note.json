@@ -1,6 +1,27 @@
 {
-    "fields": {
-        "post": "Yayınla",
-        "attachments": "Dosya Ekle"
+  "fields": {
+    "post": "Yayınla",
+    "attachments": "Dosya Ekle",
+    "targetType": "Hedef",
+    "teams": "Takımlar",
+    "users": "Kullanıcılar",
+    "portals": "Portallar"
+  },
+  "filters": {
+    "all": "Hepsi",
+    "posts": "Yazılar",
+    "updates": "Güncellemeler"
+  },
+  "messages": {
+    "writeMessage": "Mesajınızı buraya yazınız"
+  },
+  "options": {
+    "targetType": {
+      "self": "kendime",
+      "users": "Belirli kullanıcılara",
+      "teams": "Belirli takımlara",
+      "all": "Tüm dahili kullanıcılara",
+      "portals": "Portal kullanıcılarına"
     }
+  }
 }

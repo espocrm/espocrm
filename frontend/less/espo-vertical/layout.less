@@ -8,18 +8,35 @@
 }
 
 #header ul.tabs li.dropdown {
-  display: none;
+
 }
 
 @media screen and (max-width: @screen-sm-min) {
-  #header .navbar-header > a.minimizer {
+  #header a.minimizer {
     display: none;
+  }
+
+  body > #header .more-icon {
+    display: none;
+  }
+
+  body > #header .more-label {
+    display: inline;
+  }
+
+  #header .navbar ul.nav > li.global-search-container {
+    display: block;
+  }
+
+  #global-search-input {
+      width: 100% !important;
   }
 }
 
 body > #header ul.tabs > li > a > span.short-label {
   display: none;
 }
+
 body > #header ul.tabs > li > a > span.full-label {
   display: inline;
 }
@@ -28,11 +45,62 @@ body > #header .navbar-brand span.home-icon {
   display: none;
 }
 
+#header .more-icon {
+  display: inline;
+}
+
+#header .more-label {
+  display: none;
+}
+
+#header .navbar > .navbar-header > a.navbar-brand {
+  &,
+  &:active {
+    color: @navbar-inverse-link-color;
+  }
+}
+
 @media screen and (min-width: @screen-sm-min) {
+
+  #header .nav > li.more > .dropdown-menu {
+    top: 0;
+    left: @navbar-width;
+    padding-top: 0;
+    padding-bottom: 0;
+    position: fixed;
+    border-left-width: 0;
+    border-top-width: 0;
+    overflow-y: hidden;
+  }
+
+  #header ul.tabs {
+    width: @navbar-width;
+    margin-left: -8px;
+    overflow-y: hidden;
+  }
+
+  #header a.minimizer {
+    color: @navbar-inverse-link-color;
+    text-decoration: none;
+    margin-top: 5px;
+    display: inline-block;
+    margin-left: 3px;
+  }
+
+  #header a.minimizer > span.left {
+    display: inline;
+  }
+  #header a.minimizer > span.right {
+    display: none;
+  }
 
   body.minimized {
     #header {
       width: @navbar-minimized-width;
+    }
+
+    #header .nav > li.more > ul.dropdown-menu {
+      left: @navbar-minimized-width;
     }
 
     #header .navbar-brand img {
@@ -41,7 +109,7 @@ body > #header .navbar-brand span.home-icon {
 
     #header a.navbar-brand {
       position: fixed;
-      top: 30px;
+      top: 0;
       height: 35px;
       width: @navbar-minimized-width;
       padding-top: 8px;
@@ -63,15 +131,11 @@ body > #header .navbar-brand span.home-icon {
         height: 30px;
     }
 
-    #header .navbar-header > a.minimizer {
-      width: 30px;
-      height: 30px;
-      float: none;
-      display: block;
+    #header a.minimizer > span.left {
+      display: none;
     }
-
-    #header .navbar-header > a.minimizer span {
-      margin-left: 12px;
+    #header a.minimizer > span.right {
+      display: inline;
     }
 
     #content {
@@ -88,7 +152,7 @@ body > #header .navbar-brand span.home-icon {
 
     #header ul.tabs {
       width: @navbar-minimized-width;
-      margin-top: 35px;
+      margin-top: 5px;
     }
 
     #header .navbar-right {
@@ -120,13 +184,13 @@ body > #header .navbar-brand span.home-icon {
   }
 
   #header .navbar-brand img {
-    max-width: @navbar-width - 30px;
-    height: 30px;
+    max-width: @navbar-width - 12px;
+    height: 33px;
   }
 
   #header a.navbar-brand {
-    max-width: @navbar-width - 30px;
-    height: 30px;
+    max-width: @navbar-width;
+    height: 35px;
   }
 
   #header .navbar-header {
@@ -184,13 +248,6 @@ body > #header .navbar-brand span.home-icon {
     float: none;
   }
 
-  #header ul.tabs {
-    width: @navbar-width;
-    margin-left: -8px;
-    overflow-y: hidden;
-    overflow-x: hidden;
-  }
-
   #header .navbar-right {
     position: fixed;
     bottom: 20px;
@@ -199,7 +256,7 @@ body > #header .navbar-brand span.home-icon {
     left: 0;
     height: @tob-bar-height;
     width: 100%;
-    background-color: @main-gray;
+    background-color: @top-navbar-bg-color;
     margin-left: @navbar-width;
     padding-right: @navbar-width;
   }

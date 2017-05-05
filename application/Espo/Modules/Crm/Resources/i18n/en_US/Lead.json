@@ -24,7 +24,9 @@
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List",
-        "industry": "Industry"
+        "industry": "Industry",
+        "acceptanceStatus": "Acceptance Status",
+        "opportunityAmountCurrency": "Opportunity Amount Currency"
     },
     "links": {
         "targetLists": "Target Lists",

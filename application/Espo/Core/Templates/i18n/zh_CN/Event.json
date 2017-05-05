@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "关联",
+    "dateStart": "开始日期",
+    "dateEnd": "结束日期",
+    "duration": "持续时间",
+    "status": "状态",
+    "reminders": "提醒"
+  },
+  "links": {
+    "parent": "关联"
+  },
+  "options": {
+    "status": {
+      "Planned": "已计划",
+      "Held": "已举行",
+      "Not Held": "未举行"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "创建 {entityTypeTranslated}",
+    "Schedule {entityType}": "计划 {entityTypeTranslated}",
+    "Log {entityType}": "记录 {entityTypeTranslated} ",
+    "Set Held": "设为已举行",
+    "Set Not Held": "设为未举行"
+  },
+  "massActions": {
+    "setHeld": "设为已举行",
+    "setNotHeld": "设为未举行"
+  },
+  "presetFilters": {
+    "planned": "已计划",
+    "held": "已举行",
+    "todays": "今天的"
+  }
+}

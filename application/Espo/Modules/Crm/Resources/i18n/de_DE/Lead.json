@@ -23,7 +23,8 @@
     "createdOpportunity": "Verkaufschance",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
-    "targetList": "Kontaktliste"
+    "targetList": "Kontaktliste",
+    "industry": "Industrie"
   },
   "links": {
     "targetLists": "Kontaktlisten",

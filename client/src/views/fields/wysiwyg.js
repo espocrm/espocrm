@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -84,7 +84,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             }.bind(this));
 
             this.once('remove', function () {
-                $('body > .tooltip').remove();
+                if (this.$summernote) {
+                    this.$summernote.summernote('destroy');
+                }
+            });
+
+            this.on('inline-edit-off', function () {
+                if (this.$summernote) {
+                    this.$summernote.summernote('destroy');
+                }
             });
         },
 
@@ -96,6 +104,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         sanitizeHtml: function (value) {
             if (value) {
                 value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
+                value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
             }
             return value || '';
         },
@@ -261,9 +270,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         disableWysiwygMode: function () {
-            this.$summernote.summernote('destroy');
-
-            this.$summernote.addClass('hidden');
+            if (this.$summernote) {
+                this.$summernote.summernote('destroy');
+                this.$summernote.addClass('hidden');
+            }
             this.$element.removeClass('hidden');
         },
 

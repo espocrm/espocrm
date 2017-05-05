@@ -1,0 +1,26 @@
+{
+  "label": {
+    "Field": "Felt"
+  },
+  "options": {
+    "operators": {
+      "equals": "Lik",
+      "notEquals": "Ikke lik",
+      "greaterThan": "Større enn",
+      "lessThan": "Mindre enn",
+      "greaterThanOrEquals": "Større enn eller lik",
+      "lessThanOrEquals": "Mindre enn eller lik",
+      "in": "I",
+      "notIn": "Ikke i",
+      "inPast": "I fortiden",
+      "inFuture": "I fremtiden",
+      "isToday": "Er idag",
+      "isTrue": "Er sann",
+      "isFalse": "Er falsk",
+      "isEmpty": "Er tom",
+      "isNotEmpty": "Er ikke tom",
+      "contains": "Inneholder",
+      "notContains": "Inneholder ikke"
+    }
+  }
+}

@@ -1,13 +1,20 @@
 {
-    "modes": {
-        "month": "місяць",
-        "week": "тиждень",
-        "day": "день",
-        "agendaWeek": "тиждень",
-        "agendaDay": "день"
-    },
-    "labels": {
-        "Today": "Сьогодні",
-        "Create": "Створити"
-    }
+  "modes": {
+    "month": "місяць",
+    "week": "тиждень",
+    "agendaWeek": "тиждень",
+    "day": "день",
+    "agendaDay": "день",
+    "timeline": "Timeline"
+  },
+  "labels": {
+    "Today": "Сьогодні",
+    "Create": "Створити",
+    "Shared": "Загальний",
+    "Add User": "Додати користувача",
+    "current": "Потік",
+    "time": "Час",
+    "User List": "Список користувачів",
+    "Manage Users": "Управління користувачами"
+  }
 }

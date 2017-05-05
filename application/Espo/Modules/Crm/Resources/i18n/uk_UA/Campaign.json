@@ -1,54 +1,75 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "description": "Опис",
-        "status": "Статус",
-        "type": "Тип",
-        "startDate": "Дата Початку",
-        "endDate": "Дата Закінчення",
-        "targetLists": "Цільові списки",
-        "sentCount": "Відправлено",
-        "openedCount": "Відкрито",
-        "clickedCount": "Цикнуте",
-        "optedOutCount": "Відмовлено",
-        "bouncedCount": "Відшито",
-        "hardBouncedCount": "Жорстко відшито",
-        "softBouncedCount": "М'яко відшито",
-        "leadCreatedCount": "Ліди створені",
-        "revenue": "Виручка"
+  "fields": {
+    "name": "Ім'я",
+    "description": "Опис",
+    "status": "Статус",
+    "type": "Тип",
+    "startDate": "Дата Початку",
+    "endDate": "Дата Закінчення",
+    "targetLists": "Цільові списки",
+    "excludingTargetLists": "За винятком цільових списків",
+    "sentCount": "Відправлено",
+    "openedCount": "Відкрито",
+    "clickedCount": "Цикнуте",
+    "optedOutCount": "Відмовлено",
+    "bouncedCount": "Відшито",
+    "hardBouncedCount": "Жорстко відшито",
+    "softBouncedCount": "М'яко відшито",
+    "leadCreatedCount": "Ліди створені",
+    "revenue": "Виручка",
+    "revenueConverted": "Revenue (converted)",
+    "budget": "Бюджет",
+    "budgetConverted": "Бюджет (конвертований)"
+  },
+  "links": {
+    "targetLists": "Цільові списки",
+    "excludingTargetLists": "За винятком цільових списків",
+    "accounts": "Контрагенти",
+    "contacts": "Контакти",
+    "leads": "Ліди",
+    "opportunities": "Угоди",
+    "campaignLogRecords": "Лоґ",
+    "massEmails": "Масові електронні адреси",
+    "trackingUrls": "Tracking URLs"
+  },
+  "options": {
+    "type": {
+      "Email": "Емейл",
+      "Web": "Веб",
+      "Television": "Телебачення",
+      "Radio": "Радіо",
+      "Newsletter": "Розсилка",
+      "Mail": "Пошта"
     },
-    "links": {
-        "targetLists": "Цільові списки",
-        "accounts": "Контрагенти",
-        "contacts": "Контакти",
-        "leads": "Ліди",
-        "opportunities": "Угоди",
-        "campaignLogRecords": "Лоґ"
-    },
-    "options": {
-        "type": {
-            "Email": "Емейл",
-            "Web": "Веб",
-            "Television": "Телебачення",
-            "Radio": "Радіо",
-            "Newsletter": "Розсилка",
-            "Mail": "Пошта"
-        },
-        "status": {
-            "Planning": "Запланований",
-            "Active": "Активний",
-            "Inactive": "Неактивний",
-            "Complete": "Завершений"
-        }
-    },
-    "labels": {
-        "Create Campaign": "Створити кампанію",
-        "Target Lists": "Цільові списки",
-        "Statistics": "Статистика",
-        "hard": "жорстко",
-        "soft": "м'яко"
-    },
-    "presetFilters": {
-        "active": "Активний"
+    "status": {
+      "Planning": "Запланований",
+      "Active": "Активний",
+      "Inactive": "Неактивний",
+      "Complete": "Завершений"
     }
+  },
+  "labels": {
+    "Create Campaign": "Створити кампанію",
+    "Target Lists": "Цільові списки",
+    "Statistics": "Статистика",
+    "hard": "жорстко",
+    "soft": "м'яко",
+    "Unsubscribe": "Непідписувати",
+    "Mass Emails": "Масові електронні адреси",
+    "Email Templates": "Шаблони електронної пошти",
+    "Unsubscribe again": "Відписатися знову",
+    "Subscribe again": "Підписатися знову",
+    "Create Target List": "Create Target List"
+  },
+  "presetFilters": {
+    "active": "Активний"
+  },
+  "messages": {
+    "unsubscribed": "Ви відписалися зі списку розсилки.",
+    "subscribedAgain": "Ви підписані знову"
+  },
+  "tooltips": {
+    "targetLists": "Targets that should receive messages.",
+    "excludingTargetLists": "Targets that should not receive messages."
+  }
 }

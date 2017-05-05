@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "名称",
+    "roles": "角色",
+    "assignmentPermission": "分配许可",
+    "userPermission": "用户权限",
+    "portalPermission": "门户权限"
+  },
+  "links": {
+    "users": "用户",
+    "teams": "团队"
+  },
+  "tooltips": {
+    "assignmentPermission": "允许限制记录和发布消息分配给其他用户的能力。\n\n所有的 - 没有限制\n\n团队 - 可以分配，只有张贴到队友\n\n否 - 可以分配，只有张贴到自",
+    "userPermission": "允许以限制用户查看活动，日历和其他用户的数据流的能力。\n\n所有 - 可以查看所有\n\n团队 - 可以查看队友的活动只\n\n否 - 无法查看",
+    "portalPermission": "定义为门户网站的信息，将联系人门户网站用户，并发布消息转换为门户用户能力的访问。"
+  },
+  "labels": {
+    "Access": "访问",
+    "Create Role": "创建角色",
+    "Scope Level": "范围级别",
+    "Field Level": "场级"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "没有设置",
+      "enabled": "启用",
+      "disabled": "禁用"
+    },
+    "levelList": {
+      "all": "所有",
+      "team": "球队",
+      "account": "客户",
+      "contact": "联系",
+      "own": "拥有",
+      "no": "没有",
+      "yes": "是",
+      "not-set": "没有设置"
+    }
+  },
+  "actions": {
+    "read": "读",
+    "edit": "编辑",
+    "delete": "删除",
+    "stream": "信息流",
+    "create": "创建"
+  },
+  "messages": {
+    "changesAfterClearCache": "访问控制中的所有更改将在缓存清除后应用。"
+  }
+}

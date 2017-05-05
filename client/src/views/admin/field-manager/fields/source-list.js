@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ Espo.define('views/admin/field-manager/fields/source-list', 'views/fields/multi-
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(Object.keys(this.getMetadata().get('entityDefs.Attachment.sources') || {}));
+            this.params.options = Espo.Utils.clone(this.getMetadata().get('entityDefs.Attachment.sourceList') || []);
 
             this.translatedOptions = {};
             this.params.options.forEach(function (item) {

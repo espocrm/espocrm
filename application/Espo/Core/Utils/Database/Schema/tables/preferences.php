@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -25,13 +25,31 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-return array(    
+return array(
 
     'unset' => array(
-        'Preferences', 
+        '__APPEND__',
+        'Preferences'
     ),
+    'unsetIgnore' => [
+        '__APPEND__',
+        ['Preferences', 'fields', 'id'],
+        ['Preferences', 'fields', 'data']
+    ],
+    'Preferences' => array(
+        'fields' => array(
+            'id' => array(
+                'dbType' => 'varchar',
+                'len' => 24,
+                'type' => 'id'
+            ),
+            'data' => array(
+                'type' => 'text'
+            )
+        )
+    )
 
 );
 

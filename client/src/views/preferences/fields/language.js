@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,7 +31,9 @@ Espo.define('views/preferences/fields/language', 'views/fields/enum', function (
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList'));
+            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList')).sort(function (v1, v2) {
+                return this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language'));
+            }.bind(this));
 
             this.params.options.unshift('');
 

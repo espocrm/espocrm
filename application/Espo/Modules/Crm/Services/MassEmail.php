@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -70,9 +70,9 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
-    protected function afterRemove(Entity $entity, array $data = array())
+    protected function afterRemove(Entity $massEmail, array $data = array())
     {
-        parent::afterRemove($entity, $data);
+        parent::afterRemove($massEmail, $data);
         $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => ['Pending', 'Failed'],
             'massEmailId' => $massEmail->id
@@ -337,8 +337,6 @@ class MassEmail extends \Espo\Services\Record
 
         $body = $emailData['body'];
 
-
-
         $optOutUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=unsubscribe&id=' . $queueItem->id;
         $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
 
@@ -394,6 +392,14 @@ class MassEmail extends \Espo\Services\Record
 
     protected function sendQueueItem(Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], $campaign = null, $isTest = false)
     {
+        $queueItemFetched = $this->getEntityManager()->getEntity($queueItem->getEntityType(), $queueItem->id);
+        if ($queueItemFetched->get('status') !== 'Pending') {
+            return;
+        }
+
+        $queueItem->set('status', 'Sending');
+        $this->getEntityManager()->saveEntity($queueItem);
+
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
@@ -432,6 +438,8 @@ class MassEmail extends \Espo\Services\Record
             $params['replyToName'] = $massEmail->get('replyToName');
         }
 
+        $isSent = false;
+
         try {
             $attemptCount = $queueItem->get('attemptCount');
             $attemptCount++;
@@ -443,8 +451,28 @@ class MassEmail extends \Espo\Services\Record
             $header->setId($queueItem->id);
             $message->getHeaders()->addHeader($header);
 
+            $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
+
+            if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
+                $optOutUrl = $this->getConfig()->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+                $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
+            }
+
             $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmentList);
 
+            $isSent = true;
+        } catch (\Exception $e) {
+            if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
+                $queueItem->set('status', 'Failed');
+            } else {
+                $queueItem->set('status', 'Pending');
+            }
+            $this->getEntityManager()->saveEntity($queueItem);
+            $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
+            return false;
+        }
+
+        if ($isSent) {
             $emailObject = $emailTemplate;
             if ($massEmail->get('storeSentEmails') && !$isTest) {
                 $this->getEntityManager()->saveEntity($email);
@@ -460,14 +488,6 @@ class MassEmail extends \Espo\Services\Record
             if ($campaign) {
                 $this->getCampaignService()->logSent($campaign->id, $queueItem->id, $target, $emailObject, $target->get('emailAddress'), null, $queueItem->get('isTest'));
             }
-
-        } catch (\Exception $e) {
-            if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
-                $queueItem->set('status', 'Failed');
-            }
-            $this->getEntityManager()->saveEntity($queueItem);
-            $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
-            return false;
         }
 
         return true;

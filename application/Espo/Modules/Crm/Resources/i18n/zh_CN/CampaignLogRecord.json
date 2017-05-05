@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "行动",
+    "actionDate": "日期",
+    "data": "数据",
+    "campaign": "营销活动",
+    "parent": "目标",
+    "object": "目的",
+    "application": "应用",
+    "queueItem": "队列项",
+    "stringData": "String Data",
+    "stringAdditionalData": "字符串附加数据"
+  },
+  "links": {
+    "queueItem": "队列项",
+    "parent": "关联",
+    "object": "目的"
+  },
+  "options": {
+    "action": {
+      "Sent": "发送",
+      "Opened": "开业",
+      "Opted Out": "选择退出",
+      "Bounced": "退回",
+      "Clicked": "点击",
+      "Lead Created": "已创建的线索"
+    }
+  },
+  "labels": {
+    "All": "所有"
+  },
+  "presetFilters": {
+    "sent": "发送",
+    "opened": "打开",
+    "optedOut": "选择退出",
+    "bounced": "反弹",
+    "clicked": "点击",
+    "leadCreated": "已创建的线索"
+  }
+}

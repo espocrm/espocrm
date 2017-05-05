@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -55,25 +55,7 @@ class Portal extends Record
 
     protected function loadUrlField(Entity $entity)
     {
-        if ($entity->get('customUrl')) {
-            $entity->set('url', $entity->get('customUrl'));
-            return;
-        }
-        $siteUrl = $this->getConfig()->get('siteUrl');
-        $siteUrl = rtrim($siteUrl , '/') . '/';
-        $url = $siteUrl . 'portal/';
-        if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
-            $entity->set('isDefault', true);
-            $entity->setFetched('isDefault', true);
-        } else {
-            if ($entity->get('customId')) {
-                $url .= $entity->get('customId') . '/';
-            } else {
-                $url .= $entity->id . '/';
-            }
-            $entity->setFetched('isDefault', false);
-        }
-        $entity->set('url', $url);
+        $this->getRepository()->loadUrlField($entity);
     }
 }
 

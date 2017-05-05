@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         data: function () {
             return {
-                tabListDefs: this.tabListDefs,
+                tabDefsList: this.tabDefsList,
                 title: this.options.title,
                 menu: this.getMenuDefs(),
                 quickCreateList: this.quickCreateList,
@@ -60,7 +60,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
             },
-            'click .navbar-header a.minimizer': function () {
+            'click a.minimizer': function () {
                 var $body = $('body');
                 if ($body.hasClass('minimized')) {
                     $body.removeClass('minimized');
@@ -68,6 +68,17 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 } else {
                     $body.addClass('minimized');
                     this.getStorage().set('state', 'layoutMinimized', true);
+                }
+            },
+            'click a.action': function (e) {
+                var $el = $(e.currentTarget);
+
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                if (typeof this[method] == 'function') {
+                    var data = $el.data();
+                    this[method](data, e);
+                    e.preventDefault();
                 }
             }
         },
@@ -126,7 +137,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             this.setupGlobalSearch();
 
 
-            this.setupTabListDefs();
+            this.setupTabDefsList();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -192,15 +203,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     var windowWidth = window.innerWidth;
                     var moreWidth = $moreDd.width();
 
-                    $more.children('li').each(function (i, li) {
+                    $more.children('li.not-in-more').each(function (i, li) {
                         unhideOneTab();
                     });
-
-                    $more.parent().addClass('hidden');
 
                     if (windowWidth < smallScreenWidth) {
                         return;
                     }
+
+                    $more.parent().addClass('hidden');
 
                     var headerWidth = this.$el.width();
 
@@ -238,38 +249,48 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 };
 
-                if ($navbar.height() <= navbarNeededHeight) {
+                if ($navbar.height() <= navbarNeededHeight && $more.children().size() === 0) {
                     $more.parent().addClass('hidden');
                 }
 
                 processUpdateWidth();
 
-
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
                 var minHeight = $tabs.height() + navbarStaticItemsHeight;
+
+                var $more = $tabs.find('li.more > ul');
+
+                if ($more.children().size() === 0) {
+                    $more.parent().addClass('hidden');
+                }
+
                 $('body').css('minHeight', minHeight + 'px');
+
                 $window.on('scroll.navbar', function () {
                     $tabs.scrollTop($window.scrollTop());
+                    $more.scrollTop($window.scrollTop());
                 }.bind(this));
 
-                var updateHeight = function () {
+                var updateSizeForVertical = function () {
                     var windowHeight = window.innerHeight;
                     var windowWidth = window.innerWidth;
 
                     if (windowWidth < smallScreenWidth) {
-                        $tabs.css('height', 'none');
-                        return;
+                        $tabs.css('height', 'auto');
+                        $more.css('max-height', '');
+                    } else {
+                        $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
+                        $more.css('max-height', windowHeight + 'px');
                     }
 
-                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                 }.bind(this);
 
                 $(window).on('resize.navbar', function() {
-                    updateHeight();
+                    updateSizeForVertical();
                 });
-                updateHeight();
+                updateSizeForVertical();
             }
         },
 
@@ -329,48 +350,71 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
-        setupTabListDefs: function () {
-            var tabListDefs = [];
+        setupTabDefsList: function () {
+            var tabDefsList = [];
+            var moreIsMet = false;;
             this.tabList.forEach(function (tab, i) {
+                if (tab === '_delimiter_') {
+                    moreIsMet = true;
+                    return;
+                }
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
                 var o = {
                     link: '#' + tab,
                     label: label,
                     shortLabel: label.substr(0, 2),
-                    name: tab
+                    name: tab,
+                    isInMore: moreIsMet
                 };
-                tabListDefs.push(o);
+                tabDefsList.push(o);
             }, this);
-            this.tabListDefs = tabListDefs;
+            this.tabDefsList = tabDefsList;
         },
 
         getMenuDefs: function () {
             var menuDefs = [
                 {
                     link: '#Preferences',
-                    label: this.getLanguage().translate('Preferences'),
-                },
+                    label: this.getLanguage().translate('Preferences')
+                }
+            ];
+
+            if (!this.getConfig().get('actionHistoryDisabled')) {
+                menuDefs.push({
+                    divider: true
+                });
+                menuDefs.push({
+                    action: 'showLastViewed',
+                    link: '#LastViewed',
+                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
+                });
+            }
+
+            menuDefs = menuDefs.concat([
                 {
-                    link: '#About',
-                    label: this.getLanguage().translate('About'),
-                },
-                {
-                    divider: true,
+                    divider: true
                 },
                 {
                     link: '#clearCache',
-                    label: this.getLanguage().translate('Clear Local Cache'),
+                    label: this.getLanguage().translate('Clear Local Cache')
+                },
+                {
+                    divider: true
+                },
+                {
+                    link: '#About',
+                    label: this.getLanguage().translate('About')
                 },
                 {
                     link: '#logout',
-                    label: this.getLanguage().translate('Log Out'),
-                },
-            ];
+                    label: this.getLanguage().translate('Log Out')
+                }
+            ]);
 
             if (this.getUser().isAdmin()) {
                 menuDefs.unshift({
                     link: '#Admin',
-                    label: this.getLanguage().translate('Administration'),
+                    label: this.getLanguage().translate('Administration')
                 });
             }
             return menuDefs;
@@ -386,6 +430,24 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
                 view.render();
             });
+        },
+
+        actionShowLastViewed: function () {
+            this.createView('dialog', 'views/modals/last-viewed', {}, function (view) {
+                view.render();
+                this.listenTo(view, 'close', function () {
+                    this.clearView('dialog');
+                }, this);
+            }, this);
+        },
+
+        actionShowHistory: function () {
+            this.createView('dialog', 'views/modals/action-history', {}, function (view) {
+                view.render();
+                this.listenTo(view, 'close', function () {
+                    this.clearView('dialog');
+                }, this);
+            }, this);
         }
     });
 

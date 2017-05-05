@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'fields/formula/edit',
+        detailTemplate: 'fields/formula/detail',
 
         editTemplate: 'fields/formula/edit',
 
@@ -88,7 +88,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             this.$editor = this.$el.find('#' + this.containerId);
 
-            if (this.mode === 'edit' || this.mode == 'detail') {
+            if (this.$editor.size() && (this.mode === 'edit' || this.mode == 'detail')) {
                 this.$editor
                     .css('height', this.height + 'px')
                     .css('fontSize', '14px');
@@ -96,6 +96,8 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
 
                 if (this.mode == 'detail') {
                     editor.setReadOnly(true);
+                    editor.renderer.$cursorLayer.element.style.display = "none";
+                    editor.renderer.setShowGutter(false);
                 }
 
                 editor.setShowPrintMargin(false);

@@ -5,44 +5,6 @@
         "list":"views/inbound-email/record/list"
     },
     "formDependency": {
-        "createCase": {
-            "map": {
-                "true" : [
-                    {
-                        "action": "show",
-                        "fields": ["caseDistribution"]
-                    }
-                ]
-            },
-            "default": [
-                {
-                    "action": "hide",
-                    "fields": ["caseDistribution"]
-                }
-            ]
-        },
-        "caseDistribution": {
-            "map": {
-                "Round-Robin" : [
-                    {
-                        "action": "show",
-                        "fields": ["targetUserPosition"]
-                    }
-                ],
-                "Least-Busy" : [
-                    {
-                        "action": "show",
-                        "fields": ["targetUserPosition"]
-                    }
-                ]
-            },
-            "default": [
-                {
-                    "action": "hide",
-                    "fields": ["targetUserPosition"]
-                }
-            ]
-        },
         "reply": {
             "map": {
                 "true" : [
@@ -77,5 +39,15 @@
             "create": false,
             "rowActionsView": "views/record/row-actions/remove-only"
         }
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": [
+        ],
+        "detailSmall": [
+        ],
+        "edit": [
+        ],
+        "editSmall": [
+        ]
     }
 }

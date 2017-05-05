@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "storeSentEmails": "Lager Sendte Emails",
+    "startAt": "Startdato",
+    "fromAddress": "Fra Adresse",
+    "fromName": "Fra Navn",
+    "replyToAddress": "Svar-til Adresse",
+    "replyToName": "Svar-til Navn",
+    "campaign": "Kampagne",
+    "emailTemplate": "Emailskabelon",
+    "inboundEmail": "Emailkonto",
+    "targetLists": "Kontaktlister",
+    "excludingTargetLists": "Ekskluderer Kontaktlister",
+    "optOutEntirely": "Fuldstændig Opt-Out"
+  },
+  "links": {
+    "targetLists": "Kontaktlister",
+    "excludingTargetLists": "Ekskluderer Kontaktlister",
+    "queueItems": "Objekter i Kø",
+    "campaign": "Kampagne",
+    "emailTemplate": "Emailskabelon",
+    "inboundEmail": "Emailkonto"
+  },
+  "options": {
+    "status": {
+      "Draft": "Kladde",
+      "Pending": "Afventer",
+      "In Process": "Under Behandling",
+      "Complete": "Færdig",
+      "Canceled": "Afbrudt",
+      "Failed": "Fejlet"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Opret Masse-Email",
+    "Send Test": "Send Test"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Vælg mindst et Mål",
+    "testSent": "Testemail(s) formodes at være sendt"
+  },
+  "tooltips": {
+    "optOutEntirely": "Emailadresser tilhørende modtagere, som er afmeldt, bliver markeret som \"afmeldt\", og de vil ikke modtage masse-emails fremover.",
+    "targetLists": "Kontakter der skal modtage meddelelser",
+    "excludingTargetLists": "Kontakter der ikke skal modtage meddelelser"
+  },
+  "presetFilters": {
+    "actual": "Aktuel",
+    "complete": "Færdig"
+  }
+}

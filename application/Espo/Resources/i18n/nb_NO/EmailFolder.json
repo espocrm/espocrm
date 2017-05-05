@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Hopp over varslinger"
+  },
+  "labels": {
+    "Create EmailFolder": "Opprett mappe",
+    "Manage Folders": "Administrer mapper",
+    "Emails": "Eposter"
+  }
+}

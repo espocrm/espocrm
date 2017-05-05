@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/pa
         fetchOnModelAfterRelate: true,
 
         actionOptOut: function (data) {
-            if (confirm(this.translate('confirmation', 'messages'))) {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
                 $.ajax({
                     url: 'TargetList/action/optOut',
                     type: 'POST',
@@ -47,7 +47,7 @@ Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/pa
                     Espo.Ui.success(this.translate('Done'));
                     this.model.trigger('opt-out');
                 }.bind(this));
-            }
+            }, this);
         }
 
     });

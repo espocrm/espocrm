@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -49,6 +49,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         backdrop: true,
 
         fitHeight: true,
+
+        className: 'dialog dialog-record',
+
+        sideDisabled: false,
+
+        bottomDisabled: false,
 
         setup: function () {
 
@@ -179,7 +185,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.header = this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
-                this.header += ' &raquo; ' + model.get('name');
+                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
                 this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
@@ -231,7 +237,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 inlineEditDisabled: true,
-                exit: function () {},
+                sideDisabled: this.sideDisabled,
+                bottomDisabled: this.bottomDisabled,
+                exit: function () {}
             };
             this.createView('record', viewName, options, callback);
         },
@@ -273,19 +281,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 }
             }
 
-            var $previous = this.$el.find('footer button[data-name="previous"]');
-            var $next = this.$el.find('footer button[data-name="next"]');
-
             if (previousButtonEnabled) {
-                $previous.removeClass('disabled');
+                this.enableButton('previous');
             } else {
-                $previous.addClass('disabled');
+                this.disableButton('previous');
             }
 
             if (nextButtonEnabled) {
-                $next.removeClass('disabled');
+                this.enableButton('next');
             } else {
-                $next.addClass('disabled');
+                 this.disableButton('next');
             }
         },
 
@@ -388,19 +393,19 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         actionRemove: function () {
             var model = this.getView('record').model;
 
-            if (confirm(this.translate('removeRecordConfirmation', 'messages'))) {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
-                $buttons.addClass('disabled');
+                $buttons.addClass('disabled').attr('disabled', 'disabled');
                 model.destroy({
                     success: function () {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
                     }.bind(this),
                     error: function () {
-                        $buttons.removeClass('disabled');
+                        $buttons.removeClass('disabled').removeAttr('disabled');
                     }
                 });
-            }
+            }, this);
         },
 
         actionFullForm: function () {

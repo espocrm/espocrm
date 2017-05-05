@@ -1,32 +1,43 @@
 {
-    "labels": {
-        "Create Document": "Створити документ",
-        "Details": "Деталі"
+  "labels": {
+    "Create Document": "Створити документ",
+    "Details": "Деталі"
+  },
+  "fields": {
+    "name": "Ім'я",
+    "status": "Статус",
+    "file": "Файл",
+    "type": "Тип",
+    "publishDate": "Дата публікації",
+    "expirationDate": "Термін придатности",
+    "description": "Опис",
+    "accounts": "Облікові записи",
+    "folder": "Папка"
+  },
+  "links": {
+    "accounts": "Контрагенти",
+    "opportunities": "Угоди",
+    "folder": "Папка",
+    "leads": "Керівники",
+    "contacts": "Контакти"
+  },
+  "options": {
+    "status": {
+      "Active": "Активний",
+      "Draft": "Чернетка",
+      "Expired": "Прострочено",
+      "Canceled": "Скасовано"
     },
-    "fields": {
-        "name": "Ім'я",
-        "status": "Статус",
-        "file": "Файл",
-        "type": "Тип",
-        "source": "Джерело",
-        "publishDate": "Дата публікації",
-        "expirationDate": "Термін придатности",
-        "description": "Опис"
-    },
-    "links": {
-        "accounts": "Контрагенти",
-        "opportunities": "Угоди"
-    },
-    "options": {
-        "status": {
-            "Active": "Активний",
-            "Draft": "Чернетка",
-            "Expired": "Прострочено",
-            "Canceled": "Скасовано"
-        }
-    },
-    "presetFilters": {
-        "active": "Активний",
-        "draft": "Чернетка"
+    "type": {
+      "": "Жоден",
+      "Contract": "Контракт",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "Ліцензійна угода"
     }
+  },
+  "presetFilters": {
+    "active": "Активний",
+    "draft": "Чернетка"
+  }
 }

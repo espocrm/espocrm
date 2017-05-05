@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -98,16 +98,23 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
             }
-            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
-                attributes.nameHash = {};
-                attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
-            }
 
-            if (scope && !attributes.parentId) {
-                if (this.checkParentTypeAvailability(scope, this.model.name)) {
-                    attributes.parentType = this.model.name;
-                    attributes.parentId = this.model.id;
-                    attributes.parentName = this.model.get('name');
+            attributes.nameHash = {};
+            attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
+
+            if (scope) {
+                if (!attributes.parentId) {
+                    if (this.checkParentTypeAvailability(scope, this.model.name)) {
+                        attributes.parentType = this.model.name;
+                        attributes.parentId = this.model.id;
+                        attributes.parentName = this.model.get('name');
+                    }
+                } else {
+                    if (attributes.parentType && !this.checkParentTypeAvailability(scope, attributes.parentType)) {
+                        attributes.parentType = null;
+                        attributes.parentId = null;
+                        attributes.parentName = null;
+                    }
                 }
             }
             callback.call(this, attributes);
@@ -153,7 +160,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
             }
 
             Espo.require('EmailHelper', function (EmailHelper) {
-                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser());
+                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
 
                 this.notify('Please wait...');
 

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Navn",
+    "emailAddress": "Epost",
+    "title": "Tittel",
+    "website": "Nettside",
+    "accountName": "Kontonavn",
+    "phoneNumber": "Telefon",
+    "doNotCall": "Ikke ring!",
+    "address": "Adresse",
+    "description": "Beskrivelse"
+  },
+  "labels": {
+    "Create Target": "Opprett mål",
+    "Convert to Lead": "Konverter til ledetråd"
+  }
+}

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -48,7 +48,8 @@ class Email extends Record
             'preferences',
             'fileManager',
             'crypt',
-            'serviceFactory'
+            'serviceFactory',
+            'fileStorageManager'
         ]);
     }
 
@@ -63,6 +64,11 @@ class Email extends Record
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
+    }
+
+    protected function getFileStorageManager()
+    {
+        return $this->getInjection('fileStorageManager');
     }
 
     protected function getMailSender()
@@ -277,7 +283,7 @@ class Email extends Record
             $this->prepareEntityForOutput($entity);
         }
 
-        if (!empty($entity) && !empty($id)) {
+        if (!empty($entity) && !empty($id) && !$entity->get('isRead')) {
             $this->markAsRead($entity->id);
         }
         return $entity;
@@ -366,6 +372,18 @@ class Email extends Record
                 user_id = " . $pdo->quote($userId) . "
         ";
         $pdo->query($sql);
+
+        $sql = "
+            UPDATE notification SET `read` = 1
+            WHERE
+                `deleted` = 0 AND
+                `type` = 'EmailReceived' AND
+                `related_type` = 'Email' AND
+                `read` = 0 AND
+                `user_id` = " . $pdo->quote($userId) . "
+        ";
+        $pdo->query($sql);
+
         return true;
     }
 
@@ -383,6 +401,20 @@ class Email extends Record
                 email_id = " . $pdo->quote($id) . "
         ";
         $pdo->query($sql);
+
+        $sql = "
+            UPDATE notification SET `read` = 1
+            WHERE
+                `deleted` = 0 AND
+                `type` = 'EmailReceived' AND
+                `related_type` = 'Email' AND
+                `related_id` = " . $pdo->quote($id) ." AND
+                `read` = 0 AND
+                `user_id` = " . $pdo->quote($userId) . "
+        ";
+
+        $pdo->query($sql);
+
         return true;
     }
 
@@ -639,16 +671,17 @@ class Email extends Record
                 $attachment->set('global', $source->get('global'));
                 $attachment->set('name', $source->get('name'));
                 $attachment->set('sourceId', $source->getSourceId());
+                $attachment->set('storage', $source->get('storage'));
 
                 if (!empty($parentType) && !empty($parentId)) {
                     $attachment->set('parentType', $parentType);
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileManager()->isFile('data/upload/' . $source->getSourceId())) {
+                if ($this->getFileStorageManager()->isFile($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
-
-                    $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+                    $contents = $this->getFileStorageManager()->getContents($source);
+                    $this->getFileStorageManager()->putContents($attachment, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');
                 }

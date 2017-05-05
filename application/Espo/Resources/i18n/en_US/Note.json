@@ -5,7 +5,8 @@
         "targetType": "Target",
         "teams": "Teams",
         "users": "Users",
-        "portals": "Portals"
+        "portals": "Portals",
+        "type": "Type"
     },
     "filters": {
         "all": "All",

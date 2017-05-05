@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -66,6 +66,18 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             'click [data-action="createContact"]': function (e) {
                 var address = $(e.currentTarget).data('address');
                 From.prototype.createPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="createLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.createPerson.call(this, 'Lead', address);
+            },
+            'click [data-action="addToContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="addToLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Lead', address);
             }
         },
 
@@ -157,6 +169,14 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                         this.$input.val('');
                     }.bind(this)
                 });
+
+                this.once('render', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
+
+                this.once('remove', function () {
+                    this.$input.autocomplete('dispose');
+                }, this);
             }
         },
 
@@ -256,7 +276,11 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
-                lineHtml = addressHtml;
+                if (name) {
+                    lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
+                } else {
+                    lineHtml = addressHtml;
+                }
             }
             if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {

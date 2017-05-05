@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Largeur (%)",
+    "link": "Lien",
+    "notSortable": "Not Sortable",
+    "align": "Align",
+    "panelName": "Panel Name",
+    "style": "Style",
+    "sticked": "Sticked"
+  },
+  "options": {
+    "align": {
+      "left": "Gauche",
+      "right": "Droite"
+    },
+    "style": {
+      "default": "Default",
+      "success": "Success",
+      "danger": "Danger",
+      "info": "Info",
+      "warning": "Warning",
+      "primary": "Primary"
+    }
+  }
+}

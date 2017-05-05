@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -187,6 +187,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRemove($entity, $options);
         $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
+    }
+
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    {
+        $hookData = array(
+            'relationName' => $relationName,
+            'relationParams' => $params
+        );
+
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
     }
 
     public function remove(Entity $entity, array $options = array())

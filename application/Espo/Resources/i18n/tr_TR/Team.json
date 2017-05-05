@@ -1,12 +1,20 @@
 {
-    "fields": {
-        "name": "İsim",
-        "roles": "Görevler"
-    },
-    "links": {
-        "users": "Kullanıcılar"
-    },
-    "labels": {
-        "Create Team": "Takım Oluştur"
-    }
+  "fields": {
+    "name": "İsim",
+    "roles": "Görevler",
+    "positionList": "Pozisyon Listesi"
+  },
+  "links": {
+    "users": "Kullanıcılar",
+    "notes": "Notlar",
+    "roles": "Roller",
+    "inboundEmails": "Grup E-posta Hesapları"
+  },
+  "tooltips": {
+    "roles": "Rollere Erişim. Bu ekibin kullanıcıları, seçilen rollerden erişim kontrolü düzeyi elde eder.",
+    "positionList": "Bu takımda mevcut pozisyonlar. Örneğin Satış Görevlisi, Müdür."
+  },
+  "labels": {
+    "Create Team": "Takım Oluştur"
+  }
 }

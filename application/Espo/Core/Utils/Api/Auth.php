@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -59,6 +59,13 @@ class Auth extends \Slim\Middleware
         $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
         if (isset($espoAuth)) {
             list($authUsername, $authPassword) = explode(':', base64_decode($espoAuth));
+        }
+
+        if (!isset($authUsername)) {
+            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
+                $authUsername = $_COOKIE['auth-username'];
+                $authPassword = $_COOKIE['auth-token'];
+            }
         }
 
         $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');

@@ -8,7 +8,7 @@
       "detail": "crm:views/contact/record/detail",
       "detailQuick": "crm:views/contact/record/detail-small"
    },
-   "defaultSidePanelFieldList": {
+   "defaultSidePanelFieldLists": {
       "detail": [
          {
             "name": "assignedUser"

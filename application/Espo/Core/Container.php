@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -126,6 +126,14 @@ class Container
     protected function loadSlim()
     {
         return new \Espo\Core\Utils\Api\Slim();
+    }
+
+    protected function loadFileStorageManager()
+    {
+        return new \Espo\Core\FileStorage\Manager(
+            $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
+            $this
+        );
     }
 
     protected function loadFileManager()
@@ -340,6 +348,13 @@ class Container
         return new \Espo\Core\Utils\ClientManager(
             $this->get('config'),
             $this->get('themeManager')
+        );
+    }
+
+    protected function loadInjectableFactory()
+    {
+        return new \Espo\Core\InjectableFactory(
+            $this
         );
     }
 

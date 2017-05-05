@@ -27,7 +27,7 @@
                     {{/each}}
                 </ul>
             </div>
-            <input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">
+            {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon" data-action="search">
                     <span class="glyphicon glyphicon-search"></span>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="form-group col-md-6 col-sm-4">
-        <div class="btn-group">
+        <div class="btn-group search-right-buttons-group">
             <button type="button" class="btn btn-default" data-action="reset">
                 <span class="glyphicon glyphicon-repeat"></span>&nbsp;{{translate 'Reset'}}
             </button>

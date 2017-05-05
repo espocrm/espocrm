@@ -4,7 +4,9 @@
     "Any": "Beliebig",
     "Send in Email": "In E-Mail senden",
     "Move Up": "Aufwärts",
-    "Move Down": "Abwärts"
+    "Move Down": "Abwärts",
+    "Move to Top": "zu Anfang",
+    "Move to Bottom": "zum Ende"
   },
   "fields": {
     "name": "Name",
@@ -37,7 +39,6 @@
     }
   },
   "tooltips": {
-    "portals": "Wenn in diesem Feld etwas eingetragen ist, wird dieser Artikel nur in den gewählten Portalen angezeigt. Ist das Feld leer ist der Artikel in allen Portalen zu sehen."
   },
   "presetFilters": {
     "published": "Publiziert"

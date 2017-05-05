@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "title": "Tittel",
+    "dateFrom": "Fra dato",
+    "dateTo": "Til dato",
+    "autorefreshInterval": "Intervall for automatisk oppdatering",
+    "displayRecords": "Antall oppføringer",
+    "isDoubleHeight": "Dobbel høyde",
+    "mode": "Visning",
+    "enabledScopeList": "Hva som skal vises",
+    "users": "Brukere"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Uke (agenda)",
+      "basicWeek": "Uke",
+      "month": "Måned",
+      "basicDay": "Dag",
+      "agendaDay": "Dag (agenda)",
+      "timeline": "Tidslinje"
+    }
+  }
+}

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -66,6 +66,13 @@ class EntityManager
     protected function getMetadata()
     {
         return $this->metadata;
+    }
+
+    protected function getEntityManager()
+    {
+        if (!$this->container) return;
+
+        return $this->container->get('entityManager');
     }
 
     protected function getLanguage()
@@ -210,6 +217,7 @@ class EntityManager
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
+        $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
         $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
@@ -655,7 +663,7 @@ class EntityManager
         }
 
         if (
-            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('audited', $params)) {
                 $audited = $params['audited'];
@@ -672,7 +680,7 @@ class EntityManager
         }
 
         if (
-           $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('auditedForeign', $params)) {
                 $auditedForeign = $params['auditedForeign'];

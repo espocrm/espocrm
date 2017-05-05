@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -45,6 +45,7 @@ class Import extends \Espo\Services\Record
         $this->addDependency('serviceFactory');
         $this->addDependency('fileManager');
         $this->addDependency('selectManagerFactory');
+        $this->addDependency('fileStorageManager');
     }
 
     protected $dateFormatsMap = array(
@@ -60,6 +61,7 @@ class Import extends \Espo\Services\Record
 
     protected $timeFormatsMap = array(
         'HH:mm' => 'H:i',
+        'HH:mm:ss' => 'H:i:s',
         'hh:mm a' => 'h:i a',
         'hh:mma' => 'h:ia',
         'hh:mm A' => 'h:iA',
@@ -71,6 +73,11 @@ class Import extends \Espo\Services\Record
     protected function getSelectManagerFactory()
     {
         return $this->injections['selectManagerFactory'];
+    }
+
+    protected function getFileStorageManager()
+    {
+        return $this->injections['fileStorageManager'];
     }
 
     protected function getFileManager()
@@ -293,7 +300,12 @@ class Import extends \Espo\Services\Record
             $enclosure = $params['textQualifier'];
         }
 
-        $contents = $this->getFileManager()->getContents('data/upload/' . $attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        if (!$attachment) {
+            throw new Error('Import error');
+        }
+
+        $contents = $this->getFileStorageManager()->getContents($attachment);
         if (empty($contents)) {
             throw new Error('Import error');
         }
@@ -416,9 +428,9 @@ class Import extends \Espo\Services\Record
         }
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
+            $updateByFieldList = [];
+            $whereClause = array();
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
-                $updateByFieldList = [];
-                $whereClause = array();
                 foreach ($params['updateBy'] as $i) {
                     if (array_key_exists($i, $importFieldList)) {
                         $updateByFieldList[] = $importFieldList[$i];
@@ -569,7 +581,7 @@ class Import extends \Espo\Services\Record
                             if ($found) {
                                 $entity->set($relation . 'Id', $found->id);
                             } else {
-                                if (!in_array($scope, 'User', 'Team')) {
+                                if (!in_array($scope, ['User', 'Team'])) {
                                     // TODO create related record with name $name and relate
                                 }
                             }
@@ -655,9 +667,11 @@ class Import extends \Espo\Services\Record
                     }
                     break;
                 case Entity::DATETIME:
-                    $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value);
+                    $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
+                    $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
                     if ($dt) {
-                        return $dt->format('Y-m-d H:i');
+                        $dt->setTimezone(new \DateTimeZone('UTC'));
+                        return $dt->format('Y-m-d H:i:s');
                     }
                     break;
                 case Entity::FLOAT:

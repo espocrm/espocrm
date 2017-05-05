@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "host": "Vært",
+    "username": "Brugernavn",
+    "password": "Kodeord",
+    "port": "Port",
+    "monitoredFolders": "Overvågede Mapper",
+    "ssl": "SSL",
+    "fetchSince": "Hent Siden",
+    "emailAddress": "Emailadresse",
+    "sentFolder": "Sendt Mappe",
+    "storeSentEmails": "Gem Sendte Emails",
+    "keepFetchedEmailsUnread": "Behold Hentede Emails som Ulæste",
+    "emailFolder": "Læg i Mappe",
+    "useSmtp": "Brug SMTP",
+    "smtpHost": "SMTP Host",
+    "smtpPort": "SMTP Port",
+    "smtpAuth": "SMTP Auth",
+    "smtpSecurity": "SMTP Sikkerhed",
+    "smtpUsername": "SMTP Brugernavn",
+    "smtpPassword": "SMTP Kodeord"
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Emails"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Opret Emailkonto",
+    "IMAP": "IMAP",
+    "Main": "Konto",
+    "Test Connection": "Test Forbindelse",
+    "Send Test Email": "Send Testemail",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kunne ikke forbinde til IMAP server",
+    "connectionIsOk": "Forbindelse OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Du kan tilføje en 'Sendt' mappe for at synkronisere emails sendt fra en ekstern emailklient.",
+    "storeSentEmails": "Sendte emails bliver lagret på IMAP serveren. Emailadressefeltet skal matche adressen emails vil blive sendt fra."
+  }
+}

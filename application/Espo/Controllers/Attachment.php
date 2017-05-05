@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ class Attachment extends \Espo\Core\Controllers\Record
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $this->getEntityManager()->saveEntity($attachment);
-        $this->getContainer()->get('fileManager')->putContents('data/upload/' . $attachment->id, $contents);
+        $this->getContainer()->get('fileStorageManager')->putContents($attachment, $contents);
 
         return array(
             'attachmentId' => $attachment->id

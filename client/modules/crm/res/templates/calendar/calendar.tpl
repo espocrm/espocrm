@@ -4,7 +4,7 @@
 {{#if header}}
 <div class="row button-container">
     <div class="col-sm-4 col-xs-3">
-        <div class="btn-group">
+        <div class="btn-group range-switch-group">
             <button class="btn btn-default" data-action="prev"><span class="glyphicon glyphicon-chevron-left"></span></button>
             <button class="btn btn-default" data-action="next"><span class="glyphicon glyphicon-chevron-right"></span></button>
         </div>

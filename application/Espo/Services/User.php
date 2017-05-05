@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -97,7 +97,7 @@ class User extends Record
         return $result;
     }
 
-    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword)
+    public function changePassword($userId, $password, $checkCurrentPassword = false, $currentPassword = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -342,7 +342,7 @@ class User extends Record
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->getConfig()->get('smtpServer')) {
+        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
             return;
         }
 
@@ -389,6 +389,19 @@ class User extends Record
             'to' => $emailAddress
         ));
 
+        if ($this->getConfig()->get('smtpServer')) {
+            $this->getMailSender()->useGlobal();
+        } else {
+            $this->getMailSender()->useSmtp(array(
+                'server' => $this->getConfig()->get('internalSmtpServer'),
+                'port' => $this->getConfig()->get('internalSmtpPort'),
+                'auth' => $this->getConfig()->get('internalSmtpAuth'),
+                'username' => $this->getConfig()->get('internalSmtpUsername'),
+                'password' => $this->getConfig()->get('internalSmtpPassword'),
+                'security' => $this->getConfig()->get('internalSmtpSecurity'),
+                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
+            ));
+        }
         $this->getMailSender()->send($email);
     }
 
@@ -400,8 +413,8 @@ class User extends Record
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->getConfig()->get('smtpServer')) {
-            throw new Error("SMTP settings is not setup.");
+        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+            throw new Error("SMTP credentials are not defined.");
         }
 
         $subject = $this->getLanguage()->translate('passwordChangeLinkEmailSubject', 'messages', 'User');
@@ -418,6 +431,20 @@ class User extends Record
             'to' => $emailAddress
         ));
 
+        if ($this->getConfig()->get('smtpServer')) {
+            $this->getMailSender()->useGlobal();
+        } else {
+            $this->getMailSender()->useSmtp(array(
+                'server' => $this->getConfig()->get('internalSmtpServer'),
+                'port' => $this->getConfig()->get('internalSmtpPort'),
+                'auth' => $this->getConfig()->get('internalSmtpAuth'),
+                'username' => $this->getConfig()->get('internalSmtpUsername'),
+                'password' => $this->getConfig()->get('internalSmtpPassword'),
+                'security' => $this->getConfig()->get('internalSmtpSecurity'),
+                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
+            ));
+        }
+
         $this->getMailSender()->send($email);
     }
 
@@ -430,6 +457,17 @@ class User extends Record
             throw new Forbidden();
         }
         return parent::deleteEntity($id);
+    }
+
+    protected function checkEntityForMassRemove(Entity $entity)
+    {
+        if ($entity->id == 'system') {
+            return false;
+        }
+        if ($entity->id == $this->getUser()->id) {
+            return false;
+        }
+        return true;
     }
 
     public function afterUpdate(Entity $entity, array $data = array())

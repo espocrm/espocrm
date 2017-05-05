@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -38,6 +38,14 @@ class User extends \Espo\Core\SelectManagers\Base
         if (!$this->getUser()->isAdmin()) {
             $result['whereClause'][] = array(
                 'isActive' => true
+            );
+        }
+        if ($this->getAcl()->get('portalPermission') !== 'yes') {
+            $result['whereClause'][] = array(
+                'OR' => [
+                    ['isPortalUser' => false],
+                    ['id' => $this->getUser()->id]
+                ]
             );
         }
         $result['whereClause'][] = array(
@@ -85,6 +93,13 @@ class User extends \Espo\Core\SelectManagers\Base
     }
 
     protected function accessOnlyOwn(&$result)
+    {
+        $result['whereClause'][] = array(
+            'id' => $this->getUser()->id
+        );
+    }
+
+    protected function accessPortalOnlyOwn(&$result)
     {
         $result['whereClause'][] = array(
             'id' => $this->getUser()->id

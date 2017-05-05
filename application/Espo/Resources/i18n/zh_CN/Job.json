@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "status": "状态",
+    "executeTime": "执行At",
+    "attempts": "尝试左",
+    "failedAttempts": "失败尝试",
+    "serviceName": "服务",
+    "method": "方法",
+    "scheduledJob": "计划作业",
+    "data": "数据"
+  },
+  "options": {
+    "status": {
+      "Pending": "有待",
+      "Success": "成功",
+      "Running": "运行",
+      "Failed": "失败"
+    }
+  }
+}

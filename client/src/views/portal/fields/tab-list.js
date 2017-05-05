@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -30,15 +30,16 @@ Espo.define('views/portal/fields/tab-list', 'views/settings/fields/tab-list', fu
 
     return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        setupOptions: function () {
+            Dep.prototype.setupOptions.call(this);
 
             this.params.options = this.params.options.filter(function (tab) {
+                if (tab === '_delimiter_') return true;
                 if (!!this.getMetadata().get('scopes.' + tab + '.aclPortal')) {
                     return true;
                 }
             }, this);
-        },
+        }
 
     });
 

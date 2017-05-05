@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -315,6 +315,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.$textarea.prop('disabled', false);
                     this.disablePostingMode();
                     this.afterPost();
+
+                    if (this.getPreferences().get('followEntityOnStreamPost')) {
+                        this.model.set('isFollowed', true);
+                    }
                 }, this);
 
                 model.set('post', message);

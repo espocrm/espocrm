@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -224,6 +224,59 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectWithSubquery()
+    {
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'post.id=s' => array(
+                    'entityType' => 'Post',
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => array(
+                            'name' => 'test'
+                        )
+                    )
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'post.id!=s' => array(
+                    'entityType' => 'Post',
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => array(
+                            'name' => 'test'
+                        )
+                    )
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+
+
+        $sql = $this->query->createSelectQuery('Post', array(
+            'select' => ['id', 'name'],
+            'whereClause' => array(
+                'NOT'=> array(
+                    'name' => 'test',
+                    'post.createdById' => '1'
+                )
+            )
+        ));
+
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.created_by_id = '1' AND post.deleted = '0') AND post.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testOrderBy()
     {
         $sql = $this->query->createSelectQuery('Comment', array(
@@ -339,6 +392,18 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction1()
+    {
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'MONTH_NUMBER:comment.created_at' => 2
+            )
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
 }
-
-

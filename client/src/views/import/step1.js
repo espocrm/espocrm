@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -74,6 +74,25 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             return {
                 entityList: this.getEntityList(),
                 currencyList: this.getConfig().get('currencyList'),
+                dateFormatDataList: [
+                    {key: "YYYY-MM-DD", value: '2017-12-27'},
+                    {key: "DD-MM-YYYY", value: '27-12-2017'},
+                    {key: "MM-DD-YYYY", value: '12-27-2017'},
+                    {key: "MM/DD/YYYY", value: '12/27/2017'},
+                    {key: "DD/MM/YYYY", value: '27/12/2017'},
+                    {key: "DD.MM.YYYY", value: '27.12.2017'},
+                    {key: "MM.DD.YYYY", value: '12.27.2017'},
+                    {key: "YYYY.MM.DD", value: '2017.12.27'}
+                ],
+                timeFormatDataList: [
+                    {key: "HH:mm", value: '23:00'},
+                    {key: "HH:mm:ss", value: '23:00:00'},
+                    {key: "hh:mm a", value: '11:00 pm'},
+                    {key: "hh:mma", value: '11:00pm'},
+                    {key: "hh:mm A", value: '11:00 PM'},
+                    {key: "hh:mmA", value: '11:00PM'}
+                ],
+                timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
             };
         },
 
@@ -85,6 +104,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 textQualifier: '"',
                 dateFormat: 'YYYY-MM-DD',
                 timeFormat: 'HH:mm',
+                timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
             };
@@ -106,6 +126,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData.textQualifier = $('#import-text-qualifier').val();
             this.formData.dateFormat = $('#import-date-format').val();
             this.formData.timeFormat = $('#import-time-format').val();
+            this.formData.timezone = $('#import-timezone').val();
             this.formData.decimalMark = $('#import-decimal-mark').val();
             this.formData.currency = $('#import-currency').val();
             this.formData.personNameFormat = $('#import-person-name-format').val();
@@ -134,6 +155,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             $('#import-text-qualifier').val(this.formData.textQualifier);
             $('#import-date-format').val(this.formData.dateFormat);
             $('#import-time-format').val(this.formData.timeFormat);
+            $('#import-timezone').val(this.formData.timezone);
             $('#import-decimal-mark').val(this.formData.decimalMark);
             $('#import-person-name-format').val(this.formData.personNameFormat);
 

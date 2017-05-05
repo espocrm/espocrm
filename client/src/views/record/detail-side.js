@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -155,7 +155,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             layoutData = layoutData || {};
 
             var newList = [];
-            this.panelList.forEach(function (item) {
+            this.panelList.forEach(function (item, i) {
+                item.index = i;
                 if (item.name) {
                     var itemData = layoutData[item.name] || {};
                     if (itemData.disabled) return;
@@ -163,8 +164,13 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                         item[i] = itemData[i];
                     }
                 }
+
                 newList.push(item);
             }, this);
+
+            newList.sort(function (v1, v2) {
+                return v1.index > v2.index;
+            });
 
             this.panelList = newList;
         },
@@ -189,7 +195,7 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
             defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
 
-            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList', this.type]);
+            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
             if (fieldList) {
                 defaultPanelDefs.options = defaultPanelDefs.options || {};

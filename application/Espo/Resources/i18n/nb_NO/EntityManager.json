@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Fields": "Felt",
+    "Relationships": "Relasjoner",
+    "Schedule": "Planlegg",
+    "Log": "Logg",
+    "Formula": "Formel"
+  },
+  "fields": {
+    "name": "Navn",
+    "type": "Type",
+    "labelSingular": "Merkelapp (entall)",
+    "labelPlural": "Merkelapp (flertall)",
+    "stream": "Strøm",
+    "label": "Merkelapp",
+    "linkType": "Lenketype",
+    "entityForeign": "Fremmed enhet",
+    "linkForeign": "Fremmed lenke",
+    "link": "Lenke",
+    "labelForeign": "Fremmed merkelapp",
+    "sortBy": "Forvalgt sortering (felt)",
+    "sortDirection": "Forvalgt sortering (rettning)",
+    "relationName": "Midtre tabellnavn",
+    "linkMultipleField": "Koble flere felt",
+    "linkMultipleFieldForeign": "Kobling av flere fremmede felt",
+    "disabled": "Deaktivert",
+    "textFilterFields": "Tekstfilterfelt",
+    "audited": "Revidert",
+    "auditedForeign": "Revidert av utenforstående",
+    "statusField": "Statusfelt",
+    "beforeSaveCustomScript": "Før egendefinert lagrings-script"
+  },
+  "options": {
+    "type": {
+      "": "Ingen",
+      "Base": "Base",
+      "Person": "Person",
+      "CategoryTree": "Kategoritre",
+      "Event": "Handling",
+      "BasePlus": "Base pluss",
+      "Company": "Foretak"
+    },
+    "linkType": {
+      "manyToMany": "Mange-til-mange",
+      "oneToMany": "En-til-mange",
+      "manyToOne": "Mange-til-en",
+      "parentToChildren": "Forelder-til-barn",
+      "childrenToParent": "Barn-til-forelder"
+    },
+    "sortDirection": {
+      "asc": "Økende",
+      "desc": "Avtagende"
+    }
+  },
+  "messages": {
+    "entityCreated": "Enheten har blitt opprettet",
+    "linkAlreadyExists": "Konflikt med lenkenavn.",
+    "linkConflict": "Navnekonflikt: lenke eller felt med det samme navnet eksisterer allerede."
+  },
+  "tooltips": {
+    "statusField": "Endringer i dette feltet logges i strømmen.",
+    "textFilterFields": "Feltene brukes til tekstsøk.",
+    "stream": "Hvorvidt enheten har en strøm.",
+    "disabled": "Marker hvis du ikke trenger denne enheten i ditt system.",
+    "linkAudited": "Opprettelse av relatert oppføring og kobling med eksisterende oppføring vil logges i strømmen.",
+    "linkMultipleField": "'Koble flere'-feltet er en lettvint måte å redigere relasjoner på. Ikke bruk den hvis du har markert et stort antall relaterte oppføringer.",
+    "entityType": "Base pluss – har aktivitets-, historie- og oppgavepaneler.\n\nHendelse – tilgjengelig i kalender- og aktivitetspanelet."
+  }
+}

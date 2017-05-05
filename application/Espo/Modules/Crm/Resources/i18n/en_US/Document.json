@@ -8,7 +8,6 @@
         "status": "Status",
         "file": "File",
         "type": "Type",
-        "source": "Source",
         "publishDate": "Publish Date",
         "expirationDate": "Expiration Date",
         "description": "Description",

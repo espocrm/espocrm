@@ -56,7 +56,9 @@
                 {
                     "name": "emailReplyForceHtml"
                 },
-                false
+                {
+                    "name": "followEntityOnStreamPost"
+                }
             ]
         ]
     },

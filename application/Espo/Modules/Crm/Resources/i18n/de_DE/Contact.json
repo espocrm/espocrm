@@ -28,7 +28,8 @@
     "accounts": "Firmen",
     "casesPrimary": "Fälle (Primär)",
     "portalUser": "Portal Benutzer",
-    "originalLead": "Ursprünglicher Interessent"
+    "originalLead": "Ursprünglicher Interessent",
+    "documents": "Dokumente"
   },
   "labels": {
     "Create Contact": "Kontakt erstellen"

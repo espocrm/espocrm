@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "宽度（％）",
+    "link": "链接",
+    "notSortable": "不可排序",
+    "align": "对齐",
+    "panelName": "面板名称",
+    "style": "样式",
+    "sticked": "已贴"
+  },
+  "options": {
+    "align": {
+      "left": "剩下",
+      "right": "对"
+    },
+    "style": {
+      "default": "默认",
+      "success": "成功",
+      "danger": "危险",
+      "info": "信息",
+      "warning": "警告",
+      "primary": "主要"
+    }
+  }
+}

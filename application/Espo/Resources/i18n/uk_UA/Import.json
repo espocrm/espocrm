@@ -1,30 +1,74 @@
 {
-    "labels": {
-        "Revert Import": "Revert Import",
-        "Return to Import": "Повернутися до імпорту",
-        "Run Import": "Запустити імпорт",
-        "Back": "Назад",
-        "Field Mapping": "Зіставлення полів",
-        "Default Values": "Замовчувані значення",
-        "Add Field": "Додати поле",
-        "Created": "Створено",
-        "Updated": "Поновлено",
-        "Result": "Результат",
-        "Show records": "Показати записи",
-        "Remove Duplicates": "Remove Duplicates",
-        "importedCount": "Imported (count)",
-        "duplicateCount": "Duplicates (count)",
-        "updatedCount": "Updated (count)"
-    },
-    "messages": {
-        "utf8": "Мусить бути в кодуванні utf-8",
-        "duplicatesRemoved": "Duplicates removed"
-    },
-    "fields": {
-        "file": "Файл",
-        "entityType": "Entity Type",
-        "imported": "Imported Records",
-        "duplicates": "Duplicate Records",
-        "updated": "Updated Records"
+  "labels": {
+    "Revert Import": "Revert Import",
+    "Return to Import": "Повернутися до імпорту",
+    "Run Import": "Запустити імпорт",
+    "Back": "Назад",
+    "Field Mapping": "Зіставлення полів",
+    "Default Values": "Замовчувані значення",
+    "Add Field": "Додати поле",
+    "Created": "Створено",
+    "Updated": "Поновлено",
+    "Result": "Результат",
+    "Show records": "Показати записи",
+    "Remove Duplicates": "Remove Duplicates",
+    "importedCount": "Imported (count)",
+    "duplicateCount": "Duplicates (count)",
+    "updatedCount": "Updated (count)",
+    "Create Only": "Тільки створення",
+    "Create and Update": "Створення та оновлення",
+    "Update Only": "Тільки оновлення",
+    "Update by": "Оновлено до",
+    "Set as Not Duplicate": "Позначити не дублювати",
+    "File (CSV)": "Файл (CSV)",
+    "First Row Value": "First Row Value",
+    "Skip": "Пропуск",
+    "Header Row Value": "Header Row Value",
+    "Field": "Поле",
+    "What to Import?": "Що імпортувати?",
+    "Entity Type": "Тип об'єкта",
+    "What to do?": "Що робити?",
+    "Properties": "Властивості",
+    "Header Row": "Тема рядка",
+    "Person Name Format": "Person Name Format",
+    "John Smith": "John Smith",
+    "Smith John": "Smith John",
+    "Smith, John": "Smith, John",
+    "Field Delimiter": "Роздільник полів",
+    "Date Format": "Формат дати",
+    "Decimal Mark": "Decimal Mark",
+    "Text Qualifier": "Класифікатор тексту",
+    "Time Format": "Формат часу",
+    "Currency": "Валюта",
+    "Preview": "Попередній перегляд",
+    "Next": "Наступний",
+    "Step 1": "Крок 1",
+    "Step 2": "Крок 2",
+    "Double Quote": "Подвійні лапки",
+    "Single Quote": "Апостроф",
+    "Imported": "Імпортований",
+    "Duplicates": "Дублікати",
+    "Skip searching for duplicates": "Skip searching for duplicates",
+    "Timezone": "Часовий пояс"
+  },
+  "messages": {
+    "utf8": "Мусить бути в кодуванні utf-8",
+    "duplicatesRemoved": "Duplicates removed",
+    "inIdle": "Execute in idle (for big data; via cron)"
+  },
+  "fields": {
+    "file": "Файл",
+    "entityType": "Entity Type",
+    "imported": "Imported Records",
+    "duplicates": "Duplicate Records",
+    "updated": "Updated Records",
+    "status": "Статус"
+  },
+  "options": {
+    "status": {
+      "Failed": "Не вдалося",
+      "In Process": "In Process",
+      "Complete": "Complete"
     }
+  }
 }

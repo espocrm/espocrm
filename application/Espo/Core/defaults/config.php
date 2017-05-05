@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -65,11 +65,13 @@ return array (
     'languageList' => [
         'en_US',
         'cs_CZ',
+        'da_DK',
         'de_DE',
         'es_ES',
         'fr_FR',
         'id_ID',
         'it_IT',
+        'nb_NO',
         'nl_NL',
         'tr_TR',
         'ro_RO',
@@ -77,7 +79,8 @@ return array (
         'pl_PL',
         'pt_BR',
         'uk_UA',
-        'vi_VN'
+        'vi_VN',
+        'zh_CN'
     ],
     'language' => 'en_US',
     'logger' =>
@@ -95,8 +98,8 @@ return array (
         'Lead',
         'Opportunity',
     ),
-    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Calendar", "Meeting", "Call", "Task", "Case", "Email", "Document", "Campaign", "KnowledgeBaseArticle"],
-    "quickCreateList" => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
+    'tabList' => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
+    'quickCreateList' => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
     'exportDisabled' => false,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
@@ -110,7 +113,7 @@ return array (
     'followCreatedEntities' => false,
     'b2cMode' => false,
     'restrictedMode' => false,
-    'theme' => 'Espo',
+    'theme' => 'HazyblueVertical',
     'massEmailMaxPerHourCount' => 100,
     'personalEmailMaxPortionSize' => 10,
     'inboundEmailMaxPortionSize' => 20,
@@ -150,9 +153,13 @@ return array (
             ]
         ]
     ],
-    "calendarEntityList" => ["Meeting", "Call", "Task"],
-    "activitiesEntityList" => ["Meeting", "Call"],
-    "historyEntityList" => ["Meeting", "Call", "Email"],
-    'isInstalled' => false,
+    'calendarEntityList' => ['Meeting', 'Call', 'Task'],
+    'activitiesEntityList' => ['Meeting', 'Call'],
+    'historyEntityList' => ['Meeting', 'Call', 'Email'],
+    'lastViewedCount' => 20,
+    'cleanupJobPeriod' => '1 month',
+    'cleanupActionHistoryPeriod' => '15 days',
+    'cleanupAuthTokenPeriod' => '1 month',
+    'isInstalled' => false
 );
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -43,10 +43,24 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
         $this->evaluator = null;
     }
 
-    function testEvaluate1()
+    function testEvaluateMathExpression1()
     {
         $expression = "5 - (2 + 1)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(2, $actual);
+    }
+
+    function testEvaluateList1()
+    {
+        $expression = "list()";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals([], $actual);
+    }
+
+    function testEvaluateList2()
+    {
+        $expression = "list(1)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals([1], $actual);
     }
 }

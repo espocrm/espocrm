@@ -49,6 +49,12 @@
                 "delete": "own",
                 "create": "no"
             },
+            "ActionHistoryRecord": {
+                "read": "no",
+                "edit": "no",
+                "delete": "no",
+                "create": "no"
+            },
             "Role": false,
             "PortalRole": false
         },

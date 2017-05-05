@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -32,11 +32,15 @@ Espo.define('views/inbound-email/record/edit', ['views/record/edit', 'views/inbo
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            Detail.prototype.handleDistributionField.call(this);
+            Detail.prototype.setupFieldsBehaviour.call(this);
 
             if (Detail.prototype.wasFetched.call(this)) {
                 this.setFieldReadOnly('fetchSince');
             }
+        },
+
+        controlStatusField: function () {
+            Detail.prototype.controlStatusField.call(this);
         },
 
         afterRender: function () {

@@ -9,15 +9,13 @@
             <% _.each(row, function (cell, cellNumber) { %>
                 <% if (cell != false) { %>
                     <div class="cell<% if (columnCount == 1 || cell.fullWidth) { %> col-sm-12<% } else {%> col-sm-6<% } %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.name %>">
-                        <label class="control-label<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
-                        <%
+                        <label class="control-label<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>"><span class="label-text"><%
                             if ('customLabel' in cell) {
                                 print (cell.customLabel);
                             } else {
                                 print ("{{translate \""+cell.name+"\" scope=\""+model.name+"\" category='fields'}}");
                             }
-                        %>
-                        </label>
+                        %></span></label>
                         <div class="field<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
                         <%
                             if ('customCode' in cell) {

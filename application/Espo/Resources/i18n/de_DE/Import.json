@@ -47,17 +47,27 @@
     "Double Quote": "Anführungszeichen",
     "Single Quote": "Einfaches Hochkomma",
     "Imported": "Importiert",
-    "Duplicates": "Duplikate"
+    "Duplicates": "Duplikate",
+    "Skip searching for duplicates": "Duplikatssuche überspringen"
   },
   "messages": {
     "utf8": "Sollte UTF-8 kodiert sein",
-    "duplicatesRemoved": "Duplikate entfernt"
+    "duplicatesRemoved": "Duplikate entfernt",
+    "inIdle": "Ausführen im Leerlauf (für große Datenmengen über cron)"
   },
   "fields": {
     "file": "Datei",
     "entityType": "Entitätstyp",
     "imported": "Importierte Datensätze",
     "duplicates": "Doppelte Datensätze",
-    "updated": "Aktualisierte Datensätze"
+    "updated": "Aktualisierte Datensätze",
+    "status": "Status"
+  },
+  "options": {
+    "status": {
+      "Failed": "Fehler",
+      "In Process": "In Arbeit",
+      "Complete": "Fertig"
+    }
   }
 }

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -384,34 +384,35 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         },
 
         resetToDefault: function () {
-            if (!confirm(this.translate('confirmation', 'messages'))) return;
+            this.confirm(this.translate('confirmation', 'messages'), function () {
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            this.ajaxPostRequest('FieldManager/action/resetToDefault', {
-                scope: this.scope,
-                name: this.field
-            }).then(function () {
-                Promise.all([
-                    new Promise(function (resolve) {
-                        this.getMetadata().load(function () {
-                            this.getMetadata().storeToCache();
-                            resolve();
-                        }.bind(this), true);
-                    }.bind(this)),
-                    new Promise(function (resolve) {
-                        this.getLanguage().load(function () {
-                            resolve();
-                        }.bind(this), true);
-                    }.bind(this))
-                ]).then(function () {
-                    this.setupFieldData(function () {
-                        this.notify('Done', 'success');
-                        this.reRender();
+                this.ajaxPostRequest('FieldManager/action/resetToDefault', {
+                    scope: this.scope,
+                    name: this.field
+                }).then(function () {
+                    Promise.all([
+                        new Promise(function (resolve) {
+                            this.getMetadata().load(function () {
+                                this.getMetadata().storeToCache();
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this)),
+                        new Promise(function (resolve) {
+                            this.getLanguage().load(function () {
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this))
+                    ]).then(function () {
+                        this.setupFieldData(function () {
+                            this.notify('Done', 'success');
+                            this.reRender();
+                        }.bind(this));
                     }.bind(this));
                 }.bind(this));
 
-            }.bind(this));
+            }, this);
         }
 
     });

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -43,14 +43,14 @@ class EmailTemplate extends Record
     {
         parent::init();
 
-        $this->addDependency('fileManager');
+        $this->addDependency('fileStorageManager');
         $this->addDependency('dateTime');
         $this->addDependency('language');
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->injections['fileManager'];
+        return $this->injections['fileStorageManager'];
     }
 
     protected function getDateTime()
@@ -134,8 +134,9 @@ class EmailTemplate extends Record
                     unset($data['id']);
                     $clone->set($data);
                     $clone->set('sourceId', $attachment->getSourceId());
+                    $clone->set('storage', $attachment->get('storage'));
 
-                    if (!$this->getFileManager()->isFile('data/upload/' . $attachment->getSourceId())) {
+                    if (!$this->getFileStorageManager()->isFile($attachment)) {
                         continue;
                     }
                     $this->getEntityManager()->saveEntity($clone);
@@ -193,10 +194,15 @@ class EmailTemplate extends Record
                 $value = implode(', ', $valueList);
                 $value = $this->getLanguage()->translateOption($value, $field, $entity->getEntityType());
             } else {
-                if ($entity->fields[$field]['type'] == 'date') {
+                if (!isset($entity->fields[$field]['type'])) continue;
+                $attributeType = $entity->fields[$field]['type'];
+
+                if ($attributeType == 'date') {
                     $value = $this->getDateTime()->convertSystemDate($value);
-                } else if ($entity->fields[$field]['type'] == 'datetime') {
+                } else if ($attributeType == 'datetime') {
                     $value = $this->getDateTime()->convertSystemDateTime($value);
+                } else if ($attributeType == 'text') {
+                    $value = nl2br($value);
                 }
             }
             if (is_string($value) || $value === null || is_scalar($value) || is_callable([$value, '__toString'])) {

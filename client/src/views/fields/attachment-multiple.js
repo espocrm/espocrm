@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -156,7 +156,21 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.showPreviews = this.params.showPreviews;
             }
 
-            this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
+            var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
+
+            this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {
+                if (!(item in sourceDefs)) return true;
+                var defs = sourceDefs[item];
+                if (defs.configCheck) {
+                    var configCheck = defs.configCheck;
+                    if (configCheck) {
+                        var arr = configCheck.split('.');
+                        if (this.getConfig().getByPath(arr)) {
+                            return true;
+                        }
+                    }
+                }
+            }, this);
 
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -238,6 +252,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         getEditPreview: function (name, type, id) {
+            name = Handlebars.Utils.escapeExpression(name);
+
             var preview = name;
 
             switch (type) {
@@ -268,8 +284,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                  .css('width', '100%')
                                  .css('max-width', '300px')
                                  .addClass('gray-box')
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
-                                 .append(removeLink);
+                                 .append(removeLink)
+                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'));
 
             var $container = $('<div>').append($att);
             $attachments.append($container);
@@ -397,6 +413,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         getDetailPreview: function (name, type, id) {
+            name = Handlebars.Utils.escapeExpression(name);
+
             var preview = name;
 
             if (this.isTypeIsImage(type)) {
@@ -419,7 +437,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
-                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + name + '</a></div>';
+                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name); + '</a></div>';
                     names.push(line);
                 }
                 var string = previews.join('') + names.join('');
@@ -430,7 +448,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         insertFromSource: function (source) {
             var viewName =
-                this.getMetadata().get(['Attachment', 'sources', source, 'insertModalView']) ||
+                this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
                 this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
                 'views/modals/select-records';
 
@@ -454,11 +472,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         }
                     }
                 }
-                var boolFilterList = this.getMetadata().get(['Attachment', 'sources', source, 'boolFilterList']);
+                var boolFilterList = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
                 if (('getSelectBoolFilterList' + source) in this) {
                     boolFilterList = this['getSelectBoolFilterList' + source]();
                 }
-                var primaryFilterName = this.getMetadata().get(['Attachment', 'sources', source, 'primaryFilter']);
+                var primaryFilterName = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
                 if (('getSelectPrimaryFilterName' + source) in this) {
                     primaryFilterName = this['getSelectPrimaryFilterName' + source]();
                 }

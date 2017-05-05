@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -39,6 +39,11 @@ use \Espo\Core\Exceptions\Error;
 class SubscribeAgain extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
+
+    private function getHookManager()
+    {
+        return $this->getContainer()->get('hookManager');
+    }
 
     public function run()
     {
@@ -96,15 +101,34 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
                         $targetListList = $massEmail->get('targetLists');
 
                         foreach ($targetListList as $targetList) {
-                            $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
+                            $optedInResult = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
                                 'optedOut' => false
                             ));
+                            if ($optedInResult) {
+                                $hookData = [
+                                   'link' => $link,
+                                   'targetId' => $targetId,
+                                   'targetType' => $targetType
+                                ];
+                                $this->getHookManager()->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+                            }
                         }
                         echo $this->getLanguage()->translate('subscribedAgain', 'messages', 'Campaign');
                         echo '<br><br>';
                         echo '<a href="?entryPoint=unsubscribe&id='.$queueItemId.'">' . $this->getLanguage()->translate('Unsubscribe again', 'labels', 'Campaign') . '</a>';
                     }
                 }
+            }
+        }
+
+        if ($campaign && $target) {
+            $logRecord = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
+                'queueItemId' => $queueItemId,
+                'action' => 'Opted Out'
+            ))->order('createdAt', true)->findOne();
+
+            if ($logRecord) {
+                $this->getEntityManager()->removeEntity($logRecord);
             }
         }
 

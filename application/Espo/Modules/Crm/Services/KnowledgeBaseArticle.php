@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -39,6 +39,19 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
 {
     protected $readOnlyAttributeList = ['order'];
 
+    protected function init()
+    {
+        parent::init();
+        $this->addDependencyList([
+            'fileStorageManager'
+        ]);
+    }
+
+    protected function getFileStorageManager()
+    {
+        return $this->getInjection('fileStorageManager');
+    }
+
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
         $ids = array();
@@ -67,16 +80,17 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
                 $attachment->set('global', $source->get('global'));
                 $attachment->set('name', $source->get('name'));
                 $attachment->set('sourceId', $source->getSourceId());
+                $attachment->set('storage', $source->get('storage'));
 
                 if (!empty($parentType) && !empty($parentId)) {
                     $attachment->set('parentType', $parentType);
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileManager()->isFile('data/upload/' . $source->getSourceId())) {
+                if ($this->getFileStorageManager()->isFile($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
-
-                    $this->getFileManager()->putContents('data/upload/' . $attachment->id, $contents);
+                    $contents = $this->getFileStorageManager()->getContents($source);
+                    $this->getFileStorageManager()->putContents($attachment, $contents);
                     $ids[] = $attachment->id;
                     $names->{$attachment->id} = $attachment->get('name');
                 }
@@ -88,45 +102,6 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
             'names' => $names
         );
     }
-
-    public function moveToTop($id, $where = null)
-    {
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
-
-        $currentIndex = $entity->get('order');
-
-        if (!is_int($currentIndex)) throw new Error();
-
-        if (!$where) {
-            $where = array();
-        }
-
-        $params = array(
-            'where' => $where
-        );
-
-        $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($params, true, true);
-
-        $selectParams['whereClause'][] = array(
-            'order<' => $currentIndex
-        );
-
-        $selectManager->applyOrder('order', false, $selectParams);
-
-        $previousEntity = $this->getRepository()->findOne($selectParams);
-
-        if (!$previousEntity) return;
-
-        $entity->set('order', $previousEntity->get('order'));
-        $previousEntity->set('order', $currentIndex);
-
-        $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($previousEntity);
-    }
-
 
     public function moveUp($id, $where = null)
     {
@@ -203,6 +178,43 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($entity);
         $this->getEntityManager()->saveEntity($nextEntity);
     }
+
+    public function moveToTop($id, $where = null)
+    {
+        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        if (!$entity) throw new NotFound();
+        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        $currentIndex = $entity->get('order');
+
+        if (!is_int($currentIndex)) throw new Error();
+
+        if (!$where) {
+            $where = array();
+        }
+
+        $params = array(
+            'where' => $where
+        );
+
+        $selectManager = $this->getSelectManager();
+        $selectParams = $selectManager->buildSelectParams($params, true, true);
+
+        $selectParams['whereClause'][] = array(
+            'order<' => $currentIndex
+        );
+
+        $selectManager->applyOrder('order', false, $selectParams);
+
+        $previousEntity = $this->getRepository()->findOne($selectParams);
+
+        if (!$previousEntity) return;
+
+        $entity->set('order', $previousEntity->get('order') - 1);
+
+        $this->getEntityManager()->saveEntity($entity);
+    }
+
     public function moveToBottom($id, $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
@@ -234,10 +246,8 @@ class KnowledgeBaseArticle extends \Espo\Services\Record
 
         if (!$nextEntity) return;
 
-        $entity->set('order', $nextEntity->get('order'));
-        $nextEntity->set('order', $currentIndex);
+        $entity->set('order', $nextEntity->get('order') + 1);
 
         $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($nextEntity);
     }
 }

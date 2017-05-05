@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -199,6 +199,7 @@ class Installer
 			'language' => $language,
 			'siteUrl' => $siteUrl,
 			'passwordSalt' => $this->getPasswordHash()->generateSalt(),
+			'cryptKey' => $this->getContainer()->get('crypt')->generateKey()
 		);
 
 		$owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);

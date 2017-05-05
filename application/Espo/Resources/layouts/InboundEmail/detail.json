@@ -11,15 +11,11 @@
                 {"name":"replyToAddress"}
             ],
             [
-                {"name":"team"},
+                {"name":"teams"},
                 {"name":"fetchSince"}
             ],
             [
                 {"name":"addAllTeamUsers"},
-                false
-            ],
-            [
-                {"name":"assignToUser"},
                 false
             ]
         ]
@@ -43,19 +39,24 @@
         "label":"Actions",
         "rows": [
             [
-                {"name":"createCase"},{"name":"reply"}
+                {"name":"createCase"},
+                {"name":"reply"}
             ],
             [
                 {"name":"caseDistribution"},
                 {"name":"replyEmailTemplate"}
             ],
             [
-                {"name":"targetUserPosition"},
+                {"name":"team"},
                 {"name":"replyFromAddress"}
             ],
             [
-                false,
+                {"name":"targetUserPosition"},
                 {"name":"replyFromName"}
+            ],
+            [
+                {"name":"assignToUser"},
+                false
             ]
         ]
     }

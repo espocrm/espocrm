@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,6 +42,10 @@ class Notification extends \Espo\Core\Controllers\Record
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
         $after = $request->get('after');
+
+        if (empty($maxSize)) {
+            $maxSize = self::MAX_SIZE_LIMIT;
+        }
 
         $params = array(
             'offset' => $offset,

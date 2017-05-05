@@ -1,31 +1,47 @@
 {
-    "fields": {
-        "name": "İsim",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateStart": "Başlangıç Tarihi",
-        "dateEnd": "Vade Tarihi",
-        "priority": "Öncelik",
-        "description": "açıklama",
-        "isOverdue": "Vadesi Geçmiş"
+  "fields": {
+    "name": "İsim",
+    "parent": "Üst Seçenek",
+    "status": "Durum",
+    "dateStart": "Başlangıç Tarihi",
+    "dateEnd": "Vade Tarihi",
+    "dateStartDate": "Tarih Başlangıcı (bütün gün)",
+    "dateEndDate": "Bitiş Tarihi (bütün gün)",
+    "priority": "Öncelik",
+    "description": "açıklama",
+    "isOverdue": "Vadesi Geçmiş",
+    "account": "Hesap",
+    "dateCompleted": "Tamamlanma Tarihi",
+    "attachments": "Ekler",
+    "reminders": "Hatırlatıcılar"
+  },
+  "links": {
+    "attachments": "Eklentiler"
+  },
+  "options": {
+    "status": {
+      "Not Started": "başlamadı",
+      "Started": "Başladı",
+      "Completed": "Tamamlandı",
+      "Canceled": "İptal edildi",
+      "Deferred": "Vadeli"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "başlamadı",
-            "Started": "Başladı",
-            "Completed": "Tamamlandı",
-            "Canceled": "İptal edildi"
-        },
-        "priority" : {
-            "Low": "Düşük",
-            "Normal": "Normal",
-            "High": "Yüksek",
-            "Urgent": "Acil"
-        }
-    },
-    "labels": {
-        "Create Task": "Görev Oluştur"
+    "priority": {
+      "Low": "Düşük",
+      "Normal": "Normal",
+      "High": "Yüksek",
+      "Urgent": "Acil"
     }
+  },
+  "labels": {
+    "Create Task": "Görev Oluştur",
+    "Complete": "Tamamla"
+  },
+  "presetFilters": {
+    "actual": "Gerçek",
+    "completed": "Tamamlandı",
+    "todays": "Bugünün",
+    "overdue": "süresi geçmiş",
+    "deferred": "Vadeli"
+  }
 }

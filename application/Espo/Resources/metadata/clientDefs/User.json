@@ -14,9 +14,10 @@
    "modalViews": {
       "detail": "views/user/modals/detail"
    },
-   "defaultSidePanelFieldList": {
+   "defaultSidePanelFieldLists": {
       "detail": [
-        "avatar"
+        "avatar",
+        "createdAt"
       ],
       "detailSmall": [
         "avatar"

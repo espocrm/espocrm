@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "名称",
+    "parent": "关联",
+    "status": "状态",
+    "dateStart": "开始日期",
+    "dateEnd": "截止日期",
+    "dateStartDate": "日期开始（全天）",
+    "dateEndDate": "日期结束（全天）",
+    "priority": "优先级",
+    "description": "说明",
+    "isOverdue": "逾期",
+    "account": "帐户",
+    "dateCompleted": "完成日期",
+    "attachments": "附件",
+    "reminders": "提醒"
+  },
+  "links": {
+    "attachments": "附件"
+  },
+  "options": {
+    "status": {
+      "Not Started": "未开始",
+      "Started": "开始",
+      "Completed": "已完成",
+      "Canceled": "取消",
+      "Deferred": "推迟"
+    },
+    "priority": {
+      "Low": "低",
+      "Normal": "正常",
+      "High": "高",
+      "Urgent": "紧急"
+    }
+  },
+  "labels": {
+    "Create Task": "创建任务",
+    "Complete": "完成"
+  },
+  "presetFilters": {
+    "actual": "实际",
+    "completed": "完成",
+    "todays": "今天的",
+    "overdue": "过期",
+    "deferred": "延期"
+  }
+}

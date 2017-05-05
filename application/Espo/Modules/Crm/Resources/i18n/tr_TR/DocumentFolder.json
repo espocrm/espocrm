@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Belge Klasörü Oluştur",
+    "Manage Categories": "Klasörleri Yönet",
+    "Documents": "Belgeler"
+  },
+  "links": {
+    "documents": "Belgeler"
+  }
+}

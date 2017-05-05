@@ -22,7 +22,13 @@
         "PortalRole": "Portal Role",
         "Attachment": "Attachment",
         "EmailFolder": "Email Folder",
-        "PortalUser": "Portal User"
+        "PortalUser": "Portal User",
+        "ScheduledJobLogRecord": "Scheduled Job Log Record",
+        "PasswordChangeRequest": "Password Change Request",
+        "ActionHistoryRecord": "Action History Record",
+        "AuthToken": "Auth Token",
+        "UniqueId": "Unique ID",
+        "LastViewed": "Last Viewed"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -47,7 +53,13 @@
         "PortalRole": "Portal Roles",
         "Attachment": "Attachments",
         "EmailFolder": "Email Folders",
-        "PortalUser": "Portal Users"
+        "PortalUser": "Portal Users",
+        "ScheduledJobLogRecord": "Scheduled Job Log Records",
+        "PasswordChangeRequest": "Password Change Requests",
+        "ActionHistoryRecord": "Action History",
+        "AuthToken": "Auth Tokens",
+        "UniqueId": "Unique IDs",
+        "LastViewed": "Last Viewed"
     },
     "labels": {
         "Misc": "Misc",
@@ -85,6 +97,7 @@
         "Cache is not enabled": "Cache is not enabled",
         "Cache has been cleared": "Cache has been cleared",
         "Rebuild has been done": "Rebuild has been done",
+        "Return to Application": "Return to Application",
         "Saving...": "Saving...",
         "Modified": "Modified",
         "Created": "Created",
@@ -170,7 +183,7 @@
         "Yes": "Yes",
         "No": "No",
         "View": "View",
-        "Select All Result": "Select All Result",
+        "Select All Results": "Select All Results",
         "Value": "Value",
         "Current version": "Current version",
         "List View": "List View",
@@ -189,7 +202,9 @@
         "Attach File": "Attach File",
         "Skip": "Skip",
         "Attribute": "Attribute",
-        "Function": "Function"
+        "Function": "Function",
+        "Self-Assign": "Self-Assign",
+        "Self-Assigned": "Self-Assigned"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -199,11 +214,11 @@
         "duplicate": "The record you are creating might already exist",
         "dropToAttach": "Drop to attach",
         "fieldIsRequired": "{field} is required",
-        "fieldShouldBeEmail": "{field} should be valid email",
-        "fieldShouldBeFloat": "{field} should be valid float",
-        "fieldShouldBeInt": "{field} should be valid integer",
-        "fieldShouldBeDate": "{field} should be valid date",
-        "fieldShouldBeDatetime": "{field} should be valid date/time",
+        "fieldShouldBeEmail": "{field} should be a valid email",
+        "fieldShouldBeFloat": "{field} should be a valid float",
+        "fieldShouldBeInt": "{field} should be a valid integer",
+        "fieldShouldBeDate": "{field} should be a valid date",
+        "fieldShouldBeDatetime": "{field} should be a valid date/time",
         "fieldShouldAfter": "{field} should be after {otherField}",
         "fieldShouldBefore": "{field} should be before {otherField}",
         "fieldShouldBeBetween": "{field} should be between {min} and {max}",
@@ -232,6 +247,7 @@
         "checkForNewNotifications": "Check for new notifications",
         "checkForNewNotes": "Check for stream updates",
         "internalPost": "Post will be seen only by internal users",
+        "internalPostTitle": "Post is seen only by internal users",
         "done": "Done",
         "confirmMassFollow": "Are you sure you want to follow selected records?",
         "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
@@ -298,7 +314,8 @@
     },
     "dashlets": {
         "Stream": "Stream",
-        "Emails": "My Inbox"
+        "Emails": "My Inbox",
+        "Records": "Record List"
     },
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
@@ -498,14 +515,19 @@
             "nextXDays": "Next X Days",
             "ever": "Ever",
             "isEmpty": "Is Empty",
-            "olderThanXDays": "Older Than X Days"
+            "olderThanXDays": "Older Than X Days",
+            "afterXDays": "After X Days"
         },
         "searchRanges": {
             "is": "Is",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty",
-            "isOneOf": "Is One Of",
-            "isFromTeams": "Is From Team"
+            "isOneOf": "Any Of",
+            "isFromTeams": "Is From Team",
+            "isNot": "Is Not",
+            "isNotOneOf": "None Of",
+            "anyOf": "Any Of",
+            "noneOf": "None Of"
         },
         "varcharSearchRanges": {
             "equals": "Equals",
@@ -648,10 +670,13 @@
     },
     "themes": {
         "Espo": "Espo",
+        "EspoRtl": "RTL Espo",
         "Sakura": "Sakura",
-        "EspoVertical": "Espo Vertical",
-        "SakuraVertical": "Sakura Vertical",
+        "EspoVertical": "Espo w/ sidebar",
+        "SakuraVertical": "Sakura w/ sidebar",
         "Violet": "Violet",
-        "VioletVertical": "Violet Vertical"
+        "VioletVertical": "Violet w/ sidebar",
+        "Hazyblue": "Hazyblue",
+        "HazyblueVertical": "Hazyblue w/ sidebar"
     }
 }

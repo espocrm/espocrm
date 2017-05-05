@@ -50,7 +50,8 @@
         "Imported": "Imported",
         "Duplicates": "Duplicates",
         "Updated": "Updated",
-        "Skip searching for duplicates": "Skip searching for duplicates"
+        "Skip searching for duplicates": "Skip searching for duplicates",
+        "Timezone": "Timezone"
     },
     "messages": {
         "utf8": "Should be UTF-8 encoded",

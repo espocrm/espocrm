@@ -27,5 +27,12 @@
                 {"name":"tabList"}
             ]
         ]
+    },
+    {
+        "label": "Notifications",
+        "name": "notifications",
+        "rows": [
+            [{"name": "receiveStreamEmailNotifications"}, false]
+        ]
     }
 ]

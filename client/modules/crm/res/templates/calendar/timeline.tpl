@@ -6,9 +6,8 @@
         <div class="btn-group">
             <button class="btn btn-default" data-action="today">{{translate 'Today' scope='Calendar'}}</button>
             <button class="btn btn-default" title="{{translate 'Refresh'}}" data-action="refresh"><span class="glyphicon glyphicon-refresh"></span></button>
-        </div>
-        {{#if calendarTypeSelectEnabled}}
-        <div class="btn-group calendar-type-button-group" role="group">
+        </div>{{#if calendarTypeSelectEnabled}}<div class="btn-group calendar-type-button-group">
+        <div class="btn-group " role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 {{#each calendarTypeDataList}}
@@ -19,9 +18,9 @@
                     </li>
                 {{/each}}
             </ul>
-        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="showSharedCalendarOptions">{{translate 'Manage Users' scope='Calendar'}}</button>
         </div>
-
+        <button class="btn btn-default{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}}" data-action="showSharedCalendarOptions" title="{{translate 'Manage Users' scope='Calendar'}}"><span class="glyphicon glyphicon-pencil"></span></button>
+        </div>
         {{/if}}
     </div>
 

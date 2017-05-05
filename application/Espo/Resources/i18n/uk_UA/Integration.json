@@ -1,15 +1,20 @@
 {
-    "fields": {
-        "enabled": "Увімкнено",
-        "clientId": "Клієнтський ID",
-        "clientSecret": "Секрет Клієнта",
-        "redirectUri": "URI перенаправлення"
-    },
-    "messages": {
-        "selectIntegration": "Виберіть інтеграцію з меню.",
-        "noIntegrations": "Жодних інтеграцій не доступно."
-    },
-    "help": {
-        "Google": "<p><b>Отримати посвідчення OAuth 2.0 з Google Developers Console.</b></p><p>Відвідайте <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> для отримання посвідчення OAuth 2.0, таких як Клієнтський ID та Секрет Клієнта, що йдуть однаково для Google та EspoCRM додатків.</p>"
-    }
+  "fields": {
+    "enabled": "Увімкнено",
+    "clientId": "Клієнтський ID",
+    "clientSecret": "Секрет Клієнта",
+    "redirectUri": "URI перенаправлення",
+    "apiKey": "API Key"
+  },
+  "messages": {
+    "selectIntegration": "Виберіть інтеграцію з меню.",
+    "noIntegrations": "Жодних інтеграцій не доступно."
+  },
+  "help": {
+    "Google": "<p><b>Отримати посвідчення OAuth 2.0 з Google Developers Console.</b></p><p>Відвідайте <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> для отримання посвідчення OAuth 2.0, таких як Клієнтський ID та Секрет Клієнта, що йдуть однаково для Google та EspoCRM додатків.</p>",
+    "GoogleMaps": "<p>Obtain API key <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
+  },
+  "titles": {
+    "GoogleMaps": "Google Mапи"
+  }
 }

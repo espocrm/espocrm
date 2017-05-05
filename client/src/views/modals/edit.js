@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -47,6 +47,12 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
         escapeDisabled: true,
 
         fitHeight: true,
+
+        className: 'dialog dialog-record',
+
+        sideDisabled: false,
+
+        bottomDisabled: false,
 
         setup: function () {
 
@@ -142,6 +148,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
                 buttonsPosition: false,
+                sideDisabled: this.sideDisabled,
+                bottomDisabled: this.bottomDisabled,
                 exit: function () {}
             };
             this.createView('edit', viewName, options, callback);
@@ -157,10 +165,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             }, this);
 
             var $buttons = this.dialog.$el.find('.modal-footer button');
-            $buttons.addClass('disabled');
+            $buttons.addClass('disabled').attr('disabled', 'disabled');
 
             editView.once('cancel:save', function () {
-                $buttons.removeClass('disabled');
+                $buttons.removeClass('disabled').removeAttr('disabled');
             }, this);
 
             editView.save();

@@ -1,51 +1,50 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "parent": "Джерело",
-        "status": "Статус",
-        "dateStart": "Дата початку",
-        "dateEnd": "Дата закінчення",
-        "direction": "Напрямок",
-        "duration": "Тривалість",
-        "description": "Опис",
-        "users": "Користувачі",
-        "contacts": "Контакти",
-        "leads": "Ліди",
-        "reminders": "Нагадування",
-        "account": "Контрагент"
+  "fields": {
+    "name": "Ім'я",
+    "parent": "Джерело",
+    "status": "Статус",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата закінчення",
+    "direction": "Напрямок",
+    "duration": "Тривалість",
+    "description": "Опис",
+    "users": "Користувачі",
+    "contacts": "Контакти",
+    "leads": "Ліди",
+    "reminders": "Нагадування",
+    "account": "Контрагент",
+    "acceptanceStatus": "Прийняття статусу"
+  },
+  "options": {
+    "status": {
+      "Planned": "Заплановано",
+      "Held": "Виконано",
+      "Not Held": "Не відбулося"
     },
-    "links": {
+    "direction": {
+      "Outbound": "Вихідне",
+      "Inbound": "Вхідне"
     },
-    "options": {
-        "status": {
-            "Planned": "Заплановано",
-            "Held": "Виконано",
-            "Not Held": "Не відбулося"
-        },
-        "direction": {
-            "Outbound": "Вихідне",
-            "Inbound": "Вхідне"
-        },
-        "acceptanceStatus": {
-            "None": "Нема",
-            "Accepted": "Прийнято",
-            "Declined": "Відхилено",
-            "Tentative": "Попереднє"
-        }
-    },
-    "massActions": {
-        "setHeld": "Позначити виконаним",
-        "setNotHeld": "Позначити невиконаним"
-    },
-    "labels": {
-        "Create Call": "Створити дзвінок",
-        "Set Held": "Позначити виконаним",
-        "Set Not Held": "Позначити невиконаним",
-        "Send Invitations": "Відправити запрошення"
-    },
-    "presetFilters": {
-        "planned": "Заплановано",
-        "held": "Виконано",
-        "todays": "Сьогоднішнє"
+    "acceptanceStatus": {
+      "None": "Нема",
+      "Accepted": "Прийнято",
+      "Declined": "Відхилено",
+      "Tentative": "Попереднє"
     }
+  },
+  "massActions": {
+    "setHeld": "Позначити виконаним",
+    "setNotHeld": "Позначити невиконаним"
+  },
+  "labels": {
+    "Create Call": "Створити дзвінок",
+    "Set Held": "Позначити виконаним",
+    "Set Not Held": "Позначити невиконаним",
+    "Send Invitations": "Відправити запрошення"
+  },
+  "presetFilters": {
+    "planned": "Заплановано",
+    "held": "Виконано",
+    "todays": "Сьогоднішнє"
+  }
 }

@@ -3,7 +3,8 @@
     "Fields": "Felder",
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
-    "Log": "Log"
+    "Log": "Log",
+    "Formula": "Formel"
   },
   "fields": {
     "name": "Name",
@@ -23,7 +24,11 @@
     "linkMultipleField": "Mehrere Felder verlinken",
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
     "disabled": "Inaktiv",
-    "textFilterFields": "Textfilter Felder"
+    "textFilterFields": "Textfilter Felder",
+    "audited": "überprüft",
+    "auditedForeign": "fremd geprüft",
+    "statusField": "Status Feld",
+    "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script"
   },
   "options": {
     "type": {
@@ -51,5 +56,14 @@
     "entityCreated": "Entität wurde erstellt",
     "linkAlreadyExists": "Relationsnamenkonflikt",
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
+  },
+  "tooltips": {
+    "statusField": "Updates dieses Feldes werden im Stream protokolliert.",
+    "textFilterFields": "Von der Textsuche verwendete Felder.",
+    "stream": "Ob die Entity einen Stream hat.",
+    "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
+    "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
+    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
+    "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\"."
   }
 }

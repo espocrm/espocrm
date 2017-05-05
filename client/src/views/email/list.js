@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -136,6 +136,19 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         applyFolder: function () {
             this.collection.data.folderId = this.selectedFolderId;
+        },
+
+        applyRoutingParams: function (params) {
+            var id = params.folder || 'inbox';
+
+            if (!params.isReturnThroughLink && id !== this.selectedFolderId) {
+                var foldersView = this.getView('folders');
+                if (foldersView) {
+                    foldersView.actionSelectFolder(id);
+                    foldersView.reRender();
+                    $(window).scrollTop(0);
+                }
+            }
         }
 
     });

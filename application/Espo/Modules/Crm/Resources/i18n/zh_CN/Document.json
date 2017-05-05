@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "创建文档",
+    "Details": "细节"
+  },
+  "fields": {
+    "name": "名称",
+    "status": "状态",
+    "file": "文件",
+    "type": "类型",
+    "publishDate": "发布日期",
+    "expirationDate": "截止日期",
+    "description": "描述",
+    "accounts": "客户\n",
+    "folder": "夹"
+  },
+  "links": {
+    "accounts": "客户\n",
+    "opportunities": "商机",
+    "folder": "夹",
+    "leads": "线索",
+    "contacts": "联系人"
+  },
+  "options": {
+    "status": {
+      "Active": "活性",
+      "Draft": "草案",
+      "Expired": "已过期",
+      "Canceled": "取消"
+    },
+    "type": {
+      "": "没有",
+      "Contract": "合同",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "许可协议"
+    }
+  },
+  "presetFilters": {
+    "active": "活性",
+    "draft": "草案"
+  }
+}

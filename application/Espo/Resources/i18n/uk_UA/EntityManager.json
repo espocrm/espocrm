@@ -1,44 +1,69 @@
 {
-    "labels": {
-        "Fields": "Поля",
-        "Relationships": "Зв'язки"
+  "labels": {
+    "Fields": "Поля",
+    "Relationships": "Зв'язки",
+    "Schedule": "Графік",
+    "Log": "Log",
+    "Formula": "формула"
+  },
+  "fields": {
+    "name": "Ім'я",
+    "type": "Тип",
+    "labelSingular": "Одиночна мітка",
+    "labelPlural": "Множинна мітка",
+    "stream": "Потік",
+    "label": "Мітка",
+    "linkType": "Link Type",
+    "entityForeign": "Foreign Entity",
+    "linkForeign": "Foreign Link",
+    "link": "Link",
+    "labelForeign": "Foreign Label",
+    "sortBy": "Default Order (field)",
+    "sortDirection": "Default Order (direction)",
+    "relationName": "Назва середньої таблиці",
+    "linkMultipleField": "Посилання ",
+    "linkMultipleFieldForeign": "Зовнішнє посилання багаторазове поле",
+    "disabled": "Відключено",
+    "textFilterFields": "Поля текстових фільтрів",
+    "audited": "Перевірка",
+    "auditedForeign": "Зовнішня перевірка",
+    "statusField": "Статус поля",
+    "beforeSaveCustomScript": "Перед тим як зберегти призначений користувачу скрипт"
+  },
+  "options": {
+    "type": {
+      "": "Нема",
+      "Base": "База",
+      "Person": "Особа",
+      "CategoryTree": "Category Tree",
+      "Event": "Подія",
+      "BasePlus": "База плюс",
+      "Company": "Компанія"
     },
-    "fields": {
-        "name": "Ім'я",
-        "type": "Тип",
-        "labelSingular": "Одиночна мітка",
-        "labelPlural": "Множинна мітка",
-        "stream": "Потік",
-        "label": "Мітка",
-        "linkType": "Link Type",
-        "entityForeign": "Foreign Entity",
-        "linkForeign": "Foreign Link",
-        "link": "Link",
-        "labelForeign": "Foreign Label",
-        "sortBy": "Default Order (field)",
-        "sortDirection": "Default Order (direction)"
+    "linkType": {
+      "manyToMany": "Багато-до-багатьох",
+      "oneToMany": "Один-до-багатьох",
+      "manyToOne": "Багато-до-одного",
+      "parentToChildren": "Батьки-дітям",
+      "childrenToParent": "Діти-батькам"
     },
-    "options": {
-        "type": {
-            "": "Нема",
-            "Base": "База",
-            "Person": "Особа",
-            "CategoryTree": "Category Tree"
-        },
-        "linkType": {
-            "manyToMany": "Багато-до-багатьох",
-            "oneToMany": "Один-до-багатьох",
-            "manyToOne": "Багато-до-одного",
-            "parentToChildren": "Батьки-дітям",
-            "childrenToParent": "Діти-батькам"
-        },
-        "sortDirection": {
-            "asc": "Ascending",
-            "desc": "Descending"
-        }
-    },
-    "messages": {
-        "entityCreated": "Підрозділ було створено",
-        "linkAlreadyExists": "Конфлікт: линва вже існує."
+    "sortDirection": {
+      "asc": "Ascending",
+      "desc": "Descending"
     }
+  },
+  "messages": {
+    "entityCreated": "Підрозділ було створено",
+    "linkAlreadyExists": "Конфлікт: линва вже існує.",
+    "linkConflict": "Конфлікт імен: посилання чи поле з таким іменем уже є"
+  },
+  "tooltips": {
+    "statusField": "Оновлення цього поля записуються в потік.",
+    "textFilterFields": "Поле що використовується для текстового пошуку",
+    "stream": "Незалежно від об'єкта є потік.",
+    "disabled": "Перевірте, чи не потрібен цей об'єкт у вашій системі.",
+    "linkAudited": "Створення відповідного запису і зв'язок з існуючим записом буде реєструватися в потоці.",
+    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
+    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
+  }
 }

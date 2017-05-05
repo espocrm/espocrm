@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Fields": "字段",
+    "Relationships": "关系",
+    "Schedule": "时间表",
+    "Log": "日志",
+    "Formula": "公式"
+  },
+  "fields": {
+    "name": "名称",
+    "type": "类型",
+    "labelSingular": "单标签",
+    "labelPlural": "多标签",
+    "stream": "信息流",
+    "label": "标签",
+    "linkType": "链接类型",
+    "entityForeign": "外部实体",
+    "linkForeign": "外部链接",
+    "link": "链接",
+    "labelForeign": "外部标签",
+    "sortBy": "默认顺序（字段）",
+    "sortDirection": "默认顺序（方向）",
+    "relationName": "中间名称",
+    "linkMultipleField": "链接多个字段",
+    "linkMultipleFieldForeign": "外地链接多字段",
+    "disabled": "禁用",
+    "textFilterFields": "文本过滤字段",
+    "audited": "已审核",
+    "auditedForeign": "外部审核",
+    "statusField": "字段状态",
+    "beforeSaveCustomScript": "在保存自定义脚本之前"
+  },
+  "options": {
+    "type": {
+      "": "没有",
+      "Base": "基础",
+      "Person": "人",
+      "CategoryTree": "类别树",
+      "Event": "时间",
+      "BasePlus": "基础加",
+      "Company": "公司"
+    },
+    "linkType": {
+      "manyToMany": "多对多",
+      "oneToMany": "一对多",
+      "manyToOne": "多对一",
+      "parentToChildren": "关联到子项",
+      "childrenToParent": "关联到父项"
+    },
+    "sortDirection": {
+      "asc": "上升",
+      "desc": "降序"
+    }
+  },
+  "messages": {
+    "entityCreated": "实体已创建",
+    "linkAlreadyExists": "链接名称冲突。",
+    "linkConflict": "名称冲突：具有相同名称的链接或字段已存在。"
+  },
+  "tooltips": {
+    "statusField": "此字段的更新记录在信息流中。",
+    "textFilterFields": "文字搜索使用的字段。",
+    "stream": "不论实体是否有信息流。",
+    "disabled": "检查您的系统中是否不需要此实体。",
+    "linkAudited": "在信息流中将记录创建相关记录并链接现有记录。",
+    "linkMultipleField": "链接多字段提供了编辑关系的方便的方式。不要使用它，如果你可以有大量的相关记录。",
+    "entityType": "Base Plus  - 具有活动，历史和任务面板。活动 - 在“日历和活动”面板中可用。"
+  }
+}

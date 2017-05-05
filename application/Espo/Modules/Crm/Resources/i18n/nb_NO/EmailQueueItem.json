@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "target": "Mål",
+    "sentAt": "Dato sendt",
+    "attemptCount": "Forsøk",
+    "emailAddress": "Epostadresse",
+    "massEmail": "Masseutsendt epost",
+    "isTest": "Er test"
+  },
+  "links": {
+    "target": "Mål",
+    "massEmail": "Masseutsendt epost"
+  },
+  "options": {
+    "status": {
+      "Pending": "Venter",
+      "Sent": "Sendt",
+      "Failed": "Feilet",
+      "Sending": "Sender"
+    }
+  },
+  "presetFilters": {
+    "pending": "Venter",
+    "sent": "Sendt",
+    "failed": "Feilet"
+  }
+}

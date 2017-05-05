@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "名称",
+    "emailAddress": "电子邮件",
+    "title": "标题",
+    "accountRole": "标题",
+    "account": "帐户",
+    "accounts": "客户",
+    "phoneNumber": "电话",
+    "accountType": "帐户类型",
+    "doNotCall": "不要电联",
+    "address": "地址",
+    "opportunityRole": "商机角色",
+    "description": "描述",
+    "campaign": "营销活动",
+    "targetLists": "目标列表",
+    "targetList": "目标列表",
+    "portalUser": "门户网站用户",
+    "originalLead": "原始线索"
+  },
+  "links": {
+    "opportunities": "商机",
+    "cases": "案例",
+    "targetLists": "目标列表",
+    "campaignLogRecords": "营销活动日志",
+    "campaign": "营销活动",
+    "account": "帐户（主要）",
+    "accounts": "客户",
+    "casesPrimary": "案例（主要）",
+    "portalUser": "门户用户",
+    "originalLead": "原始线索",
+    "documents": "文件"
+  },
+  "labels": {
+    "Create Contact": "建立联系"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "- 没有 - ",
+      "Decision Maker": "决策者",
+      "Evaluator": "评估者",
+      "Influencer": "影响者"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "门户用户",
+    "notPortalUsers": "不是门户用户"
+  }
+}

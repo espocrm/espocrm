@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -46,8 +46,9 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
             for (var label in response) {
                 var value = response[label];
                 d.push({
-                    stage: this.getLanguage().translateOption(label, 'stage', 'Opportunity'),
-                    value: value
+                    stageTranslated: this.getLanguage().translateOption(label, 'stage', 'Opportunity'),
+                    value: value,
+                    stage: label
                 });
             }
 
@@ -58,7 +59,8 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 var nextValue = ((i + 1) < d.length) ? d[i + 1].value : value;
                 data.push({
                     data: [[i, value], [i + 1, nextValue]],
-                    label: item.stage
+                    label: item.stageTranslated,
+                    stage: item.stage
                 });
             }
 
@@ -140,7 +142,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 if (i + 1 > colors.length) {
                     colors.push('#164');
                 }
-                if (this.chartData.length == i + 1) {
+                if (this.chartData.length == i + 1 && item.stage === 'Closed Won') {
                     colors[i] = this.successColor;
                 }
             }, this);

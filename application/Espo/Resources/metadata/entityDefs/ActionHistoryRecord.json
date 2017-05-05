@@ -1,0 +1,56 @@
+{
+    "fields": {
+        "number": {
+            "type": "autoincrement",
+            "index": true
+        },
+        "targetType": {
+            "view": "views/action-history-record/fields/target-type",
+            "translation": "Global.scopeNames"
+        },
+        "target": {
+            "type": "linkParent",
+            "view": "views/action-history-record/fields/target"
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "action": {
+            "type": "enum",
+            "options": ["read", "update", "create", "delete"]
+        },
+        "createdAt": {
+            "type": "datetime"
+        },
+        "user": {
+            "type": "link"
+        },
+        "ipAddress": {
+            "type": "varchar",
+            "maxLength": "39"
+        },
+        "authToken": {
+            "type": "link"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "target": {
+            "type": "belongsToParent"
+        },
+        "authToken": {
+            "type": "belongsTo",
+            "entity": "AuthToken",
+            "foreignName": "id",
+            "foreign": "actionHistoryRecords"
+        }
+    },
+    "collection": {
+        "sortBy": "number",
+        "asc": false,
+        "textFilterFields": ["ipAddress", "userName"]
+    }
+}

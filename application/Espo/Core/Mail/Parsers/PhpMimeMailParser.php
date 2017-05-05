@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -85,6 +85,42 @@ class PhpMimeMailParser
         return $this->getMessageAttribute($message, 'Message-ID');
     }
 
+    public function getAddressNameMap($message)
+    {
+        $map = (object) [];
+
+        foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
+            if ($this->checkMessageAttribute($message, $type)) {
+                $list = $this->getParser($message)->getAddresses($type);
+                foreach ($list as $item) {
+                    $name = $list[0]['display'];
+                    $address = $list[0]['address'];
+                    if ($name && $address && $name !== $address) {
+                        $map->$address = $name;
+                    }
+                }
+
+            }
+        }
+
+        return $map;
+    }
+
+    public function getAddressDataFromMessage($message, $type)
+    {
+        $addressList = [];
+        if ($this->checkMessageAttribute($message, $type)) {
+            $list = $this->getParser($message)->getAddresses($type);
+            if (count($list)) {
+                return [
+                    'address' => $list[0]['address'],
+                    'name' => $list[0]['display'],
+                ];
+            }
+        }
+        return null;
+    }
+
     public function getAddressListFromMessage($message, $type)
     {
         $addressList = [];
@@ -130,9 +166,10 @@ class PhpMimeMailParser
             $attachment->set('name', $attachmentObj->getFileName());
             $attachment->set('type', $attachmentObj->getContentType());
 
+            $contentId = $attachmentObj->getContentID();
+
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');
-                $contentId = $attachmentObj->getContentID();
             } else {
                 $attachment->set('role', 'Attachment');
             }
@@ -142,11 +179,14 @@ class PhpMimeMailParser
             $this->getEntityManager()->saveEntity($attachment);
 
             if ($disposition == 'attachment') {
-                $attachmentsIds = $email->get('attachmentsIds');
-                $attachmentsIds[] = $attachment->id;
-                $email->set('attachmentsIds', $attachmentsIds);
+                $email->addLinkMultipleId('attachments', $attachment->id);
+                if ($contentId) {
+                    $inlineIds[$contentId] = $attachment->id;
+                }
             } else if ($disposition == 'inline') {
-                $inlineIds[$contentId] = $attachment->id;
+                if ($contentId) {
+                    $inlineIds[$contentId] = $attachment->id;
+                }
             }
         }
 

@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Send epost til mange",
+      "ControlKnowledgeBaseArticleStatus": "Kontrollér kunnskapsbaseartikkelens status"
+    }
+  }
+}

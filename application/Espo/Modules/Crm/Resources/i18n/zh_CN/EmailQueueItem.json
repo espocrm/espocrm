@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "名称",
+    "status": "状态",
+    "target": "目标",
+    "sentAt": "发送日期",
+    "attemptCount": "尝试",
+    "emailAddress": "电子邮件地址",
+    "massEmail": "群发电子邮件",
+    "isTest": "是测试"
+  },
+  "links": {
+    "target": "目标",
+    "massEmail": "群发电子邮件"
+  },
+  "options": {
+    "status": {
+      "Pending": "有待",
+      "Sent": "发送",
+      "Failed": "失败",
+      "Sending": "发送中"
+    }
+  },
+  "presetFilters": {
+    "pending": "有待",
+    "sent": "发送",
+    "failed": "失败"
+  }
+}

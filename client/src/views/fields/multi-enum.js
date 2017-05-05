@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -58,7 +58,6 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             });
         },
 
-
         setup: function () {
             Dep.prototype.setup.call(this);
         },
@@ -73,7 +72,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 (this.params.options || []).forEach(function (value) {
                     var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {
-                         if (value in this.translatedOptions) {
+                        if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
                         }
                     }
@@ -132,7 +131,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     return true;
                 }
             }
-        },
+        }
 
     });
 });

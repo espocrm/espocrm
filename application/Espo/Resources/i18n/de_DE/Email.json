@@ -33,7 +33,8 @@
     "sentBy": "Gesendet von (Benutzer)",
     "folder": "Ordner",
     "inboundEmails": "Gruppenkonten",
-    "emailAccounts": "Persönliche Konten"
+    "emailAccounts": "Persönliche Konten",
+    "hasAttachment": "Anhang vorhanden"
   },
   "links": {
     "replied": "Beantwortet",

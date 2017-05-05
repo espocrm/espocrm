@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Navn",
+    "roles": "Roller",
+    "positionList": "Posisjonliste"
+  },
+  "links": {
+    "users": "Brukere",
+    "notes": "Notater",
+    "roles": "Roller",
+    "inboundEmails": "Epostkonti for grupper"
+  },
+  "tooltips": {
+    "roles": "Roller for tilgangskontroll. Brukere i denne gruppen får tilgangsnivå tilsvarende de valgte rollene.",
+    "positionList": "Tilgjengelige posisjoner i denne gruppen. F.eks. salgsperson, leder etc."
+  },
+  "labels": {
+    "Create Team": "Opprett gruppe"
+  }
+}

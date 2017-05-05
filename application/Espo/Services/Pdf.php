@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -52,6 +52,7 @@ class Pdf extends \Espo\Core\Services\Base
         $this->addDependency('serviceFactory');
         $this->addDependency('dateTime');
         $this->addDependency('number');
+        $this->addDependency('entityManager');
     }
 
     protected function getAcl()
@@ -94,7 +95,7 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl());
+        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl(), $this->getInjection('entityManager'));
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 

@@ -1,0 +1,97 @@
+{
+  "fields": {
+    "name": "Navn",
+    "userName": "Brukernavn",
+    "title": "Tittel",
+    "isAdmin": "Er admin",
+    "defaultTeam": "Forvalgt gruppe",
+    "emailAddress": "Epost",
+    "phoneNumber": "Telefon",
+    "roles": "Roller",
+    "portals": "Portaler",
+    "portalRoles": "Portalroller",
+    "teamRole": "Posisjon",
+    "password": "Passord",
+    "currentPassword": "Nåværende passord",
+    "passwordConfirm": "Bekreft passord",
+    "newPassword": "Nytt passord",
+    "newPasswordConfirm": "Bekreft nytt passord",
+    "avatar": "Avatar",
+    "isActive": "Er aktiv",
+    "isPortalUser": "Er portalbruker",
+    "contact": "Kontakt",
+    "accounts": "Konti",
+    "account": "Konto (Primær)",
+    "sendAccessInfo": "Send tilgangsinformasjonen på epost til brukeren",
+    "portal": "Portal",
+    "gender": "Kjønn",
+    "position": "Posisjon i gruppen"
+  },
+  "links": {
+    "teams": "Grupper",
+    "roles": "Roller",
+    "notes": "Notater",
+    "portals": "Portaler",
+    "portalRoles": "Portalroller",
+    "contact": "Kontakt",
+    "accounts": "Konti",
+    "account": "Konto (Primær)",
+    "tasks": "Oppgaver"
+  },
+  "labels": {
+    "Create User": "Opprett bruker",
+    "Generate": "Generer",
+    "Access": "Tilgang",
+    "Preferences": "Preferanser",
+    "Change Password": "Endre passord",
+    "Teams and Access Control": "Grupper og tilgangskontroll",
+    "Forgot Password?": "Glemt passordet?",
+    "Password Change Request": "Spør om å få bytte passord",
+    "Email Address": "Epostadresse",
+    "External Accounts": "Eksterne konti",
+    "Email Accounts": "Epostkonti",
+    "Portal": "Portal",
+    "Create Portal User": "Opprett portalbruker",
+    "Proceed w/o Contact": "Fortsett uten kontakt"
+  },
+  "tooltips": {
+    "defaultTeam": "Alle oppføringer som opprettes av denne brukeren vil bli relatert til denne gruppen som forvalg.",
+    "userName": "Bokstaver fra a-z, nummer fra 0-9, punktum, bindestrek, krøllalfa og understrek er tillat.",
+    "isAdmin": "Adminbruker har tilgang til alt.",
+    "isActive": "Brukeren kan ikke logge inn når dette valget ikke er markert.",
+    "teams": "Grupper som denne brukeren tilhører. Tilgangsnivået arves fra gruppens roller.",
+    "roles": "Ytterligere tilgangsroller. Benyttes hvis brukeren ikke tilhører til noen gruppe eller når du har behov for å utvide tilgangsnivået for kun en bruker.",
+    "portalRoles": "Ytterligere portalroller. Benyttes for å utvide tilgangsnivået for kun en bruker.",
+    "portals": "Portaler som brukeren har tilgang til."
+  },
+  "messages": {
+    "passwordWillBeSent": "Passordet vil sendes til brukerens epostadresse.",
+    "accountInfoEmailSubject": "EspoCRM-brukerens tilgangsinformasjon",
+    "accountInfoEmailBody": "Påloggingsinformasjon:\n\nBrukernavn: {userName}\nPassord: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Spør om å få bytte passord",
+    "passwordChanged": "Passordet har blitt forandret",
+    "userCantBeEmpty": "Brukernavn-feltet må fylles ut",
+    "wrongUsernamePasword": "Feil brukernavn og / eller passord",
+    "emailAddressCantBeEmpty": "Epostadresse-feltet må fylles ut",
+    "userNameEmailAddressNotFound": "Brukernavn og / eller passordet finnes ikke",
+    "forbidden": "Ikke tillat, prøv igjen senere",
+    "uniqueLinkHasBeenSent": "Den unike lenken er sendt til den angitte epostadressen.",
+    "passwordChangedByRequest": "Passordet er endret.",
+    "setupSmtpBefore": "For å sende ut passord via epost må du først sette opp en <a href=\"{url}\">SMTP-tjener</a>."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Bare min gruppe"
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "activePortal": "Aktiv portal"
+  },
+  "options": {
+    "gender": {
+      "": "Ikke satt",
+      "Male": "Mann",
+      "Female": "Kvinne",
+      "Neutral": "Nøytral"
+    }
+  }
+}

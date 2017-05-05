@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -36,17 +36,29 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function init()
     {
         parent::init();
-        $this->addDependency('fileManager');
+        $this->addDependency('fileStorageManager');
+        $this->addDependency('config');
     }
 
-    protected function getFileManager()
+    protected function getFileStorageManager()
     {
-        return $this->getInjection('fileManager');
+        return $this->getInjection('fileStorageManager');
+    }
+
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
     }
 
     public function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
+
+        $storage = $entity->get('storage');
+        if (!$storage) {
+            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
+        }
+
         if ($entity->isNew()) {
             if (!$entity->has('size') && $entity->has('contents')) {
                 $entity->set('size', mb_strlen($entity->has('contents')));
@@ -62,7 +74,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $this->getFileManager()->putContents($this->getFilePath($entity), $contents);
+                $this->getFileStorageManager()->putContents($entity, $contents);
             }
         }
 
@@ -72,7 +84,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        $this->getFileManager()->removeFile('data/upload/' . $entity->id);
+        $this->getFileStorageManager()->unlink($entity);
     }
 
     public function getCopiedAttachment(Entity $entity, $role = null)
@@ -97,15 +109,21 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
     public function getContents(Entity $entity)
     {
-        return $this->getFileManager()->getContents($this->getFilePath($entity));
+        return $this->getFileStorageManager()->getContents($entity);
     }
 
     public function getFilePath(Entity $entity)
     {
-        $sourceId = $entity->getSourceId();
-
-        return 'data/upload/' . $sourceId;
+        return $this->getFileStorageManager()->getLocalFilePath($entity);
     }
 
-}
+    public function hasDownloadUrl(Entity $entity)
+    {
+        return $this->getFileStorageManager()->hasDownloadUrl($entity);
+    }
 
+    public function getDownloadUrl(Entity $entity)
+    {
+        return $this->getFileStorageManager()->getDownloadUrl($entity);
+    }
+}

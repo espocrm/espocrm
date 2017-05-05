@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -57,6 +57,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             if (this.getMetadata().get('clientDefs.' + this.scope + '.searchPanelDisabled')) {
                 this.searchPanel = false;
+            }
+
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
+                this.createButton = false;
             }
 
             this.entityType = this.collection.name;
@@ -193,12 +197,16 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             var listViewName = this.getRecordViewName();
 
             this.createView('list', listViewName, o, function (view) {
-                if (!this.hasParentView()) return;
+                if (!this.hasParentView()) {
+                    view.undelegateEvents();
+                    return;
+                }
 
                 view.render();
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {
+                        view.undelegateEvents();
                         this.clearView('list');
                     }
                 }, this);

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,20 +42,37 @@ class AuthToken extends \Espo\Core\Controllers\Record
 
     public function actionUpdate($params, $data, $request)
     {
-        throw new Forbidden();
-    }
-
-    public function actionCreate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    public function actionListLinked($params, $data, $request)
-    {
+        if (
+            is_array($data) &&
+            array_key_exists('isActive', $data) &&
+            $data['isActive'] === false &&
+            count(array_keys($data)) === 1)
+        {
+            return parent::actionUpdate($params, $data, $request);
+        }
         throw new Forbidden();
     }
 
     public function actionMassUpdate($params, $data, $request)
+    {
+        if (empty($data['attributes'])) {
+            throw new BadRequest();
+        }
+
+        $attributes = $data['attributes'];
+
+        if (
+            is_object($attributes) &&
+            isset($attributes->isActive) &&
+            $attributes->isActive === false &&
+            count(array_keys(get_object_vars($attributes))) === 1
+        ) {
+            return parent::actionMassUpdate($params, $data, $request);
+        }
+        throw new Forbidden();
+    }
+
+    public function actionCreate($params, $data, $request)
     {
         throw new Forbidden();
     }

@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "Kullanıcılar"
+  },
+  "labels": {
+    "Access": "Erişim",
+    "Create PortalRole": "Portal Rolü Oluştur",
+    "Scope Level": "Kapsam Düzeyi",
+    "Field Level": "Alan Düzeyi"
+  }
+}

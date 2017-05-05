@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,14 +33,14 @@ Espo.define('views/user/fields/contact', 'views/fields/link', function (Dep) {
         select: function (model) {
             Dep.prototype.select.call(this, model);
 
-            if (model.has('accountId')) {
+            var attributes = {};
+
+            if (model.get('accountId')) {
                 var names = {};
                 names[model.get('accountId')] = model.get('accountName');
+                attributes.accountsIds = [model.get('accountId')],
+                attributes.accountsNames = names;
 
-                var attributes = {
-                    accountsIds: [model.get('accountId')],
-                    accountsNames: names
-                };
             }
 
             attributes.firstName = model.get('firstName');

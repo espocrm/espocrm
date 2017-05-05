@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "storeSentEmails": "Lager sendte eposter",
+    "startAt": "Startdato",
+    "fromAddress": "Fra-adresse",
+    "fromName": "Fra-navn",
+    "replyToAddress": "Svar-til adresse",
+    "replyToName": "Svar-til navn",
+    "campaign": "Kampanje",
+    "emailTemplate": "Epostmal",
+    "inboundEmail": "Epostkonto",
+    "targetLists": "Målgrupper",
+    "excludingTargetLists": "Ekskluderte målgrupper",
+    "optOutEntirely": "Fullstendig avmelding"
+  },
+  "links": {
+    "targetLists": "Målgrupper",
+    "excludingTargetLists": "Ekskluderte målgrupper",
+    "queueItems": "Køobjekter",
+    "campaign": "Kampanje",
+    "emailTemplate": "Epostmal",
+    "inboundEmail": "Epostkonto"
+  },
+  "options": {
+    "status": {
+      "Draft": "Utkast",
+      "Pending": "Venter",
+      "In Process": "Under behandling",
+      "Complete": "Ferdig",
+      "Canceled": "Kansellert",
+      "Failed": "Feilet"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Opprett masseutsendt epost",
+    "Send Test": "Send test"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Velg minst ett mål.",
+    "testSent": "Test epost(ene) som skal sendes"
+  },
+  "tooltips": {
+    "optOutEntirely": "Epostadresser fra mottagere som har meldt seg av, vil merkes som 'avmeldt' og mottar ikke fremtidige utsendelser.",
+    "targetLists": "Mål som ikke skal motta meldinger.",
+    "excludingTargetLists": "Mål som ikke skal motta meldinger."
+  },
+  "presetFilters": {
+    "actual": "Aktuell",
+    "complete": "Ferdig"
+  }
+}

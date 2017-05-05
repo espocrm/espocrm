@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -298,6 +298,22 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     break;
             }
 
+
+            if (!attributes.parentId) {
+                if (this.checkParentTypeAvailability(this.model.name)) {
+                    attributes.parentType = this.model.name;
+                    attributes.parentId = this.model.id;
+                    attributes.parentName = this.model.get('name');
+                }
+            } else {
+                if (attributes.parentType && !this.checkParentTypeAvailability(attributes.parentType)) {
+                    attributes.parentType = null;
+                    attributes.parentId = null;
+                    attributes.parentName = null;
+                }
+            }
+
+
             if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name)) {
                 attributes.nameHash = {};
                 attributes.nameHash[emailAddress] = this.model.get('name');
@@ -310,6 +326,10 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 view.render();
                 view.notify(false);
             });
+        },
+
+        checkParentTypeAvailability: function (parentType) {
+            return ~(this.getMetadata().get(['entityDefs', 'Email', 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
         },
 
         setup: function () {

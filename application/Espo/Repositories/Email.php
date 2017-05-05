@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -154,8 +154,17 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
             if ($p) {
                 $nameHash->$address = $p->get('name');
-                $typeHash->$address = $p->getEntityName();
+                $typeHash->$address = $p->getEntityType();
                 $idHash->$address = $p->id;
+            }
+        }
+
+        $addressNameMap = $entity->get('addressNameMap');
+        if (is_object($addressNameMap)) {
+            foreach (get_object_vars($addressNameMap) as $key => $value) {
+                if (!isset($nameHash->$key)) {
+                    $nameHash->$key = $value;
+                }
             }
         }
 
@@ -187,7 +196,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
-                        $entity->setLinkMultipleColumn('users', 'isRead', $ids[0], true);
 
                         if (!$entity->get('sentById')) {
                             $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User');
@@ -221,6 +229,11 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
 
         parent::beforeSave($entity, $options);
+
+        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+            $entity->addLinkMultipleId('users', $entity->get('createdById'));
+            $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
+        }
 
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');

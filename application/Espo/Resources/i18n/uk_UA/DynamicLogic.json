@@ -1,0 +1,28 @@
+{
+  "label": {
+    "Field": "Поле"
+  },
+  "options": {
+    "operators": {
+      "equals": "Так само",
+      "notEquals": "Не так само",
+      "greaterThan": "Greater Than",
+      "lessThan": "Less Than",
+      "greaterThanOrEquals": "Greater Than Or Equals",
+      "lessThanOrEquals": "Less Than Or Equals",
+      "in": "In",
+      "notIn": "Not In",
+      "inPast": "In Past",
+      "inFuture": "Is Future",
+      "isToday": "Is Today",
+      "isTrue": "Is True",
+      "isFalse": "Is False",
+      "isEmpty": "Is Empty",
+      "isNotEmpty": "Не порожній",
+      "contains": "Містить",
+      "has": "Містить",
+      "notContains": "Не містить",
+      "notHas": "Не містить"
+    }
+  }
+}

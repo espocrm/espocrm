@@ -1,6 +1,9 @@
 {
     "controller": "controllers/record",
     "boolFilterList": ["onlyMy"],
+    "recordViews": {
+        "detail": "views/templates/event/record/detail"
+    },
     "activityDefs": {
         "activitiesCreate": true,
         "historyCreate": true

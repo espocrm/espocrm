@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -35,11 +35,6 @@ class Language extends \Espo\Core\Utils\Language
 {
     public function setPortal($portal)
     {
-        if ($portal->get('language') !== '' && $portal->get('language')) {
-            if (!$this->getPreferences()->get('language')) {
-                $this->setLanguage($portal->get('language'));
-            }
-        }
     }
 
 }

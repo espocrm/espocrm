@@ -1,42 +1,59 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "number": "Номер",
-        "status": "Статус",
-        "account": "Контрагент",
-        "contact": "Контакт",
-        "priority": "Пріоритет",
-        "type": "Тип",
-        "description": "Опис"
+  "fields": {
+    "name": "Ім'я",
+    "number": "Номер",
+    "status": "Статус",
+    "account": "Контрагент",
+    "contact": "Контакт",
+    "contacts": "Контакти",
+    "priority": "Пріоритет",
+    "type": "Тип",
+    "description": "Опис",
+    "inboundEmail": "Inbound Email",
+    "lead": "Керувати"
+  },
+  "links": {
+    "inboundEmail": "Inbound Email",
+    "account": "Обліковий запис",
+    "contact": "Контакт (Основний)",
+    "Contacts": "Контакти",
+    "meetings": "Зустрічі",
+    "calls": "Дзвінки",
+    "tasks": "Завдання",
+    "emails": "Електронні скриньки",
+    "articles": "База знань Статті",
+    "lead": "Керувати"
+  },
+  "options": {
+    "status": {
+      "New": "Новий",
+      "Assigned": "На розгляді",
+      "Pending": "Поточне",
+      "Closed": "Закрито",
+      "Rejected": "Відмовлено",
+      "Duplicate": "Дуплікат"
     },
-    "links": {
+    "priority": {
+      "Low": "Низько",
+      "Normal": "Нормальний",
+      "High": "Високо",
+      "Urgent": "Терміново"
     },
-    "options": {
-        "status": {
-            "New": "Новий",
-            "Assigned": "На розгляді",
-            "Pending": "Поточне",
-            "Closed": "Закрито",
-            "Rejected": "Відмовлено",
-            "Duplicate": "Дуплікат"
-        },
-        "priority" : {
-            "Low": "Низько",
-            "Normal": "Нормальний",
-            "High": "Високо",
-            "Urgent": "Терміново"
-        },
-        "type": {
-            "Question": "Питання",
-            "Incident": "Випадок",
-            "Problem": "Проблема"
-        }
-    },
-    "labels": {
-        "Create Case": "Створити кейс"
-    },
-    "presetFilters": {
-        "open": "Відкрито",
-        "closed": "Закрито"
+    "type": {
+      "Question": "Питання",
+      "Incident": "Випадок",
+      "Problem": "Проблема"
     }
+  },
+  "labels": {
+    "Create Case": "Створити кейс",
+    "Close": "Зачинено",
+    "Reject": "Відхиляти",
+    "Closed": "Закрити",
+    "Rejected": "Відхилено"
+  },
+  "presetFilters": {
+    "open": "Відкрито",
+    "closed": "Закрито"
+  }
 }

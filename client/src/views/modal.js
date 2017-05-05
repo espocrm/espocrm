@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,6 +31,8 @@ Espo.define('views/modal', 'view', function (Dep) {
     return Dep.extend({
 
         cssName: 'modal-dialog',
+
+        className: 'dialog',
 
         header: false,
 
@@ -129,6 +131,11 @@ Espo.define('views/modal', 'view', function (Dep) {
                     buttonListExt.push(o);
                 }, this);
 
+                var modalBodyDiffHeight = 92;
+                if (this.getThemeManager().getParam('modalBodyDiffHeight') !== null) {
+                    modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
+                }
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: this.header,
@@ -139,6 +146,11 @@ Espo.define('views/modal', 'view', function (Dep) {
                     keyboard: !this.escapeDisabled,
                     fitHeight: this.fitHeight,
                     draggable: this.isDraggable,
+                    className: this.className,
+                    bodyDiffHeight: modalBodyDiffHeight,
+                    footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
+                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
+                    screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
@@ -186,7 +198,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
@@ -195,7 +207,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         addButton: function (o, toBeginnig, doNotReRender) {

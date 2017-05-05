@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -242,5 +242,54 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('2016-10-10', $selectParams['whereClause'][1]['OR'][0]['date=']);
         $this->assertEquals('2016-10-10 10:10:00', $selectParams['whereClause'][1]['OR'][1]['dateTime>']);
+    }
+
+    function testBuildSelectParamsNot()
+    {
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager->setEntityType('Test2');
+
+        $params = array(
+            'where' => array(
+                array(
+                    'type' => 'not',
+                    'value' => array(
+                        array(
+                            'type' => 'equals',
+                            'attribute'=> 'date',
+                            'value' => '2016-10-10'
+                        ),
+                        array(
+                            'type' => 'after',
+                            'attribute'=> 'dateTime',
+                            'value' => '2016-10-10 10:10:00'
+                        )
+                    )
+                )
+            )
+        );
+
+        $selectParams = $selectManager->buildSelectParams($params);
+
+        $this->assertEquals('2016-10-10', $selectParams['whereClause'][0]['NOT'][0]['date=']);
+    }
+
+    function testBuildSelectParamsComplex()
+    {
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager->setEntityType('Test2');
+
+        $params = array(
+            'where' => array(
+                array(
+                    'type' => 'equals',
+                    'attribute'=> 'MONTH_NUMBER:dateTime',
+                    'value' => 2
+                )
+            )
+        );
+
+        $selectParams = $selectManager->buildSelectParams($params);
+        $this->assertEquals(2, $selectParams['whereClause'][0]['MONTH_NUMBER:dateTime=']);
     }
 }

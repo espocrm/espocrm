@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -55,12 +55,52 @@ class DateTime
         'hh:mmA' => 'h:iA',
     );
 
+
+    protected $formattingMap = array(
+        'MMMM' => 'F',
+        'MMM' => 'M',
+        'MM' => 'm',
+        'M' => 'n',
+        'DDDD' => 'z',
+        'DD' => 'd',
+        'D' => 'j',
+        'dddd' => 'l',
+        'ddd' => 'D',
+        'ww' => 'W',
+        'w' => 'W',
+        'e' => 'w',
+        'YYYY' => 'Y',
+        'YY' => 'y',
+        'HH' => 'H',
+        'H' => 'G',
+        'hh' => 'h',
+        'h' => 'g',
+        'mm' => 'i',
+        'm' => 'i',
+        'A' => 'A',
+        'a' => 'a',
+        'ss' => 's',
+        's' => 's',
+        'Z' => 'O',
+        'z' => 'O'
+    );
+
     public function __construct($dateFormat = 'YYYY-MM-DD', $timeFormat = 'HH:mm', $timeZone = 'UTC')
     {
         $this->dateFormat = $dateFormat;
         $this->timeFormat = $timeFormat;
 
         $this->timezone = new \DateTimeZone($timeZone);
+    }
+
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
+    }
+
+    public function getDateTimeFormat()
+    {
+        return $this->dateFormat . ' ' . $this->timeFormat;
     }
 
     public function getInternalDateTimeFormat()
@@ -83,6 +123,11 @@ class DateTime
         return $this->dateFormats[$this->dateFormat] . ' ' . $this->timeFormats[$this->timeFormat];
     }
 
+    protected function convertFormatToPhp($format)
+    {
+        return strtr($format, $this->formattingMap);
+    }
+
     public function convertSystemDateToGlobal($string)
     {
         return $this->convertSystemDate($string);
@@ -93,25 +138,39 @@ class DateTime
         return $this->convertSystemDateTime($string);
     }
 
-    public function convertSystemDate($string)
+    public function convertSystemDate($string, $format = null)
     {
         $dateTime = \DateTime::createFromFormat('Y-m-d', $string);
         if ($dateTime) {
-            return $dateTime->format($this->getPhpDateFormat());
+            if ($format) {
+                $phpFormat = $this->convertFormatToPhp($format);
+            } else {
+                $phpFormat = $this->getPhpDateFormat();
+            }
+            return $dateTime->format($phpFormat);
         }
         return null;
     }
 
-    public function convertSystemDateTime($string, $timezone = null)
+    public function convertSystemDateTime($string, $timezone = null, $format = null)
     {
+        if (is_string($string) && strlen($string) === 16) {
+            $string .= ':00';
+        }
         $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
         if (empty($timezone)) {
             $timezone = $this->timezone;
         } else {
             $timezone = new \DateTimeZone($timezone);
         }
+
         if ($dateTime) {
-            return $dateTime->setTimezone($timezone)->format($this->getPhpDateTimeFormat());
+            if ($format) {
+                $phpFormat = $this->convertFormatToPhp($format);
+            } else {
+                $phpFormat = $this->getPhpDateTimeFormat();
+            }
+            return $dateTime->setTimezone($timezone)->format($phpFormat);
         }
         return null;
     }

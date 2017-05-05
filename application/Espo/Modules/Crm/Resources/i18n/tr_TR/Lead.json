@@ -1,48 +1,65 @@
 {
-    "labels": {
-        "Converted To": "Çevrildi",
-        "Create Lead": "Müşteri Adayı Oluştur",
-        "Convert": "Çevir"
+  "labels": {
+    "Converted To": "Çevrildi",
+    "Create Lead": "Müşteri Adayı Oluştur",
+    "Convert": "Çevir"
+  },
+  "fields": {
+    "name": "İsim",
+    "emailAddress": "Eposta",
+    "title": "Başlık",
+    "website": "Website",
+    "phoneNumber": "Telefon ",
+    "accountName": "Hesap Adı",
+    "doNotCall": "Arama Yapma",
+    "address": "Adres",
+    "status": "Durum",
+    "source": "Kaynak",
+    "opportunityAmount": "Fırsat Tutarı",
+    "opportunityAmountConverted": "Fırsat Tutarı (dönüştürülmüş)",
+    "description": "açıklama",
+    "createdAccount": "Hesap",
+    "createdContact": "Bağlantı",
+    "createdOpportunity": "Fırsat",
+    "campaign": "Kampanya",
+    "targetLists": "Hedef Listeler",
+    "targetList": "Hedef Liste",
+    "industry": "Endüstri"
+  },
+  "links": {
+    "targetLists": "Hedef Listeler",
+    "campaignLogRecords": "Kampanya Günlüğü",
+    "campaign": "Kampanya",
+    "createdAccount": "Hesap",
+    "createdContact": "Kişi",
+    "createdOpportunity": "Fırsat",
+    "cases": "Dosyalar",
+    "documents": "Belgeler"
+  },
+  "options": {
+    "status": {
+      "New": "Yeni",
+      "Assigned": "Atanmış",
+      "In Process": "İşlemde",
+      "Converted": "Çevrildi",
+      "Recycled": "Geri Dönüştürüldü",
+      "Dead": "Ölü"
     },
-    "fields": {
-        "name": "İsim",
-        "emailAddress": "Eposta",
-        "title": "Başlık",
-        "website": "Website",
-        "phone": "Telefon",
-        "phoneOffice": "Phone (Office)",
-        "fax": "Faks",
-        "accountName": "Hesap Adı",
-        "doNotCall": "Arama Yapma",
-        "address": "Adres",
-        "status": "Durum",
-        "source": "Kaynak",
-        "opportunityAmount": "Fırsat Tutarı",
-        "description": "açıklama",
-        "createdAccount": "Hesap",
-        "createdContact": "Bağlantı",
-        "createdOpportunity": "Fırsat"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "New": "Yeni",
-            "Assigned": "Atanmış",
-            "In Process": "İşlemde",
-            "Converted": "Çevrildi",
-            "Recycled": "Geri Dönüştürüldü",
-            "Dead": "Ölü"
-        },
-        "source": {
-            "Call": "Arama",
-            "Email": "Eposta",
-            "Existing Customer": "Varolan Müşteri",
-            "Partner": "Ortak",
-            "Public Relations": "Halkla İlişkiler",
-            "Web Site": "Web Site",
-            "Campaign": "Kampanya",
-            "Other": "Diğer"
-        }
+    "source": {
+      "": "Hiçbiri ",
+      "Call": "Arama",
+      "Email": "Eposta",
+      "Existing Customer": "Varolan Müşteri",
+      "Partner": "Ortak",
+      "Public Relations": "Halkla İlişkiler",
+      "Web Site": "Web Site",
+      "Campaign": "Kampanya",
+      "Other": "Diğer"
     }
+  },
+  "presetFilters": {
+    "active": "Aktif ",
+    "actual": "Gerçek",
+    "converted": "Dönüştürülmüş"
+  }
 }

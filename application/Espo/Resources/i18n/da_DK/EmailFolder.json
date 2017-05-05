@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Spring over Notifikationer"
+  },
+  "labels": {
+    "Create EmailFolder": "Opret Mappe",
+    "Manage Folders": "Administrer Mapper",
+    "Emails": "Emails"
+  }
+}

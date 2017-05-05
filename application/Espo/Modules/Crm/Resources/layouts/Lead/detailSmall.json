@@ -6,16 +6,19 @@
                 {"name":"name", "fullWidth": true}
             ],
             [
+                {"name":"accountName", "fullWidth": true}
+            ],
+            [
                 {"name":"emailAddress", "fullWidth": true}
             ],
             [
                 {"name":"phoneNumber", "fullWidth": true}
             ],
             [
-                {"name":"accountName"}, {"name":"addressCountry"}
+                {"name":"title"}, {"name":"website"}
             ],
             [
-                {"name":"title"}, {"name":"website"}
+                {"name":"addressCity"}, {"name":"addressCountry"}
             ],
             [
                 {"name":"status"}, {"name":"source"}

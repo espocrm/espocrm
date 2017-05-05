@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Handling",
+    "actionDate": "Dato",
+    "data": "Data",
+    "campaign": "Kampagne",
+    "parent": "Mål",
+    "object": "Objekt",
+    "application": "Applikation",
+    "queueItem": "Sæt i Kø",
+    "stringData": "Streng Data",
+    "stringAdditionalData": "Streng Ekstra Data"
+  },
+  "links": {
+    "queueItem": "Sæt i Kø",
+    "parent": "Henviser til",
+    "object": "Objekt"
+  },
+  "options": {
+    "action": {
+      "Sent": "Sendt",
+      "Opened": "Åbnet",
+      "Opted Out": "Sat til Opt-Out",
+      "Bounced": "Kunne ikke leveres",
+      "Clicked": "Klikket",
+      "Lead Created": "Lead Oprettet"
+    }
+  },
+  "labels": {
+    "All": "Alle"
+  },
+  "presetFilters": {
+    "sent": "Sendt",
+    "opened": "Åbnet",
+    "optedOut": "Sat til Opt-Out",
+    "bounced": "Kunne ikke leveres",
+    "clicked": "Klikket",
+    "leadCreated": "Lead Oprettet"
+  }
+}

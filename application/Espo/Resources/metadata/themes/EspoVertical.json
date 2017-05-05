@@ -5,5 +5,7 @@
     "recordTopButtonsStickTop": 61,
     "recordTopButtonsBlockHeight": 21,
     "dashboardCellHeight": 155,
-    "dashboardCellMargin": 19
+    "dashboardCellMargin": 19,
+    "modalFooterAtTheTop": true,
+    "modalFullHeight": true
 }

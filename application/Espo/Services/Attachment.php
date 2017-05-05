@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use \Espo\ORM\Entity;
+
 class Attachment extends Record
 {
     protected $notFilteringAttributeList = ['contents'];
@@ -43,7 +45,27 @@ class Attachment extends Record
 
         $entity = parent::createEntity($data);
 
+        if (!empty($data['file'])) {
+            $entity->clear('contents');
+        }
+
         return $entity;
+    }
+
+    protected function beforeCreate(Entity $entity, array $data = array())
+    {
+        $storage = $entity->get('storage');
+        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+            $entity->clear('storage');
+        }
+    }
+
+    protected function beforeUpdate(Entity $entity, array $data = array())
+    {
+        $storage = $entity->get('storage');
+        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+            $entity->clear('storage');
+        }
     }
 }
 

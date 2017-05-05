@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -223,6 +223,24 @@ Espo.define('view', [], function () {
 
         ajaxGetRequest: function (url, data, options) {
             return this.ajaxRequest(url, 'GET', data, options);
+        },
+
+        confirm: function (o, callback, context) {
+            var confirmStyle = null;
+            if (typeof o === 'string' || o instanceof String) {
+                var message = o;
+                var confirmText = this.translate('Yes');
+            } else {
+                o = o || {};
+                var message = o.message;
+                var confirmText = o.confirmText;
+                confirmStyle = o.confirmStyle || null;
+            }
+            Espo.Ui.confirm(message, {
+                confirmText: confirmText,
+                cancelText: this.translate('Cancel'),
+                confirmStyle: confirmStyle
+            }, callback, context);
         }
     });
 

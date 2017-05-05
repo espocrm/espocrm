@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,11 +42,10 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
             Dep.prototype.setup.call(this);
             this.list = [];
 
-            /*if (this.getUser().get('emailAddress') && this.getPreferences().get('smtpServer')) {
-                this.list.push(this.getUser().get('emailAddress'));
-            }*/
-
-            this.list.push(this.getUser().get('emailAddress'));
+            var primaryEmailAddress = this.getUser().get('emailAddress');
+            if (primaryEmailAddress) {
+                this.list.push(primaryEmailAddress);
+            }
 
             var emailAddressList = this.getUser().get('emailAddressList') || [];
             emailAddressList.forEach(function (item) {

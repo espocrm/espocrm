@@ -35,7 +35,16 @@ blockquote {
 }
 
 .modal-header .close {
-    margin-top: 3px;
+    font-size: 31px;
+    font-weight: normal;
+    margin-top: -4px;
+    max-height: @font-size-h3;
+    > span {
+        position: relative;
+        max-height: @font-size-h3;
+        height: @font-size-h3;
+        display: inline-block;
+    }
 }
 
 .modal-footer {
@@ -43,9 +52,12 @@ blockquote {
     padding: @panel-padding @panel-padding @panel-padding;
 }
 
-.modal-footer .btn.pull-left {
-    margin-left: 0;
-    margin-right: 0;
+.modal-footer > .main-btn-group {
+    float: right;
+}
+
+.modal-footer > .additional-btn-group {
+    float: left;
 }
 
 .modal-dialog > .modal-content {
@@ -98,6 +110,10 @@ label {
   min-height: 33px;
 }
 
+.page-header > .row {
+    min-height: 33px;
+}
+
 .modal-header {
     background-color: @default-heading-bg-color;
 }
@@ -111,16 +127,6 @@ div.list-expanded > ul > li > div.expanded-row > .cell {
 div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     padding-left: 0;
     border-left: 0;
-}
-
-.list .checkbox-dropdown {
-    margin-right: -10px;
-    top: 1px;
-    margin-top: -2px;
-}
-
-.list .checkbox-dropdown > a {
-    padding: 0;
 }
 
 .list > table.table td > span.glyphicon,
@@ -378,7 +384,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 @media screen and (max-width: @screen-sm-min) {
     .modal-dialog {
-        margin: 10px 0;
+        margin: 0 0;
     }
     .modal-dialog .image-container {
         margin-left: -@panel-padding;
@@ -388,13 +394,20 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 @media screen and (min-width: @screen-sm-min) {
     .modal-dialog {
-        width: 740px !important;
+        width: 740px;
     }
 }
 @media screen and (min-width: @screen-md-min) {
     .modal-dialog {
-        width: 900px !important;
+        width: 900px;
     }
+    .dialog-confirm > .modal-dialog {
+        width: 550px;
+    }
+}
+
+.dialog-confirm > .modal-dialog > .modal-content {
+    text-align: center;
 }
 
 table.table > tbody td > .list-row-buttons button {
@@ -446,7 +459,7 @@ select[multiple].input-sm {
 }
 
 .input-group-btn > select.form-control {
-    position: relative; 
+    position: relative;
     display: inline-block;
     width: auto;
     vertical-align: middle;
@@ -456,6 +469,10 @@ select[multiple].input-sm {
 .input-group-btn:last-child > select.form-control {
     margin-right: 0;
     margin-left: -1px;
+}
+
+.input-group > .middle-element {
+    margin-left: 0 !important;
 }
 
 .input-group .form-control:focus {
@@ -678,6 +695,27 @@ table.list th {
     overflow: hidden;
 }
 
+.list > table td[data-name="r-checkbox"] {
+    overflow: visible;
+}
+
+.list > table th[data-name="r-checkbox"] {
+    white-space: nowrap;
+    .select-all-container {
+        line-height: @line-height-base;
+        height: unit(@line-height-base, em);
+        float: left;
+    }
+}
+
+.list .checkbox-dropdown {
+    margin-left: 3px;
+}
+
+.list .checkbox-dropdown > a {
+    padding: 0;
+}
+
 .list > table td > div.field {
     white-space: normal;
 }
@@ -728,6 +766,10 @@ td.cell[data-name="buttons"] > .btn-group {
             .dashlet-body {
                 height: ~"calc(100% - 29px)";
             }
+        }
+        .grid-stack-item-content {
+            overflow-x: visible;
+            overflow-y: visible;
         }
     }
 
@@ -789,7 +831,7 @@ td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel {
-    border-width: 2px;
+    border-width: @panel-border-width;
 }
 
 .panel-heading > .btn-group > .btn {
@@ -813,12 +855,13 @@ td.cell[data-name="buttons"] > .btn-group {
 .gray-box {
     background-color: @gray-lighter;
     margin: 0 5px 3px 0;
-    padding: 3px 3px 3px 5px;
+    padding: 2px 3px 2px 5px;
+    overflow: hidden;
 }
 
 .gray-box .preview {
     overflow: hidden;
-    display: inline-block;
+    overflow-wrap: break-word;
 }
 
 .attachment-preview {
@@ -839,13 +882,13 @@ td.cell[data-name="buttons"] > .btn-group {
 .stick-sub {
     position: fixed;
     top: 0;
-    margin: 44px 0 0;
+    margin: 44px 0 0 -@container-padding;
     z-index: 4;
 }
 
 .stick-sub.button-container {
     background-color: @body-bg;
-    padding: 3px @container-padding*2 3px 0;
+    padding: 3px @container-padding 0 @container-padding;
     width: 100%;
 }
 
@@ -924,14 +967,14 @@ body > footer > p a:visited {
 }
 
 #global-search-panel > .panel > .panel-body {
-    max-height: 294px;
+    max-height: @navbar-panel-body-max-height;
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: @panel-padding;
 }
 
 #notifications-panel > .panel > .panel-body {
-    max-height: 294px;
+    max-height: @navbar-panel-body-max-height;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -959,7 +1002,7 @@ body > footer > p a:visited {
 
 .record .middle > .panel:first-child {
     margin-top: 0;
-    border-top-width: 2px;
+    border-top-width: @panel-border-width;
 }
 
 .record .middle > .panel {
@@ -1058,8 +1101,13 @@ stream-head-text-container .span {
     cursor: default;
 }
 
-.complext-text a {
+.complex-text a {
     word-wrap: break-word;
+}
+
+table.table td.cell .complex-text {
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 #popup-notifications-container {
@@ -1211,6 +1259,10 @@ stream-head-text-container .span {
 
 #main > .calendar-container {
     margin-top: 10px;
+
+    .calendar-type-button-group {
+        margin-left: 6px;
+    }
 }
 
 #notifications-panel {
@@ -1255,7 +1307,9 @@ h5 {
     width: 270px;
 }
 
-
+.inline-cancel-link {
+    margin-left: 8px;
+}
 
 .dynamic-logic-expression-container {
     div.item-list {
@@ -1286,6 +1340,30 @@ h5 {
     .dynamic-logic-options-list-container {
         margin-bottom: 0;
     }
+}
+
+.input-group-addon:not(:first-child):not(:last-child),
+.input-group-btn:not(:first-child):not(:last-child),
+.input-group .form-control:not(:first-child):not(:last-child):not(.no-margin-shifting) {
+    margin-left: -1px;
+}
+
+.input-group > .input-group-btn > .btn:hover,
+.input-group > .input-group-btn > .btn:focus,
+.input-group > .input-group-btn > .btn.active {
+    z-index: 3;
+}
+
+.field .array-control-container {
+    position: relative;
+}
+
+code {
+    font-style: italic;
+}
+
+pre > code {
+    font-style: normal;
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -1332,6 +1410,10 @@ h5 {
 
     #header .navbar-right > li.notifications-badge-container {
         display: inline-block;
+        float: right;
+    }
+
+    .search-row .search-right-buttons-group {
         float: right;
     }
 }

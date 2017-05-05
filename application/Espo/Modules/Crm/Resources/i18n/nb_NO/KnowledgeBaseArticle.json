@@ -1,0 +1,46 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Opprett artikkel",
+    "Any": "Hva som helst",
+    "Send in Email": "Send i epost",
+    "Move Up": "Flytt opp",
+    "Move Down": "Flytt ned",
+    "Move to Top": "Flytt til toppen",
+    "Move to Bottom": "Flytt til bunnen"
+  },
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "type": "Type",
+    "attachments": "Vedlegg",
+    "publishDate": "Publiseringsdato",
+    "expirationDate": "Utløpsdato",
+    "description": "Beskrivelse",
+    "body": "Brødtekst",
+    "categories": "Kategorier",
+    "language": "Språk",
+    "portals": "Portaler"
+  },
+  "links": {
+    "cases": "Saker",
+    "opportunities": "Muligheter",
+    "categories": "Kategorier",
+    "portals": "Portaler"
+  },
+  "options": {
+    "status": {
+      "In Review": "Venter på godkjenning",
+      "Draft": "Utkas",
+      "Archived": "Arkivert",
+      "Published": "Publisert"
+    },
+    "type": {
+      "Article": "Artikkel"
+    }
+  },
+  "tooltips": {
+  },
+  "presetFilters": {
+    "published": "Publisert"
+  }
+}

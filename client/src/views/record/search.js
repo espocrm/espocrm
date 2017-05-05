@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -50,6 +50,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         disableSavePreset: false,
 
+        textFilterDisabled: false,
+
         data: function () {
             return {
                 scope: this.scope,
@@ -61,7 +63,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 filterList: this.getFilterList(),
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
-                leftDropdown: this.isLeftDropdown()
+                leftDropdown: this.isLeftDropdown(),
+                textFilterDisabled: this.textFilterDisabled
             };
         },
 
@@ -70,6 +73,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.scope = this.options.scope || this.entityType;
 
             this.searchManager = this.options.searchManager;
+
+            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled;
 
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;
@@ -232,9 +237,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
             },
             'click .dropdown-menu a[data-action="removePreset"]': function (e) {
                 var id = this.presetName;
-                if (confirm(this.translate('confirmation', 'messages'))) {
+                this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removePreset(id);
-                }
+                }, this);
             },
             'change .search-row ul.filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
                 e.stopPropagation();
@@ -613,7 +618,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         fetch: function () {
-            this.textFilter = this.$el.find('input[name="textFilter"]').val().trim();
+            (this.textFilter = this.$el.find('input[name="textFilter"]').val() || '').trim();
 
             this.bool = {};
 

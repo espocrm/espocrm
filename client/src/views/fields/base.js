@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -92,11 +92,31 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         setRequired: function () {
             this.params.required = true;
+
+            if (this.mode === 'edit') {
+                if (this.isRendered()) {
+                    this.showRequiredSign();
+                } else {
+                    this.once('after:render', function () {
+                        this.showRequiredSign();
+                    }, this);
+                }
+            }
         },
 
         setNotRequired: function () {
             this.params.required = false;
             this.getCellElement().removeClass('has-error');
+
+            if (this.mode === 'edit') {
+                if (this.isRendered()) {
+                    this.hideRequiredSign();
+                } else {
+                    this.once('after:render', function () {
+                        this.hideRequiredSign();
+                    }, this);
+                }
+            }
         },
 
         setReadOnly: function (locked) {
@@ -123,7 +143,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
          * {jQuery}
          */
         getLabelElement: function () {
-            return this.$el.parent().children('label');
+            if (!this.$label || !this.$label.size()) {
+                this.$label = this.$el.parent().children('label');
+            }
+            return this.$label;
         },
 
         /**
@@ -236,11 +259,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 });
             }, this);
 
-            if (this.mode == 'edit' && this.isRequired()) {
-                this.once('after:render', function () {
-                    this.getLabelElement().append(' *');
-                }, this);
-            }
+            this.on('after:render', function () {
+                if (this.mode === 'edit') {
+                    if (this.isRequired()) {
+                        this.showRequiredSign();
+                    } else {
+                        this.hideRequiredSign();
+                    }
+                } else {
+                    if (this.isRequired()) {
+                        this.hideRequiredSign();
+                    }
+                }
+
+            }, this);
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 var $a;
@@ -301,6 +333,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        showRequiredSign: function () {
+            var $label = this.getLabelElement();
+            var $sign = $label.find('span.required-sign');
+
+            if ($label.size() && !$sign.size()) {
+                $text = $label.find('span.label-text');
+                $('<span class="required-sign"> *</span>').insertAfter($text);
+                $sign = $label.find('span.required-sign');
+            }
+            $sign.show();
+        },
+
+        hideRequiredSign: function () {
+            var $label = this.getLabelElement();
+            var $sign = $label.find('span.required-sign');
+            $sign.hide();
         },
 
         getSearchParamsData: function () {
@@ -429,7 +479,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
             var $saveLink = $('<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>');
-            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>').css('margin-left', '8px');
+            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>');
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
             $cell.find('.inline-edit-link').addClass('hidden');

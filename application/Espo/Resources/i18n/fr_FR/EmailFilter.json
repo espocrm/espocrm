@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "De",
+    "to": "A",
+    "subject": "Objet",
+    "bodyContains": "Corps de texte contient",
+    "action": "Action",
+    "isGlobal": "Is Global",
+    "emailFolder": "Folder"
+  },
+  "labels": {
+    "Create EmailFilter": "Créer un filtre email",
+    "Emails": "Emails"
+  },
+  "tooltips": {
+    "from": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
+    "to": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
+    "name": "Juste un nom de filtre",
+    "subject": "Utilisez un caractère générique [ * ]:\n\ntexte* = commence par \"texte\"\n*texte* = contient \"texte\"\n*texte = fini par \"texte\"",
+    "bodyContains": "Le corps de l'email contient l'un des mots ou phrases",
+    "isGlobal": "Applies this filter to all emails incoming to system."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignore",
+      "Move to Folder": "Put in Folder"
+    }
+  }
+}

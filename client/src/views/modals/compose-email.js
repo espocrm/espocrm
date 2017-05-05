@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2015 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2017 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: http://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -67,6 +67,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 selectTemplateDisabled: this.options.selectTemplateDisabled,
+                keepAttachmentsOnSelectTemplate: this.options.keepAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 exit: function () {}
             };
@@ -88,13 +89,13 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             editView.once('after:send', afterSend, this);
 
-            var $send = dialog.$el.find('button[data-name="send"]');
-            $send.addClass('disabled');
-            var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
-            $saveDraft.addClass('disabled');
+            this.disableButton('send');
+            this.disableButton('saveDraft');
+
             editView.once('cancel:save', function () {
-                $send.removeClass('disabled');
-                $saveDraft.removeClass('disabled');
+                this.enableButton('send');
+                this.enableButton('saveDraft');
+
                 editView.off('after:save', afterSend);
             }, this);
 
@@ -108,22 +109,21 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             var model = editView.model;
 
-            var $send = dialog.$el.find('button[data-name="send"]');
-            $send.addClass('disabled');
-            var $saveDraft = dialog.$el.find('button[data-name="saveDraft"]');
-            $saveDraft.addClass('disabled');
+            this.disableButton('send');
+            this.disableButton('saveDraft');
 
             var afterSave = function () {
-                $saveDraft.removeClass('disabled');
-                $send.removeClass('disabled');
+                this.enableButton('send');
+                this.enableButton('saveDraft');
                 Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'));
             }.bind(this);
 
             editView.once('after:save', afterSave , this);
 
             editView.once('cancel:save', function () {
-                $send.removeClass('disabled');
-                $saveDraft.removeClass('disabled');
+                this.enableButton('send');
+                this.enableButton('saveDraft');
+
                 editView.off('after:save', afterSave);
             }, this);
 

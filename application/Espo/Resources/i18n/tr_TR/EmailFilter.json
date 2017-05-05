@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Kimden",
+    "to": "Kime",
+    "subject": "Konu",
+    "bodyContains": "Mesaj İçerir",
+    "action": "Eylem",
+    "isGlobal": "Küresel mi",
+    "emailFolder": "Klasör"
+  },
+  "labels": {
+    "Create EmailFilter": "E-mail Filtresi Yarat",
+    "Emails": "E-postalar "
+  },
+  "tooltips": {
+    "from": "Belirtilen adreslere email gönderilir. İhtiyaç yok ise boş bırakın. Joker kartı da kullanabilirsiniz *.",
+    "to": "Belirtilen adrese gönderilen e-postalar. Gerekirse boş bırakın. Joker karakteri * kullanabilirsiniz.",
+    "name": "Filtreye açıklayıcı bir ad verin.",
+    "subject": "Bir joker karakter kullanın *: \\ n \\ ntext * - metinle başlar, \\ n * metin * - metin içerir, \\ n * metin - metin ile biter.",
+    "bodyContains": "E-postanın gövdesi belirtilen kelimeleri veya cümleleri içerir.",
+    "isGlobal": "Bu filtre, sisteme gelen tüm e-postalara uygulanır."
+  },
+  "options": {
+    "action": {
+      "Skip": "Yoksay",
+      "Move to Folder": "Klasöre Yaz"
+    }
+  }
+}
