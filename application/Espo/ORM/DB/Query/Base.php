@@ -73,6 +73,26 @@ abstract class Base
         '=' => '='
     );
 
+    protected $functionList = [
+        'COUNT',
+        'SUM',
+        'AVG',
+        'MAX',
+        'MIN',
+        'MONTH',
+        'DAY',
+        'YEAR',
+        'DAYOFWEEK',
+        'DAYOFWEEK_NUMBER',
+        'MONTH_NUMBER',
+        'DATE_NUMBER',
+        'YEAR_NUMBER',
+        'HOUR_NUMBER',
+        'HOUR',
+        'MINUTE_NUMBER',
+        'MINUTE'
+    ];
+
     protected $entityFactory;
 
     protected $pdo;
@@ -206,6 +226,9 @@ abstract class Base
 
     protected function getFunctionPart($function, $part, $entityName, $distinct = false)
     {
+        if (!in_array($function, $this->functionList)) {
+            throw new \Exception("Not allowed function '".$function."'.");
+        }
         switch ($function) {
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
@@ -219,6 +242,12 @@ abstract class Base
                 break;
             case 'YEAR_NUMBER':
                 $function = 'YEAR';
+                break;
+            case 'HOUR_NUMBER':
+                $function = 'HOUR';
+                break;
+            case 'MINUTE_NUMBER':
+                $function = 'MINUTE';
                 break;
             case 'DAYOFWEEK_NUMBER':
                 $function = 'DAYOFWEEK';
