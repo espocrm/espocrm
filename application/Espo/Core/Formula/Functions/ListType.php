@@ -27,40 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Formula;
+namespace Espo\Core\Formula\Functions;
 
 use \Espo\ORM\Entity;
+use \Espo\Core\Exceptions\Error;
 
-class EvaluatorTest extends \PHPUnit_Framework_TestCase
+class ListType extends Base
 {
-    protected function setUp()
+    public function process(\StdClass $item)
     {
-        $this->evaluator = new \Espo\Core\Formula\Evaluator();
-    }
+        if (!property_exists($item, 'value')) {
+            throw new Error();
+        }
 
-    protected function tearDown()
-    {
-        $this->evaluator = null;
-    }
+        if (!is_array($item->value)) {
+            throw new Error();
+        }
 
-    function testEvaluateMathExpression1()
-    {
-        $expression = "5 - (2 + 1)";
-        $actual = $this->evaluator->process($expression);
-        $this->assertEquals(2, $actual);
-    }
+        $result = [];
+        foreach ($item->value as $item) {
+            $result[] = $this->evaluate($item);
+        }
 
-    function testEvaluateList1()
-    {
-        $expression = "list()";
-        $actual = $this->evaluator->process($expression);
-        $this->assertEquals([], $actual);
-    }
-
-    function testEvaluateList2()
-    {
-        $expression = "list(1)";
-        $actual = $this->evaluator->process($expression);
-        $this->assertEquals([1], $actual);
+        return $result;
     }
 }
