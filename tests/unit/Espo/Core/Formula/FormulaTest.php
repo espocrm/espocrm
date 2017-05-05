@@ -1251,6 +1251,68 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(20, $actual);
     }
 
+    function testDatetimeHour()
+    {
+        $item = json_decode('
+            {
+                "type": "datetime\\\\hour",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-02 14:15"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(14, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\hour",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(0, $actual);
+    }
+
+    function testDatetimeMinute()
+    {
+        $item = json_decode('
+            {
+                "type": "datetime\\\\minute",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-02 14:05"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(5, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\hour",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-20"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(0, $actual);
+    }
+
     function testDatetimeDayOfWeek()
     {
         $item = json_decode('
