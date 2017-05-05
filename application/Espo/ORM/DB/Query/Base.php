@@ -211,6 +211,15 @@ abstract class Base
                 return "DATE_FORMAT({$part}, '%Y-%m')";
             case 'DAY':
                 return "DATE_FORMAT({$part}, '%Y-%m-%d')";
+            case 'MONTH_NUMBER':
+                $function = 'MONTH';
+                break;
+            case 'DATE_NUMBER':
+                $function = 'DATE';
+                break;
+            case 'YEAR_NUMBER':
+                $function = 'YEAR';
+                break;
         }
         if ($distinct) {
             $idPart = $this->toDb($entityName) . ".id";
