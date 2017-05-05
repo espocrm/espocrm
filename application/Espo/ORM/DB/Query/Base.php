@@ -90,7 +90,11 @@ abstract class Base
         'HOUR_NUMBER',
         'HOUR',
         'MINUTE_NUMBER',
-        'MINUTE'
+        'MINUTE',
+        'LOWER',
+        'UPPER',
+        'TRIM',
+        'LENGTH'
     ];
 
     protected $entityFactory;
