@@ -10,10 +10,10 @@
     "enabledScopeList": "Qué mostrar",
     "users": "Usuarios",
     "entityType": "Tipo de entidad",
-    "primaryFilter": "Primary Filter",
-    "boolFilterList": "Additional Filters",
-    "sortBy": "Orden (campo)",
-    "sortDirection": "Orden (dirección)",
+    "primaryFilter": "Filtro Primario",
+    "boolFilterList": "Filtros adicionales",
+    "sortBy": "Ordenar (campo)",
+    "sortDirection": "Ordenar (dirección)",
     "expandedLayout": "Diseño"
   },
   "options": {
@@ -27,6 +27,6 @@
     }
   },
   "messages": {
-    "selectEntityType": "Select Entity Type in dashlet options."
+    "selectEntityType": "Seleccione el tipo de entidad en las opciones de la caja."
   }
 }

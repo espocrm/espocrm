@@ -129,7 +129,7 @@
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
     "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
     "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C.",
-    "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed."
+    "currencyDecimalPlaces": "Número de decimales. Si está vacía, se mostrarán todas las posiciones decimales disponibles."
   },
   "labels": {
     "System": "Sistema",

@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "emailAddress": "Correo Electrónico",
-    "team": "Target Team",
+    "team": "Equipo Objetivo",
     "status": "Estado",
     "assignToUser": "Asignar al Usuario",
     "host": "Servidor",
@@ -29,11 +29,11 @@
     "createCase": "Automaticamente crear un Caso de los correos entrantes.",
     "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
     "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
-    "assignToUser": "User cases will be assigned to.",
+    "assignToUser": "Los casos de usuario se asignarán a.",
     "team": ".",
-    "teams": "Teams emails will be assigned to.",
-    "targetUserPosition": "Users with specified position will be distributed with cases.",
-    "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams."
+    "teams": "Los correos de equipos serán asignados a.",
+    "targetUserPosition": "Los usuarios con la posición especificada serán distribuidos a los casos.",
+    "addAllTeamUsers": "Los correos aparecerán en la Bandeja de Entrada de todos los usuarios del equipo especificado."
   },
   "links": {
     "filters": "Filtros",

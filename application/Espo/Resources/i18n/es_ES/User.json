@@ -70,7 +70,7 @@
     "accountInfoEmailSubject": "Información Cuenta",
     "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Solicitud de Cambio de Contraseña",
-    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon.",
+    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo este enlace {link}. Esta URL única expirará pronto.",
     "passwordChanged": "La Contraseña ha sido cambiada",
     "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
     "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",

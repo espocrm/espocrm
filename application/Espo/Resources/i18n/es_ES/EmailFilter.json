@@ -19,9 +19,9 @@
     }
   },
   "tooltips": {
-    "name": "Give the filter a descriptive name.",
-    "subject": "Use a wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
-    "bodyContains": "Body of the email contains any of the specified words or phrases.",
+    "name": "Dé al filtro un nombre descriptivo.",
+    "subject": "Utilice un comodín *:\n\ntexto* - comienza con el texto,\n*texto* - contiene texto,\n*texto - termina con texto.",
+    "bodyContains": "El cuerpo del correo contiene cualquiera de las palabras o frases especificadas.",
     "from": "Filtrar los correos electrónicos enviados desde esta dirección. Dejar en blanco si no es necesario.",
     "to": "Filtrar los correos electrónicos que se envían a esta dirección. Dejar en blanco si no es necesario.",
     "isGlobal": "Se aplica este filtro a todos los correos electrónicos entrantes al sistema."

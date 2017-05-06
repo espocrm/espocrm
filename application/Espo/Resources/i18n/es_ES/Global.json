@@ -23,9 +23,9 @@
     "Attachment": "Archivo adjunto",
     "EmailFolder": "Carpeta de correo electrónico",
     "PortalUser": "Usuarios del Portal",
-    "ScheduledJobLogRecord": "Scheduled Job Log Record",
+    "ScheduledJobLogRecord": "Registro del Registro de trabajo programado",
     "PasswordChangeRequest": "Solicitud de Cambio de Contraseña",
-    "ActionHistoryRecord": "Action History Record",
+    "ActionHistoryRecord": "Registro del Histórico de Acciones",
     "AuthToken": "Token de autenticación",
     "UniqueId": "ID Único",
     "LastViewed": "Último Visualizado"
@@ -54,12 +54,12 @@
     "Attachment": "Archivos adjuntos",
     "EmailFolder": "Carpetas de correo",
     "PortalUser": "Usuarios del Portal",
-    "ScheduledJobLogRecord": "Scheduled Job Log Records",
+    "ScheduledJobLogRecord": "Registros del Registro de trabajo programado",
     "PasswordChangeRequest": "Solicitar Cambios de Contraseñas",
-    "ActionHistoryRecord": "Action History",
-    "AuthToken": "Auth Tokens",
+    "ActionHistoryRecord": "Histórico de Acciones",
+    "AuthToken": "Tokens de Autenticación",
     "UniqueId": "ID Únicos",
-    "LastViewed": "Last Viewed"
+    "LastViewed": "Últimos Visualizado"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -246,7 +246,7 @@
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
     "checkForNewNotes": "Comprobar si hay actualizaciones en la Historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
-    "internalPostTitle": "Post is seen only by internal users",
+    "internalPostTitle": "El mensaje es visto solo por usuarios internos",
     "done": "Hecho",
     "confirmMassFollow": "¿Está seguro que desea seguir los registros seleccionados?",
     "confirmMassUnfollow": "¿Está seguro que desea dejar de seguir los registros seleccionados?",
@@ -314,7 +314,7 @@
   "dashlets": {
     "Stream": "Historia",
     "Emails": "Mi bandeja de entrada",
-    "Records": "Zona Horaria"
+    "Records": "Lista de registros"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} ha sido asignado a usted",
@@ -540,18 +540,18 @@
       "ever": "Nunca",
       "isEmpty": "Está Vacío",
       "olderThanXDays": "Más de X Días",
-      "afterXDays": "After X Days"
+      "afterXDays": "Después de X días"
     },
     "searchRanges": {
       "is": "Es",
       "isEmpty": "Está vacío",
       "isNotEmpty": "No está Vacío",
-      "isOneOf": "Any Of",
-      "anyOf": "Any Of",
+      "isOneOf": "Cualquiera de",
+      "anyOf": "Cualquiera de",
       "isFromTeams": "Es de equipo",
-      "isNot": "Is Not",
-      "isNotOneOf": "None Of",
-      "noneOf": "None Of"
+      "isNot": "No es",
+      "isNotOneOf": "Ninguno de",
+      "noneOf": "Ninguno de"
     },
     "varcharSearchRanges": {
       "equals": "Equivale",
