@@ -45,5 +45,9 @@
     "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por darse de baja y no van a recibir ningún correo masivo.",
     "targetLists": "Los objetivos a los que se enviarán los correos electrónicos.",
     "excludingTargetLists": "Los objetivos a los que NO se enviarán los correos electrónicos."
+  },
+  "presetFilters": {
+    "actual": "Actuales",
+    "complete": "Completos"
   }
 }

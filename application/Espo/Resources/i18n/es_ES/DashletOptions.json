@@ -8,7 +8,13 @@
     "isDoubleHeight": "Altitud 2x",
     "mode": "Modo",
     "enabledScopeList": "Qué mostrar",
-    "users": "Usuarios"
+    "users": "Usuarios",
+    "entityType": "Tipo de entidad",
+    "primaryFilter": "Primary Filter",
+    "boolFilterList": "Additional Filters",
+    "sortBy": "Orden (campo)",
+    "sortDirection": "Orden (dirección)",
+    "expandedLayout": "Diseño"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Día (agenda)",
       "timeline": "Línea de tiempo"
     }
+  },
+  "messages": {
+    "selectEntityType": "Select Entity Type in dashlet options."
   }
 }

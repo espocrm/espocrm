@@ -54,7 +54,8 @@
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
     "Reset to Default": "Aplicar a valores por defecto",
-    "Email Filters": "Filtros"
+    "Email Filters": "Filtros",
+    "Action History": "Histórico de Acciones"
   },
   "layouts": {
     "list": "Lista",
@@ -75,10 +76,11 @@
     "foreign": "Externo",
     "duration": "Duración",
     "password": "Contraseña",
-    "parsonName": "Nombre",
+    "personName": "Nombre",
     "autoincrement": "Auto incrementar",
     "bool": "Boolean",
     "currency": "Moneda",
+    "currencyConverted": "Moneda (Convertido)",
     "date": "Fecha",
     "datetime": "Fecha/Hora",
     "datetimeOptional": "Fecha/FechaHora",
@@ -150,10 +152,10 @@
     "readOnly": "Solo lectura"
   },
   "messages": {
-    "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Esto Tomará algún tiempo.",
-    "upgradeDone": "Su EspoCRM ha sido actualizado a la versión <strong>{version}</strong>. Refresque su ventana del navegador.",
-    "upgradeBackup": "Le recomendamos que haga copias de seguridad de sus archivos y datos de EspoCRM antes de la actualización.",
-    "thousandSeparatorEqualsDecimalMark": "El separador de miles no puede ser el mismo que la marca decimal",
+    "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
+    "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+    "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
+    "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
     "selectUpgradePackage": "Seleccione el paquete para actualizar",
@@ -182,7 +184,7 @@
     "emailTemplates": "Plantillas para correos electrónicos salientes.",
     "import": "Importar datos desde CSV.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
-    "entityManager": "Crear entidades personalizadas, editar las existentes. Administrar campo y las relaciones.",
+    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
     "userInterface": "Configurar interfaz de usuario: Logo, tema, menu, etc.",
     "authTokens": "Sesiones de usuarios activas. Direcciones IP y última fecha de acceso.",
     "authentication": "Ajustes de autenticación.",
@@ -191,7 +193,8 @@
     "integrations": "Integración con los servicios de terceros.",
     "notifications": "Ajustes de notificaciones en el sistema y por correo electrónico.",
     "inboundEmails": "Configuración de correo entrante.",
-    "emailFilters": "Filtrar correo entrante. Correo a carpeta. Ignorar correos."
+    "emailFilters": "Email messages that match the specified filter won't be imported.",
+    "actionHistory": "Registro de las acciones del usuario."
   },
   "options": {
     "previewSize": {

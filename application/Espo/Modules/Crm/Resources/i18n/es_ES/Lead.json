@@ -24,7 +24,9 @@
     "campaign": "Campaña",
     "targetLists": "Lista de Objetivos",
     "targetList": "Lista de Objetivos",
-    "industry": "Industria"
+    "industry": "Industria",
+    "acceptanceStatus": "Estado de Aceptación",
+    "opportunityAmountCurrency": "Moneda del Costo de Oportunidad"
   },
   "links": {
     "targetLists": "Lista de Objetivos",

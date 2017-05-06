@@ -41,7 +41,7 @@
   "actions": {
     "read": "Leer",
     "edit": "Editar",
-    "delete": "Borrar",
+    "delete": "Eliminar",
     "stream": "Historia",
     "create": "Crear"
   },

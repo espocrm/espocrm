@@ -16,7 +16,8 @@
     "targetLists": "Lista de Objetivos",
     "targetList": "Lista de Objetivos",
     "portalUser": "Usuarios de portal",
-    "originalLead": "Posible Cliente Original"
+    "originalLead": "Posible Cliente Original",
+    "acceptanceStatus": "Estado de Aceptación"
   },
   "links": {
     "opportunities": "Oportunidades",

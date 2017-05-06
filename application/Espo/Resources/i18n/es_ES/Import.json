@@ -48,7 +48,8 @@
     "Single Quote": "Single Quote",
     "Imported": "Importado",
     "Duplicates": "Duplicados",
-    "Skip searching for duplicates": "Saltar la búsqueda de duplicados"
+    "Skip searching for duplicates": "Saltar la búsqueda de duplicados",
+    "Timezone": "Zona Horaria"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
