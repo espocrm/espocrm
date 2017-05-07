@@ -78,7 +78,7 @@
     "password": "Contraseña",
     "personName": "Nombre",
     "autoincrement": "Auto incrementar",
-    "bool": "Boolean",
+    "bool": "Booleano",
     "currency": "Moneda",
     "currencyConverted": "Moneda (Convertido)",
     "date": "Fecha",
