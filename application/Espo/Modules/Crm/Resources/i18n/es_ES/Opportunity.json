@@ -13,7 +13,8 @@
     "amountConverted": "Cantidad (convertido)",
     "amountWeightedConverted": "Cantidad Ponderada",
     "campaign": "Campaña",
-    "originalLead": "Posible Cliente Original"
+    "originalLead": "Posible Cliente Original",
+    "amountCurrency": "Monto de la Moneda"
   },
   "links": {
     "contacts": "Contactos",

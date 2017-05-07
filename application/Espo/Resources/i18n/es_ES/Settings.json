@@ -84,12 +84,18 @@
     "mentionEmailNotifications": "Se enviarán notificaciones cuando sean mencionados en los mensajes",
     "massEmailDisableMandatoryOptOutLink": "Deshabilitar la obligatoridad del enlace \"darse de baja\" ",
     "activitiesEntityList": "Lista de Entidades de Actividades",
-    "historyEntityList": "Lista de Entidades de Historia"
+    "historyEntityList": "Lista de Entidades de Historia",
+    "currencyFormat": "Formato de Moneda",
+    "currencyDecimalPlaces": "Lugares decimales en la moneda"
   },
   "options": {
     "weekStart": {
       "0": "Domingo",
       "1": "Lunes"
+    },
+    "currencyFormat": {
+      "1": "10 USD",
+      "2": "$10"
     }
   },
   "tooltips": {
@@ -122,7 +128,8 @@
     "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
     "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
-    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C."
+    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C.",
+    "currencyDecimalPlaces": "Número de decimales. Si está vacía, se mostrarán todas las posiciones decimales disponibles."
   },
   "labels": {
     "System": "Sistema",
@@ -132,7 +139,7 @@
     "In-app Notifications": "Notificaciones en el sistema",
     "Email Notifications": "Notificaciones de Correo",
     "Currency Settings": "Configuración Moneda",
-    "Currency Rates": "Tasas de conversion de Divisas",
+    "Currency Rates": "Tasas de conversión de Divisas",
     "Mass Email": "Email Masivo",
     "Test Connection": "Conexión de prueba",
     "Connecting": "Conexión",
