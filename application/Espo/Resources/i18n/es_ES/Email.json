@@ -7,7 +7,7 @@
     "from": "De",
     "to": "Para",
     "cc": "CC",
-    "bcc": "BCC",
+    "bcc": "CCO",
     "replyTo": "Responder a",
     "replyToString": "Responder a (String)",
     "isHtml": "Es Html",

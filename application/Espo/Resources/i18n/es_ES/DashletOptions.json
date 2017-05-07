@@ -8,7 +8,13 @@
     "isDoubleHeight": "Altitud 2x",
     "mode": "Modo",
     "enabledScopeList": "Qué mostrar",
-    "users": "Usuarios"
+    "users": "Usuarios",
+    "entityType": "Tipo de entidad",
+    "primaryFilter": "Filtro Primario",
+    "boolFilterList": "Filtros adicionales",
+    "sortBy": "Ordenar (campo)",
+    "sortDirection": "Ordenar (dirección)",
+    "expandedLayout": "Diseño"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Día (agenda)",
       "timeline": "Línea de tiempo"
     }
+  },
+  "messages": {
+    "selectEntityType": "Seleccione el tipo de entidad en las opciones de la caja."
   }
 }

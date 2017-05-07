@@ -7,7 +7,8 @@
   "links": {
     "users": "Usuarios",
     "notes": "Notas",
-    "roles": "Roles"
+    "roles": "Roles",
+    "inboundEmails": "Cuentas de correo grupales"
   },
   "tooltips": {
     "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados",
