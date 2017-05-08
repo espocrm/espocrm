@@ -9,7 +9,9 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span></button>
                 <ul class="dropdown-menu pull-right">
+                    {{#if targetEntityType}}
                     <li><a href="javascript:" data-action="addAttribute">{{translate 'Attribute'}}</a></li>
+                    {{/if}}
                     <li><a href="javascript:" data-action="addFunction">{{translate 'Function'}}</a></li>
                 </ul>
             </div>
