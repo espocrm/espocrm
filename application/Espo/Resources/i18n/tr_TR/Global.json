@@ -22,7 +22,13 @@
     "PortalRole": "Portal Rolü",
     "Attachment": "Eklenti",
     "EmailFolder": "E-posta Klasörü",
-    "PortalUser": "Portal Kullanıcı"
+    "PortalUser": "Portal Kullanıcı",
+    "ScheduledJobLogRecord": "Planlanmış İş Kütük Kaydı",
+    "PasswordChangeRequest": "Şifre Değişim İsteği",
+    "ActionHistoryRecord": "Eylem Tarihçesi Kaydı",
+    "AuthToken": "Auth Token",
+    "UniqueId": "Benzersiz ID",
+    "LastViewed": "Son Görünenler"
   },
   "scopeNamesPlural": {
     "Email": "Epostalar",
@@ -47,7 +53,13 @@
     "PortalRole": "Portal Rolleri",
     "Attachment": "Ekler",
     "EmailFolder": "E-posta Klasörleri",
-    "PortalUser": "Portal Kullanıcıları"
+    "PortalUser": "Portal Kullanıcıları",
+    "ScheduledJobLogRecord": "Planlanmış İş Kütük Kayıtları",
+    "PasswordChangeRequest": "Şifre Değişim İstekleri",
+    "ActionHistoryRecord": "Eylem Tarihçesi",
+    "AuthToken": "Auth Tokens",
+    "UniqueId": "Benzersiz ID'ler",
+    "LastViewed": "Son Görünenler"
   },
   "labels": {
     "Misc": "Misc",
@@ -74,7 +86,7 @@
     "Access denied": "Erişim engellendi",
     "Not found": "Bulunamadı",
     "Access": "Giriş",
-    "Are you sure?": "Are you sure?",
+    "Are you sure?": "Emin misiniz?",
     "Record has been removed": "Kayıt silindi",
     "Wrong username/password": "Yanlış kullanıcı adı/şifre",
     "Post cannot be empty": "Yorum alanı boş bırakılamaz",
@@ -86,7 +98,7 @@
     "Cache has been cleared": "Önbellek temizlendi",
     "Rebuild has been done": "Onarım tamamlandı",
     "Saving...": "Kaydediliyor...",
-    "Modified": "Değişiklik uygulandı",
+    "Modified": "Değişiklik Uygulandı",
     "Created": "Oluşturuldu",
     "Create": "Oluştur",
     "create": "oluştur",
@@ -189,7 +201,9 @@
     "Attribute": "Özellik",
     "Function": "İşlevi",
     "Self-Assign": "Kendini Atama",
-    "Self-Assigned": "Kendinden Atanmış"
+    "Self-Assigned": "Kendinden Atanmış",
+    "Return to Application": "Uygulamaya Geri Dön",
+    "Select All Results": "Tüm Sonuçları Seç"
   },
   "messages": {
     "pleaseWait": "Lütfen bekleyiniz...",
@@ -235,7 +249,13 @@
     "massFollowResultSingle": "{count} kaydı şimdi takip edildi",
     "massUnfollowResultSingle": "{count} kaydı şimdi takip edilmiyor",
     "massFollowZeroResult": "Hiçbir şey takip edilmedi",
-    "massUnfollowZeroResult": "Hiçbir şey takip edilmedi"
+    "massUnfollowZeroResult": "Hiçbir şey takip edilmedi",
+    "fieldShouldBeEmail": "{field} geçerli bir email olmalı",
+    "fieldShouldBeFloat": "{field} geçerli bir sayı olmalı",
+    "fieldShouldBeInt": "{field} geçerli bir sayı olmalı",
+    "fieldShouldBeDate": "{field} geçerli bir tarih olmalı",
+    "fieldShouldBeDatetime": "{field} geçerli bir tarih/zaman olmalı",
+    "internalPostTitle": "Yazı sadece iç kullanıcılar tarafından görülür"
   },
   "boolFilters": {
     "onlyMy": "Sadece Ben",
@@ -293,7 +313,8 @@
   },
   "dashlets": {
     "Stream": "Hareket",
-    "Emails": "Gelen Kutum"
+    "Emails": "Gelen Kutum",
+    "Records": "Kayıt Listesi"
   },
   "notificationMessages": {
     "assign": "{entitiyType}{entity} size görevlendirildi",
@@ -347,8 +368,8 @@
     "postTargetSelf": "{user} kendi gönderdi",
     "postTargetSelfAndOthers": "{user}, {target} alanına ve kendisine gönderdi",
     "createAssignedYou": "{user} size atanan {entityType} {entity} oluşturdu",
-    "createAssignedThisSelf": "{user}, bu {entityType} kendinden atanmış oluşturdu",
-    "createAssignedSelf": "{user}, {entityType} {entity} kendinden atanmış oluşturdu",
+    "createAssignedThisSelf": "{user}, bu {entityType} kendinden atanmış olarak oluşturdu",
+    "createAssignedSelf": "{user}, {entityType} {entity} kendinden atanmış olarak oluşturdu",
     "assignYou": "{user}, size {entityType} {entity} atadı",
     "assignThisVoid": "{user}, bu {entityType} öğesinin atamasını kaldırdı",
     "assignVoid": "{user} atanmamış {entityType} {entity}",
@@ -519,8 +540,12 @@
       "is": "dır/dir/olan",
       "isEmpty": "Boş",
       "isNotEmpty": "Boş Değil",
-      "isOneOf": "Biri",
-      "isFromTeams": "Takımdan"
+      "isFromTeams": "Takımdan",
+      "isOneOf": "Herhangi Biri",
+      "anyOf": "Herhangi Biri",
+      "isNot": "Olmayan",
+      "isNotOneOf": "Hiçbiri",
+      "noneOf": "Hiçbiri"
     },
     "varcharSearchRanges": {
       "equals": "Eşittir",
