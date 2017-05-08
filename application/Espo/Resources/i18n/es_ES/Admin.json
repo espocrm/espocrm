@@ -54,7 +54,8 @@
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
     "Reset to Default": "Aplicar a valores por defecto",
-    "Email Filters": "Filtros"
+    "Email Filters": "Filtros",
+    "Action History": "Histórico de Acciones"
   },
   "layouts": {
     "list": "Lista",
@@ -75,10 +76,11 @@
     "foreign": "Externo",
     "duration": "Duración",
     "password": "Contraseña",
-    "parsonName": "Nombre",
+    "personName": "Nombre",
     "autoincrement": "Auto incrementar",
-    "bool": "Boolean",
+    "bool": "Booleano",
     "currency": "Moneda",
+    "currencyConverted": "Moneda (Convertido)",
     "date": "Fecha",
     "datetime": "Fecha/Hora",
     "datetimeOptional": "Fecha/FechaHora",
@@ -150,10 +152,10 @@
     "readOnly": "Solo lectura"
   },
   "messages": {
-    "upgradeVersion": "Su EspoCRM será actualizado a la versión <strong>{version}</strong>. Esto Tomará algún tiempo.",
-    "upgradeDone": "Su EspoCRM ha sido actualizado a la versión <strong>{version}</strong>. Refresque su ventana del navegador.",
-    "upgradeBackup": "Le recomendamos que haga copias de seguridad de sus archivos y datos de EspoCRM antes de la actualización.",
-    "thousandSeparatorEqualsDecimalMark": "El separador de miles no puede ser el mismo que la marca decimal",
+    "upgradeVersion": "EspoCRM se actualizará a la versión <strong>{version}</ strong>. Por favor sea paciente ya que esto puede tomar varios minutos.",
+    "upgradeDone": "EspoCRM se ha actualizado a la versión <strong>{version}</ strong>.",
+    "upgradeBackup": "Recomendamos hacer una copia de seguridad de los archivos y datos de EspoCRM antes de actualizar.",
+    "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
     "selectUpgradePackage": "Seleccione el paquete para actualizar",
@@ -176,13 +178,13 @@
     "portals": "Gestión de portales.",
     "portalRoles": "Roles para el portal.",
     "portalUsers": "Usuarios del portal.",
-    "outboundEmails": "Opciones SMTP para correo saliente.",
+    "outboundEmails": "Configuración de correo saliente.",
     "groupEmailAccounts": "Grupos de buzones. Importación de Correo. Correo a Caso y Autorespondedores.",
     "personalEmailAccounts": "Buzones personales de los usuarios.",
-    "emailTemplates": "Plantillas para correos electrónicos salientes.",
+    "emailTemplates": "Plantillas de correos.",
     "import": "Importar datos desde CSV.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
-    "entityManager": "Crear entidades personalizadas, editar las existentes. Administrar campo y las relaciones.",
+    "entityManager": "Crear y editar entidades personalizadas. Administrar campos y relaciones.",
     "userInterface": "Configurar interfaz de usuario: Logo, tema, menu, etc.",
     "authTokens": "Sesiones de usuarios activas. Direcciones IP y última fecha de acceso.",
     "authentication": "Ajustes de autenticación.",
@@ -191,7 +193,8 @@
     "integrations": "Integración con los servicios de terceros.",
     "notifications": "Ajustes de notificaciones en el sistema y por correo electrónico.",
     "inboundEmails": "Configuración de correo entrante.",
-    "emailFilters": "Filtrar correo entrante. Correo a carpeta. Ignorar correos."
+    "emailFilters": "Correos que coincidan con el filtro especificado no se importarán.",
+    "actionHistory": "Registro de las acciones del usuario."
   },
   "options": {
     "previewSize": {

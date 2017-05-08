@@ -39,6 +39,7 @@
     }
   },
   "tooltips": {
+    "portals": "El artículo estará disponible sólo en los portales especificados."
   },
   "presetFilters": {
     "published": "Publicado"

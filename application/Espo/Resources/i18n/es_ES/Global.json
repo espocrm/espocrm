@@ -22,7 +22,13 @@
     "PortalRole": "Rol del Portal",
     "Attachment": "Archivo adjunto",
     "EmailFolder": "Carpeta de correo electrónico",
-    "PortalUser": "Usuarios del Portal"
+    "PortalUser": "Usuarios del Portal",
+    "ScheduledJobLogRecord": "Registro del Registro de trabajo programado",
+    "PasswordChangeRequest": "Solicitud de Cambio de Contraseña",
+    "ActionHistoryRecord": "Registro del Histórico de Acciones",
+    "AuthToken": "Token de autenticación",
+    "UniqueId": "ID Único",
+    "LastViewed": "Último Visualizado"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -47,7 +53,13 @@
     "PortalRole": "Roles del portal",
     "Attachment": "Archivos adjuntos",
     "EmailFolder": "Carpetas de correo",
-    "PortalUser": "Usuarios del Portal"
+    "PortalUser": "Usuarios del Portal",
+    "ScheduledJobLogRecord": "Registros del Registro de trabajo programado",
+    "PasswordChangeRequest": "Solicitar Cambios de Contraseñas",
+    "ActionHistoryRecord": "Histórico de Acciones",
+    "AuthToken": "Tokens de Autenticación",
+    "UniqueId": "ID Únicos",
+    "LastViewed": "Últimos Visualizado"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -85,6 +97,7 @@
     "Cache is not enabled": "La Caché no está habilitada",
     "Cache has been cleared": "La caché fue limpiada Correctamente",
     "Rebuild has been done": "Se ha reconstruido correctamente",
+    "Return to Application": "Volver a la aplicación",
     "Saving...": "Guardando...",
     "Modified": "Modificado",
     "Created": "Creado",
@@ -124,7 +137,7 @@
     "Followers": "Seguidores",
     "Clear Local Cache": "Borrar la caché local",
     "Actions": "Acciones",
-    "Delete": "Borrar",
+    "Delete": "Eliminar",
     "Update": "Guardar",
     "Save": "Guardar",
     "Edit": "Editar",
@@ -171,7 +184,7 @@
     "No": "No",
     "Select All Results": "Seleccionar todos los resultados",
     "Value": "Valor",
-    "Current version": "Version Actual",
+    "Current version": "Versión Actual",
     "List View": "Vista de Lista",
     "Tree View": "Vista de árbol",
     "Unlink All": "Desenlazar todo",
@@ -188,7 +201,9 @@
     "Attach File": "Adjuntar archivo",
     "Skip": "Saltar",
     "Attribute": "Atributo",
-    "Function": "Función"
+    "Function": "Función",
+    "Self-Assign": "Autoasignar",
+    "Self-Assigned": "Autosegnado"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -231,6 +246,7 @@
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
     "checkForNewNotes": "Comprobar si hay actualizaciones en la Historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
+    "internalPostTitle": "El mensaje es visto solo por usuarios internos",
     "done": "Hecho",
     "confirmMassFollow": "¿Está seguro que desea seguir los registros seleccionados?",
     "confirmMassUnfollow": "¿Está seguro que desea dejar de seguir los registros seleccionados?",
@@ -297,7 +313,8 @@
   },
   "dashlets": {
     "Stream": "Historia",
-    "Emails": "Mi bandeja de entrada"
+    "Emails": "Mi bandeja de entrada",
+    "Records": "Lista de registros"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} ha sido asignado a usted",
@@ -522,14 +539,19 @@
       "nextXDays": "Próximos X Días",
       "ever": "Nunca",
       "isEmpty": "Está Vacío",
-      "olderThanXDays": "Más de X Días"
+      "olderThanXDays": "Más de X Días",
+      "afterXDays": "Después de X días"
     },
     "searchRanges": {
       "is": "Es",
       "isEmpty": "Está vacío",
       "isNotEmpty": "No está Vacío",
-      "isOneOf": "Es Uno De",
-      "isFromTeams": "Es de equipo"
+      "isOneOf": "Cualquiera de",
+      "anyOf": "Cualquiera de",
+      "isFromTeams": "Es de equipo",
+      "isNot": "No es",
+      "isNotOneOf": "Ninguno de",
+      "noneOf": "Ninguno de"
     },
     "varcharSearchRanges": {
       "equals": "Equivale",
@@ -672,10 +694,13 @@
   },
   "themes": {
     "Espo": "Espo",
+    "EspoRtl": "RTL Espo",
     "Sakura": "Sakura",
-    "EspoVertical": "Espo (Vertical)",
-    "SakuraVertical": "Sakura (Vertical)",
+    "EspoVertical": "Espo con barra lateral",
+    "SakuraVertical": "Sakura con barra lateral",
     "Violet": "Violeta",
-    "VioletVertical": "Violeta Vertical"
+    "VioletVertical": "Violet con barra lateral",
+    "Hazyblue": "Hazyblue",
+    "HazyblueVertical": "Hazyblue con barra lateral"
   }
 }

@@ -1,4 +1,7 @@
 {
+  "fields": {
+    "acceptanceStatus": "Estado de Aceptación"
+  },
   "links": {
     "targetLists": "Lista de Objetivos"
   }

@@ -25,7 +25,8 @@
     "sendAccessInfo": "Enviar correo electrónico con los accesos a la información del usuario",
     "portal": "Portal",
     "gender": "Género",
-    "position": "Posición en el equipo"
+    "position": "Posición en el equipo",
+    "ipAddress": "Dirección IP"
   },
   "links": {
     "teams": "Equipos",
@@ -69,7 +70,7 @@
     "accountInfoEmailSubject": "Información Cuenta",
     "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Solicitud de Cambio de Contraseña",
-    "passwordChangeLinkEmailBody": "Usted puede cambiar su contraseña a través este enlace {link}. Esta url única expirará pronto.",
+    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo este enlace {link}. Esta URL única expirará pronto.",
     "passwordChanged": "La Contraseña ha sido cambiada",
     "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
     "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",

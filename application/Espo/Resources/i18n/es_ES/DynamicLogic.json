@@ -20,7 +20,9 @@
       "isEmpty": "Está Vacío",
       "isNotEmpty": "No está Vacío",
       "contains": "Contiene",
-      "notContains": "No Contiene"
+      "has": "Contiene",
+      "notContains": "No Contiene",
+      "notHas": "No Contiene"
     }
   }
 }
