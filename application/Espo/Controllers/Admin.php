@@ -63,7 +63,7 @@ class Admin extends \Espo\Core\Controllers\Base
     {
         $scheduledJob = $this->getContainer()->get('scheduledJob');
 
-        return $scheduledJob->getAllNamesOnly();
+        return $scheduledJob->getAvailableList();
     }
 
     public function postActionUploadUpgradePackage($params, $data)

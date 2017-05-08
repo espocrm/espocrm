@@ -59,6 +59,8 @@ class DataManager
 
         $result &= $this->rebuildDatabase($entityList);
 
+        $this->rebuildScheduledJobs();
+
         return $result;
     }
 
@@ -119,6 +121,40 @@ class DataManager
         $this->updateCacheTimestamp();
 
         return empty($ormData) ? false : true;
+    }
+
+    public function rebuildScheduledJobs()
+    {
+        $metadata = $this->getContainer()->get('metadata');
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], array());
+
+        foreach ($jobs as $jobName => $defs) {
+            if ($jobName && !empty($defs['isSystem']) && !empty($defs['scheduling'])) {
+                if (!$entityManager->getRepository('ScheduledJob')->where(array(
+                    'job' => $jobName,
+                    'status' => 'Active',
+                    'scheduling' => $defs['scheduling']
+                ))->findOne()) {
+                    $job = $entityManager->getRepository('ScheduledJob')->where(array(
+                        'job' => $jobName
+                    ))->findOne();
+                    if ($job) {
+                        $entityManager->removeEntity($job);
+                    }
+                    $job = $entityManager->getEntity('ScheduledJob');
+                    $job->set(array(
+                        'job' => $jobName,
+                        'status' => 'Active',
+                        'scheduling' => $defs['scheduling'],
+                        'isInternal' => true,
+                        'name' => $jobName
+                    ));
+                    $entityManager->saveEntity($job);
+                }
+            }
+        }
     }
 
     /**

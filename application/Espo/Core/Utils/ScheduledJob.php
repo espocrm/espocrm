@@ -111,6 +111,15 @@ class ScheduledJob
         return $this->getClassName($name);
     }
 
+    public function getAvailableList()
+    {
+        $data = $this->getAll();
+
+        $list = array_keys($data);
+
+        return $list;
+    }
+
     /**
      * Get list of all job names
      *
