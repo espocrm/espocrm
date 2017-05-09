@@ -60,7 +60,7 @@ Espo.define('storage', [], function () {
             if (stored) {
                 var str = stored;
                 if (stored[0] == "{" || stored[0] == "[") {
-                    try    {
+                    try {
                         str = JSON.parse(stored);
                     } catch (error) {
                         str = stored;

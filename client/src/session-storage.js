@@ -30,20 +30,38 @@ Espo.define('session-storage', 'storage', function (Dep) {
 
     return Dep.extend({
 
-        _prefix: 's',
-
         storageObject: sessionStorage,
 
         get: function (name) {
-            return Dep.prototype.get.call(this, 'session', name);
+            var stored = this.storageObject.getItem(name);
+            if (stored) {
+                var str = stored;
+                if (stored[0] == "{" || stored[0] == "[") {
+                    try {
+                        str = JSON.parse(stored);
+                    } catch (error) {
+                        str = stored;
+                    }
+                    stored = str;
+                }
+                return stored;
+            }
+            return null;
         },
 
         set: function (name, value) {
-            Dep.prototype.set.call(this, 'session', name, value);
+            if (value instanceof Object) {
+                value = JSON.stringify(value);
+            }
+            this.storageObject.setItem(name, value);
         },
 
-        clear: function (type, name) {
-            Dep.prototype.clear.call(this, 'session', name);
+        clear: function (name) {
+            for (var i in this.storageObject) {
+                if (i === name) {
+                    delete this.storageObject[i];
+                }
+            }
         }
 
     });

@@ -147,6 +147,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.isInternalNoteMode = false;
 
             this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
+            this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
 
             this.on('remove', function () {
                 if (this.$textarea && this.$textarea.size()) {
@@ -156,12 +157,31 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     } else {
                         this.getSessionStorage().clear(this.storageTextKey);
                     }
+
+                    var attachmetIdList = this.seed.get('attachmentsIds') || [];
+
+                    if (attachmetIdList.length) {
+                        this.getSessionStorage().set(this.storageAttachmentsKey, {
+                            idList: attachmetIdList,
+                            names: this.seed.get('attachmentsNames') || {}
+                        });
+                    } else {
+                        this.getSessionStorage().clear(this.storageAttachmentsKey);
+                    }
                 }
             }, this);
+
+            var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
+                if (storedAttachments) {
+                    this.seed.set({
+                        attachmentsIds: storedAttachments.idList,
+                        attachmentsNames: storedAttachments.names
+                    });
+                }
                 this.createCollection(function () {
                     this.wait(false);
                 }, this);
@@ -187,6 +207,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             var $textarea = this.$textarea;
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
+
             if (storedText && storedText.length) {
                 this.$textarea.val(storedText);
             }
@@ -342,6 +363,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }
 
                     this.getSessionStorage().clear(this.storageTextKey);
+                    this.getSessionStorage().clear(this.storageAttachmentsKey);
                 }, this);
 
                 model.set('post', message);
