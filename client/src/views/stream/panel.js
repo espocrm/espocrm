@@ -155,7 +155,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     if (text.length) {
                         this.getSessionStorage().set(this.storageTextKey, text);
                     } else {
-                        this.getSessionStorage().clear(this.storageTextKey);
+                        if (this.hasStoredText) {
+                            this.getSessionStorage().clear(this.storageTextKey);
+                        }
                     }
 
                     var attachmetIdList = this.seed.get('attachmentsIds') || [];
@@ -166,7 +168,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                             names: this.seed.get('attachmentsNames') || {}
                         });
                     } else {
-                        this.getSessionStorage().clear(this.storageAttachmentsKey);
+                        if (this.hasStoredAttachments) {
+                            this.getSessionStorage().clear(this.storageAttachmentsKey);
+                        }
                     }
                 }
             }, this);
@@ -177,6 +181,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
                 if (storedAttachments) {
+                    this.hasStoredAttachments = true;
                     this.seed.set({
                         attachmentsIds: storedAttachments.idList,
                         attachmentsNames: storedAttachments.names
@@ -209,6 +214,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             var storedText = this.getSessionStorage().get(this.storageTextKey);
 
             if (storedText && storedText.length) {
+                this.hasStoredText = true;
                 this.$textarea.val(storedText);
             }
 
