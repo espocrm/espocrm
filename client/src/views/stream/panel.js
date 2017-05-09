@@ -97,6 +97,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
+                if (this.$textarea.val() && this.$textarea.val().length) {
+                    this.controlTextareaHeight();
+                }
                 $('body').on('click.stream-panel', function (e) {
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
@@ -143,6 +146,19 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.isInternalNoteMode = false;
 
+            this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
+
+            this.on('remove', function () {
+                if (this.$textarea && this.$textarea.size()) {
+                    var text = this.$textarea.val();
+                    if (text.length) {
+                        this.getSessionStorage().set(this.storageTextKey, text);
+                    } else {
+                        this.getSessionStorage().clear(this.storageTextKey);
+                    }
+                }
+            }, this);
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
@@ -169,6 +185,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$postContainer = this.$el.find('.post-container');
 
             var $textarea = this.$textarea;
+
+            var storedText = this.getSessionStorage().get(this.storageTextKey);
+            if (storedText && storedText.length) {
+                this.$textarea.val(storedText);
+            }
 
             $textarea.off('drop');
             $textarea.off('dragover');
@@ -319,6 +340,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     if (this.getPreferences().get('followEntityOnStreamPost')) {
                         this.model.set('isFollowed', true);
                     }
+
+                    this.getSessionStorage().clear(this.storageTextKey);
                 }, this);
 
                 model.set('post', message);

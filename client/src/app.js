@@ -29,8 +29,30 @@
 
 Espo.define(
     'app',
-    ['ui', 'utils', 'acl-manager', 'cache', 'storage', 'models/settings', 'language', 'metadata', 'field-manager', 'models/user', 'models/preferences', 'model-factory' ,'collection-factory', 'pre-loader', 'view-helper', 'controllers/base', 'router', 'date-time', 'layout-manager', 'theme-manager'],
-    function (Ui, Utils, AclManager, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager) {
+    [
+        'ui',
+        'utils',
+        'acl-manager',
+        'cache',
+        'storage',
+        'models/settings',
+        'language',
+        'metadata',
+        'field-manager',
+        'models/user',
+        'models/preferences',
+        'model-factory',
+        'collection-factory',
+        'pre-loader',
+        'view-helper',
+        'controllers/base',
+        'router',
+        'date-time',
+        'layout-manager',
+        'theme-manager',
+        'session-storage'
+    ],
+    function (Ui, Utils, AclManager, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager, SessionStorage) {
 
     var App = function (options, callback) {
         var options = options || {};
@@ -56,6 +78,7 @@ Espo.define(
         }
 
         this.storage = new Storage();
+        this.sessionStorage = new SessionStorage();
 
         this.loader.cache = this.cache;
 
@@ -323,6 +346,7 @@ Espo.define(
             helper.cache = this.cache;
             helper.storage = this.storage;
             helper.themeManager = this.themeManager;
+            helper.sessionStorage = this.sessionStorage;
             helper.basePath = this.basePath;
 
             this.viewLoader = function (viewName, callback) {

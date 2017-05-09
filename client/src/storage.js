@@ -35,6 +35,8 @@ Espo.define('storage', [], function () {
 
         _prefix: 'espo',
 
+        storageObject: localStorage,
+
         _composeFullPrefix: function (type) {
             return this._prefix + '-' + type;
         },
@@ -53,7 +55,8 @@ Espo.define('storage', [], function () {
             this._checkType(type);
 
             var key = this._composeKey(type, name);
-            var stored = localStorage.getItem(key);
+
+            var stored = this.storageObject.getItem(key);
             if (stored) {
                 var str = stored;
                 if (stored[0] == "{" || stored[0] == "[") {
@@ -76,7 +79,7 @@ Espo.define('storage', [], function () {
             if (value instanceof Object) {
                 value = JSON.stringify(value);
             }
-            localStorage.setItem(key, value);
+            this.storageObject.setItem(key, value);
         },
 
         clear: function (type, name) {
@@ -91,13 +94,15 @@ Espo.define('storage', [], function () {
                 reText = '^' + this._prefix + '-';
             }
             var re = new RegExp(reText);
-            for (var i in localStorage) {
+            for (var i in this.storageObject) {
                 if (re.test(i)) {
-                    delete localStorage[i];
+                    delete this.storageObject[i];
                 }
             }
         }
     });
+
+    Storage.extend = Backbone.Router.extend;
 
     return Storage;
 });
