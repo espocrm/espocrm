@@ -340,6 +340,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                             attachment.set('type', file.type || 'text/plain');
                             attachment.set('role', 'Attachment');
                             attachment.set('size', file.size);
+                            attachment.set('parentType', this.model.name);
+
                             attachment.once('sync', function () {
                                 if (canceledList.indexOf(attachment.cid) === -1) {
                                     $att.trigger('ready');
