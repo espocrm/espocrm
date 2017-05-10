@@ -106,6 +106,11 @@ class FieldManager
             throw new Conflict('Field ['.$name.'] is not allowed');
         }
 
+        $firstLatter = $name[0];
+        if (is_numeric($firstLatter)) {
+            throw new Conflict('Field name should begin with a letter');
+        }
+
         return $this->update($scope, $name, $fieldDefs, true);
     }
 
