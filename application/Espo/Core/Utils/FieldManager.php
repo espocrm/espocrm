@@ -99,6 +99,9 @@ class FieldManager
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
         }
+        if ($this->getMetadata()->get(['entityDefs', $scope, 'links', $name])) {
+            throw new Conflict('Link with name ['.$name.'] exists in '.$scope);
+        }
         if (in_array($name, $this->forbiddenFieldNameList)) {
             throw new Conflict('Field ['.$name.'] is not allowed');
         }
