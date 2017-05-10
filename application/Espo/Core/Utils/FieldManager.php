@@ -130,7 +130,7 @@ class FieldManager
 
         $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
-        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs);
+        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
 
         if ($this->getMetadata()->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
