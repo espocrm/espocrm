@@ -160,6 +160,8 @@ return array (
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',
+    'currencyFormat' => 1,
+    'currencyDecimalPlaces' => null,
     'isInstalled' => false
 );
 
