@@ -39,6 +39,12 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupAuthTokenPeriod = '1 month';
 
+    protected $cleanupNotificationsPeriod = '2 months';
+
+    protected $cleanupRemovedNotesPeriod = '2 months';
+
+    protected $cleanupAttachmentsPeriod = '1 month';
+
     public function run()
     {
         $this->cleanupJobs();
@@ -122,7 +128,9 @@ class Cleanup extends \Espo\Core\Jobs\Base
     {
         $pdo = $this->getEntityManager()->getPDO();
 
-        $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24);
+        $period = '-' . $this->getConfig()->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
 
         $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
             'OR' => array(
@@ -130,14 +138,40 @@ class Cleanup extends \Espo\Core\Jobs\Base
                     'role' => ['Export File']
                 )
             ),
-            'createdAt<' => $dateBefore
-        ))->limit(0, 100)->find();
+            'createdAt<' => $datetime->format('Y-m-d H:i:s')
+        ))->limit(0, 1000)->find();
 
         foreach ($collection as $e) {
             $this->getEntityManager()->removeEntity($e);
         }
 
-        $sql = "DELETE FROM attachment WHERE deleted = 1 AND created_at < ".$pdo->quote($dateBefore);
+        if ($this->getConfig()->get('cleanupOrphanAttachments')) {
+            $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
+                array(
+                    'role' => 'Attachment'
+                ),
+                'OR' => array(
+                    array(
+                        'parentId' => null,
+                        'parentType!=' => null,
+                        'relatedType=' => null
+                    ),
+                    array(
+                        'parentType' => null,
+                        'relatedId' => null,
+                        'relatedType!=' => null
+                    )
+                ),
+                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+                'createdAt>' => '2017-05-10 00:00:00'
+            ))->limit(0, 1000)->find();
+
+            foreach ($collection as $e) {
+                $this->getEntityManager()->removeEntity($e);
+            }
+        }
+
+        $sql = "DELETE FROM attachment WHERE deleted = 1 AND created_at < ".$pdo->quote($datetime->format('Y-m-d H:i:s'));
         $sth = $pdo->query($sql);
     }
 
@@ -170,9 +204,11 @@ class Cleanup extends \Espo\Core\Jobs\Base
     {
         $pdo = $this->getEntityManager()->getPDO();
 
-        $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
+        $period = '-' . $this->getConfig()->get('cleanupRemovedNotesPeriod', $this->cleanupRemovedNotesPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
 
-        $sql = "SELECT * FROM `note` WHERE deleted = 1 AND created_at < ".$pdo->quote($dateBefore);
+        $sql = "SELECT * FROM `note` WHERE deleted = 1 AND DATE(created_at) < ".$pdo->quote($datetime->format('Y-m-d'));
         $sth = $pdo->prepare($sql);
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -193,9 +229,12 @@ class Cleanup extends \Espo\Core\Jobs\Base
     {
         $pdo = $this->getEntityManager()->getPDO();
 
-        $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 50);
+        $period = '-' . $this->getConfig()->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
 
-        $sql = "SELECT * FROM `notification` WHERE created_at < ".$pdo->quote($dateBefore);
+        $sql = "SELECT * FROM `notification` WHERE DATE(created_at) < ".$pdo->quote($datetime->format('Y-m-d'));
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
