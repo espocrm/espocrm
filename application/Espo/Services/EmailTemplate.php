@@ -110,6 +110,13 @@ class EmailTemplate extends Record
             }
         }
 
+        if (!empty($params['relatedId']) && !empty($params['relatedType'])) {
+            $related = $this->getEntityManager()->getEntity($params['relatedType'], $params['relatedId']);
+            if ($related) {
+                $entityHash[$related->getEntityType()] = $related;
+            }
+        }
+
         $subject = $emailTemplate->get('subject');
         $body = $emailTemplate->get('body');
 

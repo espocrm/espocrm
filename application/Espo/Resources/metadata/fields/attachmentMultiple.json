@@ -27,5 +27,6 @@
    "filter": false,
    "fieldDefs": {
       "layoutListDisabled": true
-   }
+   },
+   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\AttachmentMultipleType"
 }

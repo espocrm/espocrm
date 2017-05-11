@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "Kullanıcı",
+    "action": "Eylem",
+    "createdAt": "Tarih",
+    "target": "Hedef",
+    "targetType": "Hedef Tipi",
+    "authToken": "Auth Token",
+    "ipAddress": "IP Adresi"
+  },
+  "links": {
+    "authToken": "Auth Token",
+    "user": "Kullanıcı",
+    "target": "Hedef"
+  },
+  "presetFilters": {
+    "onlyMy": "Sadece Benim"
+  },
+  "options": {
+    "action": {
+      "read": "Oku",
+      "update": "Güncelle",
+      "delete": "Sil",
+      "create": "Oluştur"
+    }
+  }
+}

@@ -25,7 +25,8 @@
     "sendAccessInfo": "Kullanıcıya Erişim Bilgisiyle E-posta Gönder",
     "portal": "Portal",
     "gender": "Cinsiyet",
-    "position": "Takım halinde pozisyon"
+    "position": "Takım halinde pozisyon",
+    "ipAddress": "IP Adresi"
   },
   "links": {
     "teams": "Takımlar",
@@ -77,7 +78,8 @@
     "forbidden": "Yasak, lütfen daha sonra deneyin",
     "uniqueLinkHasBeenSent": "Benzersiz URL belirtilen e-posta adresine gönderilmiştir.",
     "passwordChangedByRequest": "Şifre değiştirildi.",
-    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir."
+    "setupSmtpBefore": "Sistemin e-postayla şifre gönderebilmesi için <a href=\"{url}\"> SMTP ayarlarını kurmanız </a> gerekir.",
+    "passwordChangeLinkEmailBody": "Bu {link}'i takip ederek şifrenizi değiştirebilirsiniz. Bu benzersiz URL yakın zamanda geçersiz olacaktır."
   },
   "boolFilters": {
     "onlyMyTeam": "Yalnızca Ekibim"

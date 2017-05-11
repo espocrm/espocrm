@@ -27,28 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Core\Utils\FieldManager\Hooks;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Conflict;
 
-class EmailTemplate extends \Espo\Core\Controllers\Record
+class AttachmentMultipleType extends Base
 {
-    public function actionParse($params, $data, $request)
+    public function beforeSave($scope, $name, $defs, $options)
     {
-        $id = $request->get('id');
-        $emailAddress = $request->get('emailAddress');
-        if (empty($id)) {
-            throw new Error();
+        if (!empty($options['isNew'])) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $scope, 'fields'], array());
+            foreach ($fieldDefs as $field => $defs) {
+                $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'type']);
+                if ($type === 'attachmentMultiple') {
+                    throw new Conflict("Attachment-Multiple field already exists in '{$scope}'. There can be only one Attachment-Multiple field per entity type.");
+                }
+            }
         }
-
-        return $this->getRecordService()->parse($id, array(
-            'emailAddress' => $request->get('emailAddress'),
-            'parentType' => $request->get('parentType'),
-            'parentId' => $request->get('parentId'),
-            'relatedType' => $request->get('relatedType'),
-            'relatedId' => $request->get('relatedId')
-        ), true);
     }
-
 }
-

@@ -63,4 +63,11 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
         $actual = $this->evaluator->process($expression);
         $this->assertEquals([1], $actual);
     }
+
+    function testEvaluateEmpty()
+    {
+        $expression = '';
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(null, $actual);
+    }
 }

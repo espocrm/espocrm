@@ -219,6 +219,11 @@ class Parser
         $firstOperator = null;
         $minIndex = null;
 
+        if ($expression === '') return (object) [
+            'type' => 'value',
+            'value' => null
+        ];
+
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
                 $index = strpos($expression, $operator, 1);

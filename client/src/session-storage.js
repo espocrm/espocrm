@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,28 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+Espo.define('session-storage', 'storage', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class EmailTemplate extends \Espo\Core\Controllers\Record
-{
-    public function actionParse($params, $data, $request)
-    {
-        $id = $request->get('id');
-        $emailAddress = $request->get('emailAddress');
-        if (empty($id)) {
-            throw new Error();
+        storageObject: sessionStorage,
+
+        get: function (name) {
+            var stored = this.storageObject.getItem(name);
+            if (stored) {
+                var str = stored;
+                if (stored[0] == "{" || stored[0] == "[") {
+                    try {
+                        str = JSON.parse(stored);
+                    } catch (error) {
+                        str = stored;
+                    }
+                    stored = str;
+                }
+                return stored;
+            }
+            return null;
+        },
+
+        set: function (name, value) {
+            if (value instanceof Object) {
+                value = JSON.stringify(value);
+            }
+            this.storageObject.setItem(name, value);
+        },
+
+        clear: function (name) {
+            for (var i in this.storageObject) {
+                if (i === name) {
+                    delete this.storageObject[i];
+                }
+            }
         }
 
-        return $this->getRecordService()->parse($id, array(
-            'emailAddress' => $request->get('emailAddress'),
-            'parentType' => $request->get('parentType'),
-            'parentId' => $request->get('parentId'),
-            'relatedType' => $request->get('relatedType'),
-            'relatedId' => $request->get('relatedId')
-        ), true);
-    }
-
-}
-
+    });
+});

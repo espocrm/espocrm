@@ -280,7 +280,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
             if ($entity->hasAttribute('createdById')) {
                 if (empty($options['import']) || !$entity->has('createdById')) {
-                    $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                    if ($this->getEntityManager()->getUser()) {
+                        $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                    }
                 }
             }
         } else {
@@ -289,8 +291,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('modifiedById')) {
-                    $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                    $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                    if ($this->getEntityManager()->getUser()) {
+                        $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+                        $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                    }
                 }
             }
         }

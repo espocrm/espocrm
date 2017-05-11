@@ -5,7 +5,8 @@
     "targetType": "Hedef",
     "teams": "Takımlar",
     "users": "Kullanıcılar",
-    "portals": "Portallar"
+    "portals": "Portallar",
+    "type": "Tip"
   },
   "filters": {
     "all": "Hepsi",

@@ -54,7 +54,8 @@
     "Jobs": "İşler",
     "Reset to Default": "Öndeğerlere Dön",
     "Email Filters": "E-mail Filtreleri",
-    "Portal Users": "Portal Kullanıcıları"
+    "Portal Users": "Portal Kullanıcıları",
+    "Action History": "Eylem Tarihçesi"
   },
   "layouts": {
     "list": "Liste",
@@ -151,19 +152,13 @@
     "readOnly": "Salt okunur"
   },
   "messages": {
-    "upgradeVersion": "EspoCRM yazılımınız <strong>{version}</strong> sürümüne yükseltilecektir. Bu işlem birkaç dakika sürebilir.",
-    "upgradeDone": "EspoCRM yazılımınız <strong>{version}</strong> sürümüne yükseltilmiştir. Tarayıcı pencerenizi lütfen yenileyin..",
-    "upgradeBackup": "Yükseltmeden önce EspoCRM dosya ve verilerinizi yedeklemenizi öneririz.",
-    "thousandSeparatorEqualsDecimalMark": "Binlik ayraç ondalık ayraç ile aynı olamaz.",
-    "userHasNoEmailAddress": "Kullanıcı eposta adresi tanımlamamıştır.",
     "selectEntityType": "Soldaki menüden birim türünü seçin.",
     "selectUpgradePackage": "Yükseltme paketini seçin.",
     "downloadUpgradePackage": "Güncelleme paketlerini indirin <a href=\"{url}\">here</a>.",
     "selectLayout": "Gerekli yerleşim düzenini sol menüden seçin ve düzenleyin.",
     "selectExtensionPackage": "Eklenti paketi seçiniz ",
     "extensionInstalled": "{name} {version} eklentisi başarıyla kuruldu",
-    "installExtension": "{name} {version} eklentisi kurulum için hazır",
-    "uninstallConfirmation": "Eklentiyi kaldırmak istediğinize emin misiniz?"
+    "installExtension": "{name} {version} eklentisi kurulum için hazır"
   },
   "descriptions": {
     "settings": "Uygulamanın sistem ayarları.",
@@ -190,9 +185,7 @@
     "integrations": "Üçüncü parti entegrasyon servisleri.",
     "notifications": "Uygulama içi ve e-mail bildirimi ayarları.",
     "inboundEmails": "IMAP eposta hesaplarını grupla. Eposta içe aktarımı ve dizinleme",
-    "emailFilters": "Belirtilen filtreye uyan e-mail mesajları aktarılmayacaktır.",
-    "portalUsers": "Portal kullanıcısı.",
-    "entityManager": "Özel varlıklar oluşturun, varlıklar düzenleyin. Alanları ve ilişkileri yönetin."
+    "portalUsers": "Portal kullanıcısı."
   },
   "options": {
     "previewSize": {
