@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Перетворено на",
     "Create Lead": "Створили лід",
-    "Convert": "Конвертувати"
+    "Convert": "Конвертувати",
+    "convert": "конвертувати"
   },
   "fields": {
     "name": "Ім'я",

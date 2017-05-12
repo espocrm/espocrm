@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Convertido a",
     "Create Lead": "Crear Posible Cliente",
-    "Convert": "Convertir"
+    "Convert": "Convertir",
+    "convert": "convertir"
   },
   "fields": {
     "name": "Nombre",

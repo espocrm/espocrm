@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Преобразован в",
     "Create Lead": "Создать кандидата",
-    "Convert": "Преобразовать"
+    "Convert": "Преобразовать",
+    "convert": "преобразовать"
   },
   "fields": {
     "name": "Имя",

@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Converti en",
     "Create Lead": "Créer un prospect",
-    "Convert": "Convertir"
+    "Convert": "Convertir",
+    "convert": "convertir"
   },
   "fields": {
     "name": "Nom",

@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Çevrildi",
     "Create Lead": "Müşteri Adayı Oluştur",
-    "Convert": "Çevir"
+    "Convert": "Çevir",
+    "convert": "Çevir"
   },
   "fields": {
     "name": "İsim",
