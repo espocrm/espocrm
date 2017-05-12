@@ -26,7 +26,8 @@
     "portal": "Portal",
     "gender": "Género",
     "position": "Posición en el equipo",
-    "ipAddress": "Dirección IP"
+    "ipAddress": "Dirección IP",
+    "passwordPreview": "Vista previa de la Contraseña"
   },
   "links": {
     "teams": "Equipos",

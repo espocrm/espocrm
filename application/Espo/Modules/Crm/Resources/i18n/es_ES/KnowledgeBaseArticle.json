@@ -3,10 +3,10 @@
     "Create KnowledgeBaseArticle": "Crear artículo",
     "Any": "Todos",
     "Send in Email": "Enviar por correo electrónico",
-    "Move Up": "Ascender",
-    "Move Down": "Mover hacia abajo",
-    "Move to Top": "Mover arriba",
-    "Move to Bottom": "Mover abajo"
+    "Move Up": "Mover Arriba",
+    "Move Down": "Mover abajo",
+    "Move to Top": "Mover a la parte superior",
+    "Move to Bottom": "Mover a la parte inferior"
   },
   "fields": {
     "name": "Nombre",

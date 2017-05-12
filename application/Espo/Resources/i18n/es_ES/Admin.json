@@ -72,7 +72,7 @@
   },
   "fieldTypes": {
     "address": "Dirección",
-    "array": "Arreglo",
+    "array": "Lista Ordenable",
     "foreign": "Externo",
     "duration": "Duración",
     "password": "Contraseña",
@@ -130,7 +130,7 @@
     "defaultType": "Tipo por defecto",
     "seeMoreDisabled": "Desactivar cortar texto",
     "entityList": "Lista de Entidades",
-    "isSorted": "Esta ordenado (alfabeticamente)",
+    "isSorted": "Ordenar alfabeticamente",
     "audited": "Auditada",
     "trim": "recortado",
     "height": "Altura (px)",
