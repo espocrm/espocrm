@@ -76,6 +76,10 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 }
             }, this);
 
+            this.typeList.sort(function (v1, v2) {
+                return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
+            }.bind(this));
+
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
 
