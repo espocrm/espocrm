@@ -1,5 +1,13 @@
 {
-    "labels": {
-        "Create {entityType}": "Создать {entityTypeTranslated}"
-    }
+  "fields": {
+    "address": "Адрес"
+  },
+  "links": {
+    "meetings": "Meetings",
+    "calls": "Calls",
+    "tasks": "Tasks"
+  },
+  "labels": {
+    "Create {entityType}": "Создать {entityTypeTranslated}"
+  }
 }

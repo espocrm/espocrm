@@ -1,9 +1,9 @@
 {
   "labels": {
-    "Converted To": "Преобразован в",
+    "Converted To": "Конвертирован в",
     "Create Lead": "Создать кандидата",
-    "Convert": "Преобразовать",
-    "convert": "преобразовать"
+    "Convert": "Конвертировать",
+    "convert": "конвертация"
   },
   "fields": {
     "name": "Имя",
@@ -24,7 +24,10 @@
     "createdOpportunity": "Cделка",
     "campaign": "Кампания",
     "targetLists": "Списки целей",
-    "targetList": "Список целей"
+    "targetList": "Список целей",
+    "industry": "Вид деятельности",
+    "acceptanceStatus": "Acceptance Status",
+    "opportunityAmountCurrency": "Opportunity Amount Currency"
   },
   "links": {
     "targetLists": "Списки целей",
@@ -32,14 +35,16 @@
     "campaign": "Кампания",
     "createdAccount": "Контрагент",
     "createdContact": "Контакт",
-    "createdOpportunity": "Cделка"
+    "createdOpportunity": "Cделка",
+    "cases": "Сделки",
+    "documents": "Документы"
   },
   "options": {
     "status": {
       "New": "Новый",
       "Assigned": "Назначен",
       "In Process": "В процессе",
-      "Converted": "Преобразован",
+      "Converted": "Конвертирован",
       "Recycled": "Удален",
       "Dead": "Мертв"
     },
@@ -58,6 +63,6 @@
   "presetFilters": {
     "active": "Активный",
     "actual": "Актуальный",
-    "converted": "Преобразованный"
+    "converted": "Конвертированны"
   }
 }

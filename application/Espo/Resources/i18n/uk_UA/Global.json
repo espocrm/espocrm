@@ -11,7 +11,7 @@
     "ScheduledJob": "Заплановані завдання",
     "ExternalAccount": "Зовнішній рахунок",
     "Extension": "Розширення",
-    "Dashboard": "Панель інструментів",
+    "Dashboard": "Панель дашлетів",
     "InboundEmail": "Inbound Email Account",
     "Stream": "Потік",
     "Import": "Імпорт",
@@ -21,8 +21,14 @@
     "Portal": "Портал",
     "PortalRole": "Роль порталу",
     "Attachment": "Вкладення",
-    "EmailFolder": "Email Folder",
-    "PortalUser": "Portal User"
+    "EmailFolder": "Папка з електронними листами",
+    "PortalUser": "Користувач порталу",
+    "ScheduledJobLogRecord": "Заплановані роботи запис в журналі",
+    "PasswordChangeRequest": "Запит на зміна паролю",
+    "ActionHistoryRecord": "Запис Історії дій",
+    "AuthToken": "Токен аутентифікації",
+    "UniqueId": "Унікальний ID",
+    "LastViewed": "Останні переглянуті"
   },
   "scopeNamesPlural": {
     "Email": "Листи",
@@ -36,7 +42,7 @@
     "ScheduledJob": "Заплановані завдання",
     "ExternalAccount": "Зовнішні аккаунти",
     "Extension": "Розширення",
-    "Dashboard": "Панель інструментів",
+    "Dashboard": "Панель дашлетів",
     "InboundEmail": "Inbound Email Accounts",
     "Stream": "Потік",
     "Import": "Import Results",
@@ -46,8 +52,14 @@
     "Portal": "Портали",
     "PortalRole": "Ролі порталу",
     "Attachment": "Вкладення",
-    "EmailFolder": "Email Folders",
-    "PortalUser": "Портал користувачів"
+    "EmailFolder": "Папки з електронними листами",
+    "PortalUser": "Портал користувачів",
+    "ScheduledJobLogRecord": "Записи Журналу Запланованих робіт",
+    "PasswordChangeRequest": "Запити на зміну пароля",
+    "ActionHistoryRecord": "Історія дій",
+    "AuthToken": "Токени аутентифікації",
+    "UniqueId": "Унікальні ідентифікатори",
+    "LastViewed": "Останній Розглянутий"
   },
   "labels": {
     "Misc": "Різне",
@@ -68,8 +80,8 @@
     "Merged": "Злилося",
     "Removed": "Видалено",
     "Posted": "Додано",
-    "Linked": "Із линвами",
-    "Unlinked": "Безлинвові",
+    "Linked": "Поєднано",
+    "Unlinked": "Від’єднано",
     "Done": "Зроблено",
     "Access denied": "У доступі відмовлено",
     "Not found": "Не знайдено",
@@ -79,7 +91,7 @@
     "Wrong username/password": "Хибне ім'я користувача / пароль",
     "Post cannot be empty": "Повідомлення не може бути порожнім",
     "Removing...": "Видаляється...",
-    "Unlinking...": "Розлинвення...",
+    "Unlinking...": "Від’єднання...",
     "Posting...": "Публікується...",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім!",
     "Cache is not enabled": "Кеш не підключено",
@@ -95,7 +107,7 @@
     "Add Field": "Додати поле",
     "Add Dashlet": "Додати дашлет",
     "Filter": "Filter",
-    "Edit Dashboard": "Змінити панель інструментів",
+    "Edit Dashboard": "Змінити панель дашлетів",
     "Add": "Додати",
     "Add Item": "Додати елемент",
     "Reset": "Скинути",
@@ -121,7 +133,7 @@
     "PostalCode": "Поштовий індекс",
     "Followed": "Підписано",
     "Follow": "Підписатися",
-    "Followers": "Послідовники",
+    "Followers": "Підписники",
     "Clear Local Cache": "Очистити локальний кеш",
     "Actions": "Дії",
     "Delete": "Видалити",
@@ -131,7 +143,7 @@
     "View": "Переглянути",
     "Cancel": "Скасувати",
     "Apply": "Застосовувати",
-    "Unlink": "Розлинвити",
+    "Unlink": "Від’єднати",
     "Mass Update": "Масове оновлення",
     "Export": "Експортувати",
     "No Data": "Немає даних",
@@ -143,7 +155,7 @@
     "Post": "Піблікувати",
     "Stream": "Потік",
     "Show more": "Показати більше",
-    "Dashlet Options": "Опції панелі управління",
+    "Dashlet Options": "Опції дашлету",
     "Full Form": "Повна форма",
     "Insert": "Вставити",
     "Person": "Особа",
@@ -173,7 +185,7 @@
     "Current version": "Current version",
     "List View": "List View",
     "Tree View": "Tree View",
-    "Unlink All": "Відключити всі",
+    "Unlink All": "Від’єднати всі",
     "Total": "Загальний",
     "Print to PDF": "Друк в PDF",
     "Default": "За замовчуванням",
@@ -189,7 +201,9 @@
     "Attribute": "Атрибут",
     "Function": "Функція",
     "Self-Assign": "Особисте доручення",
-    "Self-Assigned": "Особисте призначення"
+    "Self-Assigned": "Особисте призначення",
+    "Return to Application": "Повернення до додатку",
+    "Select All Results": "Вибрати всі результати"
   },
   "messages": {
     "pleaseWait": "Будь ласка, зачекайте...",
@@ -228,14 +242,20 @@
     "checkForNewNotes": "Перевірити наявність оновлень потоку",
     "internalPost": "Повідомлення буде видно тільки внутрішнім користувачам",
     "done": "Завершено",
-    "confirmMassFollow": "Ви впевнені, що хочете відстежувати вибрані записи?",
-    "confirmMassUnfollow": "Ви впевнені, що хочете не відстежувати вибрані записи?",
+    "confirmMassFollow": "Ви впевнені, що хочете підписатися на вибрані записи?",
+    "confirmMassUnfollow": "Ви впевнені, що хочете видалити підписку на вибрані записи?",
     "massFollowResult": "{count} записи наразі відстежуються",
     "massUnfollowResult": "{count} записи наразі не відстежуються",
-    "massFollowResultSingle": "{count} записи наразі відстежуються ",
-    "massUnfollowResultSingle": "{count} записи наразі не відстежуються ",
-    "massFollowZeroResult": "Nothing got followed",
-    "massUnfollowZeroResult": "Nothing got unfollowed"
+    "massFollowResultSingle": "{count} записи наразі відстежуються",
+    "massUnfollowResultSingle": "{count} записи наразі не відстежуються",
+    "massFollowZeroResult": "Немає на що підписуватись",
+    "massUnfollowZeroResult": "Немає від чого відписуватись",
+    "fieldShouldBeEmail": "{field} дійсна адреса електронної пошти",
+    "fieldShouldBeFloat": "{field} повинне бути допустимим числом з плаваючою частиною",
+    "fieldShouldBeInt": "{field} повинно бути цілим числом",
+    "fieldShouldBeDate": "{field} має бути дійсною дата",
+    "fieldShouldBeDatetime": "{field} має бути дійсним дата/час",
+    "internalPostTitle": "Повідомлення бачитимуть тільки внутрішні користувачі"
   },
   "boolFilters": {
     "onlyMy": "Тільки моє",
@@ -250,8 +270,8 @@
     "merge": "Об'єднати",
     "massUpdate": "Масове оновлення",
     "export": "Експортувати",
-    "follow": "Слідувати",
-    "unfollow": "Не слідувати"
+    "follow": "Підписатися",
+    "unfollow": "Відписатися"
   },
   "fields": {
     "name": "Ім'я",
@@ -275,8 +295,8 @@
     "phoneNumberFax": "Phone (Fax)",
     "phoneNumberOffice": "Phone (Office)",
     "phoneNumberOther": "Phone (Other)",
-    "order": "Order",
-    "parent": "Джерело",
+    "order": "Сортування",
+    "parent": "Батько",
     "children": "Children",
     "id": "ID"
   },
@@ -288,12 +308,13 @@
     "roles": "Ролі",
     "teams": "Команди",
     "users": "Користувачі",
-    "parent": "Джерело",
-    "children": "Children"
+    "parent": "Батько",
+    "children": "Діти"
   },
   "dashlets": {
     "Stream": "Потік",
-    "Emails": "Мої вхідні"
+    "Emails": "Мої вхідні",
+    "Records": "Список записів"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} призначено на Вас",
@@ -316,7 +337,7 @@
     "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
     "mentionYouInPost": "{user} згадав вас в {entityType} {entity} ",
     "mentionInPostTarget": "{user} згаданий {mentioned} в повідомленні",
-    "mentionYouInPostTarget": "{user} згадав вас у повідомленні також {target} ",
+    "mentionYouInPostTarget": "{user} згадав вас у повідомленні також {target}",
     "mentionYouInPostTargetAll": "{user} згадав вас в пості для всіх",
     "mentionYouInPostTargetNoTarget": "{user} зазначений в вашому листі",
     "create": "{user} створив {entityType} {entity}",
@@ -331,7 +352,7 @@
     "updateThis": "{user} поновив {entityType}",
     "createRelatedThis": "{user} створив {relatedEntityType} {relatedEntity} пов'язаний з {entityType}",
     "createRelated": "{user} створив {relatedEntityType} {relatedEntity} пов'язаний з  {entityType} {entity}",
-    "relate": "{user} підключений {relatedEntityType} {relatedEntity} з {entityType} {entity} ",
+    "relate": "{user} підключений {relatedEntityType} {relatedEntity} з {entityType} {entity}",
     "relateThis": "{user} підключений {relatedEntityType} {relatedEntity} із цим {entityType}",
     "emailReceivedFromThis": "Email отримано від {from}",
     "emailReceivedInitialFromThis": "Email отримано від {from}, це {entityType} створено",
@@ -347,13 +368,13 @@
     "postTargetSelf": "{user} написав для себе",
     "postTargetSelfAndOthers": "{user} написав для {target} та себе",
     "createAssignedYou": "{user} створив {entityType} {entity}, призначену Вам",
-    "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
-    "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
+    "createAssignedThisSelf": "{user} створив цей {entityType} та призначив його собі",
+    "createAssignedSelf": "{user} створив цей {entityType} {entity} та призначив його собі",
     "assignYou": "{user} призначив {entityType} {entity} на Вас",
-    "assignThisVoid": "{user} unassigned this {entityType}",
-    "assignVoid": "{user} unassigned {entityType} {entity}",
-    "assignThisSelf": "{user} self-assigned this {entityType}",
-    "assignSelf": "{user} self-assigned {entityType} {entity}"
+    "assignThisVoid": "{user} непризначено цей {entityType} {entity} ",
+    "assignVoid": "{user} непризначено {entityType} {entity}",
+    "assignThisSelf": "{user} самопризначений цей {entityType} {entity}",
+    "assignSelf": "{user} самопризначений {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -512,15 +533,19 @@
       "nextXDays": "Останні Х днів",
       "ever": "Коли-небудь",
       "isEmpty": "Порожньо",
-      "olderThanXDays": "Старіше за Х дні",
+      "olderThanXDays": "Давніше за Х дні",
       "afterXDays": "Після Х днів"
     },
     "searchRanges": {
       "is": "Is",
       "isEmpty": "Пусто",
       "isNotEmpty": "Не пусто",
-      "isOneOf": "Один з ",
-      "isFromTeams": "Від команди"
+      "isFromTeams": "Від команди",
+      "isOneOf": "будь-який з",
+      "anyOf": "будь-який з",
+      "isNot": "Не",
+      "isNotOneOf": "Жоден з",
+      "noneOf": "Жоден з"
     },
     "varcharSearchRanges": {
       "equals": "Дорівнює",
@@ -586,17 +611,17 @@
         "remove": "Видалити зображення"
       },
       "link": {
-        "link": "Link",
-        "insert": "Вставити линву",
-        "unlink": "Розлинвити",
-        "edit": "Зміни",
+        "link": "Посилання",
+        "insert": "Вставити посилання",
+        "unlink": "Від’єднати",
+        "edit": "Змінити",
         "textToDisplay": "Текст для відображення",
-        "url": "До якого URL має ця линва вести?",
+        "url": "До якого URL це посилання?",
         "openInNewWindow": "Відкрити у новому вікні"
       },
       "video": {
         "video": "Відео",
-        "videoLink": "Линва на відео",
+        "videoLink": "Посилання на відео",
         "insert": "Вставити відео",
         "url": "URL відео?",
         "providers": "(YouTube, Vimeo, Vine, Instagram, або DailyMotion)"
@@ -666,11 +691,11 @@
     "Sakura": "Сакура",
     "Violet": "Фіолетовий",
     "EspoRtl": "RTL Espo",
-    "EspoVertical": "Espo w/ sidebar",
-    "SakuraVertical": "Sakura w/ sidebar",
-    "VioletVertical": "Violet w/ sidebar",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Hazyblue w/ sidebar"
+    "EspoVertical": "Espo бокова панель",
+    "SakuraVertical": "Сакура бокова панель",
+    "VioletVertical": "Фіолет бокова панель",
+    "Hazyblue": "Темно-синій",
+    "HazyblueVertical": "Темно-синій бокова панель"
   },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} написав для {target} та себе"

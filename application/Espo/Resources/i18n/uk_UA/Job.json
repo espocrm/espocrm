@@ -2,7 +2,7 @@
   "fields": {
     "status": "Статус",
     "executeTime": "Виконати в",
-    "attempts": "Attempts Left",
+    "attempts": "Залишилось спроб",
     "failedAttempts": "Невдалі спроби",
     "serviceName": "Обслуговування",
     "method": "Метод",

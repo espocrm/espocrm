@@ -17,8 +17,8 @@
       "CheckInboundEmails": "Перевірити пошту",
       "CheckEmailAccounts": "Перевірити особисті емейл-акаунти",
       "SendEmailReminders": "Відправити нагадування емейлом",
-      "AuthTokenControl": "Auth Token Control",
-      "SendEmailNotifications": "Send Email Notifications"
+      "AuthTokenControl": "Контроль токенів аутентифікації",
+      "SendEmailNotifications": "Надіслати сповіщення на електронну пошту"
     },
     "cronSetup": {
       "linux": "Замітка: Додайте цей рядок до файлу crontab для запуску Планувальника Завдань Espo:",
@@ -32,6 +32,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+    "scheduling": "Crontab позначення. Визначає частоту виконання роботи.\n\n*/5 * * * * - кожні 5 хвилин\n\n0 */2 * * * - кожні 2 години\n\n30 1 * * * - о 01:30 один раз в день\n\n0 0 1 * * - в перший день місяця"
   }
 }

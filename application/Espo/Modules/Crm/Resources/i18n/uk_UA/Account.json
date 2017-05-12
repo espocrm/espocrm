@@ -14,22 +14,22 @@
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "originalLead": "Original Lead"
+    "originalLead": "Початковий Лід"
   },
   "links": {
     "contacts": "Контакти",
     "opportunities": "Угоди",
     "cases": "Звернення",
     "documents": "Документи",
-    "meetingsPrimary": "Meetings (expanded)",
-    "callsPrimary": "Calls (expanded)",
-    "tasksPrimary": "Tasks (expanded)",
-    "emailsPrimary": "Emails (expanded)",
+    "meetingsPrimary": "Зустрічі (розширено)",
+    "callsPrimary": "Дзвінки (розширено)",
+    "tasksPrimary": "Завдання (розширено)",
+    "emailsPrimary": "Електронні листи (розширено)",
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Журнал кампанія",
+    "campaignLogRecords": "Лоґ кампанії",
     "campaign": "Кампанія",
-    "portalUsers": "Портал користувачів",
-    "originalLead": "Original Lead"
+    "portalUsers": "Користувачі порталу",
+    "originalLead": "Початковий Лід"
   },
   "options": {
     "type": {
@@ -69,25 +69,25 @@
       "Television": "Телебачення",
       "Transportation": "Транспорт",
       "Venture Capital": "Венчурний капітал",
-      "Aerospace": "Авіаційно-космічний",
+      "Aerospace": "Авіаційно-космічна",
       "Architecture": "Архітектура",
-      "Construction": "Конструкція",
-      "Defense": "Захист",
-      "Creative": "творчий",
+      "Construction": "Будівництво",
+      "Defense": "Оборона",
+      "Creative": "Творча",
       "Culture": "Культура",
-      "Consulting": "Консультуючий",
+      "Consulting": "Консалтинг",
       "Electric Power": "Електроенергія",
-      "Hospitality": "Привітність",
+      "Hospitality": "Гостинність",
       "Mass Media": "Засоби масової інформації",
-      "Mining": "значення",
+      "Mining": "Гірнича справа",
       "Music": "Музика",
-      "Marketing": "Marketing",
-      "Petroleum": "Petroleum",
-      "Retail": "Retail",
+      "Marketing": "Маркетинг",
+      "Petroleum": "Нафта",
+      "Retail": "Роздрібна торгівля",
       "Shipping": "Доставка",
       "Support": "Підтримка",
       "Testing, Inspection & Certification": "Тестування, інспектування та сертифікація",
-      "Wholesale": "Масовий",
+      "Wholesale": "Оптова торгівля",
       "Water": "Вода"
     }
   },
@@ -98,6 +98,6 @@
   "presetFilters": {
     "customers": "Customers",
     "partners": "Partners",
-    "recentlyCreated": "Recently Created"
+    "recentlyCreated": "Нещодавно Створений"
   }
 }

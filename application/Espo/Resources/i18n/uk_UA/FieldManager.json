@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Dynamic Logic": "Dynamic Logic"
+    "Dynamic Logic": "Логічність динаміки"
   },
   "options": {
     "dateTimeDefault": {
@@ -17,15 +17,15 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 годин",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 годин",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 годин",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 hours",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 hours",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 hours",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 hours",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 day",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 days",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 days",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 days",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 days",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 годин",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 годин",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 годин",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 годин",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 день",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 дні",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 дні",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 дні",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 днів",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 годин",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 тиждень"
     },
@@ -65,11 +65,11 @@
     "default": "Значення буде встановлено за замовчуванням при створенні.",
     "min": "Мінімально допустиме значення.",
     "max": "Максимально допустиме значення.",
-    "seeMoreDisabled": "If not checked then long texts will be shortened.",
-    "lengthOfCut": "How long text can be before it will be cut.",
+    "seeMoreDisabled": "Якщо не встановлено, то довгі тексти будуть скорочені.",
+    "lengthOfCut": "Наскільки довгим може бути текст, перш ніж він буде скорочений.",
     "maxLength": "Максимально допустима довжина тексту.",
-    "before": "The date value should be before the date value of the specified field.",
-    "after": "The date value should be after the date value of the specified field.",
-    "readOnly": "Field value can't be specified by user. But can be calculated by formula."
+    "before": "Значення дати має бути перед значенням дати у вказаному полі.",
+    "after": "Значення дати має бути після значення дати у вказаному полі.",
+    "readOnly": "Користувач не може вичначати значення поля. Воно буде задане формулою."
   }
 }

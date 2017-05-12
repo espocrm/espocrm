@@ -7,18 +7,18 @@
     "portalRoles": "Ролі",
     "isActive": "Активний",
     "isDefault": "Чи за замовчуванням",
-    "tabList": "Tab List",
-    "quickCreateList": "Quick Create List",
+    "tabList": "Список меню",
+    "quickCreateList": "Список для швидкого створення",
     "theme": "Тема",
     "language": "Мова",
-    "dashboardLayout": "Панель розкладки",
+    "dashboardLayout": "Макет панелі дашлетів",
     "dateFormat": "Формат дати",
     "timeFormat": "Формат часу",
     "timeZone": "Часова зона",
     "weekStart": "Перший день тижня",
-    "defaultCurrency": "Default Currency",
-    "customUrl": "Custom URL",
-    "customId": "Custom ID"
+    "defaultCurrency": "Валюта за замовчуванням",
+    "customUrl": "Призначений для користувача URL",
+    "customId": "Призначений для користувача  ID"
   },
   "links": {
     "users": "Користувачі",
@@ -26,12 +26,12 @@
     "notes": "Примітки"
   },
   "tooltips": {
-    "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
+    "portalRoles": "Вказані ролі порталу будуть застосовуватись до всіх користувачів цього порталу"
   },
   "labels": {
     "Create Portal": "Створити портал",
     "User Interface": "Інтерфейс користувача",
-    "General": "Генеральна",
-    "Settings": "Настройки"
+    "General": "Загальне",
+    "Settings": "Налаштування"
   }
 }

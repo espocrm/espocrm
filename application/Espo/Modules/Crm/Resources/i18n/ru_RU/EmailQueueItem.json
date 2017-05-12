@@ -17,7 +17,8 @@
     "status": {
       "Pending": "В ожидании",
       "Sent": "Отправлено",
-      "Failed": "Сбой"
+      "Failed": "Сбой",
+      "Sending": "Sending"
     }
   },
   "presetFilters": {

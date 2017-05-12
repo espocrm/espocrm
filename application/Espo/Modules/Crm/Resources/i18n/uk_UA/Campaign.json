@@ -10,14 +10,14 @@
     "excludingTargetLists": "За винятком цільових списків",
     "sentCount": "Відправлено",
     "openedCount": "Відкрито",
-    "clickedCount": "Цикнуте",
+    "clickedCount": "Клікнуто",
     "optedOutCount": "Відмовлено",
     "bouncedCount": "Відшито",
     "hardBouncedCount": "Жорстко відшито",
     "softBouncedCount": "М'яко відшито",
     "leadCreatedCount": "Ліди створені",
     "revenue": "Виручка",
-    "revenueConverted": "Revenue (converted)",
+    "revenueConverted": "Дохід (в перерахунку)",
     "budget": "Бюджет",
     "budgetConverted": "Бюджет (конвертований)"
   },
@@ -29,8 +29,8 @@
     "leads": "Ліди",
     "opportunities": "Угоди",
     "campaignLogRecords": "Лоґ",
-    "massEmails": "Масові електронні адреси",
-    "trackingUrls": "Tracking URLs"
+    "massEmails": "Масові розсилки",
+    "trackingUrls": "Відстежувані URLs"
   },
   "options": {
     "type": {
@@ -42,10 +42,10 @@
       "Mail": "Пошта"
     },
     "status": {
-      "Planning": "Запланований",
-      "Active": "Активний",
-      "Inactive": "Неактивний",
-      "Complete": "Завершений"
+      "Planning": "Запланована",
+      "Active": "Активна",
+      "Inactive": "Неактивна",
+      "Complete": "Завершена"
     }
   },
   "labels": {
@@ -54,22 +54,22 @@
     "Statistics": "Статистика",
     "hard": "жорстко",
     "soft": "м'яко",
-    "Unsubscribe": "Непідписувати",
-    "Mass Emails": "Масові електронні адреси",
+    "Unsubscribe": "Відписати",
+    "Mass Emails": "Масові розсилки",
     "Email Templates": "Шаблони електронної пошти",
     "Unsubscribe again": "Відписатися знову",
     "Subscribe again": "Підписатися знову",
-    "Create Target List": "Create Target List"
+    "Create Target List": "Створити Цільовий список"
   },
   "presetFilters": {
-    "active": "Активний"
+    "active": "Активні"
   },
   "messages": {
     "unsubscribed": "Ви відписалися зі списку розсилки.",
     "subscribedAgain": "Ви підписані знову"
   },
   "tooltips": {
-    "targetLists": "Targets that should receive messages.",
-    "excludingTargetLists": "Targets that should not receive messages."
+    "targetLists": "Хто має отримувати повідомлення.",
+    "excludingTargetLists": "Завдання, які не мають отримувати повідомлення."
   }
 }

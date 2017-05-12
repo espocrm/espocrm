@@ -1,12 +1,12 @@
 {
   "labels": {
     "Create KnowledgeBaseArticle": "Створити статтю",
-    "Any": "Будь-який",
-    "Send in Email": "Send in Email",
-    "Move Up": "Підсунути",
+    "Any": "Будь-яка",
+    "Send in Email": "Надіслати в електронному листі",
+    "Move Up": "Підняти",
     "Move Down": "Вниз",
     "Move to Top": "На початок",
-    "Move to Bottom": "Переміститися вниз"
+    "Move to Bottom": "Опустити в самий вниз"
   },
   "fields": {
     "name": "Назва",
@@ -22,23 +22,26 @@
     "portals": "Портали"
   },
   "links": {
-    "cases": "Випадки",
-    "opportunities": "Можливості",
+    "cases": "Звернення",
+    "opportunities": "Угоди",
     "categories": "Категорії",
     "portals": "Портали"
   },
   "options": {
     "status": {
       "In Review": "В огляді",
-      "Draft": "Проект",
-      "Archived": "Читальний зал",
-      "Published": "Опублікований"
+      "Draft": "Чернетка",
+      "Archived": "В архіві",
+      "Published": "Опубліковано"
     },
     "type": {
       "Article": "Стаття"
     }
   },
   "presetFilters": {
-    "published": "Опублікований "
+    "published": "Опубліковано"
+  },
+  "tooltips": {
+    "portals": "Стаття буде доступна тільки в певних порталах."
   }
 }

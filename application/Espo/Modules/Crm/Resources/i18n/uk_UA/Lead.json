@@ -1,9 +1,9 @@
 {
   "labels": {
     "Converted To": "Перетворено на",
-    "Create Lead": "Створили лід",
+    "Create Lead": "Створити Лід",
     "Convert": "Конвертувати",
-    "convert": "конвертувати"
+    "convert": "конвертація"
   },
   "fields": {
     "name": "Ім'я",
@@ -25,16 +25,18 @@
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "industry": "Промисловість"
+    "industry": "Промисловість",
+    "acceptanceStatus": "Ухвалення статусу",
+    "opportunityAmountCurrency": "Валюта суми угоди"
   },
   "links": {
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Журнал кампанія",
+    "campaignLogRecords": "Лоґ кампаніґ",
     "campaign": "Кампанія",
-    "createdAccount": "Акаунт",
+    "createdAccount": "Контрагент",
     "createdContact": "Контакт",
-    "createdOpportunity": "Можливість",
-    "cases": "Випадки",
+    "createdOpportunity": "Угода",
+    "cases": "Звернення",
     "documents": "Документи"
   },
   "options": {
@@ -42,15 +44,15 @@
       "New": "Новий",
       "Assigned": "На розгляді",
       "In Process": "У процесі",
-      "Converted": "Конвертована",
+      "Converted": "Конвертований",
       "Recycled": "У кошику",
-      "Dead": "Мертве"
+      "Dead": "Мертвий"
     },
     "source": {
       "": "Жоден",
       "Call": "Дзвінок",
       "Email": "Емейл",
-      "Existing Customer": "Існуючі замовники",
+      "Existing Customer": "Існуючий замовник",
       "Partner": "Партнер",
       "Public Relations": "Зв'язки із громадськістю",
       "Web Site": "Вебсайт",
@@ -61,6 +63,6 @@
   "presetFilters": {
     "active": "Активний",
     "actual": "Актуальний",
-    "converted": "Конвертована"
+    "converted": "Конвертований"
   }
 }

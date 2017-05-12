@@ -8,7 +8,6 @@
     "status": "Статус",
     "file": "Файл",
     "type": "Тип",
-    "source": "Источник",
     "publishDate": "Опубликован",
     "expirationDate": "Актуален до",
     "description": "Описание",
@@ -18,7 +17,9 @@
   "links": {
     "accounts": "Контрагенты",
     "opportunities": "Сделки",
-    "folder": "Папка"
+    "folder": "Папка",
+    "leads": "Лиды",
+    "contacts": "Contacts"
   },
   "options": {
     "status": {

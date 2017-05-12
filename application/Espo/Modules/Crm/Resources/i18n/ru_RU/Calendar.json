@@ -4,10 +4,17 @@
     "week": "Неделя",
     "agendaWeek": "Неделя",
     "day": "День",
-    "agendaDay": "День"
+    "agendaDay": "День",
+    "timeline": "Расписание"
   },
   "labels": {
     "Today": "Сегодня",
-    "Create": "Создать"
+    "Create": "Создать",
+    "Shared": "Общий",
+    "Add User": "Добавить пользователя",
+    "current": "текущий",
+    "time": "время",
+    "User List": "Список пользователей",
+    "Manage Users": "Управлять пользователями"
   }
 }
