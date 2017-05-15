@@ -906,9 +906,21 @@ td.cell[data-name="buttons"] > .btn-group {
           url('../fonts/open-sans-regular.svg#svgFontName') format('svg');
 }
 
+.notifications-badge-container > .notifications-button > .number-badge {
+    position: absolute;
+    z-index: 10;
+    font-size: 9px;
+    padding: 2px 5px;
+    display: inline-block;
+    top: 7px;
+    left: 27px;
+    background-color: @brand-warning;
+    color: @white-color;
+}
+
 .badge-circle {
-    width:8px;
-    height:8px;
+    width: 8px;
+    height: 8px;
     border-radius: 4px;
     text-align: center;
     display: table-cell;
