@@ -33,7 +33,8 @@
         "team": "Team cases will be assigned to.",
         "teams": "Teams emails will be assigned to.",
         "targetUserPosition": "Users with specified position will be distributed with cases.",
-        "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams."
+        "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams.",
+        "monitoredFolders": "Multiple folders should be separated by comma."
     },
     "links": {
         "filters": "Filters",
