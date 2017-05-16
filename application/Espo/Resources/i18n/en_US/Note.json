@@ -8,8 +8,11 @@
         "portals": "Portals",
         "type": "Type",
         "isGlobal": "Is Global",
-        "isInternal": "Is Internal (for inernal users)",
-        "related": "Related"
+        "isInternal": "Is Internal (for internal users)",
+        "related": "Related",
+        "createdByGender": "Created By Gender",
+        "data": "Data",
+        "number": "Number"
     },
     "filters": {
         "all": "All",
