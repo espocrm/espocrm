@@ -6,7 +6,10 @@
         "teams": "Teams",
         "users": "Users",
         "portals": "Portals",
-        "type": "Type"
+        "type": "Type",
+        "isGlobal": "Is Global",
+        "isInternal": "Is Internal (for inernal users)",
+        "related": "Related"
     },
     "filters": {
         "all": "All",
