@@ -68,13 +68,20 @@ class Xlsx extends \Espo\Core\Injectable
                         $entity->set($link . 'Name', $parent->get('name'));
                     }
                 }
+            } else if ($entity->getRelationType($link) === 'belongsTo' && $entity->getRelationParam($link, 'noJoin') && $entity->hasField($link . 'Name')) {
+                if (in_array($link, $fieldList)) {
+                    $related = $entity->get($link);
+                    if ($related instanceof Entity) {
+                        $entity->set($link . 'Name', $related->get('name'));
+                    }
+                }
             }
         }
     }
 
     public function addAdditionalAttributes($entityType, &$attributeList, $fieldList)
     {
-        $parentList = [];
+        $linkList = [];
 
         if (!in_array('id', $attributeList)) {
             $attributeList[] = 'id';
@@ -84,11 +91,15 @@ class Xlsx extends \Espo\Core\Injectable
         if (is_array($linkDefs)) {
             foreach ($linkDefs as $link => $defs) {
                 if ($defs['type'] === 'belongsToParent') {
-                    $parentList[] = $link;
+                    $linkList[] = $link;
+                } else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
+                    if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link])) {
+                        $linkList[] = $link;
+                    }
                 }
             }
         }
-        foreach ($parentList as $item) {
+        foreach ($linkList as $item) {
             if (in_array($item, $fieldList) && !in_array($item . 'Name', $attributeList)) {
                 $attributeList[] = $item . 'Name';
             }
