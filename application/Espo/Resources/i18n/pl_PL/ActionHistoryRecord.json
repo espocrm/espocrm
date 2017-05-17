@@ -1,0 +1,28 @@
+{
+    "fields": {
+        "user": "Użytkownik",
+        "action": "Czynność",
+        "createdAt": "Data",
+        "user": "Użytkownik",
+        "target": "Element",
+        "targetType": "Moduł",
+        "authToken": "Token Autoryzacyjny",
+        "ipAddress": "Adres IP"
+    },
+    "links": {
+        "authToken": "Token Autoryzacyjny",
+        "user": "Użytkownik",
+        "target": "Element"
+    },
+    "presetFilters": {
+        "onlyMy": "Tylko ja"
+    },
+    "options": {
+        "action": {
+            "read": "Przeczytano",
+            "update": "Zaktualizowano",
+            "delete": "Usunięto",
+            "create": "Utworzono"
+        }
+    }
+}
