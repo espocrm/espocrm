@@ -126,7 +126,7 @@
         "max": "Max",
         "translation": "Translation",
         "previewSize": "Preview Size",
-        "noEmptyString": "No Empty String",
+        "noEmptyString": "Empty string value is not allowed",
         "defaultType": "Default Type",
         "seeMoreDisabled": "Disable Text Cut",
         "entityList": "Entity List",
