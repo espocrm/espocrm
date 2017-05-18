@@ -174,7 +174,16 @@ class Xlsx extends \Espo\Core\Injectable
                 $defs['type'] = 'base';
             }
 
-            $label = $this->getInjection('language')->translate($name, 'fields', $entityType);
+            $label = $name;
+            if (strpos($name, '_') !== false) {
+                list($linkName, $foreignField) = explode('_', $name);
+                $foreigScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                if ($foreigScope) {
+                    $label = $this->getInjection('language')->translate($linkName, 'links', $entityType) . '.' . $this->getInjection('language')->translate($foreignField, 'fields', $foreigScope);
+                }
+            } else {
+                $label = $this->getInjection('language')->translate($name, 'fields', $entityType);
+            }
 
             $sheet->setCellValue($col . $rowNumber, $label);
             $sheet->getColumnDimension($col)->setAutoSize(true);
