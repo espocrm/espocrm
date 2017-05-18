@@ -1,10 +1,10 @@
 {
   "fields": {
     "name": "Ім'я",
-    "parent": "Джерело",
+    "parent": "Батько",
     "status": "Статус",
     "dateStart": "Дата початку",
-    "dateEnd": "Належна дата",
+    "dateEnd": "Кінцева дата",
     "dateStartDate": "Date Start (all day)",
     "dateEndDate": "Date End (all day)",
     "priority": "Пріоритет",

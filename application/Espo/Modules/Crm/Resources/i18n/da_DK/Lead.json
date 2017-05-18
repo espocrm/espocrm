@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Konverteret Til",
     "Create Lead": "Opret Lead",
-    "Convert": "Konverter"
+    "Convert": "Konverter",
+    "convert": "konverter"
   },
   "fields": {
     "name": " Navn",

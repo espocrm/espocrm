@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Etkinleştirildi ",
+    "clientId": "Müşteri ID",
+    "clientSecret": "Müşteri Özel Anahtarı",
+    "redirectUri": "Yönlendirme URI",
+    "apiKey": "API Anahtarı"
+  },
+  "messages": {
+    "selectIntegration": "Menüden bir entegrasyon seçin",
+    "noIntegrations": "Geçerli entegrasyon yok"
+  },
+  "help": {
+    "Google": "<P> <b> Google Developers Console'dan OAuth 2.0 kimlik bilgilerini elde edin. </ B> </ p> <p> <a href=\"https://console.developers.google.com/project\"> adresini ziyaret edin. Hem Google hem de EspoCRM uygulamasının bildiği bir Müşteri Kimliği ve Müşteri Gizliliği gibi OAuth 2.0 kimlik bilgilerini edinmek için Google Developers Console \\ 'yu kullanın. </ P>",
+    "GoogleMaps": "<P> <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\"> Buradan </a> API anahtarı edinin. </ P>"
+  },
+  "titles": {
+    "GoogleMaps": "Google Haritalar"
+  }
+}

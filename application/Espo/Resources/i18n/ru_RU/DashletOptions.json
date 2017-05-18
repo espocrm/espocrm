@@ -7,13 +7,26 @@
     "displayRecords": "Отображать записей",
     "isDoubleHeight": "Высота 2x",
     "mode": "Режим",
-    "enabledScopeList": "Что отображать"
+    "enabledScopeList": "Что отображать",
+    "users": "Пользователи",
+    "entityType": "Entity Type",
+    "primaryFilter": "Primary Filter",
+    "boolFilterList": "Additional Filters",
+    "sortBy": "Order (field)",
+    "sortDirection": "Order (direction)",
+    "expandedLayout": "Layout"
   },
   "options": {
     "mode": {
       "agendaWeek": "Неделя (расписание)",
       "basicWeek": "Неделя",
-      "month": "Месяц"
+      "month": "Месяц",
+      "basicDay": "День",
+      "agendaDay": "День (повестка дня)",
+      "timeline": "Расписание"
     }
+  },
+  "messages": {
+    "selectEntityType": "Select Entity Type in dashlet options."
   }
 }

@@ -43,10 +43,31 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
         $this->evaluator = null;
     }
 
-    function testEvaluate1()
+    function testEvaluateMathExpression1()
     {
         $expression = "5 - (2 + 1)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(2, $actual);
+    }
+
+    function testEvaluateList1()
+    {
+        $expression = "list()";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals([], $actual);
+    }
+
+    function testEvaluateList2()
+    {
+        $expression = "list(1)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals([1], $actual);
+    }
+
+    function testEvaluateEmpty()
+    {
+        $expression = '';
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(null, $actual);
     }
 }

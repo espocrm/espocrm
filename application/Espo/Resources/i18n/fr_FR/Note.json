@@ -5,7 +5,8 @@
     "targetType": "Cible",
     "teams": "Équipes",
     "users": "Utilisateurs",
-    "portals": "Portails"
+    "portals": "Portails",
+    "type": "Type"
   },
   "filters": {
     "all": "Tous",
@@ -14,5 +15,14 @@
   },
   "messages": {
     "writeMessage": "Écrivez votre message ici"
+  },
+  "options": {
+    "targetType": {
+      "self": "to myself",
+      "users": "to particular user(s)",
+      "teams": "to particular team(s)",
+      "all": "to all internal users",
+      "portals": "to portal users"
+    }
   }
 }

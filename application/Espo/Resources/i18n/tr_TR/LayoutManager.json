@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Genişlik (%)",
+    "link": "Bağlantı",
+    "notSortable": "Sıralanamaz ",
+    "align": "Hizala",
+    "panelName": "Panel Adı",
+    "style": "Stil",
+    "sticked": "Yapışmış"
+  },
+  "options": {
+    "align": {
+      "left": "Sol",
+      "right": "Sağ"
+    },
+    "style": {
+      "default": "Varsayılan",
+      "success": "Başarılı ",
+      "danger": "Uyarı",
+      "info": "Bilgi",
+      "warning": "Uyarı",
+      "primary": "Öncelikli"
+    }
+  }
+}

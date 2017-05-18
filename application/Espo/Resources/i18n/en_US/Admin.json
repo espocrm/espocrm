@@ -152,11 +152,11 @@
         "readOnly": "Read-only"
     },
     "messages": {
-        "upgradeVersion": "Your EspoCRM will be upgraded to version <strong>{version}</strong>. This can take some time.",
-        "upgradeDone": "Your EspoCRM has been upgraded to version <strong>{version}</strong>.",
-        "upgradeBackup": "We recommend to make a backup of your EspoCRM files and data before upgrade.",
-        "thousandSeparatorEqualsDecimalMark": "Thousand separator can not be same as decimal mark",
-        "userHasNoEmailAddress": "User has not email address.",
+        "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
+        "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+        "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
+        "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
+        "userHasNoEmailAddress": "User has no email address.",
         "selectEntityType": "Select entity type in the left menu.",
         "selectUpgradePackage": "Select upgrade package",
         "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
@@ -164,7 +164,7 @@
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
-        "uninstallConfirmation": "Are you really want to uninstall the extension?"
+        "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
     },
     "descriptions": {
         "settings": "System settings of application.",
@@ -184,7 +184,7 @@
         "emailTemplates": "Templates for outbound emails.",
         "import": "Import data from CSV file.",
         "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
-        "entityManager": "Create custom entities, edit existing ones. Manage fields and relationships.",
+        "entityManager": "Create and edit custom entities. Manage fields and relationships.",
         "userInterface": "Configure UI.",
         "authTokens": "Active auth sessions. IP address and last access date.",
         "authentication": "Authentication settings.",
@@ -193,8 +193,8 @@
         "integrations": "Integration with third-party services.",
         "notifications": "In-app and email notification settings.",
         "inboundEmails": "Settings for incoming emails.",
-        "emailFilters": "Emails messages that match specified filter won't be imported.",
-        "actionHistory": "Log of actions done by users."
+        "emailFilters": "Email messages that match the specified filter won't be imported.",
+        "actionHistory": "Log of user actions."
     },
     "options": {
         "previewSize": {

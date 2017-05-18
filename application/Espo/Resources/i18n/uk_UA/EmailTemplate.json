@@ -20,6 +20,6 @@
     "actual": "Актуально"
   },
   "messages": {
-    "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
+    "infoText": "Доступні змінні:\n{optOutUrl} &#8211; - URL для відписки посилання;\n{OptOutLink} &#8211; - посилання відмови від підписки."
   }
 }

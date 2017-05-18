@@ -5,7 +5,8 @@
     "targetType": "Мета",
     "teams": "Команди",
     "users": "Користувачі",
-    "portals": "Портали"
+    "portals": "Портали",
+    "type": "Тип"
   },
   "filters": {
     "all": "Усе",

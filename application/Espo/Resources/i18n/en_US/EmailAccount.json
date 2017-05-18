@@ -45,7 +45,7 @@
         "connectionIsOk": "Connection is Ok"
     },
     "tooltips": {
-        "monitoredFolders": "You can add a 'Sent' folder to sync emails sent from an external email client.",
+        "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
         "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should much the address emails will be sent from."
     }
 }

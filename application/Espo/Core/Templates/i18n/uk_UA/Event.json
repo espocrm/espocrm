@@ -1,6 +1,6 @@
 {
   "fields": {
-    "parent": "Джерело",
+    "parent": "Батько",
     "dateStart": "Дата початку",
     "dateEnd": "Дата завершення",
     "duration": "Тривалість",
@@ -8,29 +8,29 @@
     "reminders": "Нагадування"
   },
   "links": {
-    "parent": "Джерело"
+    "parent": "Батько"
   },
   "options": {
     "status": {
       "Planned": "Плановий",
-      "Held": "Вміщений",
+      "Held": "Виконано",
       "Not Held": "Не вміщений"
     }
   },
   "labels": {
     "Create {entityType}": "Створити {entityTypeTranslated}",
     "Schedule {entityType}": "Розклад {entityTypeTranslated} ",
-    "Log {entityType}": "Log {entityTypeTranslated}",
-    "Set Held": "Set Held",
-    "Set Not Held": "Set Not Held"
+    "Log {entityType}": "Лог {entityTypeTranslated}",
+    "Set Held": "Позначити виконаним",
+    "Set Not Held": "Позначити невиконаним"
   },
   "massActions": {
-    "setHeld": "Set Held",
-    "setNotHeld": "Set Not Held"
+    "setHeld": "Позначити виконаними",
+    "setNotHeld": "Позначити невиконаними"
   },
   "presetFilters": {
     "planned": "Планований",
-    "held": "Вміщений ",
+    "held": "Виконані",
     "todays": "Сьогоднішні"
   }
 }

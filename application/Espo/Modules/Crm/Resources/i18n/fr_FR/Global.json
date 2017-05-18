@@ -35,7 +35,8 @@
     "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Article de la base de connaissance",
-    "KnowledgeBaseCategory": "Catégorie de la base de connaissance"
+    "KnowledgeBaseCategory": "Catégorie de la base de connaissance",
+    "CampaignLogRecord": "Campaign Log Record"
   },
   "scopeNamesPlural": {
     "Account": "Comptes",
@@ -53,11 +54,12 @@
     "Campaign": "Campagnes",
     "TargetList": "Listes de cibles",
     "MassEmail": "Emails groupés",
-    "EmailQueueItem": "Email Queue Items",
+    "EmailQueueItem": "File d'attente",
     "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Base de connaissance",
-    "KnowledgeBaseCategory": "Catégories de la base de connaissance"
+    "KnowledgeBaseCategory": "Catégories de la base de connaissance",
+    "CampaignLogRecord": "Logs"
   },
   "dashlets": {
     "Leads": "Mes prospects",

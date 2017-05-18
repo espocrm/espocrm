@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "name": "İsim",
+    "emailAddress": "E-mail Adresi",
+    "status": "Durum",
+    "assignToUser": "Kullanıcıyı Görevlendir",
+    "host": "Host",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "port": "Port",
+    "monitoredFolders": "İzlenen Klasörler",
+    "trashFolder": "Çöp Klasörü ",
+    "ssl": "SSL",
+    "createCase": "Dosya Oluştur",
+    "reply": "Oto-Cevap",
+    "caseDistribution": "Dosya Dağıtımı",
+    "replyEmailTemplate": "Cevapla E-mail Taslağı",
+    "replyFromAddress": "Cevaplayan Adres",
+    "replyToAddress": "Cevaplanan Asres",
+    "replyFromName": "Cevaplayan İsim",
+    "targetUserPosition": "Hedef Kullanıcı Pozisyonu",
+    "fetchSince": "Şundan itibaren çek",
+    "addAllTeamUsers": "Tüm takım kullanıcıları için",
+    "team": "Hedef Ekibi",
+    "teams": "Takımlar"
+  },
+  "tooltips": {
+    "reply": "E-posta gönderenlerine e-postalarının alındığını bildirin. \\ N \\ n Döngüleri önlemek için belirli bir süre boyunca belirli bir alıcıya yalnızca bir e-posta gönderilir.",
+    "createCase": "Gelen maillerden otomatik Dosya oluştur",
+    "replyToAddress": "Bu mail kutusuna ait email adreslerini, cevapların buraya düşmesi için belirtiniz.",
+    "caseDistribution": "Dosyaların nasıl görevlendireleceği. Direk kullanıcıyı görevlendir yada takım arasında",
+    "assignToUser": "Kullanıcı dosyaları atanacak.",
+    "team": "Takım dosyaları atanacak.",
+    "teams": "Ekiplerin e-postaları atanacak.",
+    "addAllTeamUsers": "E-postalar, belirtilen ekiplerin tüm kullanıcılarının Gelen Kutusunda görünecek.",
+    "targetUserPosition": "Dosyalar belli pozisyonlarda ki kullanıcılar arasında dağıtılır."
+  },
+  "links": {
+    "filters": "Filtreler",
+    "emails": "E-postalar "
+  },
+  "options": {
+    "status": {
+      "Active": "Aktif",
+      "Inactive": "Inaktif"
+    },
+    "caseDistribution": {
+      "": "Hiç",
+      "Direct-Assignment": "Direk-Görevlendirme",
+      "Round-Robin": "Round-Robin",
+      "Least-Busy": "En az meşgul"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "E-mail Hesabı Oluştur",
+    "IMAP": "IMAP",
+    "Actions": "Eylemler",
+    "Main": "Ana"
+  },
+  "messages": {
+    "couldNotConnectToImap": "IMAP sunucusuna bağlanılamıyor"
+  }
+}

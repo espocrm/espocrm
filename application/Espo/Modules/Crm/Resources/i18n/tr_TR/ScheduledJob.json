@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Toplu E-postalar gönder",
+      "ControlKnowledgeBaseArticleStatus": "Bilgi Bankası Makalesinin Durumunu Kontrol Edin"
+    }
+  }
+}

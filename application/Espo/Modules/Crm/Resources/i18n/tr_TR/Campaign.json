@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "İsim",
+    "description": "Açıklama",
+    "status": "Durum ",
+    "type": "tip ",
+    "startDate": "Başlangıç ​​tarihi",
+    "endDate": "Bitiş tarihi",
+    "targetLists": "Hedef Listeler",
+    "excludingTargetLists": "Hedef Listeleri Hariç Tutma",
+    "sentCount": "gönderildi",
+    "openedCount": "Açılmış",
+    "clickedCount": "tıklandı",
+    "optedOutCount": "Devre dışı bırakıldı",
+    "bouncedCount": "Geri Döndü",
+    "hardBouncedCount": "Sert Geri Döndü",
+    "softBouncedCount": "Yumuşak Geri Döndü",
+    "leadCreatedCount": "Müşteri Potansiyelleri Oluşturuldu",
+    "revenue": "Gelir",
+    "revenueConverted": "Gelir (dönüştürülmüş)",
+    "budget": "Bütçe",
+    "budgetConverted": "Bütçe (dönüştürülmüş)"
+  },
+  "links": {
+    "targetLists": "Hedef Listeler",
+    "excludingTargetLists": "Hedef Listeleri Hariç Tutma",
+    "accounts": "Hesaplar",
+    "contacts": "İletişim kişileri",
+    "leads": "Müşteri Potansiyelleri",
+    "opportunities": "Fırsatlar",
+    "campaignLogRecords": "Kütük",
+    "massEmails": "Toplu E-postalar",
+    "trackingUrls": "İzleme URL'leri"
+  },
+  "options": {
+    "type": {
+      "Email": "E-posta   ",
+      "Web": "Ağ",
+      "Television": "Televizyon!",
+      "Radio": "radyo",
+      "Newsletter": "Bülten",
+      "Mail": "Email"
+    },
+    "status": {
+      "Planning": "Planlama",
+      "Active": "Aktif ",
+      "Inactive": "Inaktif ",
+      "Complete": "Tamamla"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Kampanya Oluştur",
+    "Target Lists": "Hedef Listeler",
+    "Statistics": "İstatistikler",
+    "hard": "sert",
+    "soft": "Yumuşak",
+    "Unsubscribe": "Unsubscribe (Bülten üyeliğinden çıkma)",
+    "Mass Emails": "Toplu E-postalar",
+    "Email Templates": "E-posta şablonları",
+    "Unsubscribe again": "Tekrar abonelikten çık",
+    "Subscribe again": "Tekrar üye olun",
+    "Create Target List": "Hedef Liste Yarat"
+  },
+  "presetFilters": {
+    "active": "Aktif "
+  },
+  "messages": {
+    "unsubscribed": "Posta listemizden çıktınız",
+    "subscribedAgain": "Tekrar abone oldunuz."
+  },
+  "tooltips": {
+    "targetLists": "Mesaj alması gereken hedefler.",
+    "excludingTargetLists": "Mesaj almaması gereken hedefler."
+  }
+}

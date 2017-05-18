@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Тема",
     "parent": "Источник",
     "status": "Статус",
     "dateSent": "Дата отправки",
@@ -25,13 +24,23 @@
     "replies": "Replies",
     "isRead": "Is Read",
     "isNotRead": "Is Not Read",
-    "isImportant": "Is Important",
+    "isImportant": "Это важное",
     "isUsers": "Is User's",
-    "inTrash": "In Trash"
+    "inTrash": "In Trash",
+    "name": "Тема",
+    "isReplied": "Is Replied",
+    "isNotReplied": "Is Not Replied",
+    "sentBy": "Sent by (User)",
+    "folder": "Папка",
+    "inboundEmails": "Group Accounts",
+    "emailAccounts": "Personal Accounts",
+    "hasAttachment": "Has Attachment"
   },
   "links": {
     "replied": "Replied",
-    "replies": "Replies"
+    "replies": "Replies",
+    "inboundEmails": "Group Accounts",
+    "emailAccounts": "Personal Accounts"
   },
   "options": {
     "status": {
@@ -66,7 +75,10 @@
     "Mark as Important": "Пометить как важное",
     "Unmark Importance": "Снять пометку важности",
     "Move to Trash": "Переместить в корзину",
-    "Retrieve from Trash": "Восстановить из корзины"
+    "Retrieve from Trash": "Восстановить из корзины",
+    "Move to Folder": "Move to Folder",
+    "Filters": "Фильтры",
+    "Folders": "Папки"
   },
   "messages": {
     "noSmtpSetup": "Не настроен SMTP. {link}.",
@@ -79,13 +91,16 @@
     "archived": "В архиве",
     "inbox": "Входящие",
     "drafts": "Черновики",
-    "trash": "Корзина"
+    "trash": "Корзина",
+    "important": "Важное"
   },
   "massActions": {
     "markAsRead": "Пометить как прочитанное",
     "markAsNotRead": "Пометить как не прочитанное",
     "markAsImportant": "Пометить как важное",
     "markAsNotImportant": "Снять пометку важности",
-    "moveToTrash": "Переместить в корзину"
+    "moveToTrash": "Переместить в корзину",
+    "moveToFolder": "Move to Folder",
+    "retrieveFromTrash": "Retrieve from Trash"
   }
 }

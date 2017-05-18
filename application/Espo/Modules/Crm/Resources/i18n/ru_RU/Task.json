@@ -12,7 +12,8 @@
     "isOverdue": "Просрочена",
     "account": "Контрагент",
     "dateCompleted": "Дата завершения",
-    "attachments": "Вложения"
+    "attachments": "Вложения",
+    "reminders": "Reminders"
   },
   "links": {
     "attachments": "Вложения"
@@ -40,7 +41,7 @@
     "actual": "Актуальные",
     "completed": "Завершенные",
     "todays": "На сегодня",
-    "deferred": "Отложенные",
-    "overdue": "Просроченные"
+    "overdue": "Просроченные",
+    "deferred": "Отложенные"
   }
 }

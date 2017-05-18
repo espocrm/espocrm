@@ -346,14 +346,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
             };
             if (fieldList) {
                 o.fieldList = fieldList;
+            } else {
+                var layoutFieldList = [];
+                (this.listLayout || []).forEach(function (item) {
+                    if (item.name) {
+                        layoutFieldList.push(item.name);
+                    }
+                }, this);
+                o.fieldList = layoutFieldList;
             }
 
             this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
                 view.render();
                 this.listenToOnce(view, 'proceed', function (dialogData) {
-                    if (dialogData.useCustomFieldList) {
+                    if (!dialogData.exportAllFields) {
                         data.attributeList = dialogData.attributeList;
+                        data.fieldList = dialogData.fieldList;
                     }
+                    data.format = dialogData.format;
                     this.ajaxPostRequest(url, data).then(function (data) {
                         if ('id' in data) {
                             window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;

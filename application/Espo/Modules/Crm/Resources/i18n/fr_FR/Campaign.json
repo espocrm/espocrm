@@ -23,7 +23,7 @@
   },
   "links": {
     "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Excluant les listes de cibles",
+    "excludingTargetLists": "Exclure les listes de cibles",
     "accounts": "Comptes",
     "contacts": "Contacts",
     "leads": "Prospects",
@@ -56,13 +56,17 @@
     "soft": "faible",
     "Unsubscribe": "Se désinscrire",
     "Mass Emails": "Emails groupés",
-    "Email Templates": "Modèles d'email"
+    "Email Templates": "Modèles d'email",
+    "Unsubscribe again": "Se re-désabonner",
+    "Subscribe again": "Se réinscrire",
+    "Create Target List": "Create Target List"
   },
   "presetFilters": {
     "active": "Actif"
   },
   "messages": {
-    "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi"
+    "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi",
+    "subscribedAgain": "Vous vous êtes réinscrit."
   },
   "tooltips": {
     "targetLists": "Cibles devant recevoir les messages",

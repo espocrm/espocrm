@@ -2,7 +2,8 @@
     "labels": {
         "Converted To": "Đã chuyển đổi sang",
         "Create Lead": "Tạo chỉ dẫn",
-        "Convert": "Chuyển đổi"
+        "Convert": "Chuyển đổi",
+        "convert": "chuyển đổi"
     },
     "fields": {
         "name": "Tên",

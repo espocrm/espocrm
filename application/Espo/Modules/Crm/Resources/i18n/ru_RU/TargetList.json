@@ -5,7 +5,9 @@
     "entryCount": "Количество",
     "campaigns": "Кампании",
     "endDate": "Дата окончания",
-    "targetLists": "Списки целей"
+    "targetLists": "Списки целей",
+    "includingActionList": "Including",
+    "excludingActionList": "Excluding"
   },
   "links": {
     "accounts": "Контрагенты",

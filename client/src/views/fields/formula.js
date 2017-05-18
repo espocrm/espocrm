@@ -79,6 +79,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.containerId = this.containerId;
+            data.targetEntityType = this.targetEntityType;
 
             return data;
         },

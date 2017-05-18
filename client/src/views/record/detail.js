@@ -116,6 +116,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         selfAssignAction: false,
 
+        inlineEditDisabled: false,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -671,6 +673,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
+
+            this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;

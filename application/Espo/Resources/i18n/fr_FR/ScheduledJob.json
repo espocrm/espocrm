@@ -17,7 +17,8 @@
       "CheckInboundEmails": "Vérifier les emails entrants",
       "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
       "SendEmailReminders": "Envoyer des notifications par email",
-      "AuthTokenControl": "Auth Token Control"
+      "AuthTokenControl": "Auth Token Control",
+      "SendEmailNotifications": "Send Email Notifications"
     },
     "cronSetup": {
       "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",

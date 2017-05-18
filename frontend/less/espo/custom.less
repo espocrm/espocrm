@@ -35,7 +35,16 @@ blockquote {
 }
 
 .modal-header .close {
-    margin-top: 3px;
+    font-size: 31px;
+    font-weight: normal;
+    margin-top: -4px;
+    max-height: @font-size-h3;
+    > span {
+        position: relative;
+        max-height: @font-size-h3;
+        height: @font-size-h3;
+        display: inline-block;
+    }
 }
 
 .modal-footer {
@@ -897,9 +906,21 @@ td.cell[data-name="buttons"] > .btn-group {
           url('../fonts/open-sans-regular.svg#svgFontName') format('svg');
 }
 
+.notifications-badge-container > .notifications-button > .number-badge {
+    position: absolute;
+    z-index: 10;
+    font-size: 9px;
+    padding: 2px 5px;
+    display: inline-block;
+    top: 7px;
+    left: 27px;
+    background-color: @brand-warning;
+    color: @white-color;
+}
+
 .badge-circle {
-    width:8px;
-    height:8px;
+    width: 8px;
+    height: 8px;
     border-radius: 4px;
     text-align: center;
     display: table-cell;
@@ -1353,6 +1374,10 @@ code {
     font-style: italic;
 }
 
+pre > code {
+    font-style: normal;
+}
+
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: 5px;
@@ -1397,6 +1422,10 @@ code {
 
     #header .navbar-right > li.notifications-badge-container {
         display: inline-block;
+        float: right;
+    }
+
+    .search-row .search-right-buttons-group {
         float: right;
     }
 }

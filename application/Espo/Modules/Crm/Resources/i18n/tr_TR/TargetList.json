@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "İsim",
+    "description": "Açıklama",
+    "entryCount": "Giriş sayısı",
+    "campaigns": "Kampanyalar",
+    "endDate": "Bitiş tarihi",
+    "targetLists": "Hedef Listeler",
+    "includingActionList": "Dahil",
+    "excludingActionList": "Dışlanıyor..."
+  },
+  "links": {
+    "accounts": "Hesaplar",
+    "contacts": "Kişiler ",
+    "leads": "Müşteri Potansiyelleri",
+    "campaigns": "Kampanyalar",
+    "massEmails": "Toplu E-postalar"
+  },
+  "options": {
+    "type": {
+      "Email": "E-posta   ",
+      "Web": "Web",
+      "Television": "Televizyon!",
+      "Radio": "radyo",
+      "Newsletter": "Newsletter (Bülten)"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Hedef Liste Yarat",
+    "Opted Out": "Devre dışı bırakıldı",
+    "Cancel Opt-Out": "Devre dışı bırakmayı İptal Et",
+    "Opt-Out": "Devre Dışı"
+  }
+}

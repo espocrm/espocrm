@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "Kullanıcı",
+    "ipAddress": "IP Adresi",
+    "lastAccess": "Son Erişim Tarihi",
+    "createdAt": "Giriş Tarihi",
+    "isActive": "Aktif",
+    "portal": "Portal"
+  },
+  "links": {
+    "actionHistoryRecords": "Eylem Tarihçesi"
+  },
+  "presetFilters": {
+    "active": "Aktif",
+    "inactive": "Inaktif"
+  },
+  "labels": {
+    "Set Inactive": "Inaktif Yap"
+  },
+  "massActions": {
+    "setInactive": "Inaktif Yap"
+  }
+}

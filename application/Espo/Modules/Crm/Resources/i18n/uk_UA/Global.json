@@ -1,6 +1,6 @@
 {
   "links": {
-    "parent": "Джерело",
+    "parent": "Батько",
     "contacts": "Контакти",
     "opportunities": "Угоди",
     "leads": "Ліди",
@@ -25,18 +25,18 @@
     "Calendar": "Календар",
     "Call": "Дзвінок",
     "Task": "Завдання",
-    "Case": "Кейс",
+    "Case": "Звернення",
     "Document": "Документ",
-    "DocumentFolder": "Document Folder",
+    "DocumentFolder": "Документ папка",
     "Campaign": "Кампанія",
     "TargetList": "Цільовий список",
-    "MassEmail": "Спільна електронна адреса",
-    "EmailQueueItem": "Черговість пунктівв електронній скринці",
-    "CampaignTrackingUrl": "Tracking URL",
+    "MassEmail": "Масова розсилка",
+    "EmailQueueItem": "Черговість пунктів в електронній скринці",
+    "CampaignTrackingUrl": "Відстеження URL",
     "Activities": "Активність",
-    "KnowledgeBaseArticle": "База знань стаття",
-    "KnowledgeBaseCategory": "Категорія бази знань",
-    "CampaignLogRecord": "Campaign Log Record"
+    "KnowledgeBaseArticle": "Стаття Бази Знань",
+    "KnowledgeBaseCategory": "Категорія Бази Знань",
+    "CampaignLogRecord": "Лоґ кампанії"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенти",
@@ -50,16 +50,16 @@
     "Task": "Завдання",
     "Case": "Звернення",
     "Document": "Документи",
-    "DocumentFolder": "Document Folders",
+    "DocumentFolder": "Папки для документів",
     "Campaign": "Кампанії",
     "TargetList": "Цільові списки",
-    "MassEmail": "Загальні електронні адреси",
-    "EmailQueueItem": "Email Queue Items",
-    "CampaignTrackingUrl": "Tracking URLs",
+    "MassEmail": "Масові розсилки",
+    "EmailQueueItem": "Електронне повідомлення черговості питань",
+    "CampaignTrackingUrl": "Відстеження URLs",
     "Activities": "Активність",
     "KnowledgeBaseArticle": "База знань",
-    "KnowledgeBaseCategory": "База знань Категорії",
-    "CampaignLogRecord": "Campaign Log Records"
+    "KnowledgeBaseCategory": "Категорії Бази Знань",
+    "CampaignLogRecord": "Лоґи кампанії"
   },
   "dashlets": {
     "Leads": "Мої ліди",

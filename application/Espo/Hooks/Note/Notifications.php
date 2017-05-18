@@ -113,7 +113,7 @@ class Notifications extends \Espo\Core\Hooks\Base
                     if (is_array($targetUserIdList)) {
                         foreach ($targetUserIdList as $userId) {
                             if ($userId === $this->getUser()->id) continue;
-                            if (in_array($user->id, $userIdList)) continue;
+                            if (in_array($userId, $userIdList)) continue;
                             $userIdList[] = $userId;
                         }
                     }

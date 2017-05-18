@@ -1,14 +1,14 @@
 {
   "fields": {
-    "parent": "Джерело",
+    "parent": "Батько",
     "status": "Статус",
     "dateSent": "Дата відправки",
     "from": "Від",
     "to": "До",
     "cc": "ГГ",
     "bcc": "СК",
-    "replyTo": "Відповідати на",
-    "replyToString": "Відповісти до (рядок)",
+    "replyTo": "Куди відповідати",
+    "replyToString": "Куди відповідати (рядок)",
     "isHtml": "HTML-код",
     "body": "Тіло",
     "subject": "Тема",
@@ -20,7 +20,7 @@
     "deliveryDate": "Дата доставки",
     "account": "Контраґент",
     "users": "Користувачі",
-    "replied": "Уже відповіли",
+    "replied": "Відповіли",
     "replies": "Відповіді",
     "isRead": "Прочитано",
     "isNotRead": "Не прочитано",
@@ -28,8 +28,8 @@
     "isUsers": "Користувачі",
     "inTrash": "В кошику",
     "name": "Тема",
-    "isReplied": "Is Replied",
-    "isNotReplied": "Is Not Replied",
+    "isReplied": "Відповіли",
+    "isNotReplied": "Без відповіді",
     "sentBy": "Надіслав (Користувач)",
     "folder": "Папка",
     "inboundEmails": "Група облікових записів",
@@ -37,7 +37,7 @@
     "hasAttachment": "Має Вкладення"
   },
   "links": {
-    "replied": "Уже відповіли",
+    "replied": "Відповіли",
     "replies": "Відповіді",
     "inboundEmails": "Група облікових записів",
     "emailAccounts": "Особисті облікові записи"
@@ -81,10 +81,10 @@
     "Folders": "Папка"
   },
   "messages": {
-    "noSmtpSetup": "Не налаштовано SMTP. {посилання}.",
+    "noSmtpSetup": "Не налаштовано SMTP. {link}.",
     "testEmailSent": "Тестового листа було відправлено",
     "emailSent": "Листа було відправлено",
-    "savedAsDraft": "Saved as draft"
+    "savedAsDraft": "Збережено як чернетку"
   },
   "presetFilters": {
     "sent": "Відправлено",
@@ -98,7 +98,7 @@
     "markAsRead": "Позначити прочитаним",
     "markAsNotRead": "Позначити як прочитане",
     "markAsImportant": "Позначити як важливе",
-    "markAsNotImportant": "Unmark Importance",
+    "markAsNotImportant": "Зняти відмітку про важливість",
     "moveToTrash": "Вилучити в сміття",
     "moveToFolder": "Перемістити в папку",
     "retrieveFromTrash": "Вилучити зі сміття"

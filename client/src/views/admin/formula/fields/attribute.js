@@ -56,6 +56,13 @@ Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', f
             }, this);
 
             this.params.options = attributeList;
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            if (this.$element && this.$element[0] && this.$element[0].selectize) {
+                this.$element[0].selectize.focus();
+            }
         }
 
     });

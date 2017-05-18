@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Umgewandelt zu",
     "Create Lead": "Interessent erstellen",
-    "Convert": "Umwandeln"
+    "Convert": "Umwandeln",
+    "convert": "umwandeln"
   },
   "fields": {
     "name": "Name",

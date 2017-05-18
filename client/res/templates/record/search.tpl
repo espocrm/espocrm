@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="form-group col-md-6 col-sm-4">
-        <div class="btn-group">
+        <div class="btn-group search-right-buttons-group">
             <button type="button" class="btn btn-default" data-action="reset">
                 <span class="glyphicon glyphicon-repeat"></span>&nbsp;{{translate 'Reset'}}
             </button>

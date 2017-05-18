@@ -62,14 +62,40 @@ abstract class Base
     );
 
     protected static $comparisonOperators = array(
+        '!=s' => 'NOT IN',
+        '=s' => 'IN',
         '!=' => '<>',
         '*' => 'LIKE',
         '>=' => '>=',
         '<=' => '<=',
         '>' => '>',
         '<' => '<',
-        '=' => '=',
+        '=' => '='
     );
+
+    protected $functionList = [
+        'COUNT',
+        'SUM',
+        'AVG',
+        'MAX',
+        'MIN',
+        'MONTH',
+        'DAY',
+        'YEAR',
+        'DAYOFWEEK',
+        'DAYOFWEEK_NUMBER',
+        'MONTH_NUMBER',
+        'DATE_NUMBER',
+        'YEAR_NUMBER',
+        'HOUR_NUMBER',
+        'HOUR',
+        'MINUTE_NUMBER',
+        'MINUTE',
+        'LOWER',
+        'UPPER',
+        'TRIM',
+        'LENGTH'
+    ];
 
     protected $entityFactory;
 
@@ -204,11 +230,32 @@ abstract class Base
 
     protected function getFunctionPart($function, $part, $entityName, $distinct = false)
     {
+        if (!in_array($function, $this->functionList)) {
+            throw new \Exception("Not allowed function '".$function."'.");
+        }
         switch ($function) {
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
             case 'DAY':
                 return "DATE_FORMAT({$part}, '%Y-%m-%d')";
+            case 'MONTH_NUMBER':
+                $function = 'MONTH';
+                break;
+            case 'DATE_NUMBER':
+                $function = 'DATE';
+                break;
+            case 'YEAR_NUMBER':
+                $function = 'YEAR';
+                break;
+            case 'HOUR_NUMBER':
+                $function = 'HOUR';
+                break;
+            case 'MINUTE_NUMBER':
+                $function = 'MINUTE';
+                break;
+            case 'DAYOFWEEK_NUMBER':
+                $function = 'DAYOFWEEK';
+                break;
         }
         if ($distinct) {
             $idPart = $this->toDb($entityName) . ".id";
@@ -622,7 +669,7 @@ abstract class Base
         return false;
     }
 
-    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array())
+    public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
     {
         $whereParts = array();
 
@@ -636,11 +683,32 @@ abstract class Base
                 $field = 'AND';
             }
 
+            if ($field === 'NOT') {
+                if ($level > 1) break;
+
+                $field = 'id!=s';
+                $value = array(
+                    'selectParams' => array(
+                        'select' => ['id'],
+                        'whereClause' => $value
+                    )
+                );
+                if (!empty($params['joins'])) {
+                    $value['selectParams']['joins'] = $params['joins'];
+                }
+                if (!empty($params['leftJoins'])) {
+                    $value['selectParams']['leftJoins'] = $params['leftJoins'];
+                }
+                if (!empty($params['customJoin'])) {
+                    $value['selectParams']['customJoin'] = $params['customJoin'];
+                }
+            }
 
             if (!in_array($field, self::$sqlOperators)) {
                 $isComplex = false;
 
                 $operator = '=';
+                $operatorOrm = '=';
 
                 $leftPart = null;
 
@@ -648,6 +716,7 @@ abstract class Base
                     foreach (self::$comparisonOperators as $op => $opDb) {
                         if (strpos($field, $op) !== false) {
                             $field = trim(str_replace($op, '', $field));
+                            $operatorOrm = $op;
                             $operator = $opDb;
                             break;
                         }
@@ -745,9 +814,27 @@ abstract class Base
                         }
                     }
                 }
-
                 if (!empty($leftPart)) {
-                    if (!is_array($value)) {
+
+                    if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
+                        if (!is_array($value)) {
+                            continue;
+                        }
+                        if (!empty($value['entityType'])) {
+                            $subQueryEntityType = $value['entityType'];
+                        } else {
+                            $subQueryEntityType = $entity->getEntityType();
+                        }
+                        $subQuerySelectParams = array();
+                        if (!empty($value['selectParams'])) {
+                            $subQuerySelectParams = $value['selectParams'];
+                        }
+                        $withDeleted = false;
+                        if (!empty($value['withDeleted'])) {
+                            $withDeleted = true;
+                        }
+                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
+                    } else if (!is_array($value)) {
                         if (!is_null($value)) {
                             $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
                         } else {
@@ -757,7 +844,6 @@ abstract class Base
                                 $whereParts[] = $leftPart . " IS NOT NULL";
                             }
                         }
-
                     } else {
                         $valArr = $value;
                         foreach ($valArr as $k => $v) {
@@ -777,7 +863,7 @@ abstract class Base
                     }
                 }
             } else {
-                $internalPart = $this->getWhere($entity, $value, $field, $params);
+                $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
                 if ($internalPart) {
                     $whereParts[] = "(" . $internalPart . ")";
                 }

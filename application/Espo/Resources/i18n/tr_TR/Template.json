@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Tanım",
+    "body": "Gövde",
+    "entityType": "Varlık Türü",
+    "header": "Başlık ",
+    "footer": "Sayfa Altbilgi",
+    "leftMargin": "Sol Boşluk",
+    "topMargin": "Üst boşluk",
+    "rightMargin": "Sağ Boşluk",
+    "bottomMargin": "Alt Kenar Boşluğu",
+    "printFooter": "Baskı Altlığı",
+    "footerPosition": "Altbilgi Konumu",
+    "variables": "Uygun Yertutucuları"
+  },
+  "labels": {
+    "Create Template": "Şablon Oluştur"
+  },
+  "tooltips": {
+    "footer": "Sayfa numarasını basmak için {pageNumber} kullanın.",
+    "variables": "Başlık, Gövde veya Alt Satır yertutucusu için kopyala-yapıştır gerekli."
+  }
+}

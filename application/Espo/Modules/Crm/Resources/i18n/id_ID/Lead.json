@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Dikonversi ke",
     "Create Lead": "Create Lead",
-    "Convert": "Ubah"
+    "Convert": "Ubah",
+    "convert": "ubah"
   },
   "fields": {
     "name": "Nama",

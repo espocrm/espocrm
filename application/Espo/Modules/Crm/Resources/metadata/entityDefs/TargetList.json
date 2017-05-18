@@ -49,7 +49,8 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
-            "required": true
+            "required": true,
+            "disabled": true
         },
         "excludingActionList": {
             "type": "multiEnum",
@@ -57,7 +58,8 @@
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "disabled": true
         }
     },
     "links": {

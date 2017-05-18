@@ -35,7 +35,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         sideView: false,
 
         setup: function () {
-        	Dep.prototype.setup.call(this);
+            Dep.prototype.setup.call(this);
 
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
@@ -43,10 +43,15 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 this.model.set('isHtml', true);
             }
 
-        	if (!this.options.signatureDisabled && this.hasSignature()) {
+            if (!this.options.signatureDisabled && this.hasSignature()) {
                 var body = this.prependSignature(this.model.get('body') || '', this.model.get('isHtml'));
-	        	this.model.set('body', body);
-	        }
+                this.model.set('body', body);
+            }
+
+            if (this.options.keepAttachmentsOnSelectTemplate) {
+                this.initialAttachmentsIds = this.model.get('attachmentsIds') || [];
+                this.initialAttachmentsNames = this.model.get('attachmentsNames') || {};
+            }
 
             this.listenTo(this.model, 'insert-template', function (data) {
                 var body = data.body;
@@ -57,6 +62,18 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 this.model.set('name', data.subject);
                 this.model.set('body', '');
                 this.model.set('body', body);
+
+                if (this.options.keepAttachmentsOnSelectTemplate) {
+                    this.initialAttachmentsIds.forEach(function (id) {
+                        if (data.attachmentsIds) {
+                            data.attachmentsIds.push(id);
+                        }
+                        if (data.attachmentsNames) {
+                            data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
+                        }
+                    }, this);
+                }
+
                 this.model.set({
                     attachmentsIds: data.attachmentsIds,
                     attachmentsNames: data.attachmentsNames

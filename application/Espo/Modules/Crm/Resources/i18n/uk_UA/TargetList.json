@@ -14,7 +14,7 @@
     "contacts": "Контакти",
     "leads": "Ліди",
     "campaigns": "Кампанії",
-    "massEmails": "Mass Emails"
+    "massEmails": "Масові розсилки"
   },
   "options": {
     "type": {
@@ -28,7 +28,7 @@
   "labels": {
     "Create TargetList": "Створити цільовий список",
     "Opted Out": "Відмовився",
-    "Cancel Opt-Out": "Відмінити відмову",
-    "Opt-Out": "Відмовитися"
+    "Cancel Opt-Out": "Скасувати відмову",
+    "Opt-Out": "Відписати"
   }
 }

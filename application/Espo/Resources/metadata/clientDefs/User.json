@@ -16,7 +16,8 @@
    },
    "defaultSidePanelFieldLists": {
       "detail": [
-        "avatar"
+        "avatar",
+        "createdAt"
       ],
       "detailSmall": [
         "avatar"

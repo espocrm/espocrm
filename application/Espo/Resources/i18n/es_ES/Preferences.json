@@ -17,7 +17,7 @@
     "emailAddress": "Correo electrónico",
     "smtpPassword": "Contraseña",
     "smtpEmailAddress": "Correo Electrónico",
-    "exportDelimiter": "Exportar Delimitador",
+    "exportDelimiter": "Delimitador de exportación",
     "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
     "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
     "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
@@ -28,10 +28,11 @@
     "defaultReminders": "Recordatorios por defecto",
     "theme": "Tema",
     "useCustomTabList": "Lista de Pestañas Personalizadas",
-    "emailReplyToAllByDefault": "Correo electrónico responder a todos por defecto",
+    "emailReplyToAllByDefault": "Correo: responder a todos por defecto",
     "dashboardLayout": "Distribución del Escritorio",
-    "emailReplyForceHtml": "Responder correo electrónico en formato HTML",
-    "doNotFillAssignedUserIfNotRequired": "No llene usuario asignado si no es necesario"
+    "emailReplyForceHtml": "Correo: Responder en formato HTML",
+    "doNotFillAssignedUserIfNotRequired": "No llene usuario asignado si no es necesario",
+    "followEntityOnStreamPost": "Seguir automáticamente la entidad después de publicar en la Historia"
   },
   "options": {
     "weekStart": {
