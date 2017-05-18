@@ -1410,8 +1410,17 @@ class Record extends \Espo\Core\Services\Base
 
         $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
-        $fileName = "Export_{$this->entityType}." . $fileExtension;
 
+        $fileName = null;
+        if (!empty($params['fileName'])) {
+            $fileName = trim($params['fileName']);
+        }
+
+        if (!empty($fileName)) {
+            $fileName = $fileName . '.' . $fileExtension;
+        } else {
+            $fileName = "Export_{$this->entityType}." . $fileExtension;
+        }
 
         $exportParams = array(
             'attributeList' => $attributeList,
@@ -1433,7 +1442,6 @@ class Record extends \Espo\Core\Services\Base
 
         if (!empty($attachment->id)) {
             $this->getInjection('fileStorageManager')->putContents($attachment, $contents);
-            // TODO cron job to remove file
             return $attachment->id;
         }
         throw new Error();
