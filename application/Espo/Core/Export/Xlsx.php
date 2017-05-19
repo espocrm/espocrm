@@ -90,6 +90,7 @@ class Xlsx extends \Espo\Core\Injectable
         $linkDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'links']);
         if (is_array($linkDefs)) {
             foreach ($linkDefs as $link => $defs) {
+                if (empty($defs['type'])) continue;
                 if ($defs['type'] === 'belongsToParent') {
                     $linkList[] = $link;
                 } else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
