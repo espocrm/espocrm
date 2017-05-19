@@ -105,6 +105,15 @@ class Xlsx extends \Espo\Core\Injectable
                 $attributeList[] = $item . 'Name';
             }
         }
+
+        foreach ($fieldList as $field) {
+            $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+            if ($type === 'currencyConverted') {
+                if (!in_array($field, $attributeList)) {
+                    $attributeList[] = $field;
+                }
+            }
+        }
     }
 
     public function process($entityType, $params, $dataList)
@@ -222,6 +231,7 @@ class Xlsx extends \Espo\Core\Injectable
 
                 $defs = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name]);
                 if (!$defs) {
+                    $defs = array();
                     $defs['type'] = 'base';
                 }
                 $link = null;
@@ -244,6 +254,17 @@ class Xlsx extends \Espo\Core\Injectable
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
                             ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
+                    }
+                } else if ($defs['type'] == 'currencyConverted') {
+                    if (array_key_exists($name, $row)) {
+                        $currency = $this->getConfig()->get('baseCurrency');
+                        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
+
+                        $sheet->getStyle("$col$rowNumber")
+                            ->getNumberFormat()
+                            ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
+
+                        $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
                     }
                 } else if ($defs['type'] == 'personName') {
                     if (!empty($row['name'])) {
@@ -360,7 +381,8 @@ class Xlsx extends \Espo\Core\Injectable
                     ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
             } else {
                 switch($defs['type']) {
-                    case 'currency': {
+                    case 'currency':
+                    case 'currencyConverted': {
 
                     } break;
                     case 'int': {
