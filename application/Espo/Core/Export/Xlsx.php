@@ -401,12 +401,13 @@ class Xlsx extends \Espo\Core\Injectable
             $sheet->getStyle($linkColumn.$startingRowNumber.':'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
         }
 
-        $tempOutput = tempnam('/tmp/', 'ESPO');
         $objWriter = \PHPExcel_IOFactory::createWriter($phpExcel, 'Excel2007');
-        $objWriter->save($tempOutput);
-        $fp = fopen($tempOutput, 'r');
+
+        $tempFileName = @tempnam(\PHPExcel_Shared_File::sys_get_temp_dir(), 'phpxltmp');
+        $objWriter->save($tempFileName);
+        $fp = fopen($tempFileName, 'r');
         $xlsx = stream_get_contents($fp);
-        unlink($tempOutput);
+        unlink($tempFileName);
 
         return $xlsx;
     }
