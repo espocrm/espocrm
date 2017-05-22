@@ -45,7 +45,7 @@ Espo.define('views/search/filter', 'view', function (Dep) {
             var type = this.model.getFieldType(name);
 
             if (type) {
-                var viewName = this.model.getFieldParam(name, 'view') || 'views/fields/' + Espo.Utils.camelCaseToHyphen(type);
+                var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                 this.createView('field', viewName, {
                     mode: 'search',
