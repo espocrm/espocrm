@@ -47,7 +47,7 @@ class ThemeManager extends \Espo\Core\Utils\ThemeManager
     {
         $theme = $this->portal->get('theme');
         if (!$theme) {
-            $theme = $this->defaultName;
+            $theme = $this->config->get('theme', $this->defaultName);
         }
         return $theme;
     }
