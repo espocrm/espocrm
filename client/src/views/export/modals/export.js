@@ -60,11 +60,10 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             if (this.options.fieldList) {
                 this.model.set('fieldList', this.options.fieldList);
                 this.model.set('exportAllFields', false);
-                this.model.set('format', 'csv');
             } else {
                 this.model.set('exportAllFields', true);
-                this.model.set('format', 'csv');
             }
+            this.model.set('format', this.getMetadata().get('app.export.formatList')[0]);
 
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
