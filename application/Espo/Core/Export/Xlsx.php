@@ -163,7 +163,7 @@ class Xlsx extends \Espo\Core\Injectable
         foreach ($azRangeCopied as $i => $char1) {
             foreach ($azRangeCopied as $j => $char2) {
                 $azRange[] = $char1 . $char2;
-                if ($i * count($azRange) + $j === count($fieldList)) {
+                if ($i * count($azRangeCopied) + $j === count($fieldList)) {
                     break 2;
                 }
             }
