@@ -132,7 +132,8 @@ class Xlsx extends \Espo\Core\Injectable
             $exportName = $this->getInjection('language')->translate($entityType, 'scopeNamesPlural');
         }
 
-        $sheet->setTitle($exportName);
+        $sheetName = substr($exportName, 0, 30);
+        $sheet->setTitle($sheetName);
 
         $fieldList = $params['fieldList'];
 
