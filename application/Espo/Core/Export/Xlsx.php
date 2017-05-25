@@ -40,7 +40,8 @@ class Xlsx extends \Espo\Core\Injectable
         'config',
         'dateTime',
         'entityManager',
-        'fileStorageManager'
+        'fileStorageManager',
+        'fileManager'
     ];
 
     protected function getConfig()
@@ -426,11 +427,15 @@ class Xlsx extends \Espo\Core\Injectable
 
         $objWriter = \PHPExcel_IOFactory::createWriter($phpExcel, 'Excel2007');
 
-        $tempFileName = @tempnam(\PHPExcel_Shared_File::sys_get_temp_dir(), 'phpxltmp');
+        if (!$this->getInjection('fileManager')->isDir('data/cache/')) {
+            $this->getInjection('fileManager')->mkdir('data/cache/');
+        }
+        $tempFileName = 'data/cache/' . 'export_' . substr(md5(rand()), 0, 7);
+
         $objWriter->save($tempFileName);
         $fp = fopen($tempFileName, 'r');
         $xlsx = stream_get_contents($fp);
-        unlink($tempFileName);
+        $this->getInjection('fileManager')->unlink($tempFileName);
 
         return $xlsx;
     }
