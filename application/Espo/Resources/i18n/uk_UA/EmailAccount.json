@@ -46,6 +46,6 @@
   },
   "tooltips": {
     "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. The email address field should match the address from which emails will be sent."
+    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should much the address emails will be sent from."
   }
 }
