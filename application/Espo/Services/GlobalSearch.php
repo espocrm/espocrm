@@ -88,6 +88,13 @@ class GlobalSearch extends \Espo\Core\Services\Base
             $selectManager = $this->getSelectManagerFactory()->create($entityType);
             $selectManager->manageAccess($params);
             $selectManager->manageTextFilter($query, $params);
+            if ($entityType === 'Lead') {
+              $params['whereClause'][0][] = array(
+                "AND" => array(
+                  "status!=" => "Converted"
+                )
+              );
+            }
 
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
 
