@@ -107,7 +107,7 @@ class AclManager
             $config = $this->getContainer()->get('config');
             $fileManager = $this->getContainer()->get('fileManager');
             $metadata = $this->getContainer()->get('metadata');
-            $fieldManager = $this->getContainer()->get('fieldManager');
+            $fieldManager = $this->getContainer()->get('fieldManagerUtil');
 
             $this->tableHashMap[$key] = new $this->tableClassName($user, $config, $fileManager, $metadata, $fieldManager);
         }
