@@ -110,6 +110,10 @@
             "type": "link",
             "readOnly": true
         },
+        "createLead": {
+            "type": "bool",
+            "default": false
+        },
         "modifiedBy": {
             "type": "link",
             "readOnly": true

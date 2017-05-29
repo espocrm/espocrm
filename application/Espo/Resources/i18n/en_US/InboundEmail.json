@@ -22,7 +22,8 @@
         "targetUserPosition": "Target User Position",
         "fetchSince": "Fetch Since",
         "addAllTeamUsers": "For all team users",
-        "teams": "Teams"
+        "teams": "Teams",
+        "createLead": "Create Lead"
     },
     "tooltips": {
         "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
