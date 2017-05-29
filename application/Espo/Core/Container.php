@@ -335,6 +335,13 @@ class Container
         );
     }
 
+    protected function loadFieldManagerUtil()
+    {
+        return new \Espo\Core\Utils\FieldManagerUtil(
+            $this->get('metadata')
+        );
+    }
+
     protected function loadThemeManager()
     {
         return new \Espo\Core\Utils\ThemeManager(

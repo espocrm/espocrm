@@ -36,7 +36,7 @@ use \Espo\Entities\User;
 
 use \Espo\Core\Utils\Config;
 use \Espo\Core\Utils\Metadata;
-use \Espo\Core\Utils\FieldManager;
+use \Espo\Core\Utils\FieldManagerUtil;
 use \Espo\Core\Utils\File\Manager as FileManager;
 
 class Table
@@ -77,7 +77,7 @@ class Table
 
     protected $forbiddenFieldsCache = array();
 
-    public function __construct(User $user, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManager $fieldManager = null)
+    public function __construct(User $user, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManagerUtil $fieldManager = null)
     {
         $this->data = (object) [
             'table' => (object) [],

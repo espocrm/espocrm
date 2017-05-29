@@ -52,7 +52,6 @@ class Record extends \Espo\Core\Services\Base
         'serviceFactory',
         'fileManager',
         'selectManagerFactory',
-        'preferences',
         'fileStorageManager',
         'injectableFactory'
     );
@@ -144,11 +143,6 @@ class Record extends \Espo\Core\Services\Base
     protected function getFileManager()
     {
         return $this->injections['fileManager'];
-    }
-
-    protected function getPreferences()
-    {
-        return $this->injections['preferences'];
     }
 
     protected function getMetadata()
