@@ -29,10 +29,6 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Container;
-
 class FieldManagerUtil
 {
     private $metadata;
