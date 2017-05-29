@@ -1497,6 +1497,14 @@ class Base
         }
     }
 
+    protected function boolFilterOnlyMyCreated(&$result)
+    {
+        $result['whereClause'][] = array(
+            'assignedUserId!=' => $this->getUser()->id,
+            'createdById' => $this->getUser()->id
+        );
+    }
+
     protected function filterFollowed(&$result)
     {
         $query = $this->getEntityManager()->getQuery();
@@ -1512,5 +1520,6 @@ class Base
     {
         $this->filterFollowed($result);
     }
+
 }
 
