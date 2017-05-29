@@ -47,6 +47,13 @@ Espo.define('views/global-search/panel', 'view', function (Dep) {
                                     params: {
                                         containerEl: this.options.el
                                     },
+                                },
+                                {
+                                    name: 'accountName',
+                                    view: 'views/global-search/account-field',
+                                    params: {
+                                        containerEl: this.options.el
+                                    },
                                 }
                             ]
                         ],
