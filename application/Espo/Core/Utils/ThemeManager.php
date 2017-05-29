@@ -35,7 +35,7 @@ class ThemeManager
 
     protected $metadata;
 
-    private $defaultName = 'Espo';
+    protected $defaultName = 'Espo';
 
     private $defaultStylesheet = 'Espo';
 
