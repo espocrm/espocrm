@@ -1512,5 +1512,15 @@ class Base
     {
         $this->filterFollowed($result);
     }
+
+    protected function getBoolFilterWhereOnlyMyCreated()
+    {
+        return array(
+            'type' => 'equals',
+            'field' => 'createdById',
+            'value' => $this->user->id,
+        );
+    }
+
 }
 
