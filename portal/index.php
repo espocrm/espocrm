@@ -34,7 +34,9 @@ if (!$app->isInstalled()) {
     exit;
 }
 
-$a = explode('?', $_SERVER['REQUEST_URI']);
+$url = !empty($_SERVER['REDIRECT_URL']) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+
+$a = explode('?', $url);
 if (substr($a[0], -1) !== '/') {
     $url = $a[0] . '/';
     if (count($a) > 1) {
@@ -44,7 +46,7 @@ if (substr($a[0], -1) !== '/') {
     exit();
 }
 
-$portalId = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
+$portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 if ($portalId) {
     $app->setBasePath('../../');
 } else {
