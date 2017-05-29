@@ -1185,7 +1185,8 @@ class Base
 
                     $value = $item['value'];
 
-                    if (is_null($value)) break;
+                    // LinkWithMultipleColumns allows filtering with no linkId set
+                    /* if (is_null($value)) break; */
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1195,7 +1196,17 @@ class Base
 
                         if (!empty($midKeys)) {
                             $key = $midKeys[1];
-                            $part[$alias . 'Middle.' . $key] = $value;
+                            if (!empty($value)) {
+                                $part[$alias . 'Middle.' . $key] = $value;
+                            }
+
+                            if (isset($item['columns']) && is_array($item['columns'])) {
+                                foreach ($item['columns'] as $columnName => $columnValues) {
+                                    if (empty($columnValues)) continue;
+                                    $columnName = ucwords($columnName);
+                                    $part[$alias . 'Middle.'.$columnName] = $columnValues;
+                                }
+                            }
                         }
                     } else if ($relationType == 'hasMany') {
                         $this->addLeftJoin([$link, $alias], $result);
@@ -1221,7 +1232,8 @@ class Base
 
                     $value = $item['value'];
 
-                    if (is_null($value)) break;
+                    // LinkWithMultipleColumns allows filtering with no linkId set
+                    /* if (is_null($value)) break; */
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1233,7 +1245,20 @@ class Base
 
                         if (!empty($midKeys)) {
                             $key = $midKeys[1];
-                            $result['joinConditions'][$alias] = [$key => $value];
+                            $result['joinconditions'][$alias][$key] = [];
+                            if (isset($value)) {
+                                $result['joinConditions'][$alias][$key] = $value;
+                            }
+                            if (isset($item['columns']) && is_array($item['columns'])) {
+                                foreach ($item['columns'] as $columnName => $columnValues) {
+                                    if (empty($columnValues)) continue;
+                                    $columnName = ucwords($columnName);
+                                    $result['joinConditions'][$alias][$columnName] = $columnValues;
+                                }
+                            }
+                            if (empty($result['joinconditions'][$alias][$key])) {
+                                unset($result['joinconditions'][$alias][$key]);
+                            }
                             $part[$alias . 'Middle.' . $key] = null;
                         }
                     } else if ($relationType == 'hasMany') {
