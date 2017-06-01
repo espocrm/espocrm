@@ -1228,13 +1228,26 @@ class Record extends \Espo\Core\Services\Base
                 $where['id!='] = $entity->id;
             }
             $duplicateList = $this->getRepository()->where($where)->find();
+            $extraDuplicatelist = [];
+            if ($this->entityType == 'Lead') {
+                $extraDuplicateList = $this->getEntityManager()->getRepository('Contact')->where($where)->find();
+            } else if ($this->entityType == 'Contact') {
+                $extraDuplicateList = $this->getEntityManager()->getRepository('Lead')->where($where)->find();
+            }
+            $result = array();
             if (count($duplicateList)) {
-                $result = array();
                 foreach ($duplicateList as $e) {
                     $result[$e->id] = $e->getValues();
+                    $result[$e->id]['entityType'] = $this->entityType;
                 }
-                return $result;
             }
+            if (count($extraDuplicateList)) {
+                foreach ($extraDuplicateList as $e) {
+                    $result[$e->id] = $e->getValues();
+                    $result[$e->id]['entityType'] = $this->entityType == 'Lead' ? 'Contact' : 'Lead';
+                }
+            }
+            return $result;
         }
         return false;
     }

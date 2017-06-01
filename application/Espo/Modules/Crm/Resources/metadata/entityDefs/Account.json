@@ -2,6 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
+            "view": "Fields.AccountName",
             "required": true,
             "trim": true
         },

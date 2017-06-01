@@ -30,18 +30,39 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
+        AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
+
         type: 'personName',
 
         detailTemplate: 'fields/person-name/detail',
 
         editTemplate: 'fields/person-name/edit',
 
+        generateDuplicateRow: function(item) {
+            let html = '<div class="autocomplete-duplicate-container">';
+            html += '<span style="float: left; margin-right: 10px;" class="glyphicon glyphicon-user"></span>';
+            let address = typeof item.billingAddressCity == 'string' ? (', ' + item.billingAddressCity) : '';
+            if (typeof item.billingAddressCity == 'string') {
+                address = typeof item.billingAddressPostalCode == 'string' ? address + ', ' + item.billingAddressPostalCode : address;
+            }
+            html += '<span style="width: 65%; overflow: hidden; text-overflow: ellipsis"><span style="border-bottom: 1px dotted;">' + item.name + '</span>' + address + '</span><span style="float: right; color: #999">' + item.entityType + '</span>';
+
+            if (typeof item.accountName == 'string') {
+                account = item.accountName;
+            }
+
+            html += '<div style="font-size: 0.85em; color: #666"><span style="float: left; margin-right: 10px; color: #AAA" class="glyphicon glyphicon-home"></span>';
+            html += item.accountName + '</div></div><!-- autocomplete-duplicate-container -->';
+            return html;
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.salutationValue = this.model.get(this.salutationField);
-            data.firstValue = this.model.get(this.firstField);
-            data.lastValue = this.model.get(this.lastField);
+            data.firstValue = this.model.get(this.firstField) || '';
+            data.lastValue = this.model.get(this.lastField) || '';
+            data.nameValue = data.firstValue + ' ' + data.lastValue;
             data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
             return data;
         },
@@ -51,15 +72,63 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             this.salutationField = 'salutation' + ucName;
             this.firstField = 'first' + ucName;
             this.lastField = 'last' + ucName;
+            this.nameField = 'person' + ucName;
             Dep.prototype.init.call(this);
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+            if (this.mode == 'edit' && typeof this.model.id == 'undefined') {
+                // Create Entity mode
+                var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name)
+                let $personName = $('[name = person' + ucName + ']');
+                $personName.autocomplete({
+                    serviceUrl: [
+                        'Contact?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+                        'Lead?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT
+                    ],
+                    width: '350px',
+                    paramName: 'q',
+                    minChars: 3,
+                    autoSelectFirst: false,
+                    transformResult: function (response) {
+                        var list = [];
+                        response.list.sort(function(a,b) {
+                            return a.entityType < b.entityType;
+                        });
+                        response.list.forEach(function(item) {
+                            item.entityType = typeof item.accountId == 'undefined' ? 'Lead' : 'Contact';
+                            list.push({
+                                data: item.id,
+                                item: item,
+                                value: this.generateDuplicateRow(item)
+                            });
+                        }, this);
+                        return {
+                            suggestions: list
+                        };
+                    }.bind(this),
+                    onSelect: function (s) {
+                        this.$element.val('');
+                        $('.modal-header > a')[0].click();
+                        window.location.href = this.getConfig().get('siteUrl') + '#' + s.item.entityType + '/view/' + s.data;
+                    }.bind(this)
+                });
+
+                this.once('render', function () {
+                    this.$element.autocomplete('dispose');
+                }, this);
+
+                this.once('remove', function () {
+                    this.$element.autocomplete('dispose');
+                }, this);
+            }
+
             if (this.mode == 'edit') {
                 this.$salutation = this.$el.find('[name="' + this.salutationField + '"]');
                 this.$first = this.$el.find('[name="' + this.firstField + '"]');
                 this.$last = this.$el.find('[name="' + this.lastField + '"]');
+                this.$name = this.$el.find('[name="' + this.nameField + '"]');
 
                 this.$salutation.on('change', function () {
                     this.trigger('change');
@@ -68,6 +137,9 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
                     this.trigger('change');
                 }.bind(this));
                 this.$last.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
+                this.$name.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
             }
@@ -100,8 +172,28 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         fetch: function (form) {
             var data = {};
             data[this.salutationField] = this.$salutation.val();
-            data[this.firstField] = this.$first.val().trim();
-            data[this.lastField] = this.$last.val().trim();
+
+            var firstName = '';
+            var lastName = '';
+
+            if (typeof this.model.id == 'undefined') {
+                let nameParts = this.$name.val().trim().split(/\s+/);
+                if (nameParts.length) {
+                    if (nameParts.length > 1) {
+                        firstName = nameParts.shift()
+                        lastName = nameParts.join(" ");
+                    } else {
+                        lastName = nameParts.shift();
+                    }
+                }
+            } else {
+                firstName = this.$first.val() || '';
+                lastName = this.$last.val() || '';
+            }
+
+            data[this.firstField] = firstName.trim();
+            data[this.lastField] = lastName.trim();
+
             return data;
         },
     });
