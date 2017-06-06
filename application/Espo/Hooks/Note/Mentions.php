@@ -61,11 +61,9 @@ class Mentions extends \Espo\Core\Hooks\Base
             }
         }
 
-        preg_match_all('/(@\w+)/', $post, $matches);
+        preg_match_all('/(@[\w@.-]+)/', $post, $matches);
 
         $mentionCount = 0;
-
-
 
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             $parent = null;

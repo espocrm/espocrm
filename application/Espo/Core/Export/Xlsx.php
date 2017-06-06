@@ -137,6 +137,8 @@ class Xlsx extends \Espo\Core\Injectable
         foreach ($badCharList as $badChar) {
             $sheetName = str_replace($badCharList, ' ', $sheetName);
         }
+        $sheetName = str_replace('\'', '', $sheetName);
+
         $sheet->setTitle($sheetName);
 
         $fieldList = $params['fieldList'];
