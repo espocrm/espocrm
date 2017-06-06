@@ -133,6 +133,10 @@ class Xlsx extends \Espo\Core\Injectable
         }
 
         $sheetName = substr($exportName, 0, 30);
+        $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
+        foreach ($badCharList as $badChar) {
+            $sheetName = str_replace($badCharList, ' ', $sheetName);
+        }
         $sheet->setTitle($sheetName);
 
         $fieldList = $params['fieldList'];
