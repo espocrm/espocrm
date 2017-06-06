@@ -55,7 +55,8 @@
         "Jobs": "Jobs",
         "Reset to Default": "Reset to Default",
         "Email Filters": "Email Filters",
-        "Action History": "Action History"
+        "Action History": "Action History",
+        "Label Manager": "Label Manager"
     },
     "layouts": {
         "list": "List",
@@ -194,7 +195,8 @@
         "notifications": "In-app and email notification settings.",
         "inboundEmails": "Settings for incoming emails.",
         "emailFilters": "Email messages that match the specified filter won't be imported.",
-        "actionHistory": "Log of user actions."
+        "actionHistory": "Log of user actions.",
+        "labelManager": "Customize application labels."
     },
     "options": {
         "previewSize": {
