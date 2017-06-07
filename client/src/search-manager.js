@@ -146,6 +146,16 @@ Espo.define('search-manager', [], function () {
                 if ('attribute' in defs) {
                     attribute = defs.attribute;
                 }
+
+                if (type == 'linkedWith' || type == 'notLinkedWith') {
+                    return {
+                        type: type,
+                        attribute: attribute,
+                        value: defs.value,
+                        columns: defs.columns
+                    }
+                }
+
                 if (defs.dateTime) {
                     return {
                         type: type,
