@@ -288,6 +288,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             var label = valueSanitized;
             if (this.translatedOptions) {
                 label = ((value in this.translatedOptions) ? this.translatedOptions[value] : label);
+                label = label.toString();
                 label = this.getHelper().stripTags(label);
                 label = label.replace(/"/g, '&quot;');
             }
