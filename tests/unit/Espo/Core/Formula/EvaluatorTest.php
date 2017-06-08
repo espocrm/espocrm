@@ -70,4 +70,11 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(null, $actual);
     }
+
+    function testNotEqualsNull()
+    {
+        $expression = "5 != null";
+        $actual = $this->evaluator->process($expression);
+        $this->assertTrue($actual);
+    }
 }

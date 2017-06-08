@@ -765,6 +765,31 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    function testComparisonNotEqualsNull()
+    {
+        $item = json_decode('
+            {
+                "type": "comparison\\\\notEquals",
+                "value": [
+                    {
+                        "type": "attribute",
+                        "value": "amount"
+                    },
+                    {
+                        "type": "value",
+                        "value": null
+                    }
+                ]
+            }
+        ');
+
+        $this->setEntityAttributes($this->entity, array(
+            'amount' => 3
+        ));
+        $result = $this->formula->process($item, $this->entity);
+        $this->assertTrue($result);
+    }
+
     function testComparisonEqualsArray()
     {
         $item = json_decode('
