@@ -240,6 +240,18 @@ class Parser
                         !empty($this->operatorMap[$possibleRightOperator])
                     ) continue;
 
+                    $possibleLeftOperator = null;
+                    if (strlen($operator) === 1) {
+                        if ($index > 0) {
+                            $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+                        }
+                    }
+                    if (
+                        $possibleLeftOperator &&
+                        $possibleLeftOperator != $operator &&
+                        !empty($this->operatorMap[$possibleLeftOperator])
+                    ) continue;
+
                     $firstPart = substr($expression, 0, $index);
                     $secondPart = substr($expression, $index + strlen($operator));
 
