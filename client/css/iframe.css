@@ -1,6 +1,6 @@
 body, table {
 	font-size: 14px;
-	font-family: 'Open Sans';
+	font-family: 'Open Sans', sans-serif;
 	color: #333;
 }
 
@@ -9,7 +9,7 @@ body{
 }
 
 @font-face {
-     font-family: Open Sans;
+     font-family: 'Open Sans', sans-serif;
      src: url('../fonts/open-sans-regular.eot?') format('eot'),
           url('../fonts/open-sans-regular.woff') format('woff'),
           url('../fonts/open-sans-regular.ttf')  format('truetype'),
