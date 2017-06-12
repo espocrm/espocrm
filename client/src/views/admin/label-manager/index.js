@@ -52,11 +52,15 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
         events: {
             'click [data-action="selectScope"]': function (e) {
                 var scope = $(e.currentTarget).data('name');
-                this.selectScope(scope);
+                this.getRouter().checkConfirmLeaveOut(function () {
+                    this.selectScope(scope);
+                }, this);
             },
             'change select[data-name="language"]': function (e) {
                 var language = $(e.currentTarget).val();
-                this.selectLanguage(language);
+                this.getRouter().checkConfirmLeaveOut(function () {
+                    his.selectLanguage(language);
+                }, this);
             }
         },
 

@@ -98,10 +98,15 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
             this.scopeData[category][name] = value;
 
             this.dirtyLabelList.push(name);
+            this.setConfirmLeaveOut(true);
 
             if (!this.hasView(category)) return;
 
             this.getView(category).categoryData[name] = value;
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
         },
 
         afterRender: function () {
@@ -129,6 +134,7 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
             }).then(function (returnData) {
                 this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
                 this.dirtyLabelList = [];
+                this.setConfirmLeaveOut(false);
 
                 this.$save.removeClass('disabled').removeAttr('disabled');
                 this.$cancel.removeClass('disabled').removeAttr('disabled');
@@ -148,6 +154,7 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
         actionCancel: function () {
             this.scopeData = Espo.Utils.cloneDeep(this.scopeDataInitial);
             this.dirtyLabelList = [];
+            this.setConfirmLeaveOut(false);
 
             this.getCategoryList().forEach(function (category) {
                 if (!this.hasView(category)) return;
