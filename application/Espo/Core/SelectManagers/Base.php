@@ -1031,7 +1031,7 @@ class Base
                     $part[$attribute . '>='] = $item['value'];
                     break;
                 case 'lessThanOrEquals':
-                    $part[$attribute . '<'] = $item['value'];
+                    $part[$attribute . '<='] = $item['value'];
                     break;
                 case 'in':
                     $part[$attribute . '='] = $item['value'];
