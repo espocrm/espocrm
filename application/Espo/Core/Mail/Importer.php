@@ -314,11 +314,10 @@ class Importer
                     $email->set('parentId', $contact->get('accountId'));
                     return true;
                 }
-            } else {
-                $email->set('parentType', 'Contact');
-                $email->set('parentId', $contact->id);
-                return true;
             }
+            $email->set('parentType', 'Contact');
+            $email->set('parentId', $contact->id);
+            return true;
         } else {
             $account = $this->getEntityManager()->getRepository('Account')->where(array(
                 'emailAddress' => $emailAddress
