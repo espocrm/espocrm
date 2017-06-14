@@ -63,6 +63,7 @@ return array (
     'smtpUsername' => '',
     'smtpPassword' => '',
     'languageList' => [
+        'en_GB',
         'en_US',
         'cs_CZ',
         'da_DK',
