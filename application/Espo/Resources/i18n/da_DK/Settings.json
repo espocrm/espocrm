@@ -84,12 +84,18 @@
     "mentionEmailNotifications": "Send email-notifikationer når man nævnes i poster",
     "massEmailDisableMandatoryOptOutLink": "Deaktiver krævet afmeldingslink",
     "activitiesEntityList": "Entitetsliste for Aktiviteter",
-    "historyEntityList": "Entitetsliste for Forløb"
+    "historyEntityList": "Entitetsliste for Historik",
+    "currencyFormat": "Currency Format",
+    "currencyDecimalPlaces": "Currency Decimal Places"
   },
   "options": {
     "weekStart": {
       "0": "Søndag",
       "1": "Mandag"
+    },
+    "currencyFormat": {
+      "1": "10 USD",
+      "2": "$10"
     }
   },
   "tooltips": {
@@ -122,7 +128,8 @@
     "ldapAccountDomainNameShort": "Det korte domæne som bruges til autorisering til LDAP serveren",
     "ldapUserTeams": "Teams til oprettet bruger. For mere, se brugerprofilen.",
     "ldapUserDefaultTeam": "Standardteam for oprettet bruger. For mere, se brugerprofilen.",
-    "b2cMode": "EspoCRM er som standard indstillet til B2B. Du kan skifte det til B2C."
+    "b2cMode": "EspoCRM er som standard indstillet til B2B. Du kan skifte det til B2C.",
+    "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed."
   },
   "labels": {
     "System": "System",

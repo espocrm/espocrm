@@ -16,7 +16,8 @@
     "targetLists": "Kontaktlister",
     "targetList": "Kontaktliste",
     "portalUser": "Portalbruger",
-    "originalLead": "Oprindelig Lead"
+    "originalLead": "Oprindelig Lead",
+    "acceptanceStatus": "Acceptance Status"
   },
   "links": {
     "opportunities": "Muligheder",

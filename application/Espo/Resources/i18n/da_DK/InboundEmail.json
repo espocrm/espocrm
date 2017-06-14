@@ -32,7 +32,8 @@
     "assignToUser": "Bruger sager bliver tildelt.",
     "team": "Team sager bliver tildelt",
     "teams": "Teams emails bliver tildelt",
-    "addAllTeamUsers": "Emails vil kunne ses i alle brugeres indbakke i angivne teams."
+    "addAllTeamUsers": "Emails vil kunne ses i alle brugeres indbakke i angivne teams.",
+    "targetUserPosition": "Users with specified position will be distributed with cases."
   },
   "links": {
     "filters": "Filtre",

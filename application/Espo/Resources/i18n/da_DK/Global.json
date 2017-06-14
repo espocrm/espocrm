@@ -22,7 +22,13 @@
     "PortalRole": "Portal Rolle",
     "Attachment": "Vedhæftet",
     "EmailFolder": "Emailmappe",
-    "PortalUser": "Portalbruger"
+    "PortalUser": "Portalbruger",
+    "ScheduledJobLogRecord": "Scheduled Job Log Record",
+    "PasswordChangeRequest": "Password Change Request",
+    "ActionHistoryRecord": "Action History Record",
+    "AuthToken": "Auth Token",
+    "UniqueId": "Unique ID",
+    "LastViewed": "Sidst set"
   },
   "scopeNamesPlural": {
     "Email": "Emails",
@@ -47,7 +53,13 @@
     "PortalRole": "Portal Roller",
     "Attachment": "Vedhæftede",
     "EmailFolder": "Emailmapper",
-    "PortalUser": "Portalbrugere"
+    "PortalUser": "Portalbrugere",
+    "ScheduledJobLogRecord": "Scheduled Job Log Records",
+    "PasswordChangeRequest": "Password Change Requests",
+    "ActionHistoryRecord": "Action History",
+    "AuthToken": "Auth Tokens",
+    "UniqueId": "Unique IDs",
+    "LastViewed": "Sidst set"
   },
   "labels": {
     "Misc": "Forskellige",
@@ -83,7 +95,7 @@
     "Posting...": "Bogfører...",
     "Username can not be empty!": "Brugernavn skal udfyldes!",
     "Cache is not enabled": "Cache er ikke aktiv",
-    "Cache has been cleared": "Cache er ikke tømt",
+    "Cache has been cleared": "Cache er tømt",
     "Rebuild has been done": "Genopbygning er udført",
     "Saving...": "Gemmer...",
     "Modified": "Ændret",
@@ -189,7 +201,9 @@
     "Attribute": "Attribut",
     "Function": "Funktion",
     "Self-Assign": "Tildel til mig selv",
-    "Self-Assigned": "Tildelt til mig selv"
+    "Self-Assigned": "Tildelt til mig selv",
+    "Return to Application": "Return to Application",
+    "Select All Results": "Select All Results"
   },
   "messages": {
     "pleaseWait": "Vent venligst",
@@ -235,7 +249,13 @@
     "massFollowResultSingle": "{count} post følges nu.",
     "massUnfollowResultSingle": "{count} post følges ikke mere.",
     "massFollowZeroResult": "Ingenting blev fulgt",
-    "massUnfollowZeroResult": "Ingenting blev ikke fulgt."
+    "massUnfollowZeroResult": "Ingenting blev ikke fulgt.",
+    "fieldShouldBeEmail": "{field} should be a valid email",
+    "fieldShouldBeFloat": "{field} should be a valid float",
+    "fieldShouldBeInt": "{field} should be a valid integer",
+    "fieldShouldBeDate": "{field} should be a valid date",
+    "fieldShouldBeDatetime": "{field} should be a valid date/time",
+    "internalPostTitle": "Post is seen only by internal users"
   },
   "boolFilters": {
     "onlyMy": "Kun Min",
@@ -293,7 +313,8 @@
   },
   "dashlets": {
     "Stream": "Aktiviteter",
-    "Emails": "Min Indbakke"
+    "Emails": "Min Indbakke",
+    "Records": "Record List"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} er oprettet til dig",
@@ -519,8 +540,12 @@
       "is": "Er",
       "isEmpty": "Er Tom",
       "isNotEmpty": "Er Ikke Tom",
-      "isOneOf": "Er En Af",
-      "isFromTeams": "Er Fra Team"
+      "isFromTeams": "Er Fra Team",
+      "isOneOf": "Any Of",
+      "anyOf": "Any Of",
+      "isNot": "Is Not",
+      "isNotOneOf": "None Of",
+      "noneOf": "None Of"
     },
     "varcharSearchRanges": {
       "equals": "Er Lig Med",

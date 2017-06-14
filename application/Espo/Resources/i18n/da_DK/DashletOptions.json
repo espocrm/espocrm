@@ -8,7 +8,13 @@
     "isDoubleHeight": "Dobbelt højde.",
     "mode": "Mode",
     "enabledScopeList": "Hvad skal vises.",
-    "users": "Brugere"
+    "users": "Brugere",
+    "entityType": "Entity Type",
+    "primaryFilter": "Primary Filter",
+    "boolFilterList": "Additional Filters",
+    "sortBy": "Order (field)",
+    "sortDirection": "Order (direction)",
+    "expandedLayout": "Layout"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Dag (agenda)",
       "timeline": "Tidslinie"
     }
+  },
+  "messages": {
+    "selectEntityType": "Select Entity Type in dashlet options."
   }
 }

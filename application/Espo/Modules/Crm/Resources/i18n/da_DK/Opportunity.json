@@ -13,7 +13,8 @@
     "amountConverted": "Beløb (konverteret)",
     "amountWeightedConverted": "Beløb Vægtet",
     "campaign": "Kampagne",
-    "originalLead": "Oprindelig Lead"
+    "originalLead": "Oprindelig Lead",
+    "amountCurrency": "Amount Currency"
   },
   "links": {
     "contacts": "Kontakter",

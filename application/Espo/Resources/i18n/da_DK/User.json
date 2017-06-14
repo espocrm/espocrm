@@ -25,7 +25,9 @@
     "sendAccessInfo": "Send Email med info om  Adgang til Bruger",
     "portal": "Portal",
     "gender": "Køn",
-    "position": "Position i Teamet"
+    "position": "Position i Teamet",
+    "ipAddress": "IP Address",
+    "passwordPreview": "Password Preview"
   },
   "links": {
     "teams": "Teams",
@@ -77,7 +79,8 @@
     "forbidden": "Forbudt. Prøv venligst senere.",
     "uniqueLinkHasBeenSent": "Den unikke URL er sendt til den angivne emailadresse.",
     "passwordChangedByRequest": "Kodeordet er ændret.",
-    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email."
+    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email.",
+    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
   },
   "boolFilters": {
     "onlyMyTeam": "Kun Mit Team"

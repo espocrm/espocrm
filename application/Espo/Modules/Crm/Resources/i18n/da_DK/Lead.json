@@ -3,7 +3,7 @@
     "Converted To": "Konverteret Til",
     "Create Lead": "Opret Lead",
     "Convert": "Konverter",
-    "convert": "konverter"
+    "convert": "convert"
   },
   "fields": {
     "name": " Navn",
@@ -25,7 +25,9 @@
     "campaign": "Kampagne",
     "targetLists": "Kontaktlister",
     "targetList": "Kontaktliste",
-    "industry": "Industri"
+    "industry": "Industri",
+    "acceptanceStatus": "Acceptance Status",
+    "opportunityAmountCurrency": "Opportunity Amount Currency"
   },
   "links": {
     "targetLists": "Kontaktlister",

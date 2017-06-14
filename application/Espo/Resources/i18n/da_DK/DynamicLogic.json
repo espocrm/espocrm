@@ -20,7 +20,9 @@
       "isEmpty": "Er Tom",
       "isNotEmpty": "Er Ikke Tom",
       "contains": "Indeholder",
-      "notContains": "Indeholder Ikke"
+      "has": "Indeholder",
+      "notContains": "Indeholder Ikke",
+      "notHas": "Indeholder Ikke"
     }
   }
 }
