@@ -97,7 +97,7 @@ Espo.define('acl/email', 'acl', function (Dep) {
                 }
             }
 
-            return false;
+            return result;
         }
 
     });
