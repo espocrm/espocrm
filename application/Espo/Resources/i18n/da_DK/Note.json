@@ -5,7 +5,8 @@
     "targetType": "Mål",
     "teams": "Teams",
     "users": "Brugere",
-    "portals": "Portaler"
+    "portals": "Portaler",
+    "type": "Type"
   },
   "filters": {
     "all": "Alle",

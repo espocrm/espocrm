@@ -38,9 +38,10 @@
       "Article": "Artikel"
     }
   },
-  "tooltips": {
-  },
   "presetFilters": {
     "published": "Publiseret"
+  },
+  "tooltips": {
+    "portals": "Article will be available only in specified portals."
   }
 }

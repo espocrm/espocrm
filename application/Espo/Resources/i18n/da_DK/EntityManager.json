@@ -64,6 +64,6 @@
     "disabled": "Marker hvis du ikke behøver denne entitet i dit system.",
     "linkAudited": "Oprettelse af relaterede poster og sammenkædning med eksisterende poster bliver logget i Listen.",
     "linkMultipleField": "'Forbind-Flere'-feltet er en bekvem måde at redigere relationer. Brug den ikke, hvis du har markeret et stort antal relaterede poster.",
-    "entityType": "Base Plus - har Aktivitets-, forløbs- og opgavepaneler."
+    "entityType": "Base Plus - har Aktivitets-, historiks- og opgavepaneler."
   }
 }
