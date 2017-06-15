@@ -59,7 +59,7 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
             'change select[data-name="language"]': function (e) {
                 var language = $(e.currentTarget).val();
                 this.getRouter().checkConfirmLeaveOut(function () {
-                    his.selectLanguage(language);
+                    this.selectLanguage(language);
                 }, this);
             }
         },
@@ -97,7 +97,7 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
             this.language = this.options.language || this.getConfig().get('language');
 
             this.once('after:render', function () {
-                this.selectScope(this.scope);
+                this.selectScope(this.scope, true);
             }, this);
         },
 
@@ -113,10 +113,12 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
             this.createRecordView();
         },
 
-        selectScope: function (scope) {
+        selectScope: function (scope, skipRouter) {
             this.scope = scope;
 
-            this.getRouter().navigate('#Admin/labelManager/scope=' + scope + '&language=' + this.language, {trigger: false});
+            if (!skipRouter) {
+                this.getRouter().navigate('#Admin/labelManager/scope=' + scope + '&language=' + this.language, {trigger: false});
+            }
 
             this.$el.find('[data-action="selectScope"]').removeClass('disabled').removeAttr('disabled');
             this.$el.find('[data-name="'+scope+'"][data-action="selectScope"]').addClass('disabled').attr('disabled', 'disabled');
