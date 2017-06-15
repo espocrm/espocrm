@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,26 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+Espo.define('crm:views/contact/fields/account-role', 'views/fields/varchar', function (Dep) {
 
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class Account extends \Espo\Services\Record
-{
-    protected $linkSelectParams = array(
-        'contacts' => array(
-            'additionalColumns' => array(
-                'role' => 'accountRole',
-                'isInactive' => 'accountIsInactive'
-            )
-        )
-    );
+        detailTemplate: 'crm:contact/fields/account-role/detail',
 
-    protected function getDuplicateWhereClause(Entity $entity, $data = array())
-    {
-        return array(
-            'name' => $entity->get('name')
-        );
-    }
-}
+        listTemplate: 'crm:contact/fields/account-role/detail',
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            if (this.model.has('accountIsInactive')) {
+                data.accountIsInactive = this.model.get('accountIsInactive');
+            }
+            return data;
+        }
+    });
+
+});

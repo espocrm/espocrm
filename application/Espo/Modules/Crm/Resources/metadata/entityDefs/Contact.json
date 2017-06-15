@@ -105,13 +105,33 @@
             "type": "linkMultiple",
             "view": "crm:views/contact/fields/accounts",
             "columns": {
-                "role": "contactRole"
+                "role": "contactRole",
+                "isInactive": "contactIsInactive"
             }
         },
         "accountRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
+            "view": "crm:views/contact/fields/account-role"
+        },
+        "accountIsInactive": {
+            "type": "bool",
+            "notStorable": true,
+            "select": "accountContact.is_inactive",
+            "orderBy": "accountContact.is_inactive {direction}",
+            "where": {
+                "=": {
+                    "leftJoins": ["accounts"],
+                    "sql": "accountsMiddle.is_inactive = {value}",
+                    "distinct": true
+                }
+            },
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true
         },
         "accountType": {
             "type": "foreign",
@@ -226,6 +246,10 @@
                 "role": {
                     "type": "varchar",
                     "len": 50
+                },
+                "isInactive": {
+                    "type": "bool",
+                    "default": false
                 }
             },
             "layoutRelationshipsDisabled": true

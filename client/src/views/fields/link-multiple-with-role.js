@@ -134,7 +134,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
             var $container = this.$el.find('.link-container');
-            var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id);
+            var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
             var nameHtml = '<div>' + this.getHelper().stripTags(name) + '&nbsp;' + '</div>';
 
@@ -153,24 +153,16 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 $role = $('<input class="role form-control input-sm pull-right" maxlength="50" placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">');
             }
 
-            $left = $('<div class="pull-left">').css({
-                'width': '92%',
-                'display': 'inline-block'
-            });
+            $left = $('<div class="pull-left">');
             if ($role) {
                 $left.append($role);
             }
             $left.append(nameHtml);
             $el.append($left);
 
-            $right = $('<div>').css({
-                'width': '8%',
-                'display': 'inline-block',
-                'vertical-align': 'top'
-            });
+            $right = $('<div>');
             $right.append(removeHtml);
             $el.append($right);
-            $el.append('<br style="clear: both;" />');
 
             $container.append($el);
 

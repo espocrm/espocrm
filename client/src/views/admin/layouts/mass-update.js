@@ -38,6 +38,12 @@ Espo.define('views/admin/layouts/mass-update', 'views/admin/layouts/rows', funct
 
         ignoreTypeList: ['duration'],
 
+        dataAttributesDefs: {
+            name: {
+                readOnly: true
+            }
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 

@@ -1,5 +1,5 @@
 [
-    {"name":"name", "width":35,"link":"true"},
-    {"name":"accountRole", "width":35, "notSortable": true},
+    {"name":"name", "width": 35,"link":"true", "view": "crm:views/contact/fields/name-for-account"},
+    {"name":"accountRole", "width": 35, "notSortable": true},
     {"name":"emailAddress"}
 ]

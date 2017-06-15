@@ -128,26 +128,18 @@ Espo.define('views/fields/link-multiple-with-primary', 'views/fields/link-multip
             }
 
             var $container = this.$el.find('.link-container');
-            var $el = $('<div class="form-inline list-group-item link-with-role">').addClass('link-' + id).attr('data-id', id);
+            var $el = $('<div class="form-inline list-group-item link-with-role clearfix link-group-item-with-primary">').addClass('link-' + id).attr('data-id', id);
 
             var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
             var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="glyphicon glyphicon-remove"></a>';
 
-            $left = $('<div class="pull-left">').css({
-                'width': '92%',
-                'display': 'inline-block'
-            });
+            $left = $('<div>');
             $left.append(nameHtml);
             $el.append($left);
 
-            $right = $('<div>').css({
-                'width': '8%',
-                'display': 'inline-block',
-                'vertical-align': 'top'
-            });
+            $right = $('<div>');
             $right.append(removeHtml);
             $el.append($right);
-            $el.append('<br style="clear: both;" />');
 
             var isPrimary = (id == this.primaryId);
             var iconHtml = '<span class="glyphicon glyphicon-star ' + (!isPrimary ? 'text-muted' : '') + '"></span>';

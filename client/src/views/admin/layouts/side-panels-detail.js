@@ -40,6 +40,9 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
             },
             sticked: {
                 type: 'bool'
+            },
+            name: {
+                readOnly: true
             }
         },
 

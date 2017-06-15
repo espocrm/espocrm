@@ -90,6 +90,12 @@
             "notStorable": true,
             "disabled": true
         },
+        "contactIsInactive": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false,
+            "disabled": true
+        },
         "billingAddress": {
             "type": "address"
         },

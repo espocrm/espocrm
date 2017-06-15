@@ -11,6 +11,7 @@
         "industry": "Industry",
         "type": "Type",
         "contactRole": "Title",
+        "contactIsInactive": "Inactive",
         "campaign": "Campaign",
         "targetLists": "Target Lists",
         "targetList": "Target List",
@@ -94,7 +95,8 @@
     },
     "labels": {
         "Create Account": "Create Account",
-        "Copy Billing": "Copy Billing"
+        "Copy Billing": "Copy Billing",
+        "Set Primary": "Set Primary"
     },
     "presetFilters": {
         "customers": "Customers",
