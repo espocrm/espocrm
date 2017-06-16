@@ -148,8 +148,36 @@
         "opportunityRole": {
             "type": "enum",
             "notStorable": true,
-            "disabled": true,
-            "options": ["", "Decision Maker", "Evaluator", "Influencer"]
+            "options": ["", "Decision Maker", "Evaluator", "Influencer"],
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "where": {
+                "=": {
+                    "leftJoins": ["opportunities"],
+                    "sql": "opportunitiesMiddle.role = {value}",
+                    "distinct": true
+                },
+                "<>": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role = {value})",
+                "IN": {
+                    "leftJoins": ["opportunities"],
+                    "sql": "opportunitiesMiddle.role IN {value}",
+                    "distinct": true
+                },
+                "NOT IN": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role IN {value})",
+                "LIKE": {
+                    "leftJoins": ["opportunities"],
+                    "sql": "opportunitiesMiddle.role LIKE {value}",
+                    "distinct": true
+                },
+                "IS NULL": {
+                    "leftJoins": ["opportunities"],
+                    "sql": "opportunitiesMiddle.role IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": "contact.id NOT IN (SELECT contact_id FROM contact_opportunity WHERE deleted = 0 AND role IS NULL)"
+            },
+            "view": "crm:views/contact/fields/opportunity-role"
         },
         "acceptanceStatus": {
             "type": "varchar",
