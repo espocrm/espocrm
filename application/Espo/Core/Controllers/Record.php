@@ -134,6 +134,9 @@ class Record extends Base
         $textFilter = $request->get('textFilter');
 
         if (empty($maxSize)) {
+            $maxSize = $request->get('maxCount');
+        }
+        if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
         if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
