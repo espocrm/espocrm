@@ -737,6 +737,8 @@ class Record extends \Espo\Core\Services\Base
             $this->listCountQueryDisabled
             ||
             in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            ||
+            !empty($params['q'])
         ) {
             $disableCount = true;
         }
