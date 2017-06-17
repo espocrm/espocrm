@@ -265,6 +265,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
 
             var boolFilterList = data.boolFilterList || Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+            if (typeof boolFilterList == 'string') {
+                boolFilterList = boolFilterList.split(',');
+            }
             if (typeof boolFilterList == 'function') {
                 boolFilterList = boolFilterList.call(this);
             }
