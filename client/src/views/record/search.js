@@ -579,6 +579,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             if ('primary' in searchData) {
                 this.primary = searchData.primary;
+                if (!this.presetName) {
+                    this.presetName = this.primary;
+                }
             }
 
             if (this.presetName) {
