@@ -1162,16 +1162,49 @@ class Base
                         );
                     }
                     break;
+                case 'columnLike':
+                case 'columnIn':
+                case 'columnIsNull':
+                case 'columnNotIn':
+                    $link = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
+                    $column = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
+                    $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                    $this->setDistinct(true, $result);
+                    $this->addLeftJoin([$link, $alias], $result);
+                    $value = $item['value'];
+                    $columnKey = $alias . 'Middle.' . $column;
+                    if ($item['type'] === 'columnIn') {
+                        $part[$columnKey] = $value;
+                    } else if ($item['type'] === 'columnNotIn') {
+                        $part[$columnKey . '!='] = $value;
+                    } else if ($item['type'] === 'columnIsNull') {
+                        $part[$columnKey] = null;
+                    } else if ($item['type'] === 'columnIsNotNull') {
+                        $part[$columnKey . '!='] = null;
+                    } else if ($item['type'] === 'columnLike') {
+                        $part[$columnKey . '*'] = $value;
+                    } else if ($item['type'] === 'columnStartsWith') {
+                        $part[$columnKey . '*'] = $value . '%';
+                    } else if ($item['type'] === 'columnEndsWith') {
+                        $part[$columnKey . '*'] = '%' . $value;
+                    } else if ($item['type'] === 'columnContains') {
+                        $part[$columnKey . '*'] = '%' . $value . '%';
+                    } else if ($item['type'] === 'columnEquals') {
+                        $part[$columnKey . '='] = $value;
+                    } else if ($item['type'] === 'columnNotEquals') {
+                        $part[$columnKey . '!='] = $value;
+                    }
+                    break;
                 case 'isNotLinked':
                     if (!$result) break;
-                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));;
+                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id'] = null;
                     $this->setDistinct(true, $result);
                     $this->addLeftJoin([$attribute, $alias], $result);
                     break;
                 case 'isLinked':
                     if (!$result) break;
-                    $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));;
+                    $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id!='] = null;
                     $this->setDistinct(true, $result);
                     $this->addLeftJoin([$attribute, $alias], $result);

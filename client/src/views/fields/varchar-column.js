@@ -26,69 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        type: 'varchar',
-
-        detailTemplate: 'fields/varchar/detail',
-
-        searchTemplate: 'fields/varchar/search',
-
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'isEmpty', 'isNotEmpty'],
 
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
-                    this.handleSearchType(type);
-                },
-            }, this.events || {});
-        },
-
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-            if (
-                this.model.get(this.name) !== null
-                &&
-                this.model.get(this.name) !== ''
-            ) {
-                data.isNotEmpty = true;
-            }
-            return data;
-        },
-
-        handleSearchType: function (type) {
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                this.$el.find('input.main-element').addClass('hidden');
-            } else {
-                this.$el.find('input.main-element').removeClass('hidden');
-            }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-            if (this.mode == 'search') {
-                var type = this.$el.find('select.search-type').val();
-                this.handleSearchType(type);
-            }
-        },
-
-        fetch: function () {
-            var data = {};
-            var value = this.$element.val();
-            if (this.params.trim) {
-                if (typeof value.trim === 'function') {
-                    value = value.trim();
-                }
-            }
-            data[this.name] = value;
-            return data;
-        },
-
         fetchSearch: function () {
-
             var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
 
             var data;
@@ -101,11 +45,11 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                             type: 'or',
                             value: [
                                 {
-                                    type: 'isNull',
+                                    type: 'columnIsNull',
                                     field: this.name,
                                 },
                                 {
-                                    type: 'equals',
+                                    type: 'columnEquals',
                                     field: this.name,
                                     value: ''
                                 }
@@ -119,12 +63,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                             type: 'and',
                             value: [
                                 {
-                                    type: 'notEquals',
+                                    type: 'columnNotEquals',
                                     field: this.name,
                                     value: ''
                                 },
                                 {
-                                    type: 'isNotNull',
+                                    type: 'columnIsNotNull',
                                     field: this.name,
                                     value: null
                                 }
@@ -139,17 +83,16 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 if (value) {
                     data = {
                         value: value,
-                        type: type,
-                        typeFront: type
+                        type: 'column' . Espo.Utils.upperCaseFirst(type),
+                        data: {
+                            type: type,
+                            value: value
+                        }
                     }
                     return data;
                 }
             }
             return false;
-        },
-
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         }
 
     });

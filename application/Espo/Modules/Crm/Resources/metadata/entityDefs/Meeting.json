@@ -56,8 +56,30 @@
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,
-            "disabled": true,
-            "options": ["None", "Accepted", "Tentative", "Declined"]
+            "options": ["None", "Accepted", "Tentative", "Declined"],
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "where": {
+                "=": {
+                    "leftJoins": ["users", "contacts", "leads"],
+                    "sql": "contactsMiddle.status = {value} OR leadsMiddle.status = {value} OR usersMiddle.status = {value}",
+                    "distinct": true
+                },
+                "<>": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status = {value}) AND meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status = {value}) AND meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status = {value})",
+                "IN": {
+                    "leftJoins": ["users", "leads", "contacts"],
+                    "sql": "contactsMiddle.status IN {value} OR leadsMiddle.status IN {value} OR usersMiddle.status IN {value}",
+                    "distinct": true
+                },
+                "NOT IN": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status IN {value}) AND meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status IN {value}) AND meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status IN {value})",
+                "IS NULL": {
+                    "leftJoins": ["users", "contacts", "leads"],
+                    "sql": "contactsMiddle.status IS NULL AND leadsMiddle.status IS NULL AND usersMiddle.status IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": "meeting.id NOT IN (SELECT meeting_id FROM contact_meeting WHERE deleted = 0 AND status IS NULL) OR meeting.id NOT IN (SELECT meeting_id FROM meeting_user WHERE deleted = 0 AND status IS NULL) OR meeting.id NOT IN (SELECT meeting_id FROM lead_meeting WHERE deleted = 0 AND status IS NULL)"
+            },
+            "view": "crm:views/meeting/fields/acceptance-status"
         },
         "users": {
             "type": "linkMultiple",

@@ -18,7 +18,9 @@
         "portalUser": "Portal User",
         "originalLead": "Original Lead",
         "acceptanceStatus": "Acceptance Status",
-        "accountIsInactive": "Account Inactive"
+        "accountIsInactive": "Account Inactive",
+        "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+        "acceptanceStatusCalls": "Acceptance Status (Calls)"
     },
     "links": {
         "opportunities": "Opportunities",

@@ -184,6 +184,26 @@
             "notStorable": true,
             "disabled": true
         },
+        "acceptanceStatusMeetings": {
+            "type": "enum",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/acceptance-status",
+            "link": "meetings",
+            "column": "status"
+        },
+        "acceptanceStatusCalls": {
+            "type": "enum",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/acceptance-status",
+            "link": "calls",
+            "column": "status"
+        },
         "campaign": {
             "type": "link",
             "layoutListDisabled": true
