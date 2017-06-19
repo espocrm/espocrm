@@ -49,27 +49,9 @@ Espo.define('views/fields/enum-int', 'views/fields/enum', function (Dep) {
             return data;
         },
 
-        fetchSearch: function () {
-            var list = this.$element.val().split(':,:');
-
-            list.forEach(function (item, i) {
-                list[i] = parseInt(list[i]);
-            }, this);
-
-            if (list.length == 1 && list[0] == '') {
-                list = [];
-            }
-
-            if (list.length == 0) {
-                return false;
-            }
-
-            var data = {
-                type: 'in',
-                value: list
-            };
-            return data;
-        },
+        parseItemForSearch: function (item) {
+            return parseInt(item);
+        }
 
     });
 });

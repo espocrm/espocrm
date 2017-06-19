@@ -243,6 +243,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             return data;
         },
 
+        parseItemForSearch: function (item) {
+            return item;
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('[name="'+this.name+'-type"]').val();
 
@@ -251,7 +255,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 list = [];
             }
 
-
+            list.forEach(function (item, i) {
+                list[i] = this.parseItemForSearch(item);
+            }, this);
 
             if (type === 'anyOf') {
                 if (list.length === 0) {
