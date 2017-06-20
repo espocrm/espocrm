@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "064c61d7e728851cad5d703c85ade74d",
-    "content-hash": "02c2bb32ee1f881379ee82f5d375419d",
+    "hash": "c3e1eecd426127adbeb3e78b8a3c5248",
+    "content-hash": "9140ac7a9a1e4c65c69f67e7dcc174b9",
     "packages": [
         {
             "name": "composer/semver",
@@ -863,16 +863,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "2.4.2",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e"
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/3a2ac723f17b5d81607287ff28575d38b9fbc70e",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/20a02782f76830b67ae56a5c08eb1f563c351a37",
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37",
                 "shasum": ""
             },
             "require": {
@@ -905,7 +905,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2014-02-16 18:18:25"
+            "time": "2015-03-08 18:41:17"
         },
         {
             "name": "tecnickcom/tcpdf",
