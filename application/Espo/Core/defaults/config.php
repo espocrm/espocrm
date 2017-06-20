@@ -65,6 +65,7 @@ return array (
     'languageList' => [
         'en_GB',
         'en_US',
+        'es_MX',
         'cs_CZ',
         'da_DK',
         'de_DE',

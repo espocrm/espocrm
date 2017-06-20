@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create Lead": "Crear Referencia",
+    "Create Contact": "Crear Contacto",
+    "Create Task": "Crear Tarea",
+    "Create Case": "Crear Caso",
+    "Add to Contact": "Agregar a Contactos",
+    "Add to Lead": "Añadir a la Referencia"
+  }
+}

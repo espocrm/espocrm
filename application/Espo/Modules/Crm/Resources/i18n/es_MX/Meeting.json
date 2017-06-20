@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "parent": "Padre",
+    "status": "Estátus",
+    "dateStart": "Fecha de Comienzo",
+    "dateEnd": "Fecha de Finalización",
+    "duration": "Duración",
+    "description": "Descripción",
+    "users": "Usuarios",
+    "contacts": "Contactos",
+    "leads": "Referencias",
+    "reminders": "Recordatorios",
+    "account": "Cuenta",
+    "acceptanceStatus": "Estátus de aprobación"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planeadas",
+      "Held": "Retenida",
+      "Not Held": "Pendiente"
+    },
+    "acceptanceStatus": {
+      "None": "Ninguno",
+      "Accepted": "Aprobado",
+      "Declined": "Rechazado",
+      "Tentative": "Tentativa"
+    }
+  },
+  "massActions": {
+    "setHeld": "Marcar como Retenida",
+    "setNotHeld": "Marcar como Pendiente"
+  },
+  "labels": {
+    "Create Meeting": "Crear Reunión",
+    "Set Held": "Marcar como Retenida",
+    "Set Not Held": "Marcar como Pendiente",
+    "Send Invitations": "Enviar Invitaciones",
+    "on time": "a tiempo",
+    "before": "antes"
+  },
+  "presetFilters": {
+    "planned": "Planeadas",
+    "held": "Retenidas",
+    "todays": "De Hoy"
+  },
+  "messages": {
+    "nothingHasBeenSent": "No se ha enviado nada"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "Crear Documento",
+    "Details": "Detalles"
+  },
+  "fields": {
+    "name": "Nombre",
+    "status": "Estátus",
+    "file": "Archivo",
+    "type": "Tipo",
+    "publishDate": "Publicar Fecha",
+    "expirationDate": "Fecha de Expiración",
+    "description": "Descripción",
+    "accounts": "Cuentas",
+    "folder": "Carpeta"
+  },
+  "links": {
+    "accounts": "Cuentas",
+    "opportunities": "Oportunidades",
+    "folder": "Carpeta",
+    "leads": "Referencias",
+    "contacts": "Contactos"
+  },
+  "options": {
+    "status": {
+      "Active": "Activo",
+      "Draft": "Borrador",
+      "Expired": "Expirado",
+      "Canceled": "Cancelado"
+    },
+    "type": {
+      "": "Ninguno",
+      "Contract": "Contrato",
+      "NDA": "AdC",
+      "EULA": "EULA",
+      "License Agreement": "Contrato de Licencia"
+    }
+  },
+  "presetFilters": {
+    "active": "Activo",
+    "draft": "Borrador"
+  }
+}

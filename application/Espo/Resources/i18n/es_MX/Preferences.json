@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "dateFormat": "Formato de fecha",
+    "timeFormat": "Formato de tiempo",
+    "timeZone": "Zona Horaria",
+    "weekStart": "Primer día de la semana",
+    "thousandSeparator": "Separador de miles",
+    "decimalMark": "Separador decimal",
+    "defaultCurrency": "Moneda por Omisión",
+    "currencyList": "Lista de Moneda",
+    "language": "Idioma",
+    "smtpServer": "Servidor",
+    "smtpPort": "Puerto",
+    "smtpAuth": "Autorizar",
+    "smtpSecurity": "Seguridad",
+    "smtpUsername": "Nombre de Usuario",
+    "emailAddress": "Correo Electrónico",
+    "smtpPassword": "Contraseña",
+    "smtpEmailAddress": "Correo Electrónico",
+    "exportDelimiter": "Exportar Delimitador",
+    "autoFollowEntityTypeList": "Seguir automaticamente",
+    "signature": "Firma de correo",
+    "dashboardTabList": "Lista de Pestañas",
+    "tabList": "Lista de Pestañas",
+    "defaultReminders": "Recordatorios por Omisión",
+    "theme": "Tema",
+    "useCustomTabList": "Lista de Pestañas Personalizada",
+    "emailReplyToAllByDefault": "Contestar a todos por omisión",
+    "receiveAssignmentEmailNotifications": "Notificaciones por correo sobre asignaciones",
+    "receiveMentionEmailNotifications": "Notificaciones por correo sobre menciones en publicaciones",
+    "receiveStreamEmailNotifications": "Notificar por correo las publicaciones y actualizaciones de estátus",
+    "dashboardLayout": "Formato del Tablero",
+    "emailReplyForceHtml": "Responder correo en HTML",
+    "doNotFillAssignedUserIfNotRequired": "No llenar el campo de 'Usuario Asignado' si no es obligatorio",
+    "followEntityOnStreamPost": "Auto-seguir una entidad después de publicar en Seguimiento"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Domingo",
+      "1": "Lunes"
+    }
+  },
+  "labels": {
+    "Notifications": "Notificaciones",
+    "User Interface": "Interfaz de Usuario",
+    "SMTP": "SMTP",
+    "Misc": "Misceláneos",
+    "Locale": "Localización"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en las actividades y recibirá notificaciones."
+  }
+}

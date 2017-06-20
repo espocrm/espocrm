@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "userName": "Nombre Usuario",
+    "title": "Título",
+    "isAdmin": "Es Administrador",
+    "defaultTeam": "Equipo por Omisión",
+    "emailAddress": "Correo electrónico",
+    "phoneNumber": "Teléfono",
+    "roles": "Roles",
+    "portals": "Portales",
+    "portalRoles": "Roles del Portal",
+    "teamRole": "Posición",
+    "password": "Contraseña",
+    "currentPassword": "Contraseña Actual",
+    "passwordConfirm": "Confirmar Contraseña",
+    "newPassword": "Nueva Contraseña",
+    "newPasswordConfirm": "Confirmar Contraseña Nueva",
+    "avatar": "Avatar",
+    "isActive": "Está Activo",
+    "isPortalUser": "Es Usuario del Portal",
+    "contact": "Contacto",
+    "accounts": "Cuentas",
+    "account": "Cuenta (principal)",
+    "sendAccessInfo": "Enviar al Usuario un correo con su Información de Acceso",
+    "portal": "Portal",
+    "gender": "Género",
+    "position": "Puesto en el equipo",
+    "ipAddress": "Dirección IP",
+    "passwordPreview": "Ver la Contraseña"
+  },
+  "links": {
+    "teams": "Equipos",
+    "roles": "Roles",
+    "notes": "Notas",
+    "portals": "Portales",
+    "portalRoles": "Roles del Portal",
+    "contact": "Contacto",
+    "accounts": "Cuentas",
+    "account": "Cuenta (principal)",
+    "tasks": "Tareas"
+  },
+  "labels": {
+    "Create User": "Crear Usuario",
+    "Generate": "Generar",
+    "Access": "Acceso",
+    "Preferences": "Preferencias",
+    "Change Password": "Cambiar Contraseña",
+    "Teams and Access Control": "Equipos y Control de Acceso",
+    "Forgot Password?": "¿Olvidó la Contraseña?",
+    "Password Change Request": "Solicitar Cambio de Contraseña",
+    "Email Address": "Correo Electrónico",
+    "External Accounts": "Cuentas Externas",
+    "Email Accounts": "Cuentas de Correo",
+    "Portal": "Portal",
+    "Create Portal User": "Crear Usuario del Portal",
+    "Proceed w/o Contact": "Proceder sin Contacto"
+  },
+  "tooltips": {
+    "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por omisión.",
+    "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
+    "isAdmin": "El usuario administrador puede tener acceso a todo.",
+    "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
+    "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
+    "roles": "Roles de acceso adicionales. Úselo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso sólo para este usuario.",
+    "portalRoles": "Roles adicionales del portal.  Utilícelos para extender el nivel de acceso exclusivamente para este Usuario",
+    "portals": "Portales a los que este Usuario tiene acceso"
+  },
+  "messages": {
+    "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
+    "accountInfoEmailSubject": "Información Cuenta",
+    "accountInfoEmailBody": "Información de tu cuenta:\n\nNombre Usuario: {userName}\nContraseña: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Solicitud de Cambio de Contraseña",
+    "passwordChanged": "La Contraseña ha sido cambiada",
+    "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
+    "wrongUsernamePasword": "Nombre de usuario/contraseña incorrectos",
+    "emailAddressCantBeEmpty": "La dirección de correo no puede estar vacía",
+    "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
+    "forbidden": "Prohibido, por favor intente después",
+    "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
+    "passwordChangedByRequest": "La contraseña ha sido cambiada.",
+    "setupSmtpBefore": "Necesita configurar  <a href=\"{url}\">Configuración SMTP</a> para que el sistema pueda enviar contraseñas por correo.",
+    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo esta liga {link}.  Esta dirección URL única expirará pronto."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Sólo mi equipo"
+  },
+  "presetFilters": {
+    "active": "Activo",
+    "activePortal": "Portal Activo"
+  },
+  "options": {
+    "gender": {
+      "": "No Definido",
+      "Male": "Masculino",
+      "Female": "Femenino",
+      "Neutral": "Neutral"
+    }
+  }
+}
