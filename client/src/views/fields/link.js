@@ -57,11 +57,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
         data: function () {
+            var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
+            if (nameValue === null) {
+                nameValue = this.model.get(this.idName);
+            }
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
+                nameValue: nameValue,
                 foreignScope: this.foreignScope
             }, Dep.prototype.data.call(this));
         },

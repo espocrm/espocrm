@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
+
 use Espo\Core\Utils\Util;
 
 class Base
