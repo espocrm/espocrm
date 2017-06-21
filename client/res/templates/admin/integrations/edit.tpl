@@ -5,16 +5,20 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <div class="cell form-group" data-name="enabled">
-            <label class="control-label" data-name="enabled">{{translate 'enabled' scope='Integration' category='fields'}}</label>
-            <div class="field" data-name="enabled">{{{enabled}}}</div>
-        </div>
-        {{#each dataFieldList}}
-            <div class="cell form-group" data-name="{{./this}}">
-                <label class="control-label" data-name="{{./this}}">{{translate this scope='Integration' category='fields'}}</label>
-                <div class="field" data-name="{{./this}}">{{{var this ../this}}}</div>
+        <div class="panel">
+            <div class="panel-body">
+                <div class="cell form-group" data-name="enabled">
+                    <label class="control-label" data-name="enabled">{{translate 'enabled' scope='Integration' category='fields'}}</label>
+                    <div class="field" data-name="enabled">{{{enabled}}}</div>
+                </div>
+                {{#each dataFieldList}}
+                    <div class="cell form-group" data-name="{{./this}}">
+                        <label class="control-label" data-name="{{./this}}">{{translate this scope='Integration' category='fields'}}</label>
+                        <div class="field" data-name="{{./this}}">{{{var this ../this}}}</div>
+                    </div>
+                {{/each}}
             </div>
-        {{/each}}
+        </div>
     </div>
     <div class="col-sm-6">
         {{#if helpText}}
