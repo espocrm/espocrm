@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c3e1eecd426127adbeb3e78b8a3c5248",
-    "content-hash": "9140ac7a9a1e4c65c69f67e7dcc174b9",
+    "hash": "cee1fbed429077eccb3334d4086bcc48",
+    "content-hash": "47173c776f7086e30358a4239b5decef",
     "packages": [
         {
             "name": "composer/semver",
@@ -1022,16 +1022,16 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "0.4.1",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/MailMimeParser.git",
-                "reference": "63dec759b5933cd858302e058ebb954f7c48e522"
+                "reference": "c60636e6744c34508635393f196f214d65a827d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/63dec759b5933cd858302e058ebb954f7c48e522",
-                "reference": "63dec759b5933cd858302e058ebb954f7c48e522",
+                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/c60636e6744c34508635393f196f214d65a827d6",
+                "reference": "c60636e6744c34508635393f196f214d65a827d6",
                 "shasum": ""
             },
             "require": {
@@ -1040,9 +1040,9 @@
             },
             "require-dev": {
                 "evert/phpdoc-md": "~0.1.1",
-                "phing/phing": "2.*",
-                "phpdocumentor/phpdocumentor": "2.*",
-                "phpunit/phpunit": "~4.8"
+                "phing/phing": "~2.15.0",
+                "phpdocumentor/phpdocumentor": "~2.8.0",
+                "phpunit/phpunit": "~4.5.0"
             },
             "type": "library",
             "autoload": {
@@ -1069,7 +1069,7 @@
                 "parser",
                 "php-imap"
             ],
-            "time": "2017-03-05 22:50:58"
+            "time": "2017-04-05 21:50:13"
         },
         {
             "name": "zendframework/zend-crypt",
