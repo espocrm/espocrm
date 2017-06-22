@@ -379,6 +379,9 @@ abstract class Base
                 if (!empty($fieldDefs['notStorable'])) {
                     continue;
                 }
+                if ($attributeType === null) {
+                    continue;
+                }
                 $fieldPath = $this->getFieldPath($entity, $attribute);
                 if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
                     $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
