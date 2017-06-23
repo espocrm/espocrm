@@ -1352,7 +1352,7 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             }
         ');
         $actual = $this->formula->process($item);
-        $this->assertEquals(6, $actual);
+        $this->assertEquals(5, $actual);
 
         $item = json_decode('
             {
@@ -1366,7 +1366,35 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             }
         ');
         $actual = $this->formula->process($item);
-        $this->assertEquals(1, $actual);
+        $this->assertEquals(0, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\dayOfWeek",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": ""
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(-1, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\dayOfWeek",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-05-12"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(5, $actual);
     }
 
     function testDatetimeDiff()
