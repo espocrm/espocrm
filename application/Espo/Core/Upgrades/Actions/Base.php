@@ -389,9 +389,7 @@ abstract class Base
     {
         if (!isset($this->data['fileList'])) {
             $packagePath = $this->getPackagePath();
-            $filesPath = Util::concatPath($packagePath, self::FILES);
-
-            $this->data['fileList'] = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+            $this->data['fileList'] = $this->getFileList($packagePath);
         }
 
         return $this->data['fileList'];
@@ -401,12 +399,53 @@ abstract class Base
     {
         if (!isset($this->data['restoreFileList'])) {
             $backupPath = $this->getPath('backupPath');
-            $backupFilePath = Util::concatPath($backupPath, self::FILES);
-
-            $this->data['restoreFileList'] = $this->getFileManager()->getFileList($backupFilePath, true, '', true, true);
+            $this->data['restoreFileList'] = $this->getFileList($backupPath);
         }
 
         return $this->data['restoreFileList'];
+    }
+
+    /**
+     * Get file directories (files, beforeInstallFiles, afterInstallFiles)
+     *
+     * @param  sting $parentDirPath
+     *
+     * @return array
+     */
+    protected function getFileDirs($parentDirPath = null)
+    {
+        $dirNames = $this->getParams('customDirNames');
+        $paths = array(self::FILES, $dirNames['before'], $dirNames['after']);
+
+        if (isset($parentDirPath)) {
+            foreach ($paths as &$path) {
+                $path = Util::concatPath($parentDirPath, $path);
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Get file list from directories: files, beforeUpgradeFiles, afterUpgradeFiles
+     *
+     * @param  string $dirPath
+     *
+     * @return array
+     */
+    protected function getFileList($dirPath)
+    {
+        $fileList = array();
+
+        $paths = $this->getFileDirs($dirPath);
+        foreach ($paths as $filesPath) {
+            if (file_exists($filesPath)) {
+                $files = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+                $fileList = array_merge($fileList, $files);
+            }
+        }
+
+        return $fileList;
     }
 
     protected function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
@@ -423,15 +462,32 @@ abstract class Base
     /**
      * Copy files from upgrade/extension package
      *
-     * @param  string $processId
+     * @param  string $type
+     *
      * @return boolean
      */
-    protected function copyFiles()
+    protected function copyFiles($type = null)
     {
-        $packagePath = $this->getPackagePath();
-        $filesPath = Util::concatPath($packagePath, self::FILES);
+        switch ($type) {
+            case 'before':
+            case 'after':
+                $dirNames = $this->getParams('customDirNames');
+                $dirPath = $dirNames[$type];
+                break;
 
-        return $this->copy($filesPath, '', true);
+            default:
+                $dirPath = self::FILES;
+                break;
+        }
+
+        $packagePath = $this->getPackagePath();
+        $filesPath = Util::concatPath($packagePath, $dirPath);
+
+        if (file_exists($filesPath)) {
+            return $this->copy($filesPath, '', true);
+        }
+
+        return true;
     }
 
     public function getManifest()
