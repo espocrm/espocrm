@@ -42,6 +42,11 @@ class ExtensionManager extends Upgrades\Base
             'after' => 'AfterInstall',
             'beforeUninstall' => 'BeforeUninstall',
             'afterUninstall' => 'AfterUninstall',
+        ),
+
+        'customDirNames' => array(
+            'before' => 'beforeInstallFiles',
+            'after' => 'afterInstallFiles',
         )
     );
 }

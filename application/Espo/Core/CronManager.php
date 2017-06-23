@@ -283,24 +283,20 @@ class CronManager
             }
 
             try {
-                $previousDate = $cronExpression->getPreviousRunDate()->format('Y-m-d H:i:s');
+                $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('CronManager (ScheduledJob ['.$scheduledJob['id'].']): Unsupported CRON expression ['.$scheduling.']');
                 continue;
             }
 
-            if ($cronExpression->isDue()) {
-                $previousDate = date('Y-m-d H:i:s');
-            }
-
-            $existingJob = $this->getCronJob()->getJobByScheduledJob($scheduledJob['id'], $previousDate);
+            $existingJob = $this->getCronJob()->getJobByScheduledJob($scheduledJob['id'], $nextDate);
             if ($existingJob) continue;
 
             $className = $this->getScheduledJobUtil()->get($scheduledJob['job']);
             if ($className) {
                 if (method_exists($className, 'prepare')) {
                     $implementation = new $className($this->container);
-                    $implementation->prepare($scheduledJob, $previousDate);
+                    $implementation->prepare($scheduledJob, $nextDate);
                     continue;
                 }
             }
@@ -314,7 +310,7 @@ class CronManager
                 'name' => $scheduledJob['name'],
                 'status' => self::PENDING,
                 'scheduledJobId' => $scheduledJob['id'],
-                'executeTime' => $previousDate,
+                'executeTime' => $nextDate,
                 'method' => $scheduledJob['job']
             ));
             $this->getEntityManager()->saveEntity($jobEntity);
