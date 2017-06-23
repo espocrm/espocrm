@@ -40,8 +40,6 @@ Espo.define('views/admin/field-manager/fields/link/default', 'views/fields/link'
             data.nameValue = nameValue;
             data.idValue = idValue;
 
-            console.log(data)
-
             return data;
         },
 
