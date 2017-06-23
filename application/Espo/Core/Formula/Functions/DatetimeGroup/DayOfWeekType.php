@@ -54,18 +54,15 @@ class DayOfWeekType extends \Espo\Core\Formula\Functions\Base
 
         $value = $this->evaluate($item->value[0]);
 
-        if (empty($value)) return 0;
+        if (empty($value)) return -1;
 
         if (strlen($value) > 11) {
-            $resultString = $this->getInjection('dateTime')->convertSystemDateTime($value, null, 'D');
+            $resultString = $this->getInjection('dateTime')->convertSystemDateTime($value, null, 'e');
         } else {
-            $resultString = $this->getInjection('dateTime')->convertSystemDate($value, 'D');
+            $resultString = $this->getInjection('dateTime')->convertSystemDate($value, 'e');
         }
 
-        $result = intval($resultString) + 1;
-        if ($result == 8) {
-            $result = 1;
-        }
+        $result = intval($resultString);
 
         return $result;
     }
