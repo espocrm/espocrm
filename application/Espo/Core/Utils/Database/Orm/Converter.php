@@ -192,6 +192,13 @@ class Converter
     {
         foreach ($ormMeta as $entityName => &$entityParams) {
             foreach ($entityParams['fields'] as $fieldName => &$fieldParams) {
+
+                /* remove fields without type */
+                if (!isset($fieldParams['type']) && (!isset($fieldParams['notStorable']) || $fieldParams['notStorable'] === false)) {
+                    unset($entityParams['fields'][$fieldName]);
+                    continue;
+                }
+
                 switch ($fieldParams['type']) {
                     case 'id':
                         if ($fieldParams['dbType'] != 'int') {
