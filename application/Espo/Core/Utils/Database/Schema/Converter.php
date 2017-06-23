@@ -440,13 +440,13 @@ class Converter
 
             $dependentEntities[] = $entityName;
 
-            foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
-
-                if (isset($relationParams['entity'])) {
-                    $relationEntity = $relationParams['entity'];
-
-                    if (!in_array($relationEntity, $dependentEntities)) {
-                        $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+            if (array_key_exists('relations', $ormMeta[$entityName])) {
+                foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
+                    if (isset($relationParams['entity'])) {
+                        $relationEntity = $relationParams['entity'];
+                        if (!in_array($relationEntity, $dependentEntities)) {
+                            $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+                        }
                     }
                 }
             }
