@@ -45,6 +45,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupAttachmentsPeriod = '1 month';
 
+    protected $cleanupRemindersPeriod = '15 days';
+
     public function run()
     {
         $this->cleanupJobs();
@@ -97,6 +99,19 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $datetime->modify($period);
 
         $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < '" . $datetime->format('Y-m-d') . "'";
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+    }
+
+    protected function cleanupReminders()
+    {
+        $period = '-' . $this->getConfig()->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
+
+        $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < '" . $datetime->format('Y-m-d') . "'";
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
