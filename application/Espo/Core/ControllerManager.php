@@ -60,9 +60,9 @@ class ControllerManager
 
     public function process($controllerName, $actionName, $params, $data, $request)
     {
-        $customeClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
-        if (class_exists($customeClassName)) {
-            $controllerClassName = $customeClassName;
+        $customClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($controllerName);
+        if (class_exists($customClassName)) {
+            $controllerClassName = $customClassName;
         } else {
             $moduleName = $this->metadata->getScopeModuleName($controllerName);
             if ($moduleName) {
