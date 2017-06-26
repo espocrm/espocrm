@@ -102,6 +102,26 @@ class EntityManager
         return $this->container->get('serviceFactory');
     }
 
+    protected function checkControllerExists($name)
+    {
+        $controllerClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
+        if (class_exists($controllerClassName)) {
+            return true;
+        } else {
+            foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+                $controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
+                if (class_exists($controllerClassName)) {
+                    return true;
+                }
+            }
+            $controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($name);
+            if (class_exists($controllerClassName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function create($name, $type, $params = array())
     {
         $name = ucfirst($name);
@@ -112,6 +132,10 @@ class EntityManager
         }
         if (empty($name) || empty($type)) {
             throw new Error();
+        }
+
+        if ($this->checkControllerExists($name)) {
+            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 
         $serviceFactory = $this->getServiceFactory();
