@@ -405,8 +405,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             } else {
                                 if (!empty($columns)) {
                                     foreach ($columns as $columnName => $columnField) {
-                                        if (isset($columnData->$id)) {
-                                            if ($columnData->$id->$columnName !== $existingColumnsData->$id->$columnName) {
+                                        if (isset($columnData->$id) && is_object($columnData->$id)) {
+                                            if (
+                                                property_exists($columnData->$id, $columnName)
+                                                &&
+                                                (
+                                                    !property_exists($existingColumnsData->$id, $columnName)
+                                                    ||
+                                                    $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
+                                                )
+                                            ) {
                                                 $toUpdateIds[] = $id;
                                             }
                                         }
