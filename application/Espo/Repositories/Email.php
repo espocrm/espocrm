@@ -119,7 +119,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc'])
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc'])
     {
         $addressList = array();
         if (in_array('from', $fieldList) && $entity->get('from')) {
@@ -137,6 +137,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         if (in_array('cc', $fieldList)) {
             $arr = explode(';', $entity->get('cc'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
+            }
+        }
+        if (in_array('bcc', $fieldList)) {
+            $arr = explode(';', $entity->get('bcc'));
             foreach ($arr as $address) {
                 if (!in_array($address, $addressList)) {
                     $addressList[] = $address;
