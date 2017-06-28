@@ -56,17 +56,6 @@ Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-
-            var currencyListField = this.getFieldView('currencyList');
-            var defaultCurrencyField = this.getFieldView('defaultCurrency');
-            if (currencyListField && defaultCurrencyField) {
-                this.listenTo(currencyListField, 'change', function () {
-                    var data = currencyListField.fetch();
-                    var options = data.currencyList;
-                    defaultCurrencyField.params.options = options;
-                    defaultCurrencyField.render();
-                }.bind(this));
-            }
         },
 
         exit: function (after) {
