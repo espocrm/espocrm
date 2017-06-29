@@ -12,7 +12,7 @@
       },
       {
          "name":"default",
-         "type":"enum",
+         "type":"varchar",
          "view": "views/admin/field-manager/fields/options/default"
       },
       {
