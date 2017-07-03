@@ -59,7 +59,7 @@ class Team extends Record
         }
     }
 
-    protected function clearRolesCache($id)
+    protected function clearRolesCache()
     {
         $this->getFileManager()->removeInDir('data/cache/application/acl');
     }
