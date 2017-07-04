@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "Adresa e-pošte",
+    "status": "Status",
+    "assignToUser": "Zaduži korisnika",
+    "host": "Host",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "port": "Port",
+    "monitoredFolders": "Nadgledani folderi",
+    "trashFolder": "Folder za otpad",
+    "ssl": "SSL",
+    "createCase": "Napravi predmet",
+    "reply": "Automatski odgovor",
+    "caseDistribution": "Distribucija predmeta",
+    "replyEmailTemplate": "Šablon odgovora na e-poruku",
+    "replyFromAddress": "Odgovor sa adrese",
+    "replyToAddress": "Adresa za slanje odgovora",
+    "replyFromName": "Ko šalje odgovor",
+    "targetUserPosition": "Pozicija ciljanog korisnika",
+    "fetchSince": "Preuzmi od",
+    "addAllTeamUsers": "Za sve korisnike tima",
+    "team": "Ciljani tim",
+    "teams": "Timovi"
+  },
+  "tooltips": {
+    "reply": "Obavesti e-pošiljaoce da je primljena e-pošta. \n\n Samo jedna poruka će biti poslata određenom primaocu u određenom vremenskom periodu da se spreči ponavljanje.",
+    "createCase": "Automatski napravi predmet za sve dolazne e-poruke.",
+    "replyToAddress": "Navedite adresu ovog sandučeta kako bi odgovori stizali ovamo.",
+    "caseDistribution": "Kako će predmeti biti zadužavani. Zadužavati direktno korisnika ili unutar tima.",
+    "assignToUser": "Korisnički predmeti će biti dodeljeni",
+    "team": "Predmeti tima će biti dodeljeni.",
+    "teams": "E-pošta timova će biti dodeljena.",
+    "addAllTeamUsers": "E-pošta će se pojaviti u Primljenim svih korisnika navedenih timova.",
+    "targetUserPosition": "Korisnicima sa određenim položajem će dodeljeni predmeti.",
+    "monitoredFolders": "Više fascikli mora biti odeljeno zapetom."
+  },
+  "links": {
+    "filters": "Filteri",
+    "emails": "E-poruke"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Inactive": "Neaktivan"
+    },
+    "caseDistribution": {
+      "": "Nema",
+      "Direct-Assignment": "Dirktna dodela",
+      "Round-Robin": "U krug",
+      "Least-Busy": "Najmanje zauzet"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Stvoriti nalog e-pošte",
+    "IMAP": "IMAP",
+    "Actions": "Akcije",
+    "Main": "Glavni"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Ne može da se poveže na IMAP server"
+  }
+}

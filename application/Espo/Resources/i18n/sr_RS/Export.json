@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "fieldList": "Polje lista",
+    "exportAllFields": "Izvesti sva polja",
+    "format": "Format"
+  },
+  "options": {
+    "format": {
+      "csv": "CSV datoteke",
+      "xlsx": "XLSX (Excel),"
+    }
+  }
+}

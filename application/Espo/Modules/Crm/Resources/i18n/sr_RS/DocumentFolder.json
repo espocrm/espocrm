@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Napraviti fasciklu za dokumente",
+    "Manage Categories": "Upravljanje fasciklama",
+    "Documents": "Dokumenti"
+  },
+  "links": {
+    "documents": "Dokumenti"
+  }
+}

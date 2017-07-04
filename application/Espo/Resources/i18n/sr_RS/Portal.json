@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Ime",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL adresa",
+    "portalRoles": "Uloge",
+    "isActive": "Aktivan",
+    "isDefault": "je podrazumevano",
+    "tabList": "Lista kartica",
+    "quickCreateList": "Lista za brzo pravljenje",
+    "theme": "Tema",
+    "language": "Jezik",
+    "dashboardLayout": "Kontrolna tabla raspored",
+    "dateFormat": "Format datuma",
+    "timeFormat": "Format vremena",
+    "timeZone": "Vremenska zona",
+    "weekStart": "Prvi dan sedmice",
+    "defaultCurrency": "Uobičajena valuta",
+    "customUrl": "Prilagođeni URL",
+    "customId": "Prilagođeni ID"
+  },
+  "links": {
+    "users": "Korisnici",
+    "portalRoles": "Uloge",
+    "notes": "Beleške"
+  },
+  "tooltips": {
+    "portalRoles": "Navedene Portal Uloge će se primeniti na sve korisnike ovog portala."
+  },
+  "labels": {
+    "Create Portal": "Napravite portal",
+    "User Interface": "Korisnički interfejs",
+    "General": "Opšta",
+    "Settings": "Podešavanja"
+  }
+}

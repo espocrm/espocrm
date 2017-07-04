@@ -76,6 +76,7 @@ return array (
         'nb_NO',
         'nl_NL',
         'tr_TR',
+        'sr_RS',
         'ro_RO',
         'ru_RU',
         'pl_PL',

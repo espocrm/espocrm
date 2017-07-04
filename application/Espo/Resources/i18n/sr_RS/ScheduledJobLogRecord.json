@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Status",
+    "executionTime": "Vreme izvršenja",
+    "target": "Meta"
+  }
+}

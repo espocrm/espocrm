@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Status",
+    "isHtml": "je HTML",
+    "body": "Telo",
+    "subject": "Predmet",
+    "attachments": "Prilozi",
+    "insertField": "Ubaci polje",
+    "oneOff": "Jednokratno"
+  },
+  "labels": {
+    "Create EmailTemplate": "Kreiraj šablon e-pošte",
+    "Info": "Info"
+  },
+  "tooltips": {
+    "oneOff": "Označite ako nameravate da koristite ovaj obrazac samo jednom. Npr. masovna poruka."
+  },
+  "presetFilters": {
+    "actual": "Trenutni"
+  },
+  "messages": {
+    "infoText": "Dostupne promenljive: \n\n{optOutUrl} &#8211; URL za link za odjavljivanje;\n\n{optOutLink} &#8211; link za odjavljivanje."
+  }
+}
