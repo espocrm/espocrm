@@ -213,9 +213,11 @@ Espo.define('view-helper', [], function () {
             });
 
             Handlebars.registerHelper('complexText', function (text) {
-                text = Handlebars.Utils.escapeExpression(text || '');
+                text = text || ''
 
                 text = text.replace(self.urlRegex, '$1[$2]($2)');
+
+                text = Handlebars.Utils.escapeExpression(text);
 
                 self.mdSearch.forEach(function (re, i) {
                     text = text.replace(re, self.mdReplace[i]);
