@@ -338,10 +338,8 @@ class InboundEmail extends \Espo\Services\Record
 
                         if ($emailAccount->get('createCase')) {
                             $this->createCase($emailAccount, $email);
-                        } elseif($emailAccount->get('createLead')) {
-                            if (!empty($email) && !$this->checkIfLeadExists($email->get('from'), $email->get('body'))) {
+                        } elseif($emailAccount->get('createLead') && !$this->checkIfLeadExists($email->get('from'), $email->get('body'))) {
                                 $this->createLeadForInboundEmail($email);
-                            }
                         } else {
                             if ($emailAccount->get('reply')) {
                                 $user = $this->getEntityManager()->getEntity('User', $userId);
@@ -724,6 +722,7 @@ class InboundEmail extends \Espo\Services\Record
         }
         return $this->campaignService;
     }
+
     protected function createLeadForInboundEmail($email)
     {
             $entityManager = $this->getEntityManager();
@@ -748,7 +747,7 @@ class InboundEmail extends \Espo\Services\Record
 
             $oLead->set($aLeadArray);
 
-            $entityManager->saveEntity($oLead);
+        return $entityManager->saveEntity($oLead);
     }
 
     protected function checkIfLeadExists($sEmail, $sDescription)
