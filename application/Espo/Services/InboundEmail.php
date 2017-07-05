@@ -338,6 +338,8 @@ class InboundEmail extends \Espo\Services\Record
 
                         if ($emailAccount->get('createCase')) {
                             $this->createCase($emailAccount, $email);
+                        } elseif($emailAccount->get('createLead') && !$this->checkIfLeadExists($email->get('from'), $email->get('body'))) {
+                                $this->createLeadForInboundEmail($email);
                         } else {
                             if ($emailAccount->get('reply')) {
                                 $user = $this->getEntityManager()->getEntity('User', $userId);
@@ -719,6 +721,46 @@ class InboundEmail extends \Espo\Services\Record
             $this->campaignService = $this->getServiceFactory()->create('Campaign');
         }
         return $this->campaignService;
+    }
+
+    protected function createLeadForInboundEmail($email)
+    {
+            $entityManager = $this->getEntityManager();
+            $oLead = $entityManager->getEntity('Lead');
+
+            $aLeadArray = array();
+
+            $sFromString = $email->get('fromString');
+            $aFromString = explode('<', $sFromString);
+
+            if ($sFirstLastName = trim($aFromString[0])) {
+                $aFirstLastName = explode(' ', $sFirstLastName);
+
+                $aLeadArray['firstName'] = trim($aFirstLastName[0]);
+                if (!empty($aFirstLastName[1])) {
+                    $aLeadArray['lastName'] = trim($aFirstLastName[1]);
+                }
+            }
+
+            $aLeadArray['emailAddress'] = trim($email->get('from'));
+            $aLeadArray['description'] = trim($email->get('body'));
+
+            $oLead->set($aLeadArray);
+
+        return $entityManager->saveEntity($oLead);
+    }
+
+    protected function checkIfLeadExists($sEmail, $sDescription)
+    {
+        $entityManager = $this->getEntityManager();
+        $aWhereArray = array(
+            'emailAddress' => $sEmail,
+            'description' => $sDescription
+        );
+
+        $aLeadsList = $entityManager->getRepository('Lead')->where($aWhereArray)->find();
+
+        return count($aLeadsList->getInnerContainer());
     }
 
 }

@@ -20,7 +20,8 @@
     "replyFromName": "Absendername für Rückantwort",
     "targetUserPosition": "Position Zielbenutzer",
     "fetchSince": "Holen seit",
-    "addAllTeamUsers": "Für alle Teambenutzer"
+    "addAllTeamUsers": "Für alle Teambenutzer",
+    "createLead": "Blei erstellen"
   },
   "tooltips": {
     "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
