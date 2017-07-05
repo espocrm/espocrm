@@ -43,7 +43,7 @@ class Config
 
     protected $configPath = 'data/config.php';
 
-    protected $customConfigPath = 'data/customConfig.php';
+    protected $customDefaultConfigPath = 'data/defaultConfig.php';
 
     private $cacheTimestamp = 'cacheTimestamp';
 
@@ -218,10 +218,10 @@ class Config
         $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
         $this->data = Util::merge($systemConfig, $this->data);
 
-        // Load custom config overrides.
-        if (file_exists($this->customConfigPath)) {
-            $customConfig = $this->getFileManager()->getPhpContents($this->customConfigPath);
-            $this->data = Util::merge($this->data, $customConfig);
+        // Load custom config defaults.
+        if (file_exists($this->customDefaultConfigPath)) {
+            $customDefaultConfig = $this->getFileManager()->getPhpContents($this->customConfigPath);
+            $this->data = Util::merge($customDefaultConfig, $this->data);
         }
 
         return $this->data;

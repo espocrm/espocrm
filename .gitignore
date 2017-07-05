@@ -4,7 +4,6 @@
 /data/preferences/*
 /data/.backup/*
 /data/config.php
-/data/customConfig.php
 /build
 /node_modules
 /test.php
