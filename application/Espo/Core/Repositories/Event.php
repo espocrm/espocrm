@@ -38,6 +38,8 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
 
     protected function afterRemove(Entity $entity, array $options = array())
     {
+        parent::afterRemove($entity, $options);
+
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             DELETE FROM `reminder`
