@@ -220,7 +220,7 @@ class Config
 
         // Load custom config defaults.
         if (file_exists($this->customDefaultConfigPath)) {
-            $customDefaultConfig = $this->getFileManager()->getPhpContents($this->customConfigPath);
+            $customDefaultConfig = $this->getFileManager()->getPhpContents($this->customDefaultConfigPath);
             $this->data = Util::merge($customDefaultConfig, $this->data);
         }
 
