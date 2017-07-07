@@ -52,8 +52,6 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
     public function beforeSave(Entity $entity, array $options = array())
     {
-        parent::beforeSave($entity, $options);
-
         $storage = $entity->get('storage');
         if (!$storage) {
             $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
@@ -64,6 +62,8 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
                 $entity->set('size', mb_strlen($entity->has('contents')));
             }
         }
+
+        parent::beforeSave($entity, $options);
     }
 
     public function save(Entity $entity, array $options = array())

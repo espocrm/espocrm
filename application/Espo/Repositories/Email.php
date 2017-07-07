@@ -187,7 +187,6 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
-                        $entity->setLinkMultipleColumn('users', 'isRead', $ids[0], true);
 
                         if (!$entity->get('sentById')) {
                             $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User');
@@ -220,14 +219,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        parent::beforeSave($entity, $options);
-
-        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
-            $entity->addLinkMultipleId('users', $entity->get('createdById'));
-        }
-
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
+
         if (!empty($parentId) || !empty($parentType)) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!empty($parent)) {
@@ -244,6 +238,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     }
                 }
             }
+        }
+
+        parent::beforeSave($entity, $options);
+
+        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+            $entity->addLinkMultipleId('users', $entity->get('createdById'));
+            $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
         }
 
         if ($entity->get('isBeingImported')) {
