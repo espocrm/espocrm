@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "名称",
+    "parent": "关联",
+    "status": "状态",
+    "dateStart": "起始日期",
+    "dateEnd": "日期结束",
+    "direction": "方向",
+    "duration": "持续时间",
+    "description": "描述",
+    "users": "用户",
+    "contacts": "联系人",
+    "leads": "线索",
+    "reminders": "提醒",
+    "account": "客户",
+    "acceptanceStatus": "接受状态"
+  },
+  "options": {
+    "status": {
+      "Planned": "已计划",
+      "Held": "已进行",
+      "Not Held": "未进行"
+    },
+    "direction": {
+      "Outbound": "呼出",
+      "Inbound": "呼入"
+    },
+    "acceptanceStatus": {
+      "None": "无",
+      "Accepted": "接受",
+      "Declined": "拒绝",
+      "Tentative": "暂缓"
+    }
+  },
+  "massActions": {
+    "setHeld": "设为进行",
+    "setNotHeld": "设为未进行"
+  },
+  "labels": {
+    "Create Call": "创建通话",
+    "Set Held": "设为举行",
+    "Set Not Held": "设为未举行",
+    "Send Invitations": "发送邀请"
+  },
+  "presetFilters": {
+    "planned": "已计划",
+    "held": "已进行",
+    "todays": "今天的"
+  }
+}

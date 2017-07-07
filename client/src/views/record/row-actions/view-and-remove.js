@@ -36,7 +36,8 @@ Espo.define('views/record/row-actions/view-and-remove', 'views/record/row-action
                 label: 'View',
                 data: {
                     id: this.model.id
-                }
+                },
+                link: '#' + this.model.name + '/view/' + this.model.id
             }];
             if (this.options.acl.edit) {
                 actionList.push({

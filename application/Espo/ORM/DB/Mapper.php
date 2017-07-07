@@ -66,9 +66,8 @@ abstract class Mapper implements IMapper
         }
 
         $params['whereClause']['id'] = $id;
-        $params['whereClause']['deleted'] = 0;
 
-        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
 
         $ps = $this->pdo->query($sql);
 
@@ -103,7 +102,7 @@ abstract class Mapper implements IMapper
 
     public function select(IEntity $entity, $params = array())
     {
-        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params);
+        $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
 
         return $this->selectByQuery($entity, $sql);
     }

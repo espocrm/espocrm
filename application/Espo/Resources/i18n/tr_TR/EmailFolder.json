@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Bildirimleri Atla"
+  },
+  "labels": {
+    "Create EmailFolder": "Klasör oluşturun",
+    "Manage Folders": "Klasörleri Yönet",
+    "Emails": "E-postalar "
+  }
+}

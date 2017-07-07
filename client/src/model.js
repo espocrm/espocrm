@@ -101,6 +101,13 @@ Espo.define('model', [], function () {
                         var defaultValue = this.parseDefaultValue(defaultValue);
                         defaultHash[field] = defaultValue;
                     }
+
+                    var defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
+                    if (defaultAttributes) {
+                        for (var attribute in defaultAttributes) {
+                            defaultHash[attribute] = defaultAttributes[attribute];
+                        }
+                    }
                 }
             }
 

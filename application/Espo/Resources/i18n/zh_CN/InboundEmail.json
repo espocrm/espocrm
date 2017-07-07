@@ -1,0 +1,62 @@
+{
+  "fields": {
+    "name": "名称",
+    "emailAddress": "电子邮件地址",
+    "status": "状态",
+    "assignToUser": "分配给用户",
+    "host": "服务器",
+    "username": "用户名",
+    "password": "密码",
+    "port": "端口",
+    "monitoredFolders": "监视文件夹",
+    "trashFolder": "垃圾文件夹",
+    "ssl": "SSL",
+    "createCase": "创建案例",
+    "reply": "自动回复",
+    "caseDistribution": "案例分发",
+    "replyEmailTemplate": "回复电子邮件模板",
+    "replyFromAddress": "回复地址",
+    "replyToAddress": "回复地址",
+    "replyFromName": "回复名称",
+    "targetUserPosition": "目标用户位置",
+    "fetchSince": "Fetch Since",
+    "addAllTeamUsers": "对于所有团队用户",
+    "team": "目标团队",
+    "teams": "团队"
+  },
+  "tooltips": {
+    "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n 只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
+    "createCase": "自动从传入电子邮件创建案例。\"",
+    "replyToAddress": "指定此邮箱的电子邮件地址，以便响应到这里。",
+    "caseDistribution": "如何分配案例，直接指派给用户或团队。",
+    "assignToUser": "用户案例将会指派给。",
+    "team": "团队案例将会指派给。",
+    "teams": "团队电子邮件将会指派给。",
+    "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。"
+  },
+  "links": {
+    "filters": "过滤器",
+    "emails": "邮箱"
+  },
+  "options": {
+    "status": {
+      "Active": "活性",
+      "Inactive": "待用"
+    },
+    "caseDistribution": {
+      "": "没有",
+      "Direct-Assignment": "直接分配",
+      "Round-Robin": "循环",
+      "Least-Busy": "最不忙"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "创建电子邮件帐户",
+    "IMAP": "IMAP",
+    "Actions": "操作",
+    "Main": "主要"
+  },
+  "messages": {
+    "couldNotConnectToImap": "无法连接到IMAP服务器"
+  }
+}

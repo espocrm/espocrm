@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "URL",
+    "urlToUse": "Код для вставки замість URL",
+    "campaign": "Кампанія"
+  },
+  "links": {
+    "campaign": "Кампанія"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Створити відстежувану URL"
+  }
+}

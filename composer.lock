@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e599a4ab425b29d1e585685684a0bffd",
-    "content-hash": "81595e763c766d29eca4a5b03a007f2f",
+    "hash": "cee1fbed429077eccb3334d4086bcc48",
+    "content-hash": "47173c776f7086e30358a4239b5decef",
     "packages": [
         {
             "name": "composer/semver",
@@ -767,6 +767,63 @@
             "time": "2016-10-07 16:46:22"
         },
         {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01 07:00:55"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -806,16 +863,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "2.4.2",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e"
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/3a2ac723f17b5d81607287ff28575d38b9fbc70e",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/20a02782f76830b67ae56a5c08eb1f563c351a37",
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37",
                 "shasum": ""
             },
             "require": {
@@ -848,7 +905,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2014-02-16 18:18:25"
+            "time": "2015-03-08 18:41:17"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -962,6 +1019,57 @@
                 "image"
             ],
             "time": "2014-07-13 09:19:12"
+        },
+        {
+            "name": "zbateson/mail-mime-parser",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/MailMimeParser.git",
+                "reference": "c60636e6744c34508635393f196f214d65a827d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/c60636e6744c34508635393f196f214d65a827d6",
+                "reference": "c60636e6744c34508635393f196f214d65a827d6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "evert/phpdoc-md": "~0.1.1",
+                "phing/phing": "~2.15.0",
+                "phpdocumentor/phpdocumentor": "~2.8.0",
+                "phpunit/phpunit": "~4.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\MailMimeParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson",
+                    "email": "zbateson@users.noreply.github.com"
+                }
+            ],
+            "description": "MIME email message parser",
+            "homepage": "https://github.com/zbateson/MailMimeParser",
+            "keywords": [
+                "email",
+                "mail",
+                "mime",
+                "parser",
+                "php-imap"
+            ],
+            "time": "2017-04-05 21:50:13"
         },
         {
             "name": "zendframework/zend-crypt",

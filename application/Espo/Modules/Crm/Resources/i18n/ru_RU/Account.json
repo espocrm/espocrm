@@ -13,7 +13,8 @@
     "contactRole": "Должность",
     "campaign": "Кампания",
     "targetLists": "Списки целей",
-    "targetList": "Список целей"
+    "targetList": "Список целей",
+    "originalLead": "Original Lead"
   },
   "links": {
     "contacts": "Контакты",
@@ -27,7 +28,8 @@
     "targetLists": "Списки целей",
     "campaignLogRecords": "Журнал кампании",
     "campaign": "Кампания",
-    "portalUsers": "Пользователи портала"
+    "portalUsers": "Пользователи портала",
+    "originalLead": "Original Lead"
   },
   "options": {
     "type": {
@@ -66,7 +68,27 @@
       "Telecommunications": "Telecommunications",
       "Television": "Television",
       "Transportation": "Transportation",
-      "Venture Capital": "Venture Capital"
+      "Venture Capital": "Venture Capital",
+      "Aerospace": "Aerospace",
+      "Architecture": "Architecture",
+      "Construction": "Construction",
+      "Defense": "Defense",
+      "Creative": "Creative",
+      "Culture": "Culture",
+      "Consulting": "Consulting",
+      "Electric Power": "Electric Power",
+      "Hospitality": "Hospitality",
+      "Mass Media": "Mass Media",
+      "Mining": "Mining",
+      "Music": "Music",
+      "Marketing": "Marketing",
+      "Petroleum": "Petroleum",
+      "Retail": "Retail",
+      "Shipping": "Shipping",
+      "Support": "Support",
+      "Testing, Inspection & Certification": "Testing, Inspection & Certification",
+      "Wholesale": "Wholesale",
+      "Water": "Water"
     }
   },
   "labels": {
@@ -75,9 +97,7 @@
   },
   "presetFilters": {
     "customers": "Заказчики",
-    "partners": "Партнеры"
-  },
-  "streamMessages": {
-    "emailReceivedFrom": "Получено эл. письмо от {from}, относится к контрагенту {entity}"
+    "partners": "Партнеры",
+    "recentlyCreated": "Недавно созданный"
   }
 }

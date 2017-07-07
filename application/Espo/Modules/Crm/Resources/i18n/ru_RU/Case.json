@@ -9,7 +9,8 @@
     "priority": "Приоритет",
     "type": "Тип",
     "description": "Описание",
-    "inboundEmail": "Входящая эл. почта"
+    "inboundEmail": "Входящая эл. почта",
+    "lead": "Лид"
   },
   "links": {
     "inboundEmail": "Входящая эл. почта",
@@ -20,7 +21,8 @@
     "calls": "Звонки",
     "tasks": "Задачи",
     "emails": "Эл. письма",
-    "articles": "Статьи базы знаний"
+    "articles": "Статьи базы знаний",
+    "lead": "Лид"
   },
   "options": {
     "status": {

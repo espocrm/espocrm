@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Forelder",
+    "dateStart": "Startdato",
+    "dateEnd": "Sluttdato",
+    "duration": "Varighet",
+    "status": "Status",
+    "reminders": "Påminnelser"
+  },
+  "links": {
+    "parent": "Forelder"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlagt",
+      "Held": "Gjennomført",
+      "Not Held": "Ikke gjennomført"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Opprett {entityTypeTranslated}",
+    "Schedule {entityType}": "Planlegg {entityTypeTranslated}",
+    "Log {entityType}": "Logg {entityTypeTranslated}",
+    "Set Held": "Merk som gjennomført",
+    "Set Not Held": "Merk som ikke gjennomført"
+  },
+  "massActions": {
+    "setHeld": "Merk som gjennomført",
+    "setNotHeld": "Merk som ikke gjennomført"
+  },
+  "presetFilters": {
+    "planned": "Planlagt",
+    "held": "Gjennomført",
+    "todays": "Dagens"
+  }
+}

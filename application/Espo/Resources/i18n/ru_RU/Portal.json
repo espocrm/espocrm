@@ -16,7 +16,9 @@
     "timeFormat": "Формат времени",
     "timeZone": "Часовой пояс",
     "weekStart": "Первый день недели",
-    "defaultCurrency": "Валюта по умолчанию"
+    "defaultCurrency": "Валюта по умолчанию",
+    "customUrl": "Пользовательский URL",
+    "customId": "Custom ID"
   },
   "links": {
     "users": "Пользователи",

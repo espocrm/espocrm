@@ -35,7 +35,8 @@
     "portalRoles": "Portal Rollen",
     "contact": "Kontakt",
     "accounts": "Firmen",
-    "account": "Benutzerkonto (Primär)"
+    "account": "Benutzerkonto (Primär)",
+    "tasks": "Aufgaben"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -50,13 +51,14 @@
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
     "Portal": "Portal",
-    "Create Portal User": "Portalbenutzer erstellen"
+    "Create Portal User": "Portalbenutzer erstellen",
+    "Proceed w/o Contact": "Weiter mit Kontakt"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
     "userName": "Erlaubte Zeichen sind die Buchstaben a-z, Ziffern, Punkt, @-Symbol, Strich und Unterstrich.",
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-    "isActive": "Wenn nicht markiert kann der Benutzer nicht einloggen",
+    "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
     "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",

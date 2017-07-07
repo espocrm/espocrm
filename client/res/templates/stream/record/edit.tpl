@@ -15,17 +15,19 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div class="cell form-group" data-name="targetType">
+        <div class="form-group">
+        <div class="cell" data-name="targetType">
             <div class="field" data-name="targetType">{{{targetType}}}</div>
         </div>
-        <div class="cell form-group" data-name="users">
+        <div class="cell" data-name="users">
             <div class="field" data-name="users">{{{users}}}</div>
         </div>
-        <div class="cell form-group" data-name="teams">
+        <div class="cell" data-name="teams">
             <div class="field" data-name="teams">{{{teams}}}</div>
         </div>
-        <div class="cell form-group" data-name="portals">
+        <div class="cell" data-name="portals">
             <div class="field" data-name="portals">{{{portals}}}</div>
+        </div>
         </div>
     </div>
 </div>

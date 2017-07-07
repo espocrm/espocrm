@@ -70,9 +70,9 @@ class MassEmail extends \Espo\Services\Record
         }
     }
 
-    protected function afterRemove(Entity $entity, array $data = array())
+    protected function afterRemove(Entity $massEmail, array $data = array())
     {
-        parent::afterRemove($entity, $data);
+        parent::afterRemove($massEmail, $data);
         $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => ['Pending', 'Failed'],
             'massEmailId' => $massEmail->id
@@ -337,8 +337,6 @@ class MassEmail extends \Espo\Services\Record
 
         $body = $emailData['body'];
 
-
-
         $optOutUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=unsubscribe&id=' . $queueItem->id;
         $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
 
@@ -452,6 +450,13 @@ class MassEmail extends \Espo\Services\Record
             $header = new \Espo\Core\Mail\Mail\Header\XQueueItemId();
             $header->setId($queueItem->id);
             $message->getHeaders()->addHeader($header);
+
+            $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
+
+            if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
+                $optOutUrl = $this->getConfig()->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+                $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
+            }
 
             $this->getMailSender()->useGlobal()->send($email, $params, $message, $attachmentList);
 

@@ -51,7 +51,7 @@
                     <li class="divider"></li>
                     {{#each menu}}
                         {{#unless divider}}
-                            <li><a href="{{link}}" class="nav-link">{{label}}</a></li>
+                            <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{label}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}

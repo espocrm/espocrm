@@ -1,0 +1,66 @@
+{
+  "labels": {
+    "Converted To": "Konvertert til",
+    "Create Lead": "Opprett ledetråd",
+    "Convert": "Konvertert",
+    "convert": "konvertert"
+  },
+  "fields": {
+    "name": "Navn",
+    "emailAddress": "Epost",
+    "title": "Tittel",
+    "website": "Nettside",
+    "phoneNumber": "Telefon",
+    "accountName": "Kontonavn",
+    "doNotCall": "Ikke ring!",
+    "address": "Adresse",
+    "status": "Status",
+    "source": "Kilde",
+    "opportunityAmount": "Beløp for mulighet",
+    "opportunityAmountConverted": "Beløp for mulighet (konverter)",
+    "description": "Beskrivelse",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Mulighet",
+    "campaign": "Kampanje",
+    "targetLists": "Målgrupper",
+    "targetList": "Målgruppe",
+    "industry": "Industri"
+  },
+  "links": {
+    "targetLists": "Målgrupper",
+    "campaignLogRecords": "Kampanjelogg",
+    "campaign": "Kampanje",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Mulighet",
+    "cases": "Saker",
+    "documents": "Dokumenter"
+  },
+  "options": {
+    "status": {
+      "New": "Ny",
+      "Assigned": "Tildelt",
+      "In Process": "Under behandling",
+      "Converted": "Konvertert",
+      "Recycled": "Brukt på nytt",
+      "Dead": "Død"
+    },
+    "source": {
+      "": "Ingen",
+      "Call": "Samtale",
+      "Email": "Epost",
+      "Existing Customer": "Eksisterende kunde",
+      "Partner": "Partner",
+      "Public Relations": "Informasjon og samfunnskontakt (PR)",
+      "Web Site": "Nettside",
+      "Campaign": "Kampanje",
+      "Other": "Annet"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktive",
+    "actual": "Aktuell",
+    "converted": "Konvertert"
+  }
+}

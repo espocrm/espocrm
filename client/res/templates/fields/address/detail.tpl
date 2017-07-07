@@ -1,3 +1,1 @@
-{{{formattedAddress}}}
-
-
+{{breaklines formattedAddress}}

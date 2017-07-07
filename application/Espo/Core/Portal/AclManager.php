@@ -108,7 +108,7 @@ class AclManager extends \Espo\Core\AclManager
             $config = $this->getContainer()->get('config');
             $fileManager = $this->getContainer()->get('fileManager');
             $metadata = $this->getContainer()->get('metadata');
-            $fieldManager = $this->getContainer()->get('fieldManager');
+            $fieldManager = $this->getContainer()->get('fieldManagerUtil');
             $portal = $this->getPortal();
 
             $this->tableHashMap[$key] = new $this->tableClassName($user, $portal, $config, $fileManager, $metadata, $fieldManager);
@@ -176,6 +176,15 @@ class AclManager extends \Espo\Core\AclManager
             return $this->getMainManager()->checkReadOnlyTeam($user, $data);
         }
         return parent::checkReadOnlyTeam($user, $scope);
+    }
+
+    public function checkReadNo(User $user, $scope)
+    {
+        if ($this->checkUserIsNotPortal($user)) {
+            $data = $this->getTable($user)->getScopeData($scope);
+            return $this->getMainManager()->checkReadNo($user, $data);
+        }
+        return parent::checkReadNo($user, $scope);
     }
 
     public function checkReadOnlyOwn(User $user, $scope)

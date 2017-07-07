@@ -76,6 +76,11 @@
             "url":"#Admin/authTokens",
             "label":"Auth Tokens",
             "description":"authTokens"
+         },
+         {
+            "url": "#ActionHistoryRecord",
+            "label": "Action History",
+            "description": "actionHistory"
          }
       ]
    },
@@ -91,6 +96,11 @@
             "url":"#Admin/entityManager",
             "label":"Entity Manager",
             "description":"entityManager"
+         },
+         {
+            "url":"#Admin/labelManager",
+            "label":"Label Manager",
+            "description":"labelManager"
          },
          {
             "url":"#Admin/extensions",

@@ -35,7 +35,7 @@ Espo.define('crm:views/mass-email/detail', 'views/detail', function (Dep) {
             if (~['Draft', 'Pending'].indexOf(this.model.get('status'))) {
                 if (this.getAcl().checkModel(this.model, 'edit')) {
                     this.menu.buttons.push({
-                        'label': 'Sent Test',
+                        'label': 'Send Test',
                         'action': 'sendTest',
                         'acl': 'edit'
                     });

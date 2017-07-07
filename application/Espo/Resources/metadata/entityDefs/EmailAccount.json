@@ -14,7 +14,8 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Inactive"]
+            "options": ["Active", "Inactive"],
+            "default": "Active"
         },
         "host": {
             "type": "varchar",

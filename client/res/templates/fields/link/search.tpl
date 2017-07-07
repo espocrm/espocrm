@@ -3,13 +3,13 @@
 </select>
 <div class="primary">
 	<div class="input-group">
-	    <input class="form-control input-sm" type="text" name="{{nameName}}" value="{{searchParams.valueName}}" autocomplete="off" placeholder="{{translate 'Select'}}">
+	    <input class="form-control input-sm" type="text" name="{{nameName}}" value="{{searchData.nameValue}}" autocomplete="off" placeholder="{{translate 'Select'}}">
 	    <span class="input-group-btn">
 	        <button type="button" class="btn btn-sm btn-default" data-action="selectLink" tabindex="-1" title="{{translate 'Select'}}"><i class="glyphicon glyphicon-arrow-up"></i></button>
 	        <button type="button" class="btn btn-sm btn-default" data-action="clearLink" tabindex="-1"><i class="glyphicon glyphicon-remove"></i></button>
 	    </span>
 	</div>
-	<input type="hidden" name="{{idName}}" value="{{searchParams.value}}">
+	<input type="hidden" name="{{idName}}" value="{{searchData.idValue}}">
 </div>
 
 <div class="one-of-container hidden">

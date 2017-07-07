@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Aktivert",
+    "clientId": "Klient-ID",
+    "clientSecret": "Klienthemmelighet",
+    "redirectUri": "Videresendings-URI",
+    "apiKey": "API-nøkkel"
+  },
+  "messages": {
+    "selectIntegration": "Velg en integrasjon fra menyen.",
+    "noIntegrations": "Ingen integrasjoner er tilgjengelig."
+  },
+  "help": {
+    "Google": "<p><b>Hent OAuth 2.0 akkreditiver fra Google Developers Console.</b></p><p>Besøk <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> for å hente OAuth 2.0 akkreditiver, som f.eks. Client ID og Client Secret som er kjent av både Google og EspoCRM-appen.</p>",
+    "GoogleMaps": "<p>Hent API-nøkkel <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">her</a>.</p>"
+  },
+  "titles": {
+    "GoogleMaps": "Google Maps"
+  }
+}

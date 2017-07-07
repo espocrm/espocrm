@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "İsim",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
+    "portalRoles": "Roller",
+    "isActive": "Aktif",
+    "isDefault": "Ön Tanımlı",
+    "tabList": "Sekme Listesi",
+    "quickCreateList": "Çabuk liste oluştur",
+    "theme": "Tema ",
+    "language": "Dil",
+    "dashboardLayout": "Gösterge Paneli Düzeni",
+    "dateFormat": "Tarih Formatı",
+    "timeFormat": "Zaman Formatı",
+    "timeZone": "Saat Dilimi",
+    "weekStart": "Haftanın ilk günü",
+    "defaultCurrency": "Ön Tanımlı Döviz",
+    "customUrl": "Özel URL",
+    "customId": "Özel kimlik"
+  },
+  "links": {
+    "users": "Kullanıcılar",
+    "portalRoles": "Roller",
+    "notes": "Notlar "
+  },
+  "tooltips": {
+    "portalRoles": "Belirtilen Portal Rolleri, bu portalın tüm kullanıcılarına uygulanacaktır."
+  },
+  "labels": {
+    "Create Portal": "Portal Oluştur",
+    "User Interface": "Kullanıcı Arayüzü",
+    "General": "Genel",
+    "Settings": "Ayarlar"
+  }
+}

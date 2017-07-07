@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "status": "Durum",
+    "executeTime": "Burda çalıştır",
+    "attempts": "Kalan hak",
+    "failedAttempts": "Başarısız denemeler",
+    "serviceName": "Servis",
+    "method": "Metod",
+    "scheduledJob": "İş planla",
+    "data": "Veri"
+  },
+  "options": {
+    "status": {
+      "Pending": "Bekliyor",
+      "Success": "Başarılı",
+      "Running": "Çalışıyor",
+      "Failed": "Başarısız"
+    }
+  }
+}

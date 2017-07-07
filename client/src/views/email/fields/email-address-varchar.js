@@ -66,6 +66,18 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             'click [data-action="createContact"]': function (e) {
                 var address = $(e.currentTarget).data('address');
                 From.prototype.createPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="createLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.createPerson.call(this, 'Lead', address);
+            },
+            'click [data-action="addToContact"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Contact', address);
+            },
+            'click [data-action="addToLead"]': function (e) {
+                var address = $(e.currentTarget).data('address');
+                From.prototype.addToPerson.call(this, 'Lead', address);
             }
         },
 
@@ -264,7 +276,11 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
             } else {
-                lineHtml = addressHtml;
+                if (name) {
+                    lineHtml = '<span>' + name + ' <span class="text-muted">&#187;</span> ' + addressHtml + '</span>';
+                } else {
+                    lineHtml = addressHtml;
+                }
             }
             if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {

@@ -117,6 +117,9 @@ class Htmlizer
                         if ($item instanceof \StdClass) {
                             $v = get_object_vars($v);
                         }
+                        if (!is_array($v)) {
+                            $v = [];
+                        }
                         foreach ($v as $k => $w) {
                             $v[$k] = $this->format($v[$k]);
                         }

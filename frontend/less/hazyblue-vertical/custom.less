@@ -33,10 +33,6 @@
     background-color: @white-color;
 }
 
-.modal-footer {
-    margin-top: 0;
-}
-
 .panel-heading > .btn-group {
     top: -5px;
     right: -10px;
@@ -70,7 +66,8 @@ table.table {
 
 .dashlet-body .list-container > .list,
 .panel-body .list-container > .list,
-.dashlet-container > .panel {
+.dashlet-container > .panel,
+.note-editor.panel {
     box-shadow: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -89,7 +86,8 @@ table.table {
 #main > .calendar-container .timeline,
 .well,
 .admin-content .table.table-bordered,
-.admin-content iframe {
+.admin-content iframe,
+.list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
     -moz-box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
     box-shadow: 3px 3px 4px rgba(0,0,0,0.13);
@@ -119,12 +117,6 @@ table.table {
     margin-bottom: 10px;
 }
 
-.modal-header {
-    background-color: @white-color;
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
 .calendar-container > .calendar,
 .calendar-container > .timeline {
     background-color: @white-color;
@@ -151,44 +143,3 @@ table.table {
     background-color: @navbar-bg !important;
     padding-bottom: 0;
 }
-
-.modal-footer > .main-btn-group {
-    float: left;
-}
-
-.modal-footer > .additional-btn-group {
-    float: right;
-}
-
-.dialog-confirm .modal-footer > .main-btn-group {
-    float: right;
-}
-
-.dialog-confirm .modal-footer > .additional-btn-group {
-    float: left;
-}
-
-.modal-footer {
-    padding-top: @modal-title-padding;
-    padding-bottom: @modal-title-padding;
-}
-
-@media (min-width: @screen-sm-min) {
-    .modal-dialog {
-        margin: 0 0 0 auto;
-    }
-    .modal-content .note-editor > .modal > .modal-dialog {
-        margin: 0 0 0 -@container-padding;
-    }
-
-    .dialog-confirm > .modal-dialog {
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: @screen-sm-min) {
-    .modal-dialog {
-        margin: 0 0 0 0;
-    }
-}
-

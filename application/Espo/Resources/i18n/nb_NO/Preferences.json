@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "dateFormat": "Datoformat",
+    "timeFormat": "Tidsformat",
+    "timeZone": "Tidssone",
+    "weekStart": "Første dagen i uken",
+    "thousandSeparator": "Tusentallsdeler",
+    "decimalMark": "Desimaltegn",
+    "defaultCurrency": "Forvalgt valuta",
+    "currencyList": "Valutaliste",
+    "language": "Språk",
+    "smtpServer": "Tjener",
+    "smtpPort": "Port",
+    "smtpAuth": "Autentisering",
+    "smtpSecurity": "Sikkerhet",
+    "smtpUsername": "Brukernavn",
+    "emailAddress": "Epost",
+    "smtpPassword": "Passord",
+    "smtpEmailAddress": "Epostadresse",
+    "exportDelimiter": "Skilletegn for eksport",
+    "autoFollowEntityTypeList": "Følg automatisk",
+    "signature": "Epostsignatur",
+    "dashboardTabList": "Menyliste",
+    "tabList": "Menyliste",
+    "defaultReminders": "Forvalgte påminnelser",
+    "theme": "Stiltema",
+    "useCustomTabList": "Egendefinert menyliste",
+    "emailReplyToAllByDefault": "Epostsvar sendes til alle som forvalg",
+    "receiveAssignmentEmailNotifications": "Epostvarsel når du blir tildelt noe",
+    "receiveMentionEmailNotifications": "Epostvarsel når du nevnes i poster",
+    "receiveStreamEmailNotifications": "Epostvarsel om post- og statusoppdateringer",
+    "dashboardLayout": "Dashbordutforming",
+    "emailReplyForceHtml": "Send epost med HTML-formatering",
+    "doNotFillAssignedUserIfNotRequired": "Ikke fyll ut 'tildelt bruker' hvis det ikke er påkrevd",
+    "followEntityOnStreamPost": "Følg enhet automatisk etter posting i strøm."
+  },
+  "options": {
+    "weekStart": {
+      "0": "Søndag",
+      "1": "Mandag"
+    }
+  },
+  "labels": {
+    "Notifications": "Varsler",
+    "User Interface": "Brukergrensesnitt",
+    "SMTP": "SMTP",
+    "Misc": "Diverse",
+    "Locale": "Språk og nasjonalitet"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Brukeren vil automatisk følge alle nye oppføringer til de valgte enhetstypene, motta varsler og se informasjonen i strømmen."
+  }
+}

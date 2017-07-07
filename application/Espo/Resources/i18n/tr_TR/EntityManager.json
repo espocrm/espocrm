@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Fields": "Alanlar",
+    "Relationships": "İlişkiler",
+    "Schedule": "Planlama ",
+    "Log": "Kütük",
+    "Formula": "formül"
+  },
+  "fields": {
+    "name": "İsim ",
+    "type": "Tip",
+    "labelSingular": "Tekil Etiket",
+    "labelPlural": "Çoğul Etiket",
+    "stream": "Akış",
+    "label": "Etiket",
+    "linkType": "Bağlantı Tipi",
+    "entityForeign": "Yabancı Varlık",
+    "linkForeign": "Yabancı Bağlantı ",
+    "link": "Bağlantı",
+    "labelForeign": "Yabancı Etiket",
+    "sortBy": "Ön Tanımlı Sıralama (alan)",
+    "sortDirection": "Ön Tanımlı Sıralama (yön)",
+    "relationName": "Orta Tablo İsmi",
+    "linkMultipleField": "Birden Çok Alanı Bağla",
+    "linkMultipleFieldForeign": "Birden Çok Alana Yabancı Bağlantı ",
+    "disabled": "Devre dışı",
+    "textFilterFields": "Metin Filtre Alanları",
+    "audited": "Denetlenmiş",
+    "auditedForeign": "Dış Kaynak Denetimden Geçmiş",
+    "statusField": "Durum Alanı",
+    "beforeSaveCustomScript": "Özel Komut Dosyasını Kaydetmeden Önce"
+  },
+  "options": {
+    "type": {
+      "": "Yok",
+      "Base": "Temel",
+      "Person": "Kişi",
+      "CategoryTree": "Kategori Ağacı",
+      "Event": "Etkinlik ",
+      "BasePlus": "Taban Artı",
+      "Company": "Şirket"
+    },
+    "linkType": {
+      "manyToMany": "Çoktan Çoğa",
+      "oneToMany": "Tekten Çoğa",
+      "manyToOne": "Çoktan Teke ",
+      "parentToChildren": "Ebeveyn - çocuk",
+      "childrenToParent": "Çocuk - ebeveyn"
+    },
+    "sortDirection": {
+      "asc": "Artan",
+      "desc": "Azalan"
+    }
+  },
+  "messages": {
+    "entityCreated": "Varlık yaratıldı",
+    "linkAlreadyExists": "İsim çakışmalarını bağla",
+    "linkConflict": "İsim çakışması: aynı isimde bağlantı veya alan zaten var"
+  },
+  "tooltips": {
+    "statusField": "Bu alanın güncellemeleri akış halinde kaydedildi.",
+    "textFilterFields": "Metin aramasında kullanılan alanlar.",
+    "stream": "Varlığın bir Akışı olup olmadığı.",
+    "disabled": "Sisteminizde bu öğeye ihtiyacınız yok mu kontrol edin.",
+    "linkAudited": "Ilgili kayıt oluşturma ve varolan kayıt ile bağlantı Akış kaydedilecektir.",
+    "linkMultipleField": "Bağlantı Çoklu alan ilişkileri düzenlemenin kullanışlı bir yoludur. Çok sayıda ilgili kayıt olabiliyorsa kullanmayın.",
+    "entityType": "Taban Artı - Etkinlikler, Geçmiş ve Görevler panellerine sahiptir. \\ N \\ nEvent - Takvim ve Etkinlikler panelinde kullanılabilir."
+  }
+}

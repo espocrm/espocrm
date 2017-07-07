@@ -110,6 +110,16 @@
             "notStorable": true,
             "disabled": true
         },
+        "authTokenId": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "ipAddress": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
         "defaultTeam": {
             "type": "link",
             "tooltip": true
@@ -118,6 +128,26 @@
             "type": "varchar",
             "notStorable": true,
             "disabled": true
+        },
+        "acceptanceStatusMeetings": {
+            "type": "enum",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/acceptance-status",
+            "link": "meetings",
+            "column": "status"
+        },
+        "acceptanceStatusCalls": {
+            "type": "enum",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "view": "crm:views/lead/fields/acceptance-status",
+            "link": "calls",
+            "column": "status"
         },
         "teamRole": {
             "type": "varchar",

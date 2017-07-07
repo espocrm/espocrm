@@ -107,7 +107,7 @@ class AclManager
             $config = $this->getContainer()->get('config');
             $fileManager = $this->getContainer()->get('fileManager');
             $metadata = $this->getContainer()->get('metadata');
-            $fieldManager = $this->getContainer()->get('fieldManager');
+            $fieldManager = $this->getContainer()->get('fieldManagerUtil');
 
             $this->tableHashMap[$key] = new $this->tableClassName($user, $config, $fileManager, $metadata, $fieldManager);
         }
@@ -131,6 +131,15 @@ class AclManager
     public function get(User $user, $permission)
     {
         return $this->getTable($user)->get($permission);
+    }
+
+    public function checkReadNo(User $user, $scope)
+    {
+        if ($user->isAdmin()) {
+            return false;
+        }
+        $data = $this->getTable($user)->getScopeData($scope);
+        return $this->getImplementation($scope)->checkReadNo($user, $data);
     }
 
     public function checkReadOnlyTeam(User $user, $scope)

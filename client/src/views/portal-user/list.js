@@ -85,7 +85,9 @@ Espo.define('views/portal-user/list', 'views/list', function (Dep) {
                 }, this);
 
                 this.listenToOnce(view, 'skip', function (model) {
-                    var attributes= {}
+                    var attributes= {
+                        isPortalUser: true
+                    };
 
                     var router = this.getRouter();
                     var url = '#' + this.scope + '/create';

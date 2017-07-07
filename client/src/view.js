@@ -112,6 +112,12 @@ Espo.define('view', [], function () {
             }
         },
 
+        getSessionStorage: function () {
+            if (this._helper) {
+                return this._helper.sessionStorage;
+            }
+        },
+
         getLanguage: function () {
             if (this._helper) {
                 return this._helper.language;

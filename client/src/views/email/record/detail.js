@@ -294,6 +294,28 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             this.save();
         },
 
+        exitAfterDelete: function () {
+            var folderId = ((this.collection || {}).data || {}).folderId || null;
+
+            if (folderId === 'inbox') {
+                folderId = null;
+            }
+
+            var options = {
+                isReturn: true,
+                isReturnThroughLink: false,
+                folder: folderId
+            };
+            var url = '#' + this.scope;
+            var action = null;
+            if (folderId) {
+                action = 'list';
+                url += '/list/folder=' + folderId;
+            }
+            this.getRouter().dispatch(this.scope, action, options);
+            this.getRouter().navigate(url, {trigger: false});
+        }
+
     });
 });
 

@@ -67,6 +67,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 selectTemplateDisabled: this.options.selectTemplateDisabled,
+                keepAttachmentsOnSelectTemplate: this.options.keepAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 exit: function () {}
             };

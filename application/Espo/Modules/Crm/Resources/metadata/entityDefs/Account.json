@@ -36,6 +36,7 @@
                 "Building Materials & Equipment",
                 "Chemical",
                 "Construction",
+                "Consulting",
                 "Computer",
                 "Culture",
                 "Creative",
@@ -66,6 +67,7 @@
                 "Software",
                 "Support",
                 "Shipping",
+                "Travel",
                 "Technology",
                 "Telecommunications",
                 "Television",
@@ -86,6 +88,12 @@
         "contactRole": {
             "type": "varchar",
             "notStorable": true,
+            "disabled": true
+        },
+        "contactIsInactive": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false,
             "disabled": true
         },
         "billingAddress": {
@@ -269,8 +277,7 @@
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true,
-            "audited": true
+            "layoutRelationshipsDisabled": true
         },
         "emails": {
             "type": "hasChildren",

@@ -85,12 +85,18 @@
         "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
         "activitiesEntityList": "Activities Entity List",
         "historyEntityList": "History Entity List",
-        "b2cMode": "B2C Mode"
+        "b2cMode": "B2C Mode",
+        "currencyFormat": "Currency Format",
+        "currencyDecimalPlaces": "Currency Decimal Places"
     },
     "options": {
         "weekStart": {
             "0": "Sunday",
             "1": "Monday"
+        },
+        "currencyFormat": {
+            "1": "10 USD",
+            "2": "$10"
         }
     },
     "tooltips": {
@@ -123,7 +129,8 @@
         "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
         "ldapUserTeams": "Teams for created user. For more, see user profile.",
         "ldapUserDefaultTeam": "Default team for created user. For more, see user profile.",
-        "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C."
+        "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C.",
+        "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed."
     },
     "labels": {
         "System": "System",

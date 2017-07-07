@@ -54,7 +54,8 @@
         },
         "notifiedUserIdList": {
             "type": "jsonArray",
-            "notStorable": true
+            "notStorable": true,
+            "disabled": true
         },
         "isInternal": {
             "type": "bool"

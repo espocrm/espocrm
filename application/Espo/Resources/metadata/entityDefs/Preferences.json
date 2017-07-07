@@ -151,6 +151,10 @@
         },
         "doNotFillAssignedUserIfNotRequired": {
             "type": "bool"
+        },
+        "followEntityOnStreamPost": {
+            "type": "bool",
+            "default": true
         }
     }
 }

@@ -1,5 +1,10 @@
 {
-    "labels": {
-        "Create {entityType}": "Створити {entityTypeTranslated}"
-    }
+  "links": {
+    "meetings": "Зустрічі",
+    "calls": "Дзвінки",
+    "tasks": "Завдання"
+  },
+  "labels": {
+    "Create {entityType}": "Створити {entityTypeTranslated}"
+  }
 }

@@ -52,6 +52,7 @@ Espo.define('views/admin/field-manager/index', 'view', function (Dep) {
             },
 
             'click #fields-content a.field-link': function (e) {
+                e.preventDefault();
                 var scope = $(e.currentTarget).data('scope');
                 var field = $(e.currentTarget).data('field');
                 this.openField(scope, field);

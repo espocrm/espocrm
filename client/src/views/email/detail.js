@@ -135,7 +135,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
             attributes.emailId = this.model.id;
 
-            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.detail') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
@@ -149,8 +149,8 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
                     view.close();
-                }.bind(this));
-            }.bind(this));
+                }, this);
+            }, this);
         },
 
         actionCreateCase: function () {
@@ -362,6 +362,19 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 '<a href="#' + this.model.name + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 nameHtml
             ]);
+        },
+
+        actionNavigateToRoot: function (data, e) {
+            e.stopPropagation();
+
+            this.getRouter().checkConfirmLeaveOut(function () {
+                var options = {
+                    isReturn: true,
+                    isReturnThroughLink: true
+                };
+                this.getRouter().dispatch(this.scope, null, options);
+                this.getRouter().navigate('#' + this.scope, {trigger: false});
+            }, this);
         },
 
     });

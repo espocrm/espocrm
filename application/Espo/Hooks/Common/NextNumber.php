@@ -70,29 +70,13 @@ class NextNumber extends \Espo\Core\Hooks\Base
                     }
                     continue;
                 }
+                $this->getEntityManager()->getPdo()->query('LOCK TABLES `next_number` WRITE');
                 $nextNumber = $this->getEntityManager()->getRepository('NextNumber')->where(array(
                     'fieldName' => $fieldName,
                     'entityType' => $entity->getEntityType()
                 ))->findOne();
                 if (!$nextNumber) continue;
                 $entity->set($fieldName, $this->composeNumberAttribute($nextNumber));
-            }
-        }
-    }
-
-    public function afterSave(Entity $entity, array $options = array())
-    {
-        if (!$entity->isNew()) return;
-
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], array());
-
-        foreach ($fieldDefs as $fieldName => $defs) {
-            if (isset($defs['type']) && $defs['type'] === 'number') {
-                $nextNumber = $this->getEntityManager()->getRepository('NextNumber')->where(array(
-                    'fieldName' => $fieldName,
-                    'entityType' => $entity->getEntityType()
-                ))->findOne();
-                if (!$nextNumber) continue;
 
                 $value = $nextNumber->get('value');
                 if (!$value) {
@@ -102,10 +86,11 @@ class NextNumber extends \Espo\Core\Hooks\Base
 
                 $nextNumber->set('value', $value);
                 $this->getEntityManager()->saveEntity($nextNumber);
+
+                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
             }
         }
     }
-
 
 }
 

@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "Navn",
+    "description": "Beskrivelse",
+    "status": "Status",
+    "type": "Type",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "targetLists": "Kontaktliste",
+    "excludingTargetLists": "Udelukker Kontaktlister",
+    "sentCount": "Sendt",
+    "openedCount": "Åbnet",
+    "clickedCount": "Klikket",
+    "optedOutCount": "Sat som Opt-Out",
+    "bouncedCount": "Kan ikke leveres",
+    "hardBouncedCount": "Afvist",
+    "softBouncedCount": "Kan ikke leveres i øjeblikket",
+    "leadCreatedCount": "Oprettede Leads",
+    "revenue": "Indtægt",
+    "revenueConverted": "Indtægt (konverteret)",
+    "budget": "Budget",
+    "budgetConverted": "Budget (konverteret)"
+  },
+  "links": {
+    "targetLists": "Kontaktliste",
+    "excludingTargetLists": "Udelukker Kontaktlister",
+    "accounts": "Konti",
+    "contacts": "Kontakter",
+    "leads": "Leads",
+    "opportunities": "Muligheder",
+    "campaignLogRecords": "Log",
+    "massEmails": "Masse-Email",
+    "trackingUrls": "Tracking URLs"
+  },
+  "options": {
+    "type": {
+      "Email": "Email",
+      "Web": "Web",
+      "Television": "TV",
+      "Radio": "Radio",
+      "Newsletter": "Nyhedsbrev",
+      "Mail": "Mail"
+    },
+    "status": {
+      "Planning": "Planlægning",
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv",
+      "Complete": "Fuldført"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Opret Kampagne",
+    "Target Lists": "Kontaktlister",
+    "Statistics": "Statistikker",
+    "hard": "Hård",
+    "soft": "Blød",
+    "Unsubscribe": "Afmeld",
+    "Mass Emails": "Masse-Emails",
+    "Email Templates": "Emailskabeloner",
+    "Unsubscribe again": "Frameld igen",
+    "Subscribe again": "Tilmeld igen",
+    "Create Target List": "Opret Kontaktliste"
+  },
+  "presetFilters": {
+    "active": "Aktiv"
+  },
+  "messages": {
+    "unsubscribed": "Din mailadresse er fjernet fra vores mailliste.",
+    "subscribedAgain": "Du er tilmeldt igen."
+  },
+  "tooltips": {
+    "targetLists": "Kontakter som skal modtage meddelelser",
+    "excludingTargetLists": "Kontakter som ikke skal modtage meddelelser"
+  }
+}

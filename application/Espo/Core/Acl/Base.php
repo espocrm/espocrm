@@ -106,6 +106,14 @@ class Base implements Injectable
         return $data->read === 'team';
     }
 
+    public function checkReadNo(User $user, $data)
+    {
+        if (empty($data) || !is_object($data) || !isset($data->read)) {
+            return false;
+        }
+        return $data->read === 'no';
+    }
+
     public function checkReadOnlyOwn(User $user, $data)
     {
         if (empty($data) || !is_object($data) || !isset($data->read)) {

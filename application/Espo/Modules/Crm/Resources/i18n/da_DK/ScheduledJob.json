@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Send Masse-Emails",
+      "ControlKnowledgeBaseArticleStatus": "Kontroller Videnbase Artikels Status"
+    }
+  }
+}

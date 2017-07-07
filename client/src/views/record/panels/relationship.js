@@ -49,7 +49,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.link = this.panelName;
+            this.link = this.defs.link || this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
@@ -105,14 +105,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            var type = 'listSmall';
+            var layoutName = 'listSmall';
             var listLayout = null;
             var layout = this.defs.layout || null;
             if (layout) {
                 if (typeof layout == 'string') {
-                     type = layout;
+                     layoutName = layout;
                 } else {
-                     type = 'listRelationship';
+                     layoutName = 'listRelationshipCustom';
                      listLayout = layout;
                 }
              }
@@ -152,7 +152,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.once('sync', function () {
                         this.createView('list', viewName, {
                             collection: collection,
-                            type: type,
+                            layoutName: layoutName,
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
@@ -286,27 +286,27 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionUnlinkRelated: function (data) {
             var id = data.id;
 
-            var self = this;
             this.confirm({
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
                 confirmText: this.translate('Unlink')
             }, function () {
                 var model = this.collection.get(id);
-                self.notify('Unlinking...');
+                this.notify('Unlinking...');
                 $.ajax({
-                    url: self.collection.url,
+                    url: this.collection.url,
                     type: 'DELETE',
                     data: JSON.stringify({
                         id: id
                     }),
                     contentType: 'application/json',
                     success: function () {
-                        self.notify('Unlinked', 'success');
-                        self.collection.fetch();
-                    },
+                        this.notify('Unlinked', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    }.bind(this),
                     error: function () {
-                        self.notify('Error occurred', 'error');
-                    },
+                        this.notify('Error occurred', 'error');
+                    }.bind(this),
                 });
             }, this);
         },
@@ -314,18 +314,18 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionRemoveRelated: function (data) {
             var id = data.id;
 
-            var self = this;
             this.confirm({
                 message: this.translate('removeRecordConfirmation', 'messages'),
                 confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
-                self.notify('Removing...');
+                this.notify('Removing...');
                 model.destroy({
                     success: function () {
-                        self.notify('Removed', 'success');
-                        self.collection.fetch();
-                    },
+                        this.notify('Removed', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    }.bind(this),
                 });
             }, this);
         },
@@ -344,6 +344,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.notify(false);
                     this.notify('Unlinked', 'success');
                     this.collection.fetch();
+                    this.model.trigger('after:unrelate');
                 }.bind(this));
             }, this);
         },

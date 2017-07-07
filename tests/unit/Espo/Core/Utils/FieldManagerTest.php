@@ -69,7 +69,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($data));
 
-        $this->object->create('varName', $data, 'CustomEntity');
+        $this->object->create('CustomEntity', 'varName', $data);
     }
 
     public function testUpdateCoreField()
@@ -103,7 +103,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->object->update('name', $data, 'Account');
+        $this->object->update('Account', 'name', $data);
     }
 
     public function testUpdateCustomFieldIsNotChanged()
@@ -132,7 +132,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
             ->will($this->returnValue(true));
 
-        $this->assertTrue($this->object->update('varName', $data, 'CustomEntity'));
+        $this->assertTrue($this->object->update('CustomEntity', 'varName', $data));
     }
 
     public function testUpdateCustomField()
@@ -168,7 +168,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "isCustom" => true,
         );
 
-        $this->object->update('varName', $data, 'CustomEntity');
+        $this->object->update('CustomEntity', 'varName', $data);
     }
 
     public function testRead()
@@ -190,7 +190,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('translate')
             ->will($this->returnValue('Var Name'));
 
-        $this->assertEquals($data, $this->object->read('varName', 'Account'));
+        $this->assertEquals($data, $this->object->read('Account', 'varName'));
     }
 
     public function testNormalizeDefs()
@@ -200,6 +200,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             "type" => "varchar",
             "maxLength" => "50",
         );
+
         $result = array(
             'fields' => array(
                 'fielName' => array(
@@ -208,7 +209,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
-        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array($input1, $input2, 'CustomEntity')));
+        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array('CustomEntity', $input1, $input2)));
     }
 
     public function testDeleteTestFile()
@@ -218,11 +219,4 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             @unlink($file);
         }
     }
-
-
-
-
-
 }
-
-?>

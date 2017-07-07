@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "名称",
+    "status": "状态",
+    "isHtml": "是Html",
+    "body": "正文",
+    "subject": "主题",
+    "attachments": "附件",
+    "insertField": "插入字段",
+    "oneOff": "一次性"
+  },
+  "labels": {
+    "Create EmailTemplate": "创建电子邮件模板",
+    "Info": "信息"
+  },
+  "tooltips": {
+    "oneOff": "检查您是否只使用此模板一次，例如批量电子邮件。"
+  },
+  "presetFilters": {
+    "actual": "实际"
+  },
+  "messages": {
+    "infoText": "可用变量:\n\n{排除地址} &#8211;统一资源定位地址为一个退订链接;\n\n{排除链接} &#8211;一个退订链接"
+  }
+}

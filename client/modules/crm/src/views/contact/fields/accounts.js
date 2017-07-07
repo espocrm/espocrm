@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-with-role', function (Dep) {
+Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-with-columns', function (Dep) {
 
     return Dep.extend({
 
@@ -66,7 +66,16 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             this.listenTo(this.model, 'change:' + this.primaryIdFieldName, function () {
                 this.primaryId = this.model.get(this.primaryIdFieldName);
                 this.primaryName = this.model.get(this.primaryNameFieldName);
-            }.bind(this));
+            }, this);
+
+
+            if (this.mode === 'edit' || this.mode === 'detail') {
+                this.events['click a[data-action="setPrimary"]'] = function (e) {
+                    var id = $(e.currentTarget).data('id');
+                    this.setPrimaryId(id);
+                    this.reRender();
+                }
+            }
         },
 
         setPrimaryId: function (id) {
@@ -106,16 +115,42 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             }
         },
 
-        deleteLink: function (id) {
-            if (id == this.primaryId) {
-                this.setPrimaryId(null);
+        getDetailLinkHtml: function (id, name) {
+            var html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+            if (this.getColumnValue(id, 'isInactive')) {
+                var $el = $(html);
+                $el.find('a').css('text-decoration', 'line-through');
+                return $el.prop('outerHTML');
             }
-            Dep.prototype.deleteLink.call(this, id);
+            return html;
         },
 
-        deleteLinkHtml: function (id) {
-            Dep.prototype.deleteLinkHtml.call(this, id);
-            this.managePrimaryButton();
+        afterAddLink: function (id) {
+            if (this.ids.length === 1) {
+                this.primaryId = id;
+                this.primaryName = this.nameHash[id];
+            }
+            this.controlPrimaryAppearance();
+        },
+
+        afterDeleteLink: function (id) {
+            if (this.ids.length === 0) {
+                this.primaryId = null;
+                this.primaryName = null;
+                return;
+            }
+            if (id === this.primaryId) {
+                this.primaryId = this.ids[0];
+                this.primaryName = this.nameHash[this.primaryId];
+            }
+            this.controlPrimaryAppearance();
+        },
+
+        controlPrimaryAppearance: function () {
+            this.$el.find('li.set-primary-list-item').removeClass('hidden');
+            if (this.primaryId) {
+                this.$el.find('li.set-primary-list-item[data-id="'+this.primaryId+'"]').addClass('hidden');
+            }
         },
 
         addLinkHtml: function (id, name) {
@@ -127,33 +162,28 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
             var isPrimary = (id == this.primaryId);
 
-            var iconHtml = '<span class="glyphicon glyphicon-star ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
-            var title = this.translate('Primary');
+            var $a = $(
+                '<a href="javascript:" data-action="setPrimary" data-id="' + id+ '"</a>' +
+                this.translate('Set Primary', 'labels', 'Account') +
+                '</a>'
+            );
 
-            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
-            $primary.insertAfter($el.children().first().children().first());
-            this.managePrimaryButton();
+            var $li = $('<li class="set-primary-list-item" data-id="'+id+'">').append($a);
+
+            if (isPrimary || this.ids.length === 1) {
+                $li.addClass('hidden');
+            }
+
+            $el.find('ul.dropdown-menu').append($li);
+
+
+            if (this.getColumnValue(id, 'isInactive')) {
+                $el.find('div.link-item-name').css('text-decoration', 'line-through');
+            }
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-        },
-
-        managePrimaryButton: function () {
-            var $primary = this.$el.find('button[data-action="switchPrimary"]');
-            if ($primary.size() > 1) {
-                $primary.removeClass('hidden');
-            } else {
-                $primary.addClass('hidden');
-            }
-
-            if ($primary.filter('.active').size() == 0) {
-                var $first = $primary.first();
-                if ($first.size()) {
-                    $first.addClass('active').children().removeClass('text-muted');
-                    this.setPrimaryId($first.data('id'));
-                }
-            }
         },
 
         fetch: function () {
@@ -164,7 +194,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
 
             return data;
-        },
+        }
 
     });
 

@@ -26,17 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/currency-converted', 'views/fields/float', function (Dep) {
+Espo.define('views/fields/currency-converted', 'views/fields/currency', function (Dep) {
 
     return Dep.extend({
 
-        detailTemplate: 'fields/currency/detail',
-
-        listTemplate: 'fields/currency/detail',
-
         data: function () {
+            var currencyValue = this.getConfig().get('baseCurrency');
             return _.extend({
-                currencyValue: this.getConfig().get('baseCurrency'),
+                currencyValue: currencyValue,
+                currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || ''
             }, Dep.prototype.data.call(this));
         },
 

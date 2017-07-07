@@ -1,0 +1,66 @@
+{
+  "labels": {
+    "Converted To": "已转换为",
+    "Create Lead": "创建线索",
+    "Convert": "转换",
+    "convert": "转换"
+  },
+  "fields": {
+    "name": "名称",
+    "emailAddress": "电子邮件",
+    "title": "标题",
+    "website": "网站",
+    "phoneNumber": "电话",
+    "accountName": "单位名称",
+    "doNotCall": "不要电联",
+    "address": "地址",
+    "status": "状态",
+    "source": "资源",
+    "opportunityAmount": "商机金额",
+    "opportunityAmountConverted": "商机金额（转换）",
+    "description": "描述",
+    "createdAccount": "客户",
+    "createdContact": "联系人",
+    "createdOpportunity": "商机",
+    "campaign": "营销活动",
+    "targetLists": "目标列表",
+    "targetList": "目标列表",
+    "industry": "行业"
+  },
+  "links": {
+    "targetLists": "目标列表",
+    "campaignLogRecords": "营销活动日志",
+    "campaign": "营销活动",
+    "createdAccount": "客户",
+    "createdContact": "联系人",
+    "createdOpportunity": "商机",
+    "cases": "案例",
+    "documents": "文件"
+  },
+  "options": {
+    "status": {
+      "New": "新",
+      "Assigned": "指派",
+      "In Process": "处理中",
+      "Converted": "已转换",
+      "Recycled": "已回收",
+      "Dead": "没机会"
+    },
+    "source": {
+      "": "无",
+      "Call": "通话",
+      "Email": "电子邮件",
+      "Existing Customer": "现有客户",
+      "Partner": "伙伴",
+      "Public Relations": "公共关系",
+      "Web Site": "网站",
+      "Campaign": "营销活动",
+      "Other": "其他"
+    }
+  },
+  "presetFilters": {
+    "active": "活性",
+    "actual": "实际",
+    "converted": "已转换"
+  }
+}

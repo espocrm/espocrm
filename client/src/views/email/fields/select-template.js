@@ -65,6 +65,8 @@ Espo.define('views/email/fields/select-template', 'views/fields/link', function 
                     emailAddress: emailAddress,
                     parentType: this.model.get('parentType'),
                     parentId: this.model.get('parentId'),
+                    relatedType: this.model.get('relatedType'),
+                    relatedId: this.model.get('relatedId')
                 },
                 success: function (data) {
                     this.model.trigger('insert-template', data);

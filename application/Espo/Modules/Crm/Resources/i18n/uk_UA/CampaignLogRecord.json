@@ -1,24 +1,40 @@
 {
-    "fields": {
-        "action": "Дія",
-        "actionDate": "Дата",
-        "data": "Дані",
-        "campaign": "Кампанія",
-        "parent": "Ціль",
-        "object": "Об'єкт",
-        "application": "Додаток"
-    },
-    "options": {
-    	"action": {
-            "Sent": "Відправлено",
-            "Opened": "Відкрито",
-            "Opted Out": "Відмовлено",
-            "Bounced": "Відшито",
-            "Clicked": "Цикнуте",
-            "Lead Created": "Лід створено"
-    	}
-    },
-    "labels": {
-        "All": "Все"
+  "fields": {
+    "action": "Дія",
+    "actionDate": "Дата",
+    "data": "Дані",
+    "campaign": "Кампанія",
+    "parent": "Ціль",
+    "object": "Об'єкт",
+    "application": "Додаток",
+    "queueItem": "Елемент черги",
+    "stringData": "Рядок даних",
+    "stringAdditionalData": "Рядок додаткової інформації"
+  },
+  "links": {
+    "queueItem": "Пункт черги",
+    "parent": "Батько",
+    "object": "Об'єкт"
+  },
+  "options": {
+    "action": {
+      "Sent": "Відправлено",
+      "Opened": "Відкрито",
+      "Opted Out": "Відмовлено",
+      "Bounced": "Відшито",
+      "Clicked": "Клікнуто",
+      "Lead Created": "Лід створено"
     }
+  },
+  "labels": {
+    "All": "Все"
+  },
+  "presetFilters": {
+    "sent": "Надіслано",
+    "opened": "Відкрито",
+    "optedOut": "Відмовлено",
+    "bounced": "Відшито",
+    "clicked": "Клікнуто",
+    "leadCreated": "Лід створено"
+  }
 }

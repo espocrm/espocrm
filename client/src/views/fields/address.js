@@ -106,11 +106,11 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
             var html = '';
             if (streetValue) {
-                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+                html += streetValue;
             }
             if (cityValue || stateValue || postalCodeValue) {
                 if (html != '') {
-                    html += '<br>'
+                    html += '\n';
                 }
                 if (cityValue) {
                     html += cityValue;
@@ -130,7 +130,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             }
             if (countryValue) {
                 if (html != '') {
-                    html += '<br>';
+                    html += '\n';
                 }
                 html += countryValue;
             }
@@ -146,11 +146,11 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
             var html = '';
             if (streetValue) {
-                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+                html += streetValue;
             }
             if (cityValue || postalCodeValue) {
                 if (html != '') {
-                    html += '<br>'
+                    html += '\n';
                 }
                 if (postalCodeValue) {
                     html += postalCodeValue;
@@ -164,7 +164,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             }
             if (stateValue || countryValue) {
                 if (html != '') {
-                    html += '<br>';
+                    html += '\n';
                 }
                 if (stateValue) {
                     html += stateValue;
@@ -192,7 +192,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             }
             if (cityValue || stateValue || postalCodeValue) {
                 if (html != '') {
-                    html += '<br>'
+                    html += '\n';
                 }
                 if (postalCodeValue) {
                     html += postalCodeValue;
@@ -212,9 +212,9 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             }
             if (streetValue) {
                 if (html != '') {
-                    html += '<br>';
+                    html += '\n';
                 }
-                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+                html += streetValue;
             }
             return html;
         },
@@ -228,17 +228,17 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
 
             var html = '';
             if (streetValue) {
-                html += streetValue.replace(/(\r\n|\n|\r)/gm, '<br>');
+                html += streetValue;
             }
             if (cityValue) {
                 if (html != '') {
-                    html += '<br>';
+                    html += '\n';
                 }
                 html += cityValue;
             }
             if (countryValue || stateValue || postalCodeValue) {
                 if (html != '') {
-                    html += '<br>'
+                    html += '\n';
                 }
                 if (countryValue) {
                     html += countryValue;

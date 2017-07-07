@@ -67,6 +67,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->backupExistingFiles();
 
+        //beforeInstallFiles
+        if (!$this->copyFiles('before')) {
+            $this->throwErrorAndRemovePackage('Cannot copy beforeInstall files.');
+        }
+
         /* run before install script */
         $this->runScript('before');
 
@@ -83,6 +88,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+        }
+
+        //afterInstallFiles
+        if (!$this->copyFiles('after')) {
+            $this->throwErrorAndRemovePackage('Cannot copy afterInstall files.');
         }
 
         /* run before install script */
@@ -112,7 +122,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $deleteFileList = array_diff($copyFileList, $backupFileList);
 
         $res = $this->copy($backupFilePath, '', true);
-        $res &= $this->getFileManager()->remove($deleteFileList, null, true);
+        if (!empty($deleteFileList)) {
+            $res &= $this->getFileManager()->remove($deleteFileList, null, true);
+        }
 
         if ($res) {
             $this->getFileManager()->removeInDir($backupPath, true);

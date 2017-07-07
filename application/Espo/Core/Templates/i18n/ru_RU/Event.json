@@ -1,5 +1,36 @@
 {
-    "labels": {
-        "Create {entityType}": "Создать {entityTypeTranslated}"
+  "fields": {
+    "parent": "Parent",
+    "dateStart": "Date Start",
+    "dateEnd": "Date End",
+    "duration": "Duration",
+    "status": "Status",
+    "reminders": "Reminders"
+  },
+  "links": {
+    "parent": "Parent"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planned",
+      "Held": "Held",
+      "Not Held": "Not Held"
     }
+  },
+  "labels": {
+    "Create {entityType}": "Создать {entityTypeTranslated}",
+    "Schedule {entityType}": "Schedule {entityTypeTranslated}",
+    "Log {entityType}": "Log {entityTypeTranslated}",
+    "Set Held": "Set Held",
+    "Set Not Held": "Set Not Held"
+  },
+  "massActions": {
+    "setHeld": "Set Held",
+    "setNotHeld": "Set Not Held"
+  },
+  "presetFilters": {
+    "planned": "Запланировано",
+    "held": "Held",
+    "todays": "Сегодняшние"
+  }
 }

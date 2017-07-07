@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Nom",
+    "body": "Corps de texte",
+    "entityType": "Type d’entité",
+    "header": "Entête",
+    "footer": "Pied de page",
+    "leftMargin": "Marge gauche",
+    "topMargin": "Marge du haut",
+    "rightMargin": "Marge droite",
+    "bottomMargin": "Marge du bas",
+    "printFooter": "Imprimer les pieds de page",
+    "footerPosition": "Position des pieds de page",
+    "variables": "Available Placeholders"
+  },
+  "labels": {
+    "Create Template": "Créer un modèle"
+  },
+  "tooltips": {
+    "footer": "Utiliser {pageNumber} pour imprimer la page.",
+    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+  }
+}

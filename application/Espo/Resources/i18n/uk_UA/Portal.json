@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "logo": "Лого",
+    "companyLogo": "Лого",
+    "url": "URL",
+    "portalRoles": "Ролі",
+    "isActive": "Активний",
+    "isDefault": "Чи за замовчуванням",
+    "tabList": "Список меню",
+    "quickCreateList": "Список для швидкого створення",
+    "theme": "Тема",
+    "language": "Мова",
+    "dashboardLayout": "Макет панелі дашлетів",
+    "dateFormat": "Формат дати",
+    "timeFormat": "Формат часу",
+    "timeZone": "Часова зона",
+    "weekStart": "Перший день тижня",
+    "defaultCurrency": "Валюта за замовчуванням",
+    "customUrl": "Призначений для користувача URL",
+    "customId": "Призначений для користувача  ID"
+  },
+  "links": {
+    "users": "Користувачі",
+    "portalRoles": "Ролі",
+    "notes": "Примітки"
+  },
+  "tooltips": {
+    "portalRoles": "Вказані ролі порталу будуть застосовуватись до всіх користувачів цього порталу"
+  },
+  "labels": {
+    "Create Portal": "Створити портал",
+    "User Interface": "Інтерфейс користувача",
+    "General": "Загальне",
+    "Settings": "Налаштування"
+  }
+}

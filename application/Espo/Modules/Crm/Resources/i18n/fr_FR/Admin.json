@@ -1,5 +1,6 @@
 {
-    "layouts": {
-        "detailConvert": "Convertir le prospect"
-    }
+  "layouts": {
+    "detailConvert": "Convertir le prospect",
+    "listForAccount": "Liste (compte)"
+  }
 }

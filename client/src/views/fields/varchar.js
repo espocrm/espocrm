@@ -149,7 +149,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         },
 
         getSearchType: function () {
-            return this.searchParams.typeFront || this.searchParams.type;
+            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         }
 
     });

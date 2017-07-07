@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "emailAddress": "Correo electrónico",
+    "title": "Título",
+    "accountRole": "Título",
+    "account": "Cuenta",
+    "accounts": "Cuentas",
+    "phoneNumber": "Teléfono",
+    "accountType": "Tipo de Cuenta",
+    "doNotCall": "No Llamar",
+    "address": "Dirección",
+    "opportunityRole": "Rol de Oportunidad",
+    "description": "Descripción",
+    "campaign": "Campaña",
+    "targetLists": "Lista de Objetivos",
+    "targetList": "Lista de Objetivos",
+    "portalUser": "Usuario del Portal",
+    "originalLead": "Referencia Original",
+    "acceptanceStatus": "Estatus de Aprobación",
+    "accountIsInactive": "Account Inactive",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+  },
+  "links": {
+    "opportunities": "Oportunidades",
+    "cases": "Casos",
+    "targetLists": "Lista de Objetivos",
+    "campaignLogRecords": "Registrar Campaña",
+    "campaign": "Campaña",
+    "account": "Cuenta (Primaria)",
+    "accounts": "Cuentas",
+    "casesPrimary": "Casos (Primario)",
+    "portalUser": "Usuario del Portal",
+    "originalLead": "Referencia Original",
+    "documents": "Documentos"
+  },
+  "labels": {
+    "Create Contact": "Crear Contacto"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Ninguno--",
+      "Decision Maker": "Tomador de Desiciones",
+      "Evaluator": "Evaluador",
+      "Influencer": "Factor de Influencia"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Usuarios del Portal",
+    "notPortalUsers": "No son Usuarios del Portal"
+  }
+}

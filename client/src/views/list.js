@@ -59,6 +59,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.searchPanel = false;
             }
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
+                this.createButton = false;
+            }
+
             this.entityType = this.collection.name;
 
             this.headerView = this.options.headerView || this.headerView;

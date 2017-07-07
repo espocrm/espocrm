@@ -56,13 +56,17 @@
     "soft": "мягкий",
     "Unsubscribe": "Отписаться",
     "Mass Emails": "Массовые рассылки эл. писем",
-    "Email Templates": "Шаблоны эл. писем"
+    "Email Templates": "Шаблоны эл. писем",
+    "Unsubscribe again": "Unsubscribe again",
+    "Subscribe again": "Subscribe again",
+    "Create Target List": "Create Target List"
   },
   "presetFilters": {
     "active": "Активна"
   },
   "messages": {
-    "unsubscribed": "Вы были удалены из нашего списка рассылки."
+    "unsubscribed": "Вы были удалены из нашего списка рассылки.",
+    "subscribedAgain": "You are subscribed again."
   },
   "tooltips": {
     "targetLists": "Цели которые должны получить сообщения.",

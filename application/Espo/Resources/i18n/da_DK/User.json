@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "name": "Navn",
+    "userName": "Brugernavn",
+    "title": "Titel",
+    "isAdmin": "Er Admin",
+    "defaultTeam": "Standard Team",
+    "emailAddress": "Email",
+    "phoneNumber": "Telefon",
+    "roles": "Roller",
+    "portals": "Portaler",
+    "portalRoles": "Portalroller",
+    "teamRole": "Stilling",
+    "password": "Kodeord",
+    "currentPassword": "Nuværende Kodeord",
+    "passwordConfirm": "Bekræft Kodeord",
+    "newPassword": "Nyt Kodeord",
+    "newPasswordConfirm": "Bekræft Nyt Kodeord",
+    "avatar": "Avatar",
+    "isActive": "Er Aktiv",
+    "isPortalUser": "Er Portalbruger",
+    "contact": "Kontakt",
+    "accounts": "Konti",
+    "account": "Konto (Primær)",
+    "sendAccessInfo": "Send Email med info om  Adgang til Bruger",
+    "portal": "Portal",
+    "gender": "Køn",
+    "position": "Position i Teamet",
+    "ipAddress": "IP Address",
+    "passwordPreview": "Password Preview"
+  },
+  "links": {
+    "teams": "Teams",
+    "roles": "Roller",
+    "notes": "Notater",
+    "portals": "Portaler",
+    "portalRoles": "Portalroller",
+    "contact": "Kontakt",
+    "accounts": "Konti",
+    "account": "Konto (Primær)",
+    "tasks": "Opgaver"
+  },
+  "labels": {
+    "Create User": "Opret Bruger",
+    "Generate": "Generér",
+    "Access": "Adgang",
+    "Preferences": "Brugerindstillinger",
+    "Change Password": "Skift Kodeord",
+    "Teams and Access Control": "Teams og Adgangskontrol",
+    "Forgot Password?": "Glemt Kodeord?",
+    "Password Change Request": "Anmodning om Ændring af Kodeord",
+    "Email Address": "Emailadresse",
+    "External Accounts": "Eksterne Konti",
+    "Email Accounts": "Emailkonti",
+    "Portal": "Portal",
+    "Create Portal User": "Opret Portalbruger",
+    "Proceed w/o Contact": "Forsæt uden Kontakt"
+  },
+  "tooltips": {
+    "defaultTeam": "Alle poster oprettet af denne bruger bliver som standard relateret til dette team.",
+    "userName": "Bogstaver a-z, tal 0-9, punktummer, bindestreger, @ og understregning er tilladte.",
+    "isAdmin": "Brugeren Admin kan tilgå alt.",
+    "isActive": "Hvis ikke markeret kan bruger ikke logge ind.",
+    "teams": "Teams som denne bruger tilhører. Adgangsniveau er arvet fra teamroller.",
+    "roles": "Yderligere adgangsroller. Brug det hvis bruger ikke tilhører et team, eller hvis der er brug for at udvide adgangsniveauet specielt for denne bruger.",
+    "portalRoles": "Yderligere portalroller. Brug det til at udvide adgangsniveauet specielt for denne bruger",
+    "portals": "Portaler som denne bruger har adgang til."
+  },
+  "messages": {
+    "passwordWillBeSent": "Kodeord sendes til brugers emailadresse.",
+    "accountInfoEmailSubject": "EspoCRM Info om Brugeradgang.",
+    "accountInfoEmailBody": "Dine Logindetaljer:\n\nBrugernavn: {userName}\nKodeord: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Anmodning om Ændring af Kodeord",
+    "passwordChanged": "Kodeordet er ændret",
+    "userCantBeEmpty": "Brugernavn kan ikke være tomt.",
+    "wrongUsernamePasword": "Forkert brugernavn/kodeord",
+    "emailAddressCantBeEmpty": "Emailadresse kan ikke være tom",
+    "userNameEmailAddressNotFound": "Brugernavn/Emailadresse ikke fundet.",
+    "forbidden": "Forbudt. Prøv venligst senere.",
+    "uniqueLinkHasBeenSent": "Den unikke URL er sendt til den angivne emailadresse.",
+    "passwordChangedByRequest": "Kodeordet er ændret.",
+    "setupSmtpBefore": "Det er nødvendigt af udfylde <a href=\"{url}\">SMTP indstillinger</a> for at systemet kan sende kodeordet i en email.",
+    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Kun Mit Team"
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "activePortal": "Portal Aktiv"
+  },
+  "options": {
+    "gender": {
+      "": "Ikke Sat",
+      "Male": "Hankøn",
+      "Female": "Kunkøn",
+      "Neutral": "Neutral"
+    }
+  }
+}

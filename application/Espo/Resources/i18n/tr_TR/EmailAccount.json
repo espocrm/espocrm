@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "İsim ",
+    "status": "Durum",
+    "host": "Host",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "port": "Port",
+    "monitoredFolders": "İzlenen Klasörler",
+    "ssl": "SSL",
+    "fetchSince": "İtibaren Getir",
+    "emailAddress": "E-mail Adresi",
+    "sentFolder": "Gönderilenler Klasörü",
+    "storeSentEmails": "Gönderilen E-mailleri Sakla ",
+    "keepFetchedEmailsUnread": "Getirilen E-mailleri Okunmadı Olarak Tut",
+    "emailFolder": "Klasöre Koy",
+    "useSmtp": "SMTP kullan",
+    "smtpHost": "SMTP Sunucusu",
+    "smtpPort": "SMTP Bağlantı Noktası",
+    "smtpAuth": "SMTP Auth",
+    "smtpSecurity": "SMTP Güvenliği",
+    "smtpUsername": "SMTP kullanıcı adı ",
+    "smtpPassword": "SMTP şifresi "
+  },
+  "links": {
+    "filters": "Filtreler",
+    "emails": "E-postalar "
+  },
+  "options": {
+    "status": {
+      "Active": "Arşiv",
+      "Inactive": "Inaktif"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "E-mail Hesabı Yarat",
+    "IMAP": "IMAP",
+    "Main": "Ana",
+    "Test Connection": "Bağlantıyı Test Et",
+    "Send Test Email": "Test E-postası gönder",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "IMAP Sunucusuna Bağlanılamıyor",
+    "connectionIsOk": "Bağlantı Tamam"
+  },
+  "tooltips": {
+    "monitoredFolders": "Harici bir e-posta istemcisinden gönderilen e-postaları senkronize etmek için bir 'Gönderilmiş' klasörü ekleyebilirsiniz.",
+    "storeSentEmails": "Gönderilen e-postalar IMAP sunucusunda saklanır. E-posta Adresi alanına, adres e-postalarının gönderilmesi gerekir."
+  }
+}

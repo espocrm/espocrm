@@ -1,7 +1,10 @@
 {
   "labels": {
     "Fields": "Поля",
-    "Relationships": "Отношения"
+    "Relationships": "Отношения",
+    "Schedule": "Schedule",
+    "Log": "Log",
+    "Formula": "Formula"
   },
   "fields": {
     "name": "Название",
@@ -20,14 +23,22 @@
     "relationName": "Middle Table Name",
     "linkMultipleField": "Link Multiple Field",
     "linkMultipleFieldForeign": "Foreign Link Multiple Field",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "textFilterFields": "Text Filter Fields",
+    "audited": "Audited",
+    "auditedForeign": "Foreign Audited",
+    "statusField": "Status Field",
+    "beforeSaveCustomScript": "Before Save Custom Script"
   },
   "options": {
     "type": {
       "": "Нет",
       "Base": "Base",
       "Person": "Person",
-      "CategoryTree": "Category Tree"
+      "CategoryTree": "Category Tree",
+      "Event": "Event",
+      "BasePlus": "Base Plus",
+      "Company": "Company"
     },
     "linkType": {
       "manyToMany": "Many-to-Many",
@@ -45,5 +56,14 @@
     "entityCreated": "Объект был создан",
     "linkAlreadyExists": "Конфликт названий связей (link).",
     "linkConflict": "Связь (link) с таким названием уже существует."
+  },
+  "tooltips": {
+    "statusField": "Updates of this field are logged in stream.",
+    "textFilterFields": "Fields used by text search.",
+    "stream": "Whether entity has a Stream.",
+    "disabled": "Check if you don't need this entity in your system.",
+    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
+    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
+    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
   }
 }

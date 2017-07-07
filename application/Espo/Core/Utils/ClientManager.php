@@ -86,7 +86,9 @@ class ClientManager
             $htmlFilePath = $this->mainHtmlFilePath;
         }
 
-        if ($this->getConfig()->get('isDeveloperMode')) {
+        $isDeveloperMode = $this->getConfig()->get('isDeveloperMode');
+
+        if ($isDeveloperMode) {
             if (file_exists('frontend/' . $htmlFilePath)) {
                 $htmlFilePath = 'frontend/' . $htmlFilePath;
             }
@@ -102,6 +104,9 @@ class ClientManager
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
         $html = str_replace('{{basePath}}', $this->basePath , $html);
+        if ($isDeveloperMode) {
+            $html = str_replace('{{useCacheInDeveloperMode}}', $this->getConfig()->get('useCacheInDeveloperMode') ? 'true' : 'false', $html);
+        }
 
         echo $html;
         exit;

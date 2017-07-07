@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Converted To": "Konverteret Til",
+    "Create Lead": "Opret Lead",
+    "Convert": "Konverter",
+    "convert": "convert"
+  },
+  "fields": {
+    "name": " Navn",
+    "emailAddress": "Email",
+    "title": "Titel",
+    "website": "Website",
+    "phoneNumber": "Telefon",
+    "accountName": "Kontonavn",
+    "doNotCall": "Ring Ikke!",
+    "address": "Adresse",
+    "status": "Status",
+    "source": "Kilde",
+    "opportunityAmount": "Beløb for Mulighed",
+    "opportunityAmountConverted": "Beløb for Mulighed (Konverteret)",
+    "description": "Beskrivelse",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Mulighed",
+    "campaign": "Kampagne",
+    "targetLists": "Kontaktlister",
+    "targetList": "Kontaktliste",
+    "industry": "Industri",
+    "acceptanceStatus": "Acceptance Status",
+    "opportunityAmountCurrency": "Opportunity Amount Currency"
+  },
+  "links": {
+    "targetLists": "Kontaktlister",
+    "campaignLogRecords": "Kampagne-log",
+    "campaign": "Kampagne",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Mulighed",
+    "cases": "Sager",
+    "documents": "Dokumenter"
+  },
+  "options": {
+    "status": {
+      "New": "Ny",
+      "Assigned": "Tildelt",
+      "In Process": "Under Behandling",
+      "Converted": "Konverteret",
+      "Recycled": "Genbrugt",
+      "Dead": "Død"
+    },
+    "source": {
+      "": "Ingen",
+      "Call": "Samtale",
+      "Email": "Email",
+      "Existing Customer": "Eksisterende Kunde",
+      "Partner": "Partner",
+      "Public Relations": "PR",
+      "Web Site": "Webside",
+      "Campaign": "Kampagne",
+      "Other": "Andet"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "actual": "Aktuel",
+    "converted": "Konverteret"
+  }
+}

@@ -51,6 +51,8 @@ class Activities extends \Espo\Core\Services\Base
 
     const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
 
+    const REMINDER_PAST_HOURS = 24;
+
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
@@ -1085,8 +1087,10 @@ class Activities extends \Espo\Core\Services\Base
 
         $dt = new \DateTime();
 
+        $pastHours = $this->getConfig()->get('reminderPastHours', self::REMINDER_PAST_HOURS);
+
         $now = $dt->format('Y-m-d H:i:s');
-        $nowShifted = $dt->sub(new \DateInterval('PT1H'))->format('Y-m-d H:i:s');
+        $nowShifted = $dt->sub(new \DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
 
         $sql = "
             SELECT id, entity_type AS 'entityType', entity_id AS 'entityId'

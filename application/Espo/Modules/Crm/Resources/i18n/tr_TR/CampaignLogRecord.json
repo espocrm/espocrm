@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Eylem",
+    "actionDate": "Tarih",
+    "data": "Veri",
+    "campaign": "Kampanya",
+    "parent": "Hedef",
+    "object": "Nesne",
+    "application": "Uygulama",
+    "queueItem": "Sıra Öğesi",
+    "stringData": "Dize Verileri",
+    "stringAdditionalData": "Dize Ek Veri"
+  },
+  "links": {
+    "queueItem": "Sıra Öğesi",
+    "parent": "Üst",
+    "object": "Nesne"
+  },
+  "options": {
+    "action": {
+      "Sent": "gönderildi",
+      "Opened": "Açılmış",
+      "Opted Out": "Devre dışı bırakıldı",
+      "Bounced": "Geri Döndü",
+      "Clicked": "tıklandı",
+      "Lead Created": "Müşteri Potansiyeli Oluşturuldu"
+    }
+  },
+  "labels": {
+    "All": "Hepsi"
+  },
+  "presetFilters": {
+    "sent": "gönderildi",
+    "opened": "Açılmış",
+    "optedOut": "Devre dışı bırakıldı",
+    "bounced": "Geri Döndü",
+    "clicked": "tıklandı",
+    "leadCreated": "Müşteri Potansiyeli Oluşturuldu"
+  }
+}

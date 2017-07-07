@@ -1107,7 +1107,7 @@ class Stream extends \Espo\Core\Services\Base
         foreach ($scopes as $scope => $d) {
             if (empty($d['entity']) || !$d['entity']) continue;
             if (empty($d['object']) || !$d['object']) continue;
-            if (!$this->getAcl()->checkScope($scope)) {
+            if (!$this->getAcl()->checkScope($scope) || !$this->getAcl()->checkScope($scope, 'stream')) {
                 $ignoreScopeList[] = $scope;
             }
         }

@@ -140,10 +140,14 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
 
         applyRoutingParams: function (params) {
             var id = params.folder || 'inbox';
-            var foldersView = this.getView('folders');
-            if (foldersView) {
-                foldersView.actionSelectFolder(id);
-                foldersView.reRender();
+
+            if (!params.isReturnThroughLink && id !== this.selectedFolderId) {
+                var foldersView = this.getView('folders');
+                if (foldersView) {
+                    foldersView.actionSelectFolder(id);
+                    foldersView.reRender();
+                    $(window).scrollTop(0);
+                }
             }
         }
 

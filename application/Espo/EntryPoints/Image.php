@@ -149,6 +149,10 @@ class Image extends \Espo\Core\EntryPoints\Base
 
     protected function getThumbImage($filePath, $fileType, $size)
     {
+        if (!@is_array(getimagesize($filePath))) {
+            throw new Error();
+        }
+
         list($originalWidth, $originalHeight) = getimagesize($filePath);
         list($width, $height) = $this->imageSizes[$size];
 

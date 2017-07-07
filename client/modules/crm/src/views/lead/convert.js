@@ -100,7 +100,8 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
 
                             model.set(data[scope] || {}, {silent: true});
 
-                            this.createView(scope, 'views/record/edit', {
+                            var convertEntityViewName = this.getMetadata().get(['clientDefs', scope, 'recordViews', 'edit']) || 'views/record/edit';
+                            this.createView(scope, convertEntityViewName, {
                                 model: model,
                                 el: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                 buttonsPosition: false,

@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "名称",
+    "number": "数",
+    "status": "状态",
+    "account": "帐户",
+    "contact": "联系人",
+    "contacts": "联系人",
+    "priority": "优先",
+    "type": "类型",
+    "description": "描述",
+    "inboundEmail": "入站邮件",
+    "lead": "线索"
+  },
+  "links": {
+    "inboundEmail": "入站电子邮件",
+    "account": "帐户",
+    "contact": "联系人（主）",
+    "Contacts": "联系人",
+    "meetings": "会晤",
+    "calls": "通话",
+    "tasks": "任务",
+    "emails": "电子邮件",
+    "articles": "知识库文章",
+    "lead": "线索"
+  },
+  "options": {
+    "status": {
+      "New": "新",
+      "Assigned": "已指派",
+      "Pending": "待定",
+      "Closed": "关闭",
+      "Rejected": "拒绝",
+      "Duplicate": "重复"
+    },
+    "priority": {
+      "Low": "低",
+      "Normal": "正常",
+      "High": "高",
+      "Urgent": "紧急"
+    },
+    "type": {
+      "Question": "询问",
+      "Incident": "事件",
+      "Problem": "问题"
+    }
+  },
+  "labels": {
+    "Create Case": "创建案例",
+    "Close": "关",
+    "Reject": "拒绝",
+    "Closed": "关闭",
+    "Rejected": "拒绝"
+  },
+  "presetFilters": {
+    "open": "打开",
+    "closed": "关闭"
+  }
+}

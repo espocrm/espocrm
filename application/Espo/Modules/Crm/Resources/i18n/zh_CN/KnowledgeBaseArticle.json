@@ -1,0 +1,44 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "创建文章",
+    "Any": "任何",
+    "Send in Email": "在电子邮件中发送",
+    "Move Up": "提升",
+    "Move Down": "下降",
+    "Move to Top": "移到顶部",
+    "Move to Bottom": "移到底部"
+  },
+  "fields": {
+    "name": "名称",
+    "status": "状态",
+    "type": "类型",
+    "attachments": "附件",
+    "publishDate": "发布日期",
+    "expirationDate": "截止日期",
+    "description": "描述",
+    "body": "身体",
+    "categories": "分类",
+    "language": "语言",
+    "portals": "门户"
+  },
+  "links": {
+    "cases": "案例",
+    "opportunities": "商机",
+    "categories": "分类",
+    "portals": "门户"
+  },
+  "options": {
+    "status": {
+      "In Review": "回顾",
+      "Draft": "草案",
+      "Archived": "存档",
+      "Published": "发布时间"
+    },
+    "type": {
+      "Article": "文章"
+    }
+  },
+  "presetFilters": {
+    "published": "发布"
+  }
+}

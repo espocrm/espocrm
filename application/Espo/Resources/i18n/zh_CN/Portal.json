@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "名称",
+    "logo": "商标",
+    "companyLogo": "商标",
+    "url": "网址",
+    "portalRoles": "角色",
+    "isActive": "活跃",
+    "isDefault": "是默认值",
+    "tabList": "选项卡列表",
+    "quickCreateList": "快速创建列表",
+    "theme": "主题",
+    "language": "语言",
+    "dashboardLayout": "仪表板布局",
+    "dateFormat": "日期格式",
+    "timeFormat": "时间格式",
+    "timeZone": "时区",
+    "weekStart": "每周起始日",
+    "defaultCurrency": "默认货币",
+    "customUrl": "自定义网址",
+    "customId": "用户ID"
+  },
+  "links": {
+    "users": "用户",
+    "portalRoles": "角色",
+    "notes": "笔记"
+  },
+  "tooltips": {
+    "portalRoles": "指定的门户角色将应用于此门户的所有用户。"
+  },
+  "labels": {
+    "Create Portal": "创建门户",
+    "User Interface": "用户界面",
+    "General": "一般",
+    "Settings": "设置"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Napravi članak",
+    "Any": "Bilo koji",
+    "Send in Email": "POštalji u e-poruciSend in Email",
+    "Move Up": "Pomeri na gore",
+    "Move Down": "Pomeri ne dole",
+    "Move to Top": "Pomeri na vrh",
+    "Move to Bottom": "Pomeri na dno"
+  },
+  "fields": {
+    "name": "Ime",
+    "status": "Status",
+    "type": "Tip",
+    "attachments": "prilozi",
+    "publishDate": "Datum objave",
+    "expirationDate": "Rok isteka",
+    "description": "Opis",
+    "body": "telo",
+    "categories": "Kategorije",
+    "language": "Jezik",
+    "portals": "Portali"
+  },
+  "links": {
+    "cases": "Predmeti",
+    "opportunities": "Prilike",
+    "categories": "Kategorije",
+    "portals": "Portali"
+  },
+  "options": {
+    "status": {
+      "In Review": "U pregledu",
+      "Draft": "Nacrt",
+      "Archived": "Arhiviran",
+      "Published": "Objavljen"
+    },
+    "type": {
+      "Article": "Članak"
+    }
+  },
+  "presetFilters": {
+    "published": "Objavljen"
+  },
+  "tooltips": {
+    "portals": "Članak će biti dostupan samo u određenim portalima."
+  }
+}

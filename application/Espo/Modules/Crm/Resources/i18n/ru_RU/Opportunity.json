@@ -12,12 +12,15 @@
     "description": "Описание",
     "amountConverted": "Сумма (сконвертированная)",
     "amountWeightedConverted": "Сумма (средневзвешенная)",
-    "campaign": "Кампания"
+    "campaign": "Кампания",
+    "originalLead": "Original Lead",
+    "amountCurrency": "Amount Currency"
   },
   "links": {
     "contacts": "Контакты",
     "documents": "Документы",
-    "campaign": "Кампания"
+    "campaign": "Кампания",
+    "originalLead": "Original Lead"
   },
   "options": {
     "stage": {

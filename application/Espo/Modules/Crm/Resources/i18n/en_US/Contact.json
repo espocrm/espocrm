@@ -16,7 +16,11 @@
         "targetLists": "Target Lists",
         "targetList": "Target List",
         "portalUser": "Portal User",
-        "originalLead": "Original Lead"
+        "originalLead": "Original Lead",
+        "acceptanceStatus": "Acceptance Status",
+        "accountIsInactive": "Account Inactive",
+        "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+        "acceptanceStatusCalls": "Acceptance Status (Calls)"
     },
     "links": {
         "opportunities": "Opportunities",

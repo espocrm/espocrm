@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Makale Oluştur",
+    "Any": "herhangi",
+    "Send in Email": "E-posta ile gönder",
+    "Move Up": "Yukarı Taşı",
+    "Move Down": "Aşağı",
+    "Move to Top": "En Üste Taşı",
+    "Move to Bottom": "En Alta Taşı"
+  },
+  "fields": {
+    "name": "İsim",
+    "status": "Durum ",
+    "type": "tip ",
+    "attachments": "Eklentiler",
+    "publishDate": "Yayım tarihi:",
+    "expirationDate": "Bitiş Tarihi ",
+    "description": "Açıklama",
+    "body": "Gövde",
+    "categories": "Kategoriler  ",
+    "language": "Dil ",
+    "portals": "Portallar"
+  },
+  "links": {
+    "cases": "Dosyalar",
+    "opportunities": "Fırsatlar",
+    "categories": "Kategoriler  ",
+    "portals": "Portallar"
+  },
+  "options": {
+    "status": {
+      "In Review": "İncelemede",
+      "Draft": "Taslak",
+      "Archived": "Arşivlenmiş",
+      "Published": "Yayınlanan"
+    },
+    "type": {
+      "Article": "Makale"
+    }
+  },
+  "presetFilters": {
+    "published": "Yayınlanan"
+  },
+  "tooltips": {
+    "portals": "Bu makale sadece belli portallar için geçerli olacaktır."
+  }
+}

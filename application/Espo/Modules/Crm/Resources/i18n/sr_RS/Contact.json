@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "E-mail",
+    "title": "Naslov",
+    "accountRole": "Naslov",
+    "account": "Stranka",
+    "accounts": "Stranke",
+    "phoneNumber": "Telefon",
+    "accountType": "Tip računa",
+    "doNotCall": "Ne zovi",
+    "address": "Adresa",
+    "opportunityRole": "Uloga prilika",
+    "description": "Opis",
+    "campaign": "Kampanja",
+    "targetLists": "Liste meta",
+    "targetList": "Lista meta",
+    "portalUser": "Korisnik portala",
+    "originalLead": "Originalni izvor",
+    "acceptanceStatus": "Status prihvatanja",
+    "accountIsInactive": "Stranka neaktivna",
+    "acceptanceStatusMeetings": "Status prihvatanja (sastanci)",
+    "acceptanceStatusCalls": "Status prihvatanja (pozivi)"
+  },
+  "links": {
+    "opportunities": "Prilike",
+    "cases": "Predmeti",
+    "targetLists": "Liste meta",
+    "campaignLogRecords": "Dnevnik kampanje",
+    "campaign": "Kampanja",
+    "account": "Stranka (osnovna)",
+    "accounts": "Stranke",
+    "casesPrimary": "Predmeti (osnovni)",
+    "portalUser": "Korisnik portala",
+    "originalLead": "Originalni izvor",
+    "documents": "Dokumenti"
+  },
+  "labels": {
+    "Create Contact": "Napravi kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "Nema",
+      "Decision Maker": "Donosilac odluka",
+      "Evaluator": "Evaluator",
+      "Influencer": "Uticajno lice"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Korisnici portala",
+    "notPortalUsers": "Nisu korisnici portala"
+  }
+}

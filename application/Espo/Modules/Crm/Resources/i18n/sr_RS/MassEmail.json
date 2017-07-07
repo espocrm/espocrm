@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Status",
+    "storeSentEmails": "Čuvaj poslate e-poruke",
+    "startAt": "Početni datum",
+    "fromAddress": "Dolazna adresa",
+    "fromName": "Od osobe",
+    "replyToAddress": "Adresa za odgovor",
+    "replyToName": "Odgovori osobi",
+    "campaign": "Kampanja",
+    "emailTemplate": "Šablon e-pošte",
+    "inboundEmail": "Nalog E-pošte",
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "optOutEntirely": "Potpuno \"ne želi\""
+  },
+  "links": {
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "queueItems": "Na redu čekanja",
+    "campaign": "Kampanja",
+    "emailTemplate": "Šablon e-pošte",
+    "inboundEmail": "Nalog e-pošte"
+  },
+  "options": {
+    "status": {
+      "Draft": "nacrt",
+      "Pending": "Čeka",
+      "In Process": "U procesu",
+      "Complete": "Gotovo",
+      "Canceled": "Otkazano",
+      "Failed": "Neuspešno"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Napravi masovnu e-poruku",
+    "Send Test": "Pošalji Test"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Izabrati najmanje jedan cilj.",
+    "testSent": "Test-poruke koje će biti poslate"
+  },
+  "tooltips": {
+    "optOutEntirely": "E-mail adrese primalaca koji su se odjavili će biti označen kao opredelio se da ne želi i neće više primati masovne mejlove.",
+    "targetLists": "Mete koji treba da primaju poruke.",
+    "excludingTargetLists": "Mete koje ne bi trebalo da primaju poruke."
+  },
+  "presetFilters": {
+    "actual": "Aktuelan",
+    "complete": "Završeno"
+  }
+}

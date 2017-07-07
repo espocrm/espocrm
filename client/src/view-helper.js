@@ -43,7 +43,7 @@ Espo.define('view-helper', [], function () {
         this.mdReplace = [
             '<a href="$2">$1</a>',
             function (s, string) {
-                return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+                return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
             },
             function (s, string) {
                 return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
@@ -65,6 +65,14 @@ Espo.define('view-helper', [], function () {
         preferences: null,
 
         language: null,
+
+        stripTags: function (text) {
+            text = text || '';
+            if (typeof text === 'string' || text instanceof String) {
+                return text.replace(/<\/?[^>]+(>|$)/g, '');
+            }
+            return text;
+        },
 
         tranformTextMarkdown: function (text) {
             var newline = text.indexOf('\r\n') != -1 ? '\r\n' : text.indexOf('\n') != -1 ? '\n' : '';
@@ -185,7 +193,9 @@ Espo.define('view-helper', [], function () {
                 var style = options.hash.style || 'default';
                 var scope = options.hash.scope || null;
                 var label = options.hash.label || name;
-                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+self.language.translate(label, 'labels', scope)+'</button>');
+
+                var html = options.hash.label.html || self.language.translate(label, 'labels', scope);
+                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+html+'</button>');
             });
 
             Handlebars.registerHelper('hyphen', function (string) {
@@ -203,9 +213,11 @@ Espo.define('view-helper', [], function () {
             });
 
             Handlebars.registerHelper('complexText', function (text) {
-                text = Handlebars.Utils.escapeExpression(text || '');
+                text = text || ''
 
                 text = text.replace(self.urlRegex, '$1[$2]($2)');
+
+                text = Handlebars.Utils.escapeExpression(text);
 
                 self.mdSearch.forEach(function (re, i) {
                     text = text.replace(re, self.mdReplace[i]);

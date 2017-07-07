@@ -54,14 +54,18 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
-        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'],
+        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
         data: function () {
+            var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
+            if (nameValue === null) {
+                nameValue = this.model.get(this.idName);
+            }
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
+                nameValue: nameValue,
                 foreignScope: this.foreignScope
             }, Dep.prototype.data.call(this));
         },
@@ -107,9 +111,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (model) {
+                            this.clearView('dialog');
                             this.select(model);
                         }, this);
-                    }.bind(this));
+                    }, this);
                 });
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
@@ -133,6 +138,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (models) {
+                            this.clearView('dialog');
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
@@ -153,6 +159,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         select: function (model) {
             this.$elementName.val(model.get('name'));
             this.$elementId.val(model.get('id'));
+            if (this.mode === 'search') {
+                this.searchData.idValue = model.get('id');
+                this.searchData.nameValue = model.get('name');
+            }
             this.trigger('change');
         },
 
@@ -165,6 +175,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         setupSearch: function () {
             this.searchData.oneOfIdList = this.searchParams.oneOfIdList || [];
             this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
+            this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
+            this.searchData.nameValue = this.getSearchParamsData().nameValue ||  this.searchParams.valueName;
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -175,13 +187,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         handleSearchType: function (type) {
-            if (~['is'].indexOf(type)) {
+            if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
             } else {
                 this.$el.find('div.primary').addClass('hidden');
             }
 
-            if (type === 'isOneOf') {
+            if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.one-of-container').removeClass('hidden');
             } else {
                 this.$el.find('div.one-of-container').addClass('hidden');
@@ -327,7 +339,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
 
-                if (type == 'isOneOf') {
+                if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
                     this.searchData.oneOfIdList.forEach(function (id) {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     }, this);
@@ -423,18 +435,95 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 };
                 return data;
-
+            } else if (type == 'isNotOneOf') {
+                var data = {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'notIn',
+                            attribute: this.idName,
+                            value: this.searchData.oneOfIdList
+                        },
+                        {
+                            type: 'isNull',
+                            attribute: this.idName
+                        }
+                    ],
+                    field: this.idName,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type == 'isNotOneOfAndIsNotEmpty') {
+                var data = {
+                    type: 'notIn',
+                    field: this.idName,
+                    value: this.searchData.oneOfIdList,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            }  else if (type == 'isNot') {
+                if (!value) {
+                    return false;
+                }
+                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var data = {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'notEquals',
+                            attribute: this.idName,
+                            value: value
+                        },
+                        {
+                            type: 'isNull',
+                            attribute: this.idName
+                        }
+                    ],
+                    field: this.idName,
+                    data: {
+                        type: type,
+                        idValue: value,
+                        nameValue: nameValue
+                    }
+                };
+                return data;
+            } else if (type == 'isNotAndIsNotEmpty') {
+                if (!value) {
+                    return false;
+                }
+                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
+                var data = {
+                    type: 'notEquals',
+                    field: this.idName,
+                    value: value,
+                    data: {
+                        type: type,
+                        idValue: value,
+                        nameValue: nameValue
+                    }
+                };
+                return data;
             } else {
                 if (!value) {
                     return false;
                 }
+                var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'equals',
                     field: this.idName,
                     value: value,
-                    valueName: this.$el.find('[name="' + this.nameName + '"]').val(),
                     data: {
-                        type: type
+                        type: type,
+                        idValue: value,
+                        nameValue: nameValue
                     }
                 };
                 return data;

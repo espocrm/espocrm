@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "isHtml": "Er HTML",
+    "body": "Brødtekst",
+    "subject": "Emne",
+    "attachments": "Vedlegg",
+    "insertField": "Sett inn felt",
+    "oneOff": "Bruk en gang"
+  },
+  "labels": {
+    "Create EmailTemplate": "Ny epostmal",
+    "Info": "Info"
+  },
+  "tooltips": {
+    "oneOff": "Velg denne hvis du kun skal bruke malen en gang, f.eks. til masseutsendt epost."
+  },
+  "presetFilters": {
+    "actual": "Reell"
+  },
+  "messages": {
+    "infoText": "Tilgjengelige variabler:\n\n{optOutUrl} &#8211; kun URLen til en avmeldingsside;\n\n{optOutLink} &#8211; En lenke med teksten 'Meld med av*."
+  }
+}

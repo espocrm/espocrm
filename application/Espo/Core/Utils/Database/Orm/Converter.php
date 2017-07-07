@@ -190,8 +190,14 @@ class Converter
 
     public function afterProcess(array $ormMeta)
     {
-        foreach($ormMeta as $entityName => &$entityParams) {
-            foreach($entityParams['fields'] as $fieldName => &$fieldParams) {
+        foreach ($ormMeta as $entityName => &$entityParams) {
+            foreach ($entityParams['fields'] as $fieldName => &$fieldParams) {
+
+                /* remove fields without type */
+                if (!isset($fieldParams['type']) && (!isset($fieldParams['notStorable']) || $fieldParams['notStorable'] === false)) {
+                    unset($entityParams['fields'][$fieldName]);
+                    continue;
+                }
 
                 switch ($fieldParams['type']) {
                     case 'id':
@@ -240,16 +246,16 @@ class Converter
         $outputMeta = array(
             'id' => array(
                 'type' => Entity::ID,
-                'dbType' => 'varchar',
+                'dbType' => 'varchar'
             ),
             'name' => array(
                 'type' => isset($entityMeta['fields']['name']['type']) ? $entityMeta['fields']['name']['type'] : Entity::VARCHAR,
-                'notStorable' => true,
+                'notStorable' => true
             ),
             'deleted' => array(
                 'type' => Entity::BOOL,
-                'default' => false,
-            ),
+                'default' => false
+            )
         );
 
         foreach($entityMeta['fields'] as $fieldName => $fieldParams) {
@@ -307,14 +313,27 @@ class Converter
 
             if (class_exists($className) && method_exists($className, 'load')) {
                 $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
-                $fieldResult = $helperClass->process( $fieldName, $entityName );
+                $fieldResult = $helperClass->process($fieldName, $entityName);
                 if (isset($fieldResult['unset'])) {
                     $ormMeta = Util::unsetInArray($ormMeta, $fieldResult['unset']);
                     unset($fieldResult['unset']);
                 }
 
                 $ormMeta = Util::merge($ormMeta, $fieldResult);
+            }
 
+            $defaultAttributes = $this->metadata->get(['entityDefs', $entityName, 'fields', $fieldName, 'defaultAttributes']);
+            if ($defaultAttributes && array_key_exists($fieldName, $defaultAttributes)) {
+                $defaultMetadataPart = array(
+                    $entityName => array(
+                        'fields' => array(
+                            $fieldName => array(
+                                'default' => $defaultAttributes[$fieldName]
+                            )
+                        )
+                    )
+                );
+                $ormMeta = Util::merge($ormMeta, $defaultMetadataPart);
             }
         }
 

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "网址",
+    "urlToUse": "要插入代码而不是网址",
+    "campaign": "营销活动"
+  },
+  "links": {
+    "campaign": "营销活动"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "创建跟踪网址"
+  }
+}

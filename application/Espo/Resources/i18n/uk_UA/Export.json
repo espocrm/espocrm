@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "fieldList": "Список полів",
+    "exportAllFields": "Експортувати всі поля",
+    "format": "Формат"
+  },
+  "options": {
+    "format": {
+      "csv": "CSV",
+      "xlsx": "XLSX (Excel)"
+    }
+  }
+}

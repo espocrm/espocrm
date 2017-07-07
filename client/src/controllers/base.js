@@ -43,15 +43,11 @@ Espo.define('controllers/base', 'controller', function (Dep) {
         },
 
         clearCache: function (options) {
-            var cache = this.getCache();
-            if (cache) {
-                cache.clear();
-                this.getRouter().navigateBack();
-                window.location.reload();
-            } else {
-                Espo.Ui.notify('Cache is not enabled', 'error', 3000);
-                this.getRouter().navigateBack();
-            }
+            this.entire('views/clear-cache', {
+                cache: this.getCache()
+            }, function (view) {
+                view.render();
+            });
         },
 
         error404: function () {

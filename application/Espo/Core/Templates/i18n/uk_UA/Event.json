@@ -1,5 +1,36 @@
 {
-    "labels": {
-        "Create {entityType}": "Створити {entityTypeTranslated}"
+  "fields": {
+    "parent": "Батько",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата завершення",
+    "duration": "Тривалість",
+    "status": "Статус",
+    "reminders": "Нагадування"
+  },
+  "links": {
+    "parent": "Батько"
+  },
+  "options": {
+    "status": {
+      "Planned": "Плановий",
+      "Held": "Виконано",
+      "Not Held": "Не вміщений"
     }
+  },
+  "labels": {
+    "Create {entityType}": "Створити {entityTypeTranslated}",
+    "Schedule {entityType}": "Розклад {entityTypeTranslated} ",
+    "Log {entityType}": "Лог {entityTypeTranslated}",
+    "Set Held": "Позначити виконаним",
+    "Set Not Held": "Позначити невиконаним"
+  },
+  "massActions": {
+    "setHeld": "Позначити виконаними",
+    "setNotHeld": "Позначити невиконаними"
+  },
+  "presetFilters": {
+    "planned": "Планований",
+    "held": "Виконані",
+    "todays": "Сьогоднішні"
+  }
 }

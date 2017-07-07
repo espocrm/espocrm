@@ -94,7 +94,7 @@ class Schema
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
 
-        $this->schemaConverter = new Converter($this->fileManager);
+        $this->schemaConverter = new Converter($this->metadata, $this->fileManager);
 
         $this->ormMetadata = $ormMetadata;
     }

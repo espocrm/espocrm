@@ -10,12 +10,14 @@
     "rightMargin": "Margen Derecho",
     "bottomMargin": "Margen Inferior",
     "printFooter": "Imprimir Pié",
-    "footerPosition": "Posición del Pié"
+    "footerPosition": "Posición del Pié",
+    "variables": "Etiquetas disponibles."
   },
   "labels": {
     "Create Template": "Crear Plantilla"
   },
   "tooltips": {
-    "footer": "Use {pageNumber} para imprimir el número de página."
+    "footer": "Use {pageNumber} para imprimir el número de página.",
+    "variables": "Copie y Pegue la etiqueta necesaria en el encabezado, cuerpo o pie de página."
   }
 }

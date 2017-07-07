@@ -2,7 +2,8 @@
     "labels": {
         "Converted To": "Geconverteerd naar",
         "Create Lead": "Lead Aanmaken",
-        "Convert": "Converteren"
+        "Convert": "Converteren",
+        "convert": "converteren"
     },
     "fields": {
         "name": "Record Naam",

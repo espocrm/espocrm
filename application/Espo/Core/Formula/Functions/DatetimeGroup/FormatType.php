@@ -58,10 +58,15 @@ class FormatType extends \Espo\Core\Formula\Functions\Base
         }
         $value = $this->evaluate($item->value[0]);
 
+        $format = null;
+        if (count($item->value) > 2) {
+            $format = $this->evaluate($item->value[2]);
+        }
+
         if (strlen($value) > 11) {
-            return $this->getInjection('dateTime')->convertSystemDateTime($value, $timezone);
+            return $this->getInjection('dateTime')->convertSystemDateTime($value, $timezone, $format);
         } else {
-            return $this->getInjection('dateTime')->convertSystemDate($value);
+            return $this->getInjection('dateTime')->convertSystemDate($value, $format);
         }
     }
 }

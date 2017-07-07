@@ -8,7 +8,6 @@
     "status": "Status",
     "file": "Datei",
     "type": "Typ",
-    "source": "Quelle",
     "publishDate": "Veröffentlichungsdatum",
     "expirationDate": "Ablaufdatum",
     "description": "Beschreibung",
@@ -19,7 +18,8 @@
     "accounts": "Firmen",
     "opportunities": "Verkaufschancen",
     "folder": "Ordner",
-    "leads": "Interessenten"
+    "leads": "Interessenten",
+    "contacts": "Kontakte"
   },
   "options": {
     "status": {

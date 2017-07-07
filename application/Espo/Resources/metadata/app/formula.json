@@ -57,8 +57,20 @@
             "insertText": "datetime\\addYears(VALUE, YEARS)"
         },
         {
+            "name": "datetime\\diff",
+            "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)"
+        },
+        {
             "name": "number\\format",
             "insertText": "number\\format(VALUE)"
+        },
+        {
+            "name": "number\\abs",
+            "insertText": "number\\abs(VALUE)"
+        },
+        {
+            "name": "number\\round",
+            "insertText": "number\\round(VALUE, PRECISION)"
         },
         {
             "name": "entity\\isNew",

@@ -104,12 +104,16 @@ class Importer
             }
         }
 
-        if ($parser->checkMessageAttribute($message, 'from')) {
-            $email->set('fromString', $parser->getMessageAttribute($message, 'from'));
+        $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
+        if ($fromAddressData) {
+            $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' . $fromAddressData['address'] .'>';
+            $email->set('fromString', $fromString);
         }
 
-        if ($parser->checkMessageAttribute($message, 'reply-To')) {
-            $email->set('replyToString', $parser->getMessageAttribute($message, 'reply-To'));
+        $replyToData = $parser->getAddressDataFromMessage($message, 'reply-To');
+        if ($replyToData) {
+            $replyToString = ($replyToData['name'] ? ($replyToData['name'] . ' ') : '') . '<' . $replyToData['address'] .'>';
+            $email->set('replyToString', $replyToString);
         }
 
         $fromArr = $parser->getAddressListFromMessage($message, 'from');
@@ -123,6 +127,9 @@ class Importer
         $email->set('to', implode(';', $toArr));
         $email->set('cc', implode(';', $ccArr));
         $email->set('replyTo', implode(';', $replyToArr));
+
+        $addressNameMap = $parser->getAddressNameMap($message);
+        $email->set('addressNameMap', $addressNameMap);
 
         if ($folderData) {
             foreach ($folderData as $uId => $folderId) {
@@ -307,11 +314,10 @@ class Importer
                     $email->set('parentId', $contact->get('accountId'));
                     return true;
                 }
-            } else {
-                $email->set('parentType', 'Contact');
-                $email->set('parentId', $contact->id);
-                return true;
             }
+            $email->set('parentType', 'Contact');
+            $email->set('parentId', $contact->id);
+            return true;
         } else {
             $account = $this->getEntityManager()->getRepository('Account')->where(array(
                 'emailAddress' => $emailAddress

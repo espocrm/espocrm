@@ -1,18 +1,32 @@
 {
-    "fields": {
-        "title": "Посада",
-        "dateFrom": "Дата від",
-        "dateTo": "Дата до",
-        "autorefreshInterval": "Інтервал авто-оновлення",
-        "displayRecords": "Відобразити записи",
-        "isDoubleHeight": "Висота 2x",
-        "mode": "Mode"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Week (agenda)",
-    		"basicWeek": "тиждень",
-    		"month": "місяць"
-    	}
+  "fields": {
+    "title": "Посада",
+    "dateFrom": "Дата від",
+    "dateTo": "Дата до",
+    "autorefreshInterval": "Інтервал авто-оновлення",
+    "displayRecords": "Відобразити записи",
+    "isDoubleHeight": "Висота 2x",
+    "mode": "Режим",
+    "enabledScopeList": "Що відображати",
+    "users": "Користувачі",
+    "entityType": "Тип сутності",
+    "primaryFilter": "Первинний фільтр",
+    "boolFilterList": "Додаткові фільтри",
+    "sortBy": "Сортування (поле)",
+    "sortDirection": "Сортування (напрямок)",
+    "expandedLayout": "Макет"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Тиждень (порядок денний)",
+      "basicWeek": "Тиждень",
+      "month": "Місяць",
+      "basicDay": "День",
+      "agendaDay": "День (порядок денний)",
+      "timeline": "Графік"
     }
+  },
+  "messages": {
+    "selectEntityType": "Виберіть тип сутності в опціях дашлету"
+  }
 }

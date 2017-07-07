@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "Brukere"
+  },
+  "labels": {
+    "Access": "Tilgang",
+    "Create PortalRole": "Opprett portalrolle",
+    "Scope Level": "Omfangsnivå",
+    "Field Level": "Feltnivå"
+  }
+}

@@ -149,7 +149,9 @@ return array (    'defaultPermissions' =>
         'ldapUserDefaultTeamId',
         'ldapUserDefaultTeamName',
         'ldapUserTeamsIds',
-        'ldapUserTeamsNames'
+        'ldapUserTeamsNames',
+        'cleanupJobPeriod',
+        'cleanupActionHistoryPeriod'
     ),
     'userItems' =>
     array (

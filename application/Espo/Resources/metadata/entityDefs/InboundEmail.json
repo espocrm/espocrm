@@ -14,24 +14,22 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Inactive"]
+            "options": ["Active", "Inactive"],
+            "default": "Active"
         },
         "host": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "port": {
             "type": "varchar",
-            "default": "143",
-            "required": true
+            "default": "143"
         },
         "ssl": {
             "type": "bool"
         },
         "username": {
             "type": "varchar",
-            "required": true,
             "trim": true
         },
         "password": {
@@ -39,9 +37,9 @@
         },
         "monitoredFolders": {
             "type": "varchar",
-            "required": true,
             "default": "INBOX",
-            "view": "views/inbound-email/fields/folders"
+            "view": "views/inbound-email/fields/folders",
+            "tooltip": true
         },
         "fetchSince": {
             "type": "date",
@@ -59,9 +57,14 @@
             "type": "link",
             "tooltip": true
         },
+        "teams": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
         "addAllTeamUsers": {
             "type": "bool",
-            "tooltip": true
+            "tooltip": true,
+            "default": true
         },
         "createCase": {
             "type": "bool",
@@ -90,8 +93,7 @@
         },
         "replyToAddress": {
             "type": "varchar",
-            "tooltip": true,
-            "required": true
+            "tooltip": true
         },
         "replyFromName": {
             "type": "varchar"
@@ -121,6 +123,11 @@
         "modifiedBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "inboundEmails"
         },
         "assignToUser": {
             "type": "belongsTo",

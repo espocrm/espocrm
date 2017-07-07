@@ -109,6 +109,7 @@ class Auth
         }
 
         $user->set('isAdmin', $isAdmin);
+        $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $entityManager->setUser($user);
         $this->getContainer()->setUser($user);
@@ -116,7 +117,10 @@ class Auth
 
     public function login($username, $password)
     {
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array('token' => $password))->findOne();
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array(
+            'token' => $password,
+            'isActive' => true
+        ))->findOne();
 
         if ($authToken) {
             if (!$this->allowAnyAccess) {
@@ -167,6 +171,8 @@ class Auth
                 $user->loadLinkMultipleField('teams');
             }
 
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+
             $this->getEntityManager()->setUser($user);
             $this->getContainer()->setUser($user);
 
@@ -186,6 +192,7 @@ class Auth
 
             	$this->getEntityManager()->saveEntity($authToken);
             	$user->set('token', $authToken->get('token'));
+                $user->set('authTokenId', $authToken->id);
             }
 
             return true;
@@ -201,7 +208,8 @@ class Auth
     {
         $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(array('token' => $token))->findOne();
         if ($authToken) {
-            $this->getEntityManager()->removeEntity($authToken);
+            $authToken->set('isActive', false);
+            $this->getEntityManager()->saveEntity($authToken);
             return true;
         }
     }

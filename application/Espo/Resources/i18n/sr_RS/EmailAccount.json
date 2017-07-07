@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Status",
+    "host": "Host",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "port": "Port",
+    "monitoredFolders": "Nadgledani folderi",
+    "ssl": "SSL",
+    "fetchSince": "Preuzimaj od",
+    "emailAddress": "Adresa e-pošte",
+    "sentFolder": "Fascikla poslatih",
+    "storeSentEmails": "Čuvaj poslate poruke",
+    "keepFetchedEmailsUnread": "Drži preuzete poruke kao nepročitane",
+    "emailFolder": "Stavi u fasciklu",
+    "useSmtp": "Koristi SMTP",
+    "smtpHost": "SMTP host",
+    "smtpPort": "SMTP port",
+    "smtpAuth": "SMTP auth",
+    "smtpSecurity": "SMTP bezbednost",
+    "smtpUsername": "SMTP korisničko ime",
+    "smtpPassword": "SMTP lozinka"
+  },
+  "links": {
+    "filters": "Filteri",
+    "emails": "E-poruke"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Inactive": "Neaktivan"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Napravite nalog e-pošte",
+    "IMAP": "IMAP",
+    "Main": "Glavni",
+    "Test Connection": "Testiraj vezu",
+    "Send Test Email": "Poštalji probnu e-poruku",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Ne može da se poveže na IMAP server",
+    "connectionIsOk": "Veza u redu"
+  },
+  "tooltips": {
+    "storeSentEmails": "Poslate e-poruke će se čuvati na IMAP serveru. E-mail adresa polje treba bude isto kao i adresa odakle je poslata.",
+    "monitoredFolders": "Više fascilli mora biti odeljeno zapetama.\n\nMožete dodati fasciklu \"poslate\" da biste sinhronizovali e-poruke poslate sa spoljnog klijenta."
+  }
+}

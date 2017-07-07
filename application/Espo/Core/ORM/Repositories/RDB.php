@@ -189,12 +189,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
     }
 
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    {
+        $hookData = array(
+            'relationName' => $relationName,
+            'relationParams' => $params
+        );
+
+        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
+    }
+
     public function remove(Entity $entity, array $options = array())
     {
         $result = parent::remove($entity, $options);
-        if ($result) {
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
-        }
         return $result;
     }
 
@@ -269,18 +276,22 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $entity->set('modifiedAt', $nowString);
             }
             if ($entity->hasAttribute('createdById')) {
-                if (empty($options['import']) || !$entity->has('createdById')) {
-                    $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                    if ($this->getEntityManager()->getUser()) {
+                        $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                    }
                 }
             }
         } else {
-            if (empty($options['silent'])) {
+            if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
                 if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('modifiedById')) {
-                    $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                    $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                    if ($this->getEntityManager()->getUser()) {
+                        $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+                        $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                    }
                 }
             }
         }
@@ -391,8 +402,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             } else {
                                 if (!empty($columns)) {
                                     foreach ($columns as $columnName => $columnField) {
-                                        if (isset($columnData->$id)) {
-                                            if ($columnData->$id->$columnName !== $existingColumnsData->$id->$columnName) {
+                                        if (isset($columnData->$id) && is_object($columnData->$id)) {
+                                            if (
+                                                property_exists($columnData->$id, $columnName)
+                                                &&
+                                                (
+                                                    !property_exists($existingColumnsData->$id, $columnName)
+                                                    ||
+                                                    $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
+                                                )
+                                            ) {
                                                 $toUpdateIds[] = $id;
                                             }
                                         }

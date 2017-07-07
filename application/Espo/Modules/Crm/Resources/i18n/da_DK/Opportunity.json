@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Navn",
+    "account": "Konto",
+    "stage": "Stadie",
+    "amount": "Beløb",
+    "probability": "Sandsynlighed, %",
+    "leadSource": "Leadkilde",
+    "doNotCall": "Ring Ikke!",
+    "closeDate": "Slutdato",
+    "contacts": "Kontakter",
+    "description": "Beskrivelse",
+    "amountConverted": "Beløb (konverteret)",
+    "amountWeightedConverted": "Beløb Vægtet",
+    "campaign": "Kampagne",
+    "originalLead": "Oprindelig Lead",
+    "amountCurrency": "Amount Currency"
+  },
+  "links": {
+    "contacts": "Kontakter",
+    "documents": "Dokumenter",
+    "campaign": "Kampagne",
+    "originalLead": "Oprindelig Lead"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Undersøges",
+      "Qualification": "Kvalifikation",
+      "Needs Analysis": "Behovsanalyse",
+      "Value Proposition": "Vejledende Tilbud",
+      "Id. Decision Makers": "Identifikation af Beslutningstagere",
+      "Perception Analysis": "Analyse af Opfattelsen",
+      "Proposal/Price Quote": "Tilbud/Pristilbud",
+      "Negotiation/Review": "Forhandler/Gennemgår",
+      "Closed Won": "Vundet og Lukket",
+      "Closed Lost": "Tabt og Lukket"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Opret Mulighed"
+  },
+  "presetFilters": {
+    "open": "Åbn",
+    "won": "Vundet",
+    "lost": "Tabt"
+  }
+}

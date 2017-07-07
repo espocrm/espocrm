@@ -11,7 +11,8 @@
     "contacts": "Kontakte",
     "leads": "Interessenten",
     "reminders": "Erinnerungen",
-    "account": "Firma"
+    "account": "Firma",
+    "acceptanceStatus": "Akzeptanzstatus"
   },
   "options": {
     "status": {
@@ -42,5 +43,8 @@
     "planned": "Geplant",
     "held": "Abgehalten",
     "todays": "Heutige"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Es wurde nicht gesendet"
   }
 }

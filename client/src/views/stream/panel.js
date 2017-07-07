@@ -97,6 +97,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
+                if (this.$textarea.val() && this.$textarea.val().length) {
+                    this.controlTextareaHeight();
+                }
                 $('body').on('click.stream-panel', function (e) {
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
@@ -143,9 +146,47 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.isInternalNoteMode = false;
 
+            this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
+            this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+
+            this.on('remove', function () {
+                if (this.$textarea && this.$textarea.size()) {
+                    var text = this.$textarea.val();
+                    if (text.length) {
+                        this.getSessionStorage().set(this.storageTextKey, text);
+                    } else {
+                        if (this.hasStoredText) {
+                            this.getSessionStorage().clear(this.storageTextKey);
+                        }
+                    }
+
+                    var attachmetIdList = this.seed.get('attachmentsIds') || [];
+
+                    if (attachmetIdList.length) {
+                        this.getSessionStorage().set(this.storageAttachmentsKey, {
+                            idList: attachmetIdList,
+                            names: this.seed.get('attachmentsNames') || {}
+                        });
+                    } else {
+                        if (this.hasStoredAttachments) {
+                            this.getSessionStorage().clear(this.storageAttachmentsKey);
+                        }
+                    }
+                }
+            }, this);
+
+            var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
+                if (storedAttachments) {
+                    this.hasStoredAttachments = true;
+                    this.seed.set({
+                        attachmentsIds: storedAttachments.idList,
+                        attachmentsNames: storedAttachments.names
+                    });
+                }
                 this.createCollection(function () {
                     this.wait(false);
                 }, this);
@@ -169,6 +210,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$postContainer = this.$el.find('.post-container');
 
             var $textarea = this.$textarea;
+
+            var storedText = this.getSessionStorage().get(this.storageTextKey);
+
+            if (storedText && storedText.length) {
+                this.hasStoredText = true;
+                this.$textarea.val(storedText);
+            }
 
             $textarea.off('drop');
             $textarea.off('dragover');
@@ -315,6 +363,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.$textarea.prop('disabled', false);
                     this.disablePostingMode();
                     this.afterPost();
+
+                    if (this.getPreferences().get('followEntityOnStreamPost')) {
+                        this.model.set('isFollowed', true);
+                    }
+
+                    this.getSessionStorage().clear(this.storageTextKey);
+                    this.getSessionStorage().clear(this.storageAttachmentsKey);
                 }, this);
 
                 model.set('post', message);
@@ -355,7 +410,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
                 list.push({
                     action: 'selectFilter',
-                    html: '<span class="glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'filters', 'Note'),
+                    html: '<span class="check-icon glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') + '</div>',
                     data: {
                         name: item
                     }

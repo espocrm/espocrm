@@ -2,11 +2,11 @@
 
 <div class="row">
     <div id="integrations-menu" class="col-sm-3">
-    <ul class="list-group">
-    {{#each integrationList}}
-        <li class="list-group-item"><a href="javascript:" class="integration-link" data-name="{{./this}}">{{{translate ./this scope='Integration' category='titles'}}}</a></li>
-    {{/each}}
-    </ul>
+        <ul class="list-group list-group-panel">
+        {{#each integrationList}}
+            <li class="list-group-item"><a href="javascript:" class="integration-link" data-name="{{./this}}">{{{translate ./this scope='Integration' category='titles'}}}</a></li>
+        {{/each}}
+        </ul>
     </div>
 
     <div id="integration-panel" class="col-sm-9">

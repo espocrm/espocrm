@@ -57,13 +57,25 @@ Espo.define('views/email-account/record/detail', 'views/record/detail', function
         },
 
         initSslFieldListening: function () {
-            var sslField = this.getFieldView('ssl');
-            this.listenTo(sslField, 'change', function () {
-                var ssl = sslField.fetch()['ssl'];
-                if (ssl) {
-                    this.model.set('port', '993');
-                } else {
-                    this.model.set('port', '143');
+            this.listenTo(this.model, 'change:ssl', function (model, value, o) {
+                if (o.ui) {
+                    if (value) {
+                        this.model.set('port', 993);
+                    } else {
+                        this.model.set('port', 143);
+                    }
+                }
+            }, this);
+
+            this.listenTo(this.model, 'change:smtpSecurity', function (model, value, o) {
+                if (o.ui) {
+                    if (value === 'SSL') {
+                        this.model.set('smtpPort', 465);
+                    } else if (value === 'TLS') {
+                        this.model.set('smtpPort', 587);
+                    } else {
+                        this.model.set('smtpPort', 25);
+                    }
                 }
             }, this);
         },

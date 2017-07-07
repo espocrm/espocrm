@@ -65,6 +65,9 @@ class App extends \Espo\Core\Controllers\Base
             $settings->$item = $this->getConfig()->get($item);
         }
 
+        unset($userData['authTokenId']);
+        unset($userData['password']);
+
         return array(
             'user' => $userData,
             'acl' => $this->getAcl()->getMap(),

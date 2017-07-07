@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Umgewandelt zu",
     "Create Lead": "Interessent erstellen",
-    "Convert": "Umwandeln"
+    "Convert": "Umwandeln",
+    "convert": "umwandeln"
   },
   "fields": {
     "name": "Name",
@@ -23,7 +24,8 @@
     "createdOpportunity": "Verkaufschance",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
-    "targetList": "Kontaktliste"
+    "targetList": "Kontaktliste",
+    "industry": "Industrie"
   },
   "links": {
     "targetLists": "Kontaktlisten",

@@ -43,7 +43,7 @@ Espo.define('views/modals/array-field-add', 'views/modal', function (Dep) {
 
         events: {
             'click button[data-action="add"]': function (e) {
-                var value = $(e.currentTarget).data('value');
+                var value = $(e.currentTarget).attr('data-value');
                 this.trigger('add', value);
             },
         },

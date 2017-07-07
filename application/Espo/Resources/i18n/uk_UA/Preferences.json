@@ -1,41 +1,53 @@
 {
-    "fields": {
-        "dateFormat": "Формат дати",
-        "timeFormat": "Формат часу",
-        "timeZone": "Часовий пояс",
-        "weekStart": "Перший день тижня",
-        "thousandSeparator": "Розділювач ґруп розрядів",
-        "decimalMark": "Розділювач десяткових",
-        "defaultCurrency": "Валюта за замовчуванням",
-        "currencyList": "Список валют",
-        "language": "Мова",
-        "smtpServer": "Сервер",
-        "smtpPort": "Порт",
-        "smtpAuth": "Авторизація",
-        "smtpSecurity": "Безпека",
-        "smtpUsername": "Ім'я користувача",
-        "emailAddress": "Емейл",
-        "smtpPassword": "Пароль",
-        "smtpEmailAddress": "Поштова скринька",
-        "exportDelimiter": "Експортувати роздільник даних",
-        "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
-        "autoFollowEntityTypeList": "Авто-підписка",
-        "signature": "Підпис емейла",
-        "dashboardTabList": "Вкладка Список",
-        "defaultReminders": "Default Reminders"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Неділя",
-            "1": "Понеділок"
-        }
-    },
-    "labels": {
-        "Notifications": "Оповіщення"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи із вибраних типів сутностей, бачитиме інформацію у потоці й отримувати сповіщення."
+  "fields": {
+    "dateFormat": "Формат дати",
+    "timeFormat": "Формат часу",
+    "timeZone": "Часовий пояс",
+    "weekStart": "Перший день тижня",
+    "thousandSeparator": "Розділювач ґруп розрядів",
+    "decimalMark": "Розділювач десяткових",
+    "defaultCurrency": "Валюта за замовчуванням",
+    "currencyList": "Список валют",
+    "language": "Мова",
+    "smtpServer": "Сервер",
+    "smtpPort": "Порт",
+    "smtpAuth": "Авторизація",
+    "smtpSecurity": "Безпека",
+    "smtpUsername": "Ім'я користувача",
+    "emailAddress": "Емейл",
+    "smtpPassword": "Пароль",
+    "smtpEmailAddress": "Поштова скринька",
+    "exportDelimiter": "Експортувати роздільник даних",
+    "autoFollowEntityTypeList": "Авто-підписка",
+    "signature": "Підпис емейла",
+    "dashboardTabList": "Список меню",
+    "tabList": "Список меню",
+    "defaultReminders": "Default Reminders",
+    "theme": "Тема",
+    "useCustomTabList": "Власний список меню",
+    "emailReplyToAllByDefault": "Емайл Відповісти Все за замовчуванням",
+    "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
+    "receiveMentionEmailNotifications": "Сповіщення по електронні пошті про згадування в повідомленнях",
+    "receiveStreamEmailNotifications": "Сповіщення по електронні пошті про повідомлення та оновлення статусу",
+    "dashboardLayout": "Макет панелі дашлетів",
+    "emailReplyForceHtml": "Відправити відповідь в HTML",
+    "doNotFillAssignedUserIfNotRequired": "Не назначати користувача, якщо це не обов’язково",
+    "followEntityOnStreamPost": "Автоматично підписатись після публікації в потоці"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Неділя",
+      "1": "Понеділок"
     }
+  },
+  "labels": {
+    "Notifications": "Оповіщення",
+    "User Interface": "Інтерфейс користувача",
+    "SMTP": "\n SMTP",
+    "Misc": "Різне",
+    "Locale": "Місце дії"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи із вибраних типів сутностей, бачитиме інформацію у потоці й отримувати сповіщення."
+  }
 }

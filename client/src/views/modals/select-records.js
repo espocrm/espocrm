@@ -155,7 +155,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             this.collection.where = searchManager.getWhere();
 
             if (this.searchPanel) {
-                this.createView('search', 'Record.Search', {
+                this.createView('search', 'views/record/search', {
                     collection: this.collection,
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
@@ -167,7 +167,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
         loadList: function () {
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
                            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                           'Record.List';
+                           'views/record/list';
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', viewName, {
@@ -177,7 +177,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     checkboxes: this.multiple,
                     massActionsDisabled: true,
                     rowActionsView: false,
-                    type: 'listSmall',
+                    layoutName: 'listSmall',
                     searchManager: this.searchManager,
                     checkAllResultDisabled: !this.massRelateEnabled,
                     buttonsDisabled: true

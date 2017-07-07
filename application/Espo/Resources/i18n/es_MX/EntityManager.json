@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Fields": "Campos",
+    "Relationships": "Relaciones",
+    "Schedule": "Agenda",
+    "Log": "Historial",
+    "Formula": "Fórmula"
+  },
+  "fields": {
+    "name": "Nombre",
+    "type": "Tipo",
+    "labelSingular": "Etiqueta en Singular",
+    "labelPlural": "Etiqueta en Plural",
+    "stream": "Seguimiento",
+    "label": "Etiqueta",
+    "linkType": "Tipo de enlace",
+    "entityForeign": "Entidad Foránea",
+    "linkForeign": "Enlace Foráneo",
+    "link": "Enlace",
+    "labelForeign": "Etiqueta Foránea",
+    "sortBy": "Orden por Omisión (campo)",
+    "sortDirection": "Orden por Omisión (dirección)",
+    "relationName": "Nombre de la Tabla Intermedia",
+    "linkMultipleField": "Ligar Varios Campos",
+    "linkMultipleFieldForeign": "Ligar Varios Campos Foráneos",
+    "disabled": "Desactivado",
+    "textFilterFields": "Campos de Filtros de Texto",
+    "audited": "Auditado",
+    "auditedForeign": "Auditado Externamente",
+    "statusField": "Campo de Estátus",
+    "beforeSaveCustomScript": "Antes de Guardar el Código Personalizado"
+  },
+  "options": {
+    "type": {
+      "": "Ninguno",
+      "Base": "Base",
+      "Person": "Persona",
+      "CategoryTree": "Árbol de Categorías",
+      "Event": "Evento",
+      "BasePlus": "Base Plus",
+      "Company": "Empresa"
+    },
+    "linkType": {
+      "manyToMany": "Muchos-a-Muchos",
+      "oneToMany": "Uno-a-Muchos",
+      "manyToOne": "Muchos-a-uno",
+      "parentToChildren": "Padres-a-Hijos",
+      "childrenToParent": "Hijos-a-Padres"
+    },
+    "sortDirection": {
+      "asc": "Ascendente",
+      "desc": "Descendente"
+    }
+  },
+  "messages": {
+    "entityCreated": "La entidad ha sido creada",
+    "linkAlreadyExists": "Conflicto de nombres en el enlace.",
+    "linkConflict": "Ya existe un enlace con el mismo nombra."
+  },
+  "tooltips": {
+    "statusField": "Los cambios en este campo serán registrados en seguimiento",
+    "textFilterFields": "Campos usados por la búsqueda de texto",
+    "stream": "Si la entidad tiene Seguimiento.",
+    "disabled": "Verifique si ya no necesita esta entidad en su sistema.",
+    "linkAudited": "Se registrará en Seguimiento la creación de registros relacionados y su liga con con registros existentes.",
+    "linkMultipleField": "El campo 'Multi-Ligas' es una forma fácil de editar relaciones.  No lo uses si tienes muchos registros.",
+    "entityType": "Base Plus - tiene páneles de Seguimento, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Seguimiento"
+  }
+}

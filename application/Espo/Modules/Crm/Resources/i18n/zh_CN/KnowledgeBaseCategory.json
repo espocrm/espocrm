@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "创建类别",
+    "Manage Categories": "管理类别",
+    "Articles": "用品"
+  },
+  "links": {
+    "articles": "文章"
+  }
+}

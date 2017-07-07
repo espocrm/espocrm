@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "post": "Post",
+    "attachments": "Vedlegg",
+    "targetType": "Mål",
+    "teams": "Grupper",
+    "users": "Brukere",
+    "portals": "Portaler"
+  },
+  "filters": {
+    "all": "Alle",
+    "posts": "Poster",
+    "updates": "Oppdateringer"
+  },
+  "messages": {
+    "writeMessage": "Skriv en melding her"
+  },
+  "options": {
+    "targetType": {
+      "self": "til meg selv",
+      "users": "til valgt(e) bruker(e)",
+      "teams": "til valgt(e) gruppe(r)",
+      "all": "til alle interne brukere",
+      "portals": "til portalbrukere"
+    }
+  }
+}

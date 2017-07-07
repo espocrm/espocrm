@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Širina (%)",
+    "link": "Veza",
+    "notSortable": "Nije sortabilno",
+    "align": "Poravnavanje",
+    "panelName": "Ime panela",
+    "style": "stil",
+    "sticked": "Lepljivo"
+  },
+  "options": {
+    "align": {
+      "left": "Levo",
+      "right": "Desno"
+    },
+    "style": {
+      "default": "Podrazumevano",
+      "success": "Uspešno",
+      "danger": "opasnost",
+      "info": "Info",
+      "warning": "Upozorenje",
+      "primary": "Primarno"
+    }
+  }
+}

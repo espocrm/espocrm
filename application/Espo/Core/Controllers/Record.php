@@ -67,7 +67,7 @@ class Record extends Base
     public function actionRead($params, $data, $request)
     {
         $id = $params['id'];
-        $entity = $this->getRecordService()->getEntity($id);
+        $entity = $this->getRecordService()->readEntity($id);
 
         if (empty($entity)) {
             throw new NotFound();
@@ -256,6 +256,14 @@ class Record extends Base
 
         if (isset($data['attributeList'])) {
             $params['attributeList'] = $data['attributeList'];
+        }
+
+        if (isset($data['fieldList'])) {
+            $params['fieldList'] = $data['fieldList'];
+        }
+
+        if (isset($data['format'])) {
+            $params['format'] = $data['format'];
         }
 
         return array(

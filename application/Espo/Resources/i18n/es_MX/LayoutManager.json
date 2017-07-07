@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "width": "Ancho (%)",
+    "link": "Enlace",
+    "notSortable": "No ordenable",
+    "align": "Alinear",
+    "panelName": "Nombre del Panel",
+    "style": "Estilo",
+    "sticked": "Pegado"
+  },
+  "options": {
+    "align": {
+      "left": "Izquierda",
+      "right": "Derecha"
+    },
+    "style": {
+      "default": "Por Omisión",
+      "success": "Correcto",
+      "danger": "Peligro",
+      "info": "Info",
+      "warning": "Precaución",
+      "primary": "Primario"
+    }
+  }
+}

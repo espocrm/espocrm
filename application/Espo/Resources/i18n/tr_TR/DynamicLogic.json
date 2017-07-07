@@ -1,0 +1,28 @@
+{
+  "label": {
+    "Field": "Alan "
+  },
+  "options": {
+    "operators": {
+      "equals": "Eşittir",
+      "notEquals": "eşit değil",
+      "greaterThan": "büyük",
+      "lessThan": "küçük",
+      "greaterThanOrEquals": "Büyüktür Veya Eşittir",
+      "lessThanOrEquals": "Küçüktür Veya Eşittir",
+      "in": " İçinde",
+      "notIn": "dışında",
+      "inPast": "Geçmişte",
+      "inFuture": "Gelecekte",
+      "isToday": "Bugün",
+      "isTrue": "Doğru",
+      "isFalse": "Yanlış",
+      "isEmpty": "Boş",
+      "isNotEmpty": "Boş değil",
+      "contains": "İçeren",
+      "has": "İçeren",
+      "notContains": "İçermez",
+      "notHas": "İçermez"
+    }
+  }
+}

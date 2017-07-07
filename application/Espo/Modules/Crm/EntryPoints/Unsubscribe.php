@@ -40,6 +40,11 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
 {
     public static $authRequired = false;
 
+    private function getHookManager()
+    {
+        return $this->getContainer()->get('hookManager');
+    }
+
     public function run()
     {
         if (empty($_GET['id'])) {
@@ -96,9 +101,17 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                         $targetListList = $massEmail->get('targetLists');
 
                         foreach ($targetListList as $targetList) {
-                            $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
+                            $optedOutResult = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
                                 'optedOut' => true
                             ));
+                            if ($optedOutResult) {
+                                $hookData = [
+                                   'link' => $link,
+                                   'targetId' => $targetId,
+                                   'targetType' => $targetType
+                                ];
+                                $this->getHookManager()->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
+                            }
                         }
                         echo $this->getLanguage()->translate('unsubscribed', 'messages', 'Campaign');
                         echo '<br><br>';

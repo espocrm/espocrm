@@ -1470,5 +1470,73 @@ class UtilTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($result, Util::unsetInArrayByValue('__APPEND__', $newArray, false));
     }
+
+    public function testArrayDiff()
+    {
+        $array1 = array (
+          'type' => 'enum',
+          'options' =>
+          array (
+            0 => '',
+            1 => 'Call',
+            2 => 'Email',
+            3 => 'Existing Customer',
+            4 => 'Partner',
+            5 => 'Public Relations',
+            6 => 'Campaign',
+            7 => 'Other',
+          ),
+          'default' => '',
+          'required' => true,
+          'isSorted' => false,
+          'audited' => false,
+          'readOnly' => false,
+          'tooltip' => false,
+          'newAttr1' => false,
+        );
+
+        $array2 = array (
+          'type' => 'enum',
+          'options' =>
+          array (
+            0 => '',
+            1 => 'Call',
+            2 => 'Email',
+            3 => 'Existing Customer',
+            4 => 'Partner',
+            5 => 'Public Relations',
+            6 => 'Web Site',
+            7 => 'Campaign',
+            8 => 'Other',
+          ),
+          'default' => '',
+          'required' => false,
+          'isSorted' => false,
+          'audited' => false,
+          'readOnly' => false,
+          'tooltip' => false,
+          'newAttr2' => false,
+        );
+
+        $result = array (
+          'options' =>
+          array (
+            0 => '',
+            1 => 'Call',
+            2 => 'Email',
+            3 => 'Existing Customer',
+            4 => 'Partner',
+            5 => 'Public Relations',
+            6 => 'Web Site',
+            7 => 'Campaign',
+            8 => 'Other',
+          ),
+          'required' => false,
+          'newAttr1' => false,
+          'newAttr2' => false,
+        );
+
+        $this->assertEquals($result, \Espo\Core\Utils\Util::arrayDiff($array1, $array2));
+    }
 }
 

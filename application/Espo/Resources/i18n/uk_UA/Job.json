@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "status": "Статус",
+    "executeTime": "Виконати в",
+    "attempts": "Залишилось спроб",
+    "failedAttempts": "Невдалі спроби",
+    "serviceName": "Обслуговування",
+    "method": "Метод",
+    "scheduledJob": "Запланована робота",
+    "data": "Дата"
+  },
+  "options": {
+    "status": {
+      "Pending": "В очікуванні",
+      "Success": "Успішно",
+      "Running": "Плинний",
+      "Failed": "Невдало"
+    }
+  }
+}

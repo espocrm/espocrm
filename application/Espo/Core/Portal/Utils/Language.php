@@ -35,11 +35,6 @@ class Language extends \Espo\Core\Utils\Language
 {
     public function setPortal($portal)
     {
-        if ($portal->get('language') !== '' && $portal->get('language')) {
-            if (!$this->getPreferences()->get('language')) {
-                $this->setLanguage($portal->get('language'));
-            }
-        }
     }
 
 }

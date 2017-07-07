@@ -52,6 +52,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         className: 'dialog dialog-record',
 
+        sideDisabled: false,
+
+        bottomDisabled: false,
+
         setup: function () {
 
             var self = this;
@@ -181,7 +185,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.header = this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
-                this.header += ' &raquo; ' + model.get('name');
+                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
                 this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
@@ -233,7 +237,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 inlineEditDisabled: true,
-                exit: function () {},
+                sideDisabled: this.sideDisabled,
+                bottomDisabled: this.bottomDisabled,
+                exit: function () {}
             };
             this.createView('record', viewName, options, callback);
         },

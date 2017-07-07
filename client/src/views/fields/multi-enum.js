@@ -58,7 +58,6 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             });
         },
 
-
         setup: function () {
             Dep.prototype.setup.call(this);
         },
@@ -73,7 +72,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 (this.params.options || []).forEach(function (value) {
                     var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {
-                         if (value in this.translatedOptions) {
+                        if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
                         }
                     }
@@ -132,7 +131,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     return true;
                 }
             }
-        },
+        }
 
     });
 });

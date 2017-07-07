@@ -32,11 +32,15 @@ Espo.define('views/inbound-email/record/edit', ['views/record/edit', 'views/inbo
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            Detail.prototype.handleDistributionField.call(this);
+            Detail.prototype.setupFieldsBehaviour.call(this);
 
             if (Detail.prototype.wasFetched.call(this)) {
                 this.setFieldReadOnly('fetchSince');
             }
+        },
+
+        controlStatusField: function () {
+            Detail.prototype.controlStatusField.call(this);
         },
 
         afterRender: function () {

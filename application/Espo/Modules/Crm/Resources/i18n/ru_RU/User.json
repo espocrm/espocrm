@@ -1,5 +1,8 @@
 {
   "links": {
     "targetLists": "Списки целей"
+  },
+  "fields": {
+    "acceptanceStatus": "Acceptance Status"
   }
 }

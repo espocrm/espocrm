@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "post": "Post",
+    "attachments": "Vedhæftninger",
+    "targetType": "Mål",
+    "teams": "Teams",
+    "users": "Brugere",
+    "portals": "Portaler",
+    "type": "Type"
+  },
+  "filters": {
+    "all": "Alle",
+    "posts": "Poster",
+    "updates": "Opdateringer"
+  },
+  "messages": {
+    "writeMessage": "Skriv din meddelelse her"
+  },
+  "options": {
+    "targetType": {
+      "self": "til mig selv",
+      "users": "til bestemt(e) bruger(e)",
+      "teams": "til bestemt(e) team(s)",
+      "all": "til alle interne brugere",
+      "portals": "til portalbrugere"
+    }
+  }
+}

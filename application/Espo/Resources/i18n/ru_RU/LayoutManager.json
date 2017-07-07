@@ -3,12 +3,23 @@
     "width": "Ширина (%)",
     "link": "Ссылка",
     "notSortable": "Не сортируемый",
-    "align": "Выровнять"
+    "align": "Выровнять",
+    "panelName": "Panel Name",
+    "style": "Style",
+    "sticked": "Sticked"
   },
   "options": {
     "align": {
       "left": "по левому краю",
       "right": "по правому краю"
+    },
+    "style": {
+      "default": "Default",
+      "success": "Success",
+      "danger": "Danger",
+      "info": "Info",
+      "warning": "Warning",
+      "primary": "Primary"
     }
   }
 }

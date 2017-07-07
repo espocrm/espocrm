@@ -31,6 +31,8 @@ namespace Espo\SelectManagers;
 
 class Email extends \Espo\Core\SelectManagers\Base
 {
+    protected $textFilterUseContainsAttributeList = ['name'];
+
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);

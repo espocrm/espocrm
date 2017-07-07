@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "名称",
+    "status": "状态",
+    "job": "工作",
+    "scheduling": "计划"
+  },
+  "links": {
+    "log": "日志"
+  },
+  "labels": {
+    "Create ScheduledJob": "创建计划作业"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "清理",
+      "CheckInboundEmails": "检查组电子邮件帐户",
+      "CheckEmailAccounts": "检查个人电子邮件帐户",
+      "SendEmailReminders": "发送电子邮件提醒",
+      "AuthTokenControl": "授权令牌控制",
+      "SendEmailNotifications": "发送邮件通知"
+    },
+    "cronSetup": {
+      "linux": "注意：将此行添加到crontab文件以运行Espo计划作业：",
+      "mac": "注意：将此行添加到crontab文件以运行Espo计划作业：",
+      "windows": "注意：使用以下命令创建批处理文件以使用Windows计划任务运行Espo计划作业：",
+      "default": "注意：将此命令添加到Cron Job（计划任务）："
+    },
+    "status": {
+      "Active": "活性",
+      "Inactive": "待用"
+    }
+  },
+  "tooltips": {
+    "scheduling": "crontab的符号。定义作业运行的频率。\n\n* / 5 * * * *  - 每5分钟\n\n0 * / 2 * * *  - 每2小时\n\n30 1 * * *  - 在01:30每天一次\n\n0 0 1 * *  - 在每月的第一天"
+  }
+}

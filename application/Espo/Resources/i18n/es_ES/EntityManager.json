@@ -60,10 +60,10 @@
   "tooltips": {
     "statusField": "Las actualizaciones de este campo se registran en la Historia.",
     "textFilterFields": "Campos utilizados por la búsqueda de texto.",
-    "stream": "Markei si la entidad tiendrá una Historia.",
-    "disabled": "Marke si no necesita esta entidad en su sistema.",
+    "stream": "Marque para que la entidad tenga Historia.",
+    "disabled": "Marque si no necesita esta entidad en su sistema.",
     "linkAudited": "La creación de registros relacionados y vinculados con el registro existente, se registrarán en la Historia.",
     "linkMultipleField": "El campo de Relaciones Múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
-    "entityType": "Base Plus - tiene paneles de Actividades planeadas, Historial de actividades y Tareas.\n\nEvento - Disponible en Calendario y en el Panel de Actividades."
+    "entityType": "Base: Sin elementos adicionales \n\nBase Plus - Similar a Posibles Clientes y Oportunidades (tiene paneles de Actividades planeadas, Historial de actividades y Tareas).\n\nEvento - Similar a Reuniones y Llamadas (disponible en Calendario y en el Panel de Actividades).\n\nPersona - Similar a Contacto.\n\nEmpresa - Similar a Cuenta"
   }
 }

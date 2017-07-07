@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Estátus",
+    "executionTime": "Tiempo de Ejecución",
+    "target": "Blanco"
+  }
+}

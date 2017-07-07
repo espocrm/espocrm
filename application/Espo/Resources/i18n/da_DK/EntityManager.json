@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Fields": "Felter",
+    "Relationships": "Relationer",
+    "Schedule": "Planlæg",
+    "Log": "Log",
+    "Formula": "Formel"
+  },
+  "fields": {
+    "name": "Navn",
+    "type": "Type",
+    "labelSingular": "Betegnelse Ental",
+    "labelPlural": "Betegnelse Flertal",
+    "stream": "aktiviteter",
+    "label": "Betegnelse",
+    "linkType": "Relationsype",
+    "entityForeign": "Fremmedentitet",
+    "linkForeign": "Fremmedlink",
+    "link": "Link",
+    "labelForeign": "Fremmedbetegnelse",
+    "sortBy": "Standard Sortering (Felt)",
+    "sortDirection": "Standard Sortering (Rækkefølge)",
+    "relationName": "Midterste Tabelnavn",
+    "linkMultipleField": "Link flere Felter",
+    "linkMultipleFieldForeign": "Fremmedlink flere Felter",
+    "disabled": "Inaktiv",
+    "textFilterFields": "Tekstfilter Felter",
+    "audited": "Revideret",
+    "auditedForeign": "Revideret af udenforstående",
+    "statusField": "Statusfelt",
+    "beforeSaveCustomScript": "Før Lagring af Brugerdefineret Script"
+  },
+  "options": {
+    "type": {
+      "": "Ingen",
+      "Base": "Basis",
+      "Person": "Person",
+      "CategoryTree": "Kategoritræ",
+      "Event": "Begivenhed",
+      "BasePlus": "Base Plus",
+      "Company": "Firma"
+    },
+    "linkType": {
+      "manyToMany": "n:n",
+      "oneToMany": "1:n",
+      "manyToOne": "n:1",
+      "parentToChildren": "Forældre til Børn",
+      "childrenToParent": "Børn til Forældre"
+    },
+    "sortDirection": {
+      "asc": "Stigende",
+      "desc": "Faldende"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entitet er oprettet",
+    "linkAlreadyExists": "Navnekonflikt i Link",
+    "linkConflict": "Navnekonflikt i Link eller Felt med samme navn eksisterer allerede."
+  },
+  "tooltips": {
+    "statusField": "Opdateringer af dette felt bliver logget i listen",
+    "textFilterFields": "Felter brugt af tekstsøgning",
+    "stream": "hvorvidt entiteten har en Liste",
+    "disabled": "Marker hvis du ikke behøver denne entitet i dit system.",
+    "linkAudited": "Oprettelse af relaterede poster og sammenkædning med eksisterende poster bliver logget i Listen.",
+    "linkMultipleField": "'Forbind-Flere'-feltet er en bekvem måde at redigere relationer. Brug den ikke, hvis du har markeret et stort antal relaterede poster.",
+    "entityType": "Base Plus - har Aktivitets-, historiks- og opgavepaneler."
+  }
+}

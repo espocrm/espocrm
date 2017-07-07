@@ -1,4 +1,9 @@
 {
+    "fields": {
+        "acceptanceStatus": "Acceptance Status",
+        "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+        "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    },
     "links": {
         "targetLists": "Target Lists"
     }

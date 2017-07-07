@@ -1,0 +1,8 @@
+[
+    {"name":"user", "notSortable": true},
+    {"name":"action", "width": "12", "notSortable": true},
+    {"name":"targetType", "width": "15", "notSortable": true},
+    {"name":"target", "notSortable": true},
+    {"name":"ipAddress", "width": "14", "notSortable": true},
+    {"name":"createdAt", "width": "12", "align": "right", "notSortable": true}
+]

@@ -2,7 +2,8 @@
     "labels": {
         "Converted To": "Konvertováno do",
         "Create Lead": "Vytvořit stopu",
-        "Convert": "Konvertovat"
+        "Convert": "Konvertovat",
+        "convert": "konvertovat"
     },
     "fields": {
         "name": "Název",

@@ -63,21 +63,27 @@ return array (
     'smtpUsername' => '',
     'smtpPassword' => '',
     'languageList' => [
+        'en_GB',
         'en_US',
+        'es_MX',
         'cs_CZ',
+        'da_DK',
         'de_DE',
         'es_ES',
         'fr_FR',
         'id_ID',
         'it_IT',
+        'nb_NO',
         'nl_NL',
         'tr_TR',
+        'sr_RS',
         'ro_RO',
         'ru_RU',
         'pl_PL',
         'pt_BR',
         'uk_UA',
-        'vi_VN'
+        'vi_VN',
+        'zh_CN'
     ],
     'language' => 'en_US',
     'logger' =>
@@ -95,8 +101,8 @@ return array (
         'Lead',
         'Opportunity',
     ),
-    "tabList" => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
-    "quickCreateList" => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
+    'tabList' => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
+    'quickCreateList' => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
     'exportDisabled' => false,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
@@ -150,9 +156,15 @@ return array (
             ]
         ]
     ],
-    "calendarEntityList" => ["Meeting", "Call", "Task"],
-    "activitiesEntityList" => ["Meeting", "Call"],
-    "historyEntityList" => ["Meeting", "Call", "Email"],
-    'isInstalled' => false,
+    'calendarEntityList' => ['Meeting', 'Call', 'Task'],
+    'activitiesEntityList' => ['Meeting', 'Call'],
+    'historyEntityList' => ['Meeting', 'Call', 'Email'],
+    'lastViewedCount' => 20,
+    'cleanupJobPeriod' => '1 month',
+    'cleanupActionHistoryPeriod' => '15 days',
+    'cleanupAuthTokenPeriod' => '1 month',
+    'currencyFormat' => 1,
+    'currencyDecimalPlaces' => null,
+    'isInstalled' => false
 );
 

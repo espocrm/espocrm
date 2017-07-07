@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "user": "Bruker",
+    "ipAddress": "IP-adresse",
+    "lastAccess": "Forrige pålogging",
+    "createdAt": "Påloggingsdato"
+  }
+}

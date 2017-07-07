@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Navn",
+    "status": "Status",
+    "isHtml": "Er Html",
+    "body": "Indhold",
+    "subject": "Emne",
+    "attachments": "Vedhæftet",
+    "insertField": "Indsæt Felt",
+    "oneOff": "Kun en gang"
+  },
+  "labels": {
+    "Create EmailTemplate": "Opret Emailskabelon",
+    "Info": "Info"
+  },
+  "tooltips": {
+    "oneOff": "Check hvis du kun skal bruge denne skabelon en enkelt gang. F.eks. til masse-email."
+  },
+  "presetFilters": {
+    "actual": "Aktuel"
+  },
+  "messages": {
+    "infoText": "Tilgængelige variabler:\n\n{optOutUrl} &#8211; URL til afmeldingslink\n\n{optOutLink} &#8211; afmeldingslink"
+  }
+}

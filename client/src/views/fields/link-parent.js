@@ -125,6 +125,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         dialog.render();
                         Espo.Ui.notify(false);
                         this.listenToOnce(dialog, 'select', function (model) {
+                            this.clearView('dialog');
                             this.select(model);
                         }, this);
                     }, this);

@@ -68,6 +68,13 @@ class EntityManager
         return $this->metadata;
     }
 
+    protected function getEntityManager()
+    {
+        if (!$this->container) return;
+
+        return $this->container->get('entityManager');
+    }
+
     protected function getLanguage()
     {
         return $this->language;
@@ -95,6 +102,26 @@ class EntityManager
         return $this->container->get('serviceFactory');
     }
 
+    protected function checkControllerExists($name)
+    {
+        $controllerClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
+        if (class_exists($controllerClassName)) {
+            return true;
+        } else {
+            foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+                $controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
+                if (class_exists($controllerClassName)) {
+                    return true;
+                }
+            }
+            $controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($name);
+            if (class_exists($controllerClassName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function create($name, $type, $params = array())
     {
         $name = ucfirst($name);
@@ -105,6 +132,10 @@ class EntityManager
         }
         if (empty($name) || empty($type)) {
             throw new Error();
+        }
+
+        if ($this->checkControllerExists($name)) {
+            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 
         $serviceFactory = $this->getServiceFactory();
@@ -210,6 +241,7 @@ class EntityManager
         $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
+        $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
         $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
@@ -655,7 +687,7 @@ class EntityManager
         }
 
         if (
-            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('audited', $params)) {
                 $audited = $params['audited'];
@@ -672,7 +704,7 @@ class EntityManager
         }
 
         if (
-           $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
+            in_array($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type"), ['hasMany', 'hasChildren'])
         ) {
             if (array_key_exists('auditedForeign', $params)) {
                 $auditedForeign = $params['auditedForeign'];

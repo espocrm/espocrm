@@ -1,42 +1,59 @@
 {
-    "fields": {
-        "name": "Nom",
-        "number": "Nombre",
-        "status": "Statut",
-        "account": "Compte",
-        "contact": "Contact",
-        "priority": "Priorité",
-        "type": "Type",
-        "description": "Description"
+  "fields": {
+    "name": "Nom",
+    "number": "Nombre",
+    "status": "Statut",
+    "account": "Compte",
+    "contact": "Contact",
+    "contacts": "Contacts",
+    "priority": "Priorité",
+    "type": "Type",
+    "description": "Description",
+    "inboundEmail": "Email entrant",
+    "lead": "Prospect"
+  },
+  "links": {
+    "inboundEmail": "Emails entrants",
+    "account": "Compte",
+    "contact": "Contact (principal)",
+    "Contacts": "Contacts",
+    "meetings": "Rendez-vous",
+    "calls": "Appels",
+    "tasks": "Tâches",
+    "emails": "Emails",
+    "articles": "Articles base de connaissance",
+    "lead": "Prospect"
+  },
+  "options": {
+    "status": {
+      "New": "Nouveau",
+      "Assigned": "Assigné",
+      "Pending": "En cours",
+      "Closed": "Fermé",
+      "Rejected": "Rejeté",
+      "Duplicate": "Dupliquer"
     },
-    "links": {
+    "priority": {
+      "Low": "Basse",
+      "Normal": "Normale",
+      "High": "Haute",
+      "Urgent": "Urgente"
     },
-    "options": {
-        "status": {
-            "New": "Nouveau",
-            "Assigned": "Assigné",
-            "Pending": "En cours",
-            "Closed": "Fermé",
-            "Rejected": "Rejeté",
-            "Duplicate": "Dupliquer"
-        },
-        "priority" : {
-            "Low": "Basse",
-            "Normal": "Normale",
-            "High": "Haute",
-            "Urgent": "Urgente"
-        },
-        "type": {
-            "Question": "Question",
-            "Incident": "Incident",
-            "Problem": "Problème"
-        }
-    },
-    "labels": {
-        "Create Case": "Créer un ticket"
-    },
-    "presetFilters": {
-        "open": "Ouvert",
-        "closed": "Fermé"
+    "type": {
+      "Question": "Question",
+      "Incident": "Incident",
+      "Problem": "Problème"
     }
+  },
+  "labels": {
+    "Create Case": "Créer un ticket",
+    "Close": "Fermer",
+    "Reject": "Rejeter",
+    "Closed": "Fermé",
+    "Rejected": "Rejeté"
+  },
+  "presetFilters": {
+    "open": "Ouvert",
+    "closed": "Fermé"
+  }
 }

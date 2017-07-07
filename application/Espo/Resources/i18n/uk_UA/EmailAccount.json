@@ -1,35 +1,51 @@
 {
-    "fields": {
-        "name": "Ім'я",
-        "status": "Статус",
-        "host": "Хост",
-        "username": "Ім'я користувача",
-        "password": "Пароль",
-        "port": "Порт",
-        "monitoredFolders": "Відслідковувані теки",
-        "ssl": "SSL",
-        "fetchSince": "Вибірки з",
-        "emailAddress": "Поштова скринька"
-    },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Active": "Активний",
-            "Inactive": "Неактивний"
-        }
-    },
-    "labels": {
-        "Create EmailAccount": "Додати емейл-акаунт",
-        "IMAP": "IMAP",
-        "Main": "Основне",
-        "Test Connection": "Перевірка з'єднання"
-    },
-    "messages": {
-        "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP",
-        "connectionIsOk": "Connection is Ok"
-    },
-    "tooltips": {
-        "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client."
+  "fields": {
+    "name": "Ім'я",
+    "status": "Статус",
+    "host": "Хост",
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "port": "Порт",
+    "monitoredFolders": "Відслідковувані теки",
+    "ssl": "SSL",
+    "fetchSince": "Вибірки з",
+    "emailAddress": "Поштова скринька",
+    "sentFolder": "Папка відправлені",
+    "storeSentEmails": "Історія відправлених повідомлень",
+    "keepFetchedEmailsUnread": "Залишати завантажені повідомлення електронної пошти непрочитаними",
+    "emailFolder": "Покласти в папку",
+    "useSmtp": "Використати SMTP",
+    "smtpHost": "SMTP Хост",
+    "smtpPort": "SMTP Порт",
+    "smtpAuth": "SMTP Аутентифікація",
+    "smtpSecurity": "SMTP Безпека",
+    "smtpUsername": "SMTP Ім'я користувача",
+    "smtpPassword": "SMTP Пароль"
+  },
+  "links": {
+    "filters": "Фільтри",
+    "emails": "Електронні листи"
+  },
+  "options": {
+    "status": {
+      "Active": "Активний",
+      "Inactive": "Неактивний"
     }
+  },
+  "labels": {
+    "Create EmailAccount": "Додати емейл-акаунт",
+    "IMAP": "IMAP",
+    "Main": "Основне",
+    "Test Connection": "Перевірка з'єднання",
+    "Send Test Email": "Надіслати тестове електронне повідомлення",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Не вдається підключитися до сервера IMAP",
+    "connectionIsOk": "Connection is Ok"
+  },
+  "tooltips": {
+    "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
+    "storeSentEmails": "Відправлені повідомлення будуть зберігатися на сервері IMAP. В полі «Адреса електронної пошти» має бути відправлена велика кількість адресних листів."
+  }
 }

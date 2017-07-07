@@ -1,0 +1,6 @@
+[
+    {"name":"action", "width": "18", "notSortable": true},
+    {"name":"targetType", "width": "20", "notSortable": true},
+    {"name":"target", "notSortable": true},
+    {"name":"createdAt", "width": "18", "align": "right", "notSortable": true}
+]

@@ -69,9 +69,9 @@
     "userThemesDisabled": "Deshabilitar Temas de Usuarios",
     "emailMessageMaxSize": "Tamaño máximo del correo electrónico (Mb)",
     "massEmailMaxPerHourCount": "Número máximo de correos electrónicos enviados por hora",
-    "personalEmailMaxPortionSize": "Tamaño máximo de la porción de correo para recuperar de una cuenta personal",
-    "inboundEmailMaxPortionSize": "Tamaño máximo de la porción de correo para recuperar de una cuenta grupal",
-    "maxEmailAccountCount": "El número máximo de cuentas personales de correo electrónico que se pueden crear por usuario",
+    "personalEmailMaxPortionSize": "Cantidad máxima de correos personales que se recuperarán cada vez",
+    "inboundEmailMaxPortionSize": "Cantidad máxima de correos grupales que se recuperarán cada vez",
+    "maxEmailAccountCount": "Máximo número de cuentas personales que se pueden crear por usuario",
     "authTokenLifetime": "Vida del Token de Autenticación (horas)",
     "authTokenMaxIdleTime": "Máximo tiempo de inactividad del Token de Autenticación (horas)",
     "dashboardLayout": "Diseño del Escritorio (por defecto)",
@@ -84,12 +84,18 @@
     "mentionEmailNotifications": "Se enviarán notificaciones cuando sean mencionados en los mensajes",
     "massEmailDisableMandatoryOptOutLink": "Deshabilitar la obligatoridad del enlace \"darse de baja\" ",
     "activitiesEntityList": "Lista de Entidades de Actividades",
-    "historyEntityList": "Lista de Entidades de Historia"
+    "historyEntityList": "Lista de Entidades de Historia",
+    "currencyFormat": "Formato de Moneda",
+    "currencyDecimalPlaces": "Lugares decimales en la moneda"
   },
   "options": {
     "weekStart": {
       "0": "Domingo",
       "1": "Lunes"
+    },
+    "currencyFormat": {
+      "1": "10 USD",
+      "2": "$10"
     }
   },
   "tooltips": {
@@ -122,7 +128,8 @@
     "ldapAccountDomainNameShort": "The short domain which is used for authorization to LDAP server.",
     "ldapUserTeams": "Equipos de usuario creado. Para más información, véase el perfil de usuario.",
     "ldapUserDefaultTeam": "equipo predeterminado de usuario creado. Para más información, véase el perfil de usuario.",
-    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C."
+    "b2cMode": "Por defecto EspoCRM esta adaptado para B2B. Usted puede cambiarlo a B2C.",
+    "currencyDecimalPlaces": "Número de decimales. Si está vacía, se mostrarán todas las posiciones decimales disponibles."
   },
   "labels": {
     "System": "Sistema",
@@ -132,7 +139,7 @@
     "In-app Notifications": "Notificaciones en el sistema",
     "Email Notifications": "Notificaciones de Correo",
     "Currency Settings": "Configuración Moneda",
-    "Currency Rates": "Tasas de conversion de Divisas",
+    "Currency Rates": "Tasas de conversión de Divisas",
     "Mass Email": "Email Masivo",
     "Test Connection": "Conexión de prueba",
     "Connecting": "Conexión",

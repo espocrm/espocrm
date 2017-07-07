@@ -86,6 +86,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 ],
                 timeFormatDataList: [
                     {key: "HH:mm", value: '23:00'},
+                    {key: "HH:mm:ss", value: '23:00:00'},
                     {key: "hh:mm a", value: '11:00 pm'},
                     {key: "hh:mma", value: '11:00pm'},
                     {key: "hh:mm A", value: '11:00 PM'},

@@ -63,6 +63,18 @@ class Note extends Record
     protected function afterCreate(Entity $entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
+
+        if ($entity->get('type') === 'Post' && $entity->get('parentType') && $entity->get('parentType')) {
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
+            if ($preferences && $preferences->get('followEntityOnStreamPost')) {
+                if ($this->getMetadata()->get(['scopes', $entity->get('parentType'), 'stream'])) {
+                    $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+                    if ($parent) {
+                        $this->getServiceFactory()->create('Stream')->followEntity($parent, $this->getUser()->id);
+                    }
+                }
+            }
+        }
     }
 
     protected function beforeCreate(Entity $entity, array $data = array())

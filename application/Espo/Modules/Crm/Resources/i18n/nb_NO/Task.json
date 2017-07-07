@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Navn",
+    "parent": "Forelder",
+    "status": "Status",
+    "dateStart": "Startdato",
+    "dateEnd": "Tidsfrist",
+    "dateStartDate": "Startdato (hele dagen)",
+    "dateEndDate": "Sluttdato (hele dagen)",
+    "priority": "Prioritet",
+    "description": "Beskrivelse",
+    "isOverdue": "På overtid",
+    "account": "Konto",
+    "dateCompleted": "Gjennomført",
+    "attachments": "Vedlegg",
+    "reminders": "Påminnelser"
+  },
+  "links": {
+    "attachments": "Vedlegg"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Ikke påbegynt",
+      "Started": "Påbegynt",
+      "Completed": "Gjennomført",
+      "Canceled": "Avbrutt",
+      "Deferred": "Utsatt"
+    },
+    "priority": {
+      "Low": "Lav",
+      "Normal": "Vanlig",
+      "High": "Høy",
+      "Urgent": "Haster"
+    }
+  },
+  "labels": {
+    "Create Task": "Opprett oppgave",
+    "Complete": "Gjennomført"
+  },
+  "presetFilters": {
+    "actual": "Aktuell",
+    "completed": "Gjennomført",
+    "todays": "Dagens",
+    "overdue": "På overtid",
+    "deferred": "Utsatt"
+  }
+}

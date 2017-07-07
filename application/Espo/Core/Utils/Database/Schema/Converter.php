@@ -36,11 +36,18 @@ use Espo\Core\Utils\Util,
 class Converter
 {
     private $dbalSchema;
+
     private $fileManager;
+
+    private $metadata;
 
     private $ormMeta = null;
 
-    private $customTablePath = 'application/Espo/Core/Utils/Database/Schema/tables';
+    protected $tablePaths = array(
+        'corePath' => 'application/Espo/Core/Utils/Database/Schema/tables',
+        'modulePath' => 'application/Espo/Modules/{*}/Core/Utils/Database/Schema/tables',
+        'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/tables',
+    );
 
     protected $typeList;
 
@@ -69,11 +76,17 @@ class Converter
         'foreign'
     );
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
     {
+        $this->metadata = $metadata;
         $this->fileManager = $fileManager;
 
         $this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
+    }
+
+    protected function getMetadata()
+    {
+        return $this->metadata;
     }
 
     protected function getFileManager()
@@ -112,11 +125,23 @@ class Converter
         //check if exist files in "Tables" directory and merge with ormMetadata
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
+        if (isset($ormMeta['unsetIgnore'])) {
+            $protectedOrmMeta = array();
+            foreach ($ormMeta['unsetIgnore'] as $protectedKey) {
+                $protectedOrmMeta = Util::merge( $protectedOrmMeta, Util::fillArrayKeys($protectedKey, Util::getValueByKey($ormMeta, $protectedKey)) );
+            }
+            unset($ormMeta['unsetIgnore']);
+        }
+
         //unset some keys in orm
         if (isset($ormMeta['unset'])) {
             $ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
             unset($ormMeta['unset']);
         } //END: unset some keys in orm
+
+        if (isset($protectedOrmMeta)) {
+            $ormMeta = Util::merge($ormMeta, $protectedOrmMeta);
+        }
 
         if (isset($entityList)) {
             $entityList = is_string($entityList) ? (array) $entityList : $entityList;
@@ -143,6 +168,12 @@ class Converter
             }
 
             $tables[$entityName] = $schema->createTable($tableName);
+
+            if (isset($entityParams['params']) && is_array($entityParams['params'])) {
+                foreach ($entityParams['params'] as $paramName => $paramValue) {
+                    $tables[$entityName]->addOption($paramName, $paramValue);
+                }
+            }
 
             $primaryColumns = array();
             $uniqueColumns = array();
@@ -369,15 +400,20 @@ class Converter
      */
     protected function getCustomTables(array $ormMeta)
     {
-        $customTables = array();
+        $customTables = $this->loadData($this->tablePaths['corePath']);
 
-        $fileList = $this->getFileManager()->getFileList($this->customTablePath, false, '\.php$', true);
+        if (!empty($this->tablePaths['modulePath'])) {
+            $moduleDir = strstr($this->tablePaths['modulePath'], '{*}', true);
+            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($moduleDir, false, '', false);
 
-        foreach($fileList as $fileName) {
-            $fileData = $this->getFileManager()->getPhpContents( array($this->customTablePath, $fileName) );
-            if (is_array($fileData)) {
-                $customTables = Util::merge($customTables, $fileData);
+            foreach ($moduleList as $moduleName) {
+                $modulePath = str_replace('{*}', $moduleName, $this->tablePaths['modulePath']);
+                $customTables = Util::merge($customTables, $this->loadData($modulePath));
             }
+        }
+
+        if (!empty($this->tablePaths['customPath'])) {
+            $customTables = Util::merge($customTables, $this->loadData($this->tablePaths['customPath']));
         }
 
         //get custom tables from metdata 'additionalTables'
@@ -404,13 +440,13 @@ class Converter
 
             $dependentEntities[] = $entityName;
 
-            foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
-
-                if (isset($relationParams['entity'])) {
-                    $relationEntity = $relationParams['entity'];
-
-                    if (!in_array($relationEntity, $dependentEntities)) {
-                        $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+            if (array_key_exists('relations', $ormMeta[$entityName])) {
+                foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
+                    if (isset($relationParams['entity'])) {
+                        $relationEntity = $relationParams['entity'];
+                        if (!in_array($relationEntity, $dependentEntities)) {
+                            $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+                        }
                     }
                 }
             }
@@ -437,4 +473,23 @@ class Converter
         return implode('_', $names);
     }
 
+    protected function loadData($path)
+    {
+        $tables = array();
+
+        if (!file_exists($path)) {
+            return $tables;
+        }
+
+        $fileList = $this->getFileManager()->getFileList($path, false, '\.php$', true);
+
+        foreach($fileList as $fileName) {
+            $fileData = $this->getFileManager()->getPhpContents( array($path, $fileName) );
+            if (is_array($fileData)) {
+                $tables = Util::merge($tables, $fileData);
+            }
+        }
+
+        return $tables;
+    }
 }

@@ -1,32 +1,106 @@
 {
-    "fields": {
-        "name": "Konu",
-        "parent": "Üst Seçenek",
-        "status": "Durum",
-        "dateSent": "Gönderilen Tariht",
-        "from": "Kimden",
-        "to": "Kime",
-        "cc": "CC",
-        "bcc": "BCC",
-        "isHtml": "Html olarak gönder",
-        "body": "Mesaj",
-        "subject": "Konu",
-        "attachments": "Dosya Ekle",
-        "selectTemplate": "Şablonu Seçin",
-        "fromEmailAddress": "Gönderen Adresi",
-        "toEmailAddresses": "Alıcı Adresi",
-        "emailAddress": "Eposta Adresi"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Taslak",
-        "Sending": "Gönderiyor",
-        "Sent": "Gönderildi",
-        "Archived": "Arşivlendi"
-    },
-    "labels": {
-        "Create Email": "Epostayı Arşivle",
-        "Compose": "Yeni Eposta"
+  "fields": {
+    "parent": "Üst Seçenek",
+    "status": "Durum",
+    "dateSent": "Gönderilen Tariht",
+    "from": "Kimden",
+    "to": "Kime",
+    "cc": "CC",
+    "bcc": "BCC",
+    "replyTo": "Cevapla",
+    "replyToString": "Cevapla (dize)",
+    "isHtml": "Html olarak gönder",
+    "body": "Mesaj",
+    "subject": "Konu",
+    "attachments": "Dosya Ekle",
+    "selectTemplate": "Şablonu Seçin",
+    "fromEmailAddress": "Gönderen Adresi",
+    "toEmailAddresses": "Alıcı Adresi",
+    "emailAddress": "Eposta Adresi",
+    "deliveryDate": "Teslim Tarih",
+    "account": "Hesap",
+    "users": "Kullanıcılar",
+    "replied": "Cevaplandı",
+    "replies": "Cevaplar",
+    "isRead": "Okundu",
+    "isNotRead": "Okunmadı",
+    "isImportant": "Önemli",
+    "isUsers": "Kullanıcının ",
+    "inTrash": "Çöpte",
+    "name": "İsim (Konu)",
+    "isReplied": "Yanıtlandı",
+    "isNotReplied": "Yanıtlanmadı",
+    "sentBy": "Gönderen (Kullanıcı)",
+    "folder": "Klasör ",
+    "inboundEmails": "Grup Hesapları",
+    "emailAccounts": "Kişisel Hesaplar",
+    "hasAttachment": "Eki Olan"
+  },
+  "links": {
+    "replied": "Cevaplandı",
+    "replies": "Cevaplar",
+    "inboundEmails": "Grup Hesapları",
+    "emailAccounts": "Kişisel Hesaplar"
+  },
+  "options": {
+    "status": {
+      "Draft": "Taslak",
+      "Sending": "Gönderiliyor",
+      "Sent": "Gönderildi",
+      "Archived": "Taslakta ",
+      "Received": "Alındı",
+      "Failed": "Başarısız Oldu"
     }
+  },
+  "labels": {
+    "Create Email": "Arşiv E-mail",
+    "Archive Email": "Arşiv E-mail",
+    "Compose": "Yeni Eposta",
+    "Reply": "Cevapla",
+    "Reply to All": "Tümüne Cevapla",
+    "Forward": "İlet",
+    "Original message": "Orijinal Mesaj",
+    "Forwarded message": "İletilmiş mesaj",
+    "Email Accounts": "Kişisel E-mail Hesapları",
+    "Inbound Emails": "Grup E-mail Hesapları",
+    "Email Templates": "E-mail Taslakları",
+    "Send Test Email": "Test e-mail Gönder",
+    "Send": "Gönder",
+    "Email Address": "E-mail Adresi",
+    "Mark Read": "Okundu İşaretle",
+    "Sending...": "Gönderiliyor...",
+    "Save Draft": "Taslak Kaydet",
+    "Mark all as read": "Tümünü okundu işaretle",
+    "Show Plain Text": "Düz Metin Göster",
+    "Mark as Important": "Önemli olarak işaretle",
+    "Unmark Importance": "Önemli işaretini kaldır",
+    "Move to Trash": "Çöpe taşı",
+    "Retrieve from Trash": "Çöpten Al",
+    "Move to Folder": "Klasöre taşı",
+    "Filters": "Filtreler ",
+    "Folders": "Klasörler"
+  },
+  "messages": {
+    "noSmtpSetup": "SMTP Kurulum Yok. {link}",
+    "testEmailSent": "Test e-maili gönderilmiştir",
+    "emailSent": "E-mail gönderildi ",
+    "savedAsDraft": "Taslak olarak kayıt edildi"
+  },
+  "presetFilters": {
+    "sent": "Gönderildi",
+    "archived": "Arşivlendi",
+    "inbox": "Gelen",
+    "drafts": "Taslaklar",
+    "trash": "Çöp",
+    "important": "Önemli"
+  },
+  "massActions": {
+    "markAsRead": "Okundu İşaretle",
+    "markAsNotRead": "Okunmadı İşaretle",
+    "markAsImportant": "Önemli olarak işaretle",
+    "markAsNotImportant": "Önemli işaretini kaldır",
+    "moveToTrash": "Çöpe taşı",
+    "moveToFolder": "Klasöre taşı",
+    "retrieveFromTrash": "Çöp Kutusu'ndan geri getir"
+  }
 }

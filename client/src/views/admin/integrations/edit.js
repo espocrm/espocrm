@@ -160,7 +160,10 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
 
             var notValid = false;
             this.fieldList.forEach(function (field) {
-                notValid = this.getView(field).validate() || notValid;
+                var fieldView = this.getView(field);
+                if (fieldView && !fieldView.disabled) {
+                    notValid = fieldView.validate() || notValid;
+                }
             }, this);
 
             if (notValid) {
