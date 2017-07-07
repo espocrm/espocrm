@@ -68,14 +68,14 @@ class Json
             return false;
         }
 
-        $json = json_decode($json, $assoc);
+        $value = json_decode($json, $assoc);
 
         $error = self::getLastError();
         if ($error) {
-            $GLOBALS['log']->error('Json::decode():' . $error);
+            $GLOBALS['log']->error('Json::decode():' . $error . ' - ' . print_r($json, true));
         }
 
-        return $json;
+        return $value;
     }
 
     /**
