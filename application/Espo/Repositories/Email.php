@@ -236,15 +236,9 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        parent::beforeSave($entity, $options);
-
-        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
-            $entity->addLinkMultipleId('users', $entity->get('createdById'));
-            $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
-        }
-
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
+
         if (!empty($parentId) || !empty($parentType)) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
             if (!empty($parent)) {
@@ -261,6 +255,13 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                     }
                 }
             }
+        }
+
+        parent::beforeSave($entity, $options);
+
+        if ($entity->get('status') === 'Sending' && $entity->get('createdById')) {
+            $entity->addLinkMultipleId('users', $entity->get('createdById'));
+            $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
         }
 
         if ($entity->get('isBeingImported')) {

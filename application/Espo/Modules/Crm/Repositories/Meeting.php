@@ -36,8 +36,6 @@ class Meeting extends \Espo\Core\Repositories\Event
 {
     protected function beforeSave(Entity $entity, array $options = array())
     {
-        parent::beforeSave($entity, $options);
-
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
         if (!empty($parentId) || !empty($parentType)) {
@@ -60,6 +58,27 @@ class Meeting extends \Espo\Core\Repositories\Event
                 }
             }
         }
+
+        if (!$entity->isNew()) {
+            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
+                $dateEndPrevious = $entity->getFetched('dateEnd');
+                $dateStartPrevious = $entity->getFetched('dateStart');
+                if ($dateStartPrevious && $dateEndPrevious) {
+                    $dtStart = new \DateTime($dateStartPrevious);
+                    $dtEnd = new \DateTime($dateEndPrevious);
+                    $dt = new \DateTime($entity->get('dateStart'));
+
+                    if ($dtStart && $dtEnd && $dt) {
+                        $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
+                        $dt->modify('+' . $duration . ' seconds');
+                        $dateEnd = $dt->format('Y-m-d H:i:s');
+                        $entity->set('dateEnd', $dateEnd);
+                    }
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
 
         $assignedUserId = $entity->get('assignedUserId');
         if ($assignedUserId) {
@@ -94,25 +113,6 @@ class Meeting extends \Espo\Core\Repositories\Event
                         if (empty($usersColumns->$currentUserId->status)) {
                             $usersColumns->$currentUserId->status = 'Accepted';
                         }
-                    }
-                }
-            }
-        }
-
-        if (!$entity->isNew()) {
-            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
-                $dateEndPrevious = $entity->getFetched('dateEnd');
-                $dateStartPrevious = $entity->getFetched('dateStart');
-                if ($dateStartPrevious && $dateEndPrevious) {
-                    $dtStart = new \DateTime($dateStartPrevious);
-                    $dtEnd = new \DateTime($dateEndPrevious);
-                    $dt = new \DateTime($entity->get('dateStart'));
-
-                    if ($dtStart && $dtEnd && $dt) {
-                        $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
-                        $dt->modify('+' . $duration . ' seconds');
-                        $dateEnd = $dt->format('Y-m-d H:i:s');
-                        $entity->set('dateEnd', $dateEnd);
                     }
                 }
             }
