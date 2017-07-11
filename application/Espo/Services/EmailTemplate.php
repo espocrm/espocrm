@@ -209,6 +209,9 @@ class EmailTemplate extends Record
                 } else if ($attributeType == 'datetime') {
                     $value = $this->getDateTime()->convertSystemDateTime($value);
                 } else if ($attributeType == 'text') {
+                    if (!is_string($value)) {
+                        $value = '';
+                    }
                     $value = nl2br($value);
                 }
             }
