@@ -13,7 +13,7 @@
 		"zendframework/zend-servicemanager": "2.6.0",
 		"tecnickcom/tcpdf": "^6.2",
 		"php-mime-mail-parser/php-mime-mail-parser": "^2.5",
-		"zbateson/mail-mime-parser": "0.4.3",
+		"zbateson/mail-mime-parser": "0.4.4",
 		"phpoffice/phpexcel": "^1.8"
 	},
 	"autoload": {
