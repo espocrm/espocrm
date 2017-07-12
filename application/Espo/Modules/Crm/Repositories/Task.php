@@ -69,8 +69,6 @@ class Task extends \Espo\Core\Repositories\Event
 
     protected function beforeSave(Entity $entity, array $options = array())
     {
-        parent::beforeSave($entity, $options);
-
         if ($entity->isFieldChanged('status')) {
             if ($entity->get('status') == 'Completed') {
                 $entity->set('dateCompleted', date('Y-m-d H:i:s'));
@@ -125,5 +123,7 @@ class Task extends \Espo\Core\Repositories\Event
                 }
             }
         }
+
+        parent::beforeSave($entity, $options);
     }
 }
