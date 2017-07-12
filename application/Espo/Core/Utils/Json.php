@@ -44,7 +44,7 @@ class Json
 
         $error = self::getLastError();
         if ($json === null || !empty($error)) {
-            $GLOBALS['log']->error('Json::encode():' . $error . ' - ' . print_r($value, true));
+            $GLOBALS['log']->error('Json::encode():' . $error . ' - ' . mb_substr(print_r($value, true), 0, 255));
         }
 
         return $json;
@@ -64,7 +64,7 @@ class Json
         }
 
         if (is_array($json)) {
-            $GLOBALS['log']->warning('Json::decode() - JSON cannot be decoded - '.$json);
+            $GLOBALS['log']->warning('Json::decode() - JSON cannot be decoded - ' . mb_substr($json, 0, 255));
             return false;
         }
 
@@ -72,7 +72,7 @@ class Json
 
         $error = self::getLastError();
         if ($error) {
-            $GLOBALS['log']->error('Json::decode():' . $error . ' - ' . print_r($json, true));
+            $GLOBALS['log']->error('Json::decode():' . $error . ' - ' . mb_substr($json, 0, 255));
         }
 
         return $value;
