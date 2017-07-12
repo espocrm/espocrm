@@ -215,14 +215,14 @@ class Config
 
         $this->data = $this->getFileManager()->getPhpContents($configPath);
 
-        $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
-        $this->data = Util::merge($systemConfig, $this->data);
-
-        // Load custom config defaults.
+        // Load custom config defaults - before system defaults.
         if (file_exists($this->customDefaultConfigPath)) {
             $customDefaultConfig = $this->getFileManager()->getPhpContents($this->customDefaultConfigPath);
             $this->data = Util::merge($customDefaultConfig, $this->data);
         }
+
+        $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
+        $this->data = Util::merge($systemConfig, $this->data);
 
         return $this->data;
     }
