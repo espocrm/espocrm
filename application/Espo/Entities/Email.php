@@ -124,7 +124,7 @@ class Email extends \Espo\Core\ORM\Entity
 
     public function getToList()
     {
-        $value = $email->get('to');
+        $value = $this->get('to');
         if ($value) {
             $arr = explode(';', $value);
             if (is_array($arr)) {
@@ -136,7 +136,7 @@ class Email extends \Espo\Core\ORM\Entity
 
     public function getCcList()
     {
-        $value = $email->get('cc');
+        $value = $this->get('cc');
         if ($value) {
             $arr = explode(';', $value);
             if (is_array($arr)) {
@@ -148,7 +148,7 @@ class Email extends \Espo\Core\ORM\Entity
 
     public function getBccList()
     {
-        $value = $email->get('bcc');
+        $value = $this->get('bcc');
         if ($value) {
             $arr = explode(';', $value);
             if (is_array($arr)) {
@@ -160,7 +160,7 @@ class Email extends \Espo\Core\ORM\Entity
 
     public function getReplyToList()
     {
-        $value = $email->get('replyTo');
+        $value = $this->get('replyTo');
         if ($value) {
             $arr = explode(';', $value);
             if (is_array($arr)) {
