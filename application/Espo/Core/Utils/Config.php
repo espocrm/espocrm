@@ -170,7 +170,7 @@ class Config
 
         $removeData = empty($this->removeData) ? null : $this->removeData;
 
-        $data = include($this->configPath);
+        $data = $this->loadConfig();
 
         if (is_array($values)) {
             foreach ($values as $key => $value) {
