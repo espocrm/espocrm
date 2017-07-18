@@ -35,6 +35,8 @@ class Task extends \Espo\Core\Repositories\Event
 {
     protected $reminderDateAttribute = 'dateEnd';
 
+    protected $reminderSkippingStatusList = ['Completed', 'Canceled'];
+
     protected function init()
     {
         parent::init();

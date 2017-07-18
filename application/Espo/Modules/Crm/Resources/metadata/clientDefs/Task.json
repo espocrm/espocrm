@@ -34,10 +34,19 @@
                         {
                            "type": "isEmpty",
                            "attribute": "dateEndDate"
+                        },
+                        {
+                           "type": "notEquals",
+                           "attribute": "status",
+                           "value": "Completed"
+                        },
+                        {
+                           "type": "notEquals",
+                           "attribute": "status",
+                           "value": "Canceled"
                         }
                      ]
                   }
-
                ]
             }
          }
