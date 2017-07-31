@@ -195,9 +195,9 @@ class Xlsx extends \Espo\Core\Injectable
             $label = $name;
             if (strpos($name, '_') !== false) {
                 list($linkName, $foreignField) = explode('_', $name);
-                $foreigScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
-                if ($foreigScope) {
-                    $label = $this->getInjection('language')->translate($linkName, 'links', $entityType) . '.' . $this->getInjection('language')->translate($foreignField, 'fields', $foreigScope);
+                $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                if ($foreignScope) {
+                    $label = $this->getInjection('language')->translate($linkName, 'links', $entityType) . '.' . $this->getInjection('language')->translate($foreignField, 'fields', $foreignScope);
                 }
             } else {
                 $label = $this->getInjection('language')->translate($name, 'fields', $entityType);
@@ -205,13 +205,7 @@ class Xlsx extends \Espo\Core\Injectable
 
             $sheet->setCellValue($col . $rowNumber, $label);
             $sheet->getColumnDimension($col)->setAutoSize(true);
-            if (
-                $defs['type'] == 'phone'
-                || $defs['type'] == 'email'
-                || $defs['type'] == 'url'
-                || $defs['type'] == 'link'
-                || $defs['type'] == 'linkParent'
-            ) {
+            if (in_array($defs['type'], ['phone', 'email', 'url', 'link', 'linkParent'])) {
                 $linkColList[] = $col;
             } else if ($name == 'name') {
                 $linkColList[] = $col;
@@ -231,6 +225,8 @@ class Xlsx extends \Espo\Core\Injectable
         $sheet->getStyle("A$rowNumber:$col$rowNumber")->applyFromArray($headerStyle);
         $sheet->setAutoFilter("A$rowNumber:$col$rowNumber");
 
+        $typesCache = array();
+
         $rowNumber++;
         foreach ($dataList as $row) {
             $i = 0;
@@ -242,18 +238,31 @@ class Xlsx extends \Espo\Core\Injectable
                     $defs = array();
                     $defs['type'] = 'base';
                 }
+
+                $type = $defs['type'];
+                $foreignField = $name;
+                $linkName = null;
+                if (strpos($name, '_') !== false) {
+                    list($linkName, $foreignField) = explode('_', $name);
+                    $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    if ($foreignScope) {
+                        $type = $this->getInjection('metadata')->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                    }
+                }
+                $typesCache[$name] = $type;
+
                 $link = null;
-                if ($defs['type'] == 'link') {
+                if ($type == 'link') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
-                } else if ($defs['type'] == 'linkParent') {
+                } else if ($type == 'linkParent') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
-                } else if ($defs['type'] == 'int') {
+                } else if ($type == 'int') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
-                } else if ($defs['type'] == 'currency') {
+                } else if ($type == 'currency') {
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
                         $currency = $row[$name . 'Currency'];
@@ -263,7 +272,7 @@ class Xlsx extends \Espo\Core\Injectable
                             ->getNumberFormat()
                             ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
                     }
-                } else if ($defs['type'] == 'currencyConverted') {
+                } else if ($type == 'currencyConverted') {
                     if (array_key_exists($name, $row)) {
                         $currency = $this->getConfig()->get('baseCurrency');
                         $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
@@ -274,7 +283,7 @@ class Xlsx extends \Espo\Core\Injectable
 
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
                     }
-                } else if ($defs['type'] == 'personName') {
+                } else if ($type == 'personName') {
                     if (!empty($row['name'])) {
                         $sheet->setCellValue("$col$rowNumber", $row['name']);
                     } else {
@@ -290,15 +299,15 @@ class Xlsx extends \Espo\Core\Injectable
                         }
                         $sheet->setCellValue("$col$rowNumber", $personName);
                     }
-                } else if ($defs['type'] == 'date') {
+                } else if ($type == 'date') {
                     if (isset($row[$name])) {
                         $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
                     }
-                } else if ($defs['type'] == 'datetime' || $defs['type'] == 'datetimeOptional') {
+                } else if ($type == 'datetime' || $type == 'datetimeOptional') {
                     if (isset($row[$name])) {
                         $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
                     }
-                } else if ($defs['type'] == 'image') {
+                } else if ($type == 'image') {
                     if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
                         $attachment = $this->getEntityManager()->getEntity('Attachment', $row[$name . 'Id']);
 
@@ -316,13 +325,17 @@ class Xlsx extends \Espo\Core\Injectable
                         }
                     }
 
-                } else if ($defs['type'] == 'file') {
+                } else if ($type == 'file') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
-                } else if ($defs['type'] == 'enum') {
+                } else if ($type == 'enum') {
                     if (array_key_exists($name, $row)) {
-                        $value = $this->getInjection('language')->translateOption($row[$name], $name, $entityType);
+                        if ($linkName) {
+                            $value = $this->getInjection('language')->translateOption($row[$name], $foreignField, $foreignScope);
+                        } else {
+                            $value = $this->getInjection('language')->translateOption($row[$name], $name, $entityType);
+                        }
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
                 } else {
@@ -337,30 +350,30 @@ class Xlsx extends \Espo\Core\Injectable
                     if (array_key_exists('id', $row)) {
                         $link = $this->getConfig()->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
                     }
-                } else if ($defs['type'] == 'url') {
+                } else if ($type == 'url') {
                     if (array_key_exists($name, $row) && filter_var($row[$name], FILTER_VALIDATE_URL)) {
                         $link = $row[$name];
                     }
-                } else if ($defs['type'] == 'link') {
+                } else if ($type == 'link') {
                     if (array_key_exists($name.'Id', $row)) {
                         $foreignEntity = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $name, 'entity']);
                         if ($foreignEntity) {
                             $link = $this->getConfig()->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
                         }
                     }
-                } else if ($defs['type'] == 'file') {
+                } else if ($type == 'file') {
                     if (array_key_exists($name.'Id', $row)) {
                         $link = $this->getConfig()->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
                     }
-                } else if ($defs['type'] == 'linkParent') {
+                } else if ($type == 'linkParent') {
                     if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
                         $link = $this->getConfig()->getSiteUrl() . "/#".$row[$name.'Type']."/view/". $row[$name.'Id'];
                     }
-                } else if ($defs['type'] == 'phone') {
+                } else if ($type == 'phone') {
                     if (array_key_exists($name, $row)) {
                         $link = "tel:".$row[$name];
                     }
-                } else if ($defs['type'] == 'email' && array_key_exists($name, $row)) {
+                } else if ($type == 'email' && array_key_exists($name, $row)) {
                     if (array_key_exists($name, $row)) {
                         $link = "mailto:".$row[$name];
                     }
@@ -378,17 +391,14 @@ class Xlsx extends \Espo\Core\Injectable
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
 
-            $defs = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name]);
-            if (!$defs) {
-                $defs['type'] = 'base';
-            }
+            $type = $typesCache[$name];
 
             if ($col == 'A') {
                 $sheet->getStyle("A2:A$rowNumber")
                     ->getNumberFormat()
                     ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
             } else {
-                switch($defs['type']) {
+                switch($type) {
                     case 'currency':
                     case 'currencyConverted': {
 
