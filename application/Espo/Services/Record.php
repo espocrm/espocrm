@@ -1692,7 +1692,50 @@ class Record extends \Espo\Core\Services\Base
             if (empty($item['type'])) continue;
             $type = $item['type'];
 
-            if (!empty($item['duplicateIgnore'])) continue;
+            if (!empty($item['duplicateIgnore'])) {
+                $fieldsForUnset = [];
+                $fieldsForUnset[] = $field;
+
+                switch ($type) {
+                    case "personName":
+                        $fieldsForUnset[] = 'first' . ucfirst($field);
+                        $fieldsForUnset[] = 'last' . ucfirst($field);
+                        break;
+                    case "linkParent": $fieldsForUnset[] = $field . 'Type';
+                    case "link":
+                        $fieldsForUnset[] = $field . 'Id';
+                        $fieldsForUnset[] = $field . 'Name';
+                        break;
+                    case "linkMuliple":
+                        $fieldsForUnset[] = $field . 'Ids';
+                        $fieldsForUnset[] = $field . 'Names';
+                        $fieldsForUnset[] = $field . 'Columns';
+                        break;
+                    case "email":
+                    case "phone":
+                        $fieldsForUnset[] = $field . 'Data';
+                        break;
+                    case "file":
+                    case "image":
+                        $fieldsForUnset[] = $field . 'Id';
+                        break;
+                    case "attachmentMultiple":
+                        $fieldsForUnset[] = $field . 'Ids';
+                        $fieldsForUnset[] = $field . 'Names';
+                        $fieldsForUnset[] = $field . 'Types';
+                        break;
+                    case "currency":
+                        $fieldsForUnset[] = $field . 'Converted';
+                        break;
+                }
+
+                foreach ($fieldsForUnset as $fieldForUnset) {
+                    if (isset($attributes[$fieldForUnset])) {
+                        unset($attributes[$fieldForUnset]);
+                    }
+                }
+                continue;
+            }
 
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);
