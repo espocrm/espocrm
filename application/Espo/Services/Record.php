@@ -1692,6 +1692,8 @@ class Record extends \Espo\Core\Services\Base
             if (empty($item['type'])) continue;
             $type = $item['type'];
 
+            if (!empty($item['duplicateIgnore'])) continue;
+
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);
                 if ($attachment) {
