@@ -42,6 +42,10 @@ class LabelManager extends \Espo\Core\Injectable
         'defaultLanguage'
     ];
 
+    protected $ignoreList = [
+        'Global.sets'
+    ];
+
     public function getScopeList()
     {
         $scopeList = [];
@@ -114,14 +118,14 @@ class LabelManager extends \Espo\Core\Injectable
             if (empty($data['scopeNamesPlural'])) {
                 $data['scopeNamesPlural'] = array();
             }
-            foreach ($this->getMetadata()->get(['scopes']) as $scope => $item) {
+            foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $item) {
                 if (!empty($item['entity'])) {
-                    if (empty($data['scopeNamesPlural'][$scope])) {
-                        $data['scopeNamesPlural'][$scope] = '';
+                    if (empty($data['scopeNamesPlural'][$scopeKey])) {
+                        $data['scopeNamesPlural'][$scopeKey] = '';
                     }
                 }
-                if (empty($data['scopeNames'][$scope])) {
-                    $data['scopeNames'][$scope] = '';
+                if (empty($data['scopeNames'][$scopeKey])) {
+                    $data['scopeNames'][$scopeKey] = '';
                 }
             }
         }
@@ -135,6 +139,7 @@ class LabelManager extends \Espo\Core\Injectable
         $finalData = array();
 
         foreach ($data as $category => $item) {
+            if (in_array($scope . '.' . $category, $this->ignoreList)) continue;
             foreach ($item as $key => $categoryItem) {
                 if (is_array($categoryItem)) {
                     foreach ($categoryItem as $subKey => $subItem) {
