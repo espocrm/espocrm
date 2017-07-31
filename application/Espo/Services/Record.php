@@ -1688,11 +1688,19 @@ class Record extends \Espo\Core\Services\Base
 
         $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], array());
 
+        $fieldManager = new \Espo\Core\Utils\FieldManagerUtil($this->getMetadata());
+
         foreach ($fields as $field => $item) {
             if (empty($item['type'])) continue;
             $type = $item['type'];
 
-            if (!empty($item['duplicateIgnore'])) continue;
+            if (!empty($item['duplicateIgnore'])) {
+                $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
+                foreach ($attributeToIgnoreList as $attribute) {
+                    unset($attributes[$attribute]);
+                }
+                continue;
+            }
 
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);
