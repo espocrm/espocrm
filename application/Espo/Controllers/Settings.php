@@ -76,7 +76,11 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        if (isset($data['useCache']) && $data['useCache'] != $this->getConfig()->get('useCache')) {
+        if (
+            (isset($data['useCache']) && $data['useCache'] != $this->getConfig()->get('useCache'))
+            ||
+            (isset($data['aclStrictMode']) && $data['aclStrictMode'] !== $this->getConfig()->get('aclStrictMode'))
+        ) {
             $this->getContainer()->get('dataManager')->clearCache();
         }
 

@@ -419,6 +419,10 @@
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"
         },
+        "aclStrictMode": {
+            "type": "bool",
+            "tooltip": true
+        },
         "lastViewedCount": {
             "type": "int",
             "min": 1,

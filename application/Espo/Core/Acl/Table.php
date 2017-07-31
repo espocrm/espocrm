@@ -77,6 +77,8 @@ class Table
 
     protected $forbiddenFieldsCache = array();
 
+    protected $isStrictMode = false;
+
     public function __construct(User $user, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManagerUtil $fieldManager = null)
     {
         $this->data = (object) [
@@ -84,6 +86,8 @@ class Table
             'fieldTable' => (object) [],
             'fieldTableQuickAccess' => (object) [],
         ];
+
+        $this->isStrictMode = $config->get('aclStrictMode', false);
 
         $this->user = $user;
 
@@ -133,11 +137,6 @@ class Table
     protected function getFieldManager()
     {
         return $this->fieldManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
     }
 
     public function getMap()
@@ -454,7 +453,11 @@ class Table
                     $aclType = $this->defaultAclType;
                 }
                 if (!empty($aclType)) {
-                    $defaultValue = $this->metadata->get('app.'.$this->type.'.scopeLevelTypesDefaults.' . $aclType, $this->metadata->get('app.'.$this->type.'.scopeLevelTypesDefaults.record'));
+                    $paramDefaultsName = 'scopeLevelTypesDefaults';
+                    if ($this->isStrictMode) {
+                        $paramDefaultsName = 'scopeLevelTypesStrictDefaults';
+                    }
+                    $defaultValue = $this->metadata->get(['app', $this->type, $paramDefaultsName, $aclType], $this->metadata->get(['app', $this->type, $paramDefaultsName, 'record']));
                     if (is_array($defaultValue)) {
                         $defaultValue = (object) $defaultValue;
                     }

@@ -165,6 +165,7 @@ return array (
     'cleanupAuthTokenPeriod' => '1 month',
     'currencyFormat' => 1,
     'currencyDecimalPlaces' => null,
+    'aclStrictMode' => false,
     'isInstalled' => false
 );
 
