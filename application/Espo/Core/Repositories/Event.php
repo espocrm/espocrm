@@ -43,6 +43,7 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
         if ($entity->isAttributeChanged('status') && in_array($entity->get('status'), $this->reminderSkippingStatusList)) {
             $entity->set('reminders', []);
         }
+        parent::beforeSave($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = array())
