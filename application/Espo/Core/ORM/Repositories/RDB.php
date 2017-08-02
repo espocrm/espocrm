@@ -47,6 +47,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     private $restoreData = null;
 
+    protected $hooksDisabled = false;
+
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;
@@ -172,7 +174,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function beforeRemove(Entity $entity, array $options = array())
     {
         parent::beforeRemove($entity, $options);
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRemove', $entity, $options);
+        if (!$this->hooksDisabled) {
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRemove', $entity, $options);
+        }
 
         $nowString = date('Y-m-d H:i:s', time());
         if ($entity->hasAttribute('modifiedAt')) {
@@ -186,17 +190,20 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
+        if (!$this->hooksDisabled) {
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
+        }
     }
 
     protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
     {
-        $hookData = array(
-            'relationName' => $relationName,
-            'relationParams' => $params
-        );
-
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
+        if (!$this->hooksDisabled) {
+            $hookData = array(
+                'relationName' => $relationName,
+                'relationParams' => $params
+            );
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
+        }
     }
 
     public function remove(Entity $entity, array $options = array())
@@ -211,12 +218,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($foreign instanceof Entity) {
             $foreignEntity = $foreign;
-            $hookData = array(
-                'relationName' => $relationName,
-                'relationData' => $data,
-                'foreignEntity' => $foreignEntity
-            );
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
+            if (!$this->hooksDisabled) {
+                $hookData = array(
+                    'relationName' => $relationName,
+                    'relationData' => $data,
+                    'foreignEntity' => $foreignEntity
+                );
+                $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
+            }
         }
     }
 
@@ -226,11 +235,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($foreign instanceof Entity) {
             $foreignEntity = $foreign;
-            $hookData = array(
-                'relationName' => $relationName,
-                'foreignEntity' => $foreignEntity
-            );
-            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
+            if (!$this->hooksDisabled) {
+                $hookData = array(
+                    'relationName' => $relationName,
+                    'foreignEntity' => $foreignEntity
+                );
+                $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
+            }
         }
     }
 
@@ -238,7 +249,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
+        if (!$this->hooksDisabled) {
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -254,7 +267,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->processSpecifiedRelationsSave($entity);
         $this->processFileFieldsSave($entity);
 
-        $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
+        if (!$this->hooksDisabled) {
+            $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
+        }
     }
 
     public function save(Entity $entity, array $options = array())
