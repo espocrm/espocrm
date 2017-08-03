@@ -244,6 +244,11 @@ abstract class Base
                 return "DATE_FORMAT({$part}, '%Y-%m')";
             case 'DAY':
                 return "DATE_FORMAT({$part}, '%Y-%m-%d')";
+            case 'WEEK':
+            case 'WEEK_0':
+                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 0))";
+            case 'WEEK_1':
+                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 1))";
             case 'MONTH_NUMBER':
                 $function = 'MONTH';
                 break;
@@ -257,11 +262,8 @@ abstract class Base
                 $function = 'WEEK';
                 break;
             case 'WEEK_NUMBER_0':
-            case 'WEEK_0':
-            case 'WEEK':
                 return "WEEK({$part}, 0)";
             case 'WEEK_NUMBER_1':
-            case 'WEEK_1':
                 return "WEEK({$part}, 1)";
             case 'HOUR_NUMBER':
                 $function = 'HOUR';
