@@ -82,6 +82,9 @@ abstract class Base
         'MONTH',
         'DAY',
         'YEAR',
+        'WEEK',
+        'WEEK_0',
+        'WEEK_1',
         'DAYOFWEEK',
         'DAYOFWEEK_NUMBER',
         'MONTH_NUMBER',
@@ -91,6 +94,9 @@ abstract class Base
         'HOUR',
         'MINUTE_NUMBER',
         'MINUTE',
+        'WEEK_NUMBER',
+        'WEEK_NUMBER_0',
+        'WEEK_NUMBER_1',
         'LOWER',
         'UPPER',
         'TRIM',
@@ -247,6 +253,16 @@ abstract class Base
             case 'YEAR_NUMBER':
                 $function = 'YEAR';
                 break;
+            case 'WEEK_NUMBER':
+                $function = 'WEEK';
+                break;
+            case 'WEEK_NUMBER_0':
+            case 'WEEK_0':
+            case 'WEEK':
+                return "WEEK({$part}, 0)";
+            case 'WEEK_NUMBER_1':
+            case 'WEEK_1':
+                return "WEEK({$part}, 1)";
             case 'HOUR_NUMBER':
                 $function = 'HOUR';
                 break;
@@ -279,13 +295,14 @@ abstract class Base
         if (strpos($field, ':')) {
             list($function, $field) = explode(':', $field);
         }
+        if (!empty($function)) {
+            $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
+        }
+
         if (strpos($field, '.')) {
             list($relName, $field) = explode('.', $field);
         }
 
-        if (!empty($function)) {
-            $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
-        }
         if (!empty($relName)) {
             $relName = preg_replace('/[^A-Za-z0-9_]+/', '', $relName);
         }
