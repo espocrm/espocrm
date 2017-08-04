@@ -188,6 +188,8 @@ class Base
 
         $whereClause = array();
         foreach ($where as $item) {
+            if (!isset($item['type'])) continue;
+
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
                 foreach ($item['value'] as $filter) {
                     $p = $this->getBoolFilterWhere($filter);
@@ -210,6 +212,8 @@ class Base
 
         $additionalFilters = array();
         foreach ($where as $item) {
+            if (!isset($item['type'])) continue;
+
             $type = $item['type'];
             if (!in_array($type, $ignoreTypeList)) {
                 $part = $this->getWherePart($item, $result);
