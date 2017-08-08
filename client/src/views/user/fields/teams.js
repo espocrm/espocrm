@@ -60,6 +60,8 @@ Espo.define('views/user/fields/teams', 'views/fields/link-multiple-with-role', f
         },
 
         loadRoleList: function (callback, context) {
+            if (!this.getAcl().checkScope('Team', 'read')) return;
+
             var ids = this.ids || [];
             if (ids.length == 0) return;
 
