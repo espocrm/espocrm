@@ -504,37 +504,13 @@ class Import extends \Espo\Services\Record
                             $lastNameField = 'last' . ucfirst($field);
                             $firstNameField = 'first' . ucfirst($field);
 
-                            $firstName = '';
-                            $lastName = $value;
-                            switch ($params['personNameFormat']) {
-                                case 'f l':
-                                    $pos = strpos($value, ' ');
-                                    if ($pos) {
-                                        $firstName = trim(substr($value, 0, $pos));
-                                        $lastName = trim(substr($value, $pos + 1));
-                                    }
-                                    break;
-                                case 'l f':
-                                    $pos = strpos($value, ' ');
-                                    if ($pos) {
-                                        $lastName = trim(substr($value, 0, $pos));
-                                        $firstName = trim(substr($value, $pos + 1));
-                                    }
-                                    break;
-                                case 'l, f':
-                                    $pos = strpos($value, ',');
-                                    if ($pos) {
-                                        $lastName = trim(substr($value, 0, $pos));
-                                        $firstName = trim(substr($value, $pos + 1));
-                                    }
-                                    break;
-                            }
+                            $personName = $this->parsePersonName($value, $params['personNameFormat']);
 
                             if (!$entity->get($firstNameField)) {
-                                $entity->set($firstNameField, $firstName);
+                                $entity->set($firstNameField, $personName['firstName']);
                             }
                             if (!$entity->get($lastNameField)) {
-                                $entity->set($lastNameField, $lastName);
+                                $entity->set($lastNameField, $personName['lastName']);
                             }
                             continue;
                         }
@@ -569,20 +545,32 @@ class Import extends \Espo\Services\Record
             $defs = $fieldsDefs[$field];
             $type = $fieldsDefs[$field]['type'];
 
-            if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign']) && $defs['foreign'] === 'name') {
-                if ($entity->has($field)) {
-                    $relation = $defs['relation'];
-                    if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
-                        if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
-                            $name = $entity->get($field);
-                            $scope = $relDefs[$relation]['entity'];
-                            $found = $this->getEntityManager()->getRepository($scope)->where(array('name' => $name))->findOne();
+            if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign'])) {
+                $relatedEntityIsPerson = is_array($defs['foreign']) && in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
 
-                            if ($found) {
-                                $entity->set($relation . 'Id', $found->id);
-                            } else {
-                                if (!in_array($scope, ['User', 'Team'])) {
-                                    // TODO create related record with name $name and relate
+                if ($defs['foreign'] === 'name' || $relatedEntityIsPerson) {
+                    if ($entity->has($field)) {
+                        $relation = $defs['relation'];
+                        if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
+                            if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
+                                $value = $entity->get($field);
+                                $scope = $relDefs[$relation]['entity'];
+
+                                if ($relatedEntityIsPerson) {
+                                    $where = $this->parsePersonName($value, $params['personNameFormat']);
+                                } else {
+                                    $where['name'] = $value;
+                                }
+
+                                $found = $this->getEntityManager()->getRepository($scope)->where($where)->findOne();
+
+                                if ($found) {
+                                    $entity->set($relation . 'Id', $found->id);
+                                    $entity->set($relation . 'Name', $found->get('name'));
+                                } else {
+                                    if (!in_array($scope, ['User', 'Team'])) {
+                                        // TODO create related record with name $name and relate
+                                    }
                                 }
                             }
                         }
@@ -626,6 +614,36 @@ class Import extends \Espo\Services\Record
         }
 
         return $result;
+    }
+
+    protected function parsePersonName($value, $format)
+    {
+        $firstName = '';
+        $lastName = $value;
+        switch ($format) {
+            case 'f l':
+                $pos = strpos($value, ' ');
+                if ($pos) {
+                    $firstName = trim(substr($value, 0, $pos));
+                    $lastName = trim(substr($value, $pos + 1));
+                }
+                break;
+            case 'l f':
+                $pos = strpos($value, ' ');
+                if ($pos) {
+                    $lastName = trim(substr($value, 0, $pos));
+                    $firstName = trim(substr($value, $pos + 1));
+                }
+                break;
+            case 'l, f':
+                $pos = strpos($value, ',');
+                if ($pos) {
+                    $lastName = trim(substr($value, 0, $pos));
+                    $firstName = trim(substr($value, $pos + 1));
+                }
+                break;
+        }
+        return ['firstName' => $firstName, 'lastName' => $lastName];
     }
 
     protected function parseValue(Entity $entity, $field, $value, $params = array())
