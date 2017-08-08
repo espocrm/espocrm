@@ -129,10 +129,6 @@ Espo.define('model', [], function () {
             return defaultValue;
         },
 
-        getLinkMultipleColumn: function (field, column, id) {
-            return ((this.get(field + 'Columns') || {}).id || {}).column;
-        },
-
         setRelate: function (data) {
 
             var setRelate = function (options) {
