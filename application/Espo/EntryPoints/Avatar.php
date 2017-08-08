@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Avatar extends Image
 {
-    public static $authRequired = false;
+    public static $authRequired = true;
 
     public static $notStrictAuth = true;
 
@@ -88,14 +88,7 @@ class Avatar extends Image
             exit;
         }
 
-        if (isset($_GET['attachmentId'])) {
-            $id = $_GET['attachmentId'];
-            if ($id == 'false') {
-                $id = false;
-            }
-        } else {
-            $id = $user->get('avatarId');
-        }
+        $id = $user->get('avatarId');
 
         $size = null;
         if (!empty($_GET['size'])) {
