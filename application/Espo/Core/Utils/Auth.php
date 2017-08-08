@@ -99,7 +99,7 @@ class Auth
         return $this->getContainer()->get('entityManager');
     }
 
-    public function useNoAuth($isAdmin = false)
+    public function useNoAuth()
     {
         $entityManager = $this->getContainer()->get('entityManager');
 
@@ -108,7 +108,7 @@ class Auth
             throw new Error("System user is not found");
         }
 
-        $user->set('isAdmin', $isAdmin);
+        $user->set('isAdmin', true);
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $entityManager->setUser($user);
