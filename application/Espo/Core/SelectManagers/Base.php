@@ -1006,6 +1006,9 @@ class Base
                 case 'like':
                     $part[$attribute . '*'] = $item['value'];
                     break;
+                case 'notLike':
+                    $part[$attribute . '!*'] = $item['value'];
+                    break;
                 case 'equals':
                 case 'on':
                     $part[$attribute . '='] = $item['value'];
@@ -1018,6 +1021,9 @@ class Base
                     break;
                 case 'contains':
                     $part[$attribute . '*'] = '%' . $item['value'] . '%';
+                    break;
+                case 'notContains':
+                    $part[$attribute . '!*'] = '%' . $item['value'] . '%';
                     break;
                 case 'notEquals':
                 case 'notOn':
