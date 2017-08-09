@@ -1704,6 +1704,23 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($actual);
     }
 
+    function testArrayLength()
+    {
+        $item = json_decode('
+            {
+                "type": "array\\\\length",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": ["Test", "Hello"]
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(2, $actual);
+    }
+
     function testEnvUserAttribute()
     {
         $item = json_decode('
