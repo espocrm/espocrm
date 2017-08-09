@@ -9,6 +9,10 @@
          "name": "sourceList",
          "type": "multiEnum",
          "view": "views/admin/field-manager/fields/source-list"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
       }
    ],
    "actualFields":[
