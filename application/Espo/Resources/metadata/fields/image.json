@@ -22,12 +22,5 @@
    "notActualFields":[
       "name"
    ],
-   "filter": false,
-   "linkDefs": {
-      "type": "belongsTo",
-      "entity": "Attachment"
-   },
-   "fieldDefs":{
-      "skipOrmDefs": true
-   }
+   "filter": false
 }
