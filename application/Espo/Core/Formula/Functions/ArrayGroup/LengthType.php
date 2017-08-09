@@ -42,7 +42,7 @@ class LengthType extends \Espo\Core\Formula\Functions\Base
         $list = $this->evaluate($item->value[0]);
 
         if (!is_array($list)) {
-            throw new Error();
+            return 0;
         }
 
         return count($list);
