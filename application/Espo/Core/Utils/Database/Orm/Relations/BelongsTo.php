@@ -38,6 +38,10 @@ class BelongsTo extends Base
         $foreignEntityName = $this->getForeignEntityName();
         $foreignLinkName = $this->getForeignLinkName();
 
+        $index = true;
+        if (!empty($linkParams['noIndex'])) {
+            $index = false;
+        }
 
         $noForeignName = false;
         if (!empty($linkParams['noForeignName'])) {
@@ -71,7 +75,7 @@ class BelongsTo extends Base
                 'fields' => array(
                     $linkName.'Id' => array(
                         'type' => 'foreignId',
-                        'index' => true
+                        'index' => $index
                     )
                 ),
                 'relations' => array(
