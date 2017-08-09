@@ -65,6 +65,7 @@ abstract class Base
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
+        '!*' => 'NOT LIKE',
         '*' => 'LIKE',
         '>=' => '>=',
         '<=' => '<=',

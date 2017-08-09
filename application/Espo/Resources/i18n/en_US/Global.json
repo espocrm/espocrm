@@ -548,11 +548,14 @@
         "varcharSearchRanges": {
             "equals": "Equals",
             "like": "Is Like (%)",
+            "notLike": "Is Not Like (%)",
             "startsWith": "Starts With",
             "endsWith": "Ends With",
             "contains": "Contains",
+            "notContains": "Not Contains",
             "isEmpty": "Is Empty",
-            "isNotEmpty": "Is Not Empty"
+            "isNotEmpty": "Is Not Empty",
+            "notEquals": "Not Equals"
         },
         "intSearchRanges": {
             "equals": "Equals",

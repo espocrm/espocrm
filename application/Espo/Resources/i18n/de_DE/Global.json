@@ -539,6 +539,7 @@
       "endsWith": "Endet mit",
       "contains": "Enthält",
       "isEmpty": "Ist leer",
+      "notEquals": "Nicht gleich",
       "isNotEmpty": "Ist nicht leer"
     },
     "intSearchRanges": {
