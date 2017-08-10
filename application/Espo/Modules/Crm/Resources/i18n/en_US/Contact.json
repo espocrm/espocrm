@@ -48,6 +48,7 @@
     },
     "presetFilters": {
         "portalUsers": "Portal Users",
-        "notPortalUsers": "Not Portal Users"
+        "notPortalUsers": "Not Portal Users",
+        "accountActive": "Active"
     }
 }
