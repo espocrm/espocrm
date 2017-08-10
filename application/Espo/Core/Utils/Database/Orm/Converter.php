@@ -406,6 +406,10 @@ class Converter
         $relationships = array();
         foreach ($entityMeta['links'] as $linkName => $linkParams) {
 
+            if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
+                continue;
+            }
+
             $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityName, $ormMeta);
 
             if (isset($convertedLink)) {
