@@ -48,6 +48,7 @@
    },
    "relationshipPanels": {
       "contacts": {
+         "filterList": ["all", "accountActive"],
          "layout":"listForAccount"
       },
       "opportunities":{
