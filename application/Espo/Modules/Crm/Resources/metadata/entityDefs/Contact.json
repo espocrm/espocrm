@@ -99,7 +99,8 @@
             "type": "varchar"
         },
         "account": {
-            "type": "link"
+            "type": "link",
+            "view": "crm:views/contact/fields/account"
         },
         "accounts": {
             "type": "linkMultiple",
