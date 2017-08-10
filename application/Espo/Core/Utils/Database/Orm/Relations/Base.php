@@ -45,8 +45,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         'conditions',
         'additionalColumns',
         'midKeys',
-        'noJoin',
-        'noIndex'
+        'noJoin'
     );
 
     protected function getParams()
