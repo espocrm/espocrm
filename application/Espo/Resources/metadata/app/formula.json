@@ -111,6 +111,10 @@
         {
             "name": "env\\userAttribute",
             "insertText": "env\\userAttribute(ATTRIBUTE)"
+        },
+        {
+            "name": "array\\length",
+            "insertText": "array\\length(LIST)"
         }
     ]
 }
