@@ -246,7 +246,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         afterRender: function () {
             this.getView('name').on('change', function (m) {
                 var name = this.model.get('name');
-                this.model.set('label', name);
+                var label = name;
+                if (label.length) {
+                     label = label.charAt(0).toUpperCase() + label.slice(1);
+                }
+                this.model.set('label', label);
                 if (name) {
                     name = name.replace(/-/i, '').replace(/_/i, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
                         return g.toUpperCase();
