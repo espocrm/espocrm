@@ -70,5 +70,5 @@
       "type":"datetime",
       "notNull":false
    },
-   "view": "Fields.DatetimeOptional"
+   "view": "views/fields/datetime-optional"
 }
