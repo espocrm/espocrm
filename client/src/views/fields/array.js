@@ -87,7 +87,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             this.noEmptyString = this.params.noEmptyString;
 
             this.listenTo(this.model, 'change:' + this.name, function () {
-                this.selected = Espo.Utils.clone(this.model.get(this.name));
+                this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
             }, this);
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
