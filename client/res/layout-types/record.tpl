@@ -16,15 +16,13 @@
                                 print ("{{translate \""+cell.name+"\" scope=\""+model.name+"\" category='fields'}}");
                             }
                         %></span></label>
-                        <div class="field<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>">
-                        <%
+                        <div class="field<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>"><%
                             if ('customCode' in cell) {
                                 print (cell.customCode);
                             } else {
                                 print ("{{{"+cell.name+"}}}");
                             }
-                        %>
-                        </div>
+                        %></div>
                     </div>
                 <% } else { %>
                     <div class="col-sm-6"></div>
