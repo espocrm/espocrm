@@ -33,5 +33,10 @@
         "path": "client/lib/gridstack.min.js",
         "exportsTo": "$",
         "exportsAs": "gridstack"
+    },
+    "Colorpicker": {
+        "path": "client/lib/bootstrap-colorpicker.js",
+        "exportsTo": "$",
+        "exportsAs": "colorpicker"
     }
 }

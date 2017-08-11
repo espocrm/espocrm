@@ -1,0 +1,27 @@
+{
+   "params": [
+      {
+         "name":"required",
+         "type":"bool",
+         "default": false
+      },
+      {
+         "name":"default",
+         "type":"colorpicker"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": false,
+   "fieldDefs": {
+      "type":"varchar",
+      "maxLength": 7
+   },
+   "notCreatable": true
+}
