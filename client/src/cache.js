@@ -43,6 +43,7 @@ Espo.define('cache', [], function () {
             if (stored) {
                 if (stored !== cacheTimestamp) {
                     this.clear();
+                    this.set('app', 'cacheTimestamp', cacheTimestamp);
                     this.storeTimestamp();
                 }
             } else {
