@@ -108,7 +108,8 @@
         "rangeCurrency": "Range Currency",
         "wysiwyg": "Wysiwyg",
         "map": "Map",
-        "number": "Number"
+        "number": "Number",
+        "colorpicker": "Color Picker"
     },
     "fields": {
         "type": "Type",
