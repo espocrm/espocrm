@@ -35,6 +35,12 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
 
         emailAddressRegExp: /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.valueIsSet = this.model.has(this.name);
+            return data;
+        },
+
         events: {
             'click a[data-action="clearAddress"]': function (e) {
                 var address = $(e.currentTarget).data('address').toString();
