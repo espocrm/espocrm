@@ -45,7 +45,10 @@ class EntityManager extends Base
             'metadata' => $this->getContainer()->get('ormMetadata')->getData(),
             'repositoryFactoryClassName' => '\\Espo\\Core\\ORM\\RepositoryFactory',
             'driver' => $config->get('database.driver'),
-            'platform' => $config->get('database.platform')
+            'platform' => $config->get('database.platform'),
+            'sslCA' =>  $config->get('database.sslCA'),
+            'sslCert' =>  $config->get('database.sslCert'),
+            'sslKey' =>  $config->get('database.sslKey')
         );
 
         $entityManager = new \Espo\Core\ORM\EntityManager($params);

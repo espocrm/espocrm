@@ -135,7 +135,18 @@ class EntityManager
 
         $platform = strtolower($params['platform']);
 
-        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'], $params['user'], $params['password']);
+        $options = array();
+        if (isset($params['sslCA'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
+        }
+        if (isset($params['sslCert'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
+        }
+        if (isset($params['sslKey'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
+        }
+
+        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'], $params['user'], $params['password'], $options);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
