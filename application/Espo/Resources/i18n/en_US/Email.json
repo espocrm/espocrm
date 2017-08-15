@@ -35,7 +35,8 @@
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
         "hasAttachment": "Has Attachment",
-        "sendBy": "Sent By"
+        "assignedUsers": "Assigned Users",
+        "sentBy": "Sent By"
     },
     "links": {
         "replied": "Replied",
@@ -43,7 +44,7 @@
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
         "assignedUsers": "Assigned Users",
-        "sendBy": "Sent By"
+        "sentBy": "Sent By"
     },
     "options": {
         "status": {
