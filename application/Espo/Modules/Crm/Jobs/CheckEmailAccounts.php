@@ -66,11 +66,19 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         foreach ($collection as $entity) {
             $running = $this->getEntityManager()->getRepository('Job')->where(array(
                 'scheduledJobId' => $data['id'],
-                'status' => ['Running', 'Pending'],
+                'status' => 'Running',
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
             ))->findOne();
             if ($running) continue;
+
+            $countPending = $this->getEntityManager()->getRepository('Job')->where(array(
+                'scheduledJobId' => $data['id'],
+                'status' => 'Pending',
+                'targetType' => 'EmailAccount',
+                'targetId' => $entity->id
+            ))->count();
+            if ($countPending > 1) continue;
 
             $job = $this->getEntityManager()->getEntity('Job');
 
