@@ -39,14 +39,14 @@ Espo.define('views/email-account/record/edit', ['views/record/edit', 'views/emai
             if (Detail.prototype.wasFetched.call(this)) {
                 this.setFieldReadOnly('fetchSince');
             }
+        },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
             if (this.getUser().isAdmin()) {
-                var fieldView = this.getFieldView('assignedUser');
-                if (fieldView) {
-                    fieldView.readOnly = false;
-                    fieldView.setMode('edit');
-                    fieldView.render();
-                }
+                this.setFieldNotReadOnly('assignedUser');
+            } else {
+                this.setFieldReadOnly('assignedUser');
             }
         },
 
