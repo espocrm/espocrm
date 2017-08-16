@@ -578,9 +578,10 @@ Espo.define(
                         break;
                     case 401:
                         if (!options.login) {
-                            Espo.Ui.error(self.language.translate('Auth error'));
                             if (self.auth) {
                                 self.logout();
+                            } else {
+                                Espo.Ui.error(self.language.translate('Auth error'));
                             }
                         }
                         break;
