@@ -45,6 +45,8 @@ Espo.define('utils', [], function () {
                 } else {
                     hasAccess = acl.check(item.aclScope, item.acl);
                 }
+            } else if (item.aclScope) {
+                hasAccess = acl.checkScope(item.aclScope);
             }
             return hasAccess;
         },
