@@ -26,7 +26,8 @@
     "portal": "Portail",
     "gender": "Gender",
     "position": "Position in Team",
-    "ipAddress": "IP Address"
+    "ipAddress": "IP Address",
+    "passwordPreview": "Password Preview"
   },
   "links": {
     "teams": "Équipes",
