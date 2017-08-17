@@ -23,12 +23,12 @@
   },
   "links": {
     "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Exclure les listes de cibles",
+    "excludingTargetLists": "Excluant les listes de cibles",
     "accounts": "Comptes",
     "contacts": "Contacts",
     "leads": "Prospects",
     "opportunities": "Opportunités",
-    "campaignLogRecords": "Enregistrer",
+    "campaignLogRecords": "Logs",
     "massEmails": "Emails groupés",
     "trackingUrls": "Tracking URLs"
   },

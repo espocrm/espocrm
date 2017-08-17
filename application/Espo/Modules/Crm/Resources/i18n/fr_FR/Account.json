@@ -14,7 +14,8 @@
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
     "targetList": "Liste de cibles",
-    "originalLead": "Original Lead"
+    "originalLead": "Original Lead",
+    "contactIsInactive": "Inactive"
   },
   "links": {
     "contacts": "Contacts",
@@ -88,12 +89,14 @@
       "Support": "Support",
       "Testing, Inspection & Certification": "Testing, Inspection & Certification",
       "Wholesale": "Wholesale",
-      "Water": "Water"
+      "Water": "Water",
+      "Travel": "Travel"
     }
   },
   "labels": {
     "Create Account": "Créer un compte",
-    "Copy Billing": "Copie de facturation"
+    "Copy Billing": "Copie de facturation",
+    "Set Primary": "Set Primary"
   },
   "presetFilters": {
     "customers": "Clients",

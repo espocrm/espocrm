@@ -17,7 +17,7 @@
     "replyEmailTemplate": "Modèle de réponse email",
     "replyFromAddress": "Adresse de réponse",
     "replyToAddress": "Adresse de  destination",
-    "replyFromName": "Reply From Name",
+    "replyFromName": "Nom pour répondre",
     "targetUserPosition": "Target User Position",
     "fetchSince": "Fetch Since",
     "addAllTeamUsers": "Pour tous les membres de l'équipe",
@@ -33,7 +33,8 @@
     "team": "Team cases will be assigned to.",
     "teams": "Teams emails will be assigned to.",
     "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams.",
-    "targetUserPosition": "Users with specified position will be distributed with cases."
+    "targetUserPosition": "Users with specified position will be distributed with cases.",
+    "monitoredFolders": "Multiple folders should be separated by comma."
   },
   "links": {
     "filters": "Filtre",
