@@ -38,8 +38,8 @@ Espo.define('views/clear-cache', 'view', function (Dep) {
             'click .action[data-action="clearLocalCache"]': function () {
                 this.clearLocalCache();
             },
-            'click .action[data-action="rerurnToApplication"]': function () {
-                this.rerurnToApplication();
+            'click .action[data-action="returnToApplication"]': function () {
+                this.returnToApplication();
             }
         },
 
@@ -54,10 +54,10 @@ Espo.define('views/clear-cache', 'view', function (Dep) {
             this.$el.find('.action[data-action="clearLocalCache"]').remove();
             this.$el.find('.message-container').removeClass('hidden');
             this.$el.find('.message-container span').html(this.translate('Cache has been cleared'));
-            this.$el.find('.action[data-action="rerurnToApplication"]').removeClass('hidden');
+            this.$el.find('.action[data-action="returnToApplication"]').removeClass('hidden');
         },
 
-        rerurnToApplication: function () {
+        returnToApplication: function () {
             this.getRouter().navigate('', {trigger: true});
         }
 

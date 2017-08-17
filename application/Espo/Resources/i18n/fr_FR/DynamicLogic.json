@@ -5,7 +5,7 @@
   "options": {
     "operators": {
       "equals": "Equals",
-      "notEquals": "Not Equals",
+      "notEquals": "N'est pas égale",
       "greaterThan": "Greater Than",
       "lessThan": "Less Than",
       "greaterThanOrEquals": "Greater Than Or Equals",
@@ -21,8 +21,8 @@
       "isNotEmpty": "Is Not Empty",
       "contains": "Contains",
       "has": "Contains",
-      "notContains": "Not Contains",
-      "notHas": "Not Contains"
+      "notContains": "Ne contient pas",
+      "notHas": "Ne contient pas"
     }
   }
 }

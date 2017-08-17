@@ -6,7 +6,13 @@
     "teams": "Équipes",
     "users": "Utilisateurs",
     "portals": "Portails",
-    "type": "Type"
+    "type": "Type",
+    "isGlobal": "Is Global",
+    "isInternal": "Is Internal (for internal users)",
+    "related": "Related",
+    "createdByGender": "Created By Gender",
+    "data": "Data",
+    "number": "Number"
   },
   "filters": {
     "all": "Tous",

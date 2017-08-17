@@ -14,7 +14,8 @@
     "amountWeightedConverted": "Montant pondéré",
     "campaign": "Campagne",
     "originalLead": "Original Lead",
-    "amountCurrency": "Amount Currency"
+    "amountCurrency": "Amount Currency",
+    "contactRole": "Contact Role"
   },
   "links": {
     "contacts": "Contacts",

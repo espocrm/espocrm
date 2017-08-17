@@ -37,7 +37,7 @@
     "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Tester la connexion",
-    "Send Test Email": "Send Test Email",
+    "Send Test Email": "Envoyer un message de test",
     "SMTP": "SMTP"
   },
   "messages": {
@@ -45,7 +45,7 @@
     "connectionIsOk": "Connexion établie"
   },
   "tooltips": {
-    "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
-    "storeSentEmails": "Les emails envoyés seront stockés sur le serveur IMAP. L'adresse email doit correspondre à celle d'envoi."
+    "storeSentEmails": "Les emails envoyés seront stockés sur le serveur IMAP. L'adresse email doit correspondre à celle d'envoi.",
+    "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client."
   }
 }

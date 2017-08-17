@@ -28,7 +28,20 @@
     "ActionHistoryRecord": "Action History Record",
     "AuthToken": "Auth Token",
     "UniqueId": "Unique ID",
-    "LastViewed": "Last Viewed"
+    "LastViewed": "Dernier enregistrement",
+    "Settings": "Paramètres",
+    "FieldManager": "Field Manager",
+    "Integration": "Integration",
+    "LayoutManager": "Layout Manager",
+    "EntityManager": "Entity Manager",
+    "Export": "Exporter",
+    "DynamicLogic": "Dynamic Logic",
+    "DashletOptions": "Dashlet Options",
+    "Admin": "Admin",
+    "Global": "Global",
+    "Preferences": "Preferences",
+    "EmailAddress": "Email Address",
+    "PhoneNumber": "Phone Number"
   },
   "scopeNamesPlural": {
     "Email": "Emails",
@@ -59,7 +72,7 @@
     "ActionHistoryRecord": "Action History",
     "AuthToken": "Auth Tokens",
     "UniqueId": "Unique IDs",
-    "LastViewed": "Last Viewed"
+    "LastViewed": "Dernières vues"
   },
   "labels": {
     "Misc": "Divers",
@@ -145,7 +158,7 @@
     "Apply": "Appliquer",
     "Unlink": "Délier",
     "Mass Update": "Mise à jour groupée",
-    "Export": "Export",
+    "Export": "Exporter",
     "No Data": "Aucune donnée",
     "No Access": "Aucun accès",
     "All": "Tous",
@@ -202,7 +215,7 @@
     "Function": "Function",
     "Self-Assign": "Self-Assign",
     "Self-Assigned": "Self-Assigned",
-    "Return to Application": "Return to Application",
+    "Return to Application": "Retour à l'application",
     "Select All Results": "Select All Results"
   },
   "messages": {
@@ -255,7 +268,9 @@
     "fieldShouldBeInt": "{field} should be a valid integer",
     "fieldShouldBeDate": "{field} should be a valid date",
     "fieldShouldBeDatetime": "{field} should be a valid date/time",
-    "internalPostTitle": "Post is seen only by internal users"
+    "internalPostTitle": "Post is seen only by internal users",
+    "loading": "Chargement...",
+    "saving": "Sauvegarde..."
   },
   "boolFilters": {
     "onlyMy": "Perso",
@@ -269,9 +284,9 @@
     "remove": "Supprimer",
     "merge": "Fusionner",
     "massUpdate": "Mise à jour groupée",
-    "export": "Export",
-    "follow": "Follow",
-    "unfollow": "Unfollow"
+    "export": "Exporter",
+    "follow": "Suivre",
+    "unfollow": "Ne plus suivre"
   },
   "fields": {
     "name": "Nom",
@@ -511,7 +526,8 @@
       "vi_VN": "Vietnamese",
       "zh_CN": "Simplified Chinese (China)",
       "zh_HK": "Traditional Chinese (Hong Kong)",
-      "zh_TW": "Traditional Chinese (Taiwan)"
+      "zh_TW": "Traditional Chinese (Taiwan)",
+      "es_MX": "Spanish (Mexico)"
     },
     "dateSearchRanges": {
       "on": "Actif",
@@ -554,7 +570,10 @@
       "endsWith": "Fini par",
       "contains": "Contient",
       "isEmpty": "Est vide",
-      "isNotEmpty": "Non vide"
+      "isNotEmpty": "Non vide",
+      "notLike": "N'est pas (%)",
+      "notContains": "Ne contient pas",
+      "notEquals": "N'est pas égale"
     },
     "intSearchRanges": {
       "equals": "Egale",

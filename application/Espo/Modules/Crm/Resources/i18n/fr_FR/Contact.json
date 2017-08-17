@@ -17,7 +17,10 @@
     "targetList": "Liste de cibles",
     "portalUser": "Utilisateur Portail",
     "originalLead": "Original Lead",
-    "acceptanceStatus": "Acceptance Status"
+    "acceptanceStatus": "Acceptance Status",
+    "accountIsInactive": "Account Inactive",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
   },
   "links": {
     "opportunities": "Opportunités",
@@ -45,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Utilisateurs Portail",
-    "notPortalUsers": "N'est pas un utilisateur Portail"
+    "notPortalUsers": "N'est pas un utilisateur Portail",
+    "accountActive": "Active"
   }
 }

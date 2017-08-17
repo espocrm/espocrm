@@ -55,7 +55,8 @@
     "Reset to Default": "Valeurs par défaut",
     "Email Filters": "Filtres email",
     "Portal Users": "Portal Users",
-    "Action History": "Action History"
+    "Action History": "Action History",
+    "Label Manager": "Label Manager"
   },
   "layouts": {
     "list": "Liste",
@@ -107,7 +108,8 @@
     "wysiwyg": "Wysiwyg",
     "map": "Carte",
     "currencyConverted": "Currency (Converted)",
-    "number": "Number"
+    "number": "Number",
+    "colorpicker": "Color Picker"
   },
   "fields": {
     "type": "Type",
@@ -125,7 +127,6 @@
     "max": "Max",
     "translation": "Traduction",
     "previewSize": "Prévisualiser la taille",
-    "noEmptyString": "Pas de chaîne de caractère vide",
     "defaultType": "Type par défaut",
     "seeMoreDisabled": "Désactiver l'abréviation de texte",
     "entityList": "Liste d'entités",
@@ -149,14 +150,10 @@
     "dynamicLogicRequired": "Conditions making field required",
     "dynamicLogicOptions": "Conditional options",
     "probabilityMap": "Stage Probabilities (%)",
-    "readOnly": "Read-only"
+    "readOnly": "Read-only",
+    "noEmptyString": "Empty string value is not allowed"
   },
   "messages": {
-    "upgradeVersion": "EspoCRM va être mis à jour vers la version <strong>{version}</strong>. Cette opération peut prendre un moment.",
-    "upgradeDone": "EspoCRM a été mis à jour vers la version <strong>{version}</strong>. Réactualiser votre navigateur web.",
-    "upgradeBackup": "Nous vous recommandons de faire une sauvegarde FTP avant de démarrer une mise à jour.",
-    "thousandSeparatorEqualsDecimalMark": "Le séparateur de milliers ne peut pas être le même que celui pour la décimale",
-    "userHasNoEmailAddress": "L'utilisateur n'a pas d'adresse email.",
     "selectEntityType": "Sélectionner le type d'entité dans le menu de gauche.",
     "selectUpgradePackage": "Sélectionner le pack de mise à jour",
     "downloadUpgradePackage": "Téléchargement nécessaire des packs de mise à jour <a href=\"{url}\">ici</a>.",
@@ -164,7 +161,12 @@
     "selectExtensionPackage": "Sélectionner un pack d'extension",
     "extensionInstalled": "L'extension {name} {version} a été installé.",
     "installExtension": "L'extension {name} {version} est prête pour l'installation.",
-    "uninstallConfirmation": "Voulez-vous réellement supprimer cette extension?"
+    "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
+    "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+    "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
+    "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
+    "userHasNoEmailAddress": "User has no email address.",
+    "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
   },
   "descriptions": {
     "settings": "Paramètres système de l'application.",
@@ -191,10 +193,11 @@
     "integrations": "Intégration avec des services tiers.",
     "notifications": "Paramètres des notifications emails et internes au CRM.",
     "inboundEmails": "Group IMAP email accouts. Email import and Email-to-Case.",
-    "emailFilters": "Les messages correspondant au filtre ne seront pas importé",
     "portalUsers": "Users of portal.",
-    "entityManager": "Create custom entities, edit existing ones. Manage fields and relationships.",
-    "actionHistory": "Log of actions done by users."
+    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
+    "emailFilters": "Email messages that match the specified filter won't be imported.",
+    "actionHistory": "Log of user actions.",
+    "labelManager": "Customize application labels."
   },
   "options": {
     "previewSize": {

@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "Bienvenu à EspoCRM",
+    "Main page title": "Bienvenue sur EspoCRM",
     "Start page title": "Accord de Licence",
     "Step1 page title": "Accord de Licence",
     "License Agreement": "Accord de Licence",
@@ -27,7 +27,7 @@
     "Start": "Lancement",
     "Back": "Retour",
     "Next": "Suivant",
-    "Go to EspoCRM": "Aller à EspoCRM",
+    "Go to EspoCRM": "Aller vers EspoCRM",
     "Re-check": "Revérifier",
     "Version": "Version",
     "Test settings": "Tester la connexion",
