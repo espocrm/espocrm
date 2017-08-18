@@ -108,7 +108,8 @@
     "wysiwyg": "ŠVTD",
     "map": "Mapa",
     "currencyConverted": "Valuta (konvertovana)",
-    "number": "Broj"
+    "number": "Broj",
+    "colorpicker": "Izbornik boja"
   },
   "fields": {
     "type": "Tip",

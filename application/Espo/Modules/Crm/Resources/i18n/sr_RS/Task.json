@@ -10,7 +10,7 @@
     "priority": "Prioritet",
     "description": "Opis",
     "isOverdue": "kasni",
-    "account": "Stranka",
+    "account": "Pravno lice",
     "dateCompleted": "Datum završetka",
     "attachments": "Prilozi",
     "reminders": "Podsetnici"

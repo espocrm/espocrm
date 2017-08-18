@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Ime",
-    "account": "Stranka",
+    "account": "Pravno lice",
     "stage": "Faza",
     "amount": "Iznos",
     "probability": "Verovatnoća,%",

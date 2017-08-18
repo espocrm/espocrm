@@ -4,10 +4,10 @@
     "emailAddress": "E-mail",
     "title": "Naslov",
     "accountRole": "Naslov",
-    "account": "Stranka",
-    "accounts": "Stranke",
+    "account": "Pravno lice",
+    "accounts": "Pravna lica",
     "phoneNumber": "Telefon",
-    "accountType": "Tip računa",
+    "accountType": "Tip pravnog lica",
     "doNotCall": "Ne zovi",
     "address": "Adresa",
     "opportunityRole": "Uloga prilika",
@@ -18,8 +18,8 @@
     "portalUser": "Korisnik portala",
     "originalLead": "Originalni izvor",
     "acceptanceStatus": "Status prihvatanja",
-    "accountIsInactive": "Stranka neaktivna",
-    "acceptanceStatusMeetings": "Status prihvatanja (sastanci)",
+    "accountIsInactive": "Neaktivno pravno lice",
+    "acceptanceStatusMeetings": "Status prihvatanja (Ročišta)",
     "acceptanceStatusCalls": "Status prihvatanja (pozivi)"
   },
   "links": {
@@ -28,8 +28,8 @@
     "targetLists": "Liste meta",
     "campaignLogRecords": "Dnevnik kampanje",
     "campaign": "Kampanja",
-    "account": "Stranka (osnovna)",
-    "accounts": "Stranke",
+    "account": "Pravno lice (osnovno)",
+    "accounts": "Pravna lica",
     "casesPrimary": "Predmeti (osnovni)",
     "portalUser": "Korisnik portala",
     "originalLead": "Originalni izvor",
@@ -48,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Korisnici portala",
-    "notPortalUsers": "Nisu korisnici portala"
+    "notPortalUsers": "Nisu korisnici portala",
+    "accountActive": "Aktivan"
   }
 }
