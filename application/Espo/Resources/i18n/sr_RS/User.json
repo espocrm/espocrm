@@ -20,8 +20,8 @@
     "isActive": "je aktivno",
     "isPortalUser": "je korisnik portala",
     "contact": "Kontakt",
-    "accounts": "Stranke",
-    "account": "Stranka (osnovna)",
+    "accounts": "Pravna lica",
+    "account": "Pravno lice (osnovno)",
     "sendAccessInfo": "Pošaljite e-poruku sa pristupnim podacima za korisnike",
     "portal": "Portal",
     "gender": "pol",
@@ -36,8 +36,8 @@
     "portals": "Portali",
     "portalRoles": "Uloge za portal",
     "contact": "Kontakt",
-    "accounts": "Stranke",
-    "account": "Stranka (osnovna)",
+    "accounts": "Pravna lica",
+    "account": "Pravno lice (osnovno)",
     "tasks": "Zadaci"
   },
   "labels": {

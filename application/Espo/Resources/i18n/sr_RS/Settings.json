@@ -35,12 +35,12 @@
     "globalSearchEntityList": "Globalna pretraga entiteta Lista",
     "authenticationMethod": "Metod autentikacije",
     "ldapHost": "HOST",
-    "ldapAccountCanonicalForm": "Stranka kanonskog oblika",
+    "ldapAccountCanonicalForm": "Pravno lice kanonski",
     "ldapAccountDomainName": "Nalog domena",
     "ldapTryUsernameSplit": "Pokušajte Korisničko ime Split",
     "ldapCreateEspoUser": "Napraviti korisnika u EspoCRM",
     "ldapUserLoginFilter": "Filter prijava korisnika",
-    "ldapAccountDomainNameShort": "Nalog domena Kratko",
+    "ldapAccountDomainNameShort": "Nalog domena kratko",
     "ldapOptReferrals": "Opt Preporuke",
     "exportDisabled": "Onemogućiti izvoz (samo administratoru je dozvoljeno)",
     "b2cMode": "B2C režim",
@@ -86,7 +86,8 @@
     "activitiesEntityList": "Lista entiteta za aktivnosti",
     "historyEntityList": "Lista entiteta za istoriju",
     "currencyFormat": "Format valute",
-    "currencyDecimalPlaces": "Valuta decimale"
+    "currencyDecimalPlaces": "Valuta decimale",
+    "aclStrictMode": "ACL strogo"
   },
   "options": {
     "weekStart": {
@@ -129,7 +130,8 @@
     "ldapUserTeams": "Timovi za napravljenog korisnika. Za više, pogledajte korisnički profil.",
     "ldapUserDefaultTeam": "Podrazumevani tim za napravljenog korisnika. Za više, pogledajte korisnički profil.",
     "b2cMode": "Po defaultu EspoCRM je prilagođena za B2B. Možete ga prebaciti na B2C.",
-    "currencyDecimalPlaces": "Broj decimalnih mesta. Ako je prazno, onda će biti prikazana sva decilana mesta."
+    "currencyDecimalPlaces": "Broj decimalnih mesta. Ako je prazno, onda će biti prikazana sva decilana mesta.",
+    "aclStrictMode": "Uključeno: Pristup entitetima će biti zabranjen ako nije određeno u ulogama.\n\nIsključeno: Pristup entitetima će biti dozvoljen ako nije određeno u ulogama"
   },
   "labels": {
     "System": "Sistem",

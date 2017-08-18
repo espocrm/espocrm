@@ -570,7 +570,10 @@
       "endsWith": "Završava sa",
       "contains": "Sadrži",
       "isEmpty": "Prazno",
-      "isNotEmpty": "Nije prazno"
+      "isNotEmpty": "Nije prazno",
+      "notLike": "nije kao (%)",
+      "notContains": "Ne sadrži",
+      "notEquals": "Nije jednako"
     },
     "intSearchRanges": {
       "equals": "Jednako je",

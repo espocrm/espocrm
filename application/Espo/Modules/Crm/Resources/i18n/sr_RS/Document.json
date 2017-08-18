@@ -11,11 +11,11 @@
     "publishDate": "Datum objave",
     "expirationDate": "Rok upotrebe",
     "description": "Opis",
-    "accounts": "Stranke",
+    "accounts": "Pravna lica",
     "folder": "Fascikla"
   },
   "links": {
-    "accounts": "Stranke",
+    "accounts": "Pravna lica",
     "opportunities": "Prilike",
     "folder": "Fascikla",
     "leads": "Izvori",

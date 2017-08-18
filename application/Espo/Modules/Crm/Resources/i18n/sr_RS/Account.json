@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Ime",
+    "name": "Naziv",
     "emailAddress": "Email",
     "website": "Sajt",
     "phoneNumber": "Telefon",
@@ -15,14 +15,14 @@
     "targetLists": "Liste meta",
     "targetList": "Lista meta",
     "originalLead": "Originalni izvor",
-    "contactIsInactive": "Neaktivan"
+    "contactIsInactive": "Neaktivano"
   },
   "links": {
     "contacts": "Kontakti",
     "opportunities": "Prilike",
     "cases": "Predmeti",
     "documents": "Dokumenti",
-    "meetingsPrimary": "Sastanci (priošireno)",
+    "meetingsPrimary": "Ročišta (prošireno)",
     "callsPrimary": "Pozivi (prošireno)",
     "tasksPrimary": "Zadaci (prošireno)",
     "emailsPrimary": "E-pošta (prošireno)",
@@ -34,7 +34,7 @@
   },
   "options": {
     "type": {
-      "Customer": "Stranka",
+      "Customer": "Klijent",
       "Investor": "Investitor",
       "Partner": "Partner",
       "Reseller": "Prodavac"
@@ -94,13 +94,13 @@
     }
   },
   "labels": {
-    "Create Account": "Napravi stranku",
+    "Create Account": "Napravi pravno lice",
     "Copy Billing": "Prekopiraj adresu",
     "Set Primary": "Podesi primarno"
   },
   "presetFilters": {
-    "customers": "Stranke",
+    "customers": "Klijenti",
     "partners": "Partneri",
-    "recentlyCreated": "Nedavno napravljen"
+    "recentlyCreated": "Nedavno napravljena"
   }
 }
