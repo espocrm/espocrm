@@ -821,7 +821,10 @@ class Base
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day');
+
+                $dt = new \DateTime('now', new \DateTimeZone($timeZone));
+                $dt->setTime(23, 59, 59);
+                $dt->setTimezone(new \DateTimeZone('UTC'));
                 $to = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
@@ -912,7 +915,9 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
 
-                $dt->modify('+1 day');
+                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt->modify('+1 day -1 second');
+                $dt->setTimezone(new \DateTimeZone('UTC'));
                 $to = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
@@ -936,6 +941,7 @@ class Base
                     $from = $dt->format($format);
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
+                    $dt->modify('+1 day -1 second');
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     $to = $dt->format($format);
 
