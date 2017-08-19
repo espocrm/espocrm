@@ -826,6 +826,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }, function (view) {
                 view.render();
 
+                this.listenToOnce(view, 'cancel', function () {
+                    if (!this.model.isNew())
+                        this.model.fetch();
+                }.bind(this));
                 this.listenToOnce(view, 'save', function () {
                     this.model.set('forceDuplicate', true);
                     this.actionSave();
