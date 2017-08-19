@@ -66,7 +66,7 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                 this.createView('calendar', 'crm:views/calendar/calendar', {
                     mode: mode,
                     el: this.options.el + ' > .calendar-container',
-                    header: false,
+                    header: this.getOption('header'),
                     enabledScopeList: this.getOption('enabledScopeList'),
                     containerSelector: this.options.el
                 }, function (view) {
