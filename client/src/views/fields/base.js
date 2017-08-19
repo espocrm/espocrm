@@ -459,11 +459,25 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     model.trigger('after:save');
                     self.notify('Saved', 'success');
                 },
-                error: function () {
+                error: function (e, xhr) {
+                    if (xhr.status == 409) {
+                        var header = xhr.getResponseHeader('X-Status-Reason');
+                        try {
+                            var response = JSON.parse(header);
+                            if (response.reason == 'Duplicate') {
+                                xhr.errorIsHandled = true;
+                                var record = this.getParentView().getParentView();
+                                record.showDuplicate(response.data);
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Error while parsing response');
+                        }
+                    }
                     self.notify('Error occured', 'error');
                     model.set(prev, {silent: true});
                     self.render()
-                },
+                }.bind(this),
                 patch: true
             });
             this.inlineEditClose(true);
