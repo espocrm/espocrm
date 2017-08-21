@@ -88,10 +88,35 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             });
         },
 
+        setupButtonList: function () {
+            if (this.getOption('mode') !== 'timeline') {
+                this.buttonList.push({
+                    name: 'previous',
+                    html: '<span class="glyphicon glyphicon-chevron-left"></span>',
+                });
+                this.buttonList.push({
+                    name: 'next',
+                    html: '<span class="glyphicon glyphicon-chevron-right"></span>',
+                });
+            }
+        },
+
         actionRefresh: function () {
             var view = this.getView('calendar');
             if (!view) return;
             view.actionRefresh();
+        },
+
+        actionNext: function () {
+            var view = this.getView('calendar');
+            if (!view) return;
+            view.actionNext();
+        },
+
+        actionPrevious: function () {
+            var view = this.getView('calendar');
+            if (!view) return;
+            view.actionPrevious();
         },
 
         actionViewCalendar: function () {
