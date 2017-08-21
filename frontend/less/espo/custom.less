@@ -768,13 +768,28 @@ td.cell[data-name="buttons"] > .btn-group {
     margin-left: 10px;
 }
 
-.panel.dashlet > .panel-heading > .menu-container {
-    margin-top: -8px;
+.panel.dashlet > .panel-heading > .btn-group {
+    margin-top: -7px;
+    top: 0;
     right: -10px;
 }
 
 .panel.dashlet > .panel-heading > .panel-title {
     cursor: default;
+}
+
+.panel.dashlet > .panel-heading > .btn-group .btn-link {
+    color: @text-color;
+}
+
+.panel.dashlet > .panel-heading > .btn-group > .btn + .dropdown-toggle {
+    padding-left: @padding-small-horizontal;
+    padding-right: @padding-small-horizontal;
+}
+
+.panel > .panel-heading > .btn-group > .btn + .dropdown-toggle {
+    padding-left: @padding-small-horizontal;
+    padding-right: @padding-small-horizontal;
 }
 
 .panel.dashlet {

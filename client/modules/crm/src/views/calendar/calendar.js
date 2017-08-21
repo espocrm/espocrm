@@ -618,6 +618,16 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.$calendar.fullCalendar('refetchEvents');
         },
 
+        actionNext: function () {
+            this.$calendar.fullCalendar('next');
+            this.updateDate();
+        },
+
+        actionPrevious: function () {
+            this.$calendar.fullCalendar('prev');
+            this.updateDate();
+        },
+
         getColorFromScopeName: function (scope) {
             var additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
 
