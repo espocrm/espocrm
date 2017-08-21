@@ -281,12 +281,18 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (!this.header) {
                 return;
             }
-            var title;
+
+            var title = this.getTitle();
+            this.$el.find('.date-title h4 span').text(title);
+        },
+
+        getTitle: function () {
+            var title = '';
 
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
-            this.$el.find('.date-title h4 span').text(title);
+            return title;
         },
 
         convertEvent: function (o) {

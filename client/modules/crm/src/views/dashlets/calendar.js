@@ -70,7 +70,16 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     enabledScopeList: this.getOption('enabledScopeList'),
                     containerSelector: this.options.el
                 }, function (view) {
+                    this.listenTo(view, 'view', function () {
+                        if (this.getOption('mode') === 'month') {
+                            var title = this.getOption('title');
+                            var $headerSpan = this.$el.closest('.panel').find('.panel-heading > .panel-title > span');
+                            title += ' &raquo; ' + view.getTitle();
+                            $headerSpan.html(title);
+                        }
+                    }, this);
                     view.render();
+
                     this.on('resize', function () {
                         setTimeout(function() {
                             view.adjustSize();
