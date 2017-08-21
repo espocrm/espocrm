@@ -80,11 +80,23 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             }
         },
 
+        setupActionList: function () {
+            this.actionList.unshift({
+                name: 'viewCalendar',
+                html: this.translate('View Calendar', 'labels', 'Calendar'),
+                url: '#Calendar'
+            });
+        },
+
         actionRefresh: function () {
             var view = this.getView('calendar');
             if (!view) return;
             view.actionRefresh();
         },
+
+        actionViewCalendar: function () {
+            this.getRouter().navigate('#Calendar', {trigger: true});
+        }
     });
 });
 
