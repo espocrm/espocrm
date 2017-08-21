@@ -196,6 +196,14 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 this.$el.find('button[data-action="today"]').removeClass('active');
             }
 
+            var title = this.getTitle();
+
+            this.$el.find('.date-title h4 span').text(title);
+        },
+
+        getTitle: function () {
+            var view = this.$calendar.fullCalendar('getView');
+
             var map = {
                 'agendaWeek': 'week',
                 'agendaDay': 'day',
@@ -215,7 +223,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
-            this.$el.find('.date-title h4 span').text(title);
+
+            return title;
         },
 
         convertToFcEvent: function (o) {
