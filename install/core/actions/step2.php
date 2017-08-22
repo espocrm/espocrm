@@ -27,26 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$defaults = $installer->getConfig()->get('database');
+$config = $installer->getConfig();
 
-$fieldMap = array(
-    'db-driver' => 'driver',
-    'db-name' => 'dbname',
-    'host-name' => 'host',
-    'port' => 'port',
-    'db-user-name' => 'user',
-    'db-user-password' => 'password',
+$fields = array(
+    'db-driver' => array(
+        'default' => $config->get('database.driver', ''),
+    ),
+    'db-name' => array(
+        'default' => $config->get('database.dbname', ''),
+    ),
+    'host-name' => array(
+        'default' => $config->get('database.host', ''),
+    ),
+    'port' => array(
+        'default' => $config->get('database.port', ''),
+    ),
+    'db-user-name' => array(
+        'default' => $config->get('database.user', ''),
+    ),
+    'db-user-password' => array(
+        'default' => $config->get('database.password', ''),
+    ),
 );
 
-$fields = array();
-
-foreach ($fieldMap as $fieldName => $optionName) {
-    $fields[$fieldName] = array();
-
+foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {
         $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
     } else {
-        $fields[$fieldName]['value'] = isset($defaults[$optionName]) ? $defaults[$optionName] : '';
+        $fields[$fieldName]['value'] = isset($field['default']) ? $field['default'] : '';
     }
 }
 
