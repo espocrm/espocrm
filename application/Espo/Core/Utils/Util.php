@@ -602,5 +602,18 @@ class Util
 
         return $array;
     }
+
+    /**
+     * Array keys exists
+     *
+     * @param  array  $keys
+     * @param  array  $array
+     *
+     * @return boolean
+     */
+    static public function arrayKeysExists(array $keys, array $array)
+    {
+       return !array_diff_key(array_flip($keys), $array);
+    }
 }
 

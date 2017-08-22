@@ -27,23 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$fields = array(
-	'db-name' => array(),
-	'host-name' => array(
-		'default' => (isset($langs['labels']['localhost']))? $langs['labels']['localhost'] : '',),
-	'port' => array(),
-	'db-user-name' => array(),
-	'db-user-password' => array(),
-	'db-driver' => array()
+$defaults = $installer->getConfig()->get('database');
+
+$fieldMap = array(
+    'db-driver' => 'driver',
+    'db-name' => 'dbname',
+    'host-name' => 'host',
+    'port' => 'port',
+    'db-user-name' => 'user',
+    'db-user-password' => 'password',
 );
 
-foreach ($fields as $fieldName => $field) {
-	if (isset($_SESSION['install'][$fieldName])) {
-		$fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
-	}
-	else {
-		$fields[$fieldName]['value'] = (isset($fields[$fieldName]['default']))? $fields[$fieldName]['default'] : '';
-	}
+$fields = array();
+
+foreach ($fieldMap as $fieldName => $optionName) {
+    $fields[$fieldName] = array();
+
+    if (isset($_SESSION['install'][$fieldName])) {
+        $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
+    } else {
+        $fields[$fieldName]['value'] = isset($defaults[$optionName]) ? $defaults[$optionName] : '';
+    }
 }
 
 $smarty->assign('fields', $fields);
