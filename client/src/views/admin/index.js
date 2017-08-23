@@ -40,7 +40,7 @@ Espo.define('views/admin/index', 'view', function (Dep) {
 
         setup: function () {
             this.links = this.getMetadata().get('app.adminPanel');
-            this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || '//espocrm.com/news';
+            this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
         },
 
         updatePageTitle: function () {
