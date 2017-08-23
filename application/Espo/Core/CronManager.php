@@ -149,7 +149,7 @@ class CronManager
     public function run()
     {
         if (!$this->checkLastRunTime()) {
-            $GLOBALS['log']->info('CronManager: Stop cron running, too frequent execution.');
+            $GLOBALS['log']->warning('CronManager: Stop cron running, too frequent execution.');
             return;
         }
 
