@@ -111,6 +111,31 @@ class Container
         );
     }
 
+    protected function loadLog()
+    {
+        $config = $this->get('config');
+
+        $path = $config->get('logger.path', 'data/logs/espo.log');
+        $rotation = $config->get('logger.rotation', true);
+
+        $log = new \Espo\Core\Utils\Log('Espo');
+        $levelCode = $log->getLevelCode($config->get('logger.level', 'WARNING'));
+
+        if ($rotation) {
+            $maxFileNumber = $config->get('logger.maxFileNumber', 30);
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler($path, $maxFileNumber, $levelCode);
+        } else {
+            $handler = new \Espo\Core\Utils\Log\Monolog\Handler\StreamHandler($path, $levelCode);
+        }
+        $log->pushHandler($handler);
+
+        $errorHandler = new \Monolog\ErrorHandler($log);
+        $errorHandler->registerExceptionHandler(null, false);
+        $errorHandler->registerErrorHandler(array(), false);
+
+        return $log;
+    }
+
     protected function loadFileManager()
     {
         return new \Espo\Core\Utils\File\Manager(

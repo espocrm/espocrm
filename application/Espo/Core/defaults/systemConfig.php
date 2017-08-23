@@ -115,6 +115,7 @@ return array (    'defaultPermissions' =>
         'smtpPassword',
         'cron',
         'authenticationMethod',
+        'adminPanelIframeUrl',
         'ldapHost',
         'ldapPort',
         'ldapSecurity',
