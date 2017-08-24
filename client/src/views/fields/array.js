@@ -229,6 +229,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 });
             }, this);
 
+            if (data.length == 0) {
+                this.$element.addClass("main-element form-control input-sm");
+                return;
+            }
             this.$element.selectize({
                 options: data,
                 delimiter: ':,:',
