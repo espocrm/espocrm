@@ -87,10 +87,10 @@ class NextNumber extends \Espo\Core\Hooks\Base
                 }
                 $value++;
 
+                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+                
                 $nextNumber->set('value', $value);
                 $this->getEntityManager()->saveEntity($nextNumber);
-
-                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
             }
         }
     }
