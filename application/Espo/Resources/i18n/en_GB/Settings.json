@@ -101,7 +101,6 @@
   "tooltips": {
     "recordsPerPage": "Number of records initially displayed in list views.",
     "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
-    "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
     "followCreatedEntities": "Users will automatically follow records they created.",
     "emailMessageMaxSize": "All inbound emails exceeding a specified size will be fetched w/o body and attachments.",
     "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
