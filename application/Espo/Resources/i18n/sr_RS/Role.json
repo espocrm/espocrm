@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Ime",
+    "roles": "Uloge",
+    "assignmentPermission": "Dozvola zaduživanja",
+    "userPermission": "Dozvola korisnika",
+    "portalPermission": "Dozvola za portal"
+  },
+  "links": {
+    "users": "Korisnici",
+    "teams": "Timovi"
+  },
+  "tooltips": {
+    "assignmentPermission": "Omogućava da se ograniči sposobnost da se zadužuju upisi  i postavljaju poruke drugim korisnicima.\nsve - Nikakvo ograničenje\ntim- može zadužiti i pisati samo članovima tima\nne- može zadužiti i pisati samo sebi",
+    "userPermission": "Omogućava da se ograniči sposobnost korisnicima da vide aktivnosti, kalendar i tok drugima \nsve - da vide sve\ntim - mogu da vide aktivnosti samo članova tima\nne - ne vide.",
+    "portalPermission": "Definiše pristup portalu informacija, sposobnost pretvaranja kontakata u korisnike portala i da šalju poruke na korisnicima portala."
+  },
+  "labels": {
+    "Access": "Pristup",
+    "Create Role": "Pravljenje uloge",
+    "Scope Level": "Nivo obuhvata",
+    "Field Level": "Nivo polja"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nije podešeno",
+      "enabled": "omogućeno",
+      "disabled": "onemogućeno"
+    },
+    "levelList": {
+      "all": "sve",
+      "team": "tim",
+      "account": "pravno lice",
+      "contact": "kontakt",
+      "own": "vlastiti",
+      "no": "ne",
+      "yes": "da",
+      "not-set": "nije podešeno"
+    }
+  },
+  "actions": {
+    "read": "Čitanje",
+    "edit": "Izmena",
+    "delete": "Brisanje",
+    "stream": "Tok vesti",
+    "create": "Pravljenje"
+  },
+  "messages": {
+    "changesAfterClearCache": "Sve promene u vidu kontrole pristupa će se primenjivati nakon što se keš očisti."
+  }
+}

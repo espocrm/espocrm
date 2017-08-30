@@ -94,5 +94,9 @@
             "delete": "no",
             "create": "yes"
         }
+    },
+    "scopeLevelTypesStrictDefaults": {
+        "boolean": false,
+        "record": false
     }
 }

@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Naziv",
+    "parent": "Roditelj",
+    "status": "Status",
+    "dateStart": "Početni datum",
+    "dateEnd": "Krajnji datum",
+    "duration": "Trajanje",
+    "description": "Opis",
+    "users": "Korisnici",
+    "contacts": "Kontakti",
+    "leads": "Izvori",
+    "reminders": "Podsetnici",
+    "account": "Pravno lice",
+    "acceptanceStatus": "Status prihvatanja"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planiran",
+      "Held": "Održano",
+      "Not Held": "Nije održano"
+    },
+    "acceptanceStatus": {
+      "None": "Nema",
+      "Accepted": "Prihvaćeno",
+      "Declined": "Odbijeno",
+      "Tentative": "Tentativno"
+    }
+  },
+  "massActions": {
+    "setHeld": "Podesi kao održano",
+    "setNotHeld": "Podesi kao nije održano"
+  },
+  "labels": {
+    "Create Meeting": "Napravi ročište",
+    "Set Held": "Podesi održano",
+    "Set Not Held": "Podesi nije održano",
+    "Send Invitations": "Pošalji pozive",
+    "on time": "na vreme",
+    "before": "pre"
+  },
+  "presetFilters": {
+    "planned": "Planirano",
+    "held": "Održano",
+    "todays": "Današnja"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Ništa nije poslato"
+  }
+}

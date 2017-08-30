@@ -9,20 +9,20 @@
     "priority": "Пріоритет",
     "type": "Тип",
     "description": "Опис",
-    "inboundEmail": "Inbound Email",
-    "lead": "Керувати"
+    "inboundEmail": "Вхідний лист",
+    "lead": "Лід"
   },
   "links": {
-    "inboundEmail": "Inbound Email",
-    "account": "Обліковий запис",
+    "inboundEmail": "Вхідний лист",
+    "account": "Контрагент",
     "contact": "Контакт (Основний)",
     "Contacts": "Контакти",
     "meetings": "Зустрічі",
     "calls": "Дзвінки",
     "tasks": "Завдання",
     "emails": "Електронні скриньки",
-    "articles": "База знань Статті",
-    "lead": "Керувати"
+    "articles": "Статті Бази Знань",
+    "lead": "Лід"
   },
   "options": {
     "status": {
@@ -34,9 +34,9 @@
       "Duplicate": "Дуплікат"
     },
     "priority": {
-      "Low": "Низько",
+      "Low": "Низький",
       "Normal": "Нормальний",
-      "High": "Високо",
+      "High": "Високий",
       "Urgent": "Терміново"
     },
     "type": {
@@ -46,14 +46,14 @@
     }
   },
   "labels": {
-    "Create Case": "Створити кейс",
-    "Close": "Зачинено",
-    "Reject": "Відхиляти",
-    "Closed": "Закрити",
+    "Create Case": "Створити Звернення",
+    "Close": "Закрити",
+    "Reject": "Відхилити",
+    "Closed": "Закрите",
     "Rejected": "Відхилено"
   },
   "presetFilters": {
-    "open": "Відкрито",
-    "closed": "Закрито"
+    "open": "Відкриті",
+    "closed": "Закриті"
   }
 }

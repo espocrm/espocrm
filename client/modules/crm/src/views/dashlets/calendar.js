@@ -70,7 +70,16 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     enabledScopeList: this.getOption('enabledScopeList'),
                     containerSelector: this.options.el
                 }, function (view) {
+                    this.listenTo(view, 'view', function () {
+                        if (this.getOption('mode') === 'month') {
+                            var title = this.getOption('title');
+                            var $headerSpan = this.$el.closest('.panel').find('.panel-heading > .panel-title > span');
+                            title += ' &raquo; ' + view.getTitle();
+                            $headerSpan.html(title);
+                        }
+                    }, this);
                     view.render();
+
                     this.on('resize', function () {
                         setTimeout(function() {
                             view.adjustSize();
@@ -80,11 +89,48 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             }
         },
 
+        setupActionList: function () {
+            this.actionList.unshift({
+                name: 'viewCalendar',
+                html: this.translate('View Calendar', 'labels', 'Calendar'),
+                url: '#Calendar'
+            });
+        },
+
+        setupButtonList: function () {
+            if (this.getOption('mode') !== 'timeline') {
+                this.buttonList.push({
+                    name: 'previous',
+                    html: '<span class="glyphicon glyphicon-chevron-left"></span>',
+                });
+                this.buttonList.push({
+                    name: 'next',
+                    html: '<span class="glyphicon glyphicon-chevron-right"></span>',
+                });
+            }
+        },
+
         actionRefresh: function () {
             var view = this.getView('calendar');
             if (!view) return;
             view.actionRefresh();
         },
+
+        actionNext: function () {
+            var view = this.getView('calendar');
+            if (!view) return;
+            view.actionNext();
+        },
+
+        actionPrevious: function () {
+            var view = this.getView('calendar');
+            if (!view) return;
+            view.actionPrevious();
+        },
+
+        actionViewCalendar: function () {
+            this.getRouter().navigate('#Calendar', {trigger: true});
+        }
     });
 });
 

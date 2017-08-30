@@ -1,0 +1,10 @@
+{
+  "links": {
+    "meetings": "Ročišta",
+    "calls": "Pozivi",
+    "tasks": "Zadaci"
+  },
+  "labels": {
+    "Create {entityType}": "Napravi {entityTypeTranslated}"
+  }
+}

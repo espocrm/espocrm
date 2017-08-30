@@ -4,7 +4,8 @@
         "rows": [
             [{"name": "useCache"}, {"name": "siteUrl"}],
             [{"name": "exportDisabled"}, {"name": "globalSearchEntityList"}],
-            [{"name": "followCreatedEntities"}, {"name": "b2cMode"}]
+            [{"name": "followCreatedEntities"}, {"name": "b2cMode"}],
+            [{"name": "aclStrictMode"}, false]
         ]
     },
     {
@@ -12,10 +13,12 @@
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [false, {"name": "thousandSeparator"}],
-            [{"name": "language"}, {"name": "decimalMark"}],
+            [{"name": "language"}, false],
+            [{"name": "currencyFormat"}, {"name": "thousandSeparator"}],
+            [{"name": "currencyDecimalPlaces"}, {"name": "decimalMark"}],
             [{"name": "addressFormat"}, false],
             [{"name": "addressPreview"}, false]
+
         ]
     },
     {

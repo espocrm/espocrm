@@ -39,6 +39,9 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                 type: 'enum',
                 options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
                 translation: 'LayoutManager.options.style'
+            },
+            name: {
+                readOnly: true
             }
         },
 

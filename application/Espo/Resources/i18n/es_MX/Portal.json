@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
+    "portalRoles": "Roles",
+    "isActive": "Está Activo",
+    "isDefault": "Es Valor x/Omisión",
+    "tabList": "Lista de Tabuladores",
+    "quickCreateList": "Crear Lista Rápida",
+    "theme": "Tema",
+    "language": "Idioma",
+    "dashboardLayout": "Diseño del Tablero",
+    "dateFormat": "Formato de Fecha",
+    "timeFormat": "Formato de Hora",
+    "timeZone": "Zona Horaria",
+    "weekStart": "Primer Día de la Semana",
+    "defaultCurrency": "Moneda por Omisión",
+    "customUrl": "URL Personalizado",
+    "customId": "ID Personalizado"
+  },
+  "links": {
+    "users": "Usuarios",
+    "portalRoles": "Roles",
+    "notes": "Notas"
+  },
+  "tooltips": {
+    "portalRoles": "Los Roles del Portal indicados se aplicarán a todos los usuarios del portal"
+  },
+  "labels": {
+    "Create Portal": "Crear Portal",
+    "User Interface": "Interfaz del Usuario",
+    "General": "General",
+    "Settings": "Configuración"
+  }
+}

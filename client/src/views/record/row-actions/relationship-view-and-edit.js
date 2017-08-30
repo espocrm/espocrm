@@ -35,7 +35,8 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                 action: 'quickView',
                 label: 'View',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
+                    link: '#' + this.model.name + '/view/' + this.model.id
                 }
             }];
             if (this.options.acl.edit) {
@@ -44,7 +45,8 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                     label: 'Edit',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    link: '#' + this.model.name + '/edit/' + this.model.id
                 });
             }
             return list;

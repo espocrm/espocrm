@@ -5,7 +5,7 @@
     "Run Import": "Запустити імпорт",
     "Back": "Назад",
     "Field Mapping": "Зіставлення полів",
-    "Default Values": "Замовчувані значення",
+    "Default Values": "Значення за замовчуванням",
     "Add Field": "Додати поле",
     "Created": "Створено",
     "Updated": "Поновлено",
@@ -18,25 +18,25 @@
     "Create Only": "Тільки створення",
     "Create and Update": "Створення та оновлення",
     "Update Only": "Тільки оновлення",
-    "Update by": "Оновлено до",
+    "Update by": "Оновив(ла)",
     "Set as Not Duplicate": "Позначити не дублювати",
     "File (CSV)": "Файл (CSV)",
-    "First Row Value": "First Row Value",
+    "First Row Value": "Перший рядок значення",
     "Skip": "Пропуск",
-    "Header Row Value": "Header Row Value",
+    "Header Row Value": "Тема рядка значення",
     "Field": "Поле",
     "What to Import?": "Що імпортувати?",
     "Entity Type": "Тип об'єкта",
     "What to do?": "Що робити?",
     "Properties": "Властивості",
     "Header Row": "Тема рядка",
-    "Person Name Format": "Person Name Format",
-    "John Smith": "John Smith",
-    "Smith John": "Smith John",
-    "Smith, John": "Smith, John",
+    "Person Name Format": "Формат Імені персони",
+    "John Smith": "Джон Сміт",
+    "Smith John": "Сміт Джон",
+    "Smith, John": "Сміт, Джон",
     "Field Delimiter": "Роздільник полів",
     "Date Format": "Формат дати",
-    "Decimal Mark": "Decimal Mark",
+    "Decimal Mark": "Десятковий знак",
     "Text Qualifier": "Класифікатор тексту",
     "Time Format": "Формат часу",
     "Currency": "Валюта",
@@ -48,13 +48,13 @@
     "Single Quote": "Апостроф",
     "Imported": "Імпортований",
     "Duplicates": "Дублікати",
-    "Skip searching for duplicates": "Skip searching for duplicates",
+    "Skip searching for duplicates": "Пропустити пошук дублікатів",
     "Timezone": "Часовий пояс"
   },
   "messages": {
     "utf8": "Мусить бути в кодуванні utf-8",
     "duplicatesRemoved": "Duplicates removed",
-    "inIdle": "Execute in idle (for big data; via cron)"
+    "inIdle": "Виконати у фоновому режимі (для великих даних; через cron)"
   },
   "fields": {
     "file": "Файл",
@@ -67,8 +67,8 @@
   "options": {
     "status": {
       "Failed": "Не вдалося",
-      "In Process": "In Process",
-      "Complete": "Complete"
+      "In Process": "В процесі",
+      "Complete": "Виконано"
     }
   }
 }

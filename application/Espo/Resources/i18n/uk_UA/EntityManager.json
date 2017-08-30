@@ -3,7 +3,7 @@
     "Fields": "Поля",
     "Relationships": "Зв'язки",
     "Schedule": "Графік",
-    "Log": "Log",
+    "Log": "Лог",
     "Formula": "формула"
   },
   "fields": {
@@ -13,16 +13,16 @@
     "labelPlural": "Множинна мітка",
     "stream": "Потік",
     "label": "Мітка",
-    "linkType": "Link Type",
+    "linkType": "Тип посилання",
     "entityForeign": "Foreign Entity",
     "linkForeign": "Foreign Link",
     "link": "Link",
     "labelForeign": "Foreign Label",
-    "sortBy": "Default Order (field)",
-    "sortDirection": "Default Order (direction)",
+    "sortBy": "Сортування за замовчуванням (поле)",
+    "sortDirection": "Сортування за замовчуванням (напрямок)",
     "relationName": "Назва середньої таблиці",
-    "linkMultipleField": "Посилання ",
-    "linkMultipleFieldForeign": "Зовнішнє посилання багаторазове поле",
+    "linkMultipleField": "Поле Link Multiple",
+    "linkMultipleFieldForeign": "Поле Foreign Link Multiple",
     "disabled": "Відключено",
     "textFilterFields": "Поля текстових фільтрів",
     "audited": "Перевірка",
@@ -44,8 +44,8 @@
       "manyToMany": "Багато-до-багатьох",
       "oneToMany": "Один-до-багатьох",
       "manyToOne": "Багато-до-одного",
-      "parentToChildren": "Батьки-дітям",
-      "childrenToParent": "Діти-батькам"
+      "parentToChildren": "Від батька до сина",
+      "childrenToParent": "Від сина до батька"
     },
     "sortDirection": {
       "asc": "Ascending",
@@ -54,7 +54,7 @@
   },
   "messages": {
     "entityCreated": "Підрозділ було створено",
-    "linkAlreadyExists": "Конфлікт: линва вже існує.",
+    "linkAlreadyExists": "Конфлікт: посилання вже існує.",
     "linkConflict": "Конфлікт імен: посилання чи поле з таким іменем уже є"
   },
   "tooltips": {
@@ -63,7 +63,7 @@
     "stream": "Незалежно від об'єкта є потік.",
     "disabled": "Перевірте, чи не потрібен цей об'єкт у вашій системі.",
     "linkAudited": "Створення відповідного запису і зв'язок з існуючим записом буде реєструватися в потоці.",
-    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
+    "linkMultipleField": "Посилання Багаторазове поле забезпечує зручний спосіб для редагування відносин. Не використовуйте його, якщо ви можете мати велику кількість пов'язаних записів.",
+    "entityType": "База Плюс - містить Активність, Історію і Панелі завдання.\n\nПодія - доступна в календарі і Активній панелі."
   }
 }

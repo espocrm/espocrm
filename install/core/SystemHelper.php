@@ -31,6 +31,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 {
 	protected $config;
 
+	protected $mainConfig;
+
 	protected $requirements;
 
 	protected $apiPath;
@@ -45,8 +47,21 @@ class SystemHelper extends \Espo\Core\Utils\System
 	{
 		$this->config = include('config.php');
 
+		if (file_exists('data/config.php')) {
+			$this->mainConfig = include('data/config.php');
+		}
+
 		$this->requirements = $this->config['requirements'];
 		$this->apiPath = $this->config['apiPath'];
+	}
+
+	protected function getMainConfig($optionName, $returns = null)
+	{
+		if (isset($this->mainConfig[$optionName])) {
+			return $this->mainConfig[$optionName];
+		}
+
+		return $returns;
 	}
 
 	public function initWritable()
@@ -199,11 +214,34 @@ class SystemHelper extends \Espo\Core\Utils\System
 		return $result;
 	}
 
-	public function getPdoConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName)
+	protected function getPdoConnection($hostName, $port, $dbUserName, $dbUserPass, $dbName)
 	{
+		$params = $this->getMainConfig('database', array());
+
+        $port = empty($port) ? '' : 'port=' . $port . ';';
+        $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
+
+        $options = array();
+
+        if (isset($params['sslCA'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
+        }
+        if (isset($params['sslCert'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
+        }
+        if (isset($params['sslKey'])) {
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
+        }
+        if (isset($params['sslCAPath'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
+        }
+        if (isset($params['sslCipher'])) {
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
+        }
+
 		try {
-			$dsn = "mysql:host={$hostName};" . ((!empty($port)) ? "port={$port};" : '') . "dbname={$dbName}";
-			$dbh = new PDO($dsn, $dbUserName, $dbUserPass);
+			$dsn = $platform . ':host='.$hostName.';'.$port.'dbname=' . $dbName;
+			$dbh = new PDO($dsn, $dbUserName, $dbUserPass, $options);
 		} catch (PDOException $e) {
 			return $e;
 		}

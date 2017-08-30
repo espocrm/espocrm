@@ -325,6 +325,10 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-bottom: -1px;
 }
 
+.panel-body .field > .link-container > .list-group-item {
+    background-color: @panel-bg;
+}
+
 .field .link-container .list-group-item > div {
     margin: -3px 0 -3px;
 }
@@ -337,6 +341,14 @@ ul.dropdown-menu > li.checkbox:last-child {
 .field .link-container .list-group-item .btn {
     margin-top: 1px;
     margin-bottom: 1px;
+}
+
+.field .link-container .link-group-item-with-columns > div > .btn-group {
+    margin-top: 0;
+    margin-bottom: 0;
+    .caret {
+        border-top-color: @gray-light;
+    }
 }
 
 .filter > .form-group .field {
@@ -368,8 +380,30 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-top: 1px;
 }
 
-.field .link-container .list-group-item.link-with-role a {
+.field .link-container > .list-group-item.link-with-role a {
     margin-top: 6px;
+}
+
+.field .link-container > .list-group-item.link-group-item-with-columns,
+.field .link-container > .list-group-item.link-group-item-with-primary {
+    > div:nth-child(1) {
+        display: inline-block;
+        width: calc(~"100% - 23px");
+        float: left;
+        > input.form-control {
+            width: 40%;
+        }
+    }
+    > div:nth-child(2) {
+        display: inline-block;
+        width: 23px;
+        float: right;
+        vertical-align: top;
+    }
+}
+
+ul.dropdown-menu > li > a > .check-icon + div {
+    padding-right: 20px;
 }
 
 .detail-field-container {
@@ -416,7 +450,7 @@ table.table > tbody td > .list-row-buttons button {
 }
 
 .list-row-buttons span.caret {
-    border-top-color: #999;
+    border-top-color: @gray-light;
 }
 
 .list > table {
@@ -441,10 +475,10 @@ table.table > tbody td > .list-row-buttons button {
 }
 
 .list > table th span.caret {
-    border-top-color: #999;
+    border-top-color: @gray-light;
 }
 .list > table th span.caret-up {
-    border-bottom-color: #999;
+    border-bottom-color: @gray-light;
 }
 
 .filter a.remove-filter {
@@ -734,13 +768,28 @@ td.cell[data-name="buttons"] > .btn-group {
     margin-left: 10px;
 }
 
-.panel.dashlet > .panel-heading > .menu-container {
-    margin-top: -8px;
+.panel.dashlet > .panel-heading > .btn-group {
+    margin-top: -7px;
+    top: 0;
     right: -10px;
 }
 
 .panel.dashlet > .panel-heading > .panel-title {
     cursor: default;
+}
+
+.panel.dashlet > .panel-heading > .btn-group .btn-link {
+    color: @text-color;
+}
+
+.panel.dashlet > .panel-heading > .btn-group > .btn + .dropdown-toggle {
+    padding-left: @padding-small-horizontal;
+    padding-right: @padding-small-horizontal;
+}
+
+.panel > .panel-heading > .btn-group > .btn + .dropdown-toggle {
+    padding-left: @padding-small-horizontal;
+    padding-right: @padding-small-horizontal;
 }
 
 .panel.dashlet {
@@ -847,7 +896,7 @@ td.cell[data-name="buttons"] > .btn-group {
     padding-left: @panel-padding;
 }
 
-.autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+.autocomplete-suggestions { border: 1px solid @gray-light; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
@@ -906,9 +955,21 @@ td.cell[data-name="buttons"] > .btn-group {
           url('../fonts/open-sans-regular.svg#svgFontName') format('svg');
 }
 
+.notifications-badge-container > .notifications-button > .number-badge {
+    position: absolute;
+    z-index: 10;
+    font-size: 9px;
+    padding: 2px 5px;
+    display: inline-block;
+    top: 7px;
+    left: 27px;
+    background-color: @brand-warning;
+    color: @white-color;
+}
+
 .badge-circle {
-    width:8px;
-    height:8px;
+    width: 8px;
+    height: 8px;
     border-radius: 4px;
     text-align: center;
     display: table-cell;
@@ -1352,6 +1413,10 @@ h5 {
 .input-group > .input-group-btn > .btn:focus,
 .input-group > .input-group-btn > .btn.active {
     z-index: 3;
+}
+
+.list-group-panel {
+    background-color: @panel-bg;
 }
 
 .field .array-control-container {

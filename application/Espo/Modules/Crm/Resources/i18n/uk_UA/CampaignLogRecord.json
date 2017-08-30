@@ -7,13 +7,13 @@
     "parent": "Ціль",
     "object": "Об'єкт",
     "application": "Додаток",
-    "queueItem": "Черговий пункт",
-    "stringData": "Дані рядка",
-    "stringAdditionalData": "String Additional Data"
+    "queueItem": "Елемент черги",
+    "stringData": "Рядок даних",
+    "stringAdditionalData": "Рядок додаткової інформації"
   },
   "links": {
-    "queueItem": "Queue Item",
-    "parent": "Джерело",
+    "queueItem": "Пункт черги",
+    "parent": "Батько",
     "object": "Об'єкт"
   },
   "options": {
@@ -22,7 +22,7 @@
       "Opened": "Відкрито",
       "Opted Out": "Відмовлено",
       "Bounced": "Відшито",
-      "Clicked": "Цикнуте",
+      "Clicked": "Клікнуто",
       "Lead Created": "Лід створено"
     }
   },
@@ -30,11 +30,11 @@
     "All": "Все"
   },
   "presetFilters": {
-    "sent": "Надісланий",
-    "opened": "Відкритий",
-    "optedOut": "Відмовився",
-    "bounced": "Bounced",
-    "clicked": "Натиснув",
-    "leadCreated": "Lead Created"
+    "sent": "Надіслано",
+    "opened": "Відкрито",
+    "optedOut": "Відмовлено",
+    "bounced": "Відшито",
+    "clicked": "Клікнуто",
+    "leadCreated": "Лід створено"
   }
 }

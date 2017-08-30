@@ -61,5 +61,13 @@ class Contact extends \Espo\Core\SelectManagers\Base
         }
     }
 
+    protected function filterAccountActive(&$result)
+    {
+        if (!array_key_exists('additionalColumnsConditions', $result)) {
+            $result['additionalColumnsConditions'] = array();
+        }
+        $result['additionalColumnsConditions']['isInactive'] = false;
+    }
+
  }
 

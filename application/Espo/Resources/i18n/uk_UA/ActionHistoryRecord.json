@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "Користувач",
+    "action": "Дія",
+    "createdAt": "Дата",
+    "target": "Ціль",
+    "targetType": "Тип цілі",
+    "authToken": "Токен аутентифікації",
+    "ipAddress": "IP адреса"
+  },
+  "links": {
+    "authToken": "Токен аутентифікації",
+    "user": "Користувач",
+    "target": "Ціль"
+  },
+  "presetFilters": {
+    "onlyMy": "Тільки моє"
+  },
+  "options": {
+    "action": {
+      "read": "Читати",
+      "update": "Обновити",
+      "delete": "Видалити",
+      "create": "Створити"
+    }
+  }
+}

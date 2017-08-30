@@ -48,7 +48,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsDefault: 4,
 
-        searchTypeList: ['contains', 'startsWith', 'equals', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
@@ -80,6 +80,11 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.model.get(this.name) !== ''
             ) {
                 data.isNotEmpty = true;
+            }
+            if (this.mode === 'search') {
+                if (typeof this.searchParams.value === 'string') {
+                    this.searchData.value = this.searchParams.value;
+                }
             }
             return data;
         },
@@ -142,39 +147,39 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
                 if (type == 'isEmpty') {
                     data = {
-                        typeFront: type,
-                        where: {
-                            type: 'or',
-                            value: [
-                                {
-                                    type: 'isNull',
-                                    field: this.name,
-                                },
-                                {
-                                    type: 'equals',
-                                    field: this.name,
-                                    value: ''
-                                }
-                            ]
+                        type: 'or',
+                        value: [
+                            {
+                                type: 'isNull',
+                                field: this.name,
+                            },
+                            {
+                                type: 'equals',
+                                field: this.name,
+                                value: ''
+                            }
+                        ],
+                        data: {
+                            type: type
                         }
                     }
                 } else {
                     data = {
-                        typeFront: type,
-                        where: {
-                            type: 'and',
-                            value: [
-                                {
-                                    type: 'notEquals',
-                                    field: this.name,
-                                    value: ''
-                                },
-                                {
-                                    type: 'isNotNull',
-                                    field: this.name,
-                                    value: null
-                                }
-                            ]
+                        type: 'and',
+                        value: [
+                            {
+                                type: 'notEquals',
+                                field: this.name,
+                                value: ''
+                            },
+                            {
+                                type: 'isNotNull',
+                                field: this.name,
+                                value: null
+                            }
+                        ],
+                        data: {
+                            type: type
                         }
                     }
                 }
@@ -185,8 +190,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 if (value) {
                     data = {
                         value: value,
-                        type: type,
-                        typeFront: type
+                        type: type
                     }
                     return data;
                 }
@@ -195,7 +199,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         getSearchType: function () {
-            return this.searchParams.typeFront || this.searchParams.type;
+            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         }
 
     });

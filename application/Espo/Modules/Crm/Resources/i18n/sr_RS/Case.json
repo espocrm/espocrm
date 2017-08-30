@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "name": "Ime",
+    "number": "Broj",
+    "status": "Status",
+    "account": "Pravno lice",
+    "contact": "Kontakt",
+    "contacts": "Kontakti",
+    "priority": "Prioritet",
+    "type": "Tip",
+    "description": "Opis",
+    "inboundEmail": "Dolazni email",
+    "lead": "Izvor"
+  },
+  "links": {
+    "inboundEmail": "Dolazni email",
+    "account": "Pravno lice",
+    "contact": "Kontakt (osnovni)",
+    "Contacts": "Kontakti",
+    "meetings": "Ročišta",
+    "calls": "Pozivi",
+    "tasks": "Zadaci",
+    "emails": "E-poruke",
+    "articles": "Baza znanja",
+    "lead": "Izvor"
+  },
+  "options": {
+    "status": {
+      "New": "Novi",
+      "Assigned": "Dodeljen",
+      "Pending": "Nerešen",
+      "Closed": "Zatvoren",
+      "Rejected": "Odbijen",
+      "Duplicate": "Duplikat"
+    },
+    "priority": {
+      "Low": "Nizak",
+      "Normal": "Normalan",
+      "High": "Visok",
+      "Urgent": "Hitan"
+    },
+    "type": {
+      "Question": "Pitanje",
+      "Incident": "Incident",
+      "Problem": "Problem"
+    }
+  },
+  "labels": {
+    "Create Case": "Napravi predmet",
+    "Close": "Zatvori",
+    "Reject": "Odbijen",
+    "Closed": "Zatvoren",
+    "Rejected": "Odbijen"
+  },
+  "presetFilters": {
+    "open": "Otvoren",
+    "closed": "Zatvoren"
+  }
+}

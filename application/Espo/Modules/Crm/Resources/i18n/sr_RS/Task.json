@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Ime",
+    "parent": "roditelj",
+    "status": "Status",
+    "dateStart": "Početni datum",
+    "dateEnd": "Rok",
+    "dateStartDate": "Datum početka (ceo dan)",
+    "dateEndDate": "Datum završetka (ceo dan)",
+    "priority": "Prioritet",
+    "description": "Opis",
+    "isOverdue": "kasni",
+    "account": "Pravno lice",
+    "dateCompleted": "Datum završetka",
+    "attachments": "Prilozi",
+    "reminders": "Podsetnici"
+  },
+  "links": {
+    "attachments": "Prilozi"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Nije počelo",
+      "Started": "Započeto",
+      "Completed": "Završeno",
+      "Canceled": "Otkazano",
+      "Deferred": "Odloženo"
+    },
+    "priority": {
+      "Low": "Nizak",
+      "Normal": "Normalan",
+      "High": "Visok",
+      "Urgent": "Hitan"
+    }
+  },
+  "labels": {
+    "Create Task": "Kreiraj Zadatak",
+    "Complete": "Završeno"
+  },
+  "presetFilters": {
+    "actual": "Aktuelno",
+    "completed": "Završeno",
+    "todays": "Današnji",
+    "overdue": "Kašnjenje",
+    "deferred": "Odloženi"
+  }
+}

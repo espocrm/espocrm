@@ -33,10 +33,12 @@ Espo.define('crm:views/knowledge-base-article/record/detail', 'views/record/deta
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.dropdownItemList.push({
-                'label': 'Send in Email',
-                'name': 'sendInEmail'
-            });
+            if (this.getAcl().checkScope('Email', 'create')) {
+                this.dropdownItemList.push({
+                    'label': 'Send in Email',
+                    'name': 'sendInEmail'
+                });
+            }
         },
 
         actionSendInEmail: function () {

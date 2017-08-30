@@ -140,6 +140,17 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     window.location.reload();
                 }
             }, this);
+
+            this.listenTo(this.model, 'change:smtpSecurity', function (model, smtpSecurity, o) {
+                if (!o.ui) return;
+                if (smtpSecurity == 'SSL') {
+                    this.model.set('smtpPort', '465');
+                } else if (smtpSecurity == 'TLS') {
+                    this.model.set('smtpPort', '587');
+                } else {
+                    this.model.set('smtpPort', '25');
+                }
+            }, this);
         },
 
         actionReset: function () {
@@ -158,19 +169,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-
-
-            var smtpSecurityField = this.getFieldView('smtpSecurity');
-            this.listenTo(smtpSecurityField, 'change', function () {
-                var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
-                if (smtpSecurity == 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
-                }
-            }.bind(this));
         },
 
         exit: function (after) {

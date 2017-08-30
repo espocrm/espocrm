@@ -95,15 +95,20 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     protected function restoreFiles()
     {
         $packagePath = $this->getPath('packagePath');
-        $filesPath = Util::concatPath($packagePath, self::FILES);
 
-        if (!file_exists($filesPath)) {
+        $manifestPath = Util::concatPath($packagePath, $this->manifestName);
+        if (!file_exists($manifestPath)) {
             $this->unzipArchive($packagePath);
         }
 
-        $res = $this->copy($filesPath, '', true);
+        $fileDirs = $this->getFileDirs($packagePath);
+        foreach ($fileDirs as $filesPath) {
+            if (file_exists($filesPath)) {
+                $res = $this->copy($filesPath, '', true);
+            }
+        }
 
-        $manifestJson = $this->getFileManager()->getContents(array($packagePath, $this->manifestName));
+        $manifestJson = $this->getFileManager()->getContents($manifestPath);
         $manifest = Json::decode($manifestJson, true);
         if (!empty($manifest['delete'])) {
             $res &= $this->getFileManager()->remove($manifest['delete'], null, true);
@@ -114,7 +119,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    protected function copyFiles()
+    protected function copyFiles($type = null)
     {
         $backupPath = $this->getPath('backupPath');
         $res = $this->copy(array($backupPath, self::FILES), '', true);

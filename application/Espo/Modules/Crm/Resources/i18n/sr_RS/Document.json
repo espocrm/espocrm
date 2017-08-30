@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "Napravi dokument",
+    "Details": "Detaljnije"
+  },
+  "fields": {
+    "name": "Ime",
+    "status": "Status",
+    "file": "Datoteka",
+    "type": "Tip",
+    "publishDate": "Datum objave",
+    "expirationDate": "Rok upotrebe",
+    "description": "Opis",
+    "accounts": "Pravna lica",
+    "folder": "Fascikla"
+  },
+  "links": {
+    "accounts": "Pravna lica",
+    "opportunities": "Prilike",
+    "folder": "Fascikla",
+    "leads": "Izvori",
+    "contacts": "Kontakti"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Draft": "Nacrt",
+      "Expired": "Istekao",
+      "Canceled": "Otkazan"
+    },
+    "type": {
+      "": "Nema",
+      "Contract": "Ugovor",
+      "NDA": "NDA",
+      "EULA": "EULA",
+      "License Agreement": "Ugovor o licenci"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktivan",
+    "draft": "Nacrt"
+  }
+}

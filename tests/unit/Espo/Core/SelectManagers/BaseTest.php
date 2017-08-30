@@ -256,12 +256,12 @@ class BaseTest extends \PHPUnit_Framework_TestCase
                     'value' => array(
                         array(
                             'type' => 'equals',
-                            'field'=> 'date',
+                            'attribute'=> 'date',
                             'value' => '2016-10-10'
                         ),
                         array(
                             'type' => 'after',
-                            'field'=> 'dateTime',
+                            'attribute'=> 'dateTime',
                             'value' => '2016-10-10 10:10:00'
                         )
                     )
@@ -272,5 +272,24 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $selectParams = $selectManager->buildSelectParams($params);
 
         $this->assertEquals('2016-10-10', $selectParams['whereClause'][0]['NOT'][0]['date=']);
+    }
+
+    function testBuildSelectParamsComplex()
+    {
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager->setEntityType('Test2');
+
+        $params = array(
+            'where' => array(
+                array(
+                    'type' => 'equals',
+                    'attribute'=> 'MONTH_NUMBER:dateTime',
+                    'value' => 2
+                )
+            )
+        );
+
+        $selectParams = $selectManager->buildSelectParams($params);
+        $this->assertEquals(2, $selectParams['whereClause'][0]['MONTH_NUMBER:dateTime=']);
     }
 }

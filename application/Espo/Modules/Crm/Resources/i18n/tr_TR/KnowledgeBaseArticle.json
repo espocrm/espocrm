@@ -40,5 +40,8 @@
   },
   "presetFilters": {
     "published": "Yayınlanan"
+  },
+  "tooltips": {
+    "portals": "Bu makale sadece belli portallar için geçerli olacaktır."
   }
 }

@@ -1,0 +1,11 @@
+{
+  "links": {
+    "users": "Korisnici"
+  },
+  "labels": {
+    "Access": "Pristup",
+    "Create PortalRole": "Stvoriti Portal ulogu",
+    "Scope Level": "Nivo obuhvata",
+    "Field Level": "Nivo polja"
+  }
+}

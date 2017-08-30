@@ -18,14 +18,16 @@
     "newPasswordConfirm": "Підтвердити Новий Пароль",
     "avatar": "Аватар",
     "isActive": "Активний",
-    "isPortalUser": "Портал користувача",
+    "isPortalUser": "Користувач порталу",
     "contact": "Контакт",
-    "accounts": "Обліковийзапис",
-    "account": "Обліковий запис (основний)",
-    "sendAccessInfo": "Send Email with Access Info to User",
+    "accounts": "Контрагенти",
+    "account": "Контрагент (основний)",
+    "sendAccessInfo": "Надіслати Емайл користувачу з інформацією доступу",
     "portal": "Портал",
     "gender": "Стать",
-    "position": "Позиція в комадні"
+    "position": "Позиція в комадні",
+    "ipAddress": "IP адреса",
+    "passwordPreview": "Попередній перегляд паролю"
   },
   "links": {
     "teams": "Команди",
@@ -34,8 +36,8 @@
     "portals": "Портали",
     "portalRoles": "Ролі порталу",
     "contact": "Контакт",
-    "accounts": "Облікові записи",
-    "account": "Обліковий запис (основний)",
+    "accounts": "Контрагенти",
+    "account": "Контрагент (основний)",
     "tasks": "Завдання"
   },
   "labels": {
@@ -52,7 +54,7 @@
     "Email Accounts": "Акаунти емейлів",
     "Portal": "Портали",
     "Create Portal User": "Створити портал користувача",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Proceed w/o Contact": "Продовжити без контакту"
   },
   "tooltips": {
     "defaultTeam": "Всі записи, створені цим користувачем, відноситимуться до цієї команди за замовчуванням.",
@@ -77,7 +79,8 @@
     "forbidden": "Недоступно, будь ласка, спробуйте пізніше",
     "uniqueLinkHasBeenSent": "Унікальне посилання була відправлена на вказану адресу електронної пошти.",
     "passwordChangedByRequest": "Пароль було змінено.",
-    "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email."
+    "setupSmtpBefore": "Вам необхідно <a href=\"{url}\">налаштувати SMTP</a>, щоб створити можливість для системи надіслати пароль по електронній пошті.",
+    "passwordChangeLinkEmailBody": "Ви можете змінити свій пароль, перейшовши за цим посиланням {посилання}. Цей унікальний URL швидко сплине."
   },
   "boolFilters": {
     "onlyMyTeam": "Тільки моя команда"

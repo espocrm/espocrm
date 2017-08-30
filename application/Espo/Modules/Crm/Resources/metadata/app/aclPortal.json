@@ -11,7 +11,8 @@
         "scopeFieldLevel": {
             "KnowledgeBaseArticle": {
                 "portals": false,
-                "order": false
+                "order": false,
+                "status": false
             },
             "Case": {
                 "status": {

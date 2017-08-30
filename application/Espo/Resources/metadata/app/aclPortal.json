@@ -114,5 +114,9 @@
     "scopeLevelTypesDefaults": {
         "boolean": false,
         "record": false
+    },
+    "scopeLevelTypesStrictDefaults": {
+        "boolean": false,
+        "record": false
     }
 }

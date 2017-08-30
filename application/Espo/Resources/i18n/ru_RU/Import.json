@@ -47,17 +47,28 @@
     "Double Quote": "Двойные кавычки",
     "Single Quote": "Одиночные кавычки",
     "Imported": "Импортировано",
-    "Duplicates": "Дубликатов"
+    "Duplicates": "Дубликатов",
+    "Skip searching for duplicates": "Skip searching for duplicates",
+    "Timezone": "Timezone"
   },
   "messages": {
     "utf8": "Должен быть в кодировке UTF-8",
-    "duplicatesRemoved": "Дубликаты убраны"
+    "duplicatesRemoved": "Дубликаты убраны",
+    "inIdle": "Execute in idle (for big data; via cron)"
   },
   "fields": {
     "file": "Файл",
     "entityType": "Тип объекта",
     "imported": "Импортированные записи",
     "duplicates": "Дубликаты",
-    "updated": "Обновленные записи"
+    "updated": "Обновленные записи",
+    "status": "Status"
+  },
+  "options": {
+    "status": {
+      "Failed": "Failed",
+      "In Process": "In Process",
+      "Complete": "Complete"
+    }
   }
 }

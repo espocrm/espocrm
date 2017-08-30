@@ -10,12 +10,14 @@
     "rightMargin": "Højre Margin",
     "bottomMargin": "Bund Margin",
     "printFooter": "Udskriv Footer",
-    "footerPosition": "Footer Position"
+    "footerPosition": "Footer Position",
+    "variables": "Available Placeholders"
   },
   "labels": {
     "Create Template": "Opret Skabelon"
   },
   "tooltips": {
-    "footer": "Brug {pageNumber} til at printe sidetal."
+    "footer": "Brug {pageNumber} til at printe sidetal.",
+    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
   }
 }

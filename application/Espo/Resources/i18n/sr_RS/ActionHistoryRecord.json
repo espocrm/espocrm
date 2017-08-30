@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "Korisnik",
+    "action": "Akcija",
+    "createdAt": "Datum",
+    "target": "Meta",
+    "targetType": "Vrsta mete",
+    "authToken": "Auth token",
+    "ipAddress": "IP adresa"
+  },
+  "links": {
+    "authToken": "Auth token",
+    "user": "Korisnik",
+    "target": "Meta"
+  },
+  "presetFilters": {
+    "onlyMy": "Samo moje"
+  },
+  "options": {
+    "action": {
+      "read": "Pročitaj",
+      "update": "Ažuriraj",
+      "delete": "Obriši",
+      "create": "Napravi"
+    }
+  }
+}

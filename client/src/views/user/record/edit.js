@@ -66,6 +66,15 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             }, this);
 
             Detail.prototype.setupFieldAppearance.call(this);
+
+            this.hideField('passwordPreview');
+            this.listenTo(this.model, 'change:passwordPreview', function (model, value) {
+                if (value.length) {
+                    this.showField('passwordPreview');
+                } else {
+                    this.hideField('passwordPreview');
+                }
+            }, this);
         },
 
         controlFieldAppearance: function () {
@@ -123,16 +132,23 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     }
                                 },
                                 {
-                                    name: 'passwordInfo',
-                                    customLabel: '',
-                                    customCode: this.getPasswordSendingMessage()
+                                    name: 'passwordPreview',
+                                    view: 'views/fields/base',
+                                    params: {
+                                        readOnly: true
+                                    }
                                 }
                             ],
                             [
                                 {
                                     name: 'sendAccessInfo'
                                 },
-                                false
+                                {
+                                    name: 'passwordInfo',
+                                    customLabel: '',
+                                    customCode: this.getPasswordSendingMessage()
+                                }
+
                             ]
                         ]
                     });

@@ -17,13 +17,17 @@
     "newPassword": "Новый пароль",
     "newPasswordConfirm": "Подтвердить новый пароль",
     "avatar": "Аватар",
-    "isActive": "Признак активности",
+    "isActive": "Активен",
     "isPortalUser": "Пользователь портала",
     "contact": "Контакты",
     "accounts": "Контрагенты",
     "account": "Контрагент",
     "sendAccessInfo": "Отправить пользователю эл. письмо с реквизитами доступа",
-    "portal": "Портал"
+    "portal": "Портал",
+    "gender": "Пол",
+    "position": "Position in Team",
+    "ipAddress": "IP Address",
+    "passwordPreview": "Password Preview"
   },
   "links": {
     "teams": "Группы",
@@ -32,7 +36,9 @@
     "portals": "Порталы",
     "portalRoles": "Роли порталов",
     "contact": "Контакт",
-    "accounts": "Контрагенты"
+    "accounts": "Контрагенты",
+    "account": "Учетная запись (Основная)",
+    "tasks": "Tasks"
   },
   "labels": {
     "Create User": "Создать пользователя",
@@ -47,7 +53,8 @@
     "External Accounts": "Внешние учетные записи",
     "Email Accounts": "Учетные записи эл. почты",
     "Portal": "Портал",
-    "Create Portal User": "Создать пользователя портала"
+    "Create Portal User": "Создать пользователя портала",
+    "Proceed w/o Contact": "Proceed w/o Contact"
   },
   "tooltips": {
     "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой группе.",
@@ -64,7 +71,6 @@
     "accountInfoEmailSubject": "Информация об учетной записи EspoCRM",
     "accountInfoEmailBody": "Информация о Вашей учетной записи:\n\nИмя пользователя: {userName}\nПароль: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Запрос смены пароля",
-    "passwordChangeLinkEmailBody": "Вы можете изменить пароль использовав эту уникальную ссылку {link}. Срок действия ссылки скоро истечет.",
     "passwordChanged": "Пароль был изменен",
     "userCantBeEmpty": "Имя пользователя не может быть пустым",
     "wrongUsernamePasword": "Неверное имя пользователя/пароль",
@@ -72,13 +78,23 @@
     "userNameEmailAddressNotFound": "Имя пользователя/Адрес эл. почты не найдены",
     "forbidden": "Запрещено, повторите попытку позже",
     "uniqueLinkHasBeenSent": "Уникальная ссылка была отправлена на указанный адрес эл. почты.",
-    "passwordChangedByRequest": "Пароль был изменен."
+    "passwordChangedByRequest": "Пароль был изменен.",
+    "setupSmtpBefore": "Вы должны настроить <a href=\"{url}\">SMTP settings</a> чтобы система имела возможность отправлять пароль по электронной почте.",
+    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
   },
   "boolFilters": {
     "onlyMyTeam": "Только моя группа"
   },
   "presetFilters": {
     "active": "Активные",
-    "activePortal": "Portal Active"
+    "activePortal": "Активный портал"
+  },
+  "options": {
+    "gender": {
+      "": "Не установлен",
+      "Male": "Мужской",
+      "Female": "Женский",
+      "Neutral": "Нейтральный"
+    }
   }
 }

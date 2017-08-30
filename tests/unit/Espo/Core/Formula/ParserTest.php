@@ -80,6 +80,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    function testNotEquals()
+    {
+        $expression = "isActive != false";
+        $actual = $this->parser->parse($expression);
+        $expected = (object) [
+            'type' => 'comparison\\notEquals',
+            'value' => [
+                (object) [
+                    'type' => 'attribute',
+                    'value' => 'isActive'
+                ],
+                (object) [
+                    'type' => 'value',
+                    'value' => false
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $actual);
+    }
+
     function testSplit()
     {
         $expression = "name == 'test';\nvalue > 0.5\n;";

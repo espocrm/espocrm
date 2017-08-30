@@ -77,4 +77,4 @@ try {
     $app->runRebuild();
 } catch (\Exception $e) {}
 
-echo "Install is completed.\n";
+echo "Installation is complete.\n";

@@ -67,6 +67,7 @@
                 "Software",
                 "Support",
                 "Shipping",
+                "Travel",
                 "Technology",
                 "Telecommunications",
                 "Television",
@@ -87,6 +88,12 @@
         "contactRole": {
             "type": "varchar",
             "notStorable": true,
+            "disabled": true
+        },
+        "contactIsInactive": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false,
             "disabled": true
         },
         "billingAddress": {

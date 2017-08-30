@@ -134,7 +134,7 @@ class Application
     public function runCron()
     {
         $auth = $this->createAuth();
-        $auth->useNoAuth(true);
+        $auth->useNoAuth();
 
         $cronManager = new \Espo\Core\CronManager($this->container);
         $cronManager->run();
@@ -327,6 +327,7 @@ class Application
     public function setupSystemUser()
     {
         $user = $this->getContainer()->get('entityManager')->getEntity('User', 'system');
+        $user->sets('isAdmin', true);
         $this->getContainer()->setUser($user);
         $this->getContainer()->get('entityManager')->setUser($user);
     }

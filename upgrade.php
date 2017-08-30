@@ -83,4 +83,4 @@ try {
     $app->runRebuild();
 } catch (\Exception $e) {}
 
-echo "Upgrade is completed. New version is " . $config->get('version') . ". \n";
+echo "Upgrade is complete. New version is " . $config->get('version') . ". \n";

@@ -392,6 +392,32 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction1()
+    {
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'MONTH_NUMBER:comment.created_at' => 2
+            )
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE MONTH(comment.created_at) = '2' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunction2()
+    {
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['id'],
+            'whereClause' => array(
+                'WEEK_NUMBER_1:createdAt' => 2
+            )
+        ));
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "WHERE WEEK(comment.created_at, 1) = '2' AND comment.deleted = '0'";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
 }
-
-

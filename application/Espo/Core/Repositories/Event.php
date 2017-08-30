@@ -36,8 +36,20 @@ class Event extends \Espo\Core\ORM\Repositories\RDB
 {
     protected $reminderDateAttribute = 'dateStart';
 
+    protected $reminderSkippingStatusList = ['Held', 'Not Held'];
+
+    protected function beforeSave(Entity $entity, array $options = array())
+    {
+        if ($entity->isAttributeChanged('status') && in_array($entity->get('status'), $this->reminderSkippingStatusList)) {
+            $entity->set('reminders', []);
+        }
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = array())
     {
+        parent::afterRemove($entity, $options);
+
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
             DELETE FROM `reminder`

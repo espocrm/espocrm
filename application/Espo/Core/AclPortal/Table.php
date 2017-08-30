@@ -37,7 +37,7 @@ use \Espo\Entities\Portal;
 
 use \Espo\Core\Utils\Config;
 use \Espo\Core\Utils\Metadata;
-use \Espo\Core\Utils\FieldManager;
+use \Espo\Core\Utils\FieldManagerUtil;
 use \Espo\Core\Utils\File\Manager as FileManager;
 
 class Table extends \Espo\Core\Acl\Table
@@ -52,7 +52,7 @@ class Table extends \Espo\Core\Acl\Table
 
     protected $valuePermissionList = [];
 
-    public function __construct(User $user, Portal $portal, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManager $fieldManager = null)
+    public function __construct(User $user, Portal $portal, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManagerUtil $fieldManager = null)
     {
         if (empty($portal)) {
             throw new Error("No portal was passed to AclPortal\\Table constructor.");

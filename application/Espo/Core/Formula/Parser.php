@@ -219,6 +219,11 @@ class Parser
         $firstOperator = null;
         $minIndex = null;
 
+        if ($expression === '') return (object) [
+            'type' => 'value',
+            'value' => null
+        ];
+
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
                 $index = strpos($expression, $operator, 1);
@@ -233,6 +238,18 @@ class Parser
                         $possibleRightOperator &&
                         $possibleRightOperator != $operator &&
                         !empty($this->operatorMap[$possibleRightOperator])
+                    ) continue;
+
+                    $possibleLeftOperator = null;
+                    if (strlen($operator) === 1) {
+                        if ($index > 0) {
+                            $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+                        }
+                    }
+                    if (
+                        $possibleLeftOperator &&
+                        $possibleLeftOperator != $operator &&
+                        !empty($this->operatorMap[$possibleLeftOperator])
                     ) continue;
 
                     $firstPart = substr($expression, 0, $index);

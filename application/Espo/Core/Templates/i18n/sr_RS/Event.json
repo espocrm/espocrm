@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Roditelj",
+    "dateStart": "Početni datum",
+    "dateEnd": "Krajnji datum",
+    "duration": "Trajanje",
+    "status": "Status",
+    "reminders": "Podsetnici"
+  },
+  "links": {
+    "parent": "Roditelj"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planiran",
+      "Held": "Održan",
+      "Not Held": "Nije održan"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Napravi {entityTypeTranslated}",
+    "Schedule {entityType}": "Zakaži {entityTypeTranslated}",
+    "Log {entityType}": "Zabeleži {entitiTipeTranslated}",
+    "Set Held": "Postavi kao održano",
+    "Set Not Held": "Postavi kao nije održano"
+  },
+  "massActions": {
+    "setHeld": "Postavi kao održano",
+    "setNotHeld": "Postavi kao nije održano"
+  },
+  "presetFilters": {
+    "planned": "Planiran",
+    "held": "Održan",
+    "todays": "Današnji"
+  }
+}

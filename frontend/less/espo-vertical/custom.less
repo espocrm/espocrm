@@ -7,7 +7,7 @@
     height: @tob-bar-height;
 }
 
-#header .notifications-badge-container a span{
+#header .notifications-badge-container a span.bell{
     margin-top: 2px;
 }
 
@@ -37,6 +37,10 @@
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: -1px;
+    }
+    .notifications-badge-container > .notifications-button > .number-badge {
+      top: 3px;
+      left: 22px;
     }
 }
 

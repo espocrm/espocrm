@@ -1,6 +1,13 @@
 {
     "fields": {
-        "useCustomFieldList": "Custom Field List",
-        "fieldList": "Field List"
+        "exportAllFields": "Export all fields",
+        "fieldList": "Field List",
+        "format": "Format"
+    },
+    "options": {
+        "format": {
+            "csv": "CSV",
+            "xlsx": "XLSX (Excel)"
+        }
     }
 }

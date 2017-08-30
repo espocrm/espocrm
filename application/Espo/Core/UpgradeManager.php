@@ -42,6 +42,11 @@ class UpgradeManager extends Upgrades\Base
         'scriptNames' => array(
             'before' => 'BeforeUpgrade',
             'after' => 'AfterUpgrade',
+        ),
+
+        'customDirNames' => array(
+            'before' => 'beforeUpgradeFiles',
+            'after' => 'afterUpgradeFiles',
         )
     );
 }

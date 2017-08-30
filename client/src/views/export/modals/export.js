@@ -59,8 +59,11 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             if (this.options.fieldList) {
                 this.model.set('fieldList', this.options.fieldList);
-                this.model.set('useCustomFieldList', true);
+                this.model.set('exportAllFields', false);
+            } else {
+                this.model.set('exportAllFields', true);
             }
+            this.model.set('format', this.getMetadata().get('app.export.formatList')[0]);
 
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
@@ -75,10 +78,11 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             if (this.getView('record').validate()) return;
 
             var returnData = {
-                useCustomFieldList: data.useCustomFieldList
+                exportAllFields: data.exportAllFields,
+                format: data.format
             };
 
-            if (data.useCustomFieldList) {
+            if (!data.exportAllFields) {
                 var attributeList = [];
                 data.fieldList.forEach(function (item) {
                     if (item === 'id') {
@@ -86,12 +90,17 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                         return;
                     }
                     var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
-                    if (!type) return;
-                    this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
-                        attributeList.push(attribute);
-                    }, this);
+                    if (type) {;
+                        this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
+                            attributeList.push(attribute);
+                        }, this);
+                    }
+                    if (~item.indexOf('_')) {
+                        attributeList.push(item);
+                    }
                 }, this);
                 returnData.attributeList = attributeList;
+                returnData.fieldList = data.fieldList;
             }
 
             this.trigger('proceed', returnData);

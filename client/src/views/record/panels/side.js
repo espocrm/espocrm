@@ -78,7 +78,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
             this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
             this.actionList = _.clone(this.defs.actionList || this.actionList || []);
 
-            this.fieldList = this.options.fieldList || this.fieldList || [];
+            this.fieldList = this.options.fieldList || this.fieldList || this.defs.fieldList || [];
 
             this.mode = this.options.mode || this.mode;
 

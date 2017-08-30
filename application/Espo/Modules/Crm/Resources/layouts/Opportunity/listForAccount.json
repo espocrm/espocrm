@@ -1,6 +1,6 @@
 [
-    {"name":"name", "width": 35, "link": true},
-    {"name":"stage", "width": 25},
-    {"name":"createdAt"},
-    {"name":"amount", "align": "right"}
+    {"name":"name", "link": true},
+    {"name":"stage", "width": 22},
+    {"name":"createdAt", "width": 20},
+    {"name":"amount", "align": "right", "width": 20}
 ]

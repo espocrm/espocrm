@@ -10,12 +10,14 @@
     "rightMargin": "Правый отступ",
     "bottomMargin": "Нижний отступ",
     "printFooter": "Отображать подвал",
-    "footerPosition": "Положение подвала"
+    "footerPosition": "Положение подвала",
+    "variables": "Available Placeholders"
   },
   "labels": {
     "Create Template": "Создать шаблон"
   },
   "tooltips": {
-    "footer": "Используйте {pageNumber} для отображения номера страницы."
+    "footer": "Используйте {pageNumber} для отображения номера страницы.",
+    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
   }
 }

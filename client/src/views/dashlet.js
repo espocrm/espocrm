@@ -44,6 +44,7 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                 id: this.id,
                 title: this.getOption('title') || this.name,
                 actionList: (this.getView('body') || {}).actionList || [],
+                buttonList: (this.getView('body') || {}).buttonList || [],
                 noPadding: (this.getView('body') || {}).noPadding
             };
         },

@@ -1,7 +1,12 @@
 {
   "labels": {
     "Create KnowledgeBaseArticle": "Создать статью",
-    "Any": "Любой"
+    "Any": "Любой",
+    "Send in Email": "Отправить на имейл",
+    "Move Up": "Move Up",
+    "Move Down": "Move Down",
+    "Move to Top": "Move to Top",
+    "Move to Bottom": "Move to Bottom"
   },
   "fields": {
     "name": "Название",
@@ -33,10 +38,10 @@
       "Article": "Статья"
     }
   },
-  "tooltips": {
-    "portals": "Статья будет доступна только в указанных порталах."
-  },
   "presetFilters": {
     "published": "Опубликована"
+  },
+  "tooltips": {
+    "portals": "Article will be available only in specified portals."
   }
 }

@@ -35,6 +35,9 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
         dataAttributesDefs: {
             fullWidth: {
                 type: 'bool'
+            },
+            name: {
+                readOnly: true
             }
         },
 

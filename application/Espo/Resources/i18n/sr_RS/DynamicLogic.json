@@ -1,0 +1,28 @@
+{
+  "label": {
+    "Field": "Polje"
+  },
+  "options": {
+    "operators": {
+      "equals": "Jednak",
+      "notEquals": "Nije jednako",
+      "greaterThan": "Veće od",
+      "lessThan": "Manje od",
+      "greaterThanOrEquals": "Više ili jednako",
+      "lessThanOrEquals": "Manje ili jednako",
+      "in": "U ovom",
+      "notIn": "Ne u",
+      "inPast": "U prošlosti",
+      "inFuture": "Da li je budućnost",
+      "isToday": "je danas",
+      "isTrue": "Tačno je",
+      "isFalse": "je netačno",
+      "isEmpty": "Prazno",
+      "isNotEmpty": "Nije prazno",
+      "contains": "Sadrži",
+      "has": "Sadrži",
+      "notContains": "ne sadrži",
+      "notHas": "ne sadrži"
+    }
+  }
+}

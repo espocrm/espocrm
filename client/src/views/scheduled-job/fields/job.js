@@ -37,7 +37,9 @@ Espo.define('views/scheduled-job/fields/job', 'views/fields/enum', function (Dep
                 $.ajax({
                     url: 'Admin/jobs',
                     success: function (data) {
-                        this.params.options = data;
+                        this.params.options = data.filter(function (item) {
+                            return !this.getMetadata().get(['entityDefs', 'ScheduledJob', 'jobs', item, 'isSystem']);
+                        }, this);
                         this.params.options.unshift('');
                         this.wait(false);
                     }.bind(this)

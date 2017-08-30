@@ -12,7 +12,8 @@
     "contacts": "Контакты",
     "leads": "Кандидаты",
     "reminders": "Напоминания",
-    "account": "Контрагент"
+    "account": "Контрагент",
+    "acceptanceStatus": "Acceptance Status"
   },
   "options": {
     "status": {

@@ -92,6 +92,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         afterRender: function () {
             this.$badge = this.$el.find('.notifications-button');
             this.$icon = this.$el.find('.notifications-button .icon');
+            this.$number = this.$el.find('.number-badge');
 
             this.runCheckUpdates(true);
 
@@ -120,13 +121,16 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         showNotRead: function (count) {
-            this.$icon.addClass('warning');
+            //this.$icon.addClass('warning');
             this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
+
+            this.$number.removeClass('hidden').html(count.toString());
         },
 
         hideNotRead: function () {
-            this.$icon.removeClass('warning');
+            //this.$icon.removeClass('warning');
             this.$badge.attr('title', '');
+            this.$number.addClass('hidden').html('');
         },
 
         checkBypass: function () {

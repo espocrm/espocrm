@@ -95,6 +95,40 @@
             "readOnly": true,
             "view": "views/fields/link-one"
         },
+        "contactRole": {
+            "type": "enum",
+            "notStorable": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "where": {
+                "=": {
+                    "leftJoins": ["contacts"],
+                    "sql": "contactsMiddle.role = {value}",
+                    "distinct": true
+                },
+                "<>": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role = {value})",
+                "IN": {
+                    "leftJoins": ["contacts"],
+                    "sql": "contactsMiddle.role IN {value}",
+                    "distinct": true
+                },
+                "NOT IN": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role IN {value})",
+                "LIKE": {
+                    "leftJoins": ["contacts"],
+                    "sql": "contactsMiddle.role LIKE {value}",
+                    "distinct": true
+                },
+                "IS NULL": {
+                    "leftJoins": ["contacts"],
+                    "sql": "contactsMiddle.role IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": "opportunity.id NOT IN (SELECT opportunity_id FROM contact_opportunity WHERE deleted = 0 AND role IS NULL)"
+            },
+            "view": "crm:views/opportunity/fields/contact-role",
+            "customizationOptionsDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

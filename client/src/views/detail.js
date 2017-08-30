@@ -264,7 +264,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 primaryFilterName = primaryFilterName.call(this);
             }
 
-            var boolFilterList = data.boolFilterList || Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+
+            var dataBoolFilterList = data.boolFilterList;
+            if (typeof data.boolFilterList == 'string') {
+                dataBoolFilterList = data.boolFilterList.split(',');
+            }
+
+            var boolFilterList = dataBoolFilterList || Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+
             if (typeof boolFilterList == 'function') {
                 boolFilterList = boolFilterList.call(this);
             }

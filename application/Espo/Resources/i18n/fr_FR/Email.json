@@ -30,7 +30,6 @@
     "name": "Name (Subject)",
     "isReplied": "Is Replied",
     "isNotReplied": "Is Not Replied",
-    "sentBy": "Sent by (User)",
     "folder": "Folder",
     "inboundEmails": "Group Accounts",
     "emailAccounts": "Personal Accounts",
@@ -82,7 +81,7 @@
   },
   "messages": {
     "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
-    "testEmailSent": "L'email test a été envoyé",
+    "testEmailSent": "L'email de test a été envoyé",
     "emailSent": "L'email a été envoyé",
     "savedAsDraft": "Sauvegardé en tant que brouillon"
   },
@@ -100,7 +99,7 @@
     "markAsImportant": "Marquer comme important",
     "markAsNotImportant": "Marquer comme non important",
     "moveToTrash": "Mettre à la corbeille",
-    "moveToFolder": "Move to Folder",
-    "retrieveFromTrash": "Retrieve from Trash"
+    "moveToFolder": "Deplacer vers",
+    "retrieveFromTrash": "Récupérer de la corbeille"
   }
 }

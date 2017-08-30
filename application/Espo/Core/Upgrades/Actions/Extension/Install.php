@@ -63,9 +63,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         /** copy scripts files */
         $packagePath = $this->getPackagePath();
-        $res &= $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
 
-        return $res;
+        return $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
     }
 
     protected function isNew()

@@ -25,9 +25,7 @@
    "filter": false,
    "linkDefs": {
       "type": "belongsTo",
-      "entity": "Attachment"
-   },
-   "fieldDefs":{
+      "entity": "Attachment",
       "skipOrmDefs": true
    }
 }

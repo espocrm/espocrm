@@ -61,13 +61,15 @@ class Language
 
     protected $useCache = false;
 
+    protected $noCustom = false;
+
     private $paths = array(
         'corePath' => 'application/Espo/Resources/i18n',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n',
         'customPath' => 'custom/Espo/Custom/Resources/i18n',
     );
 
-    public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false)
+    public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false, $noCustom = false)
     {
         if ($language) {
             $this->currentLanguage = $language;
@@ -79,6 +81,7 @@ class Language
         $this->metadata = $metadata;
 
         $this->useCache = $useCache;
+        $this->noCustom = $noCustom;
 
         $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this->metadata);
     }
@@ -345,7 +348,13 @@ class Language
     protected function init($reload = false)
     {
         if ($reload || !file_exists($this->getLangCacheFile()) || !$this->useCache) {
-            $fullData = $this->getUnifier()->unify($this->name, $this->paths, true);
+
+            $paths = $this->paths;
+            if ($this->noCustom) {
+                unset($paths['customPath']);
+            }
+
+            $fullData = $this->getUnifier()->unify($this->name, $paths, true);
 
             $result = true;
             foreach ($fullData as $i18nName => $i18nData) {

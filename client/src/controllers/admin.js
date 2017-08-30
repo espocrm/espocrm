@@ -48,6 +48,13 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.main('views/admin/layouts/index', {scope: scope, type: type});
         },
 
+        labelManager: function (options) {
+            var scope = options.scope || null;
+            var language = options.language || null;
+
+            this.main('views/admin/label-manager/index', {scope: scope, language: language});
+        },
+
         fieldManager: function (options) {
             var scope = options.scope || null;
             var field = options.field || null;

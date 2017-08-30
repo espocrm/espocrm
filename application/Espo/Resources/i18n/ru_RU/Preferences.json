@@ -4,7 +4,7 @@
     "timeFormat": "Формат времени",
     "timeZone": "Часовой пояс",
     "weekStart": "Первый день недели",
-    "thousandSeparator": "Разделитель групп разрядов",
+    "thousandSeparator": "Тысячный разделитель",
     "decimalMark": "Десятичный разделитель",
     "defaultCurrency": "Валюта по умолчанию",
     "currencyList": "Список валют",
@@ -17,8 +17,7 @@
     "emailAddress": "Адрес эл. почты",
     "smtpPassword": "Пароль",
     "smtpEmailAddress": "Адрес эл. почты",
-    "exportDelimiter": "Разделитель полей при экспортировании",
-    "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
+    "exportDelimiter": "Разделитель полей при экспорте",
     "autoFollowEntityTypeList": "Автоподписка",
     "signature": "Подпись к эл. письмам",
     "dashboardTabList": "Список вкладок",
@@ -26,7 +25,14 @@
     "defaultReminders": "Напоминания по умолчанию.",
     "theme": "Тема",
     "useCustomTabList": "Настраиваемый список вкладок",
-    "emailReplyToAllByDefault": "Email Reply to All by Default"
+    "emailReplyToAllByDefault": "Email Reply to All by Default",
+    "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
+    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
+    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
+    "dashboardLayout": "Dashboard Layout",
+    "emailReplyForceHtml": "Email Reply in HTML",
+    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
+    "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
   },
   "options": {
     "weekStart": {

@@ -2,7 +2,8 @@
     "labels": {
         "Converted To": "Convertit la",
         "Create Lead": "Creare Lead",
-        "Convert": "Converteste"
+        "Convert": "Converteste",
+        "convert": "converteste"
     },
     "fields": {
         "name": "Nume",

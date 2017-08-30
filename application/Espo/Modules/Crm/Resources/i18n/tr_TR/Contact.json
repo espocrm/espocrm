@@ -11,12 +11,13 @@
     "doNotCall": "Arama Yapma",
     "address": "Adres",
     "opportunityRole": "Fırsat Rolü",
-    "description": "açıklama",
+    "description": "Açıklama",
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
     "portalUser": "Portal Kullanıcı",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "acceptanceStatus": "Kabul Durumu"
   },
   "links": {
     "opportunities": "Fırsatlar",

@@ -52,8 +52,8 @@ class Record extends \Espo\Core\Services\Base
         'serviceFactory',
         'fileManager',
         'selectManagerFactory',
-        'preferences',
-        'fileStorageManager'
+        'fileStorageManager',
+        'injectableFactory'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -143,11 +143,6 @@ class Record extends \Espo\Core\Services\Base
     protected function getFileManager()
     {
         return $this->injections['fileManager'];
-    }
-
-    protected function getPreferences()
-    {
-        return $this->injections['preferences'];
     }
 
     protected function getMetadata()
@@ -1246,6 +1241,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function checkAttributeIsAllowedForExport($entity, $attribute)
     {
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+
         if (in_array($attribute, $this->internalAttributeList)) {
             return false;
         }
@@ -1263,41 +1260,67 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    public function exportCollection(array $params, $collection)
+    {
+        $params['collection'] = $collection;
+        return $this->export($params);
+    }
+
     public function export(array $params)
     {
-        $selectManager = $this->getSelectManager($this->getEntityType());
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-            $where = array(
-                array(
-                    'type' => 'in',
-                    'field' => 'id',
-                    'value' => $ids
-                )
-            );
-            $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
-        } else if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-
-            $p = array();
-            $p['where'] = $where;
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-            $selectParams = $this->getSelectParams($p);
+        if (array_key_exists('format', $params)) {
+            $format = $params['format'];
         } else {
-            throw new BadRequest();
+            $format = 'csv';
         }
 
-        $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
-        $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
-        if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $desc, $selectParams);
+        if (!in_array($format, $this->getMetadata()->get(['app', 'export', 'formatList']))) {
+            throw new Error('Not supported export format.');
         }
 
-        $collection = $this->getRepository()->find($selectParams);
+        $className = $this->getMetadata()->get(['app', 'export', 'exportFormatClassNameMap', $format]);
+        if (empty($className)) {
+            throw new Error();
+        }
+        $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
+
+        if (array_key_exists('collection', $params)) {
+            $collection = $params['collection'];
+        } else {
+            $selectManager = $this->getSelectManager($this->getEntityType());
+            if (array_key_exists('ids', $params)) {
+                $ids = $params['ids'];
+                $where = array(
+                    array(
+                        'type' => 'in',
+                        'field' => 'id',
+                        'value' => $ids
+                    )
+                );
+                $selectParams = $selectManager->getSelectParams(array('where' => $where), true, true);
+            } else if (array_key_exists('where', $params)) {
+                $where = $params['where'];
+
+                $p = array();
+                $p['where'] = $where;
+                if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                    foreach ($params['selectData'] as $k => $v) {
+                        $p[$k] = $v;
+                    }
+                }
+                $selectParams = $this->getSelectParams($p);
+            } else {
+                throw new BadRequest();
+            }
+
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'sortBy']);
+            $desc = !$this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'asc']);
+            if ($orderBy) {
+                $selectManager->applyOrder($orderBy, $desc, $selectParams);
+            }
+
+            $collection = $this->getRepository()->find($selectParams);
+        }
 
         $arr = array();
 
@@ -1318,34 +1341,54 @@ class Record extends \Espo\Core\Services\Base
         $attributeList = null;
         if (array_key_exists('attributeList', $params)) {
             $attributeList = [];
-            $entity = $this->getEntityManager()->getEntity($this->getEntityType());
+            $seed = $this->getEntityManager()->getEntity($this->getEntityType());
             foreach ($params['attributeList'] as $attribute) {
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
-                if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
+                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
         }
 
-        foreach ($collection as $entity) {
-            if (is_null($attributeList)) {
-                $attributeList = [];
-                foreach ($entity->getAttributes() as $attribute => $defs) {
-                    if (in_array($attribute, $attributeListToSkip)) {
-                        continue;
-                    }
-                    if ($this->checkAttributeIsAllowedForExport($entity, $attribute)) {
-                        $attributeList[] = $attribute;
-                    }
+        if (!array_key_exists('fieldList', $params)) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
+            $fieldList = array_keys($fieldDefs);
+            array_unshift($fieldList, 'id');
+        } else {
+            $fieldList = $params['fieldList'];
+        }
+
+        if (is_null($attributeList)) {
+            $attributeList = [];
+            $seed = $this->getEntityManager()->getEntity($this->entityType);
+            foreach ($seed->getAttributes() as $attribute => $defs) {
+                if (in_array($attribute, $attributeListToSkip)) {
+                    continue;
                 }
-                foreach ($this->exportAdditionalAttributeList as $attribute) {
+                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
+            foreach ($this->exportAdditionalAttributeList as $attribute) {
+                $attributeList[] = $attribute;
+            }
+        }
+
+        if (method_exists($exportObj, 'addAdditionalAttributes')) {
+            $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
+        }
+
+        foreach ($collection as $entity) {
+            if (is_null($attributeList)) {
+
+            }
 
             $this->loadAdditionalFieldsForExport($entity);
+            if (method_exists($exportObj, 'loadAdditionalFields')) {
+                $exportObj->loadAdditionalFields($entity, $fieldList);
+            }
             $row = array();
             foreach ($attributeList as $attribute) {
                 $value = $this->getAttributeFromEntityForExport($entity, $attribute);
@@ -1354,32 +1397,45 @@ class Record extends \Espo\Core\Services\Base
             $arr[] = $row;
         }
 
-        $delimiter = $this->getPreferences()->get('exportDelimiter');
-        if (empty($delimiter)) {
-            $delimiter = $this->getConfig()->get('exportDelimiter', ';');
+        if (is_null($attributeList)) {
+            $attributeList = [];
         }
 
-        $fp = fopen('php://temp', 'w');
-        fputcsv($fp, array_keys($arr[0]), $delimiter);
-        foreach ($arr as $row) {
-            fputcsv($fp, $row, $delimiter);
-        }
-        rewind($fp);
-        $csv = stream_get_contents($fp);
-        fclose($fp);
 
-        $fileName = "Export_{$this->entityType}.csv";
+        $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
+        $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
+
+        $fileName = null;
+        if (!empty($params['fileName'])) {
+            $fileName = trim($params['fileName']);
+        }
+
+        if (!empty($fileName)) {
+            $fileName = $fileName . '.' . $fileExtension;
+        } else {
+            $fileName = "Export_{$this->entityType}." . $fileExtension;
+        }
+
+        $exportParams = array(
+            'attributeList' => $attributeList,
+            'fileName ' => $fileName
+        );
+
+        $exportParams['fieldList'] = $fieldList;
+        if (array_key_exists('exportName', $params)) {
+            $exportParams['exportName'] = $params['exportName'];
+        }
+        $contents = $exportObj->process($this->entityType, $exportParams, $arr);
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
-        $attachment->set('type', 'text/csv');
+        $attachment->set('type', $mimeType);
 
         $this->getEntityManager()->saveEntity($attachment);
 
         if (!empty($attachment->id)) {
-            $this->getInjection('fileStorageManager')->putContents($attachment, $csv);
-            // TODO cron job to remove file
+            $this->getInjection('fileStorageManager')->putContents($attachment, $contents);
             return $attachment->id;
         }
         throw new Error();
@@ -1632,9 +1688,19 @@ class Record extends \Espo\Core\Services\Base
 
         $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], array());
 
+        $fieldManager = new \Espo\Core\Utils\FieldManagerUtil($this->getMetadata());
+
         foreach ($fields as $field => $item) {
             if (empty($item['type'])) continue;
             $type = $item['type'];
+
+            if (!empty($item['duplicateIgnore'])) {
+                $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
+                foreach ($attributeToIgnoreList as $attribute) {
+                    unset($attributes[$attribute]);
+                }
+                continue;
+            }
 
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);

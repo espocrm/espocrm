@@ -22,7 +22,8 @@
     "PortalRole": "Portal Rolle",
     "Attachment": "Anhang",
     "EmailFolder": "E-Mail Ordner",
-    "PortalUser": "Portal Benutzer"
+    "PortalUser": "Portal Benutzer",
+    "LastViewed": "Zuletzt Angezeigt"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -47,7 +48,8 @@
     "PortalRole": "Portal Rollen",
     "Attachment": "Anhänge",
     "EmailFolder": "E-Mail Ordner",
-    "PortalUser": "Portal Benutzer"
+    "PortalUser": "Portal Benutzer",
+    "LastViewed": "Zuletzt Angezeigt"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -539,6 +541,7 @@
       "endsWith": "Endet mit",
       "contains": "Enthält",
       "isEmpty": "Ist leer",
+      "notEquals": "Nicht gleich",
       "isNotEmpty": "Ist nicht leer"
     },
     "intSearchRanges": {

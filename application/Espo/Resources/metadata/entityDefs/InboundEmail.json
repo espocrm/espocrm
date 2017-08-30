@@ -38,7 +38,8 @@
         "monitoredFolders": {
             "type": "varchar",
             "default": "INBOX",
-            "view": "views/inbound-email/fields/folders"
+            "view": "views/inbound-email/fields/folders",
+            "tooltip": true
         },
         "fetchSince": {
             "type": "date",

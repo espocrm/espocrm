@@ -2,16 +2,16 @@
   "fields": {
     "name": "Назва",
     "status": "Статус",
-    "target": "Мета",
+    "target": "Ціль",
     "sentAt": "Дата відправки",
     "attemptCount": "Спроби",
-    "emailAddress": "Адреса електронної скриньки",
-    "massEmail": "Загальна електрона скринька",
+    "emailAddress": "Електронна адреса",
+    "massEmail": "Масова розсилка",
     "isTest": "Перевірка"
   },
   "links": {
-    "target": "Мета",
-    "massEmail": "Спільна електронна адреса"
+    "target": "Ціль",
+    "massEmail": "Масова розсилка"
   },
   "options": {
     "status": {

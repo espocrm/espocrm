@@ -1,6 +1,9 @@
 <div id="dashlet-{{id}}" class="panel panel-default dashlet{{#if isDoubleHeight}} double-height{{/if}}" data-name="{{name}}" data-id="{{id}}">
     <div class="panel-heading">
-        <div class="dropdown pull-right menu-container">
+        <div class="btn-group pull-right">
+            {{#each buttonList}}
+            <button type="button" class="btn btn-{{#if ../../style}}{{../../style}}{{else}}link{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}" data-action="{{name}}" title="{{#if title}}{{translate title}}{{/if}}">{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</button>
+            {{/each}}
             <button class="dropdown-toggle btn btn-link btn-sm menu-button" data-toggle="dropdown"><span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
               {{#each actionList}}

@@ -59,5 +59,30 @@
         "link": "calls",
         "activitiesCreate": true,
         "historyCreate": true
+    },
+    "dynamicLogic":{
+        "fields":{
+            "reminders": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type":"and",
+                            "value": [
+                                {
+                                    "type":"notEquals",
+                                    "attribute":"status",
+                                    "value":"Held"
+                                },
+                                {
+                                    "type":"notEquals",
+                                    "attribute":"status",
+                                    "value":"Not Held"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
     }
 }

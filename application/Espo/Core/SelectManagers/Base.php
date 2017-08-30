@@ -130,7 +130,7 @@ class Base
 
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
-            if ($type === 'link') {
+            if (in_array($type, ['link', 'file', 'image'])) {
                 $result['orderBy'] .= 'Name';
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
@@ -188,6 +188,8 @@ class Base
 
         $whereClause = array();
         foreach ($where as $item) {
+            if (!isset($item['type'])) continue;
+
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
                 foreach ($item['value'] as $filter) {
                     $p = $this->getBoolFilterWhere($filter);
@@ -210,6 +212,8 @@ class Base
 
         $additionalFilters = array();
         foreach ($where as $item) {
+            if (!isset($item['type'])) continue;
+
             $type = $item['type'];
             if (!in_array($type, $ignoreTypeList)) {
                 $part = $this->getWherePart($item, $result);
@@ -817,7 +821,7 @@ class Base
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-                $dt->modify('+1 day');
+                $dt->modify('+1 day -1 second');
                 $to = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
@@ -907,8 +911,7 @@ class Base
                 $dt = new \DateTime($value, new \DateTimeZone($timeZone));
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
-
-                $dt->modify('+1 day');
+                $dt->modify('+1 day -1 second');
                 $to = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
@@ -933,6 +936,7 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
+                    $dt->modify('-1 second');
                     $to = $dt->format($format);
 
                     $where['value'] = [$from, $to];
@@ -1002,6 +1006,9 @@ class Base
                 case 'like':
                     $part[$attribute . '*'] = $item['value'];
                     break;
+                case 'notLike':
+                    $part[$attribute . '!*'] = $item['value'];
+                    break;
                 case 'equals':
                 case 'on':
                     $part[$attribute . '='] = $item['value'];
@@ -1014,6 +1021,9 @@ class Base
                     break;
                 case 'contains':
                     $part[$attribute . '*'] = '%' . $item['value'] . '%';
+                    break;
+                case 'notContains':
+                    $part[$attribute . '!*'] = '%' . $item['value'] . '%';
                     break;
                 case 'notEquals':
                 case 'notOn':
@@ -1031,7 +1041,7 @@ class Base
                     $part[$attribute . '>='] = $item['value'];
                     break;
                 case 'lessThanOrEquals':
-                    $part[$attribute . '<'] = $item['value'];
+                    $part[$attribute . '<='] = $item['value'];
                     break;
                 case 'in':
                     $part[$attribute . '='] = $item['value'];
@@ -1162,16 +1172,49 @@ class Base
                         );
                     }
                     break;
+                case 'columnLike':
+                case 'columnIn':
+                case 'columnIsNull':
+                case 'columnNotIn':
+                    $link = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
+                    $column = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
+                    $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                    $this->setDistinct(true, $result);
+                    $this->addLeftJoin([$link, $alias], $result);
+                    $value = $item['value'];
+                    $columnKey = $alias . 'Middle.' . $column;
+                    if ($item['type'] === 'columnIn') {
+                        $part[$columnKey] = $value;
+                    } else if ($item['type'] === 'columnNotIn') {
+                        $part[$columnKey . '!='] = $value;
+                    } else if ($item['type'] === 'columnIsNull') {
+                        $part[$columnKey] = null;
+                    } else if ($item['type'] === 'columnIsNotNull') {
+                        $part[$columnKey . '!='] = null;
+                    } else if ($item['type'] === 'columnLike') {
+                        $part[$columnKey . '*'] = $value;
+                    } else if ($item['type'] === 'columnStartsWith') {
+                        $part[$columnKey . '*'] = $value . '%';
+                    } else if ($item['type'] === 'columnEndsWith') {
+                        $part[$columnKey . '*'] = '%' . $value;
+                    } else if ($item['type'] === 'columnContains') {
+                        $part[$columnKey . '*'] = '%' . $value . '%';
+                    } else if ($item['type'] === 'columnEquals') {
+                        $part[$columnKey . '='] = $value;
+                    } else if ($item['type'] === 'columnNotEquals') {
+                        $part[$columnKey . '!='] = $value;
+                    }
+                    break;
                 case 'isNotLinked':
                     if (!$result) break;
-                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));;
+                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id'] = null;
                     $this->setDistinct(true, $result);
                     $this->addLeftJoin([$attribute, $alias], $result);
                     break;
                 case 'isLinked':
                     if (!$result) break;
-                    $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));;
+                    $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id!='] = null;
                     $this->setDistinct(true, $result);
                     $this->addLeftJoin([$attribute, $alias], $result);

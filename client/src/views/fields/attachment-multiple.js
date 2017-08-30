@@ -340,6 +340,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                             attachment.set('type', file.type || 'text/plain');
                             attachment.set('role', 'Attachment');
                             attachment.set('size', file.size);
+                            attachment.set('parentType', this.model.name);
+
                             attachment.once('sync', function () {
                                 if (canceledList.indexOf(attachment.cid) === -1) {
                                     $att.trigger('ready');
@@ -437,7 +439,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
-                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name); + '</a></div>';
+                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
                     names.push(line);
                 }
                 var string = previews.join('') + names.join('');

@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Controllers;
 
@@ -34,17 +34,19 @@ use \Espo\Core\Exceptions\Error;
 class EmailTemplate extends \Espo\Core\Controllers\Record
 {
     public function actionParse($params, $data, $request)
-    {        
+    {
         $id = $request->get('id');
         $emailAddress = $request->get('emailAddress');
         if (empty($id)) {
             throw new Error();
         }
-        
+
         return $this->getRecordService()->parse($id, array(
             'emailAddress' => $request->get('emailAddress'),
             'parentType' => $request->get('parentType'),
             'parentId' => $request->get('parentId'),
+            'relatedType' => $request->get('relatedType'),
+            'relatedId' => $request->get('relatedId')
         ), true);
     }
 

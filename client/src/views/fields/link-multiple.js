@@ -264,6 +264,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.ids.splice(index, 1);
             }
             delete this.nameHash[id];
+            this.afterDeleteLink(id);
             this.trigger('change');
         },
 
@@ -272,9 +273,14 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.ids.push(id);
                 this.nameHash[id] = name;
                 this.addLinkHtml(id, name);
+                this.afterAddLink(id);
             }
             this.trigger('change');
         },
+
+        afterDeleteLink: function (id) {},
+
+        afterAddLink: function (id) {},
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();

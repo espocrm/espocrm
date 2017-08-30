@@ -579,6 +579,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             if ('primary' in searchData) {
                 this.primary = searchData.primary;
+                if (!this.presetName) {
+                    this.presetName = this.primary;
+                }
             }
 
             if (this.presetName) {
@@ -618,7 +621,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         fetch: function () {
-            (this.textFilter = this.$el.find('input[name="textFilter"]').val() || '').trim();
+            this.textFilter = (this.$el.find('input[name="textFilter"]').val() || '').trim();
 
             this.bool = {};
 

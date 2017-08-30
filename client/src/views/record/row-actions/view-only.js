@@ -37,7 +37,8 @@ Espo.define('views/record/row-actions/view-only', 'views/record/row-actions/defa
                     label: 'View',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    link: '#' + this.model.name + '/view/' + this.model.id
                 }
             ];
         }

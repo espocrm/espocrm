@@ -2,6 +2,6 @@
   "fields": {
     "status": "Статус",
     "executionTime": "Час виконання",
-    "target": "Мета"
+    "target": "Ціль"
   }
 }

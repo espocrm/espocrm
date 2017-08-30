@@ -78,7 +78,7 @@
         },
         "assignedUser": {
             "type": "link",
-            "readOnly": true
+            "required": true
         },
         "useSmtp": {
             "type": "bool"

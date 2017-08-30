@@ -310,6 +310,7 @@ class EmailAccount extends Record
 
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
                         if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
+                            unset($flags[Storage::FLAG_RECENT]);
                             $storage->setFlags($id, $flags);
                         }
                     }

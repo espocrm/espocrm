@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "De",
+    "to": "Para",
+    "subject": "Asunto",
+    "bodyContains": "Contenido del Cuerpo",
+    "action": "Acción",
+    "isGlobal": "Es Global",
+    "emailFolder": "Carpeta"
+  },
+  "labels": {
+    "Create EmailFilter": "Crear un Filtro de Correo",
+    "Emails": "Correos"
+  },
+  "tooltips": {
+    "from": "Los correos enviados desde la dirección especificada. Dejar en blanco si no es necesario.",
+    "to": "Los correos electrónicos que se envían a la dirección especificada. Dejar en blanco si no es necesario.",
+    "name": "Indique un nombre descriptivo del filtro.",
+    "subject": "Use el comodín *:\n\ntexto*  - inicia con 'texto',\n*texto* - contiene 'texto',\n*texto  - termina en 'text'.",
+    "bodyContains": "El cuerpo del correo contiene alguna de la palabras o frases especificadas.",
+    "isGlobal": "Aplicar este filtro a todos los correos entrantes del sistema."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorar",
+      "Move to Folder": "Carpeta"
+    }
+  }
+}

@@ -251,15 +251,10 @@ class Converter
                     case 'manyMany':
                         $tableName = $relationParams['relationName'];
 
-                        //check for duplication tables
+                        //check for duplicate tables
                         if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
                             $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
                         }
-                        break;
-
-                    case 'belongsTo':
-                        $columnName = Util::toUnderScore($relationParams['key']);
-                        $tables[$entityName]->addIndex(array($columnName));
                         break;
                 }
             }
@@ -440,13 +435,13 @@ class Converter
 
             $dependentEntities[] = $entityName;
 
-            foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
-
-                if (isset($relationParams['entity'])) {
-                    $relationEntity = $relationParams['entity'];
-
-                    if (!in_array($relationEntity, $dependentEntities)) {
-                        $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+            if (array_key_exists('relations', $ormMeta[$entityName])) {
+                foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
+                    if (isset($relationParams['entity'])) {
+                        $relationEntity = $relationParams['entity'];
+                        if (!in_array($relationEntity, $dependentEntities)) {
+                            $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+                        }
                     }
                 }
             }

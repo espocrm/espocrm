@@ -1,5 +1,8 @@
 {
   "links": {
     "targetLists": "Hedef Listeler"
+  },
+  "fields": {
+    "acceptanceStatus": "Kabul Durumu"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "Adresa za naplatu",
+    "shippingAddress": "Adresa za dostavu",
+    "website": "Sajt"
+  },
+  "links": {
+    "meetings": "Ročišta",
+    "calls": "Pozivi",
+    "tasks": "Zadaci"
+  },
+  "labels": {
+    "Create {entityType}": "Napravi {entityTypeTranslated}"
+  }
+}

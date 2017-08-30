@@ -4,8 +4,8 @@
   },
   "labels": {
     "Access": "Доступ",
-    "Create PortalRole": "Створення ролі порталу",
-    "Scope Level": "Scope Level",
-    "Field Level": "Рівень поля"
+    "Create PortalRole": "Створити Роль порталу",
+    "Scope Level": "Область застосування Рівень",
+    "Field Level": "Field Level"
   }
 }

@@ -20,19 +20,19 @@
     "exportDelimiter": "Експортувати роздільник даних",
     "autoFollowEntityTypeList": "Авто-підписка",
     "signature": "Підпис емейла",
-    "dashboardTabList": "Tab List",
-    "tabList": "Tab List",
+    "dashboardTabList": "Список меню",
+    "tabList": "Список меню",
     "defaultReminders": "Default Reminders",
     "theme": "Тема",
-    "useCustomTabList": "Custom Tab List",
-    "emailReplyToAllByDefault": "Email Reply to All by Default",
+    "useCustomTabList": "Власний список меню",
+    "emailReplyToAllByDefault": "Емайл Відповісти Все за замовчуванням",
     "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
-    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
-    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
-    "dashboardLayout": "Dashboard Layout",
-    "emailReplyForceHtml": "Email Reply in HTML",
-    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
-    "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
+    "receiveMentionEmailNotifications": "Сповіщення по електронні пошті про згадування в повідомленнях",
+    "receiveStreamEmailNotifications": "Сповіщення по електронні пошті про повідомлення та оновлення статусу",
+    "dashboardLayout": "Макет панелі дашлетів",
+    "emailReplyForceHtml": "Відправити відповідь в HTML",
+    "doNotFillAssignedUserIfNotRequired": "Не назначати користувача, якщо це не обов’язково",
+    "followEntityOnStreamPost": "Автоматично підписатись після публікації в потоці"
   },
   "options": {
     "weekStart": {
@@ -43,7 +43,7 @@
   "labels": {
     "Notifications": "Оповіщення",
     "User Interface": "Інтерфейс користувача",
-    "SMTP": "SMTP",
+    "SMTP": "\n SMTP",
     "Misc": "Різне",
     "Locale": "Місце дії"
   },

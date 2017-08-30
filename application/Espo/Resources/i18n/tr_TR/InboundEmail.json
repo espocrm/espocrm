@@ -32,7 +32,8 @@
     "assignToUser": "Kullanıcı dosyaları atanacak.",
     "team": "Takım dosyaları atanacak.",
     "teams": "Ekiplerin e-postaları atanacak.",
-    "addAllTeamUsers": "E-postalar, belirtilen ekiplerin tüm kullanıcılarının Gelen Kutusunda görünecek."
+    "addAllTeamUsers": "E-postalar, belirtilen ekiplerin tüm kullanıcılarının Gelen Kutusunda görünecek.",
+    "targetUserPosition": "Dosyalar belli pozisyonlarda ki kullanıcılar arasında dağıtılır."
   },
   "links": {
     "filters": "Filtreler",

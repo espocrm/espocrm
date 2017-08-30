@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "Ime",
+    "description": "Opis",
+    "status": "Status",
+    "type": "Tip",
+    "startDate": "Datum početka",
+    "endDate": "Krajnji datum",
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "sentCount": "Poslato",
+    "openedCount": "Otvoren",
+    "clickedCount": "Kliknuto",
+    "optedOutCount": "Ne želi",
+    "bouncedCount": "bounced",
+    "hardBouncedCount": "hard Bounced",
+    "softBouncedCount": "soft Bounced",
+    "leadCreatedCount": "Kreiran izvor",
+    "revenue": "Prihod",
+    "revenueConverted": "Prihod (konvertovan)",
+    "budget": "Budžet",
+    "budgetConverted": "Budžet (konvertovan)"
+  },
+  "links": {
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "accounts": "Pravna lica",
+    "contacts": "Kontakti",
+    "leads": "Izvori",
+    "opportunities": "Prilike",
+    "campaignLogRecords": "Dnevnik",
+    "massEmails": "Masovna e-pošta",
+    "trackingUrls": "Praćenje URL-ova"
+  },
+  "options": {
+    "type": {
+      "Email": "E-pošta",
+      "Web": "Web",
+      "Television": "Televizija",
+      "Radio": "Radio",
+      "Newsletter": "Bilten",
+      "Mail": "Pošta"
+    },
+    "status": {
+      "Planning": "Planiranje",
+      "Active": "Aktivna",
+      "Inactive": "Neaktivna",
+      "Complete": "Gotova"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Napravite kampanju",
+    "Target Lists": "Liste meta",
+    "Statistics": "Statistika",
+    "hard": "tvrd",
+    "soft": "mek",
+    "Unsubscribe": "Odjavi se",
+    "Mass Emails": "Masovna e-pošta",
+    "Email Templates": "Šabloni e-pošte",
+    "Unsubscribe again": "Ponovo se odjavite",
+    "Subscribe again": "Ponovo se prijavite",
+    "Create Target List": "Napravite listu meta"
+  },
+  "presetFilters": {
+    "active": "Aktivne"
+  },
+  "messages": {
+    "unsubscribed": "Vi ste se odjavili sa naše liste.",
+    "subscribedAgain": "Vi se ponovo pretplaćeni."
+  },
+  "tooltips": {
+    "targetLists": "Mete koji treba da primaju poruke.",
+    "excludingTargetLists": "Mete koje ne bi trebalo da primaju poruke."
+  }
+}

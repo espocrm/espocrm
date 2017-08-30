@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Przekształcony w ",
     "Create Lead": "Utwórz potencjalny kontakt",
-    "Convert": "Przekształć"
+    "Convert": "Przekształć",
+    "convert": "przekształć"
   },
   "fields": {
     "name": "Nazwa",

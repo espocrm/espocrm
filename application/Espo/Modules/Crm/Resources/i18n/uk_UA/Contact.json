@@ -16,19 +16,20 @@
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
     "portalUser": "Користувач порталів",
-    "originalLead": "Original Lead"
+    "originalLead": "Початковий Лід",
+    "acceptanceStatus": "Ухвалення статусу"
   },
   "links": {
     "opportunities": "Угоди",
     "cases": "Звернення",
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Журнал кампанія",
+    "campaignLogRecords": "Лоґ кампанії",
     "campaign": "Кампанія",
-    "account": "Обліковий запис (основний)",
-    "accounts": "Облікові записи",
-    "casesPrimary": "Випадки (Основні)",
-    "portalUser": "Користувач порталів",
-    "originalLead": "Original Lead",
+    "account": "Контрагент (основний)",
+    "accounts": "Контрагенти",
+    "casesPrimary": "Звернення (Основні)",
+    "portalUser": "Користувач порталу",
+    "originalLead": "Початковий Лід",
     "documents": "Документи"
   },
   "labels": {
@@ -38,12 +39,12 @@
     "opportunityRole": {
       "": "--Немає--",
       "Decision Maker": "Приймає рішення",
-      "Evaluator": "Оцінювач",
+      "Evaluator": "Оцінює",
       "Influencer": "Впливає"
     }
   },
   "presetFilters": {
     "portalUsers": "Користувачі порталів",
-    "notPortalUsers": "Not Portal Users"
+    "notPortalUsers": "Не користувачів порталу"
   }
 }

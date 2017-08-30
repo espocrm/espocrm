@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Converti en",
     "Create Lead": "Créer un prospect",
-    "Convert": "Convertir"
+    "Convert": "Convertir",
+    "convert": "convert"
   },
   "fields": {
     "name": "Nom",
@@ -26,7 +27,9 @@
     "targetList": "Liste de cibles",
     "industry": "Industry",
     "acceptanceStatus": "Acceptance Status",
-    "opportunityAmountCurrency": "Opportunity Amount Currency"
+    "opportunityAmountCurrency": "Opportunity Amount Currency",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
   },
   "links": {
     "targetLists": "Listes de cibles",

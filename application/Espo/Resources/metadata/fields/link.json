@@ -12,6 +12,11 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name":"default",
+         "type":"link",
+         "view": "views/admin/field-manager/fields/link/default"
       }
    ],
    "actualFields":[

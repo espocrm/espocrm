@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "account": "Cuenta",
+    "stage": "Etapa",
+    "amount": "Cantidad",
+    "probability": "Probabilidad, %",
+    "leadSource": "Orígen de la Referencia",
+    "doNotCall": "No Llamar",
+    "closeDate": "Fecha de cierre",
+    "contacts": "Contactos",
+    "description": "Descripción",
+    "amountConverted": "Cantidad (convertido)",
+    "amountWeightedConverted": "Cantidad Ponderada",
+    "campaign": "Campaña",
+    "originalLead": "Referencia original",
+    "amountCurrency": "Importe en Moneda",
+    "contactRole": "Contact Role"
+  },
+  "links": {
+    "contacts": "Contactos",
+    "documents": "Documentos",
+    "campaign": "Campaña",
+    "originalLead": "Referencia original"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospección",
+      "Qualification": "Calificación",
+      "Needs Analysis": "Análisis de Necesidades",
+      "Value Proposition": "Propuesta de Valor",
+      "Id. Decision Makers": "Id. Tomadores de Decisiones",
+      "Perception Analysis": "Análisis de la Percepción",
+      "Proposal/Price Quote": "Cotización con Propuesta/Precio",
+      "Negotiation/Review": "Negociación/Revisión",
+      "Closed Won": "Cerrado Ganado",
+      "Closed Lost": "Cerrado Perdido"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Crear Oportunidad"
+  },
+  "presetFilters": {
+    "open": "Abiertos",
+    "won": "Ganados",
+    "lost": "Perdido"
+  }
+}

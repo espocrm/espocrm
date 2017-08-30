@@ -25,35 +25,42 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
+
+$config = $installer->getConfig();
 
 $fields = array(
 	'dateFormat' =>array (
-		'default' => (isset($settingsDefaults['dateFormat']['default'])) ? $settingsDefaults['dateFormat']['default'] : '',
-		),
+		'default' => $config->get('dateFormat', ''),
+	),
 	'timeFormat' => array(
-		'default'=> (isset($settingsDefaults['timeFormat']['default'])) ? $settingsDefaults['timeFormat']['default'] : ''),
-	'timeZone' => array(),
-	'weekStart' => array((isset($settingsDefaults['weekStart']['default'])) ? $settingsDefaults['weekStart']['default'] : ''),
+		'default'=> $config->get('timeFormat', ''),
+	),
+	'timeZone' => array(
+		'default'=> $config->get('timeZone', 'UTC'),
+	),
+	'weekStart' => array(
+		'default'=> $config->get('weekStart', 0),
+	),
 	'defaultCurrency' => array(
-		'default' => (isset($settingsDefaults['defaultCurrency']['default'])) ? $settingsDefaults['defaultCurrency']['default'] : ''),
+		'default' => $config->get('defaultCurrency', 'USD'),
+	),
 	'thousandSeparator' => array(
-		'default' => ',',
+		'default' => $config->get('thousandSeparator', ','),
 	),
 	'decimalMark' =>array(
-		'default' => '.',
+		'default' => $config->get('decimalMark', '.'),
 	),
 	'language' => array(
-		'default'=> (!empty($_SESSION['install']['user-lang'])) ? $_SESSION['install']['user-lang'] : 'en_US'
+		'default'=> (!empty($_SESSION['install']['user-lang'])) ? $_SESSION['install']['user-lang'] : $config->get('language', 'en_US'),
 	),
 );
 
 foreach ($fields as $fieldName => $field) {
 	if (isset($_SESSION['install'][$fieldName])) {
 		$fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
-	}
-	else {
-		$fields[$fieldName]['value'] = (isset($fields[$fieldName]['default']))? $fields[$fieldName]['default'] : '';
+	} else {
+		$fields[$fieldName]['value'] = isset($field['default']) ? $field['default'] : '';
 	}
 }
 

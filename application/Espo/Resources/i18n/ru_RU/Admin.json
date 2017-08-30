@@ -53,7 +53,9 @@
     "Notifications": "Оповещения",
     "Jobs": "Задания",
     "Reset to Default": "Восстановить умолчания",
-    "Email Filters": "Фильтры эл. почты"
+    "Email Filters": "Фильтры эл. почты",
+    "Portal Users": "Пользователи портала",
+    "Action History": "Action History"
   },
   "layouts": {
     "list": "Список",
@@ -62,7 +64,11 @@
     "detailSmall": "Детализация (сжатая)",
     "filters": "Фильтры поиска",
     "massUpdate": "Массовое обновление",
-    "relationships": "Отношения"
+    "relationships": "Отношения",
+    "sidePanelsDetail": "Side Panels (Detail)",
+    "sidePanelsEdit": "Side Panels (Edit)",
+    "sidePanelsDetailSmall": "Side Panels (Detail Small)",
+    "sidePanelsEditSmall": "Side Panels (Edit Small)"
   },
   "fieldTypes": {
     "address": "Address",
@@ -70,7 +76,7 @@
     "foreign": "Foreign",
     "duration": "Duration",
     "password": "Password",
-    "parsonName": "Person Name",
+    "personName": "Person Name",
     "autoincrement": "Auto-increment",
     "bool": "Boolean",
     "currency": "Currency",
@@ -99,7 +105,9 @@
     "rangeFloat": "Range Float",
     "rangeCurrency": "Range Currency",
     "wysiwyg": "Wysiwyg",
-    "map": "Map"
+    "map": "Map",
+    "currencyConverted": "Валюта (сконвертированная)",
+    "number": "Номер"
   },
   "fields": {
     "type": "Тип",
@@ -130,14 +138,20 @@
     "typeList": "Список типов",
     "rows": "Количество строк в текстовом поле",
     "lengthOfCut": "Length of cut",
-    "sourceList": "Source List"
+    "sourceList": "Source List",
+    "tooltipText": "Tooltip Text",
+    "prefix": "Префикс",
+    "nextNumber": "Следующий номер",
+    "padLength": "Pad Length",
+    "disableFormatting": "Отключить форматирование",
+    "dynamicLogicVisible": "Conditions making field visible",
+    "dynamicLogicReadOnly": "Conditions making field read-only",
+    "dynamicLogicRequired": "Conditions making field required",
+    "dynamicLogicOptions": "Conditional options",
+    "probabilityMap": "Stage Probabilities (%)",
+    "readOnly": "Read-only"
   },
   "messages": {
-    "upgradeVersion": "EspoCRM будет обновлен до версии <strong>{version}</strong>. Это может занять некоторое время.",
-    "upgradeDone": "EspoCRM был обновлен до версии <strong>{version}</strong>. Обновите окно браузера.",
-    "upgradeBackup": "Мы рекомендуем перед обновлением сделать резервную копию ваших EspoCRM файлов и данных.",
-    "thousandSeparatorEqualsDecimalMark": "Разделитель групп разрядов не может быть таким же как и десятичный разделитель",
-    "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
     "selectEntityType": "Выберите тип объекта в левом меню.",
     "selectUpgradePackage": "Выберите пакет обновления",
     "downloadUpgradePackage": "Загрузить пакеты обновлений можно <a href=\"{url}\">здесь</a>.",
@@ -145,7 +159,12 @@
     "selectExtensionPackage": "Выберите пакет расширения",
     "extensionInstalled": "Расширение {name} {version} было установлено.",
     "installExtension": "Расширение {name} {version} готово к установке.",
-    "uninstallConfirmation": "Вы действительно хотите удалить это расширение?"
+    "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
+    "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+    "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
+    "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
+    "userHasNoEmailAddress": "User has no email address.",
+    "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
   },
   "descriptions": {
     "settings": "Системные настройки.",
@@ -164,7 +183,6 @@
     "emailTemplates": "Шаблоны исходящих эл. писем.",
     "import": "Импортирование данных из CSV файла.",
     "layoutManager": "Редактирование макетов (списки, детализации, редактирование, поиск, массовое обновление).",
-    "entityManager": "Создание новых объектов, редактирование существующих. Управление полями и отношениями.",
     "userInterface": "Настройки пользовательского интерфейса.",
     "authTokens": "Активные сессии аутентификации. IP-адрес и дата последнего подключения.",
     "authentication": "Настройки аутентификации.",
@@ -173,7 +191,10 @@
     "integrations": "Интеграция со сторонними сервисами.",
     "notifications": "Настройка оповещений (в приложении и по эл. почте).",
     "inboundEmails": "Настройки для входящих сообщений эл. почты.",
-    "emailFilters": "Соответствующие указанному фильтру эл. письма не будут импортированы."
+    "portalUsers": "Users of portal.",
+    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
+    "emailFilters": "Email messages that match the specified filter won't be imported.",
+    "actionHistory": "Log of user actions."
   },
   "options": {
     "previewSize": {
@@ -182,5 +203,10 @@
       "medium": "Средний",
       "large": "Большой"
     }
+  },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
   }
 }

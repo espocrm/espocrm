@@ -35,7 +35,8 @@
     "CampaignTrackingUrl": "Целевой URL-адрес",
     "Activities": "Действия",
     "KnowledgeBaseArticle": "Статья базы знаний",
-    "KnowledgeBaseCategory": "Категория базы знаний"
+    "KnowledgeBaseCategory": "Категория базы знаний",
+    "CampaignLogRecord": "Campaign Log Record"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенты",
@@ -57,7 +58,8 @@
     "CampaignTrackingUrl": "Целевые URL-адреса",
     "Activities": "Действия",
     "KnowledgeBaseArticle": "Статьи базы знаний",
-    "KnowledgeBaseCategory": "Категории базы знаний"
+    "KnowledgeBaseCategory": "Категории базы знаний",
+    "CampaignLogRecord": "Campaign Log Records"
   },
   "dashlets": {
     "Leads": "Мои кандидаты",
@@ -104,7 +106,8 @@
     "shippingAddressStreet": "Улица доставки",
     "shippingAddressCountry": "Страна доставки",
     "shippingAddressState": "Регион доставки",
-    "shippingAddressPostalCode": "Индекс доставки"
+    "shippingAddressPostalCode": "Индекс доставки",
+    "shippingAddressMap": "Карта (доставка)"
   },
   "options": {
     "reminderTypes": {

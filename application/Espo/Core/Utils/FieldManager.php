@@ -99,8 +99,16 @@ class FieldManager
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
         }
+        if ($this->getMetadata()->get(['entityDefs', $scope, 'links', $name])) {
+            throw new Conflict('Link with name ['.$name.'] exists in '.$scope);
+        }
         if (in_array($name, $this->forbiddenFieldNameList)) {
             throw new Conflict('Field ['.$name.'] is not allowed');
+        }
+
+        $firstLatter = $name[0];
+        if (is_numeric($firstLatter)) {
+            throw new Conflict('Field name should begin with a letter');
         }
 
         return $this->update($scope, $name, $fieldDefs, true);
@@ -127,7 +135,7 @@ class FieldManager
 
         $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
-        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs);
+        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
 
         if ($this->getMetadata()->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {

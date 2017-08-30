@@ -93,6 +93,24 @@ class Container
         return $className;
     }
 
+    protected function loadContainer()
+    {
+        return $this;
+    }
+
+    protected function loadSlim()
+    {
+        return new \Espo\Core\Utils\Api\Slim();
+    }
+
+    protected function loadFileStorageManager()
+    {
+        return new \Espo\Core\FileStorage\Manager(
+            $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
+            $this
+        );
+    }
+
     protected function loadLog()
     {
         $config = $this->get('config');
@@ -116,24 +134,6 @@ class Container
         $errorHandler->registerErrorHandler(array(), false);
 
         return $log;
-    }
-
-    protected function loadContainer()
-    {
-        return $this;
-    }
-
-    protected function loadSlim()
-    {
-        return new \Espo\Core\Utils\Api\Slim();
-    }
-
-    protected function loadFileStorageManager()
-    {
-        return new \Espo\Core\FileStorage\Manager(
-            $this->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']),
-            $this
-        );
     }
 
     protected function loadFileManager()
@@ -332,6 +332,13 @@ class Container
             $this->get('metadata'),
             $this->get('language'),
             $this
+        );
+    }
+
+    protected function loadFieldManagerUtil()
+    {
+        return new \Espo\Core\Utils\FieldManagerUtil(
+            $this->get('metadata')
         );
     }
 

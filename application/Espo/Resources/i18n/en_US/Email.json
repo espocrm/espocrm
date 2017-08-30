@@ -34,13 +34,17 @@
         "folder": "Folder",
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
-        "hasAttachment": "Has Attachment"
+        "hasAttachment": "Has Attachment",
+        "assignedUsers": "Assigned Users",
+        "sentBy": "Sent By"
     },
     "links": {
         "replied": "Replied",
         "replies": "Replies",
         "inboundEmails": "Group Accounts",
-        "emailAccounts": "Personal Accounts"
+        "emailAccounts": "Personal Accounts",
+        "assignedUsers": "Assigned Users",
+        "sentBy": "Sent By"
     },
     "options": {
         "status": {

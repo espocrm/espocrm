@@ -49,6 +49,17 @@ abstract class Injectable implements \Espo\Core\Interfaces\Injectable
     {
     }
 
+    public function __call($methodName, $args)
+    {
+        if (strpos($methodName, 'get') === 0) {
+            $injectionName = lcfirst(substr($methodName, 3));
+            if (in_array($injectionName, $this->dependencyList)) {
+                return $this->getInjection($injectionName);
+            }
+        }
+        throw new \BadMethodCallException('Method ' . $methodName . ' does not exist');
+    }
+
     protected function getInjection($name)
     {
         return $this->injections[$name];

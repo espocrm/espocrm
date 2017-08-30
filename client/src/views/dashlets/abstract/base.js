@@ -103,6 +103,7 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             }
 
             this.actionList = Espo.Utils.clone(this.actionList);
+            this.buttonList = Espo.Utils.clone(this.buttonList);
 
             if (this.options.readOnly) {
                 this.actionList = this.actionList.filter(function(item) {
@@ -114,6 +115,7 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             }
 
             this.setupActionList();
+            this.setupButtonList();
         },
 
         actionList: [
@@ -134,9 +136,13 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             }
         ],
 
+        buttonList: [],
+
         setupDefaultOptions: function () {},
 
         setupActionList: function () {},
+
+        setupButtonList: function () {},
 
         getOption: function (key) {
             return this.optionsData[key];

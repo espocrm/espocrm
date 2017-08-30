@@ -4,21 +4,21 @@
     "to": "До",
     "subject": "Об'єкт",
     "bodyContains": "Тіло містить",
-    "action": "Action",
-    "isGlobal": "Is Global",
+    "action": "Дія",
+    "isGlobal": "Глобальний",
     "emailFolder": "Папка"
   },
   "labels": {
     "Create EmailFilter": "Створення фільтра електронної пошти",
-    "Emails": "Emails"
+    "Emails": "Електронні адреси"
   },
   "tooltips": {
     "from": "Листи надсилаються із визначеної адреси. Залиште порожнім якщо не потрібно. Можете скористатися шаблоном *.",
     "to": "Листи надсилаються із визначеної адреси. Залиште порожнім якщо не потрібно. Можете скористатися шаблоном *.",
-    "name": "Give the filter a descriptive name.",
-    "subject": "Use a wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
-    "bodyContains": "Body of the email contains any of the specified words or phrases.",
-    "isGlobal": "Applies this filter to all emails incoming to system."
+    "name": "Дайти фільтру описову назву.",
+    "subject": "Використовуйте підстановочні *:\n\nТекст* - починається з текстом,\n*Текст* - містить текст,\n*Текст - закінчується з текстом.",
+    "bodyContains": "Тіло листа містить будь-яке з вказаних слів або фраз.",
+    "isGlobal": "Цей фільтр застосовується для всіх електронних листів, що надходять в систему."
   },
   "options": {
     "action": {

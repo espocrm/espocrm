@@ -12,19 +12,19 @@
     "emailAddress": "Поштова скринька",
     "sentFolder": "Папка відправлені",
     "storeSentEmails": "Історія відправлених повідомлень",
-    "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
+    "keepFetchedEmailsUnread": "Залишати завантажені повідомлення електронної пошти непрочитаними",
     "emailFolder": "Покласти в папку",
-    "useSmtp": "Use SMTP",
-    "smtpHost": "SMTP Host",
-    "smtpPort": "SMTP Port",
-    "smtpAuth": "SMTP Auth",
-    "smtpSecurity": "SMTP Security",
-    "smtpUsername": "SMTP Username",
-    "smtpPassword": "SMTP Password"
+    "useSmtp": "Використати SMTP",
+    "smtpHost": "SMTP Хост",
+    "smtpPort": "SMTP Порт",
+    "smtpAuth": "SMTP Аутентифікація",
+    "smtpSecurity": "SMTP Безпека",
+    "smtpUsername": "SMTP Ім'я користувача",
+    "smtpPassword": "SMTP Пароль"
   },
   "links": {
     "filters": "Фільтри",
-    "emails": "Електронні адреси"
+    "emails": "Електронні листи"
   },
   "options": {
     "status": {
@@ -46,6 +46,6 @@
   },
   "tooltips": {
     "monitoredFolders": "You can add 'Sent' folder to sync emails sent from external email client.",
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should much the address emails will be sent from."
+    "storeSentEmails": "Відправлені повідомлення будуть зберігатися на сервері IMAP. В полі «Адреса електронної пошти» має бути відправлена велика кількість адресних листів."
   }
 }

@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "已转换为",
     "Create Lead": "创建线索",
-    "Convert": "转换"
+    "Convert": "转换",
+    "convert": "转换"
   },
   "fields": {
     "name": "名称",
