@@ -68,10 +68,7 @@
         }
     },
     "tooltips": {
-        "recordsPerPageSmall": "Aantal records in relatie kaders.",
-        "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
-        "followCreatedEntities": "Users will automatically follow records they created.",
-        "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped."
+        "recordsPerPageSmall": "Aantal records in relatie kaders."
     },
     "labels": {
         "System": "Systeem",
