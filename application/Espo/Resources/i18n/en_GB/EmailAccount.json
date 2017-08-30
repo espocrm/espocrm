@@ -45,6 +45,6 @@
     "connectionIsOk": "Connection is Ok"
   },
   "tooltips": {
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should much the address emails will be sent from."
+    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
   }
 }
