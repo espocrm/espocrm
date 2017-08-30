@@ -69,7 +69,7 @@
     },
     "tooltips": {
         "recordsPerPageSmall": "Aantal records in relatie kaders.",
-        "outboundEmailIsShared": "Allow users to sent emails via this SMTP.",
+        "outboundEmailIsShared": "Allow users to send emails from this address.",
         "followCreatedEntities": "Users will automatically follow records they created.",
         "emailMessageMaxSize": "All inbound emails exceeding a specified size will be skipped."
     },
