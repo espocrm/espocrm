@@ -1067,6 +1067,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if ('customCode' in cellDefs) {
                             cell.customCode = cellDefs.customCode;
                         }
+                        if ('noLabel' in cellDefs) {
+                            cell.noLabel = cellDefs.noLabel;
+                        }
 
                         row.push(cell);
                     }
