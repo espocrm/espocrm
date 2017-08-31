@@ -1142,17 +1142,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 model: this.model,
                 scope: this.scope,
                 el: el + ' .bottom',
-                notToRender: true,
                 readOnly: this.readOnly,
                 type: this.type,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
-            }, function (view) {
-                if (this.isRendered()) {
-                    view.render();
-                }
-            }, this, false);
+            });
         },
 
         build: function (callback) {
@@ -1165,9 +1160,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (!this.bottomDisabled && this.bottomView) {
-                this.once('after:render', function () {
-                    this.createBottomView();
-                }, this);
+                this.createBottomView();
             }
         },
 
