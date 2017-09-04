@@ -393,6 +393,9 @@ class Parser
     {
         $functionContent = trim($functionContent);
 
+        $isString = false;
+        $isSingleQuote = false;
+
         if ($functionContent === '') {
             return [];
         }
@@ -400,13 +403,35 @@ class Parser
         $commaIndexList = [];
         $braceCounter = 0;
         for ($i = 0; $i < strlen($functionContent); $i++) {
-            if ($functionContent[$i] === '(') {
-                $braceCounter++;
-            } else if ($functionContent[$i] === ')') {
-                $braceCounter--;
+            if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+                if (!$isString) {
+                    $isString = true;
+                    $isSingleQuote = true;
+                } else {
+                    if ($isSingleQuote) {
+                        $isString = false;
+                    }
+                }
+            } else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+                if (!$isString) {
+                    $isString = true;
+                    $isSingleQuote = false;
+                } else {
+                    if (!$isSingleQuote) {
+                        $isString = false;
+                    }
+                }
             }
 
-            if ($braceCounter === 0 && $functionContent[$i] === ',') {
+            if (!$isString) {
+                if ($functionContent[$i] === '(') {
+                    $braceCounter++;
+                } else if ($functionContent[$i] === ')') {
+                    $braceCounter--;
+                }
+            }
+
+            if ($braceCounter === 0 && !$isString && $functionContent[$i] === ',') {
                 $commaIndexList[] = $i;
             }
         }

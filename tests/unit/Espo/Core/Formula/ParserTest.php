@@ -725,4 +725,62 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         return $result;
     }
+
+    function testCommaInString()
+    {
+        $expression = "
+            string\concatenate(
+                lastName, ', ', firstName
+            )
+        ";
+        $actual = $this->parser->parse($expression);
+
+        $expected = (object) [
+            'type' => 'string\concatenate',
+            'value' => [
+                (object) [
+                    'type' => 'attribute',
+                    'value' => 'lastName'
+                ],
+                (object) [
+                    'type' => 'value',
+                    'value' => ', '
+                ],
+                (object) [
+                    'type' => 'attribute',
+                    'value' => 'firstName'
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testBracesInString()
+    {
+        $expression = "
+            string\concatenate(
+                lastName, '(,)(\"test\")', firstName
+            )
+        ";
+        $actual = $this->parser->parse($expression);
+
+        $expected = (object) [
+            'type' => 'string\concatenate',
+            'value' => [
+                (object) [
+                    'type' => 'attribute',
+                    'value' => 'lastName'
+                ],
+                (object) [
+                    'type' => 'value',
+                    'value' => '(,)("test")'
+                ],
+                (object) [
+                    'type' => 'attribute',
+                    'value' => 'firstName'
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $actual);
+    }
 }
