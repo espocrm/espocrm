@@ -78,6 +78,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.model.get(this.name) !== null
                 &&
                 this.model.get(this.name) !== ''
+                &&
+                this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }

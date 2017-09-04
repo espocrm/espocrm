@@ -637,6 +637,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.model.set(this.attributes);
                 }
                 this.setIsNotChanged();
+                $(window).off('scroll.detail-' + this.numId);
             }, this);
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
@@ -1066,6 +1067,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                         if ('customCode' in cellDefs) {
                             cell.customCode = cellDefs.customCode;
+                        }
+                        if ('noLabel' in cellDefs) {
+                            cell.noLabel = cellDefs.noLabel;
                         }
 
                         row.push(cell);
