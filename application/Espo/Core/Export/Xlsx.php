@@ -386,6 +386,10 @@ class Xlsx extends \Espo\Core\Injectable
             $rowNumber++;
         }
 
+        $sheet->getStyle("A2:A$rowNumber")
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+
         $startingRowNumber = 4;
 
         foreach ($fieldList as $i => $name) {
@@ -393,42 +397,37 @@ class Xlsx extends \Espo\Core\Injectable
 
             $type = $typesCache[$name];
 
-            if ($col == 'A') {
-                $sheet->getStyle("A2:A$rowNumber")
-                    ->getNumberFormat()
-                    ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
-            } else {
-                switch($type) {
-                    case 'currency':
-                    case 'currencyConverted': {
 
-                    } break;
-                    case 'int': {
-                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode('0');
-                    } break;
-                    case 'date': {
-                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode($this->getInjection('dateTime')->getDateFormat());
-                    } break;
-                    case 'datetime': {
-                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
-                    } break;
-                    case 'datetimeOptional': {
-                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
-                    } break;
-                    default: {
-                        $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
-                            ->getNumberFormat()
-                            ->setFormatCode('@');
-                    } break;
-                }
+            switch($type) {
+                case 'currency':
+                case 'currencyConverted': {
+
+                } break;
+                case 'int': {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode('0');
+                } break;
+                case 'date': {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode($this->getInjection('dateTime')->getDateFormat());
+                } break;
+                case 'datetime': {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
+                } break;
+                case 'datetimeOptional': {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode($this->getInjection('dateTime')->getDateTimeFormat());
+                } break;
+                default: {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode('@');
+                } break;
             }
         }
 
