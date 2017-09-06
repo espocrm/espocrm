@@ -45,6 +45,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupAttachmentsPeriod = '1 month';
 
+    protected $cleanupAttachmentsFromPeriod = '3 month';
+
     protected $cleanupRemindersPeriod = '15 days';
 
     public function run()
@@ -183,6 +185,57 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
             foreach ($collection as $e) {
                 $this->getEntityManager()->removeEntity($e);
+            }
+        }
+
+        $fromPeriod = '-' . $this->getConfig()->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
+        $datetimeFrom = new \DateTime();
+        $datetimeFrom->modify($fromPeriod);
+
+        $scopeList = array_keys($this->getMetadata()->get(['scopes']));
+        foreach ($scopeList as $scope) {
+            if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
+            if (!$this->getMetadata()->get(['scopes', $scope, 'object']) && $scope !== 'Note') continue;
+            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) continue;
+
+            $hasAttachmentField = false;
+            if ($scope === 'Note') {
+                $hasAttachmentField = true;
+            }
+            if (!$hasAttachmentField) {
+                foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
+                    if (empty($defs['type'])) continue;
+                    if (in_array($defs['type'], ['file', 'image', 'attachmentMultiple'])) {
+                        $hasAttachmentField = true;
+                        break;
+                    }
+                }
+            }
+            if (!$hasAttachmentField) continue;
+
+            $deletedEntityList = $this->getEntityManager()->getRepository($scope)->where([
+                'deleted' => 1,
+                'modifiedAt<' => $datetime->format('Y-m-d H:i:s'),
+                'modifiedAt>' => $datetimeFrom->format('Y-m-d H:i:s'),
+
+            ])->find(['withDeleted' => true]);
+            foreach ($deletedEntityList as $deletedEntity) {
+                $attachmentToRemoveList = $this->getEntityManager()->getRepository('Attachment')->where(array(
+                    'OR' => array(
+                        array(
+                            'relatedType' => $scope,
+                            'relatedId' => $deletedEntity->id
+                        ),
+                        array(
+                            'parentType' => $scope,
+                            'parentId' => $deletedEntity->id
+                        )
+                    )
+                ))->find();
+
+                foreach ($attachmentToRemoveList as $attachmentToRemove) {
+                    $this->getEntityManager()->removeEntity($attachmentToRemove);
+                }
             }
         }
 
