@@ -34,4 +34,6 @@ use Espo\ORM\Entity;
 class AuthToken extends \Espo\Core\ORM\Repositories\RDB
 {
     protected $hooksDisabled = true;
+
+    protected $processFieldsAfterSaveDisabled = true;
 }

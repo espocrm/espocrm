@@ -49,6 +49,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected $hooksDisabled = false;
 
+    protected $processFieldsAfterSaveDisabled = false;
+
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;
@@ -262,10 +264,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
         parent::afterSave($entity, $options);
 
-        $this->processEmailAddressSave($entity);
-        $this->processPhoneNumberSave($entity);
-        $this->processSpecifiedRelationsSave($entity);
-        $this->processFileFieldsSave($entity);
+        if (!$this->processFieldsAfterSaveDisabled) {
+            $this->processEmailAddressSave($entity);
+            $this->processPhoneNumberSave($entity);
+            $this->processSpecifiedRelationsSave($entity);
+            $this->processFileFieldsSave($entity);
+        }
 
         if (!$this->hooksDisabled) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
@@ -335,6 +339,24 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 'relatedType' => $entity->getEntityType()
             ));
             $this->getEntityManager()->saveEntity($attachment);
+        }
+
+        if (!$entity->isNew()) {
+
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $defs) {
+                if (!empty($defs['type']) && in_array($defs['type'], ['file', 'image'])) {
+                    $attribute = $name . 'Id';
+                    if ($entity->isAttributeChanged($attribute)) {
+                        $previousAttachmentId = $entity->getFetched($attribute);
+                        if ($previousAttachmentId) {
+                            $attachment = $this->getEntityManager()->getEntity('Attachment', $previousAttachmentId);
+                            if ($attachment) {
+                                $this->getEntityManager()->removeEntity($attachment);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
