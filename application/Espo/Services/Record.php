@@ -1757,7 +1757,14 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->duplicatingLinkList as $link) {
             $linkedList = $repository->findRelated($duplicatingEntity, $link);
             foreach ($linkedList as $linked) {
-                $repository->relate($entity, $link, $linked);
+                $arr = $linked->toArray();
+                $foreignIdName = lcfirst($this->entityType) . 'Id';
+                unset($arr[$foreignIdName]);
+                unset($arr['id']);
+                $newLinked = $this->getEntityManager()->getEntity($linked->getEntityName());
+                $newLinked->set($arr);
+                $newLinked->set($foreignIdName, $entity->id);
+                $this->getEntityManager()->saveEntity($newLinked);
             }
         }
     }
