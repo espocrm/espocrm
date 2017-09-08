@@ -203,8 +203,10 @@ class Importer
             } catch (\Exception $e) {}
         }
 
+        $inlineAttachmentList = [];
+
         if (!$fetchOnlyHeader) {
-            $parser->fetchContentParts($email, $message);
+            $parser->fetchContentParts($email, $message, $inlineAttachmentList);
 
             if ($this->getFiltersMatcher()->match($email, $filterList)) {
                 return false;
@@ -298,6 +300,14 @@ class Importer
         }
 
         $this->getEntityManager()->saveEntity($email);
+
+        foreach ($inlineAttachmentList as $attachment) {
+            $attachment->set(array(
+                'relatedId' => $email->id,
+                'relatedType' => 'Email'
+            ));
+            $this->getEntityManager()->saveEntity($attachment);
+        }
 
         return $email;
     }
