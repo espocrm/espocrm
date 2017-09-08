@@ -143,7 +143,7 @@ class MailMimeParser
         return $addressList;
     }
 
-    public function fetchContentParts(\Espo\Entities\Email $email, $message)
+    public function fetchContentParts(\Espo\Entities\Email $email, $message, &$inlineAttachmentList = [])
     {
         $this->loadContent($message);
 
@@ -202,6 +202,7 @@ class MailMimeParser
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->id;
                 }
+                $inlineAttachmentList[] = $attachment;
             }
         }
 

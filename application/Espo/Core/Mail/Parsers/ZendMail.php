@@ -125,7 +125,7 @@ class ZendMail
         return $addressList;
     }
 
-    public function fetchContentParts(\Espo\Entities\Email $email, $message)
+    public function fetchContentParts(\Espo\Entities\Email $email, $message, &$inlineAttachmentList = [])
     {
         $zendMessage = $message->getZendMessage();
 
@@ -133,10 +133,10 @@ class ZendMail
 
         if ($zendMessage->isMultipart()) {
             foreach (new \RecursiveIteratorIterator($zendMessage) as $part) {
-                $this->importPartDataToEmail($email, $part, $inlineIds);
+                $this->importPartDataToEmail($email, $part, $inlineIds, null, $inlineAttachmentList);
             }
         } else {
-            $this->importPartDataToEmail($email, $zendMessage, $inlineIds, 'text/plain');
+            $this->importPartDataToEmail($email, $zendMessage, $inlineIds, 'text/plain', $inlineAttachmentList);
         }
 
         if (!$email->get('body') && $email->get('bodyPlain')) {
@@ -156,7 +156,7 @@ class ZendMail
         }
     }
 
-    protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array(), $defaultContentType = null)
+    protected function importPartDataToEmail(\Espo\Entities\Email $email, $part, &$inlineIds = array(), $defaultContentType = null, &$inlineAttachmentList = [])
     {
         try {
             $type = null;
@@ -275,6 +275,7 @@ class ZendMail
                     }
                 } else if ($disposition == 'inline') {
                     $inlineIds[$contentId] = $attachment->id;
+                    $inlineAttachmentList[] = $attachment;
                 }
             }
         } catch (\Exception $e) {}
