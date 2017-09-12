@@ -3,27 +3,27 @@
     "action": "Azione",
     "actionDate": "Data",
     "data": "Data",
-    "campaign": "Campagnia",
+    "campaign": "Campagna",
     "parent": "Target",
     "object": "Oggetto",
     "application": "Applicazione",
-    "queueItem": "Queue Item",
+    "queueItem": "Item in Coda",
     "stringData": "String Data",
-    "stringAdditionalData": "String Additional Data"
+    "stringAdditionalData": "String Data Addizionale"
   },
   "links": {
-    "queueItem": "Queue Item",
-    "parent": "Genitore",
+    "queueItem": "Item in Coda",
+    "parent": "Parente",
     "object": "Object"
   },
   "options": {
     "action": {
       "Sent": "Inviato",
       "Opened": "Aperto",
-      "Opted Out": "Rinuncia",
+      "Opted Out": "Rimosso",
       "Bounced": "Bounced",
       "Clicked": "Cliccato",
-      "Lead Created": "Lead Created"
+      "Lead Created": "Lead Creata"
     }
   },
   "labels": {
@@ -32,9 +32,9 @@
   "presetFilters": {
     "sent": "Inviato",
     "opened": "Aperto",
-    "optedOut": "Rinuncia",
+    "optedOut": "Rimosso",
     "bounced": "Bounced",
-    "clicked": "Clicked",
-    "leadCreated": "Lead Created"
+    "clicked": "Cliccato",
+    "leadCreated": "Lead Creata"
   }
 }

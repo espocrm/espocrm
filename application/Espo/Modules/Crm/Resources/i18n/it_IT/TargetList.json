@@ -2,15 +2,17 @@
   "fields": {
     "name": "Nome",
     "description": "Descrizione",
-    "entryCount": "Contatore iniziale",
+    "entryCount": "Conteggio Elementi",
     "campaigns": "Campagne",
-    "endDate": "Data di finee",
-    "targetLists": "Lista di destinazione"
+    "endDate": "Data di termine",
+    "targetLists": "Lista di Target",
+    "includingActionList": "Includendo",
+    "excludingActionList": "Escludendo"
   },
   "links": {
     "accounts": "Account",
     "contacts": "Contatti",
-    "leads": "Comando",
+    "leads": "Lead",
     "campaigns": "Campagne",
     "massEmails": "Email Massive"
   },
@@ -24,9 +26,9 @@
     }
   },
   "labels": {
-    "Create TargetList": "Crea lista di destinazione",
-    "Opted Out": "Rinuncia",
-    "Cancel Opt-Out": "Cancella Opt-Out",
-    "Opt-Out": "Opt-Out"
+    "Create TargetList": "Crea lista di Target",
+    "Opted Out": "Disiscritto",
+    "Cancel Opt-Out": "Annulla Disiscrizione",
+    "Opt-Out": "Disiscrizione"
   }
 }

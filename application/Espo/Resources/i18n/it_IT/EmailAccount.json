@@ -8,12 +8,12 @@
     "port": "Porta",
     "monitoredFolders": "Cartelle Monitorate",
     "ssl": "SSL",
-    "fetchSince": "Da Raggiungere",
+    "fetchSince": "Recupera a Partire Da",
     "emailAddress": "Indirizzo Email",
     "sentFolder": "Cartella Inviate",
-    "storeSentEmails": "Email Inviate",
-    "keepFetchedEmailsUnread": "Mantenere le Email non lette",
-    "emailFolder": "Mettere nella Cartella",
+    "storeSentEmails": "Salva Email Inviate",
+    "keepFetchedEmailsUnread": "Mantenere le Email Scaricate ma non Lette",
+    "emailFolder": "Metti nella Cartella",
     "useSmtp": "Usa SMTP",
     "smtpHost": "SMTP Host",
     "smtpPort": "SMTP Porta",
@@ -36,7 +36,7 @@
     "Create EmailAccount": "Crea Account Email ",
     "IMAP": "IMAP",
     "Main": "Principale",
-    "Test Connection": "Test della connessione",
+    "Test Connection": "Test della Connessione",
     "Send Test Email": "Test Invio Email",
     "SMTP": "SMTP"
   },
@@ -45,7 +45,6 @@
     "connectionIsOk": "La Connessione è Ok"
   },
   "tooltips": {
-    "monitoredFolders": "È possibile aggiungere cartella ' Inviati ' per sincronizzare i messaggi di posta elettronica inviati da client di posta elettronica esterni .",
-    "storeSentEmails": "Le e-mail inviate saranno memorizzate sul server IMAP."
+    "monitoredFolders": "Le Cartelle devono essere separate con una virgola.\n\nPuoi aggiungere una cartella 'Inviati' per sincronizzare le email inviate da un client di posta esterno."
   }
 }

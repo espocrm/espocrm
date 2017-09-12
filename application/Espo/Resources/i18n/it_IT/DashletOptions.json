@@ -1,14 +1,20 @@
 {
   "fields": {
     "title": "Titolo",
-    "dateFrom": "Data da",
-    "dateTo": "Data a",
-    "autorefreshInterval": "Intervallo di Aggiornamento automatico",
-    "displayRecords": "Visualizzare i record",
+    "dateFrom": "Dalla Data",
+    "dateTo": "Alla Data",
+    "autorefreshInterval": "Intervallo di Aggiornamento Automatico",
+    "displayRecords": "Visualizza Record",
     "isDoubleHeight": "Altezza 2x",
-    "mode": "Modo",
-    "enabledScopeList": "Cose da visualizzare",
-    "users": "Utenti"
+    "mode": "Modalità",
+    "enabledScopeList": "Cosa visualizzare",
+    "users": "Utenti",
+    "entityType": "Tipo Entità",
+    "primaryFilter": "Filtro Primario",
+    "boolFilterList": "Filtri Addizionali",
+    "sortBy": "Ordinamento (campo)",
+    "sortDirection": "Ordinamento (direzione)",
+    "expandedLayout": "Layout"
   },
   "options": {
     "mode": {
@@ -19,5 +25,8 @@
       "agendaDay": "Giorno (agenda)",
       "timeline": "Sequenza Temporale"
     }
+  },
+  "messages": {
+    "selectEntityType": "Seleziona Tipo Entità nelle opzioni della dashlet"
   }
 }

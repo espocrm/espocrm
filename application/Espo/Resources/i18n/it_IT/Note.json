@@ -1,11 +1,18 @@
 {
   "fields": {
-    "post": "Inviare",
-    "attachments": "Allegato",
+    "post": "Invia",
+    "attachments": "Allegati",
     "targetType": "Target",
-    "teams": "Teams",
+    "teams": "Team",
     "users": "Utenti",
-    "portals": "Portali"
+    "portals": "Portali",
+    "type": "Tipo",
+    "isGlobal": "È Globale",
+    "isInternal": "È Interno (per utenti interni)",
+    "related": "Correlato",
+    "createdByGender": "Creato Dal Genere",
+    "data": "Data",
+    "number": "Number"
   },
   "filters": {
     "all": "Tutti",
@@ -15,8 +22,8 @@
   "options": {
     "targetType": {
       "self": "a me stesso",
-      "users": "a utente particolare",
-      "teams": "a team particolare",
+      "users": "a utente/i specifico/i",
+      "teams": "a team specifico/i",
       "all": "a tutti gli utenti interni",
       "portals": "agli utenti del portale"
     }

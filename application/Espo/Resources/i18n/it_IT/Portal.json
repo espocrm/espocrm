@@ -8,22 +8,22 @@
     "isActive": "Attivo",
     "isDefault": "Default",
     "tabList": "Lista delle schede",
-    "quickCreateList": "Creazione rapida List",
+    "quickCreateList": "Creazione Rapida List",
     "theme": "Tema",
     "language": "Lingua",
-    "dashboardLayout": "Dashboard Layout",
+    "dashboardLayout": "Layout Dashboard",
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
-    "timeZone": "Time Zone",
+    "timeZone": "Fuso Orario",
     "weekStart": "Primo giorno della Settimana",
     "defaultCurrency": "Valuta di default",
-    "customUrl": "Custom URL",
-    "customId": "Custom ID"
+    "customUrl": "URL personalizzato",
+    "customId": "ID personalizzato"
   },
   "links": {
     "users": "Utenti",
     "portalRoles": "Ruoli",
-    "notes": "Notes"
+    "notes": "Note"
   },
   "tooltips": {
     "portalRoles": "I Ruoli specificati verranno applicati a tutti gli utenti di questo portale ."
@@ -32,6 +32,6 @@
     "Create Portal": "Crea Portale",
     "User Interface": "Interfaccia Utente",
     "General": "Generale",
-    "Settings": "Settaggi"
+    "Settings": "Impostazioni"
   }
 }

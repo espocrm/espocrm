@@ -4,9 +4,9 @@
     "number": "Numero",
     "status": "Stato",
     "account": "Account",
-    "contact": "Contatti",
+    "contact": "Contatto",
     "contacts": "Contatti",
-    "priority": "Priorita'",
+    "priority": "Priorità",
     "type": "Tipo",
     "description": "Descrizione",
     "inboundEmail": "Email in entrata",
@@ -17,11 +17,11 @@
     "account": "Account",
     "contact": "Contatto (Primario)",
     "Contacts": "Contatti",
-    "meetings": "Meetings",
+    "meetings": "Meeting",
     "calls": "Chiamate",
-    "tasks": "Tasks",
+    "tasks": "Task",
     "emails": "Email",
-    "articles": "Knowledge Base Articles",
+    "articles": "Articoli del Knowledge Base",
     "lead": "Lead"
   },
   "options": {
@@ -30,7 +30,7 @@
       "Assigned": "Assegnato",
       "Pending": "In attesa",
       "Closed": "Chiuso",
-      "Rejected": "Rigettato",
+      "Rejected": "Rifiutato",
       "Duplicate": "Duplicato"
     },
     "priority": {
@@ -40,7 +40,7 @@
       "Urgent": "Urgente"
     },
     "type": {
-      "Question": "Domande",
+      "Question": "Domanda",
       "Incident": "Incidente",
       "Problem": "Problema"
     }
@@ -48,9 +48,9 @@
   "labels": {
     "Create Case": "Crea Caso",
     "Close": "Chiuso",
-    "Reject": "Rigettato",
+    "Reject": "Rifiutato",
     "Closed": "Chiuso",
-    "Rejected": "Rigettato"
+    "Rejected": "Rifiutato"
   },
   "presetFilters": {
     "open": "Aperto",

@@ -9,24 +9,31 @@
     "phoneNumber": "Telefono",
     "accountType": "Tipo di Account",
     "doNotCall": "Non chiamare",
-    "address": "Indirizzi",
-    "opportunityRole": "Opportunity Role",
+    "address": "Indirizzo",
+    "opportunityRole": "Ruolo Opportunità",
     "description": "Descrizione",
-    "campaign": "Campaign",
+    "campaign": "Campagna",
     "targetLists": "Liste di destinazione",
     "targetList": "Lista di destinazione",
-    "portalUser": "Portal User"
+    "portalUser": "Utente Portale",
+    "originalLead": "Lead di Origine",
+    "acceptanceStatus": "Stato Accettazione",
+    "accountIsInactive": "Account Inattivo",
+    "acceptanceStatusMeetings": "Stato Accettazione (Meeting)",
+    "acceptanceStatusCalls": "Stato Accettazione (Chiamate)"
   },
   "links": {
-    "opportunities": "Opportunita'",
+    "opportunities": "Opportunità",
     "cases": "Casi",
-    "targetLists": "Liste di destinazione",
+    "targetLists": "Liste di Target",
     "campaignLogRecords": "Log Campagna",
     "campaign": "Campagna",
     "account": "Account (Primario)",
     "accounts": "Account",
     "casesPrimary": "Casi (Primario)",
-    "portalUser": "Portale Utente"
+    "portalUser": "Portale Utente",
+    "originalLead": "Lead di Origine",
+    "documents": "Documenti"
   },
   "labels": {
     "Create Contact": "Crea Contatto"
@@ -41,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Portale Utenti",
-    "notPortalUsers": "Nessun Portale Utenti"
+    "notPortalUsers": "Nessun Portale Utenti",
+    "accountActive": "Attivo"
   }
 }

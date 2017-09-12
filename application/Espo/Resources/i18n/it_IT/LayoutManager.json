@@ -3,12 +3,23 @@
     "width": "Larghezza (%)",
     "link": "Link",
     "notSortable": "Non Ordinabile",
-    "align": "Allinea"
+    "align": "Allinea",
+    "panelName": "Nome Pannello",
+    "style": "Stilo",
+    "sticked": "Fissato"
   },
   "options": {
     "align": {
       "left": "Sinistra",
       "right": "Destra"
+    },
+    "style": {
+      "default": "Default",
+      "success": "Successo",
+      "danger": "Pericolo",
+      "info": "Info",
+      "warning": "Avviso",
+      "primary": "Primario"
     }
   }
 }

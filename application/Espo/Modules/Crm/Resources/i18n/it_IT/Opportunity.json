@@ -5,19 +5,23 @@
     "stage": "Stage",
     "amount": "Importo",
     "probability": "Probabilità, %",
-    "leadSource": "Lead Source",
+    "leadSource": "Origine della Lead",
     "doNotCall": "Non chiamare",
     "closeDate": "Data di chiusura",
     "contacts": "Contatti",
     "description": "Descrizione",
     "amountConverted": "Importo (convertito)",
     "amountWeightedConverted": "Importo Ponderato",
-    "campaign": "Campagna"
+    "campaign": "Campagna",
+    "originalLead": "Lead di Provenienza",
+    "amountCurrency": "Valuta dell'importo",
+    "contactRole": "Ruolo Contatto"
   },
   "links": {
     "contacts": "Contatti",
-    "documents": "Documentsi",
-    "campaign": "Campagna"
+    "documents": "Documenti",
+    "campaign": "Campagna",
+    "originalLead": "Lead di Provenienza"
   },
   "options": {
     "stage": {
@@ -26,8 +30,8 @@
       "Needs Analysis": "Necessita di analisi",
       "Value Proposition": "Proposta di Valore",
       "Id. Decision Makers": "Id. Responsabile",
-      "Perception Analysis": "Percezione dell'Analisi",
-      "Proposal/Price Quote": "Proposta / Preventivo",
+      "Perception Analysis": "Analisi Percezione",
+      "Proposal/Price Quote": "Proposta/Preventivo",
       "Negotiation/Review": "Negoziazione/Revisione",
       "Closed Won": "Chiuso Positivamente",
       "Closed Lost": "Chiuso Negativamente"

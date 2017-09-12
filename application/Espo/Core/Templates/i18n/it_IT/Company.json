@@ -1,5 +1,15 @@
 {
-    "labels": {
-        "Create {entityType}": "Crea {entityTypeTranslated}"
-    }
+  "fields": {
+    "billingAddress": "Indirizzo di Fatturazione",
+    "shippingAddress": "Indirizzo di Spedizione",
+    "website": "Website"
+  },
+  "links": {
+    "meetings": "Meetings",
+    "calls": "Chiamate",
+    "tasks": "Tasks"
+  },
+  "labels": {
+    "Create {entityType}": "Crea {entityTypeTranslated}"
+  }
 }

@@ -5,9 +5,9 @@
     "status": "Stato",
     "type": "Tipo",
     "startDate": "Data d'Inizio",
-    "endDate": "Data di Fine",
-    "targetLists": "Liste di Destinazione",
-    "excludingTargetLists": "Escludi data di Destinazione",
+    "endDate": "Data di Termine",
+    "targetLists": "Liste di Target",
+    "excludingTargetLists": "Escludi Lista Target",
     "sentCount": "Inviato",
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
@@ -15,22 +15,22 @@
     "bouncedCount": "Bounced",
     "hardBouncedCount": "Hard Bounced",
     "softBouncedCount": "Soft Bounced",
-    "leadCreatedCount": "Leads Created",
-    "revenue": "Entrata",
-    "revenueConverted": "Entrata (convertita)",
+    "leadCreatedCount": "Lead Creata",
+    "revenue": "Fatturato",
+    "revenueConverted": "Fatturato (convertito)",
     "budget": "Budget",
     "budgetConverted": "Budget (convertito)"
   },
   "links": {
-    "targetLists": "Liste di Destinazione",
-    "excludingTargetLists": "Escludi Liste di Destinazione",
+    "targetLists": "Liste di Target",
+    "excludingTargetLists": "Escludi Liste di Target",
     "accounts": "Account",
     "contacts": "Contatti",
-    "leads": "Comando",
-    "opportunities": "Opportunita'",
+    "leads": "Lead",
+    "opportunities": "Opportunità",
     "campaignLogRecords": "Log",
     "massEmails": "Email Massiva",
-    "trackingUrls": "Tracking URLs"
+    "trackingUrls": "URL di Tracking"
   },
   "options": {
     "type": {
@@ -49,23 +49,27 @@
     }
   },
   "labels": {
-    "Create Campaign": "Create Campaign",
-    "Target Lists": "Liste di Destinazione",
+    "Create Campaign": "Crea Campaigna",
+    "Target Lists": "Liste di Target",
     "Statistics": "Statistiche",
-    "hard": "duro",
-    "soft": "leggeto",
+    "hard": "hard",
+    "soft": "soft",
     "Unsubscribe": "Annulla l'iscrizione",
     "Mass Emails": "Email Massive",
-    "Email Templates": "Modelli Email"
+    "Email Templates": "Modelli Email",
+    "Unsubscribe again": "Disiscriviti ancora",
+    "Subscribe again": "Iscriviti ancora",
+    "Create Target List": "Crea Lista Target"
   },
   "presetFilters": {
     "active": "Attivo"
   },
   "messages": {
-    "unsubscribed": "Sei stato rimosso dalla nostra mailing list ."
+    "unsubscribed": "Sei stato rimosso dalla nostra mailing list.",
+    "subscribedAgain": "Ti sei iscritto nuovamente."
   },
   "tooltips": {
-    "targetLists": "Obiettivi che devono ricevere i messaggi .",
-    "excludingTargetLists": "Obiettivi che non dovrebbe ricevere messaggi."
+    "targetLists": "Target che devono ricevere i messaggi.",
+    "excludingTargetLists": "Target che non dovrebbe ricevere messaggi."
   }
 }

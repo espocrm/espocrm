@@ -2,10 +2,10 @@
   "fields": {
     "from": "Da",
     "to": "A",
-    "subject": "Soggetto",
+    "subject": "Oggetto",
     "bodyContains": "Contenuto del Corpo",
     "action": "Azione",
-    "isGlobal": "Is Global",
+    "isGlobal": "È Globale",
     "emailFolder": "Cartella"
   },
   "labels": {
@@ -15,12 +15,12 @@
   "options": {
     "action": {
       "Skip": "Ignora",
-      "Move to Folder": "Sposta in Cartella"
+      "Move to Folder": "Sposta nella Cartella"
     }
   },
   "tooltips": {
-    "name": "Solamente il nome del filtro.",
-    "subject": "Utilizzare caratteri jolly *:\n\ntext * - inizia con il testo ,\n*testo* - contiene testo ,\n*testo - si conclude con testo.",
+    "name": "Dai un nome esplicativo al filtro.",
+    "subject": "Utilizzare caratteri jolly *:\n\ntext * - inizia con il testo ,\n*testo* - contiene testo ,\n*testo - si conclude con il testo.",
     "bodyContains": "Il corpo del messaggio contiene una delle parole o frasi specificate",
     "from": "Messaggi di posta elettronica inviati dall'indirizzo specificato. Lascia vuoto se non necessario. È possibile utilizzare caratteri jolly *.",
     "to": "Messaggi di posta elettronica inviati all'indirizzo specificato . Lascia vuoto se non necessario . È possibile utilizzare caratteri jolly *.",

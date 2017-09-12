@@ -8,18 +8,18 @@
     "status": "Stato",
     "file": "File",
     "type": "Tipo",
-    "source": "Fonte",
     "publishDate": "Data di pubblicazione",
     "expirationDate": "Data di scadenza",
     "description": "Descrizione",
-    "accounts": "Accounts",
+    "accounts": "Account",
     "folder": "Cartella"
   },
   "links": {
     "accounts": "Account",
-    "opportunities": "Opportunita'",
+    "opportunities": "Opportunità",
     "folder": "Cartella",
-    "leads": "Comando"
+    "leads": "Lead",
+    "contacts": "Contatti"
   },
   "options": {
     "status": {

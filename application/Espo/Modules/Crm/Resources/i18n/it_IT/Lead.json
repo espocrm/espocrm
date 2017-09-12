@@ -1,9 +1,9 @@
 {
   "labels": {
     "Converted To": "Convertito in",
-    "Create Lead": "Crea Guida",
-    "Convert": "Convertire",
-    "convert": "convertire"
+    "Create Lead": "Crea Lead",
+    "Convert": "Converti",
+    "convert": "converti"
   },
   "fields": {
     "name": "Nome",
@@ -13,25 +13,30 @@
     "phoneNumber": "Telefono",
     "accountName": "Nome utente",
     "doNotCall": "Non chiamare",
-    "address": "Indirizzi",
+    "address": "Indirizzo",
     "status": "Stato",
     "source": "Provenienza",
-    "opportunityAmount": "Opportunity Amount",
-    "opportunityAmountConverted": "Opportunity Amount (converted)",
+    "opportunityAmount": "Ammontare Opportunità",
+    "opportunityAmountConverted": "Ammontare Opportunità (convertito)",
     "description": "Descrizione",
     "createdAccount": "Account",
-    "createdContact": "Contatti",
+    "createdContact": "Contatto",
     "createdOpportunity": "Opportunità",
-    "campaign": "Campagnia",
-    "targetLists": "Liste di destinazione",
-    "targetList": "Lista di destinazione"
+    "campaign": "Campagna",
+    "targetLists": "Liste di Target",
+    "targetList": "Lista di Target",
+    "industry": "Settore",
+    "acceptanceStatus": "Stato Accettazione",
+    "opportunityAmountCurrency": "Valuta dell'Ammontare dell'Opportunità",
+    "acceptanceStatusMeetings": "Stato Accettazione (Meeting)",
+    "acceptanceStatusCalls": "Stato Accettazione (Chiamate)"
   },
   "links": {
-    "targetLists": "Liste di destinazione",
+    "targetLists": "Liste di Target",
     "campaignLogRecords": "Log Campagna",
     "campaign": "Campagna",
     "createdAccount": "Account",
-    "createdContact": "Contatti",
+    "createdContact": "Contatto",
     "createdOpportunity": "Opportunità",
     "cases": "Casi",
     "documents": "Documenti"
@@ -40,7 +45,7 @@
     "status": {
       "New": "Nuovo",
       "Assigned": "Assegnato",
-      "In Process": "In corso",
+      "In Process": "In Corso",
       "Converted": "Convertito",
       "Recycled": "Recuperato",
       "Dead": "Fuori uso"
@@ -49,7 +54,7 @@
       "": "Nessun",
       "Call": "Chiamata",
       "Email": "Email",
-      "Existing Customer": "Cliente esistente",
+      "Existing Customer": "Cliente Esistente",
       "Partner": "Partner",
       "Public Relations": "Pubbliche Relazioni",
       "Web Site": "Sito Web",
