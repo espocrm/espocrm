@@ -2,16 +2,17 @@
   "fields": {
     "name": "Nome",
     "roles": "Ruoli",
-    "positionList": "Lista Posizione"
+    "positionList": "Lista Posizioni"
   },
   "links": {
     "users": "Utenti",
     "notes": "Note",
-    "roles": "Ruoli"
+    "roles": "Ruoli",
+    "inboundEmails": "Account Email di Gruppo"
   },
   "tooltips": {
-    "roles": "Ruoli di accesso . Gli utenti di questo team hanno ottenuto il livello di controllo per i ruoli selezionati .",
-    "positionList": "Posizioni disponibili in questa squadra. E.g. Venditore, Manager."
+    "roles": "Ruoli di accesso. Gli utenti di questo team ottengono il livello di controllo accesso dai ruoli selezionati .",
+    "positionList": "Posizioni disponibili in questo team. Es. Commerciale, Manager."
   },
   "labels": {
     "Create Team": "Crea Team"

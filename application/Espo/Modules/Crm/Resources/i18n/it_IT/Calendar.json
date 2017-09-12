@@ -9,12 +9,12 @@
   },
   "labels": {
     "Today": "Oggi",
-    "Create": "Creare",
-    "Shared": "Diviso",
+    "Create": "Crea",
+    "Shared": "Condiviso",
     "Add User": "Aggiungi Utente",
     "current": "attuale",
     "time": "ora",
-    "User List": "Lista Utente",
+    "User List": "Lista Utenti",
     "Manage Users": "Gestione Utenti"
   }
 }

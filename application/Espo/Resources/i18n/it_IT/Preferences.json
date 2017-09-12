@@ -2,35 +2,37 @@
   "fields": {
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
-    "timeZone": "Time Zone",
+    "timeZone": "Fuso Orario",
     "weekStart": "Primo giorno della Settimana",
     "thousandSeparator": "Separatore delle migliaia",
-    "decimalMark": "Marcatore dei Decimali",
+    "decimalMark": "Separatore dei Decimali",
     "defaultCurrency": "Valuta di default",
     "currencyList": "Lista delle Valute",
     "language": "Lingua",
     "smtpServer": "Server",
     "smtpPort": "Porta",
-    "smtpAuth": "Autenticato",
+    "smtpAuth": "Auth",
     "smtpSecurity": "Sicurezza",
     "smtpUsername": "Username",
     "emailAddress": "Email",
     "smtpPassword": "Password",
     "smtpEmailAddress": "Indirizzo Email",
-    "exportDelimiter": "Delimitatore esportazione",
-    "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
-    "receiveMentionEmailNotifications": "Notifiche via e-mail in caso di menzioni nei post",
-    "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
+    "exportDelimiter": "Delimitatore per l'esportazione",
+    "receiveAssignmentEmailNotifications": "Notifiche email al momento dell'assegnazione",
+    "receiveMentionEmailNotifications": "Notifiche e-mail in caso di menzioni nei post",
+    "receiveStreamEmailNotifications": "Notifiche email per i messaggi e gli aggiornamenti di stato",
     "autoFollowEntityTypeList": "Auto-Follow",
     "signature": "Firma Email",
     "dashboardTabList": "Lista delle schede",
     "tabList": "Lista delle schede",
-    "defaultReminders": "Promemoria di Defaul",
+    "defaultReminders": "Promemoria di Default",
     "theme": "Tema",
     "useCustomTabList": "Lista delle schede personalizzata",
-    "emailReplyToAllByDefault": "Rispondi via Email a tutti, per impostazione predefinita",
+    "emailReplyToAllByDefault": "Rispondi a tutti via E-mail di default",
     "dashboardLayout": "Dashboard Layout",
-    "emailReplyForceHtml": "Email di risposta in HTML"
+    "emailReplyForceHtml": "Email di risposta in HTML",
+    "doNotFillAssignedUserIfNotRequired": "Non riempire Utente Assegnato se non è richiesto",
+    "followEntityOnStreamPost": "Segui automaticamente entità dopo che ha postato nello Stream"
   },
   "options": {
     "weekStart": {
@@ -39,13 +41,13 @@
     }
   },
   "labels": {
-    "Notifications": "Notifica",
+    "Notifications": "Notifiche",
     "User Interface": "Interfaccia Utente",
     "SMTP": "SMTP",
     "Misc": "Varie",
     "Locale": "Locale"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "L'Utente seguirà automaticamente tutti i nuovi record dei tipi di entità selezionati , vedrà le informazioni nel flusso e riceverà le notifiche ."
+    "autoFollowEntityTypeList": "L'Utente seguirà automaticamente tutti i nuovi record dei tipi di entità selezionati, vedrà le informazioni nello stream e riceverà le notifiche."
   }
 }

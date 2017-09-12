@@ -1,22 +1,22 @@
 {
   "fields": {
-    "name": "Nome (Soggetto)",
+    "name": "Nome (Oggetto)",
     "parent": "Genitore",
     "status": "Stato",
-    "dateSent": "Data invio",
+    "dateSent": "Data Invio",
     "from": "Da",
     "to": "A",
     "cc": "CC",
     "bcc": "BCC",
     "replyTo": "Rispondi a",
-    "replyToString": "Rispondi da (String)",
+    "replyToString": "Rispondi a (String)",
     "isHtml": "È Html",
     "body": "Corpo",
-    "subject": "Soggetto",
-    "attachments": "Allegato",
+    "subject": "Oggetto",
+    "attachments": "Allegati",
     "selectTemplate": "Seleziona Modello",
-    "fromEmailAddress": "Indirizzo mittente",
-    "toEmailAddresses": "Indirizzo destinatario",
+    "fromEmailAddress": "Indirizzo Mittente",
+    "toEmailAddresses": "Indirizzo Destinatario",
     "emailAddress": "Indirizzo Email",
     "deliveryDate": "Data di Consegna",
     "account": "Account",
@@ -28,17 +28,17 @@
     "isImportant": "Importante",
     "isReplied": "Risposto",
     "isNotReplied": "Non Risposto",
-    "isUsers": "Utente",
+    "isUsers": "È dell'Utente",
     "inTrash": "Nel Cestino",
-    "sentBy": "Inviato da (Utente)",
     "folder": "Cartella",
-    "inboundEmails": "Gruppo di Account",
-    "emailAccounts": "Account Personale"
+    "inboundEmails": "Account di Gruppo",
+    "emailAccounts": "Account Personale",
+    "hasAttachment": "Ha Allegati"
   },
   "links": {
     "replied": "Risposto",
     "replies": "Risposte",
-    "inboundEmails": "Gruppi di Account",
+    "inboundEmails": "Account di Gruppo",
     "emailAccounts": "Account Personali"
   },
   "options": {
@@ -54,14 +54,14 @@
   "labels": {
     "Create Email": "Archivio Email",
     "Archive Email": "Archivio Email",
-    "Compose": "Comporre",
+    "Compose": "Componi",
     "Reply": "Rispondi",
     "Reply to All": "Rispondi a tutti",
-    "Forward": "Inoltrare",
+    "Forward": "Inoltra",
     "Original message": "Messaggio originale",
     "Forwarded message": "Messaggio inoltrato",
-    "Email Accounts": "Email Accounts Personali",
-    "Inbound Emails": "Grouppi di Accounts Email ",
+    "Email Accounts": "Email Account Personali",
+    "Inbound Emails": "Account Email di Gruppo",
     "Email Templates": "Modelli di Emali",
     "Send Test Email": "Invio Email di Prova",
     "Send": "Invio",
@@ -80,7 +80,7 @@
     "Folders": "Cartelle"
   },
   "messages": {
-    "noSmtpSetup": "Nessun setup per l'SMTP. {link}.",
+    "noSmtpSetup": "SMTP non configurato. {link}.",
     "testEmailSent": "L'e-mail di prova è stata inviata",
     "emailSent": "L'email è stata inviata",
     "savedAsDraft": "Salvato come bozza."
@@ -91,7 +91,7 @@
     "inbox": "Inbox",
     "drafts": "Bozze",
     "trash": "Cestino",
-    "important": "Importantw"
+    "important": "Importante"
   },
   "massActions": {
     "markAsRead": "Contrassegna come Letto",
@@ -99,6 +99,7 @@
     "markAsImportant": "Contrassegna come Importante",
     "markAsNotImportant": "Deseleziona come Importante",
     "moveToTrash": "Sposta nel Cestino",
-    "moveToFolder": "Sposta nella Cartella"
+    "moveToFolder": "Sposta nella Cartella",
+    "retrieveFromTrash": "Recupera dal Cestino"
   }
 }

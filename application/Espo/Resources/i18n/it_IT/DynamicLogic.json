@@ -1,0 +1,28 @@
+{
+  "label": {
+    "Field": "Campo"
+  },
+  "options": {
+    "operators": {
+      "equals": "Equivale",
+      "notEquals": "Non Equivale",
+      "greaterThan": "Maggiore Di",
+      "lessThan": "Minore Di",
+      "greaterThanOrEquals": "Maggiore o Uguale",
+      "lessThanOrEquals": "Minore o Uguale",
+      "in": "In",
+      "notIn": "Non In",
+      "inPast": "Nel Passato",
+      "inFuture": "Nel Futuro",
+      "isToday": "È Oggi",
+      "isTrue": "È Vero",
+      "isFalse": "È Falso",
+      "isEmpty": "È Vuoto",
+      "isNotEmpty": "Non È Vuoto",
+      "contains": "Contiene",
+      "has": "Contiene",
+      "notContains": "Non Contiene",
+      "notHas": "Non Contiene"
+    }
+  }
+}

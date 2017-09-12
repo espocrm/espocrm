@@ -1,9 +1,9 @@
 {
   "fields": {
     "status": "Stato",
-    "executeTime": "Esegui a",
-    "attempts": "Tentativi Left",
-    "failedAttempts": "Tentativo fallito",
+    "executeTime": "Esegui Alle",
+    "attempts": "Tentativi Rimasti",
+    "failedAttempts": "Tentativi Falliti",
     "serviceName": "Servizio",
     "method": "Metodo",
     "scheduledJob": "Job Schedulato",
