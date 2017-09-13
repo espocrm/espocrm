@@ -127,6 +127,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
                         this[method].call(this, data, e);
+                        e.stopPropagation();
                         e.preventDefault();
                     }
                 }

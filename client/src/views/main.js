@@ -45,6 +45,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     if (typeof this[method] == 'function') {
                         e.preventDefault();
+                        e.stopPropagation();
                         this[method].call(this, data, e);
                     }
                 }
