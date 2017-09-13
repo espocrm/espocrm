@@ -37,7 +37,7 @@ $fields = array(
         'default' => $config->get('smtpPort', 25),
     ),
     'smtpAuth' => array(
-        'default' => $config->get('smtpAuth', ''),
+        'default' => false,
     ),
     'smtpSecurity' => array(
         'default' => $config->get('smtpSecurity', ''),
