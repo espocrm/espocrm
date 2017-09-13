@@ -121,6 +121,8 @@ class Htmlizer
                             $v = [];
                         }
                         foreach ($v as $k => $w) {
+                            $keyRaw = $k . '_RAW';
+                            $v[$keyRaw] = $v[$k];
                             $v[$k] = $this->format($v[$k]);
                         }
                         $newList[] = $v;
@@ -134,6 +136,8 @@ class Htmlizer
                         $data[$field] = get_object_vars($value);
                     }
                     foreach ($data[$field] as $k => $w) {
+                        $keyRaw = $k . '_RAW';
+                        $data[$field][$keyRaw] = $data[$field][$k];
                         $data[$field][$k] = $this->format($data[$field][$k]);
                     }
                 }
@@ -142,7 +146,9 @@ class Htmlizer
             }
 
             if (array_key_exists($field, $data)) {
-               $data[$field] = $this->format($data[$field]);
+                $keyRaw = $field . '_RAW';
+                $data[$keyRaw] = $data[$field];
+                $data[$field] = $this->format($data[$field]);
             }
         }
 
@@ -171,12 +177,34 @@ class Htmlizer
     public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
     {
         $code = \LightnCandy::compile($template, [
+            'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
             'helpers' => [
                 'file' => function ($context, $options) {
                     if (count($context) && $context[0]) {
                         $id = $context[0];
                         return "?entryPoint=attachment&id=" . $id;
                     }
+                },
+                'numberFormat' => function ($context, $options) {
+                    if ($context && isset($context[0])) {
+                        $number = $context[0];
+
+                        $decimals = 0;
+                        $decimalPoint = '.';
+                        $thousandsSeparator = ',';
+
+                        if (isset($options['decimals'])) {
+                            $decimals = $options['decimals'];
+                        }
+                        if (isset($options['decimalPoint'])) {
+                            $decimalPoint = $options['decimalPoint'];
+                        }
+                        if (isset($options['thousandsSeparator'])) {
+                            $thousandsSeparator = $options['thousandsSeparator'];
+                        }
+                        return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
+                    }
+                    return '';
                 }
             ]
         ]);
