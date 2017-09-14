@@ -206,6 +206,26 @@ class Htmlizer
                     }
                     return '';
                 }
+            ],
+            'hbhelpers' => [
+                'ifEqual' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+                    if ($args[0] === $args[1]) {
+                        return $context['fn']();
+                    } else {
+                        return $context['inverse'] ? $context['inverse']() : '';
+                    }
+                },
+                'ifNotEqual' => function () {
+                    $args = func_get_args();
+                    $context = $args[count($args) - 1];
+                    if ($args[0] !== $args[1]) {
+                        return $context['fn']();
+                    } else {
+                        return $context['inverse'] ? $context['inverse']() : '';
+                    }
+                }
             ]
         ]);
 

@@ -156,6 +156,16 @@ class HtmlizerTest extends \PHPUnit_Framework_TestCase
         $entity->set('name', '1');
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('?entryPoint=attachment&id=1', $html);
+
+        $template = "{{#ifEqual name '1'}}hello{{/ifEqual}}";
+        $entity->set('name', '1');
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('hello', $html);
+
+        $template = "{{#ifNotEqual name '1'}}hello{{else}}test{{/ifNotEqual}}";
+        $entity->set('name', '1');
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('test', $html);
     }
 }
 
