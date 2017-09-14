@@ -8,6 +8,11 @@
                 "type": "varchar",
                 "required": true
             },
+            "header": {
+                "type": "bool",
+                "default": false,
+                "required": true
+            },
             "autorefreshInterval": {
                 "type": "enumFloat",
                 "options": [0, 0.5, 1, 2, 5, 10]
@@ -31,6 +36,7 @@
         "defaults": {
             "autorefreshInterval": 0.5,
             "mode": "basicWeek",
+            "header": false,
             "enabledScopeList": ["Meeting", "Call", "Task"]
         },
         "layout": [
@@ -39,6 +45,10 @@
                     [
                         {"name": "title"},
                         {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "header"},
+                        false
                     ],
                     [
                         {"name": "mode"},

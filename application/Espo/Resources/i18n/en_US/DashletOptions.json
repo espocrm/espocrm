@@ -8,6 +8,7 @@
         "isDoubleHeight": "Height 2x",
         "mode": "Mode",
         "enabledScopeList": "What to display",
+        "header": "Display header (navigation)",
         "users": "Users",
         "entityType": "Entity Type",
         "primaryFilter": "Primary Filter",
