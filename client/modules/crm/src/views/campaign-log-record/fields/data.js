@@ -48,6 +48,11 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
                         return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
                     }
     				return '<span>' + (this.model.get('stringData') || '') + '</span>';
+                case 'Opted In':
+                    if (this.model.get('objectId') && this.model.get('objectType') && this.model.get('objectName')) {
+                        return '<a href="#'+this.model.get('objectType')+'/view/'+this.model.get('objectId')+'">'+this.model.get('objectName')+'</a>';
+                    }
+                    return '<span>' + (this.model.get('stringData') || '') + '</span>';
                 case 'Opted Out':
                     return '<span class="text-danger">' + this.model.get('stringData') + '</span>';
                 case 'Bounced':

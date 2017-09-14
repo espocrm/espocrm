@@ -122,16 +122,9 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
         }
 
         if ($campaign && $target) {
-            $logRecord = $this->getEntityManager()->getRepository('CampaignLogRecord')->where(array(
-                'queueItemId' => $queueItemId,
-                'action' => 'Opted Out'
-            ))->order('createdAt', true)->findOne();
-
-            if ($logRecord) {
-                $this->getEntityManager()->removeEntity($logRecord);
-            }
+            $campaignService = $this->getServiceFactory()->create('Campaign');
+            $campaignService->logOptedIn($campaignId, $queueItemId, $target, $queueItem->get('emailAddress'), null, $queueItem->get('isTest'));
         }
-
     }
 }
 
