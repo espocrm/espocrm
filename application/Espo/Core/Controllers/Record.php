@@ -150,6 +150,10 @@ class Record extends Base
             'textFilter' => $textFilter
         );
 
+        if ($request->get('loadAdditionalFields') && $this->getUser()->isAdmin()) {
+            $params['loadAdditionalFields'] = true;
+        }
+
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
@@ -202,6 +206,10 @@ class Record extends Base
             'q' => $q,
             'textFilter' => $textFilter
         );
+
+        if ($request->get('loadAdditionalFields') && $this->getUser()->isAdmin()) {
+            $params['loadAdditionalFields'] = true;
+        }
 
         $this->fetchListParamsFromRequest($params, $request, $data);
 

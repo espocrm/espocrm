@@ -757,6 +757,9 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($collection as $e) {
             $this->loadAdditionalFieldsForList($e);
+            if (!empty($params['loadAdditionalFields'])) {
+                $this->loadAdditionalFields($e);
+            }
             $this->prepareEntityForOutput($e);
         }
 
@@ -827,6 +830,9 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
+            if (!empty($params['loadAdditionalFields'])) {
+                $recordService->loadAdditionalFields($e);
+            }
             $recordService->prepareEntityForOutput($e);
         }
 
