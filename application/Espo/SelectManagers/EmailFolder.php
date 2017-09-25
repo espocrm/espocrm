@@ -33,7 +33,7 @@ class EmailFilter extends \Espo\Core\SelectManagers\Base
 {
     protected function access(&$result)
     {
-        if (!$this->hetUser()->isAdmin()) {
+        if (!$this->getUser()->isAdmin()) {
             $this->accessOnlyOwn($result);
         }
     }
