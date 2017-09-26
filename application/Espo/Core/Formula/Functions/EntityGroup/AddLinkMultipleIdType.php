@@ -54,10 +54,20 @@ class AddLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
         if (!is_string($link)) {
             throw new Error();
         }
-        if (!is_string($id)) {
-            throw new Error();
-        }
 
-        $this->getEntity()->addLinkMultipleId($link, $id);
+        if (is_array($id)) {
+            $idList = $id;
+            foreach ($idList as $id) {
+                if (!is_string($id)) {
+                    throw new Error();
+                }
+                $this->getEntity()->addLinkMultipleId($link, $id);
+            }
+        } else {
+            if (!is_string($id)) {
+                throw new Error();
+            }
+            $this->getEntity()->addLinkMultipleId($link, $id);
+        }
     }
 }
