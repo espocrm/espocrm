@@ -1647,6 +1647,29 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $actual);
     }
 
+    function testArrayCreate()
+    {
+        $item = json_decode('
+            {
+                "type": "array\\\\create",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "Test"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Hello"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertTrue(is_array($actual));
+        $this->assertEquals(count($actual), 2);
+        $this->assertEquals($actual[1], 'Hello');
+    }
+
     function testArrayIncludes()
     {
         $item = json_decode('

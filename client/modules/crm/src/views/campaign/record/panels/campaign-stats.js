@@ -27,7 +27,7 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.Campaign.Record.Panels.Statistics', 'Views.Record.Panels.Side', function (Dep) {
+Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/side', function (Dep) {
 
     return Dep.extend({
 
