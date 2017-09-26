@@ -39,6 +39,8 @@ class LinkMultiple extends Base
                     $fieldName.'Ids' => array(
                         'type' => 'varchar',
                         'notStorable' => true,
+                        'isLinkMultipleIdList' => true,
+                        'relation' => $fieldName
                     ),
                     $fieldName.'Names' => array(
                         'type' => 'varchar',

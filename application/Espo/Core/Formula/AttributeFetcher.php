@@ -70,6 +70,11 @@ class AttributeFetcher
             if ($parent = $entity->get($relationName)) {
                 return $parent->get('name');
             }
+        } else if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList') && $methodName == 'get') {
+            $relationName = $entity->getAttributeParam($attribute, 'relation');
+            if (!$entity->has($attribute)) {
+                $entity->loadLinkMultipleField($relationName);
+            }
         }
 
         return $entity->$methodName($attribute);
