@@ -261,12 +261,19 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         getValueForDisplay: function () {
             return this.selected.map(function (item) {
+                var label = null;
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
-                        return this.getHelper().stripTags(this.translatedOptions[item]);
+                        label = this.getHelper().stripTags(this.translatedOptions[item]);
                     }
                 }
-                return this.getHelper().stripTags(item);
+                if (label === null) {
+                    label = this.getHelper().stripTags(item);
+                }
+                if (label === '') {
+                    label = this.translate('None');
+                }
+                return label;
             }, this).join(', ');
         },
 
