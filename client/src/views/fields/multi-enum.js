@@ -65,8 +65,15 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         afterRender: function () {
             if (this.mode == 'edit') {
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
-                this.$element.val(this.selected.join(':,:'));
 
+                var valueList = Espo.Utils.clone(this.selected);
+                for (var i in valueList) {
+                    if (valueList[i] === '') {
+                        valueList[i] = '__emptystring__';
+                    }
+                }
+
+                this.$element.val(valueList.join(':,:'));
 
                 var data = [];
                 (this.params.options || []).forEach(function (value) {
@@ -75,6 +82,12 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
                         }
+                    }
+                    if (value === '') {
+                        value = '__emptystring__';
+                    }
+                    if (label === '') {
+                        label = this.translate('None');
                     }
                     data.push({
                         value: value,
@@ -116,6 +129,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             var list = this.$element.val().split(':,:');
             if (list.length == 1 && list[0] == '') {
                 list = [];
+            }
+            for (var i in list) {
+                if (list[i] === '__emptystring__') {
+                    list[i] = '';
+                }
             }
             var data = {};
             data[this.name] = list;
