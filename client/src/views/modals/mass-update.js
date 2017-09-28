@@ -110,7 +110,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
             this.$el.find('.fields-container').append(html);
 
-            var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
+            var type = this.model.getFieldType(name);
 
             var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
