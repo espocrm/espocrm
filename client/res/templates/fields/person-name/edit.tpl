@@ -5,9 +5,9 @@
         </select>
     </div>
     <div class="col-sm-4 col-xs-4">
-        <input type="text" class="form-control" name="first{{ucName}}" value="{{firstValue}}" placeholder="{{translate 'First Name'}}">
+        <input type="text" class="form-control" name="first{{ucName}}" value="{{firstValue}}" placeholder="{{translate 'First Name'}}"{{#if firstMaxLength}} maxlength="{{firstMaxLength}}"{{/if}}>
     </div>
     <div class="col-sm-5 col-xs-5">
-        <input type="text" class="form-control" name="last{{ucName}}" value="{{lastValue}}" placeholder="{{translate 'Last Name'}}">
+        <input type="text" class="form-control" name="last{{ucName}}" value="{{lastValue}}" placeholder="{{translate 'Last Name'}}"{{#if lastMaxLength}} maxlength="{{lastMaxLength}}"{{/if}}>
     </div>
 </div>
