@@ -25,34 +25,27 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/admin/panels/admin-notification', 'views/base', function (Dep) {
+
+Espo.define('views/admin/panels/notifications', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'admin/panels/admin-notification',
+        template: 'admin/panels/notifications',
 
         data: function () {
             return {
-                notifications: this.notifications
+                notificationList: this.notificationList
             };
         },
 
         setup: function () {
-            this.wait(true);
-            $.ajax({
-                type: 'GET',
-                url: 'Admin/action/adminNotifications',
-                error: function (x) {
-                }.bind(this)
-            }).done(function (data) {
-                this.notifications = data;
-            }.bind(this))
-            .always(function (data) {
-                this.wait(false);
+            this.notificationList = [];
+            this.ajaxGetRequest('Admin/action/adminNotificationList').then(function (notificationList) {
+                this.notificationList = notificationList;
+                if (this.isRendered() || this.isBeingRendered()) {
+                    this.reRender();
+                }
             }.bind(this));
-
-            Dep.prototype.setup.call(this);
-        },
-
+        }
     });
 });

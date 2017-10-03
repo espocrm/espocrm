@@ -42,15 +42,14 @@ Espo.define('views/admin/index', 'view', function (Dep) {
             this.links = this.getMetadata().get('app.adminPanel');
             this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
 
-            this.createView('adminNotificationPanel', 'views/admin/panels/admin-notification', {
-            }, function (view) {
-                view.render();
-            }, this);
+            this.createView('notificationsPanel', 'views/admin/panels/notifications', {
+                el: this.getSelector() + ' .notifications-panel-container'
+            });
         },
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Administration'));
-        },
+        }
 
     });
 });
