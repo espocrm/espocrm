@@ -50,7 +50,7 @@ class ScheduledJob
      *
      * @var string
      */
-    protected $lasCronRunTime = '-24 hours';
+    protected $lastCronRunTime = '24 hours';
 
     /**
      * @var array - path to cron job files
@@ -208,7 +208,7 @@ class ScheduledJob
      */
     public function isCronConfigured()
     {
-        $date = new \DateTime($this->lasCronRunTime, new \DateTimeZone("UTC"));
+        $date = new \DateTime('-' . $this->lastCronRunTime, new \DateTimeZone("UTC"));
 
         $query = "
             SELECT COUNT(id) as count FROM job
