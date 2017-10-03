@@ -36,13 +36,16 @@ class Person extends \Espo\Services\Record
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
         $data = array(
-            'OR' => array(
-                array(
-                    'firstName' => $entity->get('firstName'),
-                    'lastName' => $entity->get('lastName'),
-                )
-            )
+            'OR' => []
         );
+        $toCheck = false;
+        if ($entity->get('firstName') || $entity->get('lastName')) {
+            $part = [];
+            $part['firstName'] = $entity->get('firstName');
+            $part['lastName'] = $entity->get('lastName');
+            $data['OR'][] = $part;
+            $toCheck = true;
+        }
         if (
             ($entity->get('emailAddress') || $entity->get('emailAddressData'))
             &&
@@ -62,7 +65,11 @@ class Person extends \Espo\Services\Record
                 $data['OR'][] = array(
                     'emailAddress' => $emailAddress
                 );
+                $toCheck = true;
             }
+        }
+        if (!$toCheck) {
+            return false;
         }
 
         return $data;
