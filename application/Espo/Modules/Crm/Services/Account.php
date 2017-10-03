@@ -44,6 +44,9 @@ class Account extends \Espo\Services\Record
 
     protected function getDuplicateWhereClause(Entity $entity, $data = array())
     {
+        if (!$entity->get('name')) {
+            return false;
+        }
         return array(
             'name' => $entity->get('name')
         );
