@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils;
+
 use Espo\Core\Exceptions\NotFound;
 
 class ScheduledJob
@@ -43,6 +44,13 @@ class ScheduledJob
     protected $cronFile = 'cron.php';
 
     protected $allowedMethod = 'run';
+
+    /**
+     * Last cron run time to check if crontab is configured properly
+     *
+     * @var string
+     */
+    protected $lasCronRunTime = '-24 hours';
 
     /**
      * @var array - path to cron job files
@@ -193,4 +201,32 @@ class ScheduledJob
         );
     }
 
+    /**
+     * Check if crontab is configured properly
+     *
+     * @return boolean
+     */
+    public function isCronConfigured()
+    {
+        $date = new \DateTime($this->lasCronRunTime, new \DateTimeZone("UTC"));
+
+        $query = "
+            SELECT COUNT(id) as count FROM job
+            WHERE
+                deleted = 0
+                AND `status` IN ('Success', 'Failed')
+                AND execute_time > '" . $date->format('Y-m-d H:i:s') . "'
+        ";
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        if (isset($row['count']) && $row['count'] >= 1) {
+            return true;
+        }
+
+        return false;
+    }
 }

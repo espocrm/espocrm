@@ -18,6 +18,8 @@
 			{{/each}}
 		</div>
 		<div class="col-md-5">
+            <div class="admin-notification-panel">{{{adminNotificationPanel}}}</div>
+
 			<iframe src="{{iframeUrl}}" style="width: 100%; height: 874px;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 		</div>
 	</div>
