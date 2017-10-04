@@ -682,8 +682,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
             this.setupActionItems();
-
-            this.setupFinal();
+            this.setupBeforeFinal();
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
@@ -691,7 +690,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }, this);
         },
 
-        setupFinal: function () {
+        setupBeforeFinal: function () {
             this.manageAccess();
 
             this.attributes = this.model.getClonedAttributes();
@@ -717,6 +716,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDynamicLogic();
 
             this.setupFieldLevelSecurity();
+        },
+
+        setupFinal: function () {
             this.build();
         },
 
