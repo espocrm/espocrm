@@ -274,10 +274,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 this.isNew = true;
             }
 
-            this.setupFinal();
+            this.setupBeforeFinal();
         },
 
-        setupFinal: function () {
+        setupBeforeFinal: function () {
             this.attributes = this.model.getClonedAttributes();
 
             this.listenTo(this.model, 'change', function () {
