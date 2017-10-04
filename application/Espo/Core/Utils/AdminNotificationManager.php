@@ -65,33 +65,43 @@ class AdminNotificationManager
     {
         $notificationList = [];
 
-        if (!$this->isCronConfigured()) {
-            $notificationList[] = array(
-                'id' => 'cronNotConfigured',
-                'id' => 'cronNotConfigured',
-                'message' => $this->getLanaguage()->translate('cronNotConfigured', 'messages', 'Admin')
-            );
+        if ($this->getConfig()->get('adminNotificationsDisabled')) {
+            return [];
         }
 
-        $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
-        if (!empty($instanceNeedingUpgrade)) {
-            $message = $this->getLanaguage()->translate('upgradeInstance', 'messages', 'Admin');
-            $notificationList[] = array(
-                'id' => 'upgradeInstance',
-                'categoty' => 'upgradeInstance',
-                'message' => $this->prepareMessage($message, $instanceNeedingUpgrade)
-            );
-        }
-
-        $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
-        if (!empty($extensionsNeedingUpgrade)) {
-            foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
-                $message = $this->getLanaguage()->translate('upgradeExtension', 'messages', 'Admin');
+        if (!$this->getConfig()->get('adminNotificationCronIsNotConfiguredDisabled')) {
+            if (!$this->isCronConfigured()) {
                 $notificationList[] = array(
-                    'id' => 'upgradeExtension' . Util::toCamelCase($extensionName, ' ', true),
-                    'categoty' => 'upgradeExtension',
-                    'message' => $this->prepareMessage($message, $extensionDetails)
+                    'id' => 'cronIsNotConfigured',
+                    'type' => 'cronIsNotConfigured',
+                    'message' => $this->getLanaguage()->translate('cronIsNotConfigured', 'messages', 'Admin')
                 );
+            }
+        }
+
+        if (!$this->getConfig()->get('adminNotificationNewVersionIsAvailableDisabled')) {
+            $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
+            if (!empty($instanceNeedingUpgrade)) {
+                $message = $this->getLanaguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
+                $notificationList[] = array(
+                    'id' => 'newVersionIsAvailable',
+                    'type' => 'newVersionIsAvailable',
+                    'message' => $this->prepareMessage($message, $instanceNeedingUpgrade)
+                );
+            }
+        }
+
+        if (!$this->getConfig()->get('adminNotificationNewExtensionVersionIsAvailableDisabled')) {
+            $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
+            if (!empty($extensionsNeedingUpgrade)) {
+                foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
+                    $message = $this->getLanaguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    $notificationList[] = array(
+                        'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
+                        'type' => 'newExtensionVersionIsAvailable',
+                        'message' => $this->prepareMessage($message, $extensionDetails)
+                    );
+                }
             }
         }
 
