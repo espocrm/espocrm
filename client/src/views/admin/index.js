@@ -33,13 +33,28 @@ Espo.define('views/admin/index', 'view', function (Dep) {
 
         data: function () {
             return {
-                links: this.links,
+                panelDataList: this.panelDataList,
                 iframeUrl: this.iframeUrl
             };
         },
 
         setup: function () {
-            this.links = this.getMetadata().get('app.adminPanel');
+            this.panelDataList = [];
+
+            var panels = this.getMetadata().get('app.adminPanel') || {};
+            for (var name in panels) {
+                var item = Espo.Utils.clone(panels[name]);
+                item.name = name;
+                item.itemList = item.itemList || item.items || [];
+                this.panelDataList.push(item);
+            }
+
+            this.panelDataList.sort(function (v1, v2) {
+                if (!('order' in v1) && ('order' in v2)) return true;
+                if (!('order' in v2)) return false;
+                return v1.order > v2.order;
+            }.bind(this));
+
             this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
 
             if (!this.getConfig().get('adminNotificationsDisabled')) {

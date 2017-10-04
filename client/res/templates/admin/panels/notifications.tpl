@@ -2,7 +2,7 @@
     <div class="panel panel-danger">
         <div class="panel-body">
             <div class="list-container">
-                <div class="list-group list">
+                <div class="list-group list list-expanded">
                 {{#each notificationList}}
                     <div data-id="{{id}}" class="list-group-item notificatin-item">
                         <div class="text-danger">{{{message}}}</div>

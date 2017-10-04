@@ -3,23 +3,26 @@
 <div class="admin-content">
 	<div class="row">
 		<div class="col-md-7">
-			{{#each links}}
-			<h4>{{translate label scope='Admin'}}</h4>
-			<table class="table table-bordered">
-			    {{#each items}}
-			    <tr>
-			        <td width="200">
-			            <a href="{{url}}">{{translate label scope='Admin' category='labels'}}</a>
-			        </td>
-			        <td>{{translate description scope='Admin' category='descriptions'}}</td>
-			    </tr>
-			    {{/each}}
-			</table>
-			{{/each}}
+			<div class="admin-tables-container">
+				{{#each panelDataList}}
+				<div>
+					<h4>{{translate label scope='Admin'}}</h4>
+					<table class="table table-bordered table-admin-panel" data-name="{{name}}">
+					    {{#each itemList}}
+					    <tr>
+					        <td>
+					            <a href="{{url}}">{{translate label scope='Admin' category='labels'}}</a>
+					        </td>
+					        <td>{{translate description scope='Admin' category='descriptions'}}</td>
+					    </tr>
+					    {{/each}}
+					</table>
+				</div>
+				{{/each}}
+			</div>
 		</div>
-		<div class="col-md-5">
+		<div class="col-md-5 admin-right-column">
             <div class="notifications-panel-container">{{{notificationsPanel}}}</div>
-
 			<iframe src="{{iframeUrl}}" style="width: 100%; height: 874px;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 		</div>
 	</div>

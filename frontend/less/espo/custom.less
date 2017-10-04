@@ -1432,9 +1432,29 @@ pre > code {
     font-style: normal;
 }
 
+.table-admin-panel tr > td:first-child {
+    width: 200px;
+}
+
+.admin-tables-container > div {
+    margin-bottom: 20px;
+    .table-admin-panel {
+        margin-bottom: 0;
+    }
+    > h4 {
+        margin-top: 0;
+    }
+}
+
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: 5px;
+    }
+}
+
+@media screen and (min-width: @screen-md-min) {
+    .admin-content .admin-right-column {
+        padding-top: 28px;
     }
 }
 

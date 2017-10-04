@@ -1,7 +1,7 @@
 {
-   "system":{
-      "label":"System",
-      "items":[
+   "system": {
+      "label": "System",
+      "itemList": [
          {
             "url":"#Admin/settings",
             "label":"Settings",
@@ -52,11 +52,12 @@
             "label":"Rebuild",
             "description":"rebuild"
          }
-      ]
+      ],
+      "order": 0
    },
    "users":{
-      "label":"Users",
-      "items":[
+      "label": "Users",
+      "itemList": [
          {
             "url":"#User",
             "label":"Users",
@@ -82,11 +83,12 @@
             "label": "Action History",
             "description": "actionHistory"
          }
-      ]
+      ],
+      "order": 5
    },
    "customization":{
-      "label":"Customization",
-      "items":[
+      "label": "Customization",
+      "itemList": [
          {
             "url":"#Admin/layouts",
             "label":"Layout Manager",
@@ -107,11 +109,12 @@
             "label":"Extensions",
             "description":"extensions"
          }
-      ]
+      ],
+      "order": 10
    },
    "email":{
-      "label":"Email",
-      "items":[
+      "label": "Email",
+      "itemList": [
          {
             "url":"#Admin/outboundEmails",
             "label":"Outbound Emails",
@@ -142,11 +145,12 @@
             "label":"Email Templates",
             "description":"emailTemplates"
          }
-      ]
+      ],
+      "order": 15
    },
    "portal": {
-      "label":"Portal",
-      "items":[
+      "label": "Portal",
+      "itemList": [
          {
             "url":"#Portal",
             "label":"Portals",
@@ -162,16 +166,18 @@
             "label":"Portal Roles",
             "description":"portalRoles"
          }
-      ]
+      ],
+      "order": 20
    },
    "data":{
-      "label":"Data",
-      "items":[
+      "label": "Data",
+      "itemList": [
          {
             "url":"#Import",
             "label":"Import",
             "description":"import"
          }
-      ]
+      ],
+      "order": 25
    }
 }
