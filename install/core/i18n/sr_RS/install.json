@@ -116,11 +116,11 @@
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Pronađite httpd.conf datoteku (uobičajeno je u fascikli conf, config ili nešto slično)<br>\n2. Unutar httpd.conf datoteke skinite komentar sa reda LoadModule rewrite_module modules/mod_rewrite.so (uklonite '#' znak na početku reda)<br>\n3. Proverite i da li su ClearModuleList AddModule mod_rewrite.c takođe bez znaka #.\n</pre>",
-        "linux": "br><br>1.Omogućite \"mod_rewrite\". Da ovo uradite pokrenite ovaj kod u terminalu:<pre>{APACHE1}</pre><br>2. Omogućite .htaccess podršku. Dodajte/izmenite podešacanja servera (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Nakon toga pokrenite ovaj kod na serveru:<pre>{APACHE3}</pre><br>3. Pokuštajte da dodate RewriteBase putanju, otvorite datoteku {API_PATH}.htaccess i izmenite sledeći red:<pre>{APACHE4}</pre>NA<pre>{APACHE5}</pre><br> Za više informacija posetite <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">Apache server konfiguraciju za EspoCRM</a>.<br><br>"
+        "linux": "br><br>1.Omogućite \"mod_rewrite\". Da ovo uradite pokrenite ovaj kod u terminalu:<pre>{APACHE1}</pre><br>2. Omogućite .htaccess podršku. Dodajte/izmenite podešacanja servera (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Nakon toga pokrenite ovaj kod na serveru:<pre>{APACHE3}</pre><br>3. Pokuštajte da dodate RewriteBase putanju, otvorite datoteku {API_PATH}.htaccess i izmenite sledeći red:<pre>{APACHE4}</pre>NA<pre>{APACHE5}</pre><br> Za više informacija posetite <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">Apache server konfiguraciju za EspoCRM</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Za više informacija posetite <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server konfiguraciju za EspoCRM</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Za više informacija posetite <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server konfiguraciju za EspoCRM</a>.<br><br>"
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Za više informacija posetite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server konfiguraciju za EspoCRM</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Za više informacija posetite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server konfiguraciju za EspoCRM</a>.<br><br>"
       }
     },
     "modRewriteTitle": {
