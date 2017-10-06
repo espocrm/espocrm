@@ -208,14 +208,18 @@ class ScheduledJob
      */
     public function isCronConfigured()
     {
-        $date = new \DateTime('-' . $this->lastCronRunTime, new \DateTimeZone("UTC"));
+        $nowDate = new \DateTime('now', new \DateTimeZone("UTC"));
+        $startDate = new \DateTime('-' . $this->lastCronRunTime, new \DateTimeZone("UTC"));
 
         $query = "
-            SELECT COUNT(id) as count FROM job
+            SELECT job.id FROM scheduled_job
+            LEFT JOIN job ON job.scheduled_job_id = scheduled_job.id AND job.deleted = 0
             WHERE
-                deleted = 0
-                AND `status` IN ('Success', 'Failed')
-                AND execute_time > '" . $date->format('Y-m-d H:i:s') . "'
+                scheduled_job.job = 'Dummy'
+                AND scheduled_job.deleted = 0
+                AND job.execute_time BETWEEN '". $startDate->format('Y-m-d H:i:s') ."' AND '". $nowDate->format('Y-m-d H:i:s') ."'
+                AND (job.status IN ('Success', 'Failed') OR (job.status = 'Pending' AND job.execute_time >= '". $nowDate->modify('-1 hour')->format('Y-m-d H:i:s') ."') )
+            ORDER BY job.execute_time DESC
         ";
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -223,7 +227,8 @@ class ScheduledJob
         $sth->execute();
 
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        if (isset($row['count']) && $row['count'] >= 1) {
+
+        if (!empty($row['id'])) {
             return true;
         }
 
