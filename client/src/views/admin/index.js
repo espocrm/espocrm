@@ -43,10 +43,15 @@ Espo.define('views/admin/index', 'view', function (Dep) {
 
             var panels = this.getMetadata().get('app.adminPanel') || {};
             for (var name in panels) {
-                var item = Espo.Utils.clone(panels[name]);
-                item.name = name;
-                item.itemList = item.itemList || item.items || [];
-                this.panelDataList.push(item);
+                var panelItem = Espo.Utils.cloneDeep(panels[name]);
+                panelItem.name = name;
+                panelItem.itemList = panelItem.itemList || [];
+                if (panelItem.items) {
+                    panelItem.items.forEach(function (item) {
+                        panelItem.itemList.push(item);
+                    }, this);
+                }
+                this.panelDataList.push(panelItem);
             }
 
             this.panelDataList.sort(function (v1, v2) {
