@@ -1,0 +1,1 @@
+Recordatorio sobre {{{entityTypeLowerFirst}}} '{{{name}}}'
