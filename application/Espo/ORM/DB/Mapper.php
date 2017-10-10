@@ -563,7 +563,7 @@ abstract class Mapper implements IMapper
                         if (!empty($data) && is_array($data)) {
                             $setArr = array();
                             foreach ($data as $column => $value) {
-                                $setArr[] = $this->toDb($column) . " = " . $this->pdo->quote($value);
+                                $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
                             }
                             $setPart .= ', ' . implode(', ', $setArr);
                         }
