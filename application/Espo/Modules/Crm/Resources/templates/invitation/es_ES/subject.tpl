@@ -1,0 +1,1 @@
+Invitacion a {{{entityTypeLowerFirst}}} '{{{name}}}'
