@@ -36,7 +36,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
                 if (this.getAcl().checkModel(this.model, 'edit')) {
                     this.menu.buttons.push({
                         'label': 'Complete',
-                        'action': 'setCompleted',
+                        'action': 'setCompletedMain',
                         'iconHtml': '<span class="glyphicon glyphicon-ok"></span>',
                         'acl': 'edit',
                     });
@@ -49,7 +49,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
             }
         },
 
-        actionSetCompleted: function (data) {
+        actionSetCompletedMain: function (data) {
             var id = data.id;
 
             this.model.save({
