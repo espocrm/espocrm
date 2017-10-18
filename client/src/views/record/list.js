@@ -999,10 +999,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
             this._loadListLayout(function (listLayout) {
-                this.listLayout = listLayout;
-                this._internalLayout = this._convertLayout(listLayout);
+
+                var scopeForbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+                var _listLayout = [];
+
+                for (var i in listLayout) {
+                    var col = listLayout[i];
+                    if (scopeForbiddenFieldList.indexOf(col.name) !== -1) {
+                        continue;
+                    }
+                    _listLayout.push(col);
+                }
+
+                this.listLayout = _listLayout;
+                this._internalLayout = this._convertLayout(_listLayout);
                 callback(this._internalLayout);
-                return;
             }.bind(this));
         },
 
