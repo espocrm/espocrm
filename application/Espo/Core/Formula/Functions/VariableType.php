@@ -47,7 +47,7 @@ class VariableType extends Base
         }
 
         if (!property_exists($this->getVariables(), $name)) {
-            throw new Error();
+            return null;
         }
 
         return $this->getVariables()->$name;
