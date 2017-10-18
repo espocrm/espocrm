@@ -62,8 +62,17 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 var $file = $(e.currentTarget);
                 var files = e.currentTarget.files;
                 if (files.length) {
-                    this.uploadFile(files[0]);
-                    $file.replaceWith($file.clone(true));
+                    if (this.params.maximumFileSize === 0 || files[0].size < (this.params.maximumFileSize * 1000)) {
+                        this.uploadFile(files[0]);
+                        $file.replaceWith($file.clone(true));
+                    } else {
+                        var msg = this.translate('maximumFileSizeError', 'messages')
+                            .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                            .replace('{max}', this.params.maximumFileSize);
+                        this.showValidationMessage(msg, '.attachment-button label');
+                        this.trigger('invalid');
+                        e.currentTarget.value = '';
+                    }
                 }
             },
             'click a[data-action="showImagePreview"]': function (e) {
@@ -85,7 +94,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         data: function () {
-            var data =_.extend({
+            var data = _.extend({
                 id: this.model.get(this.idName),
                 acceptAttribue: this.acceptAttribue
             }, Dep.prototype.data.call(this));
@@ -184,7 +193,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getBasePath() + '?entryPoint=image&size=' + this.previewSize + '&id=' + id + '"></a>';
             }
             return preview;
         },
@@ -218,7 +227,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
                     string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
                 } else {
-                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
+                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
                 }
                 return string;
             }
@@ -338,11 +347,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             var $att = $('<div>').css('display', 'inline-block')
-                                 .css('width', '100%')
-                                 .css('max-width', '300px')
-                                 .append(removeLink)
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
-                                 .addClass('gray-box');
+                .css('width', '100%')
+                .css('max-width', '300px')
+                .append(removeLink)
+                .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
+                .addClass('gray-box');
 
             var $container = $('<div>').append($att);
             this.$attachment.append($container);

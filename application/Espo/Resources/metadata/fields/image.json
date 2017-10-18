@@ -12,6 +12,11 @@
          "options": ["x-small", "small", "medium", "large"]
       },
       {
+         "name":"maximumFileSize",
+         "type":"int",
+         "tooltip":true
+      },
+      {
          "name":"audited",
          "type":"bool"
       }
