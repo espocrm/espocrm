@@ -40,6 +40,12 @@ class ValueType extends Base
             throw new Error();
         }
 
-        return $item->value;
+        $value = $item->value;
+
+        if (is_string($value)) {
+            $value = str_replace("\\n", "\n", $value);
+        }
+
+        return $value;
     }
 }

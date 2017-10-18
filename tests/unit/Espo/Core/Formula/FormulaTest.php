@@ -926,6 +926,20 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    function testStringNewLine()
+    {
+        $item = json_decode('
+            {
+                "type": "value",
+                "value": "test\\ntest"
+            }
+        ');
+
+        $result = $this->formula->process($item, $this->entity);
+
+        $this->assertEquals("test\ntest", $result);
+    }
+
     function testVariable()
     {
         $item = json_decode('
