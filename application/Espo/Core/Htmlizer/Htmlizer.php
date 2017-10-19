@@ -155,18 +155,21 @@ class Htmlizer
         if (!$skipLinks) {
             $relationDefs = $entity->getRelations();
             foreach ($entity->getRelationList() as $relation) {
-                if (
-                    !empty($relationDefs[$relation]['type'])
-                    &&
-                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
-                ) {
+                if (!empty($relationDefs[$relation]['type'])) {
                     $relatedEntity = $entity->get($relation);
                     if (!$relatedEntity) continue;
                     if ($this->getAcl()) {
                         if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
                     }
-
-                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                    if($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent') {
+                        $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                    }
+                    else {
+                        $relatedEntities = $relatedEntity;
+                        foreach ($relatedEntities as $relatedEntity) {
+                            $data[$relation][] = $this->getDataFromEntity($relatedEntity, true);
+                        }
+                    }
                 }
             }
         }
