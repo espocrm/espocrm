@@ -81,7 +81,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $skipLinks = false)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $relationFields = array())
     {
         $data = $entity->toArray();
 
@@ -162,12 +162,12 @@ class Htmlizer
                         if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
                     }
                     if($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent') {
-                        $data[$relation] = $this->getDataFromEntity($relatedEntity, true);
+                        $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $relationFields);
                     }
-                    else {
+                    elseif(in_array($relation, $relationFields)) {
                         $relatedEntities = $relatedEntity;
                         foreach ($relatedEntities as $relatedEntity) {
-                            $data[$relation][] = $this->getDataFromEntity($relatedEntity, true);
+                            $data[$relation][] = $this->getDataFromEntity($relatedEntity, true, $relationFields);
                         }
                     }
                 }
@@ -177,7 +177,7 @@ class Htmlizer
         return $data;
     }
 
-    public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
+    public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false, $relationFields = array())
     {
         $code = \LightnCandy::compile($template, [
             'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
@@ -247,7 +247,7 @@ class Htmlizer
             $this->fileManager->removeFile($fileName);
         }
 
-        $data = $this->getDataFromEntity($entity, $skipLinks);
+        $data = $this->getDataFromEntity($entity, $skipLinks, $relationFields);
 
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
