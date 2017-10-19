@@ -101,6 +101,11 @@ abstract class Base
         return $this->getContainer()->get('clientManager');
     }
 
+    protected function getTemplateFileManager()
+    {
+        return $this->getContainer()->get('templateFileManager');
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;
