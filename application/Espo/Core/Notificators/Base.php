@@ -92,26 +92,35 @@ class Base implements Injectable
 
     public function process(Entity $entity)
     {
-        if ($entity->has('assignedUserId') && $entity->get('assignedUserId')) {
-            $assignedUserId = $entity->get('assignedUserId');
-            if ($assignedUserId != $this->getUser()->id && $entity->isFieldChanged('assignedUserId')) {
-                $notification = $this->getEntityManager()->getEntity('Notification');
-                $notification->set(array(
-                    'type' => 'Assign',
-                    'userId' => $assignedUserId,
-                    'data' => array(
-                        'entityType' => $entity->getEntityType(),
-                        'entityId' => $entity->id,
-                        'entityName' => $entity->get('name'),
-                        'isNew' => $entity->isNew(),
-                        'userId' => $this->getUser()->id,
-                        'userName' => $this->getUser()->get('name')
-                    )
-                ));
-                $this->getEntityManager()->saveEntity($notification);
+        if (!$entity->get('assignedUserId')) return;
+        if (!$entity->isFieldChanged('assignedUserId')) return;
+
+        $assignedUserId = $entity->get('assignedUserId');
+
+        if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
+            if ($entity->isNew()) {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
+            } else {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
             }
+        } else {
+            $isNotSelfAssignment = $assignedUserId !== $this->getUser()->id;
         }
+        if (!$isNotSelfAssignment) return;
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set(array(
+            'type' => 'Assign',
+            'userId' => $assignedUserId,
+            'data' => array(
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->id,
+                'entityName' => $entity->get('name'),
+                'isNew' => $entity->isNew(),
+                'userId' => $this->getUser()->id,
+                'userName' => $this->getUser()->get('name')
+            )
+        ));
+        $this->getEntityManager()->saveEntity($notification);
     }
-
 }
-
