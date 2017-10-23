@@ -62,6 +62,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
                 });
                 $(e.target).closest('ul.panels > li').remove();
+                this.normilizaDisabledItemList();
             },
             'click #layout a[data-action="addRow"]': function (e) {
                 var tpl = this.unescape($("#layout-row-tpl").html());
@@ -76,6 +77,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
                 });
                 $(e.target).closest('ul.rows > li').remove();
+                this.normilizaDisabledItemList();
             },
             'click #layout a[data-action="removeField"]': function (e) {
                 var el = $(e.target).closest('li');
@@ -165,6 +167,12 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 }, this);
             }
         }, Dep.prototype.events),
+
+        normilizaDisabledItemList: function () {
+            $('#layout ul.cells.disabled > li').each(function (i, el) {
+                $(el).removeAttr('data-full-width');
+            }.bind(this));
+        },
 
         addPanel: function (data) {
             var tpl = this.unescape($("#layout-panel-tpl").html());
