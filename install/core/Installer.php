@@ -233,10 +233,10 @@ class Installer
         $result = false;
 
         try {
-            $result = $this->app->getContainer()->get('schema')->rebuild();
+            $result = $this->app->getContainer()->get('dataManager')->rebuild();
         } catch (\Exception $e) {
             $this->auth();
-            $result = $this->app->getContainer()->get('schema')->rebuild();
+            $result = $this->app->getContainer()->get('dataManager')->rebuild();
         }
 
         return $result;
@@ -451,6 +451,4 @@ class Installer
 
         return $result;
     }
-
-
 }

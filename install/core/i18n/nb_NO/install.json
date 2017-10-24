@@ -116,11 +116,11 @@
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Finn httpd.conf file (du finner den vanligvis i en mappe kalt conf, config eller lignende)<br>\n2. I httpd.conf-filen må du avkommentere linjen LoadModule rewrite_module modules/mod_rewrite.so (ved å fjerne '#'-symbolet i starten av linjen)<br>\n3. Sjekk også at linjen ClearModuleList og AddModule mod_rewrite.c er avkommentert.\n</pre> ",
-        "linux": "<br><br>1. Aktiver \"mod_rewrite\". For å gjøre det, kjør disse kommandoene:<pre>{APACHE1}</pre><br>2. Aktiver støtte for .htaccess. Legg til / rediger tjenerens konfigurasjon (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Kjør følgende kommando etterpå:<pre>{APACHE3}</pre><br>3. Forsøk å legg til RewriteBase-banen, åpne filen {API_PATH}.htaccess og erstatt følgende linje:<pre>{APACHE4}</pre>til<pre>{APACHE5}</pre><br> For mer informasjon kan du gå til veiledningen <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">\"Konfigurasjon av Apache-tjener for EspoCRM</a>.<br><br>"
+        "linux": "<br><br>1. Aktiver \"mod_rewrite\". For å gjøre det, kjør disse kommandoene:<pre>{APACHE1}</pre><br>2. Aktiver støtte for .htaccess. Legg til / rediger tjenerens konfigurasjon (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Kjør følgende kommando etterpå:<pre>{APACHE3}</pre><br>3. Forsøk å legg til RewriteBase-banen, åpne filen {API_PATH}.htaccess og erstatt følgende linje:<pre>{APACHE4}</pre>til<pre>{APACHE5}</pre><br> For mer informasjon kan du gå til veiledningen <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">\"Konfigurasjon av Apache-tjener for EspoCRM</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> ",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> "
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> ",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> "
       }
     },
     "modRewriteTitle": {

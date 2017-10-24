@@ -116,11 +116,11 @@
     "modRewriteInstruction": {
       "apache": {
         "windows": "结果<前> 1。查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</ PRE>",
-        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM Apache服务器配置</a>.<br><br>"
+        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" 目标=\"_空白\">EspoCRM Apache服务器配置</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>"
+        "linux": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>"
       }
     },
     "modRewriteTitle": {

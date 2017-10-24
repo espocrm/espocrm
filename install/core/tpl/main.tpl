@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div class="cell cell-website pull-right" align="right">
-			<a target="_blank" href="http://blog.espocrm.com/administration/how-to-install-espocrm/" style="font-weight:bold;">{$langs['labels']['Installation Guide']}</a>
+			<a target="_blank" href="https://www.espocrm.com/documentation/administration/installation/" style="font-weight:bold;">{$langs['labels']['Installation Guide']}</a>
 		</div>
 
 	</div>

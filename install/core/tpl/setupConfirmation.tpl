@@ -86,7 +86,7 @@
 			</table>
 
 			<div class="cell cell-website pull-right" align="right">
-				<a target="_blank" href="http://blog.espocrm.com/administration/server-configuration-for-espocrm/" style="font-weight:bold;">{$langs['labels']['Configuration Instructions']}</a>
+				<a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:bold;">{$langs['labels']['Configuration Instructions']}</a>
 			</div>
 
 			<br>

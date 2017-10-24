@@ -121,12 +121,12 @@
     },
     "modRewriteInstruction": {
       "apache": {
-        "linux": "<br><br>1. Abilitare \"mod_rewrite\". Eseguire questi comandi in un terminale:<pre>{APACHE1}</pre><br>2. Abilitare il supporto .htaccess. Aggiungere/modificare le impostazioni di configurazione del server (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Dopo eseguire questo comando in un terminale:<pre>{APACHE3}</pre><br>3. Provare ad aggiungere il RewriteBase path, aprire il file {API_PATH}.htaccess e sostituire la seguente riga:<pre>{APACHE4}</pre>con<pre>{APACHE5}</pre><br> per ulteriori informazioni visitare la guida in linea <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">configurazione del server Apache per EspoCRM</a>.<br><br>",
+        "linux": "<br><br>1. Abilitare \"mod_rewrite\". Eseguire questi comandi in un terminale:<pre>{APACHE1}</pre><br>2. Abilitare il supporto .htaccess. Aggiungere/modificare le impostazioni di configurazione del server (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Dopo eseguire questo comando in un terminale:<pre>{APACHE3}</pre><br>3. Provare ad aggiungere il RewriteBase path, aprire il file {API_PATH}.htaccess e sostituire la seguente riga:<pre>{APACHE4}</pre>con<pre>{APACHE5}</pre><br> per ulteriori informazioni visitare la guida in linea <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">configurazione del server Apache per EspoCRM</a>.<br><br>",
         "windows": "<br> <pre>1.Trovare il file httpd.conf (di solito si trova in una cartella denominata conf, config o qualcosa del genere)<br>\n2. All'interno del file httpd.conf decommentare la riga LoadModule rewrite_module modules/mod_rewrite.so (rimuovere il simbolo '#' all'inizio della riga)<br>\n3. Controllare che la linea ClearModuleList sia commentata, quindi assicurarsi che la linea AddModule mod_rewrite.c non sia commentata.\n</pre>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
       }
     }
   }

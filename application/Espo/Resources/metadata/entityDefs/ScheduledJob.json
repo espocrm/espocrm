@@ -72,5 +72,11 @@
         "Cleanup": "1 1 * * 0",
         "AuthTokenControl": "*/6 * * * *",
         "SendEmailNotifications": "*/2 * * * *"
+    },
+    "jobs": {
+        "Dummy": {
+            "isSystem": true,
+            "scheduling": "1 */12 * * *"
+        }
     }
 }
