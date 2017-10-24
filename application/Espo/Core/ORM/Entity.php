@@ -51,7 +51,7 @@ class Entity extends \Espo\ORM\Entity
         }
 
         $foreignEntityType = $this->getRelationParam($field, 'entity');
-        if ($foreignEntityType) {
+        if ($foreignEntityType && $this->entityManager) {
             $foreignEntityDefs = $this->entityManager->getMetadata()->get($foreignEntityType);
             if ($foreignEntityDefs && !empty($foreignEntityDefs['collection'])) {
                 $collectionDefs = $foreignEntityDefs['collection'];
