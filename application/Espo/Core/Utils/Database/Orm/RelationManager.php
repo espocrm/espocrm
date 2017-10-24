@@ -103,7 +103,7 @@ class RelationManager
         return false;
     }
 
-    public function convert($linkName, $linkParams, $entityName, $ormMeta)
+    public function convert($linkName, $linkParams, $entityName, $ormMetadata)
     {
         $entityDefs = $this->getMetadata()->get('entityDefs');
 
@@ -132,7 +132,7 @@ class RelationManager
         }
 
         if (isset($className) && $className !== false) {
-            $helperClass = new $className($this->metadata, $ormMeta, $entityDefs);
+            $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
             return $helperClass->process($linkName, $entityName, $foreignLink['name'], $foreignEntityName);
         }
         //END: relationDefs defined in separate file

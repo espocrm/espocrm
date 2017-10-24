@@ -50,6 +50,23 @@ class Entity extends \Espo\ORM\Entity
             $defs['additionalColumns'] = $columns;
         }
 
+        $foreignEntityType = $this->getRelationParam($field, 'entity');
+        if ($foreignEntityType && $this->entityManager) {
+            $foreignEntityDefs = $this->entityManager->getMetadata()->get($foreignEntityType);
+            if ($foreignEntityDefs && !empty($foreignEntityDefs['collection'])) {
+                $collectionDefs = $foreignEntityDefs['collection'];
+                if (!empty($foreignEntityDefs['collection']['orderBy'])) {
+                    $orderBy = $foreignEntityDefs['collection']['orderBy'];
+                    $order = 'ASC';
+                    if (array_key_exists('order', $foreignEntityDefs['collection'])) {
+                        $order = $foreignEntityDefs['collection']['order'];
+                    }
+                    $defs['orderBy'] = $orderBy;
+                    $defs['order'] = $order;
+                }
+            }
+        }
+
         $collection = $this->get($field, $defs);
         $ids = array();
         $names = new \stdClass();

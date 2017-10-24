@@ -34,7 +34,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         listTemplate: 'fields/link/list',
 
-        detailTemplate: 'fields/link/detail',
+        detailTemplate: 'fields/link-parent/detail',
 
         editTemplate: 'fields/link-parent/edit',
 
@@ -86,7 +86,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.typeName = this.name + 'Type';
             this.idName = this.name + 'Id';
 
-            this.foreignScopeList = this.params.entityList || this.model.getLinkParam(this.name, 'entityList') || [];
+            this.foreignScopeList = this.options.foreignScopeList || this.foreignScopeList;
+            this.foreignScopeList = this.foreignScopeList || this.params.entityList || this.model.getLinkParam(this.name, 'entityList') || [];
             this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(function (item) {
                 if (!this.getMetadata().get(['scopes', item, 'disabled'])) return true;
             }, this);

@@ -93,4 +93,9 @@ class OrmMetadata
         return $this->data;
     }
 
+    public function get($key = null, $default = null)
+    {
+        $result = Util::getValueByKey($this->getData(), $key, $default);
+        return $result;
+    }
 }
