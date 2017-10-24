@@ -110,12 +110,15 @@ abstract class Entity implements IEntity
 
     public function set($p1, $p2 = null)
     {
-        if (is_array($p1)) {
+        if (is_array($p1) || is_object($p1)) {
+            if (is_object($p1)) {
+                $p1 = get_object_vars($p1);
+            }
             if ($p2 === null) {
                 $p2 = false;
             }
             $this->populateFromArray($p1, $p2);
-        } else {
+        } else if (is_string($p1)) {
             $name = $p1;
             $value = $p2;
             if ($name == 'id') {
