@@ -172,7 +172,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         data: function () {
             var data = {
                 scope: this.model.name,
-                name: this.name,
+                name: this.name,W
                 defs: this.defs,
                 params: this.params,
                 value: this.getValueForDisplay()
@@ -184,6 +184,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 data.searchType = this.getSearchType();
                 data.searchTypeList = this.getSearchTypeList();
             }
+
             return data;
         },
 
