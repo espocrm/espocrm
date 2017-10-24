@@ -108,6 +108,18 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.loadSearchData();
 
+            if (this.presetName) {
+                var hasPresetListed = this.presetFilterList.find(function (item) {
+                    var name = (typeof item === 'string') ? item : item.name;
+                    if (name === this.presetName) {
+                        return true;
+                    }
+                }, this);
+                if (!hasPresetListed) {
+                    this.presetFilterList.push(this.presetName);
+                }
+            }
+
             this.model = new this.collection.model();
             this.model.clear();
 
