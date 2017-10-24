@@ -45,6 +45,12 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
             data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
             data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
+
+            if (this.mode === 'detail') {
+                data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.salutationValue;
+            } else if (this.mode === 'list' || this.mode === 'listLink') {
+                data.isNotEmpty = !!data.firstValue || !!data.lastValue;
+            }
             return data;
         },
 
@@ -76,6 +82,8 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         },
 
         validateRequired: function () {
+            var isRequired = this.model.getFieldParam(this.name, 'required');
+
             var validate = function (name) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
@@ -85,6 +93,14 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
                     }
                 }
             }.bind(this);
+
+            if (isRequired) {
+                if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    this.showValidationMessage(msg, '[name="'+this.lastField+'"]');
+                    return true;
+                }
+            }
 
             var result = false;
             result = validate(this.salutationField) || result;
@@ -96,7 +112,8 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         isRequired: function () {
             return this.model.getFieldParam(this.salutationField, 'required') ||
                    this.model.getFieldParam(this.firstField, 'required') ||
-                   this.model.getFieldParam(this.lastField, 'required');
+                   this.model.getFieldParam(this.lastField, 'required') ||
+                   this.model.getFieldParam(this.name, 'required');
         },
 
         fetch: function (form) {

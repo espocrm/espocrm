@@ -183,6 +183,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 data.searchValues = this.getSearchValues();
                 data.searchType = this.getSearchType();
                 data.searchTypeList = this.getSearchTypeList();
+            } else {
+                data.isNotEmpty = true;
             }
             return data;
         },
