@@ -47,7 +47,7 @@ Espo.define('views/modals/duplicate', 'views/modal', function (Dep) {
             this.buttonList = [
                 {
                     name: 'save',
-                    label: 'Save',
+                    label: 'Create Anyway',
                     style: 'danger',
                     onClick: function (dialog) {
                         this.trigger('save');

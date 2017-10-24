@@ -216,9 +216,9 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                         return suggestion.name + ' &#60;' + suggestion.id + '&#62;';
                     },
                     transformResult: function (response) {
-                        var response = JSON.parse(response);
+                        var response = typeof response === 'string' ? JSON.parse(response) : response;
                         var list = [];
-                        response.forEach(function(item) {
+                        response.list.forEach(function(item) {
                             list.push({
                                 id: item.emailAddress,
                                 name: item.entityName,

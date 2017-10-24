@@ -72,7 +72,8 @@
                 containerClass: 'autocomplete-suggestions',
                 tabDisabled: false,
                 dataType: 'text',
-                currentRequest: null,
+                currentRequests: null,
+                returnedData: null,
                 lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
                     return suggestion.value.toLowerCase().indexOf(queryLowerCase) !== -1;
                 },
@@ -428,22 +429,55 @@
                 if (options.onSearchStart.call(that.element, options.params) === false) {
                     return;
                 }
-                if ($.isFunction(options.serviceUrl)) {
-                    serviceUrl = options.serviceUrl.call(that.element, q);
+                if (!$.isArray(options.serviceUrl)) {
+                    var url = options.serviceUrl;
+                    this.options.serviceUrl = new Array();
+
+                    this.options.serviceUrl.push(url);
                 }
-                if(this.currentRequest != null) {
-                    this.currentRequest.abort();
+
+                if ($.isArray(this.currentRequests)) {
+                    $.each(this.currentRequests, function(i, req) { req.abort(); });
                 }
-                this.currentRequest = $.ajax({
-                    url: serviceUrl,
-                    data: options.ignoreParams ? null : options.params,
-                    type: options.type,
-                    dataType: options.dataType
-                }).done(function (data) {
-                    that.processResponse(data, q);
+                this.currentRequests = new Array();
+                this.returnedData = new Array();
+
+                $.each(this.options.serviceUrl, function (i, url) {
+                    if ($.isFunction(url)) {
+                        url = url.call(that.element, q);
+                    }
+                    var donePromise = $.ajax({
+                        url: url,
+                        data: options.ignoreParams ? null : options.params,
+                        type: options.type,
+                        dataType: options.dataType
+                    }).done(function (data) {
+                        that.returnedData.push(JSON.parse(data));
+                    });
+                    that.currentRequests.push(donePromise);
+                });
+
+                $.when.apply($, this.currentRequests).done(function () {
+                    var collated = {
+                        total: 0,
+                        list: new Array()
+                    };
+
+                    $.each(that.returnedData, function (i, data) {
+                        // determine if total + list or just list
+                        if (typeof data.total == 'undefined') {
+                            collated.total += data.length;
+                            collated.list = $.merge(collated.list, data);
+                        } else {
+                            collated.total += data.total;
+                            if (typeof data.list != 'undefined') {
+                                collated.list = $.merge(collated.list, data.list);
+                            }
+                        }
+                    });
+
+                    that.processResponse(collated, q);
                     options.onSearchComplete.call(that.element, q);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    options.onSearchError.call(that.element, q, jqXHR, textStatus, errorThrown);
                 });
             }
         },
@@ -520,6 +554,9 @@
             }
 
             $.each(that.suggestions, function (i, suggestion) {
+                if (typeof suggestion.value == 'undefined') {
+                    return false;
+                }
                 var foundMatch = suggestion.value.toLowerCase().indexOf(value) === 0;
                 if (foundMatch) {
                     bestMatch = suggestion;

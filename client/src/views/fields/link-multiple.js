@@ -195,7 +195,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             return suggestion.name;
                         },
                         transformResult: function (response) {
-                            var response = JSON.parse(response);
+                            var response = typeof response === 'string' ? JSON.parse(response) : response;
                             var list = [];
                             response.list.forEach(function(item) {
                                 list.push({
