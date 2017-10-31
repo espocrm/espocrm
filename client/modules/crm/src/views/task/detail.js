@@ -43,7 +43,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
                 }
                 this.listenToOnce(this.model, 'sync', function () {
                     if (~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                        this.$el.find('[data-action="setCompleted"]').remove();
+                        this.$el.find('[data-action="setCompletedMain"]').remove();
                     }
                 }, this);
             }
@@ -58,7 +58,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
                 patch: true,
                 success: function () {
                     Espo.Ui.success(this.translate('Saved'));
-                    this.$el.find('[data-action="setCompleted"]').remove();
+                    this.$el.find('[data-action="setCompletedMain"]').remove();
                 }.bind(this),
             });
 
