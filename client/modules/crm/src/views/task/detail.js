@@ -41,7 +41,7 @@ Espo.define('crm:views/task/detail', 'views/detail', function (Dep) {
                         'acl': 'edit',
                     });
                 }
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenTo(this.model, 'sync', function () {
                     if (~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
                         this.$el.find('[data-action="setCompletedMain"]').remove();
                     }
