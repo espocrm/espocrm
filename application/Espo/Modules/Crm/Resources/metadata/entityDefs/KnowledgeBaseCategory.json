@@ -74,6 +74,7 @@
     },
     "collection": {
         "sortBy": "parent",
+        "sortByByColumn": "parentId",
         "asc": true
     },
     "additionalTables": {

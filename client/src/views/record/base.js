@@ -688,6 +688,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                 o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
             }
+            if (this.recordHelper.hasFieldOptionList(name)) {
+                o.customOptionList = this.recordHelper.getFieldOptionList(name);
+            }
 
             this.createView(name, view, o);
 
