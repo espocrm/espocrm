@@ -188,14 +188,18 @@ class Converter
         if (!empty($entityMetadata['collection']) && is_array($entityMetadata['collection'])) {
             $collectionDefs = $entityMetadata['collection'];
             $ormMetadata[$entityName]['collection'] = array();
-            if (array_key_exists('sortBy', $collectionDefs)) {
-                $ormMetadata[$entityName]['collection']['orderBy'] = $collectionDefs['sortBy'];
+
+            if (array_key_exists('sortByByColumn', $collectionDefs)) {
+                $ormMetadata[$entityName]['collection']['orderBy'] = $collectionDefs['sortByByColumn'];
+            } else if (array_key_exists('sortBy', $collectionDefs)) {
+                if (array_key_exists($collectionDefs['sortBy'], $ormMetadata[$entityName]['fields'])) {
+                    $ormMetadata[$entityName]['collection']['orderBy'] = $collectionDefs['sortBy'];
+                }
             }
             $ormMetadata[$entityName]['collection']['order'] = 'ASC';
             if (array_key_exists('asc', $collectionDefs)) {
                 $ormMetadata[$entityName]['collection']['order'] = $collectionDefs['asc'] ? 'ASC' : 'DESC';
             }
-
         }
 
         return $ormMetadata;
