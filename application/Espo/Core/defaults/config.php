@@ -166,6 +166,7 @@ return array (
     'currencyFormat' => 1,
     'currencyDecimalPlaces' => null,
     'aclStrictMode' => false,
+    'aclAllowDeleteCreated' => false,
     'isInstalled' => false
 );
 
