@@ -1,6 +1,7 @@
 [
     "teams",
     "createdAt",
+    "createdBy",
     "emailAddress",
     "title",
     "isAdmin",
