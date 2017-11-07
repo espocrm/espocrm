@@ -110,15 +110,18 @@ class Meeting extends \Espo\Services\Record
         return true;
     }
 
-    protected function getInvitationManager()
+    protected function getInvitationManager($useUserSmtp = true)
     {
-        $smtpParams = $this->getPreferences()->getSmtpParams();
-        if ($smtpParams) {
-            if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+        $smtpParams = null;
+        if ($useUserSmtp) {
+            $smtpParams = $this->getPreferences()->getSmtpParams();
+            if ($smtpParams) {
+                if (array_key_exists('password', $smtpParams)) {
+                    $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                }
+                $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
+                $smtpParams['fromName'] = $this->getUser()->get('name');
             }
-            $smtpParams['fromAddress'] = $this->getUser()->get('emailAddress');
-            $smtpParams['fromName'] = $this->getUser()->get('name');
         }
         return new Invitations(
             $this->getEntityManager(),
@@ -132,9 +135,9 @@ class Meeting extends \Espo\Services\Record
         );
     }
 
-    public function sendInvitations(Entity $entity)
+    public function sendInvitations(Entity $entity, $useUserSmtp = true)
     {
-        $invitationManager = $this->getInvitationManager();
+        $invitationManager = $this->getInvitationManager($useUserSmtp);
 
         $emailHash = array();
 

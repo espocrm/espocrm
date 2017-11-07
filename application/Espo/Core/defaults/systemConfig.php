@@ -57,10 +57,14 @@ return array (    'defaultPermissions' =>
         ),
     ),
     'cron' => array(
-        'maxJobNumber' => 15, /** Max number of jobs per one execution */
-        'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
-        'minExecutionTime' => 50, /** to avoid too frequency execution */
-        'attempts' => 3, /** attempts to run jobs */
+        /** Max number of jobs per one execution. */
+        'maxJobNumber' => 15,
+        /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
+        'jobPeriod' => 7800,
+        /** Min time (in seconds) between two cron runs. */
+        'minExecutionTime' => 50,
+        /** Attempts to re-run failed jobs. */
+        'attempts' => 2
     ),
     'crud' => array(
         'get' => 'read',

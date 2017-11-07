@@ -14,6 +14,28 @@
    "modalViews": {
       "detail": "views/user/modals/detail"
    },
+   "defaultSidePanel": {
+      "detail": {
+        "name": "default",
+        "label": false,
+        "view": "views/user/record/panels/default-side"
+      },
+      "detailSmall": {
+        "name": "default",
+        "label": false,
+        "view": "views/user/record/panels/default-side"
+      },
+      "edit": {
+        "name": "default",
+        "label": false,
+        "view": "views/user/record/panels/default-side"
+      },
+      "editSmall": {
+        "name": "default",
+        "label": false,
+        "view": "views/user/record/panels/default-side"
+      }
+   },
    "defaultSidePanelFieldLists": {
       "detail": [
         "avatar",
