@@ -304,8 +304,29 @@ class Xlsx extends \Espo\Core\Injectable
                         $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
                     }
                 } else if ($type == 'datetime' || $type == 'datetimeOptional') {
-                    if (isset($row[$name])) {
-                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
+                    $value = null;
+                    if ($type == 'datetimeOptional') {
+                        if (isset($row[$name . 'Date']) && $row[$name . 'Date']) {
+                            $value = $row[$name . 'Date'];
+                        }
+                    }
+                    if (!$value) {
+                        if (isset($row[$name])) {
+                            $value = $row[$name];
+                        }
+                    }
+                    if ($value && strlen($value) > 11) {
+                        try {
+                            $timeZone = $this->getInjection('config')->get('timeZone');
+                            $dt = new \DateTime($value);
+                            $dt->setTimezone(new \DateTimeZone($timeZone));
+                            $value = $dt->format($this->getInjection('dateTime')->getInternalDateTimeFormat());
+                        } catch (\Exception $e) {
+                            $value = '';
+                        }
+                    }
+                    if ($value) {
+                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($value)));
                     }
                 } else if ($type == 'image') {
                     if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
@@ -394,11 +415,9 @@ class Xlsx extends \Espo\Core\Injectable
 
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
-
             $type = $typesCache[$name];
 
-
-            switch($type) {
+            switch ($type) {
                 case 'currency':
                 case 'currencyConverted': {
 
