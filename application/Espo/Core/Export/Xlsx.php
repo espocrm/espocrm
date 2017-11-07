@@ -249,6 +249,14 @@ class Xlsx extends \Espo\Core\Injectable
                         $type = $this->getInjection('metadata')->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
                     }
                 }
+                if ($type === 'foreign') {
+                    $linkName = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name, 'link']);
+                    $foreignField = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'fields', $name, 'field']);
+                    $foreignScope = $this->getInjection('metadata')->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    if ($foreignScope) {
+                        $type = $this->getInjection('metadata')->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                    }
+                }
                 $typesCache[$name] = $type;
 
                 $link = null;
