@@ -88,7 +88,8 @@
         "b2cMode": "B2C Mode",
         "currencyFormat": "Currency Format",
         "currencyDecimalPlaces": "Currency Decimal Places",
-        "aclStrictMode": "ACL Strict Mode"
+        "aclStrictMode": "ACL Strict Mode",
+        "aclAllowDeleteCreated": "Allow to remove created records"
     },
     "options": {
         "weekStart": {
@@ -132,7 +133,8 @@
         "ldapUserDefaultTeam": "Default team for created user. For more, see user profile.",
         "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C.",
         "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed.",
-        "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles."
+        "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
+        "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
     },
     "labels": {
         "System": "System",

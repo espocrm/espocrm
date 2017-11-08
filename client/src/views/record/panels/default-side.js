@@ -32,32 +32,54 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
 
         template: 'record/panels/default-side',
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            if (this.complexCreatedDisabled && this.complexModifiedDisabled) {
+                data.complexDateFieldsDisabled = true;
+            }
+            return data;
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.createField('modifiedBy', true);
-            this.createField('modifiedAt', true);
-            this.createField('createdBy', true);
-            this.createField('createdAt', true);
 
-            if (!this.model.get('createdById')) {
+            if (!this.complexCreatedDisabled) {
+                this.createField('createdBy', true);
+                this.createField('createdAt', true);
+                if (!this.model.get('createdById')) {
+                    this.recordViewObject.hideField('complexCreated');
+                }
+            } else {
                 this.recordViewObject.hideField('complexCreated');
             }
-            if (!this.model.get('modifiedById')) {
+
+            if (!this.complexModifiedDisabled) {
+                this.createField('modifiedBy', true);
+                this.createField('modifiedAt', true);
+                if (!this.model.get('modifiedById')) {
+                    this.recordViewObject.hideField('complexModified');
+                }
+            } else {
                 this.recordViewObject.hideField('complexModified');
             }
-            this.listenTo(this.model, 'change:createdById', function () {
-                if (!this.model.get('createdById')) return;
-                this.recordViewObject.showField('complexCreated');
-            }, this);
-            this.listenTo(this.model, 'change:modifiedById', function () {
-                if (!this.model.get('modifiedById')) return;
-                this.recordViewObject.showField('complexModified');
-            }, this);
+
+            if (!this.complexCreatedDisabled) {
+                this.listenTo(this.model, 'change:createdById', function () {
+                    if (!this.model.get('createdById')) return;
+                    this.recordViewObject.showField('complexCreated');
+                }, this);
+            }
+            if (!this.complexModifiedDisabled) {
+                this.listenTo(this.model, 'change:modifiedById', function () {
+                    if (!this.model.get('modifiedById')) return;
+                    this.recordViewObject.showField('complexModified');
+                }, this);
+            }
 
             if (this.getMetadata().get('scopes.' + this.model.name + '.stream')) {
                 this.createField('followers', true, 'views/fields/followers');
             }
-        },
+        }
     });
 });
 

@@ -61,8 +61,10 @@ class Entity extends \Espo\ORM\Entity
                     if (array_key_exists('order', $foreignEntityDefs['collection'])) {
                         $order = $foreignEntityDefs['collection']['order'];
                     }
-                    $defs['orderBy'] = $orderBy;
-                    $defs['order'] = $order;
+                    if (array_key_exists($orderBy, $foreignEntityDefs['fields'])) {
+                        $defs['orderBy'] = $orderBy;
+                        $defs['order'] = $order;
+                    }
                 }
             }
         }

@@ -423,6 +423,10 @@
             "type": "bool",
             "tooltip": true
         },
+        "aclAllowDeleteCreated": {
+            "type": "bool",
+            "tooltip": true
+        },
         "lastViewedCount": {
             "type": "int",
             "min": 1,

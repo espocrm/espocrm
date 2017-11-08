@@ -184,6 +184,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 data.searchType = this.getSearchType();
                 data.searchTypeList = this.getSearchTypeList();
             }
+
             return data;
         },
 

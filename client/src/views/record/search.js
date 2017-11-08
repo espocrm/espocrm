@@ -108,6 +108,18 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.loadSearchData();
 
+            if (this.presetName) {
+                var hasPresetListed = this.presetFilterList.find(function (item) {
+                    var name = (typeof item === 'string') ? item : item.name;
+                    if (name === this.presetName) {
+                        return true;
+                    }
+                }, this);
+                if (!hasPresetListed) {
+                    this.presetFilterList.push(this.presetName);
+                }
+            }
+
             this.model = new this.collection.model();
             this.model.clear();
 
@@ -577,17 +589,20 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.presetName = searchData.presetName;
             }
 
+            var primaryIsSet = false;
             if ('primary' in searchData) {
                 this.primary = searchData.primary;
                 if (!this.presetName) {
                     this.presetName = this.primary;
                 }
+                primaryIsSet = true;
             }
 
             if (this.presetName) {
                 this.advanced = _.extend(Espo.Utils.clone(this.getPresetData()), searchData.advanced);
-
-                this.primary = this.getPrimaryFilterName();
+                if (!primaryIsSet) {
+                    this.primary = this.getPrimaryFilterName();
+                }
             } else {
                 this.advanced = Espo.Utils.clone(searchData.advanced);
             }

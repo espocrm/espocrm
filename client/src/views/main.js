@@ -76,7 +76,8 @@ Espo.define('views/main', 'view', function (Dep) {
                         if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
                             menu[type].push(item);
                         }
-                        item.name = item.action || item.name;
+                        item.name = item.name || item.action;
+                        item.action = item.action || this.name;
                     }, this);
                 }, this);
             }
@@ -142,12 +143,12 @@ Espo.define('views/main', 'view', function (Dep) {
             }
         },
 
-        disableMenuItem: function (action) {
-            this.$el.find('.header .header-buttons [data-action="'+action+'"]').addClass('disabled');
+        disableMenuItem: function (name) {
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled');
         },
 
-        enableMenuItem: function (action) {
-            this.$el.find('.header .header-buttons [data-action="'+action+'"]').removeClass('disabled');
+        enableMenuItem: function (name) {
+            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled');
         },
 
         removeMenuItem: function (name, doNotReRender) {
