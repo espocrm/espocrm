@@ -174,7 +174,12 @@ class MailMimeParser
             $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
 
             $attachment = $this->getEntityManager()->getEntity('Attachment');
-            $attachment->set('name', $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', 'unnamed'));
+
+            $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
+            if ($filename === null) {
+                $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
+            }
+            $attachment->set('name', $filename);
             $attachment->set('type', $attachmentObj->getHeaderValue('Content-Type'));
 
             $contentId = $attachmentObj->getHeaderValue('Content-ID');
@@ -186,6 +191,7 @@ class MailMimeParser
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');
             } else {
+                $disposition = 'attachment';
                 $attachment->set('role', 'Attachment');
             }
 
