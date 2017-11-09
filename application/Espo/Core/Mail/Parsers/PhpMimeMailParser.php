@@ -186,8 +186,10 @@ class PhpMimeMailParser
             } else if ($disposition == 'inline') {
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->id;
+                    $inlineAttachmentList[] = $attachment;
+                } else {
+                    $email->addLinkMultipleId('attachments', $attachment->id);
                 }
-                $inlineAttachmentList[] = $attachment;
             }
         }
 
