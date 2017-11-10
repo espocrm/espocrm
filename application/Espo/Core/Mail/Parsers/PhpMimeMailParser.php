@@ -137,8 +137,26 @@ class PhpMimeMailParser
     {
         $this->loadContent($message);
 
-        $bodyPlain = $this->getParser($message)->getMessageBody('text');
-        $bodyHtml = $this->getParser($message)->getMessageBody('html');
+        $bodyPlain = '';
+        $bodyHtml = '';
+
+        $inlinePartTextList = $this->getParser($message)->getInlineParts('text');
+        $inlinePartHtmlList = $this->getParser($message)->getInlineParts('html');
+        if (empty($inlinePartTextList)) {
+            $bodyPlain = $this->getParser($message)->getMessageBody('text');
+        }
+        if (empty($inlinePartHtmlList)) {
+            $bodyHtml = $this->getParser($message)->getMessageBody('html');
+        }
+
+        foreach ($inlinePartTextList as $i => $inlinePart) {
+            if ($i) $bodyPlain .= "\n";
+            $bodyPlain .= $inlinePart;
+        }
+        foreach ($inlinePartHtmlList as $i => $inlinePart) {
+            if ($i) $bodyHtml .= "<br>";
+            $bodyHtml .= $inlinePart;
+        }
 
         if ($bodyHtml) {
             $email->set('isHtml', true);

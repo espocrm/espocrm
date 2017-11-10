@@ -147,8 +147,30 @@ class MailMimeParser
     {
         $this->loadContent($message);
 
-        $bodyPlain = $this->getMessage($message)->getTextContent();
-        $bodyHtml = $this->getMessage($message)->getHtmlContent();
+        $bodyPlain = '';
+        $bodyHtml = '';
+
+        $htmlPartCount = $this->getMessage($message)->getHtmlPartCount();
+        $textPartCount = $this->getMessage($message)->getTextPartCount();
+
+        if (!$htmlPartCount) {
+            $bodyHtml = $this->getMessage($message)->getHtmlContent();
+        }
+        if (!$textPartCount) {
+            $bodyPlain = $this->getMessage($message)->getTextContent();
+        }
+
+        for ($i = 0; $i < $htmlPartCount; $i++) {
+            if ($i) $bodyHtml .= "<br>";
+            $inlinePart = $this->getMessage($message)->getHtmlPart($i);
+            $bodyHtml .= $inlinePart->getContent();
+        }
+
+        for ($i = 0; $i < $textPartCount; $i++) {
+            if ($i) $bodyPlain .= "\n";
+            $inlinePart = $this->getMessage($message)->getTextPart($i);
+            $bodyPlain .= $inlinePart->getContent();
+        }
 
         if ($bodyHtml) {
             $email->set('isHtml', true);
