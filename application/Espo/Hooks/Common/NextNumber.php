@@ -34,7 +34,7 @@ use Espo\Core\Utils\Util;
 
 class NextNumber extends \Espo\Core\Hooks\Base
 {
-    public static $order = 10;
+    public static $order = 9;
 
     protected function init()
     {
