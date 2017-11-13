@@ -34,7 +34,7 @@ use Espo\Core\Utils\Util;
 
 class Formula extends \Espo\Core\Hooks\Base
 {
-    public static $order = 5;
+    public static $order = 11;
 
     protected function init()
     {

@@ -105,22 +105,24 @@ class HookManager
             $this->loadHooks();
         }
 
-        if ($scope != 'Common') {
-            $this->process('Common', $hookName, $injection, $options, $hookData);
+        $hookList = array();
+
+        if (isset($this->data['Common'])) {
+            $hookList = $this->data['Common'];
         }
 
-        if (!empty($this->data[$scope])) {
-            if (!empty($this->data[$scope][$hookName])) {
-                foreach ($this->data[$scope][$hookName] as $className) {
-                    if (empty($this->hooks[$className])) {
-                        $this->hooks[$className] = $this->createHookByClassName($className);
-                        if (empty($this->hooks[$className])) {
-                            continue;
-                        }
-                    }
-                    $hook = $this->hooks[$className];
-                    $hook->$hookName($injection, $options, $hookData);
+        if (isset($this->data[$scope])) {
+            $hookList = $this->mergeHooks($hookList, $this->data[$scope]);
+        }
+
+        if (!empty($hookList[$hookName])) {
+            foreach ($hookList[$hookName] as $className => $classOrder) {
+                if (empty($this->hooks[$className])) {
+                    $this->hooks[$className] = $this->createHookByClassName($className);
+                    if (empty($this->hooks[$className])) continue;
                 }
+                $hook = $this->hooks[$className];
+                $hook->$hookName($injection, $options, $hookData);
             }
         }
     }
@@ -170,10 +172,10 @@ class HookManager
                         $classMethods = get_class_methods($className);
                         $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
-                        foreach($hookMethods as $hookName) {
-                            $entityHookData = isset($hookData[$scopeName][$hookName]) ? $hookData[$scopeName][$hookName] : array();
+                        foreach($hookMethods as $hookType) {
+                            $entityHookData = isset($hookData[$normalizedScopeName][$hookType]) ? $hookData[$normalizedScopeName][$hookType] : array();
                             if (!$this->isHookExists($className, $entityHookData)) {
-                                $hookData[$normalizedScopeName][$hookName][$className::$order][] = $className;
+                                $hookData[$normalizedScopeName][$hookType][$className] = $className::$order;
                             }
                         }
                     }
@@ -188,30 +190,37 @@ class HookManager
     /**
      * Sort hooks by an order
      *
-     * @param  array  $scopeHooks
+     * @param  array  $hooks
      *
      * @return array
      */
-    protected function sortHooks(array $unsortedHooks)
+    protected function sortHooks(array $hooks)
     {
-        $hooks = array();
-
-        foreach ($unsortedHooks as $scopeName => $scopeHooks) {
-            foreach ($scopeHooks as $hookName => $hookList) {
-                ksort($hookList);
-
-                $sortedHookList = array();
-                foreach($hookList as $hookDetails) {
-                    $sortedHookList = array_merge($sortedHookList, $hookDetails);
-                }
-
-                $normalizedScopeName = Util::normilizeScopeName($scopeName);
-
-                $hooks[$normalizedScopeName][$hookName] = isset($hooks[$normalizedScopeName][$hookName]) ? array_merge($hooks[$normalizedScopeName][$hookName], $sortedHookList) : $sortedHookList;
+        foreach ($hooks as $scopeName => &$scopeHooks) {
+            foreach ($scopeHooks as $hookName => &$hookList) {
+                asort($hookList);
             }
         }
 
         return $hooks;
+    }
+
+    /**
+     * Merge hooks for two entities
+     *
+     * @param  array  $hookList1
+     * @param  array  $hookList2
+     *
+     * @return array
+     */
+    protected function mergeHooks(array $hookList1, array $hookList2)
+    {
+        $mergedHookList = array_merge_recursive($hookList1, $hookList2);
+        foreach ($mergedHookList as $hookType => &$hookList) {
+            asort($hookList);
+        }
+
+        return $mergedHookList;
     }
 
     /**
@@ -226,15 +235,12 @@ class HookManager
     {
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 
-        foreach ($hookData as $key => $hookList) {
-            foreach ($hookList as $rowHookName) {
-                if (preg_match('/\\\\'.$class.'$/', $rowHookName)) {
-                    return true;
-                }
+        foreach ($hookData as $hookName => $hookOrder) {
+            if (preg_match('/\\\\'.$class.'$/', $hookName)) {
+                return true;
             }
         }
 
         return false;
     }
 }
-

@@ -463,7 +463,6 @@ class Import extends \Espo\Services\Record
 
         $isNew = $entity->isNew();
 
-
         if (!empty($params['defaultValues'])) {
             if (is_object($params['defaultValues'])) {
                 $v = get_object_vars($params['defaultValues']);
@@ -581,8 +580,6 @@ class Import extends \Espo\Services\Record
 
         $result = array();
 
-        $a = $entity->toArray();
-
         try {
             if ($isNew) {
                 $isDuplicate = false;
@@ -646,7 +643,7 @@ class Import extends \Espo\Services\Record
         return ['firstName' => $firstName, 'lastName' => $lastName];
     }
 
-    protected function parseValue(Entity $entity, $field, $value, $params = array())
+    protected function parseValue(Entity $entity, $attribute, $value, $params = array())
     {
         $decimalMark = '.';
         if (!empty($params['decimalMark'])) {
@@ -672,45 +669,55 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        $fieldDefs = $entity->getFields();
+        $type = $entity->getAttributeType($attribute);
 
-        if (!empty($fieldDefs[$field])) {
-            $type = $fieldDefs[$field]['type'];
+        switch ($type) {
+            case Entity::DATE:
+                $dt = \DateTime::createFromFormat($dateFormat, $value);
+                if ($dt) {
+                    return $dt->format('Y-m-d');
+                }
+                break;
+            case Entity::DATETIME:
+                $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
+                $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
+                if ($dt) {
+                    $dt->setTimezone(new \DateTimeZone('UTC'));
+                    return $dt->format('Y-m-d H:i:s');
+                }
+                break;
+            case Entity::FLOAT:
+                $currencyAttribute = $attribute . 'Currency';
+                if ($entity->hasAttribute($currencyAttribute)) {
+                    if (!$entity->has($currencyAttribute)) {
+                        $entity->set($currencyAttribute, $defaultCurrency);
+                    }
+                }
 
-            switch ($type) {
-                case Entity::DATE:
-                    $dt = \DateTime::createFromFormat($dateFormat, $value);
-                    if ($dt) {
-                        return $dt->format('Y-m-d');
-                    }
-                    break;
-                case Entity::DATETIME:
-                    $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
-                    $dt = \DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
-                    if ($dt) {
-                        $dt->setTimezone(new \DateTimeZone('UTC'));
-                        return $dt->format('Y-m-d H:i:s');
-                    }
-                    break;
-                case Entity::FLOAT:
-                    $currencyField = $field . 'Currency';
-                    if ($entity->hasField($currencyField)) {
-                        if (!$entity->has($currencyField)) {
-                            $entity->set($currencyField, $defaultCurrency);
-                        }
-                    }
+                $a = explode($decimalMark, $value);
+                $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
 
-                    $a = explode($decimalMark, $value);
-                    $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
-
-                    if (count($a) > 1) {
-                        return $a[0] . '.' . $a[1];
-                    } else {
-                        return $a[0];
-                    }
-                    break;
-            }
+                if (count($a) > 1) {
+                    return $a[0] . '.' . $a[1];
+                } else {
+                    return $a[0];
+                }
+                break;
+            case Entity::JSON_OBJECT:
+                $value = \Espo\Core\Utils\Json::decode($value);
+                return $value;
+            case Entity::JSON_ARRAY:
+                if (!is_string($value)) return;
+                if (!strlen($value)) return;
+                if ($value[0] === '[') {
+                    $value = \Espo\Core\Utils\Json::decode($value);
+                    return $value;
+                } else {
+                    $value = explode(',', $value);
+                    return $value;
+                }
         }
+
         return $value;
     }
 
