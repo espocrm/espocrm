@@ -15,7 +15,6 @@
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true,
             "default":""
         },
         "title": {

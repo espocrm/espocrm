@@ -82,7 +82,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         },
 
         validateRequired: function () {
-            var isRequired = this.model.getFieldParam(this.name, 'required');
+            var isRequired = this.isRequired();
 
             var validate = function (name) {
                 if (this.model.isRequired(name)) {
@@ -109,11 +109,11 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             return result;
         },
 
-        isRequired: function () {
+        hasRequiredMarker: function () {
+            if (this.isRequired()) return true;
             return this.model.getFieldParam(this.salutationField, 'required') ||
                    this.model.getFieldParam(this.firstField, 'required') ||
-                   this.model.getFieldParam(this.lastField, 'required') ||
-                   this.model.getFieldParam(this.name, 'required');
+                   this.model.getFieldParam(this.lastField, 'required');
         },
 
         fetch: function (form) {
