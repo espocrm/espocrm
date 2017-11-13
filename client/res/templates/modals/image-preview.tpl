@@ -3,5 +3,5 @@
 </div>
 
 <div class="margin">
-{{translate 'Original'}}: <a href="{{originalUrl}}">{{name}}</a>
+{{translate 'Original'}}: <a href="{{originalUrl}}" target="_blank">{{name}}</a>
 </div>
