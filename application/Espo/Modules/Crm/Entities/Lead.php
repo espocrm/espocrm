@@ -25,12 +25,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Entities;
 
 class Lead extends \Espo\Core\Entities\Person
 {
 
+    protected function _getName()
+    {
+        if (!array_key_exists('name', $this->valuesContainer) || !$this->valuesContainer['name']) {
+            if ($this->get('accountName')) {
+                return $this->get('accountName');
+            } else if ($this->get('emailAddress')) {
+                return $this->get('emailAddress');
+            } else if ($this->get('phoneNumber')) {
+                return $this->get('phoneNumber');
+            }
+        }
+        return $this->valuesContainer['name'];
+    }
 }
 
