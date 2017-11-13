@@ -98,6 +98,14 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         },
+        "email": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "phone": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
         "text": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["isEmpty", "isNotEmpty"]
