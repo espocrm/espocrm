@@ -37,6 +37,8 @@ class HookManager
 
     private $data;
 
+    private $hookListHash = array();
+
     private $hooks;
 
     protected $cacheFile = 'data/cache/application/hooks.php';
@@ -105,18 +107,10 @@ class HookManager
             $this->loadHooks();
         }
 
-        $hookList = array();
+        $hookList = $this->getHookList($scope, $hookName);
 
-        if (isset($this->data['Common'])) {
-            $hookList = $this->data['Common'];
-        }
-
-        if (isset($this->data[$scope])) {
-            $hookList = $this->mergeHooks($hookList, $this->data[$scope]);
-        }
-
-        if (!empty($hookList[$hookName])) {
-            foreach ($hookList[$hookName] as $className => $classOrder) {
+        if (!empty($hookList)) {
+            foreach ($hookList as $className) {
                 if (empty($this->hooks[$className])) {
                     $this->hooks[$className] = $this->createHookByClassName($className);
                     if (empty($this->hooks[$className])) continue;
@@ -174,8 +168,11 @@ class HookManager
 
                         foreach($hookMethods as $hookType) {
                             $entityHookData = isset($hookData[$normalizedScopeName][$hookType]) ? $hookData[$normalizedScopeName][$hookType] : array();
-                            if (!$this->isHookExists($className, $entityHookData)) {
-                                $hookData[$normalizedScopeName][$hookType][$className] = $className::$order;
+                            if (!$this->hookExists($className, $entityHookData)) {
+                                $hookData[$normalizedScopeName][$hookType][] = array(
+                                    'className' => $className,
+                                    'order' => $className::$order
+                                );
                             }
                         }
                     }
@@ -198,7 +195,7 @@ class HookManager
     {
         foreach ($hooks as $scopeName => &$scopeHooks) {
             foreach ($scopeHooks as $hookName => &$hookList) {
-                asort($hookList);
+                usort($hookList, array($this, 'cmpHooks'));
             }
         }
 
@@ -206,21 +203,38 @@ class HookManager
     }
 
     /**
-     * Merge hooks for two entities
+     * Get sorted hook list
      *
-     * @param  array  $hookList1
-     * @param  array  $hookList2
+     * @param  string $scope
+     * @param  string $hookName
      *
      * @return array
      */
-    protected function mergeHooks(array $hookList1, array $hookList2)
+    protected function getHookList($scope, $hookName)
     {
-        $mergedHookList = array_merge_recursive($hookList1, $hookList2);
-        foreach ($mergedHookList as $hookType => &$hookList) {
-            asort($hookList);
+        $key = $scope . '_' . $hookName;
+
+        if (!isset($this->hookListHash[$key])) {
+            $hookList = array();
+
+            if (isset($this->data['Common'][$hookName])) {
+                $hookList = $this->data['Common'][$hookName];
+            }
+
+            if (isset($this->data[$scope][$hookName])) {
+                $hookList = array_merge($hookList, $this->data[$scope][$hookName]);
+                usort($hookList, array($this, 'cmpHooks'));
+            }
+
+            $normalizedList = array();
+            foreach ($hookList as $hookData) {
+                $normalizedList[] = $hookData['className'];
+            }
+
+            $this->hookListHash[$key] = $normalizedList;
         }
 
-        return $mergedHookList;
+        return $this->hookListHash[$key];
     }
 
     /**
@@ -231,16 +245,25 @@ class HookManager
      *
      * @return boolean
      */
-    protected function isHookExists($className, array $hookData)
+    protected function hookExists($className, array $hookData)
     {
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 
-        foreach ($hookData as $hookName => $hookOrder) {
-            if (preg_match('/\\\\'.$class.'$/', $hookName)) {
+        foreach ($hookData as $hookData) {
+            if (preg_match('/\\\\'.$class.'$/', $hookData['className'])) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    protected function cmpHooks($a, $b)
+    {
+        if ($a['order'] == $b['order']) {
+            return 0;
+        }
+
+        return ($a['order'] < $b['order']) ? -1 : 1;
     }
 }
