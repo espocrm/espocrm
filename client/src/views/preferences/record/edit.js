@@ -100,6 +100,8 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.hideField('dashboardLayout');
             }
 
+            this.controlFollowCreatedEntityListVisibility();
+            this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
 
             var hideNotificationPanel = true;
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
@@ -151,6 +153,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     this.model.set('smtpPort', '25');
                 }
             }, this);
+        },
+
+        controlFollowCreatedEntityListVisibility: function () {
+            if (!this.model.get('followCreatedEntities')) {
+                this.showField('followCreatedEntityTypeList');
+            } else {
+                this.hideField('followCreatedEntityTypeList');
+            }
         },
 
         actionReset: function () {

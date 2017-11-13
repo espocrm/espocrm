@@ -34,11 +34,12 @@ use Espo\Core\Utils\Json;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
-    protected $defaultAttributeListFromSettings = array(
+    protected $defaultAttributeListFromSettings = [
         'decimalMark',
         'thousandSeparator',
-        'exportDelimiter'
-    );
+        'exportDelimiter',
+        'followCreatedEntities'
+    ];
 
     protected $data = array();
 
