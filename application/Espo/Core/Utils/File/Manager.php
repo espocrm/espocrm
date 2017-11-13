@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\File;
 use Espo\Core\Utils,
     Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
 
 class Manager
 {
@@ -899,7 +900,7 @@ class Manager
         if (!file_exists($fullPath)) {
             $fullPath = $this->getExistsPath(pathinfo($fullPath, PATHINFO_DIRNAME));
         }
-
+        $fullPath = Util::fixPath($fullPath);
         return $fullPath;
     }
 }

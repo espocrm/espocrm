@@ -52,7 +52,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('params', array(
-            'application/Espo/Core/defaults',
+            Util::fixPath('application/Espo/Core/defaults'),
         ) );
     }
 

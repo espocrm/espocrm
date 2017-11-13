@@ -240,7 +240,7 @@ class Layout
         }
 
         $path = Util::concatPath($path, $entityType);
-
+        $path = Util::fixPath($path);
         return $path;
     }
 }
