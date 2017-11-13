@@ -36,7 +36,5 @@
    "notMergeable":true,
    "notCreatable": false,
    "filter": true,
-   "fieldDefs":{
-      "skipOrmDefs":true
-   }
+   "skipOrmDefs": true
 }
