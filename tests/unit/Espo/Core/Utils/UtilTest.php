@@ -1150,13 +1150,26 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($testResult, Util::replaceInArray('{0}', 'DONE', $testArray, true));
     }
 
-
-    public function testGetClassName()
+    /**
+     * @dataProvider dp_classNames
+     */
+    public function testGetClassName($path, $expectedClassName = '\Espo\EntryPoints\Donwload')
     {
-        $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload.php'));
+        $this->assertEquals($expectedClassName, Util::getClassName($path));
         $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('custom/Espo/EntryPoints/Donwload.php'));
         $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('Espo/EntryPoints/Donwload.php'));
         $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload'));
+    }
+
+    public function dp_classNames()
+    {
+        return [
+            "application/Espo/EntryPoints/Donwload.php" => ['application/Espo/EntryPoints/Donwload.php'],
+            "custom/Espo/EntryPoints/Donwload.php" => ['custom/Espo/EntryPoints/Donwload.php'],
+            "Espo/EntryPoints/Donwload.php" => ['Espo/EntryPoints/Donwload.php'],
+            "application/Espo/EntryPoints/Donwload" => ['application/Espo/EntryPoints/Donwload'],
+            "\application\Espo\EntryPoints\Donwload" => ['application\Espo\EntryPoints\Donwload'],
+        ];
     }
 
     public function testUnsetInArrayNotSingle()
