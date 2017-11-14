@@ -29,45 +29,16 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
-
-abstract class Base implements \Espo\Core\Interfaces\Loader
+class FieldManagerUtil extends Base
 {
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
-     * Construct
+     * Load FieldManagerUtil
      *
-     * @param Container $container
+     * @return \Espo\Core\Utils\FieldManagerUtil
      */
-    public function __construct(Container $container)
+    public function load()
     {
-        $this->container = $container;
-    }
-
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Get service class name
-     *
-     * @param string $name
-     * @param string $default
-     *
-     * @return string
-     */
-    protected function getServiceClassName($name, $default)
-    {
-        return $this->getContainer()->get('metadata')->get('app.serviceContainer.classNames.'.$name, $default);
+        return new \Espo\Core\Utils\FieldManagerUtil($this->getContainer()->get('metadata'));
     }
 }

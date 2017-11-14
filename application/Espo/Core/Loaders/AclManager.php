@@ -29,45 +29,18 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
-
-abstract class Base implements \Espo\Core\Interfaces\Loader
+class AclManager extends Base
 {
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
-     * Construct
+     * Load AclManager
      *
-     * @param Container $container
+     * @return mixed
      */
-    public function __construct(Container $container)
+    public function load()
     {
-        $this->container = $container;
-    }
+        $className = $this->getServiceClassName('acl', '\\Espo\\Core\\AclManager');
 
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Get service class name
-     *
-     * @param string $name
-     * @param string $default
-     *
-     * @return string
-     */
-    protected function getServiceClassName($name, $default)
-    {
-        return $this->getContainer()->get('metadata')->get('app.serviceContainer.classNames.'.$name, $default);
+        return new $className($this->getContainer()->get('container'));
     }
 }
