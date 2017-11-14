@@ -411,7 +411,6 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetExistsPath($input, $result)
     {
-        $result = Util::fixPath($result);
         $this->assertEquals($result, $this->reflection->invokeMethod('getExistsPath', array($input)) );
     }
 }

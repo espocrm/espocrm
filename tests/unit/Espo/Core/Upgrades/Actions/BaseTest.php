@@ -76,9 +76,6 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->actionManagerParams['packagePath'] = Util::fixPath($this->actionManagerParams['packagePath']);
-        $this->actionManagerParams['backupPath'] = Util::fixPath($this->actionManagerParams['backupPath']);
-
         $actionManagerParams = $this->actionManagerParams;
         $this->objects['actionManager']
             ->expects($this->once())
@@ -93,12 +90,8 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
         /* create a package durectory with manifest.json file */
         $packagePath = $this->reflection->invokeMethod('getPath');
-        $packagePath = Util::fixPath($packagePath);
         $manifestName = $this->reflection->getProperty('manifestName');
         $filename = $packagePath . '/' .$manifestName;
-        $filename = Util::fixPath($filename);
-
-
 
         $this->fileManager = new \Espo\Core\Utils\File\Manager();
         $this->fileManager->putContents($filename, '');

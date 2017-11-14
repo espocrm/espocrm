@@ -88,13 +88,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPhpBin()
     {
-        if (DIRECTORY_SEPARATOR == "/") {
-            $phpBin = @exec('which php');
-        }
-
-        if (empty($phpBin)) {
-            $phpBin = PHP_BINDIR . DIRECTORY_SEPARATOR . "php";
-        }
+        $phpBin = @exec('which php');
 
         if (isset($phpBin)) {
             $this->assertEquals($phpBin, $this->object->getPhpBin());
