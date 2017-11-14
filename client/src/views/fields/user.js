@@ -38,8 +38,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
             this.searchTypeList.push('isFromTeams');
 
-            this.searchData.teamIdList = this.searchData.teamIdList || this.searchParams.teamIdList || [];
-            this.searchData.teamNameHash = this.searchData.teamNameHash || this.searchParams.teamNameHash || {};
+            this.searchData.teamIdList = this.getSearchParamsData().teamIdList || this.searchParams.teamIdList || [];
+            this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash || this.searchParams.teamNameHash || {};
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
                 var id = $(e.currentTarget).data('id').toString();

@@ -3,7 +3,5 @@
    ],
    "filter": true,
    "notCreatable": true,
-   "fieldDefs":{
-      "skipOrmDefs": true
-   }
+   "skipOrmDefs": true
 }

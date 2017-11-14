@@ -278,9 +278,9 @@ class Converter
         foreach($entityMetadata['fields'] as $fieldName => $fieldParams) {
 
             /** check if "fields" option exists in $fieldMeta */
-            $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
+            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
-            $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMeta);
+            $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMetadata);
 
             if ($fieldDefs !== false) {
                 //push fieldDefs to the ORM metadata array
@@ -292,8 +292,8 @@ class Converter
             }
 
             /** check and set the linkDefs from 'fields' metadata */
-            if (isset($fieldTypeMeta['linkDefs'])) {
-                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMeta['linkDefs']);
+            if (isset($fieldTypeMetadata['linkDefs'])) {
+                $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta($entityName, $fieldParams, $fieldTypeMetadata['linkDefs']);
                 if (isset($linkDefs)) {
                     if (!isset($entityMetadata['links'])) {
                         $entityMetadata['links'] = array();
@@ -378,19 +378,19 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMeta = null)
+    protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMetadata = null)
     {
         /** merge fieldDefs option from field definition */
-        if (!isset($fieldTypeMeta)) {
-            $fieldTypeMeta = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
+        if (!isset($fieldTypeMetadata)) {
+            $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
         }
 
-        if (isset($fieldTypeMeta['fieldDefs'])) {
-            $fieldParams = Util::merge($fieldParams, $fieldTypeMeta['fieldDefs']);
+        if (isset($fieldTypeMetadata['fieldDefs'])) {
+            $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
         /** check if need to skipOrmDefs this field in ORM metadata */
-        if (isset($fieldParams['skipOrmDefs']) && $fieldParams['skipOrmDefs'] === true) {
+        if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($fieldParams['skipOrmDefs'])) {
             return false;
         }
 
