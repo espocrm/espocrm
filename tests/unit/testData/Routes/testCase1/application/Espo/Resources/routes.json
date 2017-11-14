@@ -1,0 +1,37 @@
+[
+  {
+    "route":"/App/user",
+    "method":"get",
+    "params":{
+        "controller":"App",
+        "action":"user"
+    }
+  },
+
+  {
+    "route":"/Metadata",
+    "method":"get",
+    "params":{
+        "controller":"Metadata"
+    }
+  },
+
+  {
+    "route":"/:controller/action/:action",
+    "method":"post",
+    "params":{
+        "controller":":controller",
+        "action":":action"
+    }
+  },
+
+  {
+    "route":"/:controller/action/:action",
+    "method":"get",
+    "params":{
+        "controller":":controller",
+        "action":":action"
+    }
+  }
+
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "route":"/Custom/:scope/:id/:name",
+    "method":"get",
+    "params":{
+        "controller":"Custom",
+        "action":"list",
+        "scope":":scope",
+        "id":":id",
+        "name":":name"
+    }
+  }
+]
