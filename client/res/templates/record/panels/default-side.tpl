@@ -9,6 +9,7 @@
 {{/each}}
 </div>
 
+{{#unless complexDateFieldsDisabled}}
 <div class="row">
     <div class="cell form-group col-sm-6 col-md-12" data-name="complexCreated">
         <label class="control-label" data-name="complexCreated"><span class="label-text">{{translate 'Created'}}</span></label>
@@ -16,7 +17,6 @@
             <span data-name="createdAt" class="field">{{{createdAt}}}</span> <span class="text-muted">&raquo;</span> <span data-name="createdBy" class="field">{{{createdBy}}}</span>
         </div>
     </div>
-
     <div class="cell form-group col-sm-6 col-md-12" data-name="complexModified">
         <label class="control-label" data-name="complexModified"><span class="label-text">{{translate 'Modified'}}</span></label>
         <div class="field" data-name="complexModified">
@@ -24,14 +24,15 @@
         </div>
     </div>
 </div>
+{{/unless}}
 
-<div class="row">
 {{#if followers}}
+<div class="row">
     <div class="cell form-group col-sm-6 col-md-12" data-name="followers">
         <label class="control-label" data-name="followers"><span class="label-text">{{translate 'Followers'}}</span></label>
         <div class="field" data-name="followers">
             {{{followers}}}
         </div>
     </div>
-{{/if}}
 </div>
+{{/if}}

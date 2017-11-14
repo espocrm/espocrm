@@ -56,7 +56,7 @@ class AdminNotificationManager
         return $this->getContainer()->get('config');
     }
 
-    protected function getLanaguage()
+    protected function getLanguage()
     {
         return $this->getContainer()->get('language');
     }
@@ -65,7 +65,7 @@ class AdminNotificationManager
     {
         $notificationList = [];
 
-        if ($this->getConfig()->get('adminNotificationsDisabled')) {
+        if (!$this->getConfig()->get('adminNotifications')) {
             return [];
         }
 
@@ -74,7 +74,7 @@ class AdminNotificationManager
                 $notificationList[] = array(
                     'id' => 'cronIsNotConfigured',
                     'type' => 'cronIsNotConfigured',
-                    'message' => $this->getLanaguage()->translate('cronIsNotConfigured', 'messages', 'Admin')
+                    'message' => $this->getLanguage()->translate('cronIsNotConfigured', 'messages', 'Admin')
                 );
             }
         }
@@ -82,7 +82,7 @@ class AdminNotificationManager
         if (!$this->getConfig()->get('adminNotificationNewVersionIsAvailableDisabled')) {
             $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
             if (!empty($instanceNeedingUpgrade)) {
-                $message = $this->getLanaguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
+                $message = $this->getLanguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
                 $notificationList[] = array(
                     'id' => 'newVersionIsAvailable',
                     'type' => 'newVersionIsAvailable',
@@ -95,7 +95,7 @@ class AdminNotificationManager
             $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
             if (!empty($extensionsNeedingUpgrade)) {
                 foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
-                    $message = $this->getLanaguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
                     $notificationList[] = array(
                         'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
                         'type' => 'newExtensionVersionIsAvailable',

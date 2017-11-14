@@ -2,6 +2,7 @@
 	"assignedUser",
 	"billingAddress",
 	"createdAt",
+    "createdBy",
     "description",
 	"emailAddress",
 	"industry",

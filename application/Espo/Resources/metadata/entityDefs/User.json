@@ -211,6 +211,11 @@
         "createdAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
@@ -229,6 +234,10 @@
                 }
             },
             "layoutRelationshipsDisabled": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
         },
         "roles": {
             "type": "hasMany",

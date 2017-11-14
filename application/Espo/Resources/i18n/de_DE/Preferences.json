@@ -31,7 +31,8 @@
     "emailReplyToAllByDefault": "Standardmäßig Allen antworten",
     "dashboardLayout": "Dashboard Layout",
     "emailReplyForceHtml": "E-Mail Antwort als HTML",
-    "doNotFillAssignedUserIfNotRequired": "Zugwiesenen Benutzer nicht ausfüllen wenn optional"
+    "doNotFillAssignedUserIfNotRequired": "Zugwiesenen Benutzer nicht ausfüllen wenn optional",
+    "followCreatedEntities": "Eigene Einträge abonnieren"
   },
   "options": {
     "weekStart": {

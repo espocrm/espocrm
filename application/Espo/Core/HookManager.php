@@ -37,6 +37,8 @@ class HookManager
 
     private $data;
 
+    private $hookListHash = array();
+
     private $hooks;
 
     protected $cacheFile = 'data/cache/application/hooks.php';
@@ -105,22 +107,16 @@ class HookManager
             $this->loadHooks();
         }
 
-        if ($scope != 'Common') {
-            $this->process('Common', $hookName, $injection, $options, $hookData);
-        }
+        $hookList = $this->getHookList($scope, $hookName);
 
-        if (!empty($this->data[$scope])) {
-            if (!empty($this->data[$scope][$hookName])) {
-                foreach ($this->data[$scope][$hookName] as $className) {
-                    if (empty($this->hooks[$className])) {
-                        $this->hooks[$className] = $this->createHookByClassName($className);
-                        if (empty($this->hooks[$className])) {
-                            continue;
-                        }
-                    }
-                    $hook = $this->hooks[$className];
-                    $hook->$hookName($injection, $options, $hookData);
+        if (!empty($hookList)) {
+            foreach ($hookList as $className) {
+                if (empty($this->hooks[$className])) {
+                    $this->hooks[$className] = $this->createHookByClassName($className);
+                    if (empty($this->hooks[$className])) continue;
                 }
+                $hook = $this->hooks[$className];
+                $hook->$hookName($injection, $options, $hookData);
             }
         }
     }
@@ -170,10 +166,13 @@ class HookManager
                         $classMethods = get_class_methods($className);
                         $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
-                        foreach($hookMethods as $hookName) {
-                            $entityHookData = isset($hookData[$scopeName][$hookName]) ? $hookData[$scopeName][$hookName] : array();
-                            if (!$this->isHookExists($className, $entityHookData)) {
-                                $hookData[$normalizedScopeName][$hookName][$className::$order][] = $className;
+                        foreach($hookMethods as $hookType) {
+                            $entityHookData = isset($hookData[$normalizedScopeName][$hookType]) ? $hookData[$normalizedScopeName][$hookType] : array();
+                            if (!$this->hookExists($className, $entityHookData)) {
+                                $hookData[$normalizedScopeName][$hookType][] = array(
+                                    'className' => $className,
+                                    'order' => $className::$order
+                                );
                             }
                         }
                     }
@@ -188,30 +187,54 @@ class HookManager
     /**
      * Sort hooks by an order
      *
-     * @param  array  $scopeHooks
+     * @param  array  $hooks
      *
      * @return array
      */
-    protected function sortHooks(array $unsortedHooks)
+    protected function sortHooks(array $hooks)
     {
-        $hooks = array();
-
-        foreach ($unsortedHooks as $scopeName => $scopeHooks) {
-            foreach ($scopeHooks as $hookName => $hookList) {
-                ksort($hookList);
-
-                $sortedHookList = array();
-                foreach($hookList as $hookDetails) {
-                    $sortedHookList = array_merge($sortedHookList, $hookDetails);
-                }
-
-                $normalizedScopeName = Util::normilizeScopeName($scopeName);
-
-                $hooks[$normalizedScopeName][$hookName] = isset($hooks[$normalizedScopeName][$hookName]) ? array_merge($hooks[$normalizedScopeName][$hookName], $sortedHookList) : $sortedHookList;
+        foreach ($hooks as $scopeName => &$scopeHooks) {
+            foreach ($scopeHooks as $hookName => &$hookList) {
+                usort($hookList, array($this, 'cmpHooks'));
             }
         }
 
         return $hooks;
+    }
+
+    /**
+     * Get sorted hook list
+     *
+     * @param  string $scope
+     * @param  string $hookName
+     *
+     * @return array
+     */
+    protected function getHookList($scope, $hookName)
+    {
+        $key = $scope . '_' . $hookName;
+
+        if (!isset($this->hookListHash[$key])) {
+            $hookList = array();
+
+            if (isset($this->data['Common'][$hookName])) {
+                $hookList = $this->data['Common'][$hookName];
+            }
+
+            if (isset($this->data[$scope][$hookName])) {
+                $hookList = array_merge($hookList, $this->data[$scope][$hookName]);
+                usort($hookList, array($this, 'cmpHooks'));
+            }
+
+            $normalizedList = array();
+            foreach ($hookList as $hookData) {
+                $normalizedList[] = $hookData['className'];
+            }
+
+            $this->hookListHash[$key] = $normalizedList;
+        }
+
+        return $this->hookListHash[$key];
     }
 
     /**
@@ -222,19 +245,25 @@ class HookManager
      *
      * @return boolean
      */
-    protected function isHookExists($className, array $hookData)
+    protected function hookExists($className, array $hookData)
     {
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 
-        foreach ($hookData as $key => $hookList) {
-            foreach ($hookList as $rowHookName) {
-                if (preg_match('/\\\\'.$class.'$/', $rowHookName)) {
-                    return true;
-                }
+        foreach ($hookData as $hookData) {
+            if (preg_match('/\\\\'.$class.'$/', $hookData['className'])) {
+                return true;
             }
         }
 
         return false;
     }
-}
 
+    protected function cmpHooks($a, $b)
+    {
+        if ($a['order'] == $b['order']) {
+            return 0;
+        }
+
+        return ($a['order'] < $b['order']) ? -1 : 1;
+    }
+}

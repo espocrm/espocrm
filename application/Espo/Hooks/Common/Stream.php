@@ -56,6 +56,11 @@ class Stream extends \Espo\Core\Hooks\Base
         return $this->getInjection('serviceFactory');
     }
 
+    protected function getPreferences()
+    {
+        return $this->getInjection('container')->get('preferences');
+    }
+
     protected function checkHasStream(Entity $entity)
     {
         $entityType = $entity->getEntityType();
@@ -185,9 +190,23 @@ class Stream extends \Espo\Core\Hooks\Base
                 $createdById = $entity->get('createdById');
 
                 if (
-                    ($this->getConfig()->get('followCreatedEntities') || $this->getUser()->get('isPortalUser'))
+                    !$this->getUser()->isSystem()
                     &&
-                    !empty($createdById)
+                    $createdById
+                    &&
+                    $createdById === $this->getUser()->id
+                    &&
+                    (
+                        $this->getUser()->isPortalUser()
+                        ||
+                        $this->getPreferences()->get('followCreatedEntities')
+                        ||
+                        (
+                            is_array($this->getPreferences()->get('followCreatedEntityTypeList'))
+                            &&
+                            in_array($entityType, $this->getPreferences()->get('followCreatedEntityTypeList'))
+                        )
+                    )
                 ) {
                     $userIdList[] = $createdById;
                 }

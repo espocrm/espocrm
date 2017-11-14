@@ -36,9 +36,19 @@ class User extends \Espo\Core\Entities\Person
         return $this->get('isAdmin');
     }
 
+    public function isSystem()
+    {
+        return $this->id === 'system';
+    }
+
     public function isActive()
     {
         return $this->get('isActive');
+    }
+
+    public function isPortal()
+    {
+        return $this->isPortalUser();
     }
 
     public function isPortalUser()
