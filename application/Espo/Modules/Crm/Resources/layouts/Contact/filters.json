@@ -3,6 +3,7 @@
     "address",
 	"assignedUser",
 	"createdAt",
+    "createdBy",
 	"emailAddress",
     "phoneNumber",
 	"title",
