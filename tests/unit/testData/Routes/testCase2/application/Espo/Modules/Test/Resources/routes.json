@@ -1,0 +1,10 @@
+[
+  {
+    "route":"/Test",
+    "method":"get",
+    "params":{
+        "controller":"Test",
+        "action":"listCalendarEvents"
+    }
+  }
+]
