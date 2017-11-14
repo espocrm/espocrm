@@ -65,7 +65,7 @@ class AdminNotificationManager
     {
         $notificationList = [];
 
-        if ($this->getConfig()->get('adminNotificationsDisabled')) {
+        if (!$this->getConfig()->get('adminNotifications')) {
             return [];
         }
 
