@@ -136,7 +136,7 @@ class Application
         $auth = $this->createAuth();
         $auth->useNoAuth();
 
-        $cronManager = new \Espo\Core\CronManager($this->container);
+        $cronManager = $this->getContainer()->get('cronManager');
         $cronManager->run();
     }
 
