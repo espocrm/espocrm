@@ -147,8 +147,30 @@ class MailMimeParser
     {
         $this->loadContent($message);
 
-        $bodyPlain = $this->getMessage($message)->getTextContent();
-        $bodyHtml = $this->getMessage($message)->getHtmlContent();
+        $bodyPlain = '';
+        $bodyHtml = '';
+
+        $htmlPartCount = $this->getMessage($message)->getHtmlPartCount();
+        $textPartCount = $this->getMessage($message)->getTextPartCount();
+
+        if (!$htmlPartCount) {
+            $bodyHtml = $this->getMessage($message)->getHtmlContent();
+        }
+        if (!$textPartCount) {
+            $bodyPlain = $this->getMessage($message)->getTextContent();
+        }
+
+        for ($i = 0; $i < $htmlPartCount; $i++) {
+            if ($i) $bodyHtml .= "<br>";
+            $inlinePart = $this->getMessage($message)->getHtmlPart($i);
+            $bodyHtml .= $inlinePart->getContent();
+        }
+
+        for ($i = 0; $i < $textPartCount; $i++) {
+            if ($i) $bodyPlain .= "\n";
+            $inlinePart = $this->getMessage($message)->getTextPart($i);
+            $bodyPlain .= $inlinePart->getContent();
+        }
 
         if ($bodyHtml) {
             $email->set('isHtml', true);
@@ -174,7 +196,12 @@ class MailMimeParser
             $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
 
             $attachment = $this->getEntityManager()->getEntity('Attachment');
-            $attachment->set('name', $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', 'unnamed'));
+
+            $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
+            if ($filename === null) {
+                $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
+            }
+            $attachment->set('name', $filename);
             $attachment->set('type', $attachmentObj->getHeaderValue('Content-Type'));
 
             $contentId = $attachmentObj->getHeaderValue('Content-ID');
@@ -186,6 +213,7 @@ class MailMimeParser
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');
             } else {
+                $disposition = 'attachment';
                 $attachment->set('role', 'Attachment');
             }
 
@@ -201,8 +229,10 @@ class MailMimeParser
             } else if ($disposition == 'inline') {
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->id;
+                    $inlineAttachmentList[] = $attachment;
+                } else {
+                    $email->addLinkMultipleId('attachments', $attachment->id);
                 }
-                $inlineAttachmentList[] = $attachment;
             }
         }
 

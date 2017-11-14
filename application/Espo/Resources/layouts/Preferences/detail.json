@@ -59,6 +59,18 @@
                 {
                     "name": "followEntityOnStreamPost"
                 }
+            ],
+            [
+                false,
+                {
+                    "name": "followCreatedEntities"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "followCreatedEntityTypeList"
+                }
             ]
         ]
     },

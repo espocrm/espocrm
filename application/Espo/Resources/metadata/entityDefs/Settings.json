@@ -433,6 +433,9 @@
             "max": 200,
             "default": 20,
             "required": true
+        },
+        "adminNotifications": {
+            "type": "bool"
         }
     }
 }

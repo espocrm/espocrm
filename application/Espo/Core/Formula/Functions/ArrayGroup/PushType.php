@@ -27,41 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Error;
 
-class Portal extends \Espo\Core\EntryPoints\Base
+class PushType extends \Espo\Core\Formula\Functions\Base
 {
-    public static $authRequired = false;
-
-    public function run($data = array())
+    public function process(\StdClass $item)
     {
-        if (!empty($_GET['id'])) {
-            $id = $_GET['id'];
-        } else if (!empty($data['id'])) {
-            $id = $data['id'];
-        } else {
-            $url = $_SERVER['REQUEST_URI'];
-            $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-
-            if (!isset($id)) {
-                $url = $_SERVER['REDIRECT_URL'];
-                $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-            }
-
-            if (!$id) {
-                $id = $this->getConfig()->get('defaultPortalId');
-            }
-            if (!$id) {
-                throw new NotFound();
-            }
+        if (!property_exists($item, 'value') || !is_array($item->value)) {
+            throw new Error('Bad \'Array\\push\' definition.');
+        }
+        if (count($item->value) < 2) {
+            throw new Error('Bad arguments passed to \'Array\\push\'.');
+        }
+        $list = $this->evaluate($item->value[0]);
+        if (!is_array($list)) {
+            return false;
         }
 
-        $application = new \Espo\Core\Portal\Application($id);
-        $application->setBasePath($this->getContainer()->get('clientManager')->getBasePath());
-        $application->runClient();
+        foreach ($item->value as $i => $v) {
+            if ($i === 0) continue;
+            $element = $this->evaluate($item->value[$i]);
+            $list[] = $element;
+        }
+
+        return $list;
     }
 }

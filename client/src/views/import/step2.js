@@ -134,7 +134,12 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 $cell = $('<td>').append($select);
                 $row.append($cell);
 
-                $cell = $('<td>').html(d.value);
+                var value = d.value;
+                if (value.length > 200) {
+                    value = value.substr(0, 200) + '...';
+                }
+
+                $cell = $('<td>').html(value);
                 $row.append($cell);
 
                 if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
@@ -175,14 +180,14 @@ Espo.define('views/import/step2', 'view', function (Dep) {
         },
 
         getAttributeList: function () {
-            var fields = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
+            var fields = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
-            var fieldList = [];
-            fieldList.push('id');
+            var attributeList = [];
+            attributeList.push('id');
 
             for (var field in fields) {
                 var d = fields[field];
-                if (!~this.allowedFieldList.indexOf(field) && (d.readOnly || d.disabled || d.importDisabled)) {
+                if (!~this.allowedFieldList.indexOf(field) && (((d.readOnly || d.disabled) && !d.importNotDisabled) || d.importDisabled)) {
                     continue;
                 }
 
@@ -190,14 +195,14 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList' ) || []).map(function (item) {
                         return item.replace(/\s/g, '_');
                     }, this).forEach(function (item) {
-                        fieldList.push(field + Espo.Utils.upperCaseFirst(item));
+                        attributeList.push(field + Espo.Utils.upperCaseFirst(item));
                     }, this);
                     continue;
                 }
 
                 if (d.type == 'link') {
-                    fieldList.push(field + 'Name');
-                    fieldList.push(field + 'Id');
+                    attributeList.push(field + 'Name');
+                    attributeList.push(field + 'Id');
                 }
 
                 if (~['linkMultiple', 'foreign'].indexOf(d.type)) {
@@ -205,23 +210,28 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                 }
 
                 if (d.type == 'personName') {
-                    fieldList.push(field);
+                    attributeList.push(field);
                 }
 
                 var type = d.type;
-                var actualFields = this.getFieldManager().getActualAttributes(type, field);
-                actualFields.forEach(function (f) {
-                    if (fieldList.indexOf(f) === -1) {
-                        fieldList.push(f);
+                var actualAttributeList = this.getFieldManager().getActualAttributeList(type, field);
+
+                if (!actualAttributeList.length) {
+                    actualAttributeList = [field];
+                }
+
+                actualAttributeList.forEach(function (f) {
+                    if (attributeList.indexOf(f) === -1) {
+                        attributeList.push(f);
                     }
                 }, this);
             }
 
-            fieldList = fieldList.sort(function (v1, v2) {
+            attributeList = attributeList.sort(function (v1, v2) {
                 return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
             }.bind(this));
 
-            return fieldList
+            return attributeList
         },
 
         getFieldDropdown: function (num, name) {

@@ -63,7 +63,7 @@
         "streamEmailNotificationsEntityList": "Stream email notifications scopes",
         "b2cMode": "B2C Mode",
         "avatarsDisabled": "Disable Avatars",
-        "followCreatedEntities": "Follow Created Entities",
+        "followCreatedEntities": "Follow created records",
         "displayListViewRecordCount": "Display Total Count (on List View)",
         "theme": "Theme",
         "userThemesDisabled": "Disable User Themes",
@@ -89,7 +89,8 @@
         "currencyFormat": "Currency Format",
         "currencyDecimalPlaces": "Currency Decimal Places",
         "aclStrictMode": "ACL Strict Mode",
-        "aclAllowDeleteCreated": "Allow to remove created records"
+        "aclAllowDeleteCreated": "Allow to remove created records",
+        "adminNotifications": "System notifications in administration panel"
     },
     "options": {
         "weekStart": {
@@ -148,7 +149,8 @@
         "Mass Email": "Mass Email",
         "Test Connection": "Test Connection",
         "Connecting": "Connecting...",
-        "Activities": "Activities"
+        "Activities": "Activities",
+        "Admin Notifications": "Admin Notifications"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."

@@ -21,18 +21,20 @@
         "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
         "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
         "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
-        "autoFollowEntityTypeList": "Auto-Follow",
+        "autoFollowEntityTypeList": "Global Auto-Follow",
         "signature": "Email Signature",
         "dashboardTabList": "Tab List",
         "defaultReminders": "Default Reminders",
         "theme": "Theme",
         "useCustomTabList": "Custom Tab List",
         "tabList": "Tab List",
-        "emailReplyToAllByDefault": "Email Reply to All by Default",
+        "emailReplyToAllByDefault": "Email Reply to all by default",
         "dashboardLayout": "Dashboard Layout",
         "emailReplyForceHtml": "Email Reply in HTML",
-        "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
-        "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
+        "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
+        "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+        "followCreatedEntities": "Auto-follow created records",
+        "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
     },
     "links": {
     },
@@ -50,6 +52,9 @@
         "Locale": "Locale"
     },
     "tooltips": {
-        "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications."
+        "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+        "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
+        "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
+        "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
     }
 }

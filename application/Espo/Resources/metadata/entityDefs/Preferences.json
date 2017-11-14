@@ -150,11 +150,22 @@
             "notStorable": true
         },
         "doNotFillAssignedUserIfNotRequired": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "followEntityOnStreamPost": {
             "type": "bool",
             "default": true
+        },
+        "followCreatedEntities": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "followCreatedEntityTypeList": {
+            "type": "multiEnum",
+            "view": "views/preferences/fields/auto-follow-entity-type-list",
+            "translation": "Global.scopeNamesPlural",
+            "tooltip": true
         }
     }
 }

@@ -1387,10 +1387,6 @@ class Record extends \Espo\Core\Services\Base
         }
 
         foreach ($collection as $entity) {
-            if (is_null($attributeList)) {
-
-            }
-
             $this->loadAdditionalFieldsForExport($entity);
             if (method_exists($exportObj, 'loadAdditionalFields')) {
                 $exportObj->loadAdditionalFields($entity, $fieldList);
@@ -1447,19 +1443,23 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
-    protected function getAttributeFromEntityForExport(Entity $entity, $field)
+    protected function getAttributeFromEntityForExport(Entity $entity, $attribute)
     {
-        $methodName = 'getAttribute' . ucfirst($field). 'FromEntityForExport';
+        $methodName = 'getAttribute' . ucfirst($attribute). 'FromEntityForExport';
         if (method_exists($this, $methodName)) {
             return $this->$methodName($entity);
         }
 
         $defs = $entity->getAttributes();
-        if (!empty($defs[$field]) && !empty($defs[$field]['type'])) {
-            $type = $defs[$field]['type'];
+        if (!empty($defs[$attribute]) && !empty($defs[$attribute]['type'])) {
+            $type = $defs[$attribute]['type'];
             switch ($type) {
+                case 'jsonObject':
+                    $value = $entity->get($attribute);
+                    return \Espo\Core\Utils\Json::encode($value);
+                    break;
                 case 'jsonArray':
-                    $value = $entity->get($field);
+                    $value = $entity->get($attribute);
                     if (is_array($value)) {
                         return implode(',', $value);
                     } else {
@@ -1471,7 +1471,7 @@ class Record extends \Espo\Core\Services\Base
                     break;
             }
         }
-        return $entity->get($field);
+        return $entity->get($attribute);
     }
 
     public function prepareEntityForOutput(Entity $entity)
