@@ -29,45 +29,20 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
-
-abstract class Base implements \Espo\Core\Interfaces\Loader
+class MailSender extends Base
 {
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
-     * Construct
+     * Load MailSender
      *
-     * @param Container $container
+     * @return mixed
      */
-    public function __construct(Container $container)
+    public function load()
     {
-        $this->container = $container;
-    }
-
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Get service class name
-     *
-     * @param string $name
-     * @param string $default
-     *
-     * @return string
-     */
-    protected function getServiceClassName($name, $default)
-    {
-        return $this->getContainer()->get('metadata')->get('app.serviceContainer.classNames.'.$name, $default);
+        $className = $this->getServiceClassName('mailSernder', '\\Espo\\Core\\Mail\\Sender');
+        return new $className(
+            $this->getContainer()->get('config'),
+            $this->getContainer()->get('entityManager')
+        );
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/* * **********************************************************************
+/************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
@@ -25,49 +25,27 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- * ********************************************************************** */
+ ************************************************************************/
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
-
-abstract class Base implements \Espo\Core\Interfaces\Loader
+class SelectManagerFactory extends Base
 {
     /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * Construct
+     * Load class
      *
-     * @param Container $container
+     * @return \Espo\Core\SelectManagerFactory
      */
-    public function __construct(Container $container)
+    public function load()
     {
-        $this->container = $container;
-    }
-
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Get service class name
-     *
-     * @param string $name
-     * @param string $default
-     *
-     * @return string
-     */
-    protected function getServiceClassName($name, $default)
-    {
-        return $this->getContainer()->get('metadata')->get('app.serviceContainer.classNames.'.$name, $default);
+        return new \Espo\Core\SelectManagerFactory(
+            $this->getContainer()->get('entityManager'),
+            $this->getContainer()->get('user'),
+            $this->getContainer()->get('acl'),
+            $this->getContainer()->get('aclManager'),
+            $this->getContainer()->get('metadata'),
+            $this->getContainer()->get('config')
+        );
     }
 }
+

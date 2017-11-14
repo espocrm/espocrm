@@ -29,45 +29,20 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
-
-abstract class Base implements \Espo\Core\Interfaces\Loader
+class DateTime extends Base
 {
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
-     * Construct
+     * Load DateTime
      *
-     * @param Container $container
+     * @return \Espo\Core\Utils\DateTime
      */
-    public function __construct(Container $container)
+    public function load()
     {
-        $this->container = $container;
-    }
-
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Get service class name
-     *
-     * @param string $name
-     * @param string $default
-     *
-     * @return string
-     */
-    protected function getServiceClassName($name, $default)
-    {
-        return $this->getContainer()->get('metadata')->get('app.serviceContainer.classNames.'.$name, $default);
+        return new \Espo\Core\Utils\DateTime(
+            $this->getContainer()->get('config')->get('dateFormat'),
+            $this->getContainer()->get('config')->get('timeFormat'),
+            $this->getContainer()->get('config')->get('timeZone')
+        );
     }
 }
