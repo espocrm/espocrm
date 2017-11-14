@@ -1156,9 +1156,6 @@ class UtilTest extends \PHPUnit_Framework_TestCase
     public function testGetClassName($path, $expectedClassName = '\Espo\EntryPoints\Donwload')
     {
         $this->assertEquals($expectedClassName, Util::getClassName($path));
-        $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('custom/Espo/EntryPoints/Donwload.php'));
-        $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('Espo/EntryPoints/Donwload.php'));
-        $this->assertEquals('\Espo\EntryPoints\Donwload', Util::getClassName('application/Espo/EntryPoints/Donwload'));
     }
 
     public function dp_classNames()
