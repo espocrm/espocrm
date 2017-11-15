@@ -447,7 +447,7 @@ class Util
     public static function getClassName($filePath)
     {
         $className = preg_replace('/\.php$/i', '', $filePath);
-        $className = preg_replace('/^(application|custom)\//i', '', $className);
+        $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
         $className = '\\'.static::toFormat($className, '\\');
 
         return $className;
