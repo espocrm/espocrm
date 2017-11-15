@@ -522,6 +522,7 @@
             "future": "Future",
             "currentMonth": "Current Month",
             "lastMonth": "Last Month",
+            "nextMonth": "Next Month",
             "currentQuarter": "Current Quarter",
             "lastQuarter": "Last Quarter",
             "currentYear": "Current Year",
