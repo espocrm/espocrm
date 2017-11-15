@@ -13,19 +13,19 @@
     "opportunityRole": "Rol de Oportunidad",
     "description": "Descripción",
     "campaign": "Campaña",
-    "targetLists": "Lista de Objetivos",
+    "targetLists": "Listas de Objetivos",
     "targetList": "Lista de Objetivos",
     "portalUser": "Usuario del Portal",
     "originalLead": "Referencia Original",
     "acceptanceStatus": "Estatus de Aprobación",
-    "accountIsInactive": "Account Inactive",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "accountIsInactive": "Cuenta Inactiva",
+    "acceptanceStatusMeetings": "Estátus de Aceptación (Juntas)",
+    "acceptanceStatusCalls": "Estátus de Aceptación (Llamadas)"
   },
   "links": {
     "opportunities": "Oportunidades",
     "cases": "Casos",
-    "targetLists": "Lista de Objetivos",
+    "targetLists": "Listas de Objetivos",
     "campaignLogRecords": "Registrar Campaña",
     "campaign": "Campaña",
     "account": "Cuenta (Primaria)",
@@ -48,6 +48,7 @@
   },
   "presetFilters": {
     "portalUsers": "Usuarios del Portal",
-    "notPortalUsers": "No son Usuarios del Portal"
+    "notPortalUsers": "No son Usuarios del Portal",
+    "accountActive": "Activo"
   }
 }

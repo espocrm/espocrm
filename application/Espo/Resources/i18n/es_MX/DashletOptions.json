@@ -12,7 +12,7 @@
     "entityType": "Tipo de Entidad",
     "primaryFilter": "Filtro Primario",
     "boolFilterList": "Filtros Adicionales",
-    "sortBy": "Ordenar (campo)",
+    "sortBy": "Campo para Ordenar",
     "sortDirection": "Ordenar (dirección)",
     "expandedLayout": "Formato"
   },

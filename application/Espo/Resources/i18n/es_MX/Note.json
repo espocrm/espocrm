@@ -7,12 +7,12 @@
     "users": "Usuarios",
     "portals": "Portales",
     "type": "Tipo",
-    "isGlobal": "Is Global",
-    "isInternal": "Is Internal (for internal users)",
-    "related": "Related",
-    "createdByGender": "Created By Gender",
-    "data": "Data",
-    "number": "Number"
+    "isGlobal": "Es Global",
+    "isInternal": "Es interno (para usuarios internos)",
+    "related": "Relacionada",
+    "createdByGender": "Creado(a) por Género",
+    "data": "Datos",
+    "number": "Número"
   },
   "filters": {
     "all": "Todos",

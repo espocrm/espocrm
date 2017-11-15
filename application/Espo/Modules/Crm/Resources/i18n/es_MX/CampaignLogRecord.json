@@ -9,12 +9,14 @@
     "application": "Aplicacion",
     "queueItem": "Item de la Lista",
     "stringData": "Datos Alfanuméricos",
-    "stringAdditionalData": "Datos Alfanuméricos Adicionales"
+    "stringAdditionalData": "Datos Alfanuméricos Adicionales",
+    "isTest": "Is Test"
   },
   "links": {
     "queueItem": "Elemento de la Cola",
     "parent": "Padre",
-    "object": "Objeto"
+    "object": "Objeto",
+    "campaign": "Campaign"
   },
   "options": {
     "action": {

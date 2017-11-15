@@ -9,7 +9,7 @@
     "monitoredFolders": "Carpetas Supervisadas",
     "ssl": "SSL",
     "fetchSince": "Traer Desde",
-    "emailAddress": "Correo Electrónico",
+    "emailAddress": "Dirección de Correo",
     "sentFolder": "Carpeta de Enviados",
     "storeSentEmails": "Almacenar Correos Enviados",
     "keepFetchedEmailsUnread": "Mantener los correos obtenidos sin leer",
@@ -33,7 +33,7 @@
     }
   },
   "labels": {
-    "Create EmailAccount": "Crear Cuenta de Correo Electrónico",
+    "Create EmailAccount": "Crear Cuenta de Correo",
     "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
@@ -45,7 +45,7 @@
     "connectionIsOk": "Conexión correcta"
   },
   "tooltips": {
-    "storeSentEmails": "Los correos enviados serán almacenados en el servidor IMAP.  El campo 'Dirección de Correo' deberá ser el mismo desde donde los correos sean enviados. ",
-    "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client."
+    "monitoredFolders": "Si usa varias carpetas, debe separarlas con coma",
+    "storeSentEmails": "Los correos enviados serán guardados en el servidor IMAP.  El campo de  dirección del correo deberá coincidir con las direcciones de los correos que serán enviados."
   }
 }

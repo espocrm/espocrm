@@ -16,7 +16,7 @@
     "selectTemplate": "Seleccione una Plantilla",
     "fromEmailAddress": "De la dirección",
     "toEmailAddresses": "a la Dirección",
-    "emailAddress": "Correo Electrónico",
+    "emailAddress": "Dirección de Correo",
     "deliveryDate": "Fecha Entrega",
     "account": "Cuenta",
     "users": "Usuarios",
@@ -30,17 +30,20 @@
     "name": "Nombre (Sujeto)",
     "isReplied": "Tiene Respuesta",
     "isNotReplied": "No Tiene Respuesta",
-    "sentBy": "Enviado por (Usuario)",
     "folder": "Carpeta",
     "inboundEmails": "Cuentas de Grupo",
     "emailAccounts": "Cuentas Personales",
-    "hasAttachment": "Tiene Adjuntos"
+    "hasAttachment": "Tiene Adjuntos",
+    "sentBy": "Enviado por",
+    "assignedUsers": "Usuarios Asignados"
   },
   "links": {
     "replied": "Respondió",
     "replies": "Respuestas",
     "inboundEmails": "Cuentas de Grupo",
-    "emailAccounts": "Cuentas Personales"
+    "emailAccounts": "Cuentas Personales",
+    "assignedUsers": "Usuarios Asignados",
+    "sentBy": "Enviado por"
   },
   "options": {
     "status": {
@@ -62,11 +65,11 @@
     "Original message": "Mensaje Original",
     "Forwarded message": "Mensaje reenviado",
     "Email Accounts": "Cuentas de Correo Personales",
-    "Inbound Emails": "Grupo de Cuentas de Correo",
+    "Inbound Emails": "Agrupar Cuentas de Correo",
     "Email Templates": "Plantillas de Correo",
     "Send Test Email": "Enviar Correo de Prueba",
     "Send": "Enviar",
-    "Email Address": "Correo Electrónico",
+    "Email Address": "Correo",
     "Mark Read": "Marcar como Leído",
     "Sending...": "Enviando...",
     "Save Draft": "Guardar Borrador",

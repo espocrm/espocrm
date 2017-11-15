@@ -3,7 +3,7 @@
     "name": "Nombre",
     "body": "Cuerpo",
     "entityType": "Tipo de Entidad",
-    "header": "Cabecera",
+    "header": "Encabezado",
     "footer": "Pié",
     "leftMargin": "Margen Izquierdo",
     "topMargin": "Margen Superior",
