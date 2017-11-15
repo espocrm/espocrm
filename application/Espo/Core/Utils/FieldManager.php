@@ -150,6 +150,25 @@ class FieldManager
             }
         }
 
+        if ($isNew) {
+            $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
+            if ($subFieldsDefs) {
+                foreach ($subFieldsDefs as $partField => $partFieldData) {
+                    $partLabel = $this->getLanguage()->get('FieldManager.fieldParts.' . $type . '.' . $partField);
+                    if ($partLabel) {
+                        if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
+                            $subFieldName = $partField . ucfirst($name);
+                            $subFieldLabel = $partLabel . ' ' . $fieldDefs['label'];
+                        } else {
+                            $subFieldName = $name . ucfirst($partField);
+                            $subFieldLabel = $fieldDefs['label'] . ' ' . $partLabel;
+                        }
+                        $isLabelChanged |= $this->setLabel($scope, $subFieldName, $subFieldLabel);
+                    }
+                }
+            }
+        }
+
         if ($isLabelChanged) {
             $result &= $this->getLanguage()->save();
 
@@ -304,7 +323,19 @@ class FieldManager
 
 
         $res = $this->getMetadata()->save();
-        $res &= $this->deleteLabel($scope, $name);
+        $this->deleteLabel($scope, $name);
+
+        $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
+        if ($subFieldsDefs) {
+            foreach ($subFieldsDefs as $partField => $partFieldData) {
+                if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
+                    $subFieldName = $partField . ucfirst($name);
+                } else {
+                    $subFieldName = $name . ucfirst($partField);
+                }
+                $this->deleteLabel($scope, $subFieldName);
+            }
+        }
 
         $this->processHook('afterRemove', $type, $scope, $name);
 
