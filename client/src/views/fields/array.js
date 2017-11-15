@@ -248,6 +248,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     };
                 }
             });
+
+            this.$el.find('.selectize-dropdown-content').addClass('small');
         },
 
         fetchFromDom: function () {

@@ -230,6 +230,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         };
                     }
                 });
+
+                this.$el.find('.selectize-dropdown-content').addClass('small');
             }
         },
 
