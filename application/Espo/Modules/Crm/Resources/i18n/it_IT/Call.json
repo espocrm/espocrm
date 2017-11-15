@@ -1,25 +1,25 @@
 {
   "fields": {
     "name": "Nome",
-    "parent": "Parente",
+    "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data d'inizio",
-    "dateEnd": "Data di termine",
+    "dateStart": "Data inizio",
+    "dateEnd": "Data termine",
     "direction": "Direzione",
     "duration": "Durata",
     "description": "Descrizione",
     "users": "Utenti",
     "contacts": "Contatti",
-    "leads": "Lead",
+    "leads": "Comando",
     "reminders": "Promemoria",
     "account": "Account",
-    "acceptanceStatus": "Stato Accettazione"
+    "acceptanceStatus": "Stato accettazione"
   },
   "options": {
     "status": {
       "Planned": "Pianificato",
-      "Held": "Held",
-      "Not Held": "Non Held"
+      "Held": "Tenere",
+      "Not Held": "Lasciare"
     },
     "direction": {
       "Outbound": "in Uscita",
@@ -33,18 +33,18 @@
     }
   },
   "massActions": {
-    "setHeld": "Imposta Held",
-    "setNotHeld": "Imposta Non Held"
+    "setHeld": "Trattenuto",
+    "setNotHeld": "Non Trattenuto"
   },
   "labels": {
     "Create Call": "Crea chiamata",
-    "Set Held": "Imposta Held",
-    "Set Not Held": "Imposta non Held",
+    "Set Held": "Trattenuto",
+    "Set Not Held": "Non Trattenuto",
     "Send Invitations": "Inviare inviti"
   },
   "presetFilters": {
     "planned": "Pianificato",
     "held": "Held",
-    "todays": "Oggi"
+    "todays": "Today's"
   }
 }

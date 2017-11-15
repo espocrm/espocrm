@@ -3,22 +3,22 @@
     "name": "Nome",
     "status": "Stato",
     "storeSentEmails": "Archiviare Email Inviate",
-    "startAt": "Data d'Inizio",
+    "startAt": "Data inizio",
     "fromAddress": "Indirizzo mittente",
-    "fromName": "Mittente",
-    "replyToAddress": "Indirizzo Email per il Reply-To",
-    "replyToName": "Nome per il Reply-To",
+    "fromName": "Dal nome",
+    "replyToAddress": "Rispondi aa Indirizzo",
+    "replyToName": "Rispondi a Nome",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
     "inboundEmail": "Email Account",
-    "targetLists": "Liste di Target",
-    "excludingTargetLists": "Liste di Target Escluse",
-    "optOutEntirely": "Opt-Out da tutto"
+    "targetLists": "Liste di destinazione",
+    "excludingTargetLists": "Escludi Liste di Destinazione",
+    "optOutEntirely": "Opt-Out Entirely"
   },
   "links": {
-    "targetLists": "Liste di Target",
-    "excludingTargetLists": "Target List Escluse",
-    "queueItems": "Item in Coda",
+    "targetLists": "Liste di Destinazione",
+    "excludingTargetLists": "Excluding Target Lists",
+    "queueItems": "Queue Items",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
     "inboundEmail": "Email Account"
@@ -27,27 +27,27 @@
     "status": {
       "Draft": "Bozza",
       "Pending": "In attesa",
-      "In Process": "In Corso",
-      "Complete": "Completato",
+      "In Process": "In corso",
+      "Complete": "Completo",
       "Canceled": "Cancellato",
       "Failed": "Fallito"
     }
   },
   "labels": {
-    "Create MassEmail": "Crea Email Massiva",
+    "Create MassEmail": "Crea Email Massive",
     "Send Test": "Invia Test"
   },
   "messages": {
-    "selectAtLeastOneTarget": "Selezionare almeno un target.",
+    "selectAtLeastOneTarget": "Selezionare almeno un destinatario.",
     "testSent": "L'Email di prova dovrebbe essere stata inviata"
   },
   "tooltips": {
-    "optOutEntirely": "Gli Indirizzi e-mail dei destinatari che si sono disiscritti saranno contrassegnati come opted-out e non riceveranno più e-mail massive.",
-    "targetLists": "Target che devono ricevere i messaggi.",
-    "excludingTargetLists": "Target che non devono ricevere i messaggi."
+    "optOutEntirely": "Gli indirizzi email dei destinatari che hanno cancellato l'iscrizione verranno contrassegnati come disabilitati e non riceveranno più alcuna email.",
+    "targetLists": "Destinatari che devono ricevere i messaggi.",
+    "excludingTargetLists": "Destinatari che non devono ricevere i messaggi."
   },
   "presetFilters": {
     "actual": "Attuale",
-    "complete": "Completato"
+    "complete": "Completo"
   }
 }

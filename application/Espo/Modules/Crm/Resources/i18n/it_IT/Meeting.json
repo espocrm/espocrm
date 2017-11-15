@@ -1,50 +1,50 @@
 {
   "fields": {
     "name": "Nome",
-    "parent": "Parente",
+    "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data d'inizio",
-    "dateEnd": "Data di fine",
+    "dateStart": "Data inizio",
+    "dateEnd": "Data termine",
     "duration": "Durata",
     "description": "Descrizione",
     "users": "Utenti",
     "contacts": "Contatti",
-    "leads": "Lead",
+    "leads": "Iniziative",
     "reminders": "Promemoria",
     "account": "Account",
-    "acceptanceStatus": "Stato Accettazione"
+    "acceptanceStatus": "Stato accettazione"
   },
   "options": {
     "status": {
       "Planned": "Pianificato",
-      "Held": "Held",
-      "Not Held": "Not Held"
+      "Held": "Trattenuto",
+      "Not Held": "Non trattenuto"
     },
     "acceptanceStatus": {
       "None": "Nessun",
       "Accepted": "Accettato",
       "Declined": "Declinato",
-      "Tentative": "Provvisorio"
+      "Tentative": "Tentativo"
     }
   },
   "massActions": {
-    "setHeld": "Impostato su Held",
-    "setNotHeld": "Impostato su Not Held"
+    "setHeld": "Trattenuto",
+    "setNotHeld": "Non trattenuto"
   },
   "labels": {
-    "Create Meeting": "Crea Meeting",
-    "Set Held": "Imposta Held",
-    "Set Not Held": "Imposta Not Held",
+    "Create Meeting": "Crea Riunione",
+    "Set Held": "Trattenuto",
+    "Set Not Held": "Non trattenuto",
     "Send Invitations": "Inviare inviti",
     "on time": "puntuale",
     "before": "prima"
   },
   "presetFilters": {
     "planned": "Pianificato",
-    "held": "Held",
-    "todays": "Oggi"
+    "held": "Trattenuto",
+    "todays": "Di oggi"
   },
   "messages": {
-    "nothingHasBeenSent": "Nessun messaggio inviato"
+    "nothingHasBeenSent": "Nulla è stato inviato"
   }
 }

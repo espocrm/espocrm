@@ -1,10 +1,10 @@
 {
   "fields": {
-    "skipNotifications": "Salta Notifiche"
+    "skipNotifications": "Salta Notifica"
   },
   "labels": {
     "Create EmailFolder": "Crea Cartella",
     "Manage Folders": "Gestione Cartelle",
-    "Emails": "Email"
+    "Emails": "Emails"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "fields": {
-    "acceptanceStatus": "Stato Accettazione",
-    "acceptanceStatusMeetings": "Stato Accettazione (Meeting)",
-    "acceptanceStatusCalls": "Stato Accettazione (Chiamate)"
-  },
   "links": {
-    "targetLists": "Liste di Target"
+    "targetLists": "Liste di destinazione"
+  },
+  "fields": {
+    "acceptanceStatus": "Stato accettazione",
+    "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
+    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
   }
 }

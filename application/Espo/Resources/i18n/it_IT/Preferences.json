@@ -2,37 +2,39 @@
   "fields": {
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
-    "timeZone": "Fuso Orario",
+    "timeZone": "Time Zone",
     "weekStart": "Primo giorno della Settimana",
     "thousandSeparator": "Separatore delle migliaia",
-    "decimalMark": "Separatore dei Decimali",
+    "decimalMark": "Marcatore dei Decimali",
     "defaultCurrency": "Valuta di default",
-    "currencyList": "Lista delle Valute",
+    "currencyList": "Elenco Valute",
     "language": "Lingua",
     "smtpServer": "Server",
     "smtpPort": "Porta",
-    "smtpAuth": "Auth",
+    "smtpAuth": "Autenticato",
     "smtpSecurity": "Sicurezza",
     "smtpUsername": "Username",
     "emailAddress": "Email",
     "smtpPassword": "Password",
     "smtpEmailAddress": "Indirizzo Email",
-    "exportDelimiter": "Delimitatore per l'esportazione",
-    "receiveAssignmentEmailNotifications": "Notifiche email al momento dell'assegnazione",
-    "receiveMentionEmailNotifications": "Notifiche e-mail in caso di menzioni nei post",
-    "receiveStreamEmailNotifications": "Notifiche email per i messaggi e gli aggiornamenti di stato",
-    "autoFollowEntityTypeList": "Auto-Follow",
+    "exportDelimiter": "Delimitatore esportazione",
     "signature": "Firma Email",
-    "dashboardTabList": "Lista delle schede",
-    "tabList": "Lista delle schede",
-    "defaultReminders": "Promemoria di Default",
+    "dashboardTabList": "Elenco schede",
+    "tabList": "Elenco schede",
+    "defaultReminders": "Promemoria di Defaul",
     "theme": "Tema",
-    "useCustomTabList": "Lista delle schede personalizzata",
-    "emailReplyToAllByDefault": "Rispondi a tutti via E-mail di default",
-    "dashboardLayout": "Dashboard Layout",
+    "useCustomTabList": "Elenco schede personalizzate",
+    "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
+    "receiveMentionEmailNotifications": "Notifiche via email in caso di menzioni nei post",
+    "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
+    "dashboardLayout": "Layout panoramica",
     "emailReplyForceHtml": "Email di risposta in HTML",
-    "doNotFillAssignedUserIfNotRequired": "Non riempire Utente Assegnato se non è richiesto",
-    "followEntityOnStreamPost": "Segui automaticamente entità dopo che ha postato nello Stream"
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "emailReplyToAllByDefault": "Email Reply to all by default",
+    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
   },
   "options": {
     "weekStart": {
@@ -41,13 +43,16 @@
     }
   },
   "labels": {
-    "Notifications": "Notifiche",
+    "Notifications": "Notifica",
     "User Interface": "Interfaccia Utente",
     "SMTP": "SMTP",
     "Misc": "Varie",
     "Locale": "Locale"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "L'Utente seguirà automaticamente tutti i nuovi record dei tipi di entità selezionati, vedrà le informazioni nello stream e riceverà le notifiche."
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
+    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
+    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
   }
 }

@@ -4,10 +4,10 @@
     "description": "Descrizione",
     "status": "Stato",
     "type": "Tipo",
-    "startDate": "Data d'Inizio",
-    "endDate": "Data di Termine",
-    "targetLists": "Liste di Target",
-    "excludingTargetLists": "Escludi Lista Target",
+    "startDate": "Data inizio",
+    "endDate": "Data termine",
+    "targetLists": "Liste di destinazione",
+    "excludingTargetLists": "Esclusioni da liste di destinazione",
     "sentCount": "Inviato",
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
@@ -15,22 +15,22 @@
     "bouncedCount": "Bounced",
     "hardBouncedCount": "Hard Bounced",
     "softBouncedCount": "Soft Bounced",
-    "leadCreatedCount": "Lead Creata",
-    "revenue": "Fatturato",
-    "revenueConverted": "Fatturato (convertito)",
+    "leadCreatedCount": "Leads Created",
+    "revenue": "Entrata",
+    "revenueConverted": "Entrata (convertita)",
     "budget": "Budget",
     "budgetConverted": "Budget (convertito)"
   },
   "links": {
-    "targetLists": "Liste di Target",
-    "excludingTargetLists": "Escludi Liste di Target",
+    "targetLists": "Liste di destinazione",
+    "excludingTargetLists": "Esclusioni da liste di destinazione",
     "accounts": "Account",
     "contacts": "Contatti",
-    "leads": "Lead",
-    "opportunities": "Opportunità",
+    "leads": "Comando",
+    "opportunities": "Opportunita'",
     "campaignLogRecords": "Log",
     "massEmails": "Email Massiva",
-    "trackingUrls": "URL di Tracking"
+    "trackingUrls": "Tracking URLs"
   },
   "options": {
     "type": {
@@ -44,32 +44,32 @@
     "status": {
       "Planning": "Pianificazione",
       "Active": "Attivo",
-      "Inactive": "Non Attivo",
+      "Inactive": "Inattivo",
       "Complete": "Completo"
     }
   },
   "labels": {
-    "Create Campaign": "Crea Campaigna",
-    "Target Lists": "Liste di Target",
+    "Create Campaign": "Create Campaign",
+    "Target Lists": "Liste di destinazione",
     "Statistics": "Statistiche",
-    "hard": "hard",
-    "soft": "soft",
+    "hard": "duro",
+    "soft": "leggeto",
     "Unsubscribe": "Annulla l'iscrizione",
     "Mass Emails": "Email Massive",
     "Email Templates": "Modelli Email",
-    "Unsubscribe again": "Disiscriviti ancora",
-    "Subscribe again": "Iscriviti ancora",
-    "Create Target List": "Crea Lista Target"
+    "Unsubscribe again": "Unsubscribe again",
+    "Subscribe again": "Subscribe again",
+    "Create Target List": "Elenco crea target"
   },
   "presetFilters": {
     "active": "Attivo"
   },
   "messages": {
     "unsubscribed": "Sei stato rimosso dalla nostra mailing list.",
-    "subscribedAgain": "Ti sei iscritto nuovamente."
+    "subscribedAgain": "You are subscribed again."
   },
   "tooltips": {
-    "targetLists": "Target che devono ricevere i messaggi.",
-    "excludingTargetLists": "Target che non dovrebbe ricevere messaggi."
+    "targetLists": "Obiettivi che devono ricevere i messaggi .",
+    "excludingTargetLists": "Obiettivi che non dovrebbe ricevere messaggi."
   }
 }

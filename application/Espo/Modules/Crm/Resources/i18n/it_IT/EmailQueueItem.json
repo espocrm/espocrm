@@ -4,7 +4,7 @@
     "status": "Stato",
     "target": "Target",
     "sentAt": "Data invio",
-    "attemptCount": "Tentativi",
+    "attemptCount": "Prove",
     "emailAddress": "Indirizzo Email",
     "massEmail": "Email Massiva",
     "isTest": "è un test"
@@ -18,7 +18,7 @@
       "Pending": "In attesa",
       "Sent": "Inviato",
       "Failed": "Fallito",
-      "Sending": "In invio"
+      "Sending": "Invio"
     }
   },
   "presetFilters": {

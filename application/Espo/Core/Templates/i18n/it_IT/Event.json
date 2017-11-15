@@ -1,36 +1,36 @@
 {
   "fields": {
-    "parent": "Parente",
-    "dateStart": "Data Inizio",
-    "dateEnd": "Data Termine",
-    "duration": "Durata",
+    "parent": "Genitore",
+    "dateStart": "Data inizio",
+    "dateEnd": "Data termine",
+    "duration": "Dirata",
     "status": "Stato",
-    "reminders": "Avvisi"
+    "reminders": "Promemoria"
   },
   "links": {
-    "parent": "Parente"
+    "parent": "Genitore"
   },
   "options": {
     "status": {
       "Planned": "Pianificato",
-      "Held": "Held",
-      "Not Held": "Not Held"
+      "Held": "Trattenuto",
+      "Not Held": "Non trattenuto"
     }
   },
   "labels": {
     "Create {entityType}": "Crea {entityTypeTranslated}",
-    "Schedule {entityType}": "Programma {entityTypeTranslated}",
-    "Log {entityType}": "Log {entityTypeTranslated}",
-    "Set Held": "Imposta Held",
-    "Set Not Held": "Imposta Not Held"
+    "Schedule {entityType}": "Pianificazione {entityTypeTranslated}",
+    "Log {entityType}": "Registro {entityTypeTranslated}",
+    "Set Held": "Imposta trattenuto",
+    "Set Not Held": "Imposta non trattenuto"
   },
   "massActions": {
-    "setHeld": "Set Held",
-    "setNotHeld": "Imposta Not Held"
+    "setHeld": "Imposta trattenuto",
+    "setNotHeld": "Imposta non trattenuto"
   },
   "presetFilters": {
     "planned": "Pianificato",
-    "held": "Held",
-    "todays": "Oggi"
+    "held": "Trattenuto",
+    "todays": "Di oggi"
   }
 }

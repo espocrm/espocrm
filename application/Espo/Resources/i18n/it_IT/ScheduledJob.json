@@ -9,29 +9,29 @@
     "log": "Log"
   },
   "labels": {
-    "Create ScheduledJob": "Crea un Job Schedulato"
+    "Create ScheduledJob": "Crea un Job schedulato"
   },
   "options": {
     "job": {
-      "Cleanup": "Pulisci",
-      "CheckInboundEmails": "Controlla gli Account E-mail di Gruppo",
-      "CheckEmailAccounts": "Controlla gli Account E-mail Personali",
-      "SendEmailReminders": "Invia promemoria via email",
-      "AuthTokenControl": "Controllo dell'Auth Token",
-      "SendEmailNotifications": "Invia notifiche e-mail"
+      "Cleanup": "Pulire",
+      "CheckInboundEmails": "Controllare Gruppo Account di posta elettronica",
+      "CheckEmailAccounts": "Controllare account email personale",
+      "SendEmailReminders": "Inviare promemoria via email",
+      "AuthTokenControl": "Controllo token di autenticazione",
+      "SendEmailNotifications": "Invia notifiche email"
     },
     "cronSetup": {
-      "linux": "Nota: Aggiungi questa riga al file crontab per eseguire gli Scheduled Jobs di Espo:",
-      "mac": "Nota: Aggiungi questa riga al file crontab per eseguire gli Scheduled Jobs di Espo:",
-      "windows": "Nota: Creare un file batch con i seguenti comandi per eseguire gli Scheduled Jobs di Espo utilizzando Operazioni pianificate di Windows:",
-      "default": "Nota: Aggiungi questo comando al Cron Job (Scheduled Task):"
+      "linux": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",
+      "mac": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",
+      "windows": "Nota: crea un file batch con i seguenti comandi per eseguire le attività pianificate di EspoCRM utilizzando Operazioni pianificate di Windows:",
+      "default": "Nota: Aggiungi questo comando a Cron Job (Operazioni pianificate):"
     },
     "status": {
       "Active": "Attivo",
-      "Inactive": "Non Attivo"
+      "Inactive": "Inattivo"
     }
   },
   "tooltips": {
-    "scheduling": "Formato Crontab. Definisce la frequenza dell'esecuzione dei job.\n\n*/5 * * * * - ogni 5 minuti\n\n0 */2 * * * - ogni 2 ore\n\n30 1 * * * - all'01:30 una volta al giorno\n\n0 0 1 * * - il primo del mese"
+    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
   }
 }

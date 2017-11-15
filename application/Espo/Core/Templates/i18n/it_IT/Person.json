@@ -3,9 +3,9 @@
     "address": "Indirizzo"
   },
   "links": {
-    "meetings": "Meetings",
+    "meetings": "Riunioni",
     "calls": "Chiamate",
-    "tasks": "Tasks"
+    "tasks": "Compiti"
   },
   "labels": {
     "Create {entityType}": "Crea {entityTypeTranslated}"

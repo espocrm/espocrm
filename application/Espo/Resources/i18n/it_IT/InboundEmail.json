@@ -2,9 +2,8 @@
   "fields": {
     "name": "Nome",
     "emailAddress": "Indirizzo Email",
-    "team": "Team Target",
     "status": "Stato",
-    "assignToUser": "Assegna all'Utente",
+    "assignToUser": "Assegna a utente",
     "host": "Host",
     "username": "Username",
     "password": "Password",
@@ -14,27 +13,28 @@
     "ssl": "SSL",
     "createCase": "Crea Caso",
     "reply": "Risposta automatica",
-    "caseDistribution": "Distribuzione di Casi",
+    "caseDistribution": "Caso di Distribuzione",
     "replyEmailTemplate": "Modello Email di Risposta ",
-    "replyFromAddress": "Rispondi dall'Indirizzo",
-    "replyToAddress": "Rispondi all'Indirizzo",
-    "replyFromName": "Rispondi dall'identità",
-    "targetUserPosition": "Posizione Utente Target",
-    "fetchSince": "Recuperare Dal",
+    "replyFromAddress": "Replica da (indirizzo)",
+    "replyToAddress": "Replica a (indirizzo)",
+    "replyFromName": "Replica da (nome)",
+    "targetUserPosition": "Obiettivo posizione utente",
+    "fetchSince": "Portare Dal",
     "addAllTeamUsers": "Per tutti gli utenti del team",
-    "teams": "Team"
+    "team": "Team",
+    "teams": "Teams"
   },
   "tooltips": {
-    "reply": "Notifica ai mittenti che i loro messaggi di posta elettronica sono stati ricevuti .\n\n Verrà inviata, in un certo periodo di tempo, solo una e-mail per ogni destinatario, per evitare loop.",
+    "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
     "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
     "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
-    "caseDistribution": "Come verranno assegnati i Casi. Assegnato direttamente all'utente o all'interno del team.",
-    "assignToUser": "I casi dell'utente saranno assegnati a.",
-    "team": "I casi del team saranno assegnati a.",
-    "teams": "Le email dei team saranno assegnate a.",
-    "targetUserPosition": "I casi saranno distribuiti agli utenti con la posizione specificata.",
-    "addAllTeamUsers": "I Messaggi di posta elettronica appariranno nella Posta in arrivo di tutti gli utenti dei team specificati.",
-    "monitoredFolders": "Cartelle multiple devono essere separate con una virgola."
+    "caseDistribution": "Come verranno assegnati i Casi . Assegnato direttamente all'utente o all'interno del team.",
+    "assignToUser": "Assegnatari dei processi utente.",
+    "team": "Assegnatari dei processi dei teams.",
+    "teams": "Assegnatari delle email dei teams.",
+    "addAllTeamUsers": "I Messaggi di posta elettronica vengono visualizzati nella cartella di Posta in arrivo di tutti gli utenti di un gruppo specifico.",
+    "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i casi.",
+    "monitoredFolders": "Se più cartelle, devono essere separate da virgola"
   },
   "links": {
     "filters": "Filtri",
@@ -43,20 +43,20 @@
   "options": {
     "status": {
       "Active": "Attivo",
-      "Inactive": "Non Attivo"
+      "Inactive": "Inattivo"
     },
     "caseDistribution": {
       "": "Nessun",
-      "Direct-Assignment": "Assegnazione Diretta",
+      "Direct-Assignment": "Assegnazione diretta",
       "Round-Robin": "Round-Robin",
-      "Least-Busy": "Meno-Occupato"
+      "Least-Busy": "Least-Busy"
     }
   },
   "labels": {
     "Create InboundEmail": "Crea un Account Email",
     "IMAP": "IMAP",
     "Actions": "Azioni",
-    "Main": "Principale"
+    "Main": "Main"
   },
   "messages": {
     "couldNotConnectToImap": "Impossibile connettersi al server IMAP"

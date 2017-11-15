@@ -4,8 +4,8 @@
     "link": "Link",
     "notSortable": "Non Ordinabile",
     "align": "Allinea",
-    "panelName": "Nome Pannello",
-    "style": "Stilo",
+    "panelName": "Nome del pannello",
+    "style": "Stile",
     "sticked": "Fissato"
   },
   "options": {
@@ -18,7 +18,7 @@
       "success": "Successo",
       "danger": "Pericolo",
       "info": "Info",
-      "warning": "Avviso",
+      "warning": "Avvertimento",
       "primary": "Primario"
     }
   }

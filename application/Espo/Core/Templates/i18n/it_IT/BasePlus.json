@@ -1,8 +1,8 @@
 {
   "links": {
-    "meetings": "Meeting",
+    "meetings": "Riunioni",
     "calls": "Chiamate",
-    "tasks": "Task"
+    "tasks": "Compiti"
   },
   "labels": {
     "Create {entityType}": "Crea {entityTypeTranslated}"
