@@ -4,7 +4,7 @@
     "emailAddress": "电子邮件",
     "website": "网站",
     "phoneNumber": "电话",
-    "billingAddress": "帐单地址",
+    "billingAddress": "账单地址",
     "shippingAddress": "邮寄地址",
     "description": "描述",
     "sicCode": "Sic代码",
@@ -14,7 +14,8 @@
     "campaign": "营销活动",
     "targetLists": "目标列表",
     "targetList": "目标列表",
-    "originalLead": "原始线索"
+    "originalLead": "原始潜在顾客",
+    "contactIsInactive": "未激活"
   },
   "links": {
     "contacts": "联系人",
@@ -29,7 +30,7 @@
     "campaignLogRecords": "营销活动日志",
     "campaign": "营销活动",
     "portalUsers": "门户网站用户",
-    "originalLead": "原始线索"
+    "originalLead": "原始潜在顾客"
   },
   "options": {
     "type": {
@@ -84,16 +85,18 @@
       "Marketing": "百货",
       "Petroleum": "石油",
       "Retail": "零售",
-      "Shipping": "运输",
+      "Shipping": "邮寄",
       "Support": "支持",
       "Testing, Inspection & Certification": "检测",
       "Wholesale": "批发",
-      "Water": "水利"
+      "Water": "水利",
+      "Travel": "Travel"
     }
   },
   "labels": {
-    "Create Account": "创建帐号",
-    "Copy Billing": "复制帐单"
+    "Create Account": "创建客户",
+    "Copy Billing": "复制账单地址",
+    "Set Primary": "设置首选"
   },
   "presetFilters": {
     "customers": "顾客",

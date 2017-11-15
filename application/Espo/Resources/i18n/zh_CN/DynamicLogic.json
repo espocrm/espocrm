@@ -1,6 +1,6 @@
 {
   "label": {
-    "Field": "域/字段"
+    "Field": "字段"
   },
   "options": {
     "operators": {
@@ -17,8 +17,8 @@
       "isToday": "是今天",
       "isTrue": "是正确的",
       "isFalse": "是错误的",
-      "isEmpty": "是空的",
-      "isNotEmpty": "不是空的",
+      "isEmpty": "为空",
+      "isNotEmpty": "不为空",
       "contains": "包含",
       "has": "包含",
       "notContains": "不包含",

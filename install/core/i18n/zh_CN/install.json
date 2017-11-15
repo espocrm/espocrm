@@ -12,7 +12,7 @@
     "Errors page title": "错误",
     "Finish page title": "安装完成",
     "Congratulation! Welcome to EspoCRM": "恭喜！EspoCRM已成功安装。",
-    "More Information": "有关详情，请访问我们的{BLOG}，关注我们的{TWITTER}。<br> <br>如果您有任何建议或问题，请在{FORUM}上查询。",
+    "More Information": "获取更多信息，请访问我们的 {BLOG}，关注我们的{TWITTER}。<br> <br>如果您有任何建议或问题，请在{FORUM}上询问。",
     "share": "如果你喜欢EspoCRM，与朋友分享，让他们知道这个产品。",
     "blog": "博客",
     "twitter": "推特",
@@ -79,7 +79,7 @@
     "1045": "被拒绝访问的用户",
     "1049": "未知数据库",
     "2005": "未知的MySQL服务器主机",
-    "Bad init Permission": "权限被拒绝对“{*}”目录中。为请设置775“{*}”，或只是在终端执行此命令<前> <B> {c}里</ B> </ PRE>\n不允许操作？试试这个：{} CSU",
+    "Bad init Permission": "权限被拒绝对“{*}”目录中。为请设置775“{*}”，或只是在终端执行此命令<pre> <B> {C}里</ B> </ pre>\n不允许操作？试试这个：{CSU}",
     "Some errors occurred!": "发生了一些错误！",
     "phpVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
     "MySQLVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
@@ -116,16 +116,16 @@
     "modRewriteInstruction": {
       "apache": {
         "windows": "结果<前> 1。查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</ PRE>",
-        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM Apache服务器配置</a>.<br><br>"
+        "linux": "<br><br>1. 可用 \"mod_重写\". 在终端运行这些指令:<pre>{APACHE1}</pre><br>2. 可用 .htaccess 支持. 添加/编辑服务器配置设置(/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n 后来在一个终端运行此命令:<pre>{APACHE3}</pre><br>3. 尝试添加重写基础路径, 打开一个文件{API_PATH}.htaccess 和替换下面这一行:<pre>{APACHE4}</pre>To<pre>{APACHE5}</pre><br> 获取更多信息请访问指导指南 <a href=\"http://www.espocrm.com/blog/apache-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM Apache服务器配置</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{网页服务器}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" 目标=\"_空白\">EspoCRM的网页服务器配置</a>.<br><br>"
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> 为获取更多信息，请访问帮助 <a href=\"http://www.espocrm.com/blog/nginx-server-configuration-for-espocrm/\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>"
       }
     },
     "modRewriteTitle": {
-      "apache": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br> 可能出现的问题: 禁用 \"mod_重写\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
-      "nginx": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br>将此代码添加入你的网页服务器配置文件(/等/服务器/地址-可用的/YOUR_地址) 在里面 \"服务器\" 部分:",
+      "apache": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br> 可能出现的问题: 禁用 \"mod_rewrite\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
+      "nginx": "应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.<br>将此代码添加入你的网页服务器配置文件(/etc/nginx/sites-available/YOUR_SITE) 在里面 \"服务器\" 部分:",
       "microsoft-iis": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用 \"网址重写\". 请核对并启用\"网址重写\" 模块在IIS服务器",
       "default": "应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.<br>可能出现的问题: 禁用重写模块.请在你的服务器核对并启用重写模块 (e.g. mod_重写 在 Apache) 和.htaccess 支持."
     }

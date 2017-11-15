@@ -18,21 +18,23 @@
     "smtpPassword": "密码",
     "smtpEmailAddress": "电子邮件地址",
     "exportDelimiter": "出口分隔符",
-    "autoFollowEntityTypeList": "自动关注",
     "signature": "电子邮件签名",
     "dashboardTabList": "选项卡列表",
     "tabList": "选项卡列表",
     "defaultReminders": "默认提醒",
     "theme": "主题",
     "useCustomTabList": "自定义选项卡列表",
-    "emailReplyToAllByDefault": "电子邮件回复所有通过默认",
     "receiveAssignmentEmailNotifications": "任务邮件提醒",
     "receiveMentionEmailNotifications": "邮寄时提及的邮件提醒",
     "receiveStreamEmailNotifications": "关于邮寄和更新状态的邮件提醒",
     "dashboardLayout": "仪表板布局",
     "emailReplyForceHtml": "超文本语言回复邮件",
-    "doNotFillAssignedUserIfNotRequired": "如果不需要就不用填写指定用户",
-    "followEntityOnStreamPost": "在信息流发布后自动跟踪实体"
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "emailReplyToAllByDefault": "Email Reply to all by default",
+    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
   },
   "options": {
     "weekStart": {
@@ -48,6 +50,9 @@
     "Locale": "语言环境"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "用户将自动跟随所选实体类型的所有新记录，会看到流中的信息并接收通知。"
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
+    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
+    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
   }
 }

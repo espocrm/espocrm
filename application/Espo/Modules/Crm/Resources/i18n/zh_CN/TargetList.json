@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "名称",
-    "description": "说明",
+    "description": "描述",
     "entryCount": "条目计数",
     "campaigns": "营销活动",
     "endDate": "结束日期",
@@ -10,9 +10,9 @@
     "excludingActionList": "排除"
   },
   "links": {
-    "accounts": "帐户",
+    "accounts": "客户",
     "contacts": "联系人",
-    "leads": "线索",
+    "leads": "潜在顾客",
     "campaigns": "营销活动",
     "massEmails": "群发电子邮件"
   },

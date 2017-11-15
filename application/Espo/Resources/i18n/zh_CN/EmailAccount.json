@@ -2,17 +2,17 @@
   "fields": {
     "name": "名称",
     "status": "状态",
-    "host": "主办",
+    "host": "主机",
     "username": "用户名",
     "password": "密码",
-    "port": "港口",
+    "port": "端口",
     "monitoredFolders": "监视的文件夹",
     "ssl": "SSL",
-    "fetchSince": "由于取",
-    "emailAddress": "电子邮件地址",
+    "fetchSince": "获取从",
+    "emailAddress": "邮件地址",
     "sentFolder": "发送文件夹",
-    "storeSentEmails": "商店发送的电子邮件",
-    "keepFetchedEmailsUnread": "保持抓取的电子邮件未读",
+    "storeSentEmails": "存储发送的邮件",
+    "keepFetchedEmailsUnread": "保持获取的邮件为未读",
     "emailFolder": "放入文件夹",
     "useSmtp": "使用简单邮件传输协议",
     "smtpHost": "简单邮件传输协议主机",
@@ -28,12 +28,12 @@
   },
   "options": {
     "status": {
-      "Active": "活性",
-      "Inactive": "待用"
+      "Active": "启用",
+      "Inactive": "未启用"
     }
   },
   "labels": {
-    "Create EmailAccount": "创建的电子邮件帐户",
+    "Create EmailAccount": "创建邮件帐户",
     "IMAP": "IMAP",
     "Main": "主要",
     "Test Connection": "测试连接",
@@ -41,11 +41,11 @@
     "SMTP": "简单邮件传输协议"
   },
   "messages": {
-    "couldNotConnectToImap": "无法连接到IMAP服务器",
+    "couldNotConnectToImap": "无法连接到 IMAP 服务器",
     "connectionIsOk": "连接正常"
   },
   "tooltips": {
-    "monitoredFolders": "您可以添加一个“发送”文件夹来同步从外部电子邮件客户端发送的邮件。",
-    "storeSentEmails": "发送的邮件将存储在IMAP服务器上。电子邮件地址字段应该从发送地址的电子邮件的多少。"
+    "monitoredFolders": "多个文件夹用逗号分隔。\n\n添加 ‘Sent’ 文件夹与外部邮件客户端同步已发邮件。",
+    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
   }
 }

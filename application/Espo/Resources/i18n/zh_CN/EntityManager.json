@@ -13,16 +13,16 @@
     "labelPlural": "多标签",
     "stream": "信息流",
     "label": "标签",
-    "linkType": "链接类型",
+    "linkType": "连接类型",
     "entityForeign": "外部实体",
-    "linkForeign": "外部链接",
-    "link": "链接",
+    "linkForeign": "外部连接",
+    "link": "连接",
     "labelForeign": "外部标签",
-    "sortBy": "默认顺序（字段）",
-    "sortDirection": "默认顺序（方向）",
-    "relationName": "中间名称",
-    "linkMultipleField": "链接多个字段",
-    "linkMultipleFieldForeign": "外地链接多字段",
+    "sortBy": "默认排序（字段）",
+    "sortDirection": "默认排序（方向）",
+    "relationName": "中间表名称",
+    "linkMultipleField": "连接多个字段",
+    "linkMultipleFieldForeign": "外部连接多个字段",
     "disabled": "禁用",
     "textFilterFields": "文本过滤字段",
     "audited": "已审核",
@@ -32,8 +32,8 @@
   },
   "options": {
     "type": {
-      "": "没有",
-      "Base": "基础",
+      "": "无",
+      "Base": "基本",
       "Person": "人",
       "CategoryTree": "类别树",
       "Event": "时间",
@@ -44,18 +44,18 @@
       "manyToMany": "多对多",
       "oneToMany": "一对多",
       "manyToOne": "多对一",
-      "parentToChildren": "关联到子项",
-      "childrenToParent": "关联到父项"
+      "parentToChildren": "父对子",
+      "childrenToParent": "子对父"
     },
     "sortDirection": {
-      "asc": "上升",
+      "asc": "升序",
       "desc": "降序"
     }
   },
   "messages": {
     "entityCreated": "实体已创建",
-    "linkAlreadyExists": "链接名称冲突。",
-    "linkConflict": "名称冲突：具有相同名称的链接或字段已存在。"
+    "linkAlreadyExists": "连接名称冲突。",
+    "linkConflict": "名称冲突：已存在同名连接或字段。"
   },
   "tooltips": {
     "statusField": "此字段的更新记录在信息流中。",

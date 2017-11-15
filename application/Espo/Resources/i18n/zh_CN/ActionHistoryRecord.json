@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "用户",
+    "action": "动作",
+    "createdAt": "日期",
+    "target": "目标",
+    "targetType": "目标类型",
+    "authToken": "授权令牌",
+    "ipAddress": "IP地址"
+  },
+  "links": {
+    "authToken": "授权令牌",
+    "user": "用户",
+    "target": "目标"
+  },
+  "presetFilters": {
+    "onlyMy": "只有我的"
+  },
+  "options": {
+    "action": {
+      "read": "读",
+      "update": "升级",
+      "delete": "删除",
+      "create": "创建"
+    }
+  }
+}

@@ -45,7 +45,6 @@
     "exportDisabled": "禁用导出（仅允许管理员）",
     "b2cMode": "B2C模式",
     "avatarsDisabled": "禁用头像",
-    "followCreatedEntities": "关注创建实体",
     "displayListViewRecordCount": "显示总计数（在列表视图上）",
     "theme": "主题",
     "userThemesDisabled": "禁用用户主题",
@@ -84,45 +83,57 @@
     "mentionEmailNotifications": "发送关于发送提醒的邮件提醒",
     "massEmailDisableMandatoryOptOutLink": "禁用强制选择退出链接",
     "activitiesEntityList": "活动实体列表",
-    "historyEntityList": "历史实体列表"
+    "historyEntityList": "历史实体列表",
+    "currencyFormat": "货币格式",
+    "currencyDecimalPlaces": "货币小数位",
+    "aclStrictMode": "ACL 限制模式",
+    "followCreatedEntities": "Follow created records",
+    "aclAllowDeleteCreated": "Allow to remove created records"
   },
   "options": {
     "weekStart": {
       "0": "星期日",
       "1": "星期一"
+    },
+    "currencyFormat": {
+      "1": "10 USD",
+      "2": "$10"
     }
   },
   "tooltips": {
     "recordsPerPage": "列表视图中最初显示的记录数。",
     "recordsPerPageSmall": "最初在关系面板中显示的记录数。",
-    "outboundEmailIsShared": "允许用户通过此SMTP发送电子邮件。",
     "followCreatedEntities": "用户将自动跟随他们创建的记录。",
     "emailMessageMaxSize": "所有超过指定大小的入站电子邮件都将获取w / o正文和附件。",
     "authTokenLifetime": "定义长令牌如何存在。\n0  - 表示没有到期。",
     "authTokenMaxIdleTime": "定义多久上次访问令牌可以存在。\n0  - 表示没有到期。",
     "userThemesDisabled": "如果选中，用户将无法选择其他主题。",
     "ldapUsername": "全系统DN用户允许搜索其他用户。例如 \"CN=LDAP System User,OU=users,OU=espocrm, DC=test,DC=lan\"。",
-    "ldapPassword": "访问轻量级目录访问协议服务器的密码",
-    "ldapAuth": "轻量级目录访问协议服务器的访问凭证",
+    "ldapPassword": "访问 LDAP 服务器的密码。",
+    "ldapAuth": "访问 LDAP 的凭证。",
     "ldapUserNameAttribute": "识别用户的属性。\nE.g. \"用户主要名字\" or \"sAM账户名\" 对于活动目录, \"uid\" for OpenLDAP.",
     "ldapUserObjectClass": "搜索用户的对象类属性。例如 \"人\" for AD, \"inetOrgPerson\" for OpenLDAP.",
-    "ldapAccountCanonicalForm": "您帐户的类型是规范形式。有4个选项：<br>- 'Dn' - the form in the format 'CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - the form 'tester'.<br>- 'Backslash' - the form 'COMPANY\\tester'.<br>- 'Principal' - the form 'tester@company.com'. ",
-    "ldapBindRequiresDn": "在域名表格中规定用户名的选项",
+    "ldapAccountCanonicalForm": "你帐户的规范形式。有 4 个选项：<br>- 'Dn' - 格式为 ’CN=tester,OU=espocrm,DC=test, DC=lan'.<br>- 'Username' - 格式为 'tester'.<br>- 'Backslash' - 格式为 'COMPANY\\tester'.<br>- 'Principal' - 格式为 'tester@company.com’。",
+    "ldapBindRequiresDn": "此项用于格式化 DN 中的用户名。",
     "ldapBaseDn": "默认的基本DN用于搜索用户 例如 \"OU=用户,OU=espocrm,DC=测试, DC=lan\".",
-    "ldapTryUsernameSplit": "此选项可以将用户名与域分离",
+    "ldapTryUsernameSplit": "此选项用于从域中剥离用户名。",
     "ldapOptReferrals": "如果 参考应遵循LDAP客户端。",
-    "ldapCreateEspoUser": "这个选项允许EspoCRM去创建来自轻量级目录访问协议的一个用户",
+    "ldapCreateEspoUser": "此选项允许 EspoCRM 创建一个来自 LDAP 的用户。",
     "ldapUserFirstNameAttribute": "轻量级目录访问协议属性用来确定用户的姓.例如\"名字\".",
     "ldapUserLastNameAttribute": "轻量级目录访问协议属性用来确定用户的名.例如\" 序列号\".",
     "ldapUserTitleAttribute": "轻量级目录访问协议属性用来确定用户标题.例如\"标题\".",
     "ldapUserEmailAddressAttribute": "轻量级目录访问协议属性用来确定用户的电子邮件地址。例如 \"邮件\".",
     "ldapUserPhoneNumberAttribute": "轻量级目录访问协议属性用来确定用户的手机号码。例如 \"手机号码\".",
     "ldapUserLoginFilter": "筛选器可以禁止使用的EspoCRM用户操作 例如 \"memberOf=CN=espoGroup, OU=groups,OU=espocrm, DC=test,DC=lan\".",
-    "ldapAccountDomainName": "被用于授权访问轻量级目录访问协议服务器的域",
-    "ldapAccountDomainNameShort": "短域被用于授权访问轻量级目录访问协议服务器",
-    "ldapUserTeams": "已创建用户的团队。更多信息,见用户配置文件",
-    "ldapUserDefaultTeam": "已创建用户的默认团队。更多信息,见用户配置文件",
-    "b2cMode": "默认情况下，EspoCRM适用于B2B。您可以将其切换到B2C。"
+    "ldapAccountDomainName": "用于 LDAP 服务器身份验证的域。",
+    "ldapAccountDomainNameShort": "用于 LDAP 服务器身份验证的短域。",
+    "ldapUserTeams": "已创建用户的团队。更多信息，请查看用户资料。",
+    "ldapUserDefaultTeam": "建用户的默认团队。更多信息，请查看用户资料。",
+    "b2cMode": "默认情况下，EspoCRM适用于B2B。您可以将其切换到B2C。",
+    "currencyDecimalPlaces": "小数位数。如果留空，所有非空的小数位都将显示。",
+    "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
+    "outboundEmailIsShared": "允许用户使用此地址发送邮件。",
+    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
   },
   "labels": {
     "System": "系统",
@@ -135,10 +146,10 @@
     "Currency Rates": "货币汇率",
     "Mass Email": "群发电子邮件",
     "Test Connection": "测试连接",
-    "Connecting": "连接中",
+    "Connecting": "连接中...",
     "Activities": "活动"
   },
   "messages": {
-    "ldapTestConnection": "连接已成功建立"
+    "ldapTestConnection": "连接已成功建立。"
   }
 }

@@ -20,7 +20,7 @@
   "labels": {
     "Create {entityType}": "创建 {entityTypeTranslated}",
     "Schedule {entityType}": "计划 {entityTypeTranslated}",
-    "Log {entityType}": "记录 {entityTypeTranslated} ",
+    "Log {entityType}": "记录 {entityTypeTranslated}",
     "Set Held": "设为已举行",
     "Set Not Held": "设为未举行"
   },

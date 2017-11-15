@@ -10,12 +10,14 @@
     "rightMargin": "右边距",
     "bottomMargin": "底部边缘",
     "printFooter": "打印页脚",
-    "footerPosition": "页脚位置"
+    "footerPosition": "页脚位置",
+    "variables": "可用占位符"
   },
   "labels": {
     "Create Template": "创建模板"
   },
   "tooltips": {
-    "footer": "使用{pageNumber}打印页码。"
+    "footer": "使用{pageNumber}打印页码。",
+    "variables": "复制粘贴所需的占位符到标题，正文或页脚。"
   }
 }

@@ -5,7 +5,14 @@
     "targetType": "目标",
     "teams": "团队",
     "users": "用户",
-    "portals": "门户"
+    "portals": "门户",
+    "type": "类型",
+    "isGlobal": "全局",
+    "isInternal": "内部（用于内部用户）",
+    "related": "相关的",
+    "createdByGender": "Created By Gender",
+    "data": "数据",
+    "number": "数字"
   },
   "filters": {
     "all": "所有",
