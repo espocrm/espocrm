@@ -45,7 +45,6 @@
     "exportDisabled": "Désactiver l'Export (seul l'administrateur pourra le faire)",
     "b2cMode": "Mode B2C",
     "avatarsDisabled": "Désactiver les avatars",
-    "followCreatedEntities": "Suivre les entités crées",
     "displayListViewRecordCount": "Afficher le Nombre Total (listes)",
     "theme": "Thème",
     "userThemesDisabled": "Désactiver les thèmes utilisateur",
@@ -87,7 +86,9 @@
     "historyEntityList": "History Entity List",
     "currencyFormat": "Currency Format",
     "currencyDecimalPlaces": "Currency Decimal Places",
-    "aclStrictMode": "ACL Strict Mode"
+    "aclStrictMode": "ACL Strict Mode",
+    "followCreatedEntities": "Follow created records",
+    "aclAllowDeleteCreated": "Allow to remove created records"
   },
   "options": {
     "weekStart": {
@@ -102,7 +103,6 @@
   "tooltips": {
     "recordsPerPage": "Number of records initially displayed in list views.",
     "recordsPerPageSmall": "Nombre d'enregistrements dans les panneaux de relations.",
-    "outboundEmailIsShared": "Autoriser les utilisateurs à envoyer des Emails par SMTP",
     "followCreatedEntities": "Les utilisateurs suivront automatiquement leurs entrées",
     "emailMessageMaxSize": "All inbound emails exceeding a specified size will be fetched w/o body and attachments.",
     "authTokenLifetime": "Defines how long tokens can exist.\n0 - means no expiration.",
@@ -131,7 +131,9 @@
     "ldapUserDefaultTeam": "Default team for created user. For more, see user profile.",
     "b2cMode": "By default EspoCRM is adapted for B2B. You can switch it to B2C.",
     "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed.",
-    "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles."
+    "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
+    "outboundEmailIsShared": "Allow users to send emails from this address.",
+    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
   },
   "labels": {
     "System": "Système",
