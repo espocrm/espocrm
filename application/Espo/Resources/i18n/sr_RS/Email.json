@@ -33,13 +33,17 @@
     "folder": "Fascikla",
     "inboundEmails": "Grupni nalozi",
     "emailAccounts": "Lični nalozi",
-    "hasAttachment": "ima prilog"
+    "hasAttachment": "ima prilog",
+    "sentBy": "Poslato od strane",
+    "assignedUsers": "Zaduženi korisnici"
   },
   "links": {
     "replied": "odgovorio",
     "replies": "Odgovori",
     "inboundEmails": "Grupni nalozi",
-    "emailAccounts": "Lični nalozi"
+    "emailAccounts": "Lični nalozi",
+    "assignedUsers": "Zaduženi korisnici",
+    "sentBy": "Poslato od strane"
   },
   "options": {
     "status": {

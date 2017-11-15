@@ -45,7 +45,7 @@
     "connectionIsOk": "Veza u redu"
   },
   "tooltips": {
-    "storeSentEmails": "Poslate e-poruke će se čuvati na IMAP serveru. E-mail adresa polje treba bude isto kao i adresa odakle je poslata.",
-    "monitoredFolders": "Više fascilli mora biti odeljeno zapetama.\n\nMožete dodati fasciklu \"poslate\" da biste sinhronizovali e-poruke poslate sa spoljnog klijenta."
+    "monitoredFolders": "Više fascilli mora biti odeljeno zapetama.\n\nMožete dodati fasciklu \"poslate\" da biste sinhronizovali e-poruke poslate sa spoljnog klijenta.",
+    "storeSentEmails": "Poslate poruke će biti sačuvane na IMAP serveru. Polje \"Adresa e-pošte\" mora se podudarati sa adresom sa koje će slanje biti izvršeno."
   }
 }
