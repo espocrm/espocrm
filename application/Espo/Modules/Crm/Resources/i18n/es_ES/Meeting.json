@@ -9,10 +9,10 @@
     "description": "Descripción",
     "users": "Usuarios",
     "contacts": "Contactos",
-    "leads": "Posibles Clientes",
+    "leads": "Potenciales",
     "reminders": "Recordatorios",
     "account": "Cuenta",
-    "acceptanceStatus": "Estado de Aceptación"
+    "acceptanceStatus": "Estatus de aceptación"
   },
   "options": {
     "status": {
@@ -45,6 +45,6 @@
     "todays": "De Hoy"
   },
   "messages": {
-    "nothingHasBeenSent": "No se envió nada"
+    "nothingHasBeenSent": "No se ha enviado nada"
   }
 }

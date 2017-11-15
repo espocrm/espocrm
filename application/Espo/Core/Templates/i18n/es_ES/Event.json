@@ -1,36 +1,36 @@
 {
   "fields": {
-    "parent": "Padre",
-    "dateStart": "Fecha de Inicio",
-    "dateEnd": "Fechad e Fin",
+    "parent": "Parent",
+    "dateStart": "Fecha de incio",
+    "dateEnd": "Fecha final",
     "duration": "Duración",
     "status": "Estado",
     "reminders": "Recordatorios"
   },
   "links": {
-    "parent": "Padre"
+    "parent": "Parent"
   },
   "options": {
     "status": {
-      "Planned": "Planificado",
-      "Held": "Celebrado",
-      "Not Held": "No Celebrado"
+      "Planned": "Planeado",
+      "Held": "Agarrado",
+      "Not Held": "Pendiente"
     }
   },
   "labels": {
     "Create {entityType}": "Crear {entityTypeTranslated}",
-    "Schedule {entityType}": "Programar {entityTypeTranslated}",
-    "Log {entityType}": "Registros de {entityTypeTranslated}",
-    "Set Held": "Establecer Celebrado",
-    "Set Not Held": "Establecer No Celebrado"
+    "Schedule {entityType}": "Schedule {entityTypeTranslated}",
+    "Log {entityType}": "Log {entityTypeTranslated}",
+    "Set Held": "Set Held",
+    "Set Not Held": "Set Not Held"
   },
   "massActions": {
-    "setHeld": "Establecer Celebrado",
-    "setNotHeld": "Establecer No Celebrado"
+    "setHeld": "Set Held",
+    "setNotHeld": "Set Not Held"
   },
   "presetFilters": {
-    "planned": "Planificado",
-    "held": "Celebradas",
-    "todays": "De Hoy"
+    "planned": "Planned",
+    "held": "Held",
+    "todays": "Hoy"
   }
 }

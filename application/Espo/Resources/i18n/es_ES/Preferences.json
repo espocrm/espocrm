@@ -17,22 +17,24 @@
     "emailAddress": "Correo electrónico",
     "smtpPassword": "Contraseña",
     "smtpEmailAddress": "Correo Electrónico",
-    "exportDelimiter": "Delimitador de exportación",
-    "receiveAssignmentEmailNotifications": "Recevir Notificaciones por Correo Electrónico al ser Asignado",
-    "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
-    "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
-    "autoFollowEntityTypeList": "Seguir automaticamente",
+    "exportDelimiter": "Exportar Delimitador",
     "signature": "Firma de correo",
     "dashboardTabList": "Lista de Pestañas",
     "tabList": "Lista de Pestañas",
     "defaultReminders": "Recordatorios por defecto",
     "theme": "Tema",
-    "useCustomTabList": "Lista de Pestañas Personalizadas",
-    "emailReplyToAllByDefault": "Correo: responder a todos por defecto",
-    "dashboardLayout": "Distribución del Escritorio",
-    "emailReplyForceHtml": "Correo: Responder en formato HTML",
-    "doNotFillAssignedUserIfNotRequired": "No llene usuario asignado si no es necesario",
-    "followEntityOnStreamPost": "Seguir automáticamente la entidad después de publicar en la Historia"
+    "useCustomTabList": "Lista de Pestañas Personalizada",
+    "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
+    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
+    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
+    "dashboardLayout": "Dashboard Layout",
+    "emailReplyForceHtml": "Email Reply in HTML",
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "emailReplyToAllByDefault": "Email Reply to all by default",
+    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
   },
   "options": {
     "weekStart": {
@@ -48,6 +50,9 @@
     "Locale": "Localización"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "El usuario seguirá automáticamente todos los nuevos registros de los tipos de entidades seleccionadas, verá la información en la Historia y recibirá notificaciones."
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
+    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
+    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
   }
 }

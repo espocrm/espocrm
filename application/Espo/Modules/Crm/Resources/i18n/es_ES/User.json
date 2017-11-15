@@ -1,8 +1,10 @@
 {
-  "fields": {
-    "acceptanceStatus": "Estado de Aceptación"
-  },
   "links": {
     "targetLists": "Lista de Objetivos"
+  },
+  "fields": {
+    "acceptanceStatus": "Acceptance Status",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
   }
 }

@@ -3,7 +3,7 @@
     "parent": "Padre",
     "contacts": "Contactos",
     "opportunities": "Oportunidades",
-    "leads": "PosiblesClientes",
+    "leads": "Potenciales",
     "meetings": "Reuniones",
     "calls": "Llamadas",
     "tasks": "Tareas",
@@ -18,7 +18,7 @@
   "scopeNames": {
     "Account": "Cuenta",
     "Contact": "Contacto",
-    "Lead": "Posible Cliente",
+    "Lead": "Potencial",
     "Target": "Objetivo",
     "Opportunity": "Oportunidad",
     "Meeting": "Reunión",
@@ -33,15 +33,15 @@
     "MassEmail": "Email Masivo",
     "EmailQueueItem": "Item en Cola de Correo",
     "CampaignTrackingUrl": "URL de seguimiento",
-    "Activities": "Ocupaciones",
-    "KnowledgeBaseArticle": "Artículos de base de conocimientos",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Registro del registro de la Campaña"
+    "Activities": "Actividades",
+    "KnowledgeBaseArticle": "Artículo de la Base de Conocimientos",
+    "KnowledgeBaseCategory": "Categoría de la Base de Conocimientos",
+    "CampaignLogRecord": "Campaign Log Record"
   },
   "scopeNamesPlural": {
     "Account": "Cuentas",
     "Contact": "Contactos",
-    "Lead": "Posibles Clientes",
+    "Lead": "Potenciales",
     "Target": "Objetivos",
     "Opportunity": "Oportunidades",
     "Meeting": "Reuniones",
@@ -56,36 +56,36 @@
     "MassEmail": "Emails Masivos",
     "EmailQueueItem": "Items en Cola de Correo",
     "CampaignTrackingUrl": "URLs de Seguimiento",
-    "Activities": "Ocupaciones",
-    "KnowledgeBaseArticle": "Base de conocimiento",
-    "KnowledgeBaseCategory": "Categoría de base de conocimientos",
-    "CampaignLogRecord": "Registros del registro de la Campaña"
+    "Activities": "Actividades",
+    "KnowledgeBaseArticle": "Base de Conocimientos",
+    "KnowledgeBaseCategory": "Categorías de la Base de Conocimientos",
+    "CampaignLogRecord": "Campaign Log Records"
   },
   "dashlets": {
-    "Leads": "Mis Posibles Clientes",
-    "Opportunities": "Mis Oportunidades",
+    "Leads": "Mis Potenciales",
+    "Opportunities": "Mis Opportunidades",
     "Tasks": "Mis Tareas",
     "Cases": "Mis Casos",
     "Calendar": "Calendario",
     "Calls": "Mis Llamadas",
     "Meetings": "Mis Reuniones",
     "OpportunitiesByStage": "Oportunidades por Etapa",
-    "OpportunitiesByLeadSource": "Oportunidades por Toma de Contacto del Posible Cliente",
+    "OpportunitiesByLeadSource": "Oportunidades de origen de cliente potencial",
     "SalesByMonth": "Ventas por Mes",
     "SalesPipeline": "Canalización de ventas",
-    "Activities": "Mis próximas actividades"
+    "Activities": "Mis actividades"
   },
   "labels": {
-    "Create InboundEmail": "Crear Cuenta de Correo Grupal",
-    "Activities": "Actividades planeadas",
-    "History": "Historial de actividades",
+    "Create InboundEmail": "Crear Correo Entrante",
+    "Activities": "Actividades",
+    "History": "Historia",
     "Attendees": "Los asistentes",
-    "Schedule Meeting": "Programar Reunión",
-    "Schedule Call": "Programar Llamada",
+    "Schedule Meeting": "Reunión Programada",
+    "Schedule Call": "Llamada Programada",
     "Compose Email": "Escribir Correo",
-    "Log Meeting": "Registrar Reunión",
-    "Log Call": "Registrar Llamada",
-    "Archive Email": "Registrar Correo",
+    "Log Meeting": "Log de Reunión",
+    "Log Call": "Log de Llamada",
+    "Archive Email": "Archivar Correo",
     "Create Task": "Crear Tarea",
     "Tasks": "Tareas"
   },
@@ -107,7 +107,7 @@
     "shippingAddressCountry": "País (Envío)",
     "shippingAddressState": "Estado (Envío)",
     "shippingAddressPostalCode": "Código Postal (Envío)",
-    "shippingAddressMap": "Mapa (envío)"
+    "shippingAddressMap": "Mapa (Envío)"
   },
   "options": {
     "reminderTypes": {

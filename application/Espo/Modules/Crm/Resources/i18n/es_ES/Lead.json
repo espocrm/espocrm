@@ -1,9 +1,9 @@
 {
   "labels": {
     "Converted To": "Convertido a",
-    "Create Lead": "Crear Posible Cliente",
+    "Create Lead": "Crear Potencial",
     "Convert": "Convertir",
-    "convert": "convertir"
+    "convert": "convert"
   },
   "fields": {
     "name": "Nombre",
@@ -15,7 +15,7 @@
     "doNotCall": "No Llamar",
     "address": "Dirección",
     "status": "Estado",
-    "source": "Toma de Contacto",
+    "source": "Fuente",
     "opportunityAmount": "Costo de Oportunidad",
     "opportunityAmountConverted": "Costo de Oportunidad (convertido)",
     "description": "Descripción",
@@ -26,12 +26,14 @@
     "targetLists": "Lista de Objetivos",
     "targetList": "Lista de Objetivos",
     "industry": "Industria",
-    "acceptanceStatus": "Estado de Aceptación",
-    "opportunityAmountCurrency": "Moneda del Costo de Oportunidad"
+    "acceptanceStatus": "Acceptance Status",
+    "opportunityAmountCurrency": "Opportunity Amount Currency",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
   },
   "links": {
     "targetLists": "Lista de Objetivos",
-    "campaignLogRecords": "Registros de la Campaña",
+    "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
     "createdAccount": "Cuenta",
     "createdContact": "Contacto",
@@ -51,7 +53,7 @@
     "source": {
       "": "Ninguno",
       "Call": "Llamada",
-      "Email": "Correo Electrónico",
+      "Email": "Correo electrónico",
       "Existing Customer": "Cliente Existente",
       "Partner": "Socio",
       "Public Relations": "Relaciones Públicas",

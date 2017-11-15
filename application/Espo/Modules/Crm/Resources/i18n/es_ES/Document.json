@@ -8,7 +8,7 @@
     "status": "Estado",
     "file": "Archivo",
     "type": "Tipo",
-    "publishDate": "Publicado el",
+    "publishDate": "Publicar Fecha",
     "expirationDate": "Fecha de Expiración",
     "description": "Descripción",
     "accounts": "Cuentas",
@@ -18,7 +18,7 @@
     "accounts": "Cuentas",
     "opportunities": "Oportunidades",
     "folder": "Carpeta",
-    "leads": "Posibles Clientes",
+    "leads": "Referencias",
     "contacts": "Contactos"
   },
   "options": {

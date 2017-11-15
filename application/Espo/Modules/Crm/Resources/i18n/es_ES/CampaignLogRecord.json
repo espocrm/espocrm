@@ -8,33 +8,35 @@
     "object": "Objeto",
     "application": "Aplicacion",
     "queueItem": "Item de Cola",
-    "stringData": "Cadena de datos",
-    "stringAdditionalData": "Cadena de datos adicional"
+    "stringData": "Datos Alfanuméricos",
+    "stringAdditionalData": "Datos Alfanuméricos Adicionales",
+    "isTest": "Is Test"
   },
   "links": {
-    "queueItem": "Cola de artículos",
+    "queueItem": "Elemento de la Cola",
     "parent": "Padre",
-    "object": "Objeto"
+    "object": "Objeto",
+    "campaign": "Campaign"
   },
   "options": {
     "action": {
       "Sent": "Enviado",
       "Opened": "Abierto",
-      "Opted Out": "Se dieron de baja",
+      "Opted Out": "optado por no",
       "Bounced": "Rebotados",
       "Clicked": "Cliqueados",
-      "Lead Created": "Posible Cliente Creado"
+      "Lead Created": "Potencial Creado"
     }
   },
   "labels": {
     "All": "Todos"
   },
   "presetFilters": {
-    "sent": "Enviados",
+    "sent": "Enviado",
     "opened": "Abierto",
-    "optedOut": "Se dieron de baja",
+    "optedOut": "optado por no",
     "bounced": "Rebotados",
     "clicked": "Cliqueados",
-    "leadCreated": "Posible Cliente Creado"
+    "leadCreated": "Potencial Creado"
   }
 }

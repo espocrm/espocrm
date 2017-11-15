@@ -10,7 +10,7 @@
     "type": "Tipo",
     "description": "Descripción",
     "inboundEmail": "Cuenta de Correo",
-    "lead": "Posible Cliente"
+    "lead": "Referencia"
   },
   "links": {
     "inboundEmail": "Cuenta de Correo",
@@ -21,8 +21,8 @@
     "calls": "Llamadas",
     "tasks": "Tareas",
     "emails": "Correos",
-    "articles": "Artículas de ayuda",
-    "lead": "Posible Cliente"
+    "articles": "Artículos de la Base de Conocimientos",
+    "lead": "Referencia"
   },
   "options": {
     "status": {

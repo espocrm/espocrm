@@ -4,8 +4,8 @@
     "status": "Estado",
     "storeSentEmails": "Almacenar Correos Enviados",
     "startAt": "Fecha de Comienzo",
-    "fromAddress": "De (email)",
-    "fromName": "De (nombre):",
+    "fromAddress": "De la dirección",
+    "fromName": "De Nombre",
     "replyToAddress": "Responder a la dirección",
     "replyToName": "Responder al Nombre",
     "campaign": "Campaña",
@@ -13,7 +13,7 @@
     "inboundEmail": "Cuenta de correo",
     "targetLists": "Lista de Objetivos",
     "excludingTargetLists": "Lista de Objetivos Excluídos",
-    "optOutEntirely": "Darse de baja completamente"
+    "optOutEntirely": "Opt-Out Entirely"
   },
   "links": {
     "targetLists": "Lista de Objetivos",
@@ -42,12 +42,12 @@
     "testSent": "Se supone que el/los email/s de preuebas fueron enviados"
   },
   "tooltips": {
-    "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por darse de baja y no van a recibir ningún correo masivo.",
-    "targetLists": "Los objetivos a los que se enviarán los correos electrónicos.",
-    "excludingTargetLists": "Los objetivos a los que NO se enviarán los correos electrónicos."
+    "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por salir y no van a recibir ningún correo masivo.",
+    "targetLists": "Los objetivos que deben recibir los mensajes.",
+    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
   },
   "presetFilters": {
-    "actual": "Actuales",
-    "complete": "Completos"
+    "actual": "Real",
+    "complete": "Completo"
   }
 }
