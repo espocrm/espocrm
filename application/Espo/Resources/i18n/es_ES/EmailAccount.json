@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "status": "Estado",
-    "host": "Servidor",
+    "host": "Host",
     "username": "Nombre de Usuario",
     "password": "Contraseña",
     "port": "Puerto",
@@ -12,19 +12,19 @@
     "emailAddress": "Correo Electrónico",
     "sentFolder": "Carpeta de Enviados",
     "storeSentEmails": "Almacenar Correos Enviados",
-    "keepFetchedEmailsUnread": "Mantener los correos que se han obtenido sin leer",
-    "emailFolder": "Poner en la carpeta",
-    "useSmtp": "Utilizar SMTP",
-    "smtpHost": "Servidor SMTP",
+    "keepFetchedEmailsUnread": "Mantener los correo que se han obtenido sin leer",
+    "emailFolder": "Poner en la Carpeta",
+    "useSmtp": "Usar SMTP",
+    "smtpHost": "Host SMTP",
     "smtpPort": "Puerto SMTP",
-    "smtpAuth": "Autentificación SMTP",
+    "smtpAuth": "Auth SMTP",
     "smtpSecurity": "Seguridad SMTP",
-    "smtpUsername": "Nombre de usuario SMTP",
+    "smtpUsername": "Usuario SMTP",
     "smtpPassword": "Contraseña SMTP"
   },
   "links": {
     "filters": "Filtros",
-    "emails": "Correos"
+    "emails": "Emails"
   },
   "options": {
     "status": {
@@ -37,7 +37,7 @@
     "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
-    "Send Test Email": "Enviar correo electrónico de prueba",
+    "Send Test Email": "Enviar Email de Prueba",
     "SMTP": "SMTP"
   },
   "messages": {
@@ -45,7 +45,7 @@
     "connectionIsOk": "Conexión correcta"
   },
   "tooltips": {
-    "monitoredFolders": "Puede agregar una carpeta \"Enviado\" para sincronizar correos enviados desde un cliente de correo externo.",
-    "storeSentEmails": "Los correos enviados se almacenarán en el servidor IMAP. El campo dirección de correo debe indicar la dirección de origen."
+    "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
+    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
   }
 }

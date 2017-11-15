@@ -2,35 +2,36 @@
   "fields": {
     "name": "Nombre",
     "account": "Cuenta",
-    "stage": "Etapa de Ventas",
-    "amount": "Ingresos esperados",
-    "probability": "Probabilidad de ganar (%)",
-    "leadSource": "Toma de Contacto del Posible Cliente",
+    "stage": "Etapa",
+    "amount": "Cantidad",
+    "probability": "Probabilidad, %",
+    "leadSource": "Fuente Principal",
     "doNotCall": "No Llamar",
-    "closeDate": "Fecha esperada de cierre",
+    "closeDate": "Fecha de cierre",
     "contacts": "Contactos",
     "description": "Descripción",
     "amountConverted": "Cantidad (convertido)",
     "amountWeightedConverted": "Cantidad Ponderada",
     "campaign": "Campaña",
-    "originalLead": "Posible Cliente Original",
-    "amountCurrency": "Monto de la Moneda"
+    "originalLead": "Pista original",
+    "amountCurrency": "Amount Currency",
+    "contactRole": "Contact Role"
   },
   "links": {
     "contacts": "Contactos",
     "documents": "Documentos",
     "campaign": "Campaña",
-    "originalLead": "Posible Cliente Original"
+    "originalLead": "Pista original"
   },
   "options": {
     "stage": {
       "Prospecting": "Prospección",
       "Qualification": "Calificación",
       "Needs Analysis": "Análisis de Necesidades",
-      "Value Proposition": "Propuesta de Valor",
-      "Id. Decision Makers": "Identificar Tomador de Desiciones",
-      "Perception Analysis": "Análisis de percepcion",
-      "Proposal/Price Quote": "Propuesta/Presupuesto",
+      "Value Proposition": "Valor de la Propuesta",
+      "Id. Decision Makers": "Id. Tomadores de Decisiones",
+      "Perception Analysis": "Análisis de la Percepción",
+      "Proposal/Price Quote": "Propuesta/precio Presupuesto",
       "Negotiation/Review": "Negociación/Revisión",
       "Closed Won": "Cerrado Ganado",
       "Closed Lost": "Cerrado Perdido"
@@ -42,6 +43,6 @@
   "presetFilters": {
     "open": "Abiertos",
     "won": "Ganados",
-    "lost": "Perdidos"
+    "lost": "Perdido"
   }
 }

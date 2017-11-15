@@ -11,14 +11,14 @@
     "publishDate": "Data di pubblicazione",
     "expirationDate": "Data di scadenza",
     "description": "Descrizione",
-    "accounts": "Account",
+    "accounts": "Accounts",
     "folder": "Cartella"
   },
   "links": {
     "accounts": "Account",
-    "opportunities": "Opportunità",
+    "opportunities": "Opportunita'",
     "folder": "Cartella",
-    "leads": "Lead",
+    "leads": "Comando",
     "contacts": "Contatti"
   },
   "options": {

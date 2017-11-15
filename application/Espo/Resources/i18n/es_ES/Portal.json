@@ -1,24 +1,24 @@
 {
   "fields": {
     "name": "Nombre",
-    "logo": "Logotipo",
-    "companyLogo": "Logotipo",
+    "logo": "Logo",
+    "companyLogo": "Logo",
     "url": "URL",
     "portalRoles": "Roles",
-    "isActive": "Está activo",
-    "isDefault": "Por defecto",
-    "tabList": "Lista de pestañas",
-    "quickCreateList": "Crear lista rápida",
-    "theme": "Plantilla",
+    "isActive": "Está Activo",
+    "isDefault": "Es Valor x/Omisión",
+    "tabList": "Lista de Tabuladores",
+    "quickCreateList": "Crear Lista Rápida",
+    "theme": "Tema",
     "language": "Idioma",
-    "dashboardLayout": "Distribución del Escritorio",
-    "dateFormat": "Formato de fecha",
-    "timeFormat": "Formato de tiempo",
-    "timeZone": "Zona horaria",
-    "weekStart": "Primer dia de la semana",
-    "defaultCurrency": "Moneda predeterminada",
-    "customUrl": "URL personalizada",
-    "customId": "ID personalizado"
+    "dashboardLayout": "Diseño del Tablero",
+    "dateFormat": "Formato de Fecha",
+    "timeFormat": "Formato de ora",
+    "timeZone": "Zona Horaria",
+    "weekStart": "Primer Día de la Semana",
+    "defaultCurrency": "Moneda por Omisión",
+    "customUrl": "URL Personalizado",
+    "customId": "Custom ID"
   },
   "links": {
     "users": "Usuarios",
@@ -26,12 +26,12 @@
     "notes": "Notas"
   },
   "tooltips": {
-    "portalRoles": "Los Roles del Portal especificados se aplicarán a todos los usuarios de este portal."
+    "portalRoles": "Los Roles del Portal indicados se aplicarán a todos los usuarios del portal"
   },
   "labels": {
-    "Create Portal": "Crear un Portal",
-    "User Interface": "Interfaz de usuario",
+    "Create Portal": "Crear Portal",
+    "User Interface": "Interfaz del Usuario",
     "General": "General",
-    "Settings": "Ajustes"
+    "Settings": "Configuración"
   }
 }

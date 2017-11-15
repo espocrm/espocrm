@@ -1,6 +1,6 @@
 {
   "fields": {
-    "useCache": "Usar Caché",
+    "useCache": "Usar Cache",
     "dateFormat": "Formato de Fecha",
     "timeFormat": "Formato de Hora",
     "timeZone": "Zona Horaria",
@@ -45,8 +45,7 @@
     "exportDisabled": "Desactivar Exportación (Solo admin)",
     "b2cMode": "Modo B2C",
     "avatarsDisabled": "Desactivar Avatars",
-    "followCreatedEntities": "Seguir Endidades Creadas",
-    "displayListViewRecordCount": "Mostrar Contador Total (en la vista de lista)",
+    "displayListViewRecordCount": "Mostrar el Total de Registros (en las vistas tipo lista)",
     "theme": "Tema",
     "userThemesDisabled": "Desactivar Temas de Usuarios",
     "emailMessageMaxSize": "Tamaño máximo del Correo (MB)",
@@ -83,10 +82,13 @@
     "calendarEntityList": "Lista de Entidades del Calendario",
     "mentionEmailNotifications": "Enviar correos de notificación sobre comentarios publicados",
     "massEmailDisableMandatoryOptOutLink": "Desactivar liga de confirmación obligatoria",
-    "activitiesEntityList": "Lista de Entidades de Seguimiento",
+    "activitiesEntityList": "Lista de Entidades de Actividades",
     "historyEntityList": "Lista de Entidades del Historial",
     "currencyFormat": "Formato Moneda",
-    "currencyDecimalPlaces": "Decimales en Moneda"
+    "currencyDecimalPlaces": "Decimales en Moneda",
+    "aclStrictMode": "Modo estricto ACL",
+    "followCreatedEntities": "Follow created records",
+    "aclAllowDeleteCreated": "Allow to remove created records"
   },
   "options": {
     "weekStart": {
@@ -100,9 +102,8 @@
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a desplegar inicialmente en las vistas",
-    "recordsPerPageSmall": "Contador de registros en los paneles de relación",
-    "outboundEmailIsShared": "Permitir a los usuarios enviar mensajes a través de esta SMTP.",
-    "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos crearon.",
+    "recordsPerPageSmall": "Contador de registros en los paneles de información",
+    "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos hayan creado.",
     "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán.",
     "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
     "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
@@ -127,9 +128,12 @@
     "ldapAccountDomainName": "Dominio utilizado para acceder al servidor LDAP.",
     "ldapAccountDomainNameShort": "El dominio corto usado para acceder al servidor LDAP.",
     "ldapUserTeams": "Equipos creados por el usuario.  Para ver más, consulte el perfil del usuario.",
-    "ldapUserDefaultTeam": "Equipo defalut creado por el usuario.  Para ver más, consulte el perfil del usuario.",
+    "ldapUserDefaultTeam": "Equipo por omisión creado por el Usuario.  Si requiere más información, consulte el perfil del Usuario.",
     "b2cMode": "Por omisión, EspoCRM está configurado para B2B.  Puede cambiarlo a B2C.",
-    "currencyDecimalPlaces": "Posiciones decimales. Si está vacío, se mostrarán todos los decimales"
+    "currencyDecimalPlaces": "Posiciones decimales. Si está vacío, se mostrarán todos los decimales",
+    "aclStrictMode": "Activado: El acceso a los alcances estará prohibido si no se especifica en los roles\nDesactivado: El acceso a los alcances será permitido si no se especifica en los roles",
+    "outboundEmailIsShared": "Permitir a los usuarios enviar correos desde esta dirección",
+    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
   },
   "labels": {
     "System": "Sistema",

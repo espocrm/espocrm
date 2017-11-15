@@ -1,34 +1,34 @@
 {
   "fields": {
-    "post": "Invia",
-    "attachments": "Allegati",
+    "post": "Inviare",
+    "attachments": "Allegato",
     "targetType": "Target",
-    "teams": "Team",
+    "teams": "Teams",
     "users": "Utenti",
     "portals": "Portali",
     "type": "Tipo",
-    "isGlobal": "È Globale",
-    "isInternal": "È Interno (per utenti interni)",
+    "isGlobal": "Globale",
+    "isInternal": "Interno (per utenti interni)",
     "related": "Correlato",
-    "createdByGender": "Creato Dal Genere",
-    "data": "Data",
-    "number": "Number"
+    "createdByGender": "Creato da genere",
+    "data": "Dati",
+    "number": "Numero"
   },
   "filters": {
     "all": "Tutti",
     "posts": "Messaggi",
     "updates": "Aggiornamenti"
   },
+  "messages": {
+    "writeMessage": "Scrivi il tuo messaggio qui"
+  },
   "options": {
     "targetType": {
       "self": "a me stesso",
-      "users": "a utente/i specifico/i",
-      "teams": "a team specifico/i",
+      "users": "a utente particolare",
+      "teams": "a team particolare",
       "all": "a tutti gli utenti interni",
       "portals": "agli utenti del portale"
     }
-  },
-  "messages": {
-    "writeMessage": "Scrivi il tuo messaggio qui"
   }
 }

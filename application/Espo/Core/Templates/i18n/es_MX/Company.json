@@ -1,11 +1,11 @@
 {
   "fields": {
     "billingAddress": "Dirección de Facturación",
-    "shippingAddress": "Dirección de envio",
+    "shippingAddress": "Dirección de Entrega",
     "website": "Sitio Web"
   },
   "links": {
-    "meetings": "reuniones",
+    "meetings": "Juntas",
     "calls": "Llamadas",
     "tasks": "Tareas"
   },

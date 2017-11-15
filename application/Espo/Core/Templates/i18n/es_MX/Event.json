@@ -18,7 +18,7 @@
     }
   },
   "labels": {
-    "Create {entityType}": "Creat",
+    "Create {entityType}": "Crear {entityTypeTranslated}",
     "Schedule {entityType}": "Agendar {entityTypeTranslated}",
     "Log {entityType}": "Registrar {entityTypeTranslated}",
     "Set Held": "Marcar como Retenida",

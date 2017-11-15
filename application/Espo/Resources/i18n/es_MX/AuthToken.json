@@ -3,7 +3,7 @@
     "user": "Usuario",
     "ipAddress": "Dirección IP",
     "lastAccess": "Fecha Último Acceso",
-    "createdAt": "Creado el",
+    "createdAt": "Fecha de Creación",
     "isActive": "Está Activo",
     "portal": "Portal"
   },

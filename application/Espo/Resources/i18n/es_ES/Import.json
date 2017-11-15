@@ -15,46 +15,46 @@
     "importedCount": "Importado (recuento)",
     "duplicateCount": "Duplicados (recuento)",
     "updatedCount": "Actualizado (recuento)",
-    "Create Only": "Solo crear",
+    "Create Only": "Sólo crear",
     "Create and Update": "Crear y Actualizar",
-    "Update Only": "Solo actualizar",
+    "Update Only": "Sólo actualizar",
     "Update by": "Actualizado por",
     "Set as Not Duplicate": "Establecer como No Duplicado",
     "File (CSV)": "Archivo (CSV)",
-    "First Row Value": "En primer valor de la fila",
-    "Skip": "Omitir",
-    "Header Row Value": "Fila de encabezado Valor",
+    "First Row Value": "Valor de la primera fila",
+    "Skip": "Saltar",
+    "Header Row Value": "Valor del Encabezado",
     "Field": "Campo",
-    "What to Import?": "¿Que importar?",
-    "Entity Type": "Tipo de entidad",
+    "What to Import?": "¿Qué va a importar?",
+    "Entity Type": "Tipo de Entidad",
     "What to do?": "¿Qué hacer?",
     "Properties": "Propiedades",
-    "Header Row": "Fila de encabezado",
-    "Person Name Format": "Formato del nombre de persona",
-    "John Smith": "Juan Pérez",
-    "Smith John": "Pérez Juan",
-    "Smith, John": "Pérez, Juan",
-    "Field Delimiter": "Delimitador de campo",
-    "Date Format": "Formato de fecha",
-    "Decimal Mark": "Separador decimal",
-    "Text Qualifier": "Delimitador de Texto",
-    "Time Format": "Formato de tiempo",
+    "Header Row": "Renglón de Encabezado",
+    "Person Name Format": "Formato del Nombre de la Persona",
+    "John Smith": "Pedro Pérez",
+    "Smith John": "Pérez Pedro",
+    "Smith, John": "Perez, Pedro",
+    "Field Delimiter": "Delimitante del Campo",
+    "Date Format": "Formato de la Fecha",
+    "Decimal Mark": "Símbolo Decimal",
+    "Text Qualifier": "Calificador del Texto",
+    "Time Format": "Formato de Hora",
     "Currency": "Moneda",
     "Preview": "Vista previa",
     "Next": "Siguiente",
     "Step 1": "Paso 1",
     "Step 2": "Paso 2",
-    "Double Quote": "Comilla Doble",
-    "Single Quote": "Comilla Simple",
+    "Double Quote": "Comillas dobles",
+    "Single Quote": "Comillas sencillas",
     "Imported": "Importado",
     "Duplicates": "Duplicados",
-    "Skip searching for duplicates": "Saltar la búsqueda de duplicados",
-    "Timezone": "Zona Horaria"
+    "Skip searching for duplicates": "Skip searching for duplicates",
+    "Timezone": "Timezone"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
     "duplicatesRemoved": "Duplicados removidos",
-    "inIdle": "Ejecutar en segundo plano (para gran cantidad de datos, vía cron)"
+    "inIdle": "Execute in idle (for big data; via cron)"
   },
   "fields": {
     "file": "Archivo",
@@ -62,13 +62,13 @@
     "imported": "Registros Importados",
     "duplicates": "registros Duplicados",
     "updated": "registros Actualizados",
-    "status": "Estado"
+    "status": "Status"
   },
   "options": {
     "status": {
-      "Failed": "Falló",
-      "In Process": "En Proceso",
-      "Complete": "Completo"
+      "Failed": "Failed",
+      "In Process": "In Process",
+      "Complete": "Complete"
     }
   }
 }

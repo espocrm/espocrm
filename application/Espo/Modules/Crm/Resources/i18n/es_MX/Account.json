@@ -5,7 +5,7 @@
     "website": "Sito Web",
     "phoneNumber": "Teléfono",
     "billingAddress": "Dirección de Facturación",
-    "shippingAddress": "Dirección de Envío",
+    "shippingAddress": "Dirección de Entrega",
     "description": "Descripción",
     "sicCode": "Código SIC",
     "industry": "Industria",
@@ -15,18 +15,18 @@
     "targetLists": "Listas de Objetivos",
     "targetList": "Lista de Objetivos",
     "originalLead": "Referencia Original",
-    "contactIsInactive": "Inactive"
+    "contactIsInactive": "Inactivo"
   },
   "links": {
     "contacts": "Contactos",
     "opportunities": "Oportunidades",
     "cases": "Casos",
     "documents": "Documentos",
-    "meetingsPrimary": "Reuniones (ampliado)",
+    "meetingsPrimary": "Juntas (ampliado)",
     "callsPrimary": "Llamadas (ampliado)",
     "tasksPrimary": "Tareas (ampliado)",
     "emailsPrimary": "Correos (ampliado)",
-    "targetLists": "Lista de Objetivos",
+    "targetLists": "Listas de Objetivos",
     "campaignLogRecords": "Historial de Campañas",
     "campaign": "Campaña",
     "portalUsers": "Usuarios del Portal",
@@ -85,22 +85,22 @@
       "Marketing": "Marketing",
       "Petroleum": "Petróleo",
       "Retail": "Menudeo",
-      "Shipping": "Envio",
+      "Shipping": "Entrega",
       "Support": "Soporte",
       "Testing, Inspection & Certification": "Prueba, Inspección y Certificación",
       "Wholesale": "Compra Total",
       "Water": "Agua",
-      "Travel": "Travel"
+      "Travel": "Viaje"
     }
   },
   "labels": {
     "Create Account": "Crear Cuenta",
     "Copy Billing": "Copia Facturación",
-    "Set Primary": "Set Primary"
+    "Set Primary": "Es Primario"
   },
   "presetFilters": {
     "customers": "Clientes",
     "partners": "Socios",
-    "recentlyCreated": "Recientemente Creada"
+    "recentlyCreated": "Recientemente Creado(a)"
   }
 }

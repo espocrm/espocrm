@@ -1,22 +1,22 @@
 {
   "fields": {
     "name": "Nome",
-    "parent": "Parente",
+    "parent": "Genitore",
     "status": "Stato",
-    "dateStart": "Data d'inizio",
+    "dateStart": "Data inizio",
     "dateEnd": "Data di scadenza",
-    "dateStartDate": "Data d'Inizio (tutto il giorno)",
-    "dateEndDate": "Data di Termine (tutto il giorno)",
-    "priority": "Priorità",
+    "dateStartDate": "Data inizio (tutto il giorno)",
+    "dateEndDate": "Data termine (tutto il giorno)",
+    "priority": "Priorita'",
     "description": "Descrizione",
     "isOverdue": "In ritardo",
     "account": "Account",
-    "dateCompleted": "Data Completamento",
+    "dateCompleted": "Completato in data",
     "attachments": "Allegati",
     "reminders": "Promemoria"
   },
   "links": {
-    "attachments": "Allegati"
+    "attachments": "Allegato"
   },
   "options": {
     "status": {
@@ -24,7 +24,7 @@
       "Started": "Iniziato",
       "Completed": "Completato",
       "Canceled": "Cancellato",
-      "Deferred": "Prorogato"
+      "Deferred": "Prorogare"
     },
     "priority": {
       "Low": "Basso",
@@ -34,14 +34,14 @@
     }
   },
   "labels": {
-    "Create Task": "Crea Task",
+    "Create Task": "Crea Compito",
     "Complete": "Completo"
   },
   "presetFilters": {
     "actual": "Attuale",
     "completed": "Completato",
-    "deferred": "Prorogato",
-    "todays": "Oggi",
-    "overdue": "In RItardo"
+    "todays": "Di oggi",
+    "overdue": "Scaduto",
+    "deferred": "Prorogare"
   }
 }

@@ -27,7 +27,7 @@
     "gender": "Género",
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
-    "passwordPreview": "Ver la Contraseña"
+    "passwordPreview": "Contraseña Generada:"
   },
   "links": {
     "teams": "Equipos",
@@ -79,7 +79,7 @@
     "forbidden": "Prohibido, por favor intente después",
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
     "passwordChangedByRequest": "La contraseña ha sido cambiada.",
-    "setupSmtpBefore": "Necesita configurar  <a href=\"{url}\">Configuración SMTP</a> para que el sistema pueda enviar contraseñas por correo.",
+    "setupSmtpBefore": "Necesita configurar correctamente su <a href=\"{url}\">Servicio SMTP</a> para que el sistema pueda enviarle su contraseña por correo.",
     "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo esta liga {link}.  Esta dirección URL única expirará pronto."
   },
   "boolFilters": {

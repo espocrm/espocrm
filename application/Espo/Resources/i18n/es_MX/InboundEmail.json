@@ -26,7 +26,7 @@
   },
   "tooltips": {
     "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
-    "createCase": "Automaticamente crear un Caso de los correos entrantes.",
+    "createCase": "Crear un caso automaticamente, al recibir correos entrantes.",
     "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
     "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
     "assignToUser": "Los casos del usuario serán reasignados.",
@@ -34,7 +34,7 @@
     "teams": "Los correos del equipo serán reasignados.",
     "addAllTeamUsers": "Los correos aparecerán en el buzón de entrada de todos los usuarios de los equipos especificados.",
     "targetUserPosition": "Los Usuarios con una posición específica serán distribuidos en los casos.",
-    "monitoredFolders": "Multiple folders should be separated by comma."
+    "monitoredFolders": "Si usa varias carpetas, sepárelas con coma"
   },
   "links": {
     "filters": "Filtros",
@@ -53,7 +53,7 @@
     }
   },
   "labels": {
-    "Create InboundEmail": "Crear Cuenta de Correo Electrónico",
+    "Create InboundEmail": "Crear Cuenta de Correo",
     "IMAP": "IMAP",
     "Actions": "Acciones",
     "Main": "Principal"

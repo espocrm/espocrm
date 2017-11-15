@@ -8,9 +8,9 @@
     "dateStartDate": "日期开始（全天）",
     "dateEndDate": "日期结束（全天）",
     "priority": "优先级",
-    "description": "说明",
+    "description": "描述",
     "isOverdue": "逾期",
-    "account": "帐户",
+    "account": "客户",
     "dateCompleted": "完成日期",
     "attachments": "附件",
     "reminders": "提醒"

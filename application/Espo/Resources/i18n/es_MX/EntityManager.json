@@ -18,7 +18,7 @@
     "linkForeign": "Enlace Foráneo",
     "link": "Enlace",
     "labelForeign": "Etiqueta Foránea",
-    "sortBy": "Orden por Omisión (campo)",
+    "sortBy": "Campo para Ordenar (por Omisión)",
     "sortDirection": "Orden por Omisión (dirección)",
     "relationName": "Nombre de la Tabla Intermedia",
     "linkMultipleField": "Ligar Varios Campos",
@@ -32,7 +32,7 @@
   },
   "options": {
     "type": {
-      "": "Ninguno",
+      "": "(vacío)",
       "Base": "Base",
       "Person": "Persona",
       "CategoryTree": "Árbol de Categorías",
@@ -64,6 +64,6 @@
     "disabled": "Verifique si ya no necesita esta entidad en su sistema.",
     "linkAudited": "Se registrará en Seguimiento la creación de registros relacionados y su liga con con registros existentes.",
     "linkMultipleField": "El campo 'Multi-Ligas' es una forma fácil de editar relaciones.  No lo uses si tienes muchos registros.",
-    "entityType": "Base Plus - tiene páneles de Seguimento, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Seguimiento"
+    "entityType": "Base Plus - tiene páneles de Actividades, Historial y Tareas.\n\nEvento - disponible en los páneles de Calendario y Actividades"
   }
 }

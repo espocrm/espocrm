@@ -18,21 +18,23 @@
     "smtpPassword": "Mot de passe",
     "smtpEmailAddress": "Adresse email",
     "exportDelimiter": "Délimitant pour l'export",
-    "autoFollowEntityTypeList": "Suivi-auto",
     "signature": "Signature email",
     "dashboardTabList": "Liste des onglets",
     "tabList": "Liste des onglets",
     "defaultReminders": "Notifications par défaut",
     "theme": "Thème",
     "useCustomTabList": "Liste d'onglets personnalisé",
-    "emailReplyToAllByDefault": "Répondre à tous par défaut dans les Emails",
     "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
     "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
     "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
     "dashboardLayout": "Dashboard Layout",
     "emailReplyForceHtml": "Email Reply in HTML",
-    "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
-    "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "emailReplyToAllByDefault": "Email Reply to all by default",
+    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
   },
   "options": {
     "weekStart": {
@@ -48,6 +50,9 @@
     "Locale": "Locale"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "L'utilisateur suivra automatiquement tous les nouveaux enregistrements des types d'entités sélectionnées, verra les informations dans le flux et recevra des notifications."
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
+    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
+    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
   }
 }

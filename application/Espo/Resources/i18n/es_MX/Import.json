@@ -1,13 +1,13 @@
 {
   "labels": {
     "Revert Import": "Revertir Importación",
-    "Return to Import": "Regreso a Importar",
+    "Return to Import": "Regresar a Importación",
     "Run Import": "Ejecutar Importación",
     "Back": "Anterior",
     "Field Mapping": "Mapeo de Campo",
     "Default Values": "Valores por Omisión",
-    "Add Field": "Añadir Campo",
-    "Created": "Creado",
+    "Add Field": "Agregar Campo",
+    "Created": "Creado(a)",
     "Updated": "Actualizado",
     "Result": "Resultado",
     "Show records": "Mostrar registros",
@@ -54,7 +54,7 @@
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
     "duplicatesRemoved": "Duplicados removidos",
-    "inIdle": "Ejecutar cuando esté inactivo (para grandes datos, vía cron)"
+    "inIdle": "Ejecutar fuera de la sesión (para grandes volúmenes de datos, vía cron-job)"
   },
   "fields": {
     "file": "Archivo",

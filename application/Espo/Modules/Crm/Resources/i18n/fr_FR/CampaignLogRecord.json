@@ -9,12 +9,14 @@
     "application": "Application",
     "queueItem": "Mettre en file d'attente",
     "stringData": "Chaîne de texte",
-    "stringAdditionalData": "String Additional Data"
+    "stringAdditionalData": "String Additional Data",
+    "isTest": "Is Test"
   },
   "links": {
     "queueItem": "Mettre en file d'attente",
     "parent": "Parent",
-    "object": "Objet"
+    "object": "Objet",
+    "campaign": "Campaign"
   },
   "options": {
     "action": {

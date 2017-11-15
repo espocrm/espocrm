@@ -4,8 +4,8 @@
   },
   "labels": {
     "Access": "Accesso",
-    "Create PortalRole": "Crea Ruolo per il Portale",
-    "Scope Level": "Livello dello Scope",
+    "Create PortalRole": "Crea Ruolo",
+    "Scope Level": "Livello Ambito",
     "Field Level": "Livello del Campo"
   }
 }

@@ -1,10 +1,10 @@
 {
   "labels": {
-    "Dynamic Logic": "Dynamic Logic"
+    "Dynamic Logic": "Logica dinamica"
   },
   "options": {
     "dateTimeDefault": {
-      "": "Nessuno",
+      "": "Nessun",
       "javascript: return this.dateTime.getNow(1);": "Ora",
       "javascript: return this.dateTime.getNow(5);": "Ora (5m)",
       "javascript: return this.dateTime.getNow(15);": "Ora (15m)",
@@ -30,7 +30,7 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 settimana"
     },
     "dateDefault": {
-      "": "Nessuno",
+      "": "Nessun",
       "javascript: return this.dateTime.getToday();": "Oggi",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 giorno",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 giorni",
@@ -60,16 +60,16 @@
     }
   },
   "tooltips": {
-    "audited": "Gli aggiornamenti saranno loggati nello stream.",
-    "required": "Il campo sarà obbligatorio. Non può essere lasciato vuoto.",
-    "default": "Il valore sarà impostato di default appena creato.",
+    "audited": "Gli aggiornamenti verranno registrati nel flusso attivita.",
+    "required": "Il campo sarà obbligatorio. Non potrà essere vuoto.",
+    "default": "Sarà impostato al valore di default durante la creazione.",
     "min": "Valore minimo accettabile.",
     "max": "Valore massimo accettabile.",
-    "seeMoreDisabled": "Se disattivato i testi lunghi saranno abbreviati.",
-    "lengthOfCut": "Quanto può essere lungo il testo prima di essere tagliato.",
-    "maxLength": "Lunghezza massima accettabile per il testo.",
-    "before": "La data dovrebbe essere antecedente alla data del campo specificato.",
-    "after": "La data dovrebbe essere successiva alla data del campo specificato.",
-    "readOnly": "Il campo non può essere specificato dall'utente. Ma può essere calcolato dalla formula."
+    "seeMoreDisabled": "Se non selezionato, i testi lunghi saranno tagliati.",
+    "lengthOfCut": "Lunghezza del testo prima del taglio.",
+    "maxLength": "Lunghezza massima accettabile del testo.",
+    "before": "Il valore della data deve essere precedente al valore della data del campo specificato.",
+    "after": "Il valore della data deve essere successivo al valore della data del campo specificato.",
+    "readOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato da una formula."
   }
 }

@@ -12,12 +12,12 @@
     "emailTemplate": "Plantilla de Correo",
     "inboundEmail": "Cuenta de correo",
     "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "excludingTargetLists": "Listas de Objetivos Excluídas",
     "optOutEntirely": "Confirmación Completada"
   },
   "links": {
-    "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "targetLists": "Listas de Objetivos",
+    "excludingTargetLists": "Listas de Objetivos Excluídas",
     "queueItems": "Items en cola",
     "campaign": "Campaña",
     "emailTemplate": "Plantilla de Correo",

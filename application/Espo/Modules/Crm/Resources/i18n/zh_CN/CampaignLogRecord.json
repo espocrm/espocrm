@@ -9,12 +9,14 @@
     "application": "应用",
     "queueItem": "队列项",
     "stringData": "String Data",
-    "stringAdditionalData": "字符串附加数据"
+    "stringAdditionalData": "字符串附加数据",
+    "isTest": "Is Test"
   },
   "links": {
     "queueItem": "队列项",
     "parent": "关联",
-    "object": "目的"
+    "object": "目的",
+    "campaign": "Campaign"
   },
   "options": {
     "action": {
@@ -23,7 +25,7 @@
       "Opted Out": "选择退出",
       "Bounced": "退回",
       "Clicked": "点击",
-      "Lead Created": "已创建的线索"
+      "Lead Created": "已创建的潜在顾客"
     }
   },
   "labels": {
@@ -35,6 +37,6 @@
     "optedOut": "选择退出",
     "bounced": "反弹",
     "clicked": "点击",
-    "leadCreated": "已创建的线索"
+    "leadCreated": "已创建的潜在顾客"
   }
 }

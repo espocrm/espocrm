@@ -5,9 +5,9 @@
   "links": {
     "meetings": "Reuniones",
     "calls": "Llamadas",
-    "tasks": "1"
+    "tasks": "Tareas"
   },
   "labels": {
-    "Create {entityType}": "Crear {entityTypeTranslated}"
+    "Create {entityType}": "Create {entityTypeTranslated}"
   }
 }

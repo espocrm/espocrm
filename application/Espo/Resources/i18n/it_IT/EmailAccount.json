@@ -8,36 +8,36 @@
     "port": "Porta",
     "monitoredFolders": "Cartelle Monitorate",
     "ssl": "SSL",
-    "fetchSince": "Recupera a Partire Da",
-    "emailAddress": "Indirizzo Email",
+    "fetchSince": "Da Raggiungere",
+    "emailAddress": "Indirizzo email",
     "sentFolder": "Cartella Inviate",
-    "storeSentEmails": "Salva Email Inviate",
-    "keepFetchedEmailsUnread": "Mantenere le Email Scaricate ma non Lette",
-    "emailFolder": "Metti nella Cartella",
+    "storeSentEmails": "Emailinviate",
+    "keepFetchedEmailsUnread": "Mantieni le email non lette",
+    "emailFolder": "Sposta nella Cartella",
     "useSmtp": "Usa SMTP",
-    "smtpHost": "SMTP Host",
-    "smtpPort": "SMTP Porta",
-    "smtpAuth": "SMTP Autenticazione",
-    "smtpSecurity": "SMTP Sicurezza",
-    "smtpUsername": "SMTP Username",
-    "smtpPassword": "SMTP Password"
+    "smtpHost": "Host SMTP",
+    "smtpPort": "Porta SMTP",
+    "smtpAuth": "Autenticazione SMTP",
+    "smtpSecurity": "Sicurezza SMTP",
+    "smtpUsername": "Nome utente SMTP",
+    "smtpPassword": "Password SMTP"
   },
   "links": {
     "filters": "Filtri",
-    "emails": "Email"
+    "emails": "Emails"
   },
   "options": {
     "status": {
       "Active": "Attivo",
-      "Inactive": "Non Attivo"
+      "Inactive": "Inattivo"
     }
   },
   "labels": {
-    "Create EmailAccount": "Crea Account Email ",
+    "Create EmailAccount": "Crea Account email",
     "IMAP": "IMAP",
     "Main": "Principale",
-    "Test Connection": "Test della Connessione",
-    "Send Test Email": "Test Invio Email",
+    "Test Connection": "Test della connessione",
+    "Send Test Email": "Invia email di prova",
     "SMTP": "SMTP"
   },
   "messages": {
@@ -45,6 +45,7 @@
     "connectionIsOk": "La Connessione è Ok"
   },
   "tooltips": {
-    "monitoredFolders": "Le Cartelle devono essere separate con una virgola.\n\nPuoi aggiungere una cartella 'Inviati' per sincronizzare le email inviate da un client di posta esterno."
+    "monitoredFolders": "Cartelle multiple devono essere separate dalla virgola.\n\nÈ possibile aggiungere una cartella \"Inviata\" per sincronizzare le email inviate da un client di posta elettronica esterno.",
+    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
   }
 }

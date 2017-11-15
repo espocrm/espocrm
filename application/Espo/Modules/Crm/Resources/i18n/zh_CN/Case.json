@@ -1,20 +1,20 @@
 {
   "fields": {
     "name": "名称",
-    "number": "数",
+    "number": "号",
     "status": "状态",
-    "account": "帐户",
+    "account": "客户",
     "contact": "联系人",
     "contacts": "联系人",
     "priority": "优先",
     "type": "类型",
     "description": "描述",
     "inboundEmail": "入站邮件",
-    "lead": "线索"
+    "lead": "潜在顾客"
   },
   "links": {
     "inboundEmail": "入站电子邮件",
-    "account": "帐户",
+    "account": "客户",
     "contact": "联系人（主）",
     "Contacts": "联系人",
     "meetings": "会晤",
@@ -22,7 +22,7 @@
     "tasks": "任务",
     "emails": "电子邮件",
     "articles": "知识库文章",
-    "lead": "线索"
+    "lead": "潜在顾客"
   },
   "options": {
     "status": {

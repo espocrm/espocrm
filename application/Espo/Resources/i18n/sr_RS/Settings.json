@@ -45,7 +45,6 @@
     "exportDisabled": "Onemogućiti izvoz (samo administratoru je dozvoljeno)",
     "b2cMode": "B2C režim",
     "avatarsDisabled": "Isključi avatare",
-    "followCreatedEntities": "Prati entitete koje si kreirao",
     "displayListViewRecordCount": "Prikaži ukupan broj (na priazu: lista)",
     "theme": "Tema",
     "userThemesDisabled": "Onemogući korisničke teme",
@@ -87,7 +86,9 @@
     "historyEntityList": "Lista entiteta za istoriju",
     "currencyFormat": "Format valute",
     "currencyDecimalPlaces": "Valuta decimale",
-    "aclStrictMode": "ACL strogo"
+    "aclStrictMode": "ACL strogo",
+    "followCreatedEntities": "Follow created records",
+    "aclAllowDeleteCreated": "Allow to remove created records"
   },
   "options": {
     "weekStart": {
@@ -102,7 +103,6 @@
   "tooltips": {
     "recordsPerPage": "Broj unosa prvobitno prikazan u listama.",
     "recordsPerPageSmall": "Broj unosa prvobitno prikazan u panelima odnosa",
-    "outboundEmailIsShared": "Dozvoli korisnicima da šalju mejlove preko ovog SMTP.",
     "followCreatedEntities": "Korisnici će automatski zapratiti unose koje naprave.",
     "emailMessageMaxSize": "Sve dolazne poruke e-pošte koje prelaze određenu veličinu će biti preuzete bez teksta i priloga.",
     "authTokenLifetime": "Definiše koliko dugo tokeni mogu postojati.\n0 - Znači da nema isteka.",
@@ -131,7 +131,9 @@
     "ldapUserDefaultTeam": "Podrazumevani tim za napravljenog korisnika. Za više, pogledajte korisnički profil.",
     "b2cMode": "Po defaultu EspoCRM je prilagođena za B2B. Možete ga prebaciti na B2C.",
     "currencyDecimalPlaces": "Broj decimalnih mesta. Ako je prazno, onda će biti prikazana sva decilana mesta.",
-    "aclStrictMode": "Uključeno: Pristup entitetima će biti zabranjen ako nije određeno u ulogama.\n\nIsključeno: Pristup entitetima će biti dozvoljen ako nije određeno u ulogama"
+    "aclStrictMode": "Uključeno: Pristup entitetima će biti zabranjen ako nije određeno u ulogama.\n\nIsključeno: Pristup entitetima će biti dozvoljen ako nije određeno u ulogama",
+    "outboundEmailIsShared": "Dozvolite korisnicima da šalju poruke sa ove adrese.",
+    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
   },
   "labels": {
     "System": "Sistem",

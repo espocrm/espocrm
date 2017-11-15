@@ -2,22 +2,22 @@
   "fields": {
     "name": "Nome",
     "body": "Corpo",
-    "entityType": "Tipo Entità",
+    "entityType": "Tipo di entità",
     "header": "Intestazione",
     "footer": "Piè di pagina",
     "leftMargin": "Margine Sinistro",
-    "topMargin": "Margine Superiore",
+    "topMargin": "Marigne Superiore",
     "rightMargin": "Margine Destro",
     "bottomMargin": "Margine Inferiore",
     "printFooter": "Stampa piè di Pagina",
-    "footerPosition": "Posizione piè di pagina",
-    "variables": "Placeholder Disponibili"
+    "footerPosition": "Posizione piè  di pagina",
+    "variables": "Segnaposto disponibili"
   },
   "labels": {
     "Create Template": "Crea Modello"
   },
   "tooltips": {
-    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina.",
-    "variables": "Copia-incolla il placeholder richiesto nell'Intestazione, Corpo o piè di Pagina"
+    "footer": "Utilizzare {pageNumber} per stampare il numero di pagina .",
+    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
   }
 }

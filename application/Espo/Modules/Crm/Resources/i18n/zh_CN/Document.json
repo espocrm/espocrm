@@ -11,14 +11,14 @@
     "publishDate": "发布日期",
     "expirationDate": "截止日期",
     "description": "描述",
-    "accounts": "客户\n",
+    "accounts": "账户",
     "folder": "夹"
   },
   "links": {
-    "accounts": "客户\n",
+    "accounts": "账户",
     "opportunities": "商机",
     "folder": "夹",
-    "leads": "线索",
+    "leads": "潜在顾客",
     "contacts": "联系人"
   },
   "options": {

@@ -9,12 +9,14 @@
     "application": "Aplikacija",
     "queueItem": "U redu čekanja",
     "stringData": "String podatci",
-    "stringAdditionalData": "String dodatnih podataka"
+    "stringAdditionalData": "String dodatnih podataka",
+    "isTest": "Is Test"
   },
   "links": {
     "queueItem": "U redu čekanja",
     "parent": "Roditelj",
-    "object": "Objekat"
+    "object": "Objekat",
+    "campaign": "Campaign"
   },
   "options": {
     "action": {

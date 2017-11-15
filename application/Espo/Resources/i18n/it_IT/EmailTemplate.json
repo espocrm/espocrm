@@ -2,24 +2,24 @@
   "fields": {
     "name": "Nome",
     "status": "Stato",
-    "isHtml": "È Html",
+    "isHtml": "Is Html",
     "body": "Corpo",
-    "subject": "Oggetto",
+    "subject": "Soggetto",
     "attachments": "Allegato",
     "insertField": "Inserisci Campo",
     "oneOff": "One-off"
   },
   "labels": {
-    "Create EmailTemplate": "Crea Modello Email",
+    "Create EmailTemplate": "Crea Modello email",
     "Info": "Info"
   },
-  "messages": {
-    "infoText": "Le variabili disponibili :\n\n{optOutUrl} &#8211; URL per il link unsubscribe};\n\n{optOutLink} &#8211; link di unsubscribe."
-  },
   "tooltips": {
-    "oneOff": "Abilita se hai intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
+    "oneOff": "Controllare se avete intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
   },
   "presetFilters": {
     "actual": "Attuale"
+  },
+  "messages": {
+    "infoText": "Variabili disponibili :\n\n{optOutUrl} &#8211; URL per cancellare l'iscrizione;\n\n{optOutLink} &#8211; link per cancellare l'iscrizione."
   }
 }

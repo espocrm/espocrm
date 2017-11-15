@@ -7,7 +7,7 @@
     "startDate": "Fecha de Inicio",
     "endDate": "Fecha de Fin",
     "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "excludingTargetLists": "Listas de Objetivos Excluidas",
     "sentCount": "Enviado",
     "openedCount": "Abierto",
     "clickedCount": "Leídos",
@@ -22,8 +22,8 @@
     "budgetConverted": "Presupuesto (convertido)"
   },
   "links": {
-    "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
+    "targetLists": "Listas de Objetivos",
+    "excludingTargetLists": "Listas de Objetivos Excluidas",
     "accounts": "Cuentas",
     "contacts": "Contactos",
     "leads": "Referencias",
@@ -50,7 +50,7 @@
   },
   "labels": {
     "Create Campaign": "Crear Campaña",
-    "Target Lists": "Lista de Objetivos",
+    "Target Lists": "Listas de Objetivos",
     "Statistics": "Estadísticas",
     "hard": "duro",
     "soft": "suave",
@@ -59,7 +59,7 @@
     "Email Templates": "Correo Modelo",
     "Unsubscribe again": "Cancelar otra vez la suscripción",
     "Subscribe again": "Volverse a suscribir",
-    "Create Target List": "Crear lista de obejtivos"
+    "Create Target List": "Crear Lista de Obejtivos"
   },
   "presetFilters": {
     "active": "Activo"

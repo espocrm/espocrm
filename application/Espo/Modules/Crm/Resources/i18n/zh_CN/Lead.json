@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "已转换为",
-    "Create Lead": "创建线索",
+    "Create Lead": "创建潜在顾客",
     "Convert": "转换",
     "convert": "转换"
   },
@@ -11,7 +11,7 @@
     "title": "标题",
     "website": "网站",
     "phoneNumber": "电话",
-    "accountName": "单位名称",
+    "accountName": "客户名称",
     "doNotCall": "不要电联",
     "address": "地址",
     "status": "状态",
@@ -25,7 +25,11 @@
     "campaign": "营销活动",
     "targetLists": "目标列表",
     "targetList": "目标列表",
-    "industry": "行业"
+    "industry": "行业",
+    "acceptanceStatus": "验收状态",
+    "opportunityAmountCurrency": "机会金额货币",
+    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
+    "acceptanceStatusCalls": "Acceptance Status (Calls)"
   },
   "links": {
     "targetLists": "目标列表",

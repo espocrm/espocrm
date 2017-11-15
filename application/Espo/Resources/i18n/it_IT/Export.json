@@ -1,7 +1,7 @@
 {
   "fields": {
+    "fieldList": "Elenco campi",
     "exportAllFields": "Esporta tutti i campi",
-    "fieldList": "Lista campi",
     "format": "Formato"
   },
   "options": {

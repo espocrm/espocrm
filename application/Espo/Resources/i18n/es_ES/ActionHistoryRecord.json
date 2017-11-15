@@ -1,27 +1,27 @@
 {
   "fields": {
-    "user": "Usuario",
-    "action": "Acción",
-    "createdAt": "Fecha",
-    "target": "Objetivo",
-    "targetType": "Tipo de Objetivo",
-    "authToken": "Token de autenticación",
-    "ipAddress": "Dirección IP"
+    "user": "User",
+    "action": "Action",
+    "createdAt": "Date",
+    "target": "Target",
+    "targetType": "Target Type",
+    "authToken": "Auth Token",
+    "ipAddress": "IP Address"
   },
   "links": {
-    "authToken": "Token de autenticación",
-    "user": "Usuario",
-    "target": "Objetivo"
+    "authToken": "Auth Token",
+    "user": "User",
+    "target": "Target"
   },
   "presetFilters": {
-    "onlyMy": "Solo míos"
+    "onlyMy": "Only My"
   },
   "options": {
     "action": {
-      "read": "Leer",
-      "update": "Actualizar",
-      "delete": "Eliminar",
-      "create": "Crear"
+      "read": "Read",
+      "update": "Update",
+      "delete": "Delete",
+      "create": "Create"
     }
   }
 }
