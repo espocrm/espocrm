@@ -1127,6 +1127,13 @@ class Base
                         $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     );
                     break;
+                case 'nextMonth':
+                    $dt = new \DateTime();
+                    $part['AND'] = array(
+                        $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                    );
+                    break;
                 case 'currentQuarter':
                     $dt = new \DateTime();
                     $quarter = ceil($dt->format('m') / 3);
