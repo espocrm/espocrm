@@ -68,12 +68,15 @@ class App extends \Espo\Core\Controllers\Base
         unset($userData['authTokenId']);
         unset($userData['password']);
 
+        $language = \Espo\Core\Utils\Language::detectLanguage($this->getConfig(), $this->getPreferences());
+
         return array(
             'user' => $userData,
             'acl' => $this->getAcl()->getMap(),
             'preferences' => $preferences,
             'token' => $this->getUser()->get('token'),
-            'settings' => $settings
+            'settings' => $settings,
+            'language' => $language
         );
     }
 
