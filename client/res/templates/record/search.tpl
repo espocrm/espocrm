@@ -54,9 +54,9 @@
 
 <div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
 <div class="row advanced-filters hidden">
-{{#each filterList}}
-    <div class="filter {{./this}} col-sm-4 col-md-3">
-        {{{var this ../this}}}
+{{#each filterDataList}}
+    <div class="filter filter-{{name}} col-sm-4 col-md-3" data-name="{{name}}">
+        {{{var key ../this}}}
     </div>
 {{/each}}
 </div>
