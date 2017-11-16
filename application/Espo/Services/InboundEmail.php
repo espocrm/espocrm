@@ -549,15 +549,15 @@ class InboundEmail extends \Espo\Services\Record
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()->getRepository('Contact')->where(array(
-            'emailAddresses.id' => $email->get('fromEmailAddressId')
+        $contact = $this->getEntityManager()->getRepository('Contact')->join([['emailAddresses', 'emailAddressesMultiple']])->where(array(
+            'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
         ))->findOne();
         if ($contact) {
             $case->set('contactId', $contact->id);
         } else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
-                    'emailAddresses.id' => $email->get('fromEmailAddressId')
+                $lead = $this->getEntityManager()->getRepository('Lead')->join([['emailAddresses', 'emailAddressesMultiple']])->where(array(
+                    'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
                 ))->findOne();
                 if ($lead) {
                     $case->set('leadId', $lead->id);
