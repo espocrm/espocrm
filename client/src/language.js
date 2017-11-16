@@ -26,11 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('language', [], function () {
+Espo.define('language', ['ajax'], function (Ajax) {
 
     var Language = function (cache) {
         this.cache = cache || null;
         this.data = {};
+        this.name = 'default';
     };
 
     _.extend(Language.prototype, {
@@ -83,10 +84,13 @@ Espo.define('language', [], function () {
             return translation[value] || value;
         },
 
-        loadFromCache: function () {
-
+        loadFromCache: function (loadDefault) {
+            var name = this.name;
+            if (loadDefault) {
+                name = 'default';
+            }
             if (this.cache) {
-                var cached = this.cache.get('app', 'language');
+                var cached = this.cache.get('app', 'language-' + name);
                 if (cached) {
                     this.data = cached;
                     return true;
@@ -97,44 +101,41 @@ Espo.define('language', [], function () {
 
         clearCache: function () {
             if (this.cache) {
-                this.cache.clear('app', 'language');
+                this.cache.clear('app', 'language-' + this.name);
             }
         },
 
-        storeToCache: function () {
+        storeToCache: function (loadDefault) {
+            var name = this.name;
+            if (loadDefault) {
+                name = 'default';
+            }
             if (this.cache) {
-                this.cache.set('app', 'language', this.data);
+                this.cache.set('app', 'language-' + name, this.data);
             }
         },
 
-        load: function (callback, disableCache) {
+        load: function (callback, disableCache, loadDefault) {
             this.once('sync', callback);
 
             if (!disableCache) {
-                if (this.loadFromCache()) {
+                if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
                     return;
                 }
             }
 
-            this.fetch(false, disableCache);
+            this.fetch(disableCache, loadDefault);
         },
 
-        fetch: function (sync, disableCache) {
-            var self = this;
-            $.ajax({
-                url: this.url,
-                type: 'GET',
-                dataType: 'JSON',
-                async: !(sync || false),
-                success: function (data) {
-                    self.data = data;
-                    if (!disableCache) {
-                        self.storeToCache();
-                    }
-                    self.trigger('sync');
+        fetch: function (disableCache, loadDefault) {
+            Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
+                this.data = data;
+                if (!disableCache) {
+                    this.storeToCache(loadDefault);
                 }
-            });
+                this.trigger('sync');
+            }.bind(this));
         },
 
         sortFieldList: function (scope, fieldList) {
@@ -158,5 +159,3 @@ Espo.define('language', [], function () {
     return Language;
 
 });
-
-

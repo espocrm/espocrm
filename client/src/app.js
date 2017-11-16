@@ -98,7 +98,7 @@ Espo.define(
             new Promise(function (resolve) {
                 this.language.load(function () {
                     resolve();
-                });
+                }, false, true);
             }.bind(this))
         ]).then(function () {
             this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
@@ -448,7 +448,6 @@ Espo.define(
             this.acl.clear();
             this.storage.clear('user', 'auth');
             this.doAction({action: 'login'});
-            this.language.clearCache();
 
             this.unsetCookieAuth();
 
@@ -486,48 +485,48 @@ Espo.define(
                         options = data;
                         resolve();
                     });
-
-                }.bind(this)),
-                new Promise(function (resolve) {
-                    this.language.load(function () {
-                        resolve();
-                    }.bind(this), true);
                 }.bind(this))
             ]).then(function () {
-                this.dateTime.setLanguage(this.language);
+                (new Promise(function (resolve) {
+                    this.language.name = options.language;
+                    this.language.load(function () {
+                        resolve();
+                    }.bind(this));
+                }.bind(this))).then(function () {
+                    this.dateTime.setLanguage(this.language);
 
-                var userData = options.user || null;
-                var preferencesData = options.preferences || null;
-                var aclData = options.acl || null;
+                    var userData = options.user || null;
+                    var preferencesData = options.preferences || null;
+                    var aclData = options.acl || null;
 
-                var settingData = options.settings || {};
+                    var settingData = options.settings || {};
 
-                this.user.set(userData);
-                this.preferences.set(preferencesData);
+                    this.user.set(userData);
+                    this.preferences.set(preferencesData);
 
-                this.settings.set(settingData);
-                this.acl.set(aclData);
+                    this.settings.set(settingData);
+                    this.acl.set(aclData);
 
-                if (!this.auth) {
-                    return;
-                }
-
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', this.basePath + this.url + '/');
-                xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-
-                        var arr = Base64.decode(this.auth).split(':');
-                        this.setCookieAuth(arr[0], arr[1]);
-                        callback();
+                    if (!this.auth) {
+                        return;
                     }
-                }.bind(this);
 
-                xhr.send('');
+                    var xhr = new XMLHttpRequest();
 
+                    xhr.open('GET', this.basePath + this.url + '/');
+                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
+                            var arr = Base64.decode(this.auth).split(':');
+                            this.setCookieAuth(arr[0], arr[1]);
+                            callback();
+                        }
+                    }.bind(this);
+
+                    xhr.send('');
+                }.bind(this));
             }.bind(this));
         },
 

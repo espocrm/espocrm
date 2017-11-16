@@ -298,7 +298,7 @@ class Container
     protected function loadDefaultLanguage()
     {
         return new \Espo\Core\Utils\Language(
-            null,
+            \Espo\Core\Utils\Language::detectLanguage($this->get('config')),
             $this->get('fileManager'),
             $this->get('metadata'),
             $this->get('useCache')
