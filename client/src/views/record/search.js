@@ -60,7 +60,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 bool: this.bool || {},
                 boolFilterList: this.boolFilterList,
                 advancedFields: this.getAdvancedDefs(),
-                filterList: this.getFilterList(),
+                filterDataList: this.getFilterDataList(),
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
                 leftDropdown: this.isLeftDropdown(),
@@ -515,10 +515,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.updateCollection();
         },
 
-        getFilterList: function () {
+        getFilterDataList: function () {
             var arr = [];
             for (var field in this.advanced) {
-                arr.push('filter-' + field);
+                arr.push({
+                    key: 'filter-' + field,
+                    name: field
+                });
             }
             return arr;
         },
@@ -615,14 +618,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var rendered = false;
             if (this.isRendered()) {
                 rendered = true;
-                this.$advancedFiltersPanel.append('<div class="filter filter-' + name + ' col-sm-4 col-md-3" />');
+                this.$advancedFiltersPanel.append('<div data-name="'+name+'" class="filter filter-' + name + ' col-sm-4 col-md-3" />');
             }
 
-            this.createView('filter-' + name, 'Search.Filter', {
+            this.createView('filter-' + name, 'views/search/filter', {
                 name: name,
                 model: this.model,
                 params: params,
-                el: this.options.el + ' .filter-' + name
+                el: this.options.el + ' .filter[data-name="' + name + '"]'
             }, function (view) {
                 if (typeof callback === 'function') {
                     view.once('after:render', function () {
