@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b7a79ea5683921a46868e4c2ef74febc",
-    "content-hash": "54fe23c745b7027a9abeeaa5ddac9b43",
+    "hash": "43c1b44763a8e28beff0d02e7f724a89",
+    "content-hash": "0166ff66e4d3ba330526f5e9f036f2b8",
     "packages": [
         {
             "name": "composer/semver",
@@ -1022,16 +1022,16 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "0.4.5",
+            "version": "0.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/MailMimeParser.git",
-                "reference": "ac1488579b40defa68902b081b576caa8fbff8fa"
+                "reference": "0fa39035c121c166f9ad3a47d41ec70423558cf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/ac1488579b40defa68902b081b576caa8fbff8fa",
-                "reference": "ac1488579b40defa68902b081b576caa8fbff8fa",
+                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/0fa39035c121c166f9ad3a47d41ec70423558cf2",
+                "reference": "0fa39035c121c166f9ad3a47d41ec70423558cf2",
                 "shasum": ""
             },
             "require": {
@@ -1069,7 +1069,7 @@
                 "parser",
                 "php-imap"
             ],
-            "time": "2017-10-11 06:35:19"
+            "time": "2017-11-16 02:07:34"
         },
         {
             "name": "zendframework/zend-crypt",
