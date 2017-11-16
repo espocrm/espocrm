@@ -1,0 +1,21 @@
+[
+    {
+        "route": "/Activities/:scope/:id/:name",
+        "method": "get",
+        "params": {
+            "controller": "Test",
+            "action": "list",
+            "scope": ":scope",
+            "id": ":id",
+            "name": ":name"
+        }
+    },
+    {
+        "route": "/Test",
+        "method": "get",
+        "params": {
+            "controller": "Test",
+            "action": "testAction"
+        }
+    }
+]

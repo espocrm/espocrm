@@ -330,4 +330,66 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
     }
+
+    public function testUnifyCase4ModuleRoutesWithRewrites()
+    {
+        // prepare path
+        $paths = [
+            'corePath'   => $this->filesPath.'/testCase4/application/Espo/Resources/routes.json',
+            'modulePath' => $this->filesPath.'/testCase4/application/Espo/Modules/{*}/Resources/routes.json',
+            'customPath' => $this->filesPath.'/testCase4/custom/Espo/Custom/Resources/routes.json',
+        ];
+
+        $this->reflection->setProperty('paths', $paths);
+
+        $this->objects['metadata']
+            ->expects($this->once())
+            ->method('getModuleList')
+            ->will($this->returnValue(array(
+                    'Crm',
+                    'Test',
+                    'TestExt'
+        )));
+
+        // prepare expected result
+        $result = [
+            [
+                'route'  => '/Activities/:scope/:id/:name',
+                'method' => 'get',
+                'params' => [
+                    'controller' => 'TestExt',
+                    'action'     => 'list',
+                    'scope'      => ':scope',
+                    'id'         => ':id',
+                    'name'       => ':name',
+                ],
+            ],
+            [
+                'route'  => '/Activities',
+                'method' => 'get',
+                'params' => [
+                    'controller' => 'TestExt',
+                    'action'     => 'testExtListCalendarEvents'
+                ],
+            ],
+            [
+                'route'  => '/Product',
+                'method' => 'get',
+                'params' => [
+                    'controller' => 'Product',
+                    'action'     => 'listProduct'
+                ],
+            ],
+            [
+                'route'  => '/Test',
+                'method' => 'get',
+                'params' => [
+                    'controller' => 'Test',
+                    'action'     => 'testAction'
+                ],
+            ],
+        ];
+
+        $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
+    }
 }
