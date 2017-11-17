@@ -34,6 +34,19 @@ Espo.define('crm:views/contact/fields/account-role', 'views/fields/varchar', fun
 
         listTemplate: 'crm:contact/fields/account-role/detail',
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this.model, 'change:title', function (model, value, o) {
+                this.model.set('accountRole', this.model.get('title'));
+            }, this);
+        },
+
+        getAttributeList: function () {
+            var list = Dep.prototype.getAttributeList.call(this);
+            list.push('title');
+            return list;
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
 

@@ -45,5 +45,18 @@ class Lead extends \Espo\Core\Entities\Person
         }
         return $this->valuesContainer['name'];
     }
-}
 
+    protected function _hasName()
+    {
+        if (array_key_exists('name', $this->valuesContainer)) {
+            return true;
+        }
+        if ($this->has('accountName')) {
+            return true;
+        } else if ($this->has('emailAddress')) {
+            return true;
+        } else if ($this->has('phoneNumber')) {
+            return true;
+        }
+    }
+}
