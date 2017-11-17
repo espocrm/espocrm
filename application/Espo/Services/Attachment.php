@@ -35,6 +35,27 @@ class Attachment extends Record
 {
     protected $notFilteringAttributeList = ['contents'];
 
+    public function upload($fileData)
+    {
+        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
+            throw new Forbidden();
+        }
+
+        $arr = explode(',', $fileData);
+        if (count($arr) > 1) {
+            list($prefix, $contents) = $arr;
+            $contents = base64_decode($contents);
+        } else {
+            $contents = '';
+        }
+
+        $attachment = $this->getEntityManager()->getEntity('Attachment');
+        $attachment->set('contents', $contents);
+        $this->getEntityManager()->saveEntity($attachment);
+
+        return $attachment;
+    }
+
     public function createEntity($data)
     {
         if (!empty($data['file'])) {
