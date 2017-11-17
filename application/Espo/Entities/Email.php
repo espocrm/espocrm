@@ -41,6 +41,11 @@ class Email extends \Espo\Core\ORM\Entity
         $this->set('name', $value);
     }
 
+    protected function _hasSubject($value)
+    {
+        $this->has('name');
+    }
+
     protected function _setIsRead($value)
     {
         $this->setValue('isRead', $value !== false);
