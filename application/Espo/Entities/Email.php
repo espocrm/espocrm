@@ -41,9 +41,9 @@ class Email extends \Espo\Core\ORM\Entity
         $this->set('name', $value);
     }
 
-    protected function _hasSubject($value)
+    protected function _hasSubject()
     {
-        $this->has('name');
+        return $this->has('name');
     }
 
     protected function _setIsRead($value)
