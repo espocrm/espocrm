@@ -107,6 +107,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             return data;
         },
 
+        showValidationMessage: function (msg, selector) {
+            var $label = this.$el.find('label');
+            var title = $label.attr('title');
+            $label.attr('title', '');
+            Dep.prototype.showValidationMessage.call(this, msg, selector);
+            $label.attr('title', title);
+        },
+
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
@@ -283,12 +291,27 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         uploadFile: function (file) {
             var isCanceled = false;
 
+            var exceedsMaxFileSize = false;
+            var maxFileSize = this.params.maxFileSize;
+            if (maxFileSize) {
+                if (file.size > maxFileSize * 1024 * 1024) {
+                    exceedsMaxFileSize = true;
+                }
+            }
+            if (exceedsMaxFileSize) {
+                var msg = this.translate('fieldMaxFileSizeError', 'messages')
+                          .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                          .replace('{max}', maxFileSize);
+                this.showValidationMessage(msg, '.attachment-button label');
+                return;
+            }
+
             this.getModelFactory().create('Attachment', function (attachment) {
-                var $att = this.addAttachmentBox(file.name, file.type);
+                var $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
                 this.$el.find('.attachment-button').addClass('hidden');
 
-                $att.find('.remove-attachment').on('click.uploading', function () {
+                $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                     isCanceled = true;
                     this.$el.find('.attachment-button').removeClass('hidden');
                 }.bind(this));
@@ -296,27 +319,23 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 var fileReader = new FileReader();
                 fileReader.onload = function (e) {
                     this.handleFileUpload(file, e.target.result, function (result, fileParams) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'Attachment/action/upload',
-                            data: result,
-                            contentType: 'multipart/encrypted',
-                            timeout: 0,
-                        }).done(function (data) {
-                            attachment.id = data.attachmentId;
-                            attachment.set('name', fileParams.name);
-                            attachment.set('type', fileParams.type || 'text/plain');
-                            attachment.set('size', fileParams.size);
-                            attachment.set('role', 'Attachment');
-                            attachment.set('relatedType', this.model.name);
+                        attachment.set('name', fileParams.name);
+                        attachment.set('type', fileParams.type || 'text/plain');
+                        attachment.set('size', fileParams.size);
+                        attachment.set('role', 'Attachment');
+                        attachment.set('relatedType', this.model.name);
+                        attachment.set('file', e.target.result);
+                        attachment.set('field', this.name);
 
-                            attachment.once('sync', function () {
-                                if (!isCanceled) {
-                                    $att.trigger('ready');
-                                    this.setAttachment(attachment);
-                                }
-                            }, this);
-                            attachment.save();
+                        attachment.save().then(function () {
+                            if (!isCanceled) {
+                                $attachmentBox.trigger('ready');
+                                this.setAttachment(attachment);
+                            }
+                        }.bind(this)).fail(function () {
+                            $attachmentBox.remove();
+                            this.$el.find('.uploading-message').remove();
+                            this.$el.find('.attachment-button').removeClass('hidden');
                         }.bind(this));
                     }.bind(this));
                 }.bind(this);
@@ -358,7 +377,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.$attachment.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');
+                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + '</span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));

@@ -151,7 +151,8 @@
         "dynamicLogicRequired": "Conditions making field required",
         "dynamicLogicOptions": "Conditional options",
         "probabilityMap": "Stage Probabilities (%)",
-        "readOnly": "Read-only"
+        "readOnly": "Read-only",
+        "maxFileSize": "Max File Size (Mb)"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",

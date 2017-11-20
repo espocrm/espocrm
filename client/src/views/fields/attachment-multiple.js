@@ -291,7 +291,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             $attachments.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small">' + this.translate('Uploading...') + '</span>');
+                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + '</span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(this.translate('Ready'));
@@ -303,9 +303,36 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             return $att;
         },
 
+        showValidationMessage: function (msg, selector) {
+            var $label = this.$el.find('label');
+            var title = $label.attr('title');
+            $label.attr('title', '');
+            Dep.prototype.showValidationMessage.call(this, msg, selector);
+            $label.attr('title', title);
+        },
+
         uploadFiles: function (files) {
             var uploadedCount = 0;
             var totalCount = 0;
+
+            var exceedsMaxFileSize = false;
+            var maxFileSize = this.params.maxFileSize;
+            if (maxFileSize) {
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.size > maxFileSize * 1024 * 1024) {
+                        exceedsMaxFileSize = true;
+                    }
+                }
+            }
+            if (exceedsMaxFileSize) {
+                var msg = this.translate('fieldMaxFileSizeError', 'messages')
+                          .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                          .replace('{max}', maxFileSize);
+
+                this.showValidationMessage(msg, 'label');
+                return;
+            }
 
             this.getModelFactory().create('Attachment', function (model) {
                 var canceledList = [];
@@ -313,12 +340,13 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var fileList = [];
                 for (var i = 0; i < files.length; i++) {
                     fileList.push(files[i]);
+                    totalCount++;
                 }
 
                 fileList.forEach(function (file) {
-                    var $att = this.addAttachmentBox(file.name, file.type);
+                    var $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
-                    $att.find('.remove-attachment').on('click.uploading', function () {
+                    $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                         canceledList.push(attachment.cid);
                         totalCount--;
                     });
@@ -327,33 +355,33 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
                     var fileReader = new FileReader();
                     fileReader.onload = function (e) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'Attachment/action/upload',
-                            data: e.target.result,
-                            contentType: 'multipart/encrypted',
-                            timeout: 0,
-                        }).done(function (data) {
+                        attachment.set('name', file.name);
+                        attachment.set('type', file.type || 'text/plain');
+                        attachment.set('role', 'Attachment');
+                        attachment.set('size', file.size);
+                        attachment.set('parentType', this.model.name);
+                        attachment.set('file', e.target.result);
+                        attachment.set('field', this.name);
 
-                            attachment.id = data.attachmentId;
-                            attachment.set('name', file.name);
-                            attachment.set('type', file.type || 'text/plain');
-                            attachment.set('role', 'Attachment');
-                            attachment.set('size', file.size);
-                            attachment.set('parentType', this.model.name);
-
-                            attachment.once('sync', function () {
-                                if (canceledList.indexOf(attachment.cid) === -1) {
-                                    $att.trigger('ready');
-                                    this.pushAttachment(attachment);
-                                    $att.attr('data-id', attachment.id);
-                                    uploadedCount++;
-                                    if (uploadedCount == totalCount) {
-                                        afterAttachmentsUploaded.call(this);
-                                    }
+                        attachment.save().then(function () {
+                            if (canceledList.indexOf(attachment.cid) === -1) {
+                                $attachmentBox.trigger('ready');
+                                this.pushAttachment(attachment);
+                                $attachmentBox.attr('data-id', attachment.id);
+                                uploadedCount++;
+                                if (uploadedCount == totalCount) {
+                                    this.afterAttachmentsUploaded.call(this);
                                 }
-                            }, this);
-                            attachment.save();
+                            }
+                        }.bind(this)).fail(function () {
+                            $attachmentBox.remove();
+                            totalCount--;
+                            if (!totalCount) {
+                                this.$el.find('.uploading-message').remove();
+                            }
+                            if (uploadedCount == totalCount) {
+                                this.afterAttachmentsUploaded.call(this);
+                            }
                         }.bind(this));
                     }.bind(this);
                     fileReader.readAsDataURL(file);
@@ -522,7 +550,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             if (this.isRequired()) {
                 if (this.model.get(this.idsName).length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-                    this.showValidationMessage(msg);
+                    this.showValidationMessage(msg, 'label');
                     return true;
                 }
             }

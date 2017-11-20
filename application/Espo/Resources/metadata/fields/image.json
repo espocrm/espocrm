@@ -12,6 +12,12 @@
          "options": ["x-small", "small", "medium", "large"]
       },
       {
+         "name": "maxFileSize",
+         "type": "float",
+         "tooltip": true,
+         "min": 0
+      },
+      {
          "name":"audited",
          "type":"bool"
       }
