@@ -537,7 +537,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 placement: 'bottom',
                 container: 'body',
                 content: message,
-                trigger: 'manual',
+                trigger: 'manual'
             }).popover('show');
 
             $el.closest('.field').one('mousedown click', function () {

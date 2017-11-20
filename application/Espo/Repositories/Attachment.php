@@ -61,7 +61,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         if ($entity->isNew()) {
             if (!$entity->has('size') && $entity->has('contents')) {
-                $entity->set('size', mb_strlen($entity->has('contents')));
+                $entity->set('size', mb_strlen($entity->get('contents')));
             }
         }
     }

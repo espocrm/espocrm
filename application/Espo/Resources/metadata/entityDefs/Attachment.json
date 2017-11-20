@@ -26,6 +26,10 @@
             "readOnly": true,
             "disabled": true
         },
+        "field": {
+            "type": "varchar",
+            "disabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

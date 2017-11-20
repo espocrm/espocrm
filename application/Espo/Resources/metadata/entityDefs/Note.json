@@ -24,7 +24,7 @@
             "readOnly": true
         },
         "attachments": {
-            "type": "linkMultiple",
+            "type": "attachmentMultiple",
             "view": "views/stream/fields/attachment-multiple"
         },
         "number": {

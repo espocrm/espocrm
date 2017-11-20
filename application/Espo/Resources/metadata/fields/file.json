@@ -11,6 +11,12 @@
          "view": "views/admin/field-manager/fields/source-list"
       },
       {
+         "name": "maxFileSize",
+         "type": "float",
+         "tooltip": true,
+         "min": 0
+      },
+      {
          "name":"audited",
          "type":"bool"
       }

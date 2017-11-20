@@ -167,6 +167,7 @@ return array (
     'currencyDecimalPlaces' => null,
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
+    'inlineAttachmentUploadMaxSize' => 20,
     'isInstalled' => false
 );
 

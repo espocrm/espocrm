@@ -34,16 +34,5 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Attachment extends \Espo\Core\Controllers\Record
 {
-    public function postActionUpload($params, $data, $request)
-    {
-        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
-            throw new Forbidden();
-        }
 
-        $attachment = $this->getRecordService()->upload($data);
-
-        return array(
-            'attachmentId' => $attachment->id
-        );
-    }
 }

@@ -206,28 +206,23 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         this.getModelFactory().create('Attachment', function (attachment) {
                             var fileReader = new FileReader();
                             fileReader.onload = function (e) {
-                                $.ajax({
-                                    type: 'POST',
-                                    url: 'Attachment/action/upload',
-                                    data: e.target.result,
-                                    contentType: 'multipart/encrypted',
-                                }).done(function (data) {
-                                    attachment.id = data.attachmentId;
-                                    attachment.set('name', file.name);
-                                    attachment.set('type', file.type);
-                                    attachment.set('role', 'Inline Attachment');
-                                    attachment.set('global', true);
-                                    attachment.set('size', file.size);
-                                    attachment.once('sync', function () {
-                                        var url = '?entryPoint=attachment&id=' + attachment.id;
-                                        this.$summernote.summernote('insertImage', url);
-                                        this.notify(false);
-                                    }, this);
-                                    attachment.save();
-                                }.bind(this));
+                                attachment.set('name', file.name);
+                                attachment.set('type', file.type);
+                                attachment.set('role', 'Inline Attachment');
+                                attachment.set('global', true);
+                                attachment.set('size', file.size);
+                                attachment.set('relatedType', this.model.name);
+                                attachment.set('file', e.target.result);
+                                attachment.set('field', this.name);
+
+                                attachment.once('sync', function () {
+                                    var url = '?entryPoint=attachment&id=' + attachment.id;
+                                    this.$summernote.summernote('insertImage', url);
+                                    this.notify(false);
+                                }, this);
+                                attachment.save();
                             }.bind(this);
                             fileReader.readAsDataURL(file);
-
                         }, this);
                     }.bind(this),
                     onBlur: function () {

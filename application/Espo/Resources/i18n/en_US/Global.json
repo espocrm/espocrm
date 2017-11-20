@@ -240,6 +240,7 @@
         "fieldShouldBeLess": "{field} should be less then {value}",
         "fieldShouldBeGreater": "{field} should be greater then {value}",
         "fieldBadPasswordConfirm": "{field} not confirmed properly",
+        "fieldMaxFileSizeError": "File should not exceed {max} Mb",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "Are you sure?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
