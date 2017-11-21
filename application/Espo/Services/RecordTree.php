@@ -164,5 +164,44 @@ class RecordTree extends Record
         }
         return parent::linkEntity($id, $link, $foreignId);
     }
-}
 
+    public function getLastChildrenIdList($parentId = null)
+    {
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
+        $selectParams['whereClause'][] = array(
+            'parentId' => $parentId
+        );
+
+        $idList = [];
+
+        $includingRecords = false;
+        if ($this->checkFilterOnlyNotEmpty()) {
+            $includingRecords = true;
+        }
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            $selectParams2 = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
+            $selectParams2['whereClause'][] = array(
+                'parentId' => $entity->id
+            );
+            if (!$this->getRepository()->count($selectParams2)) {
+                $idList[] = $entity->id;
+            } else {
+                if ($includingRecords) {
+                    $isNotEmpty = false;
+                    foreach ($this->getRepository()->find($selectParams2) as $subEntity) {
+                        if (!$this->checkItemIsEmpty($subEntity)) {
+                            $isNotEmpty = true;
+                            break;
+                        }
+                    }
+                    if (!$isNotEmpty) {
+                        $idList[] = $entity->id;
+                    }
+                }
+            }
+        }
+        return $idList;
+    }
+}

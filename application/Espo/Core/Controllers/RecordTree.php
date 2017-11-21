@@ -61,5 +61,15 @@ class RecordTree extends Record
             'path' => $this->getRecordService()->getTreeItemPath($parentId)
         );
     }
-}
 
+    public function getActionLastChildrenIdList($params, $data, $request)
+    {
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        $parentId = $request->get('parentId');
+
+        return $this->getRecordService()->getLastChildrenIdList($parentId);
+    }
+}
