@@ -185,7 +185,11 @@ Espo.define('date-time', [], function () {
         },
 
         getToday: function () {
-            return moment().tz(this.timeZone).format(this.internalDateFormat);
+            var m = moment();
+            if (this.timeZone) {
+                m = m.tz(this.timeZone);
+            }
+            return moment().format(this.internalDateFormat);
         },
 
         getDateTimeShiftedFromNow: function (shift, type, multiplicity) {
@@ -199,7 +203,11 @@ Espo.define('date-time', [], function () {
         },
 
         getDateShiftedFromToday: function (shift, type) {
-            return moment.tz(this.timeZone).add(type, shift).format(this.internalDateFormat);
+            var m = moment();
+            if (this.timeZone) {
+                m = m.tz(this.timeZone);
+            }
+            return moment.add(type, shift).format(this.internalDateFormat);
         },
 
         getNow: function (multiplicity) {
