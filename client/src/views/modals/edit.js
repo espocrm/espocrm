@@ -189,6 +189,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         attributes: attributes,
                         relate: this.options.relate,
                         returnUrl: this.options.returnUrl || Backbone.history.fragment,
+                        returnDispatchParams: this.options.returnDispatchParams || null,
                     });
                     router.navigate(url, {trigger: false});
                 }.bind(this), 10);

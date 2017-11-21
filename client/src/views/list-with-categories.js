@@ -34,6 +34,10 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
         quickCreate: true,
 
+        storeViewAfterCreate: true,
+
+        storeViewAfterUpdate: true,
+
         currentCategoryId: null,
 
         currentCategoryName: '',
