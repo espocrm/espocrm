@@ -147,7 +147,22 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
                 this.listenToOnce(model, 'before:save', function () {
                     var key = this.name + 'List';
-                    this.clearStoredMainView(key);
+                    var stored = this.getStoredMainView(key);
+                    if (stored && !stored.storeViewAfterCreate) {
+                        this.clearStoredMainView(key);
+                    }
+
+                }, this);
+
+                this.listenToOnce(model, 'after:save', function () {
+                    var key = this.name + 'List';
+                    var stored = this.getStoredMainView(key);
+                    if (stored && stored.storeViewAfterCreate && stored.collection) {
+                        this.listenToOnce(stored, 'after:render', function () {
+                            stored.collection.fetch();
+                        });
+                    }
+
                 }, this);
 
                 this.main(this.getViewName('edit'), o);
@@ -168,7 +183,10 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 }
                 this.listenToOnce(model, 'before:save', function () {
                     var key = this.name + 'List';
-                    this.clearStoredMainView(key);
+                    var stored = this.getStoredMainView(key);
+                    if (stored && !stored.storeViewAfterUpdate) {
+                        this.clearStoredMainView(key);
+                    }
                 }, this);
 
                 this.showLoadingNotification();

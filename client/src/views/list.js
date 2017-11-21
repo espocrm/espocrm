@@ -52,6 +52,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         optionsToPass: [],
 
+        storeViewAfterCreate: false,
+
+        storeViewAfterUpdate: true,
+
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
@@ -242,10 +246,23 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
-            this.createView('quickCreate', 'views/modals/edit', {
+            var options = {
                 scope: this.scope,
                 attributes: attributes
-            }, function (view) {
+            };
+            if (this.storeViewAfterCreate) {
+                _.extend(options, {
+                    returnUrl: '#' + this.scope,
+                    returnDispatchParams: {
+                        controller: this.scope,
+                        action: null,
+                        options: {
+                            isReturn: true
+                        }
+                    }
+                });
+            }
+            this.createView('quickCreate', 'views/modals/edit', options, function (view) {
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
@@ -260,9 +277,23 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             var url = '#' + this.scope + '/create';
             var attributes = this.getCreateAttributes() || {};
 
-            router.dispatch(this.scope, 'create', {
+            var options = {
                 attributes: attributes
-            });
+            };
+            if (this.storeViewAfterCreate) {
+                _.extend(options, {
+                    returnUrl: '#' + this.scope,
+                    returnDispatchParams: {
+                        controller: this.scope,
+                        action: null,
+                        options: {
+                            isReturn: true
+                        }
+                    }
+                });
+            }
+
+            router.dispatch(this.scope, 'create', options);
             router.navigate(url, {trigger: false});
         }
 
