@@ -10,7 +10,8 @@
         "type": "Type",
         "description": "Description",
         "inboundEmail": "Inbound Email",
-        "lead": "Lead"
+        "lead": "Lead",
+        "attachments": "Attachments"
     },
     "links": {
         "inboundEmail": "Inbound Email",
@@ -22,7 +23,8 @@
         "tasks": "Tasks",
         "emails": "Emails",
         "articles": "Knowledge Base Articles",
-        "lead": "Lead"
+        "lead": "Lead",
+        "attachments": "Attachments"
     },
     "options": {
         "status": {
