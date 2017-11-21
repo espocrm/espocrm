@@ -10,7 +10,8 @@
     "type": "Typ",
     "description": "Beschreibung",
     "inboundEmail": "Eingehende E-Mail",
-    "lead": "Interessent"
+    "lead": "Interessent",
+    "attachments": "Anhänge"
   },
   "links": {
     "inboundEmail": "Eingehende E-Mail",
@@ -22,7 +23,8 @@
     "tasks": "Aufgaben",
     "emails": "E-Mails",
     "articles": "Wissensbasis Artikel",
-    "lead": "Interessent"
+    "lead": "Interessent",
+    "attachments": "Anhänge"
   },
   "options": {
     "status": {

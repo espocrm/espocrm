@@ -6,7 +6,8 @@
             [{"name":"status"},{"name":"account"}],
             [{"name":"priority"},{"name":"contacts"}],
             [{"name":"type"},false],
-            [{"name":"description", "fullWidth": true}]
+            [{"name":"description", "fullWidth": true}],
+            [{"name":"attachments", "fullWidth": true}]
         ]
     }
 ]
