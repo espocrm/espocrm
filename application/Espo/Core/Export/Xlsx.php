@@ -132,7 +132,7 @@ class Xlsx extends \Espo\Core\Injectable
             $exportName = $this->getInjection('language')->translate($entityType, 'scopeNamesPlural');
         }
 
-        $sheetName = substr($exportName, 0, 30);
+        $sheetName = mb_substr($exportName, 0, 30);
         $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
         foreach ($badCharList as $badChar) {
             $sheetName = str_replace($badCharList, ' ', $sheetName);
