@@ -71,6 +71,10 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        setupSearch: function () {
+            this.searchData.value = this.getSearchParamsData().value || this.searchParams.additionalValue; 
+        },
+
         getFormattedAddress: function () {
             var postalCodeValue = this.model.get(this.postalCodeField);
             var streetValue = this.model.get(this.streetField);
@@ -366,42 +370,42 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
         fetchSearch: function () {
             var value = this.$el.find('[name="'+this.name+'"]').val().toString().trim();
             if (value) {
-                value += '%';
                 var data = {
                     type: 'or',
                     value: [
                         {
                             type: 'like',
                             field: this.postalCodeField,
-                            value: value
+                            value: value + '%'
                         },
                         {
                             type: 'like',
                             field: this.streetField,
-                            value: value
+                            value: value + '%'
                         },
                         {
                             type: 'like',
                             field: this.cityField,
-                            value: value
+                            value: value + '%'
                         },
                         {
                             type: 'like',
                             field: this.stateField,
-                            value: value
+                            value: value + '%'
                         },
                             {
                             type: 'like',
                             field: this.countryField,
-                            value: value
+                            value: value + '%'
                         },
                     ],
-                    additionalValue: value
+                    data: {
+                        value: value
+                    }
                 };
                 return data;
             }
             return false;
-        },
+        }
     });
 });
-

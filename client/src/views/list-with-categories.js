@@ -156,8 +156,12 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                 data[nameAttribute] = this.currentCategoryName;
                 return data;
             }
+        },
+
+        actionManageCategories: function () {
+            this.clearView('categories');
+            this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
         }
 
     });
 });
-

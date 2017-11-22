@@ -20,7 +20,7 @@
     <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}</a>
     {{/if}}
     {{#if showEditLink}}
-    <a href="#{{scope}}" class="small pull-right" title="{{translate 'Manage Categories' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>
+    <a href="#{{scope}}" class="small pull-right action" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>
     {{/if}}
 
     <ul class="list-group list-group-tree list-group-no-border">
