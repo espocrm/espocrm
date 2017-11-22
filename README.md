@@ -17,6 +17,10 @@ For more information about server configuration see [this article](https://www.e
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
 
+### Documentation
+
+Documentation for administrators, users and developers is available [here](https://www.espocrm.com/documentation/).
+
 ### How to get started (for developers)
 
 1. Clone repository to your local computer.
