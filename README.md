@@ -13,13 +13,13 @@ Download the latest release from our [website](http://www.espocrm.com).
 
 For more information about server configuration see [this article](https://www.espocrm.com/documentation/administration/server-configuration/).
 
-### How to report bug
-
-Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
-
 ### Documentation
 
 Documentation for administrators, users and developers is available [here](https://www.espocrm.com/documentation/).
+
+### How to report bug
+
+Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
 
 ### How to get started (for developers)
 
