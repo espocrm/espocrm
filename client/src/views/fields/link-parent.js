@@ -40,6 +40,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/link-parent/search',
 
+        listLinkTemplate: 'fields/link-parent/list-link',
+
         nameName: null,
 
         idName: null,
@@ -274,7 +276,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getValueForDisplay: function () {
-            return this.model.get(this.model.get(this.nameName));
+            return this.model.get(this.nameName);
         },
 
         validateRequired: function () {
