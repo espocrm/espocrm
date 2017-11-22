@@ -30,7 +30,7 @@
         },
         "salutationName": {
             "type": "enum",
-            "options": ["", "Mr.", "Mrs.", "Ms.", "Dr."]
+            "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
         },
         "firstName": {
             "type": "varchar",
