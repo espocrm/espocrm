@@ -317,7 +317,13 @@ class MassEmail extends \Espo\Services\Record
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' is not available.");
             }
 
-            if (!$inboundEmail->get('useSmtp') || !$inboundEmail->get('smtpIsForMassEmail')) {
+            if (
+                $inboundEmail->get('status') !== 'Active'
+                ||
+                !$inboundEmail->get('useSmtp')
+                ||
+                !$inboundEmail->get('smtpIsForMassEmail')
+            ) {
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' can't be used for Mass Email.");
             }
 
