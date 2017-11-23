@@ -34,6 +34,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         listTemplate: 'fields/enum/list',
 
+        listLinkTemplate: 'fields/enum/list-link',
+
         detailTemplate: 'fields/enum/detail',
 
         editTemplate: 'fields/enum/edit',
