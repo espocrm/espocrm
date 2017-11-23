@@ -41,6 +41,9 @@ class CampaignTrackingUrl extends \Espo\Core\SelectManagers\Base
     protected function accessOnlyTeam(&$result)
     {
         $teamIdList = $this->user->get('teamsIds');
+        if (empty($result['customWhere'])) {
+            $result['customWhere'] = '';
+        }
         if (empty($teamIdList)) {
             $result['customWhere'] .= " AND campaign.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id);
             return;
