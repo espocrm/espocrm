@@ -87,6 +87,19 @@ class Email extends \Espo\Core\Controllers\Record
                         $data['password'] = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
+            } else if ($data['type'] == 'inboundEmail') {
+                if (!$this->getUser()->isAdmin()) {
+                    throw new Forbidden();
+                }
+                if (!empty($data['id'])) {
+                    $emailAccount = $this->getEntityManager()->getEntity('InboundEmail', $data['id']);
+                    if (!$emailAccount) {
+                        throw new NotFound();
+                    }
+                    if (is_null($data['password'])) {
+                        $data['password'] = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('smtpPassword'));
+                    }
+                }
             } else {
                 if (!$this->getUser()->isAdmin()) {
                     throw new Forbidden();

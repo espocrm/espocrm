@@ -104,8 +104,10 @@ class Email extends Record
         $fromAddress = strtolower($entity->get('from'));
 
         if (empty($fromAddress)) {
-            throw new Error();
+            throw new Error("Can't send with empty from address.");
         }
+
+        $inboundEmail = null;
 
         $smtpParams = null;
         if (in_array($fromAddress, $userAddressList)) {
@@ -113,7 +115,7 @@ class Email extends Record
                 $smtpParams = $this->getPreferences()->getSmtpParams();
             }
             if (!$smtpParams) {
-                $smtpParams = $this->getSmtpParamsFromEmailAccount($entity->get('from'), $this->getUser()->id);
+                $smtpParams = $this->getSmtpParamsFromEmailAccountByAddress($entity->get('from'), $this->getUser()->id);
             }
 
             if ($smtpParams) {
@@ -122,6 +124,15 @@ class Email extends Record
                 }
                 $smtpParams['fromName'] = $this->getUser()->get('name');
                 $emailSender->useSmtp($smtpParams);
+            }
+        } else {
+            $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+            $inboundEmail = $inboundEmailService->findSharedAccountForUser($this->getUser(), $fromAddress);
+            if ($inboundEmail) {
+                $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
+                if ($smtpParams) {
+                    $emailSender->useSmtp($smtpParams);
+                }
             }
         }
 
@@ -163,18 +174,30 @@ class Email extends Record
             throw new Error($e->getMessage(), $e->getCode());
         }
 
-        if ($entity->get('from') && $message) {
-            $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
-                'storeSentEmails' => true,
-                'emailAddress' => $entity->get('from'),
-                'assignedUserId' => $this->getUser()->id
-            ))->findOne();
-            if ($emailAccount) {
-                try {
-                    $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
-                    $emailAccountService->storeSentMessage($emailAccount, $message);
-                } catch (\Exception $e) {
-                    $GLOBALS['log']->error("Could not store sent email (Email Account {$emailAccount->id}): " . $e->getMessage());
+        if ($message) {
+            if ($inboundEmail) {
+                if ($inboundEmail->get('storeSentEmails')) {
+                    try {
+                        $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+                        $inboundEmailService->storeSentMessage($inboundEmail, $message);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Could not store sent email (Group Email Account {$inboundEmail->id}): " . $e->getMessage());
+                    }
+                }
+            } else {
+                $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
+                    'storeSentEmails' => true,
+                    'emailAddress' => $fromAddress,
+                    'assignedUserId' => $this->getUser()->id,
+                    'isActve' => true
+                ))->findOne();
+                if ($emailAccount) {
+                    try {
+                        $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+                        $emailAccountService->storeSentMessage($emailAccount, $message);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Could not store sent email (Email Account {$emailAccount->id}): " . $e->getMessage());
+                    }
                 }
             }
         }
@@ -188,7 +211,7 @@ class Email extends Record
         $this->getEntityManager()->saveEntity($entity);
     }
 
-    protected function getSmtpParamsFromEmailAccount($address, $userId)
+    protected function getSmtpParamsFromEmailAccountByAddress($address, $userId)
     {
         $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
             'emailAddress' => $address,

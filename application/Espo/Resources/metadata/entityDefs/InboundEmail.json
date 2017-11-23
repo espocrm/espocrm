@@ -66,6 +66,51 @@
             "tooltip": true,
             "default": true
         },
+        "sentFolder": {
+            "type": "varchar",
+            "view": "views/inbound-email/fields/folder"
+        },
+        "storeSentEmails": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "useSmtp": {
+            "type": "bool"
+        },
+        "smtpIsShared": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "smtpIsForMassEmail": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "smtpHost": {
+            "type": "varchar",
+            "trim": true
+        },
+        "smtpPort": {
+            "type": "int",
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": false
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "smtpPassword": {
+            "type": "password"
+        },
         "createCase": {
             "type": "bool",
             "tooltip": true
@@ -96,6 +141,9 @@
             "tooltip": true
         },
         "replyFromName": {
+            "type": "varchar"
+        },
+        "fromName": {
             "type": "varchar"
         },
         "createdAt": {

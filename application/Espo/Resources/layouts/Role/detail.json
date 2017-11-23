@@ -12,6 +12,10 @@
             [
                 false,
                 {"name": "portalPermission"}
+            ],
+            [
+                false,
+                {"name": "groupEmailAccountPermission"}
             ]
         ]
     }

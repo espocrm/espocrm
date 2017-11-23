@@ -51,6 +51,72 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
             return false;
         },
 
+        initSmtpFieldsControl: function () {
+            this.controlSmtpFields();
+            this.controlSentFolderField();
+            this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
+            this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpAuthField, this);
+            this.listenTo(this.model, 'change:storeSentEmails', this.controlSentFolderField, this);
+        },
+
+        controlSmtpFields: function () {
+            if (this.model.get('useSmtp')) {
+                this.showField('smtpHost');
+                this.showField('smtpPort');
+                this.showField('smtpAuth');
+                this.showField('smtpSecurity');
+                this.showField('smtpTestSend');
+                this.showField('fromName');
+                this.showField('smtpIsShared');
+                this.showField('smtpIsForMassEmail');
+                this.showField('storeSentEmails');
+
+                this.setFieldRequired('smtpHost');
+                this.setFieldRequired('smtpPort');
+
+                this.controlSmtpAuthField();
+            } else {
+                this.hideField('smtpHost');
+                this.hideField('smtpPort');
+                this.hideField('smtpAuth');
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.hideField('smtpSecurity');
+                this.hideField('smtpTestSend');
+                this.hideField('fromName');
+                this.hideField('smtpIsShared');
+                this.hideField('smtpIsForMassEmail');
+                this.hideField('storeSentEmails');
+                this.hideField('sentFolder');
+
+                this.setFieldNotRequired('smtpHost');
+                this.setFieldNotRequired('smtpPort');
+                this.setFieldNotRequired('smtpUsername');
+            }
+        },
+
+        controlSentFolderField: function () {
+            if (this.model.get('useSmtp') && this.model.get('storeSentEmails')) {
+                this.showField('sentFolder');
+                this.setFieldRequired('sentFolder');
+            } else {
+                this.hideField('sentFolder');
+                this.setFieldNotRequired('sentFolder');
+            }
+        },
+
+        controlSmtpAuthField: function () {
+            if (this.model.get('smtpAuth')) {
+                this.showField('smtpUsername');
+                this.showField('smtpPassword');
+                this.setFieldRequired('smtpUsername');
+            } else {
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.setFieldNotRequired('smtpUsername');
+            }
+        },
+
         controlStatusField: function () {
             var list = ['username', 'port', 'host', 'monitoredFolders'];
             if (this.model.get('status') === 'Active') {
@@ -71,6 +137,8 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
                     this.controlStatusField();
                 }
             }, this);
+
+            this.initSmtpFieldsControl();
 
             var handleRequirement = function (model) {
                 if (model.get('createCase')) {

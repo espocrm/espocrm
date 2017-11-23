@@ -83,7 +83,8 @@
         },
         "assignmentPermission": "all",
         "userPermission": "all",
-        "portalPermission": "no"
+        "portalPermission": "no",
+        "groupEmailAccountPermission": "no"
     },
     "scopeLevelTypesDefaults": {
         "boolean": true,

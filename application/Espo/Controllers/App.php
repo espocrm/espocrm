@@ -49,16 +49,8 @@ class App extends \Espo\Core\Controllers\Base
 
         $userData = $user->getValues();
 
-        $emailAddressList = [];
-        foreach ($user->get('emailAddresses') as $emailAddress) {
-            if ($emailAddress->get('invalid')) continue;
-            if ($user->get('emailAddrses') === $emailAddress->get('name')) continue;
-            $emailAddressList[] = $emailAddress->get('name');
-        }
-        if ($user->get('emailAddrses')) {
-            array_unshift($emailAddressList, $user->get('emailAddrses'));
-        }
-        $userData['emailAddressList'] = $emailAddressList;
+
+        $userData['emailAddressList'] = $this->getEmailAddressList();
 
         $settings = (object)[];
         foreach ($this->getConfig()->get('userItems') as $item) {
@@ -90,5 +82,59 @@ class App extends \Espo\Core\Controllers\Base
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         return $auth->destroyAuthToken($token);
     }
-}
 
+    protected function getEmailAddressList() {
+        $user = $this->getUser();
+
+        $emailAddressList = [];
+        foreach ($user->get('emailAddresses') as $emailAddress) {
+            if ($emailAddress->get('invalid')) continue;
+            if ($user->get('emailAddrses') === $emailAddress->get('name')) continue;
+            $emailAddressList[] = $emailAddress->get('name');
+        }
+        if ($user->get('emailAddrses')) {
+            array_unshift($emailAddressList, $user->get('emailAddrses'));
+        }
+
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $teamIdList = $user->getLinkMultipleIdList('teams');
+        $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
+        if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
+            if ($groupEmailAccountPermission === 'team') {
+                if (count($teamIdList)) {
+                    $selectParams = [
+                        'whereClause' => [
+                            'status' => 'Active',
+                            'useSmtp' => true,
+                            'smtpIsShared' => true,
+                            'teamsMiddle.teamId' => $teamIdList
+                        ],
+                        'joins' => ['teams'],
+                        'distinct' => true
+                    ];
+                    $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
+                    foreach ($inboundEmailList as $inboundEmail) {
+                        if (!$inboundEmail->get('emailAddress')) continue;
+                        $emailAddressList[] = $inboundEmail->get('emailAddress');
+                    }
+                }
+            } else if ($groupEmailAccountPermission === 'all') {
+                $selectParams = [
+                    'whereClause' => [
+                        'status' => 'Active',
+                        'useSmtp' => true,
+                        'smtpIsShared' => true
+                    ]
+                ];
+                $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
+                foreach ($inboundEmailList as $inboundEmail) {
+                    if (!$inboundEmail->get('emailAddress')) continue;
+                    $emailAddressList[] = $inboundEmail->get('emailAddress');
+                }
+            }
+        }
+
+        return $emailAddressList;
+    }
+}

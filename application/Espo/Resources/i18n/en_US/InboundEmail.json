@@ -22,7 +22,19 @@
         "targetUserPosition": "Target User Position",
         "fetchSince": "Fetch Since",
         "addAllTeamUsers": "For all team users",
-        "teams": "Teams"
+        "teams": "Teams",
+        "sentFolder": "Sent Folder",
+        "storeSentEmails": "Store Sent Emails",
+        "useSmtp": "Use SMTP",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpAuth": "SMTP Auth",
+        "smtpSecurity": "SMTP Security",
+        "smtpUsername": "SMTP Username",
+        "smtpPassword": "SMTP Password",
+        "fromName": "From Name",
+        "smtpIsShared": "SMTP Is Shared",
+        "smtpIsForMassEmail": "SMTP Is for Mass Email"
     },
     "tooltips": {
         "reply": "Notify email senders that their emails has been received.\n\n Only one email will be sent to a particular recipient during some period of time to prevent looping.",
@@ -34,7 +46,10 @@
         "teams": "Teams emails will be assigned to.",
         "targetUserPosition": "Users with specified position will be distributed with cases.",
         "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams.",
-        "monitoredFolders": "Multiple folders should be separated by comma."
+        "monitoredFolders": "Multiple folders should be separated by comma.",
+        "smtpIsShared": "If checked then users will be able to send emails using this SMTP. Availability is controlled by Roles through the Group Email Account permission.",
+        "smtpIsForMassEmail": "If checked then SMTP will be available for Mass Email.",
+        "storeSentEmails": "Sent emails will be stored on the IMAP server."
     },
     "links": {
         "filters": "Filters",

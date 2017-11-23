@@ -1,7 +1,7 @@
 [
     {
-        "label":"Main",
-        "rows":[
+        "label": "Main",
+        "rows": [
             [
                 {"name":"emailAddress"},
                 {"name":"status"}
@@ -21,8 +21,8 @@
         ]
     },
     {
-        "label":"IMAP",
-        "rows":[
+        "label": "IMAP",
+        "rows": [
             [
                 {"name":"host"},{"name":"ssl"}
             ],
@@ -32,11 +32,17 @@
             [
                 {"name":"monitoredFolders"},{"name":"password"}
             ],
-            [{"name": "testConnection", "customLabel": null, "view": "InboundEmail.Fields.TestConnection"}, false]
+            [
+                false, {"name":"storeSentEmails"}
+            ],
+            [
+                false, {"name":"sentFolder"}
+            ],
+            [{"name": "testConnection", "customLabel": null, "view": "views/inbound-email/fields/test-connection"}, false]
         ]
     },
     {
-        "label":"Actions",
+        "label": "Actions",
         "rows": [
             [
                 {"name":"createCase"},
@@ -57,6 +63,20 @@
             [
                 {"name":"assignToUser"},
                 false
+            ]
+        ]
+    },
+    {
+        "label": "SMTP",
+        "rows": [
+            [{"name": "useSmtp"}, false],
+            [{"name": "smtpIsShared"}, {"name": "smtpIsForMassEmail"}],
+            [{"name": "smtpHost"}, {"name": "smtpPort"}],
+            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
+            [{"name": "smtpUsername"}, {"name": "fromName"}],
+            [{"name": "smtpPassword"}, false],
+            [
+                {"name": "smtpTestSend", "customLabel": null, "view": "views/inbound-email/fields/test-send"}, false
             ]
         ]
     }

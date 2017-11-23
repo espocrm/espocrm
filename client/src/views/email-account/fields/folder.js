@@ -62,7 +62,7 @@ Espo.define('views/email-account/fields/folder', 'views/fields/base', function (
                         xhr.errorIsHandled = true;
                     },
                 }).done(function (folders) {
-                    this.createView('modal', 'EmailAccount.Modals.SelectFolder', {
+                    this.createView('modal', 'views/email-account/modals/select-folder', {
                         folders: folders
                     }, function (view) {
                         self.notify(false);
