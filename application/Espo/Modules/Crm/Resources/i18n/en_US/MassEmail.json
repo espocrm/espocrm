@@ -13,7 +13,8 @@
         "inboundEmail": "Email Account",
         "targetLists": "Target Lists",
         "excludingTargetLists": "Excluding Target Lists",
-        "optOutEntirely": "Opt-Out Entirely"
+        "optOutEntirely": "Opt-Out Entirely",
+        "smtpAccount": "SMTP Account"
     },
     "links": {
         "targetLists": "Target Lists",
@@ -35,7 +36,10 @@
     },
     "labels": {
         "Create MassEmail": "Create Mass Email",
-        "Send Test": "Send Test"
+        "Send Test": "Send Test",
+        "System SMTP": "System SMTP",
+        "system": "system",
+        "group": "group"
     },
     "messages": {
         "selectAtLeastOneTarget": "Select at least one target.",
@@ -44,7 +48,8 @@
     "tooltips": {
         "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
         "targetLists": "Targets that should receive messages.",
-        "excludingTargetLists": "Targets that should not receive messages."
+        "excludingTargetLists": "Targets that should not receive messages.",
+        "storeSentEmails": "Emails will be stored in CRM."
     },
     "presetFilters": {
         "actual": "Actual",

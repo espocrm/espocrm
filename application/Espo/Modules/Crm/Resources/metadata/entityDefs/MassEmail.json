@@ -12,7 +12,8 @@
         },
         "storeSentEmails": {
             "type": "bool",
-            "default": false
+            "default": false,
+            "tooltip": true
         },
         "optOutEntirely": {
             "type": "bool",
@@ -57,6 +58,11 @@
         },
         "inboundEmail": {
             "type": "link"
+        },
+        "smtpAccount": {
+            "type": "base",
+            "notStorable": true,
+            "view": "crm:views/mass-email/fields/smtp-account"
         },
         "createdAt": {
             "type": "datetime",

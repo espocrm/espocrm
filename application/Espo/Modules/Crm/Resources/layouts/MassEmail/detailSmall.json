@@ -25,6 +25,9 @@
                 {"name": "optOutEntirely"}
             ],
             [
+                {"name": "smtpAccount", "fullWidth": true}
+            ],
+            [
                 {"name": "fromAddress"},
                 {"name": "fromName"}
             ],

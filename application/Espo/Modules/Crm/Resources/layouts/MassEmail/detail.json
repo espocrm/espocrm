@@ -22,6 +22,10 @@
                 {"name": "emailTemplate"}, {"name": "storeSentEmails"}
             ],
             [
+                {"name": "smtpAccount"},
+                false
+            ],
+            [
                 {"name": "fromAddress"},
                 {"name": "fromName"}
             ],

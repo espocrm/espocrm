@@ -68,4 +68,13 @@ class MassEmail extends \Espo\Core\Controllers\Record
         $this->getRecordService()->processSending($massEmail, true);
         return true;
     }
+
+    public function getActionSmtpAccountDataList()
+    {
+        if (!$this->getAcl()->checkScope('MassEmail', 'create') && !$this->getAcl()->checkScope('MassEmail', 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getServiceFactory()->create('MassEmail')->getSmtpAccountDataList();
+    }
 }
