@@ -44,6 +44,27 @@ class CaseObj extends \Espo\Services\Record
         'inboundEmailId'
     ];
 
+    public function beforeCreate(Entity $entity, array $data = array())
+    {
+        parent::beforeCreate($entity, $data);
+
+        if ($this->getUser()->isPortal()) {
+            if (!$entity->has('accountId')) {
+                if ($this->getUser()->get('contactId')) {
+                    $contact = $this->getEntityManager()->getEntity('Contact', $this->getUser()->get('contactId'));
+                    if ($contact && $contact->get('accountId')) {
+                        $entity->set('accountId', $contact->get('accountId'));
+                    }
+                }
+            }
+            if (!$entity->has('contactId')) {
+                if ($this->getUser()->get('contactId')) {
+                    $entity->set('contactId', $this->getUser()->get('contactId'));
+                }
+            }
+        }
+    }
+
     public function afterCreate(Entity $entity, array $data = array())
     {
         parent::afterCreate($entity, $data);
