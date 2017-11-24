@@ -114,6 +114,11 @@ class Email extends Record
         if (in_array($fromAddress, $userAddressList)) {
             if ($primaryUserAddress === $fromAddress) {
                 $smtpParams = $this->getPreferences()->getSmtpParams();
+                if ($smtpParams) {
+                    if (array_key_exists('password', $smtpParams)) {
+                        $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                    }
+                }
             }
             if (!$smtpParams) {
                 $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
