@@ -18,6 +18,18 @@
                 "status": {
                     "read": "yes",
                     "edit": "no"
+                },
+                "account": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "contacts": {
+                    "read": "yes",
+                    "edit": "no"
+                },
+                "contact": {
+                    "read": "yes",
+                    "edit": "no"
                 }
             }
         }
