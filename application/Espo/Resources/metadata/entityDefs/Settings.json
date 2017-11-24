@@ -347,7 +347,7 @@
         },
         "massEmailMaxPerHourCount": {
             "type": "int",
-            "min": 0
+            "min": 1
         },
         "authTokenLifetime": {
             "type": "float",

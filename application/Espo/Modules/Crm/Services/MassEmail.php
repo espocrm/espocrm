@@ -39,7 +39,7 @@ class MassEmail extends \Espo\Services\Record
 {
     const MAX_ATTEMPT_COUNT = 3;
 
-    const MAX_PER_HOUR_COUNT = 100;
+    const MAX_PER_HOUR_COUNT = 10000;
 
     private $campaignService = null;
 
@@ -495,7 +495,8 @@ class MassEmail extends \Espo\Services\Record
 
             $isSent = true;
         } catch (\Exception $e) {
-            if ($queueItem->get('attemptCount') >= self::MAX_ATTEMPT_COUNT) {
+            $maxAttemptCount = $this->getConfig()->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
+            if ($queueItem->get('attemptCount') >= $maxAttemptCount) {
                 $queueItem->set('status', 'Failed');
             } else {
                 $queueItem->set('status', 'Pending');
