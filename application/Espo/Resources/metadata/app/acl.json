@@ -80,9 +80,29 @@
         "scopeLevel": {
         },
         "fieldLevel": {
-        },
+        }
+    },
+    "valuePermissionList": [
+        "assignmentPermission",
+        "userPermission",
+        "portalPermission",
+        "groupEmailAccountPermission"
+    ],
+    "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
         "userPermission": "all",
+        "portalPermission": "yes",
+        "groupEmailAccountPermission": "all"
+    },
+    "permissionsDefaults": {
+        "assignmentPermission": "all",
+        "userPermission": "all",
+        "portalPermission": "no",
+        "groupEmailAccountPermission": "no"
+    },
+    "permissionsStrictDefaults": {
+        "assignmentPermission": "no",
+        "userPermission": "no",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no"
     },

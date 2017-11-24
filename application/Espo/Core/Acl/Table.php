@@ -59,14 +59,9 @@ class Table
 
     protected $fieldLevelList = ['yes', 'no'];
 
-    protected $valuePermissionList = ['assignmentPermission', 'userPermission', 'portalPermission', 'groupEmailAccountPermission'];
+    protected $valuePermissionHighestLevels = array();
 
-    protected $valuePermissionHighestLevels = array(
-        'assignmentPermission' => 'all',
-        'userPermission' => 'all',
-        'portalPermission' => 'yes',
-        'groupEmailAccountPermission' => 'all'
-    );
+    protected $valuePermissionList = [];
 
     private $fileManager;
 
@@ -105,7 +100,8 @@ class Table
         if ($fileManager) {
             $this->fileManager = $fileManager;
         }
-        $this->valuePermissionList = $this->metadata->get('app.' . $this->type . '.defs.valuePermissionList', $this->valuePermissionList);
+        $this->valuePermissionList = $this->metadata->get(['app', $this->type, 'valuePermissionList'], []);
+        $this->valuePermissionHighestLevels = $this->metadata->get(['app', $this->type, 'valuePermissionHighestLevels'], array());
 
         $this->initCacheFilePath();
 
@@ -242,8 +238,12 @@ class Table
         $this->fillFieldTableQuickAccess();
 
         if (!$this->getUser()->isAdmin()) {
+            $permissionsDefaultsGroupName = 'permissionsDefaults';
+            if ($this->isStrictMode) {
+                $permissionsDefaultsGroupName = 'permissionsStrictDefaults';
+            }
             foreach ($this->valuePermissionList as $permission) {
-                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get('app.'.$this->type.'.default.' . $permission, 'yes'));
+                $this->data->$permission = $this->mergeValueList($valuePermissionLists->$permission, $this->metadata->get(['app', $this->type, $permissionsDefaultsGroupName, $permission, 'yes']));
                 if ($this->metadata->get('app.'.$this->type.'.mandatory.' . $permission)) {
                     $this->data->$permission = $this->metadata->get('app.'.$this->type.'.mandatory.' . $permission);
                 }

@@ -1,22 +1,12 @@
 <div class="row">
-	<div class="cell cell-assignment-permission col-sm-4 form-group">
-		<label class="control-label">{{translate 'assignmentPermission' category="fields" scope="Role"}}</label>
-		<div class="field">
-			{{translateOption assignmentPermission scope="Role" field="assignmentPermission" translatedOptions=levelListTranslation}}
-		</div>
-	</div>
-    <div class="cell cell-user-permission col-sm-4 form-group">
-        <label class="control-label">{{translate 'userPermission' category="fields" scope="Role"}}</label>
-        <div class="field">
-            {{translateOption userPermission scope="Role" field="userPermission" translatedOptions=levelListTranslation}}
+    {{#each valuePermissionDataList}}
+        <div class="cell col-sm-3 form-group" data-name="{{name}}">
+            <label class="control-label" data-name="{{name}}">{{translate name category="fields" scope="Role"}}</label>
+            <div class="field" data-name="{{name}}">
+                {{translateOption value scope="Role" field="assignmentPermission" translatedOptions=levelListTranslation}}
+            </div>
         </div>
-    </div>
-    <div class="cell cell-user-permission col-sm-4 form-group">
-        <label class="control-label">{{translate 'portalPermission' category="fields" scope="Role"}}</label>
-        <div class="field">
-            {{translateOption portalPermission scope="Role" field="portalPermission" translatedOptions=levelListTranslation}}
-        </div>
-    </div>
+    {{/each}}
 </div>
 
 <div class="user-access-table">{{{table}}}</div>

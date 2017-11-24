@@ -40,11 +40,21 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
 
         data: function () {
             return {
-                assignmentPermission: this.options.aclData.assignmentPermission,
-                userPermission: this.options.aclData.userPermission,
-                portalPermission: this.options.aclData.portalPermission,
+                valuePermissionDataList: this.getValuePermissionList(),
                 levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {}
             };
+        },
+
+        getValuePermissionList: function () {
+            var list = this.getMetadata().get(['app', 'acl', 'valuePermissionList'], []);
+            var dataList = [];
+            list.forEach(function (item) {
+                var o = {};
+                o.name = item;
+                o.value = this.options.aclData[item];
+                dataList.push(o);
+            }, this);
+            return dataList;
         },
 
         setup: function () {

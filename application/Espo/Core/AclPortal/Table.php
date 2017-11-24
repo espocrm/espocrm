@@ -50,8 +50,6 @@ class Table extends \Espo\Core\Acl\Table
 
     protected $levelList = ['yes', 'all', 'account', 'contact', 'own', 'no'];
 
-    protected $valuePermissionList = [];
-
     public function __construct(User $user, Portal $portal, Config $config = null, FileManager $fileManager = null, Metadata $metadata = null, FieldManagerUtil $fieldManager = null)
     {
         if (empty($portal)) {
