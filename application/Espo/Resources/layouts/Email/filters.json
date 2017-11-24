@@ -13,6 +13,9 @@
     "users",
     "createdAt",
     "hasAttachment",
+    "name",
+    "body",
+    "bodyPlain",
     "inboundEmails",
     "emailAccounts"
 ]

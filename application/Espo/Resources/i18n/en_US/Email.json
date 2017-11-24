@@ -12,6 +12,7 @@
         "replyToString": "Reply To (String)",
         "isHtml": "Is Html",
         "body": "Body",
+        "bodyPlain": "Body (Plain)",
         "subject": "Subject",
         "attachments": "Attachments",
         "selectTemplate": "Select Template",
