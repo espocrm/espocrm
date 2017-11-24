@@ -158,14 +158,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             } else {
                 if (minValue !== null) {
                     if (value < minValue) {
-                        var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                        var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
                                                                                  .replace('{value}', minValue);
                         this.showValidationMessage(msg);
                         return true;
                     }
                 } else if (maxValue !== null) {
                     if (value > maxValue) {
-                        var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                        var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
                                                                                     .replace('{value}', maxValue);
                         this.showValidationMessage(msg);
                         return true;
