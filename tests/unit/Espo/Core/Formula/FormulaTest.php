@@ -1236,6 +1236,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(0, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\year",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-12-31 23:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(2018, $actual);
     }
 
     function testDatetimeMonth()
@@ -1267,6 +1285,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(10, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\month",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-11-30 23:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(12, $actual);
     }
 
     function testDatetimeDate()
@@ -1298,6 +1334,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(20, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\date",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-02 23:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(3, $actual);
     }
 
     function testDatetimeHour()
@@ -1329,6 +1383,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(0, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\hour",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-11-02 14:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(16, $actual);
     }
 
     function testDatetimeMinute()
@@ -1360,6 +1432,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(0, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\minute",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-10-02 14:05"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(5, $actual);
     }
 
     function testDatetimeDayOfWeek()
@@ -1419,6 +1509,24 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item);
         $this->assertEquals(5, $actual);
+
+        $item = json_decode('
+            {
+                "type": "datetime\\\\dayOfWeek",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2017-05-05 23:15"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Europe/Kiev"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item);
+        $this->assertEquals(6, $actual);
     }
 
     function testDatetimeDiff()
