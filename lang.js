@@ -206,6 +206,7 @@ Lang.prototype.run = function () {
 
                     var targetValue = item.stringTranslated;
                     if (targetValue === '') {
+                        return;
                         targetValue = item.stringOriginal;
                     }
                     if (isArray) {
