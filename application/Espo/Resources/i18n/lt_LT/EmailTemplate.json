@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "isHtml": "Html formatas",
+    "body": "Laiško tekstas",
+    "subject": "Tema",
+    "attachments": "Prisegtukai"
+  },
+  "labels": {
+    "Create EmailTemplate": "Sukurti el. pašto laiško šabloną"
+  }
+}

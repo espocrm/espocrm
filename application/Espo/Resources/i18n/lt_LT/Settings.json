@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "useCache": "Naudoti talpyklą",
+    "dateFormat": "Datos formatas",
+    "timeFormat": "Laiko formatas",
+    "timeZone": "Laiko zona",
+    "weekStart": "Pirma savaitės diena",
+    "thousandSeparator": "Tūkstančių atskyriklis",
+    "decimalMark": "Dešimtainis ženklas",
+    "defaultCurrency": "Pagrindinė valiuta",
+    "currencyList": "Valiutų sąrašas",
+    "language": "Kalba",
+    "companyLogo": "įmonės logotipas",
+    "smtpServer": "Serveris",
+    "smtpPort": "Port",
+    "ldapPort": "Port",
+    "smtpAuth": "Auth",
+    "ldapAuth": "Auth",
+    "smtpSecurity": "Sauga",
+    "ldapSecurity": "Sauga",
+    "smtpUsername": "Vartotojo vardas",
+    "emailAddress": "El. paštas",
+    "smtpPassword": "Slaptažodis",
+    "ldapPassword": "Slaptažodis",
+    "outboundEmailFromName": "Nuo vardo",
+    "outboundEmailFromAddress": "Nuo adreso",
+    "outboundEmailIsShared": "Yra pasidalinta",
+    "recordsPerPage": "Įrašai puslapyje",
+    "recordsPerPageSmall": "Įrašai puslapyje(mažas)",
+    "tabList": "Tabų sąrašas",
+    "quickCreateList": "Greitai sukurti sąrašą",
+    "exportDelimiter": "Eksporto delimiteris",
+    "authenticationMethod": "Autentifikavimo metodas",
+    "ldapHost": "Hostas",
+    "ldapAccountCanonicalForm": "Paskyros kanoninė forma",
+    "ldapAccountDomainName": "Paskytos domeno vardas",
+    "ldapTryUsernameSplit": "Pabandykite atskirti vartotojo vardą",
+    "ldapCreateEspoUser": "Sukurti vartotoją programoje EspoCRM",
+    "ldapUserLoginFilter": "Vartotojo prisijungimo filtras",
+    "ldapAccountDomainNameShort": "Trumpas paskyros domeno vardas",
+    "ldapOptReferrals": "Opt Referrals",
+    "exportDisabled": "Išjungti eksportavimą (leidžiama tik admionistratoriui)"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Sekmadienis",
+      "1": "Pirmadienis"
+    }
+  },
+  "labels": {
+    "System": "Sistema",
+    "Locale": "Locale",
+    "SMTP": "SMTP",
+    "Configuration": "Konfigūravimas",
+    "Test Connection": "Patikrinti ryšį",
+    "Activities": "Veikla"
+  }
+}

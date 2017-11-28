@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "from": "Nuo",
+    "to": "Kam",
+    "subject": "Tema",
+    "action": "Veiksmas"
+  },
+  "labels": {
+    "Emails": "El. laiška"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "parent": "Pagrindinis",
+    "status": "Statusas",
+    "dateSent": "Išsiuntimo data",
+    "from": "Nuo",
+    "to": "Kam",
+    "cc": "CC",
+    "bcc": "BCC",
+    "isHtml": "Html formatas",
+    "body": "Laiško tekstas",
+    "subject": "Tema",
+    "attachments": "Prisegtukai",
+    "selectTemplate": "Pasirinkti šabloną",
+    "fromEmailAddress": "Nuo adreso",
+    "toEmailAddresses": "Adresui",
+    "emailAddress": "El. pašto adresas",
+    "account": "Įmonė",
+    "users": "Vartotojai"
+  },
+  "options": {
+    "status": {
+      "Draft": "Juodraštis",
+      "Sending": "Siunčiama",
+      "Sent": "Išsiųsta",
+      "Archived": "Suarchyvuota"
+    }
+  },
+  "labels": {
+    "Create Email": "Suarchyvuoti laiškai",
+    "Archive Email": "Suarchyvuoti laiškai",
+    "Compose": "Rašyti",
+    "Reply": "Atsakyti",
+    "Email Templates": "El. laiškų šabonai",
+    "Email Address": "El. pašto adresas",
+    "Sending...": "Siunčiama..."
+  },
+  "presetFilters": {
+    "sent": "Išsiųsta",
+    "archived": "Suarchyvuota"
+  }
+}

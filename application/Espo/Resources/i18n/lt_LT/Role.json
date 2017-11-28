@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "roles": "Rolės"
+  },
+  "links": {
+    "users": "Vartotojai",
+    "teams": "Komandos"
+  },
+  "labels": {
+    "Access": "Prieiga",
+    "Create Role": "Sukurti rolę"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "Nenustatyta",
+      "enabled": "įjungta",
+      "disabled": "išjumgta"
+    },
+    "levelList": {
+      "all": "visi",
+      "team": "komanda",
+      "own": "mano",
+      "no": "ne",
+      "not-set": "Nenustatyta"
+    }
+  },
+  "actions": {
+    "read": "Skaityti",
+    "edit": "Taidyti",
+    "delete": "Ištrinti",
+    "stream": "Srautas",
+    "create": "Sukurti"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "description": "Aprašymas",
+    "status": "Statusas",
+    "type": "Tipas",
+    "sentCount": "Išsiųsta",
+    "optedOutCount": "Pasirinkta"
+  },
+  "links": {
+    "accounts": "Įmonės",
+    "contacts": "Kontaktai",
+    "leads": "Potencialūs klientai",
+    "opportunities": "Galimybės",
+    "campaignLogRecords": "Log"
+  },
+  "options": {
+    "type": {
+      "Email": "El. paštas"
+    },
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  },
+  "labels": {
+    "Email Templates": "El. laiškų šabonai"
+  },
+  "presetFilters": {
+    "active": "Aktyvus"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "title": "Pavadinimas",
+    "dateFrom": "Data nuo",
+    "dateTo": "Data iki",
+    "autorefreshInterval": "Automatinio atnaujinimo intervalas",
+    "displayRecords": "Rodyti įrašus",
+    "users": "Vartotojai",
+    "expandedLayout": "Išdėstymas"
+  },
+  "options": {
+    "mode": {
+      "basicWeek": "Savaitė",
+      "month": "Mėnuo",
+      "basicDay": "Diena"
+    }
+  }
+}

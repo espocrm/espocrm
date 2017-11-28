@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "roles": "Rolės"
+  },
+  "links": {
+    "users": "Vartotojai",
+    "roles": "Rolės"
+  },
+  "labels": {
+    "Create Team": "Sukurti komandą"
+  }
+}

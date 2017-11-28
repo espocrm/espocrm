@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Run Import": "Vykdyti importavimą",
+    "Back": "Atgal",
+    "Add Field": "Pridėti laukelį",
+    "Created": "Sukurta",
+    "Field": "Laukelis",
+    "Date Format": "Datos formatas",
+    "Decimal Mark": "Dešimtainis ženklas",
+    "Time Format": "Laiko formatas",
+    "Currency": "Valiuta",
+    "Next": "Kitas"
+  },
+  "fields": {
+    "file": "Failas",
+    "status": "Statusas"
+  },
+  "options": {
+    "status": {
+      "In Process": "Vyksta"
+    }
+  }
+}

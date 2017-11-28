@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "parent": "Pagrindinis",
+    "status": "Statusas",
+    "dateStart": "Pradžios data",
+    "dateEnd": "Terminas",
+    "priority": "Prioritetas",
+    "description": "Aprašymas",
+    "isOverdue": "Vėluoja",
+    "account": "Įmonė",
+    "attachments": "Prisegtukai"
+  },
+  "links": {
+    "attachments": "Prisegtukai"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Nepradėta",
+      "Started": "Started",
+      "Completed": "Užbaigta",
+      "Canceled": "Atšaukta"
+    },
+    "priority": {
+      "Low": "Žemas",
+      "Normal": "Normalus",
+      "High": "Aukštas",
+      "Urgent": "Skubu"
+    }
+  },
+  "labels": {
+    "Create Task": "Sukurti užduotį"
+  },
+  "presetFilters": {
+    "completed": "Užbaigta",
+    "todays": "Šiandienos",
+    "overdue": "Vėluoja"
+  }
+}

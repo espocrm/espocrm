@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "emailAddress": "El. pašto adresas",
+    "status": "Statusas",
+    "assignToUser": "Priskirti darbuotojui",
+    "host": "Hostas",
+    "username": "Vartotojo vardas",
+    "password": "Slaptažodis",
+    "port": "Port",
+    "monitoredFolders": "Stebimi aplankai",
+    "trashFolder": "Trinti aplanką",
+    "ssl": "SSL",
+    "createCase": "Sukurti atvejį",
+    "caseDistribution": "Case Distribution",
+    "replyEmailTemplate": "Atsakymo el. pašto šablonas",
+    "replyFromAddress": "Atsakyti nuo adreso",
+    "replyFromName": "Atsakyti nuo vardo",
+    "teams": "Komandos",
+    "fromName": "Nuo vardo"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    },
+    "caseDistribution": {
+      "": "Joks",
+      "Direct-Assignment": "Tiesioginis priskyrimas",
+      "Round-Robin": "Round-Robin",
+      "Least-Busy": "mažiausiai-užimta"
+    }
+  },
+  "labels": {
+    "IMAP": "IMAP",
+    "Actions": "Veiksmai",
+    "Main": "Pagrindinis"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio"
+  },
+  "links": {
+    "emails": "El. laiška"
+  }
+}

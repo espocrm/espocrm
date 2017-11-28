@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "link": "Nuoroda",
+    "style": "Stilius"
+  },
+  "options": {
+    "style": {
+      "default": "Numatytas",
+      "primary": "Pirminis"
+    }
+  }
+}

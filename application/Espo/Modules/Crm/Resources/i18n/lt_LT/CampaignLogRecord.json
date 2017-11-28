@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "action": "Veiksmas",
+    "actionDate": "Data",
+    "data": "Duomenys",
+    "campaign": "Kampanija",
+    "parent": "Tikslas"
+  },
+  "links": {
+    "parent": "Pagrindinis",
+    "campaign": "Kampanija"
+  },
+  "options": {
+    "action": {
+      "Sent": "Išsiųsta",
+      "Opted Out": "Pasirinkta"
+    }
+  },
+  "labels": {
+    "All": "Visi"
+  },
+  "presetFilters": {
+    "sent": "Išsiųsta",
+    "optedOut": "Pasirinkta"
+  }
+}

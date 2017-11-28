@@ -1,0 +1,13 @@
+{
+  "modes": {
+    "month": "Mėnuo",
+    "week": "Savaitė",
+    "agendaWeek": "Savaitė",
+    "day": "Diena",
+    "agendaDay": "Diena"
+  },
+  "labels": {
+    "Today": "Šiandien",
+    "Create": "Sukurti"
+  }
+}

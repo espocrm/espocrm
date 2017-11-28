@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "job": "Darbas"
+  },
+  "links": {
+    "log": "Log"
+  },
+  "labels": {
+    "Create ScheduledJob": "Sukurkite numatytą darbą"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Išvalytis"
+    },
+    "cronSetup": {
+      "linux": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",
+      "mac": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",
+      "windows": "Pastaba: sukurkite paketinį failą šiomis komandomis, kad paleistumėte \"Espo\" darbus pagal grafiką, naudojant \"Windows\" numatytus uždavinius:",
+      "default": "Pastaba: pridėkite šią komandą į Cron Job (suplanuotą užduotį):"
+    },
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  }
+}

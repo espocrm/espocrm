@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "emailAddress": "El. paštas",
+    "title": "Pavadinimas",
+    "accountRole": "Pavadinimas",
+    "account": "Įmonė",
+    "accounts": "Įmonės",
+    "phoneNumber": "Telefonas",
+    "accountType": "Įmonės tipas",
+    "doNotCall": "Neskambinti",
+    "address": "Adresas",
+    "opportunityRole": "Galimybės rolė",
+    "description": "Aprašymas",
+    "campaign": "Kampanija"
+  },
+  "links": {
+    "opportunities": "Galimybės",
+    "cases": "Atvejai",
+    "campaign": "Kampanija",
+    "accounts": "Įmonės"
+  },
+  "labels": {
+    "Create Contact": "Sukurti kontaktą"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Nėra--",
+      "Decision Maker": "Sprendimus priimantis žmogus",
+      "Evaluator": "Vertintojas",
+      "Influencer": "Darantis įtaką"
+    }
+  },
+  "presetFilters": {
+    "accountActive": "Aktyvus"
+  }
+}

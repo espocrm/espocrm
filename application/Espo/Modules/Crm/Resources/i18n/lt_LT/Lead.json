@@ -1,0 +1,58 @@
+{
+  "labels": {
+    "Converted To": "Konvertuota į",
+    "Create Lead": "Sukurti potencialų klientą",
+    "Convert": "Konvertuoti"
+  },
+  "fields": {
+    "name": "Vardas",
+    "emailAddress": "El. paštas",
+    "title": "Pavadinimas",
+    "website": "Interntinė Svetainė",
+    "phoneNumber": "Telefonas",
+    "accountName": "Įmonės pavadinimas",
+    "doNotCall": "Neskambinti",
+    "address": "Adresas",
+    "status": "Statusas",
+    "source": "Šaltinis",
+    "opportunityAmount": "Pardavimo galimybės suma",
+    "description": "Aprašymas",
+    "createdAccount": "Įmonė",
+    "createdContact": "Kontaktas",
+    "createdOpportunity": "Galimybė",
+    "campaign": "Kampanija",
+    "industry": "Pramonės šaka"
+  },
+  "links": {
+    "campaign": "Kampanija",
+    "createdAccount": "Įmonė",
+    "createdContact": "Kontaktas",
+    "createdOpportunity": "Galimybė",
+    "cases": "Atvejai"
+  },
+  "options": {
+    "status": {
+      "New": "Naujas",
+      "Assigned": "Priskirta",
+      "In Process": "Vyksta",
+      "Converted": "Konvertuota",
+      "Recycled": "Ištrinta",
+      "Dead": "Numarintas"
+    },
+    "source": {
+      "": "Joks",
+      "Call": "Skambutis",
+      "Email": "El. paštas",
+      "Existing Customer": "Egzistuojantis klientas",
+      "Partner": "Partneris",
+      "Public Relations": "Viešieji ryšiai",
+      "Web Site": "Internetinė svetainė",
+      "Campaign": "Kampanija",
+      "Other": "Kiti"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktyvus",
+    "converted": "Konvertuota"
+  }
+}

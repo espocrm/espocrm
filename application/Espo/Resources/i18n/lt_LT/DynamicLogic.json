@@ -1,0 +1,13 @@
+{
+  "label": {
+    "Field": "Laukelis"
+  },
+  "options": {
+    "operators": {
+      "equals": "Lygu",
+      "notEquals": "Nelygu",
+      "greaterThan": "Daugiau nei",
+      "lessThan": "Mažiau nei"
+    }
+  }
+}

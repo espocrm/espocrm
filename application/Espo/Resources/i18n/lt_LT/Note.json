@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "post": "Paskelbti",
+    "attachments": "Prisegtukai",
+    "targetType": "Tikslas",
+    "teams": "Komandos",
+    "users": "Vartotojai",
+    "type": "Tipas",
+    "data": "Duomenys",
+    "number": "Numeris"
+  },
+  "filters": {
+    "all": "Visi"
+  }
+}

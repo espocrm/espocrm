@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "parent": "Pagrindinis",
+    "dateStart": "Pradžios data",
+    "dateEnd": "Pabaigos data",
+    "duration": "Trukmė",
+    "status": "Statusas"
+  },
+  "links": {
+    "parent": "Pagrindinis"
+  },
+  "options": {
+    "status": {
+      "Planned": "Suplanuota",
+      "Held": "Įvykdyta",
+      "Not Held": "Neįvykdyta"
+    }
+  },
+  "labels": {
+    "Set Held": "Pažymėti kaip įvykdytą",
+    "Set Not Held": "Pažymėti kaip neįvykdytą"
+  },
+  "massActions": {
+    "setHeld": "Pažymėti kaip įvykdytą",
+    "setNotHeld": "Pažymėti kaip neįvykdytą"
+  },
+  "presetFilters": {
+    "planned": "Suplanuota",
+    "held": "Įvykdyta",
+    "todays": "Šiandienos"
+  }
+}

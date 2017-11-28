@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "parent": "Pagrindinis",
+    "status": "Statusas",
+    "dateStart": "Pradžios data",
+    "dateEnd": "Pabaigos data",
+    "duration": "Trukmė",
+    "description": "Aprašymas",
+    "users": "Vartotojai",
+    "contacts": "Kontaktai",
+    "leads": "Potencialūs klientai",
+    "account": "Įmonė"
+  },
+  "options": {
+    "status": {
+      "Planned": "Suplanuota",
+      "Held": "Įvykdyta",
+      "Not Held": "Neįvykdyta"
+    },
+    "acceptanceStatus": {
+      "None": "Joks"
+    }
+  },
+  "massActions": {
+    "setHeld": "Pažymėti kaip įvykdytą",
+    "setNotHeld": "Pažymėti kaip neįvykdytą"
+  },
+  "labels": {
+    "Create Meeting": "Sukurti susitikimą",
+    "Set Held": "Pažymėti kaip įvykdytą",
+    "Set Not Held": "Pažymėti kaip neįvykdytą",
+    "Send Invitations": "Siųsti pakvietimus"
+  },
+  "presetFilters": {
+    "planned": "Suplanuota",
+    "held": "Įvykdyta",
+    "todays": "Šiandienos"
+  }
+}

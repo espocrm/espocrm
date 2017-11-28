@@ -1,0 +1,91 @@
+{
+  "links": {
+    "parent": "Pagrindinis",
+    "contacts": "Kontaktai",
+    "opportunities": "Galimybės",
+    "leads": "Potencialūs klientai",
+    "meetings": "Susirinkimai",
+    "calls": "Skambučiai",
+    "tasks": "Užduotys",
+    "emails": "El. laiška",
+    "accounts": "Įmonės",
+    "cases": "Atvejai",
+    "account": "Įmonė",
+    "opportunity": "Galimybė",
+    "contact": "Kontaktas"
+  },
+  "scopeNames": {
+    "Account": "Įmonė",
+    "Contact": "Kontaktas",
+    "Lead": "Potencialus klientas",
+    "Target": "Tikslas",
+    "Opportunity": "Galimybė",
+    "Meeting": "Susirinkimas",
+    "Calendar": "Kalendorius",
+    "Call": "Skambutis",
+    "Task": "Užduotis",
+    "Case": "Atvejis",
+    "Campaign": "Kampanija",
+    "Activities": "Veikla"
+  },
+  "scopeNamesPlural": {
+    "Account": "Įmonės",
+    "Contact": "Kontaktai",
+    "Lead": "Potencialūs klientai",
+    "Target": "Tikslai",
+    "Opportunity": "Galimybės",
+    "Meeting": "Susirinkimai",
+    "Calendar": "Kalendorius",
+    "Call": "Skambučiai",
+    "Task": "Užduotys",
+    "Case": "Atvejai",
+    "Activities": "Veikla"
+  },
+  "dashlets": {
+    "Leads": "Mano potencialūs klientai",
+    "Opportunities": "Mano galimybės",
+    "Tasks": "Mano užduotys",
+    "Cases": "Mano atvejai",
+    "Calendar": "Kalendorius",
+    "OpportunitiesByStage": "Galimybės pagal etapą",
+    "OpportunitiesByLeadSource": "Galimybės pagal potencialaus kliento šaltinį",
+    "SalesByMonth": "Pardavimai pagal mėnesį",
+    "SalesPipeline": "Pardavimų planas"
+  },
+  "labels": {
+    "Create InboundEmail": "Sukurti gaunamą el. laišką",
+    "Activities": "Veikla",
+    "History": "Istorija",
+    "Attendees": "Dalyviai",
+    "Schedule Meeting": "Suplanuotas susitikimas",
+    "Schedule Call": "Suplnanuotas skambutis",
+    "Compose Email": "Rašyti laišką",
+    "Log Meeting": "Susitikimo eiga",
+    "Log Call": "Skambučio eiga",
+    "Archive Email": "Suarchyvuoti laiškai",
+    "Create Task": "Sukurti užduotį",
+    "Tasks": "Užduotys"
+  },
+  "fields": {
+    "billingAddressCity": "Miestas",
+    "addressCity": "Miestas",
+    "billingAddressCountry": "Šalis",
+    "addressCountry": "Šalis",
+    "billingAddressPostalCode": "Pašto kodas",
+    "addressPostalCode": "Pašto kodas",
+    "billingAddressState": "Rajonas/regionas",
+    "addressState": "Rajonas/regionas",
+    "billingAddressStreet": "Gatvė",
+    "addressStreet": "Gatvė",
+    "shippingAddressCity": "Miestas(Pristatymo)",
+    "shippingAddressStreet": "Gatvė (Pristatymo)",
+    "shippingAddressCountry": "Šalis (Pristatymo)",
+    "shippingAddressState": "Raj./regionas (Pristatymo)",
+    "shippingAddressPostalCode": "Pašto kodas(Pristatymo)"
+  },
+  "options": {
+    "reminderTypes": {
+      "Email": "El. paštas"
+    }
+  }
+}

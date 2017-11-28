@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "status": "Statusas",
+    "scheduledJob": "Suplanuoti darbai",
+    "data": "Duomenys"
+  },
+  "options": {
+    "status": {
+      "Pending": "Vykdoma"
+    }
+  }
+}

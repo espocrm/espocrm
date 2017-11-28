@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Relationships": "Sąsajos",
+    "Log": "Log"
+  },
+  "fields": {
+    "name": "Vardas",
+    "type": "Tipas",
+    "stream": "Srautas",
+    "label": "Etiketė",
+    "link": "Nuoroda",
+    "disabled": "Išjungtas"
+  },
+  "options": {
+    "type": {
+      "": "Joks",
+      "Person": "Asmuo"
+    }
+  }
+}

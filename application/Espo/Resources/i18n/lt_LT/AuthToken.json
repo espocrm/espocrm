@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "user": "Vartotojas",
+    "ipAddress": "IP Adresss",
+    "lastAccess": "Paskutinio prisijungimo data",
+    "createdAt": "Prisijungimo data"
+  },
+  "presetFilters": {
+    "active": "Aktyvus",
+    "inactive": "Neaktyvus"
+  }
+}

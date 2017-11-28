@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "number": "Numeris",
+    "status": "Statusas",
+    "account": "Įmonė",
+    "contact": "Kontaktas",
+    "contacts": "Kontaktai",
+    "priority": "Prioritetas",
+    "type": "Tipas",
+    "description": "Aprašymas",
+    "inboundEmail": "Gaunami el. laiškai",
+    "lead": "Potencialus klientas",
+    "attachments": "Prisegtukai"
+  },
+  "links": {
+    "inboundEmail": "Gaunami el. laiškai",
+    "account": "Įmonė",
+    "Contacts": "Kontaktai",
+    "meetings": "Susirinkimai",
+    "calls": "Skambučiai",
+    "tasks": "Užduotys",
+    "emails": "El. laiška",
+    "lead": "Potencialus klientas",
+    "attachments": "Prisegtukai"
+  },
+  "options": {
+    "status": {
+      "New": "Naujas",
+      "Assigned": "Priskirta",
+      "Pending": "Vykdoma",
+      "Closed": "Uždaryta",
+      "Rejected": "Atmesta",
+      "Duplicate": "Dublikatas"
+    },
+    "priority": {
+      "Low": "Žemas",
+      "Normal": "Normalus",
+      "High": "Aukštas",
+      "Urgent": "Skubu"
+    },
+    "type": {
+      "Question": "Klausimas",
+      "Incident": "Incidentas",
+      "Problem": "Problema"
+    }
+  },
+  "labels": {
+    "Create Case": "Sukurti atvejį",
+    "Close": "Uždaryti",
+    "Closed": "Uždaryta",
+    "Rejected": "Atmesta"
+  },
+  "presetFilters": {
+    "open": "Atidaryti",
+    "closed": "Uždaryta"
+  }
+}

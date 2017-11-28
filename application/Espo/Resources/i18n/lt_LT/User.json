@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "userName": "Vartotojo vardas",
+    "title": "Pavadinimas",
+    "isAdmin": "Yra Adminas",
+    "defaultTeam": "Pagrindinė komanda",
+    "emailAddress": "El. paštas",
+    "phoneNumber": "Telefonas",
+    "roles": "Rolės",
+    "password": "Slaptažodis",
+    "passwordConfirm": "Patvirtinti slaptažodį",
+    "newPassword": "Naujas slaptažodis",
+    "contact": "Kontaktas",
+    "accounts": "Įmonės",
+    "ipAddress": "IP Adresss"
+  },
+  "links": {
+    "teams": "Komandos",
+    "roles": "Rolės",
+    "contact": "Kontaktas",
+    "accounts": "Įmonės",
+    "tasks": "Užduotys"
+  },
+  "labels": {
+    "Create User": "Sukurti vartotoją",
+    "Generate": "Generuoti",
+    "Access": "Prieiga",
+    "Preferences": "Nustatymai",
+    "Change Password": "Pakeisti slaptažodį",
+    "Email Address": "El. pašto adresas"
+  },
+  "messages": {
+    "passwordWillBeSent": "Slaptažodis bus išsiųstas vartotojo el. pašto adresu.",
+    "passwordChanged": "Slpatažodis buvo pakeistas",
+    "wrongUsernamePasword": "Neteisingas prisijungimo vardas/slaptažodis"
+  },
+  "presetFilters": {
+    "active": "Aktyvus"
+  }
+}

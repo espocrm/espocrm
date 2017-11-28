@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "description": "Aprašymas"
+  },
+  "links": {
+    "accounts": "Įmonės",
+    "contacts": "Kontaktai",
+    "leads": "Potencialūs klientai"
+  },
+  "options": {
+    "type": {
+      "Email": "El. paštas"
+    }
+  },
+  "labels": {
+    "Opted Out": "Pasirinkta"
+  }
+}

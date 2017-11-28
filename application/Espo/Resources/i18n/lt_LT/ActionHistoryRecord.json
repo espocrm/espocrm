@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "user": "Vartotojas",
+    "action": "Veiksmas",
+    "createdAt": "Data",
+    "target": "Tikslas",
+    "ipAddress": "IP Adresss"
+  },
+  "links": {
+    "user": "Vartotojas",
+    "target": "Tikslas"
+  },
+  "presetFilters": {
+    "onlyMy": "Tik mano"
+  },
+  "options": {
+    "action": {
+      "read": "Skaityti",
+      "update": "Atnaujinti",
+      "delete": "Ištrinti",
+      "create": "Sukurti"
+    }
+  }
+}

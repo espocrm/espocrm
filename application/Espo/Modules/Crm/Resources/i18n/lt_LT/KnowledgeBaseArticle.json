@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "type": "Tipas",
+    "attachments": "Prisegtukai",
+    "description": "Aprašymas",
+    "body": "Laiško tekstas",
+    "language": "Kalba"
+  },
+  "links": {
+    "cases": "Atvejai",
+    "opportunities": "Galimybės"
+  },
+  "options": {
+    "status": {
+      "Draft": "Juodraštis",
+      "Archived": "Suarchyvuota"
+    }
+  }
+}

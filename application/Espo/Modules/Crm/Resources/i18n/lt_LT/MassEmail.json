@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "startAt": "Pradžios data",
+    "fromAddress": "Nuo adreso",
+    "fromName": "Nuo vardo",
+    "campaign": "Kampanija",
+    "emailTemplate": "el. pašto laiško šablonas"
+  },
+  "links": {
+    "campaign": "Kampanija",
+    "emailTemplate": "el. pašto laiško šablonas"
+  },
+  "options": {
+    "status": {
+      "Draft": "Juodraštis",
+      "Pending": "Vykdoma",
+      "In Process": "Vyksta",
+      "Canceled": "Atšaukta"
+    }
+  }
+}

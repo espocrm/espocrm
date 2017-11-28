@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "host": "Hostas",
+    "username": "Vartotojo vardas",
+    "password": "Slaptažodis",
+    "port": "Port",
+    "monitoredFolders": "Stebimi aplankai",
+    "ssl": "SSL",
+    "emailAddress": "El. pašto adresas"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  },
+  "labels": {
+    "IMAP": "IMAP",
+    "Main": "Pagrindinis",
+    "Test Connection": "Patikrinti ryšį",
+    "SMTP": "SMTP"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio"
+  },
+  "links": {
+    "emails": "El. laiška"
+  }
+}

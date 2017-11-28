@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "account": "Įmonė",
+    "stage": "Stadija",
+    "amount": "Suma",
+    "probability": "Tikimybė, %",
+    "leadSource": "Potencialaus kliento šaltinis",
+    "doNotCall": "Neskambinti",
+    "closeDate": "Uždarymo data",
+    "contacts": "Kontaktai",
+    "description": "Aprašymas",
+    "campaign": "Kampanija"
+  },
+  "links": {
+    "contacts": "Kontaktai",
+    "campaign": "Kampanija"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Potencialių klientų paieška",
+      "Qualification": "Kvalifikacija",
+      "Needs Analysis": "Reikalinga analizė",
+      "Value Proposition": "Pasiūlymo vertė",
+      "Id. Decision Makers": "Id. Sprendimus priimantys žmonės",
+      "Perception Analysis": "Suvokimo analizė",
+      "Proposal/Price Quote": "Pasiūlymas/Kainoraštis",
+      "Negotiation/Review": "Derybos/Apžvalga",
+      "Closed Won": "Laimėta",
+      "Closed Lost": "Pralaimėta"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Sukurti pardavimo galimybę"
+  },
+  "presetFilters": {
+    "open": "Atidaryti",
+    "won": "Laimėta"
+  }
+}

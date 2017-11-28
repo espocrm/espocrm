@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "emailAddress": "El. paštas",
+    "website": "Interntinė Svetainė",
+    "phoneNumber": "Telefonas",
+    "billingAddress": "Mokėtojo adresas",
+    "shippingAddress": "Siuntimo adresas",
+    "description": "Aprašymas",
+    "sicCode": "Sic kodas",
+    "industry": "Pramonės šaka",
+    "type": "Tipas",
+    "contactRole": "Pavadinimas",
+    "campaign": "Kampanija",
+    "contactIsInactive": "Neaktyvus"
+  },
+  "links": {
+    "contacts": "Kontaktai",
+    "opportunities": "Galimybės",
+    "cases": "Atvejai",
+    "campaign": "Kampanija"
+  },
+  "options": {
+    "type": {
+      "Customer": "Klientas",
+      "Investor": "Investuotojas",
+      "Partner": "Partneris",
+      "Reseller": "Perpardavinėtojas"
+    },
+    "industry": {
+      "Banking": "Bankininkystė",
+      "Education": "Mokslas",
+      "Electronics": "Elektronika",
+      "Finance": "Finansai",
+      "Insurance": "Draudimas"
+    }
+  },
+  "labels": {
+    "Create Account": "Sukurti paskyrą"
+  }
+}

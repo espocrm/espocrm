@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "target": "Tikslas",
+    "sentAt": "Išsiuntimo data",
+    "emailAddress": "El. pašto adresas"
+  },
+  "links": {
+    "target": "Tikslas"
+  },
+  "options": {
+    "status": {
+      "Pending": "Vykdoma",
+      "Sent": "Išsiųsta",
+      "Sending": "Siunčiama"
+    }
+  },
+  "presetFilters": {
+    "pending": "Vykdoma",
+    "sent": "Išsiųsta"
+  }
+}

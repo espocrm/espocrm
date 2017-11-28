@@ -1,0 +1,34 @@
+{
+  "labels": {
+    "Details": "Išsamiau"
+  },
+  "fields": {
+    "name": "Vardas",
+    "status": "Statusas",
+    "file": "Failas",
+    "type": "Tipas",
+    "description": "Aprašymas",
+    "accounts": "Įmonės"
+  },
+  "links": {
+    "accounts": "Įmonės",
+    "opportunities": "Galimybės",
+    "leads": "Potencialūs klientai",
+    "contacts": "Kontaktai"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Draft": "Juodraštis",
+      "Canceled": "Atšaukta"
+    },
+    "type": {
+      "": "Joks",
+      "License Agreement": "Licencijos sutartis"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktyvus",
+    "draft": "Juodraštis"
+  }
+}

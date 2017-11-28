@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "name": "Vardas",
+    "portalRoles": "Rolės",
+    "tabList": "Tabų sąrašas",
+    "quickCreateList": "Greitai sukurti sąrašą",
+    "language": "Kalba",
+    "dateFormat": "Datos formatas",
+    "timeFormat": "Laiko formatas",
+    "timeZone": "Laiko zona",
+    "weekStart": "Pirma savaitės diena",
+    "defaultCurrency": "Pagrindinė valiuta"
+  },
+  "links": {
+    "users": "Vartotojai",
+    "portalRoles": "Rolės"
+  },
+  "labels": {
+    "User Interface": "Vartotojo sąsaja",
+    "Settings": "Nustatymai"
+  }
+}

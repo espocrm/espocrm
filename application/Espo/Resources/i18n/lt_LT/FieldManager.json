@@ -1,0 +1,26 @@
+{
+  "options": {
+    "dateTimeDefault": {
+      "": "Joks"
+    },
+    "dateDefault": {
+      "": "Joks",
+      "javascript: return this.dateTime.getToday();": "Šiandien"
+    }
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Gatvė",
+      "city": "Miestas",
+      "state": "Rajonas/regionas",
+      "country": "Šalis",
+      "postalCode": "Pašto kodas"
+    },
+    "personName": {
+      "salutation": "Sveikinimas"
+    },
+    "datetimeOptional": {
+      "date": "Data"
+    }
+  }
+}

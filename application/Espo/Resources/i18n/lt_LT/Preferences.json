@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "dateFormat": "Datos formatas",
+    "timeFormat": "Laiko formatas",
+    "timeZone": "Laiko zona",
+    "weekStart": "Pirma savaitės diena",
+    "thousandSeparator": "Tūkstančių atskyriklis",
+    "decimalMark": "Dešimtainis ženklas",
+    "defaultCurrency": "Pagrindinė valiuta",
+    "currencyList": "Valiutų sąrašas",
+    "language": "Kalba",
+    "smtpServer": "Serveris",
+    "smtpPort": "Port",
+    "smtpAuth": "Auth",
+    "smtpSecurity": "Sauga",
+    "smtpUsername": "Vartotojo vardas",
+    "emailAddress": "El. paštas",
+    "smtpPassword": "Slaptažodis",
+    "smtpEmailAddress": "El. pašto adresas",
+    "exportDelimiter": "Eksporto delimiteris",
+    "dashboardTabList": "Tabų sąrašas",
+    "tabList": "Tabų sąrašas"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Sekmadienis",
+      "1": "Pirmadienis"
+    }
+  },
+  "labels": {
+    "Notifications": "Pranešimai",
+    "User Interface": "Vartotojo sąsaja",
+    "SMTP": "SMTP",
+    "Misc": "Įvairūs",
+    "Locale": "Locale"
+  }
+}
