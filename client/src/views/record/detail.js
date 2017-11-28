@@ -118,6 +118,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         inlineEditDisabled: false,
 
+        printPdfAction: false,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -217,6 +219,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }, this);
                     }
                 }
+            }
+
+            if (this.printPdfAction) {
+                this.dropdownItemList.push({
+                    'label': 'Print to PDF',
+                    'name': 'printPdf'
+                });
             }
         },
 
@@ -786,6 +795,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     remove: false,
                 });
             }
+        },
+
+        actionPrintPdf: function () {
+            this.createView('pdfTemplate', 'views/modals/select-template', {
+                entityType: this.model.name
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'select', function (model) {
+                    this.clearView('pdfTemplate');
+                    window.open('?entryPoint=pdf&entityType='+this.model.name+'&entityId='+this.model.id+'&templateId=' + model.id, '_blank');
+                }, this);
+            });
         },
 
         afterSave: function () {

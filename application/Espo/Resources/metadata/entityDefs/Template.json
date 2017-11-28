@@ -7,22 +7,22 @@
         },
         "body": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "views/fields/wysiwyg"
         },
         "header": {
             "type": "text",
-            "view": "Fields.Wysiwyg"
+            "view": "views/fields/wysiwyg"
         },
         "footer": {
             "type": "text",
-            "view": "Fields.Wysiwyg",
+            "view": "views/fields/wysiwyg",
             "tooltip": true
         },
         "entityType": {
             "type": "enum",
             "required": true,
             "translation": "Global.scopeNames",
-            "view": "Fields.EntityType"
+            "view": "views/fields/entity-type"
         },
         "leftMargin": {
             "type": "float",
