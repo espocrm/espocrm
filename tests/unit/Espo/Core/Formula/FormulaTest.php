@@ -274,6 +274,70 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
+    function testAddLinkMultipleId()
+    {
+        $item = json_decode('
+            {
+                "type": "entity\\\\addLinkMultipleId",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "teams"
+                    },
+                    {
+                        "type": "value",
+                        "value": "1"
+                    }
+                ]
+            }
+        ');
+
+        $entity = $this->entity;
+
+        $this->setEntityAttributes($entity, array(
+            'teamsIds' => ['2']
+        ));
+
+        $entity
+            ->expects($this->any())
+            ->method('addLinkMultipleId')
+            ->with('teams', '1');
+
+        $this->formula->process($item, $this->entity);
+    }
+
+    function testRemoveLinkMultipleId()
+    {
+        $item = json_decode('
+            {
+                "type": "entity\\\\removeLinkMultipleId",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "teams"
+                    },
+                    {
+                        "type": "value",
+                        "value": "1"
+                    }
+                ]
+            }
+        ');
+
+        $entity = $this->entity;
+
+        $this->setEntityAttributes($entity, array(
+            'teamsIds' => ['1', '2']
+        ));
+
+        $entity
+            ->expects($this->any())
+            ->method('removeLinkMultipleId')
+            ->with('teams', '1');
+
+        $this->formula->process($item, $this->entity);
+    }
+
     function testAnd()
     {
         $item = json_decode('

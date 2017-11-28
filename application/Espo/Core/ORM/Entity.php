@@ -138,7 +138,7 @@ class Entity extends \Espo\ORM\Entity
     public function setLinkMultipleColumn($field, $column, $id, $value)
     {
         $columnsField = $field . 'Columns';
-        if (!$this->hasField($columnsField)) {
+        if (!$this->hasAttribute($columnsField)) {
             return;
         }
         $object = $this->get($columnsField);
@@ -166,7 +166,7 @@ class Entity extends \Espo\ORM\Entity
     {
         $idsField = $field . 'Ids';
 
-        if (!$this->hasField($idsField)) return;
+        if (!$this->hasAttribute($idsField)) return;
 
         if (!$this->has($idsField)) {
             if (!$this->isNew()) {
@@ -182,6 +182,19 @@ class Entity extends \Espo\ORM\Entity
         if (!in_array($id, $idList)) {
             $idList[] = $id;
             $this->set($idsField, $idList);
+        }
+    }
+
+    public function removeLinkMultipleId($field, $id)
+    {
+        if ($this->hasLinkMultipleId($field, $id)) {
+            $list = $this->getLinkMultipleIdList($field);
+            $index = array_search($id, $list);
+            if ($index !== false) {
+                unset($list[$index]);
+                $list = array_values($list);
+            }
+            $this->setLinkMultipleIdList($field, $list);
         }
     }
 
