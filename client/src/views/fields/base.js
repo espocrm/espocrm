@@ -268,7 +268,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         this.hideRequiredSign();
                     }
                 } else {
-                    if (!this.hasRequiredMarker()) {
+                    if (this.hasRequiredMarker()) {
                         this.hideRequiredSign();
                     }
                 }
