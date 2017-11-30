@@ -86,7 +86,7 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     'hidden': this.model.get('isImportant')
                 });
                 this.dropdownItemList.push({
-                    'label': 'Mark as Not Important',
+                    'label': 'Unmark Importance',
                     'name': 'markAsNotImportant',
                     'hidden': !this.model.get('isImportant')
                 });
