@@ -1181,6 +1181,40 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(20, $actual);
     }
 
+    function testNumberCeil()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\ceil",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 20.4
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(21, $actual);
+    }
+
+    function testNumberFloor()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\floor",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 20.4
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(20, $actual);
+    }
+
     function testNumberFormat()
     {
         $item = json_decode('
