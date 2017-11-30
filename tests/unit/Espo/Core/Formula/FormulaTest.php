@@ -49,6 +49,8 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
 
         $this->dateTime = new \Espo\Core\Utils\DateTime();
 
+        $this->number = new \Espo\Core\Utils\NumberUtil();
+
         $this->config = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
         $this->config
             ->expects($this->any())
@@ -67,6 +69,7 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap([
                 ['entityManager', $this->entityManager],
                 ['dateTime', $this->dateTime],
+                ['number', $this->number],
                 ['config', $this->config],
                 ['user', $this->user]
             ]));
@@ -1176,6 +1179,49 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->formula->process($item, $this->entity);
         $this->assertEquals(20, $actual);
+    }
+
+    function testNumberFormat()
+    {
+        $item = json_decode('
+            {
+                "type": "number\\\\format",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 20
+                    },
+                    {
+                        "type": "value",
+                        "value": 2
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('20.00', $actual);
+
+        $item = json_decode('
+            {
+                "type": "number\\\\format",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": 20
+                    },
+                    {
+                        "type": "value",
+                        "value": 2
+                    },
+                    {
+                        "type": "value",
+                        "value": ","
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('20,00', $actual);
     }
 
     function testNumberRound()
