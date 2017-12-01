@@ -202,14 +202,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
-        removeAction: true,
-
-        mergeAction: true,
-
-        massUpdateAction: true,
-
-        exportAction: true,
-
         quickDetailDisabled: false,
 
         quickEditDisabled: false,
@@ -675,6 +667,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
+
+            if (!this.getAcl().checkScope(this.entityType, 'delete')) {
+                this.removeMassAction('remove');
+            }
+
+
+            if (!this.getAcl().checkScope(this.entityType, 'edit')) {
+                this.removeMassAction('massUpdate');
+                this.removeMassAction('merge');
+            }
+
+
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
@@ -723,7 +727,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }, this);
 
-            if (this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')) {
+            if (
+                this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
+                ||
+                this.getUser().get('isPortalUser') && this.getConfig().get('exportInPortalDisabled')
+            ) {
             	this.removeMassAction('export');
             }
 
