@@ -280,14 +280,18 @@ Espo.define('controller', [], function () {
                         main.render();
                     }
                 }.bind(this);
+
                 if (useStored) {
                     if (this.hasStoredMainView(storedKey)) {
                         var main = this.getStoredMainView(storedKey);
-                        process(main);
-                        if (main && typeof main.applyRoutingParams === 'function') {
-                            main.applyRoutingParams(options.params || {});
+
+                        if (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) {
+                            process(main);
+                            if (main && typeof main.applyRoutingParams === 'function') {
+                                main.applyRoutingParams(options.params || {});
+                            }
+                            return;
                         }
-                        return;
                     }
                 }
                 this.viewFactory.create(view, options, process);

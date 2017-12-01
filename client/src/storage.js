@@ -51,6 +51,13 @@ Espo.define('storage', [], function () {
             }
         },
 
+        has: function (type, name) {
+            this._checkType(type);
+            var key = this._composeKey(type, name);
+
+            return this.storageObject.getItem(key) !== null;
+        },
+
         get: function (type, name) {
             this._checkType(type);
 

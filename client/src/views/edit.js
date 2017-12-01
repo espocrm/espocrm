@@ -38,7 +38,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         menu: null,
 
-        optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes'],
+        optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes', 'rootUrl'],
 
         headerView: 'views/header',
 
@@ -84,7 +84,8 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             if (this.options.noHeaderLinks) {
                 arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
             } else {
-                arr.push('<a href="#' + this.scope + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+                arr.push('<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
             }
 
             if (this.model.isNew()) {

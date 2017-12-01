@@ -96,6 +96,10 @@ Espo.define('router', [], function () {
             });
         },
 
+        getCurrentUrl: function () {
+            return '#' + Backbone.history.fragment;
+        },
+
         checkConfirmLeaveOut: function (callback, context) {
             context = context || this;
             if (this.confirmLeaveOut) {

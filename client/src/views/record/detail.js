@@ -1213,12 +1213,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true
                     });
-                    this.getRouter().navigate('#' + this.scope, {trigger: false});
+                    url = this.options.rootUrl || '#' + this.scope;
+                    this.getRouter().navigate(url, {trigger: false});
                     return;
                 }
-                url = '#' + this.scope;
+                url = this.options.rootUrl || '#' + this.scope;
                 if (this.model.id) {
-                    url += '/view/' + this.model.id;
+                    url = '#' + this.scope + '/view/' + this.model.id;
                 }
             }
 
@@ -1226,8 +1227,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var controller = this.returnDispatchParams.controller;
                 var action = this.returnDispatchParams.action;
                 var options = this.returnDispatchParams.options || {};
-                this.getRouter().dispatch(controller, action, options);
                 this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().dispatch(controller, action, options);
                 return;
             }
 

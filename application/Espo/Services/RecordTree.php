@@ -42,6 +42,18 @@ class RecordTree extends Record
 
     private $seed = null;
 
+    protected $subjectEntityType = null;
+
+    protected $categoryField = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (!$this->subjectEntityType) {
+            $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) -8 );
+        }
+    }
+
     public function getTree($parentId = null, $params = array(), $level = 0, $maxDepth = null)
     {
         if (!$maxDepth) {
@@ -91,12 +103,25 @@ class RecordTree extends Record
 
     protected function checkFilterOnlyNotEmpty()
     {
-
+        if (!$this->getAcl()->checkScope($this->subjectEntityType, 'create')) {
+            return true;
+        }
     }
 
     protected function checkItemIsEmpty(Entity $entity)
     {
+        if (!$this->categoryField) return false;
 
+        $selectManager = $this->getSelectManager($this->subjectEntityType);
+
+        $selectParams = $selectManager->getEmptySelectParams();
+        $selectManager->applyInCategory($this->categoryField, $entity->id, $selectParams);
+        $selectManager->applyAccess($selectParams);
+
+        if ($this->getEntityManager()->getRepository($this->subjectEntityType)->findOne($selectParams)) {
+            return false;
+        }
+        return true;
     }
 
     public function getTreeItemPath($parentId = null)

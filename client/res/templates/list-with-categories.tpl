@@ -3,7 +3,19 @@
 
 <div class="row">
     {{#unless categoriesDisabled}}
-    <div class="categories-container{{#unless categoriesDisabled}} col-md-3 col-sm-4{{else}} col-md-12{{/unless}}">{{{categories}}}</div>
+    <div class="{{#unless categoriesDisabled}} col-md-3 col-sm-4{{else}} col-md-12{{/unless}}">
+        <div class="categories-container">{{{categories}}}</div>
+
+        {{#if hasExpandedToggler}}
+        <div class="expanded-toggler-container">
+            <a href="javascript:" title="{{translate 'Collapse'}}" class="action{{#unless isExpanded}} hidden{{/unless}}" data-action="collapse"><span class="small glyphicon glyphicon-folder-open"></span></a>
+            <a href="javascript:" title="{{translate 'Expand'}}" class="action{{#if isExpanded}} hidden{{/if}}" data-action="expand""><span class="small glyphicon glyphicon-folder-close"></span></a>
+        </div>
+        {{/if}}
+    </div>
     {{/unless}}
-    <div class="list-container{{#unless categoriesDisabled}} col-md-9 col-sm-8{{else}} col-md-12{{/unless}}">{{{list}}}</div>
+    <div class="{{#unless categoriesDisabled}} col-md-9 col-sm-8{{else}} col-md-12{{/unless}}">
+        <div class="nested-categories-container{{#if isExpanded}} hidden{{/if}}">{{{nestedCategories}}}</div>
+        <div class="list-container">{{{list}}}</div>
+    </div>
 </div>

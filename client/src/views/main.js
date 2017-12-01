@@ -55,6 +55,8 @@ Espo.define('views/main', 'view', function (Dep) {
             this.scope = this.options.scope || this.scope;
             this.menu = {};
 
+            this.options.params = this.options.params || {};
+
             if (this.name && this.scope) {
                 this.menu = this.getMetadata().get('clientDefs.' + this.scope + '.menu.' + this.name.charAt(0).toLowerCase() + this.name.slice(1)) || {};
             }
@@ -64,6 +66,12 @@ Espo.define('views/main', 'view', function (Dep) {
             ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
             }, this);
+
+            this.updateLastUrl();
+        },
+
+        updateLastUrl: function () {
+            this.lastUrl = this.getRouter().getCurrentUrl();
         },
 
         getMenu: function () {
@@ -180,8 +188,9 @@ Espo.define('views/main', 'view', function (Dep) {
                 var options = {
                     isReturn: true
                 };
+                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+                this.getRouter().navigate(rootUrl, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, options);
-                this.getRouter().navigate('#' + this.scope, {trigger: false});
             }, this);
         },
 

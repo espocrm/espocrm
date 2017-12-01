@@ -83,11 +83,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var scope = this.getModelScope(id);
 
-                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-                this.getRouter().dispatch(scope, 'view', {
+                var options = {
                     id: id,
                     model: model
-                });
+                };
+                if (this.options.keepCurrentRootUrl) {
+                    options.rootUrl = this.getRouter().getCurrentUrl();
+                }
+
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+                this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="showMore"]': function () {
                 this.showMoreRecords();
@@ -1173,11 +1178,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.quickDetailDisabled) {
                 this.notify('Loading...');
-                this.createView('modal', viewName, {
+
+                var options = {
                     scope: scope,
                     model: model,
                     id: id
-                }, function (view) {
+                };
+                if (this.options.keepCurrentRootUrl) {
+                    options.rootUrl = this.getRouter().getCurrentUrl();
+                }
+                this.createView('modal', viewName, options, function (view) {
                     this.listenToOnce(view, 'after:render', function () {
                         Espo.Ui.notify(false);
                     });
@@ -1219,12 +1229,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.quickEditDisabled) {
                 this.notify('Loading...');
-                this.createView('modal', viewName, {
+                var options = {
                     scope: scope,
                     id: id,
                     model: model,
                     fullFormDisabled: data.noFullForm,
-                    returnUrl: '#' + scope,
+                    returnUrl: this.getRouter().getCurrentUrl(),
                     returnDispatchParams: {
                         controller: scope,
                         action: null,
@@ -1232,7 +1242,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             isReturn: true
                         }
                     }
-                }, function (view) {
+                };
+                if (this.options.keepCurrentRootUrl) {
+                    options.rootUrl = this.getRouter().getCurrentUrl();
+                }
+                this.createView('modal', viewName, options, function (view) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);
                     });
@@ -1253,10 +1267,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }, this);
                 }, this);
             } else {
-                this.getRouter().dispatch(scope, 'edit', {
+                var options = {
                     id: id,
                     model: this.collection.get(id),
-                    returnUrl: '#' + scope,
+                    returnUrl: this.getRouter().getCurrentUrl(),
                     returnDispatchParams: {
                         controller: scope,
                         action: null,
@@ -1264,8 +1278,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             isReturn: true
                         }
                     }
-                });
+                };
+                if (this.options.keepCurrentRootUrl) {
+                    options.rootUrl = this.getRouter().getCurrentUrl();
+                }
                 this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+                this.getRouter().dispatch(scope, 'edit', options);
             }
         },
 

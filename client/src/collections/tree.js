@@ -74,7 +74,9 @@ Espo.define('collections/tree', 'collection', function (Dep) {
             var options = options || {};
             options.data = options.data || {};
 
-            options.data.parentId = this.parentId;
+            if (this.parentId) {
+                options.data.parentId = this.parentId;
+            }
             options.data.maxDepth = this.maxDepth;
 
             return Dep.prototype.fetch.call(this, options);

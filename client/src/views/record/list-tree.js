@@ -72,7 +72,7 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             data.showEditLink = this.showEditLink;
 
-            if (this.level == 0 && this.selectable && !(this.selectedData || {}).id) {
+            if (this.level == 0 && this.selectable && (this.selectedData || {}).id === null) {
                 data.rootIsSelected = true;
             }
 
@@ -135,6 +135,8 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
         setSelected: function (id) {
             if (id === null) {
                 this.selectedData.id = null;
+            } else {
+                this.selectedData.id = id;
             }
             this.rowList.forEach(function (key) {
                 var view = this.getView(key);

@@ -1446,6 +1446,22 @@ pre > code {
     }
 }
 
+.list-nested-categories {
+    margin-bottom: @padding-base-horizontal;
+    .category-item {
+        padding: @padding-base-horizontal;
+        .folder-icon {
+            margin-right: 3px;
+            position: relative;
+            top: -1px;
+        }
+    }
+}
+
+.expanded-toggler-container {
+    margin-top: 5px;
+}
+
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: 5px;

@@ -217,7 +217,9 @@
         "Attribute": "Attribute",
         "Function": "Function",
         "Self-Assign": "Self-Assign",
-        "Self-Assigned": "Self-Assigned"
+        "Self-Assigned": "Self-Assigned",
+        "Expand": "Expand",
+        "Collapse": "Collapse"
     },
     "messages": {
         "pleaseWait": "Please wait...",

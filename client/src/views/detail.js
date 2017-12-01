@@ -36,7 +36,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         name: 'Detail',
 
-        optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams'],
+        optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams', 'rootUrl'],
 
         headerView: 'views/header',
 
@@ -160,8 +160,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 name = this.model.id;
             }
 
+            var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
             return this.buildHeaderHtml([
-                '<a href="#' + this.scope + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
+                '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },
