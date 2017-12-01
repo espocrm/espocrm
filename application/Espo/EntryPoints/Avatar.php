@@ -96,7 +96,7 @@ class Avatar extends Image
         }
 
         if (!empty($id)) {
-            $this->show($id, $size);
+            $this->show($id, $size, true);
         } else {
             $identicon = new \Identicon\Identicon();
             if (empty($size)) {

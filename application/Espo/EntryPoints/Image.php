@@ -71,7 +71,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         $this->show($id, $size);
     }
 
-    protected function show($id, $size)
+    protected function show($id, $size, $disableAccessCheck = false)
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 
@@ -79,7 +79,7 @@ class Image extends \Espo\Core\EntryPoints\Base
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($attachment)) {
+        if (!$disableAccessCheck && !$this->getAcl()->checkEntity($attachment)) {
             throw new Forbidden();
         }
 
