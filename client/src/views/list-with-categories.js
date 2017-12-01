@@ -150,6 +150,9 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             this.clearView('nestedCategories');
+            if (this.hasView('categories')) {
+                this.getView('categories').isExpanded = true;
+            }
 
             this.getRouter().navigate('#' + this.scope);
             this.updateLastUrl();
@@ -165,6 +168,10 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
             this.applyCategoryToCollection();
             this.applyCategoryToNestedCategoriesCollection();
+
+            if (this.hasView('categories')) {
+                this.getView('categories').isExpanded = false;
+            }
 
             this.navigateToCurrentCategory();
 
@@ -304,7 +311,8 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                     buttonsDisabled: true,
                     checkboxes: false,
                     showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
-                    isExpanded: this.isExpanded
+                    isExpanded: this.isExpanded,
+                    hasExpandedToggler: this.hasExpandedToggler
                 }, function (view) {
                     if (this.currentCategoryId) {
                         view.setSelected(this.currentCategoryId);

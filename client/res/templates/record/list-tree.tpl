@@ -20,7 +20,12 @@
     <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}</a>
     {{/if}}
     {{#if showEditLink}}
-    <a href="#{{scope}}" class="small pull-right action" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>
+    <a href="#{{scope}}" class="small pull-right action manage-categories-link" data-action="manageCategories" title="{{translate 'Manage Categories' scope=scope}}"><span class="glyphicon glyphicon-th-list"></span></a>
+    {{/if}}
+
+    {{#if hasExpandedToggler}}
+        <a href="javascript:" title="{{translate 'Collapse'}}" class="small pull-right category-expanded-toggle-link action{{#unless isExpanded}} hidden{{/unless}}" data-action="collapse"><span class="glyphicon glyphicon-folder-open"></span></a>
+        <a href="javascript:" title="{{translate 'Expand'}}" class="small pull-right category-expanded-toggle-link action{{#if isExpanded}} hidden{{/if}}" data-action="expand""><span class="glyphicon glyphicon-folder-close"></span></a>
     {{/if}}
 
     <ul class="list-group list-group-tree list-group-no-border">

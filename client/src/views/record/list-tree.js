@@ -76,6 +76,11 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 data.rootIsSelected = true;
             }
 
+            if (this.level == 0 && this.options.hasExpandedToggler) {
+                data.hasExpandedToggler = true;
+                data.isExpanded = this.isExpanded;
+            }
+
             return data;
         },
 
@@ -85,6 +90,8 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
             }
 
             this.createDisabled = this.options.createDisabled || this.createDisabled;
+
+            this.isExpanded = this.options.isExpanded;
 
             if ('showRoot' in this.options) {
                 this.showRoot = this.options.showRoot;
