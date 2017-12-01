@@ -64,8 +64,14 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         login: function () {
-                var userName = $("#field-userName").val();
-                var password = $("#field-password").val();
+                var userName = $('#field-userName').val();
+                var trimmedUserName = userName.trim();
+                if (trimmedUserName !== userName) {
+                    $('#field-userName').val(trimmedUserName);
+                    userName = trimmedUserName;
+                }
+
+                var password = $('#field-password').val();
 
                 var $submit = this.$el.find('#btn-login');
 
