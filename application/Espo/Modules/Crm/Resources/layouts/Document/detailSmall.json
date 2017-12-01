@@ -4,7 +4,8 @@
         "rows": [
             [{"name":"file", "fullWidth": true}],
             [{"name":"name", "fullWidth": true}],
-            [{"name":"status"}, {"name":"folder"}]
+            [{"name":"status"}, {"name":"folder"}],
+            [{"name":"description", "fullWidth": true}]
         ]
     }
 ]
