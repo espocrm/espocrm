@@ -177,7 +177,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }.bind(this));
 
             if (!this.model.get(this.idsName)) {
-                this.clearIds();
+                this.clearIds(true);
             }
         },
 
@@ -230,10 +230,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.model.set(this.typeHashName, typeHash);
         },
 
-        clearIds: function () {
-            this.model.set(this.idsName, []);
-            this.model.set(this.nameHashName, {});
-            this.model.set(this.typeHashName, {})
+        clearIds: function (silent) {
+            var silent = silent || false;
+            this.model.set(this.idsName, [], {silent: silent});
+            this.model.set(this.nameHashName, {}, {silent: silent});
+            this.model.set(this.typeHashName, {}, {silent: silent})
         },
 
         pushAttachment: function (attachment, link) {
