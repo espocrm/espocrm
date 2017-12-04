@@ -440,6 +440,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             model.save(attrs, {
                 success: function () {
                     this.afterSave();
+                    var isNew = self.isNew;
                     if (self.isNew) {
                         self.isNew = false;
                     }
@@ -447,7 +448,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     model.trigger('after:save');
 
                     if (!callback) {
-                        this.exit('save');
+                        if (isNew) {
+                            this.exit('create');
+                        } else {
+                            this.exit('save');
+                        }
                     } else {
                         callback(this);
                     }
@@ -699,7 +704,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
         },
 
-        exit: function () {}
+        exit: function (after) {}
 
     });
 

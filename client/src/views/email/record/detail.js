@@ -315,6 +315,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             }
             this.getRouter().dispatch(this.scope, action, options);
             this.getRouter().navigate(url, {trigger: false});
+
+            return true;
         }
 
     });

@@ -1194,6 +1194,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        exitAfterCreate: function () {
+            if (this.model.id) {
+                var url = '#' + this.scope + '/view/' + this.model.id;
+                this.getRouter().navigate(url, {trigger: true});
+                return true;
+            }
+        },
+
 
         /**
          * Called after save or cancel.
@@ -1201,17 +1209,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
          * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.
          */
         exit: function (after) {
+            if (after) {
+                var methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
+                if (methodName in this) {
+                    var result = this[methodName]();
+                    if (result) {
+                        return;
+                    }
+                }
+            }
+
             var url;
             if (this.returnUrl) {
                 url = this.returnUrl;
             } else {
-                if (after) {
-                    var methodName = 'exitAfter' + Espo.Utils.upperCaseFirst(after);
-                    if (methodName in this) {
-                        this[methodName]();
-                        return;
-                    }
-                }
+
                 if (after == 'delete') {
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true
