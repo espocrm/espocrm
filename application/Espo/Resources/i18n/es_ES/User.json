@@ -3,58 +3,58 @@
     "name": "Nombre",
     "userName": "Nombre Usuario",
     "title": "Título",
-    "isAdmin": "Es Administrador",
-    "defaultTeam": "Equipo por Defecto",
+    "isAdmin": "Es administrador",
+    "defaultTeam": "Equipo por defecto",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
     "roles": "Roles",
     "portals": "Portales",
-    "portalRoles": "Roles del Portal",
-    "teamRole": "Posición",
+    "portalRoles": "Roles del portal",
+    "teamRole": "Puesto",
     "password": "Contraseña",
     "currentPassword": "Contraseña Actual",
     "passwordConfirm": "Confirmar Contraseña",
     "newPassword": "Nueva Contraseña",
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
     "avatar": "Avatar",
-    "isActive": "Está Activo",
-    "isPortalUser": "Es Usuario del Portal",
+    "isActive": "Está activo",
+    "isPortalUser": "Es usuario del portal",
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
-    "sendAccessInfo": "Enviar al Usuario un correo con su Información de Acceso",
+    "sendAccessInfo": "Enviar información de acceso al usuario",
     "portal": "Portal",
     "gender": "Sexo",
     "position": "Puesto en el equipo",
-    "ipAddress": "IP Address",
-    "passwordPreview": "Password Preview"
+    "ipAddress": "Dirección IP",
+    "passwordPreview": "Vista previa de la contraseña"
   },
   "links": {
     "teams": "Equipos",
     "roles": "Roles",
     "notes": "Notas",
     "portals": "Portales",
-    "portalRoles": "Roles del Portal",
+    "portalRoles": "Roles del portal",
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
     "tasks": "Tareas"
   },
   "labels": {
-    "Create User": "Crear Usuario",
+    "Create User": "Crear usuario",
     "Generate": "Generar",
     "Access": "Acceso",
     "Preferences": "Preferencias",
     "Change Password": "Cambiar Contraseña",
-    "Teams and Access Control": "Equipos y Control de Acceso",
+    "Teams and Access Control": "Equipos y control de acceso",
     "Forgot Password?": "¿Olvidó la Contraseña?",
     "Password Change Request": "Solicitar Cambio de Contraseña",
-    "Email Address": "Correo Electrónico",
-    "External Accounts": "Cuentas Externas",
-    "Email Accounts": "Cuentas de Email",
+    "Email Address": "Correo electrónico",
+    "External Accounts": "Cuentas externas",
+    "Email Accounts": "Cuentas de correo",
     "Portal": "Portal",
-    "Create Portal User": "Crear Usuario del Portal",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Create Portal User": "Crear usuario del portal",
+    "Proceed w/o Contact": "Continuar sin contacto"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
@@ -62,9 +62,9 @@
     "isAdmin": "El usuario administrador puede tener acceso a todo.",
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
-    "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso sólo para este usuario.",
-    "portalRoles": "Roles adicionales del portal.  Utilícelos para extender el nivel de acceso exclusivamente para este Usuario",
-    "portals": "Portales a los que este Usuario tiene acceso"
+    "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
+    "portalRoles": "Roles adicionales del portal. Utilícelos para extender el nivel de acceso exclusivamente para este usuario.",
+    "portals": "El usuario tiene accesos a los siguientes portales."
   },
   "messages": {
     "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
@@ -79,19 +79,19 @@
     "forbidden": "Prohibido, por favor intente después",
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
     "passwordChangedByRequest": "La contraseña ha sido cambiada.",
-    "setupSmtpBefore": "Necesita configurar  <a href=\"{url}\">Configuración SMTP</a> para que el sistema pueda enviar contraseñas por correo.",
-    "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon."
+    "setupSmtpBefore": "Necesita configurar los <a href=\"{url}\">ajustes SMTP</a> para que el sistema pueda enviar contraseñas por correo.",
+    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo este enlace {link}. Esta URL única expirará pronto."
   },
   "boolFilters": {
-    "onlyMyTeam": "Sólo mi equipo"
+    "onlyMyTeam": "Solo de mi equipo"
   },
   "presetFilters": {
     "active": "Activo",
-    "activePortal": "Portal Activo"
+    "activePortal": "Portales activos"
   },
   "options": {
     "gender": {
-      "": "Not Set",
+      "": "No definido",
       "Male": "Masculino",
       "Female": "Femenino",
       "Neutral": "Neutral"

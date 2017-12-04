@@ -10,13 +10,13 @@
     "queueItem": "Item de la Lista",
     "stringData": "Datos Alfanuméricos",
     "stringAdditionalData": "Datos Alfanuméricos Adicionales",
-    "isTest": "Is Test"
+    "isTest": "Es una prueba"
   },
   "links": {
     "queueItem": "Elemento de la Cola",
     "parent": "Padre",
     "object": "Objeto",
-    "campaign": "Campaign"
+    "campaign": "Campaña"
   },
   "options": {
     "action": {

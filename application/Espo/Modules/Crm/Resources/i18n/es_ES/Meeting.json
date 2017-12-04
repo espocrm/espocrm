@@ -3,22 +3,22 @@
     "name": "Nombre",
     "parent": "Padre",
     "status": "Estado",
-    "dateStart": "Fecha de Comienzo",
-    "dateEnd": "Fecha de Finalización",
+    "dateStart": "Fecha de comienzo",
+    "dateEnd": "Fecha de finalización",
     "duration": "Duración",
     "description": "Descripción",
     "users": "Usuarios",
     "contacts": "Contactos",
-    "leads": "Potenciales",
+    "leads": "Posibles clientes",
     "reminders": "Recordatorios",
     "account": "Cuenta",
-    "acceptanceStatus": "Estatus de aceptación"
+    "acceptanceStatus": "Estado de aceptación"
   },
   "options": {
     "status": {
       "Planned": "Planeadas",
       "Held": "Celebradas",
-      "Not Held": "Sin Celebrar"
+      "Not Held": "Sin celebrar"
     },
     "acceptanceStatus": {
       "None": "Ninguno",
@@ -28,13 +28,13 @@
     }
   },
   "massActions": {
-    "setHeld": "Marcar como Celebrada",
-    "setNotHeld": "Marcar como No Celebrada"
+    "setHeld": "Marcar como celebrada",
+    "setNotHeld": "Marcar como No celebrada"
   },
   "labels": {
-    "Create Meeting": "Crear Reunión",
-    "Set Held": "Marcar como Celebrada",
-    "Set Not Held": "Marcar como No Celebrada",
+    "Create Meeting": "Crear reunión",
+    "Set Held": "Marcar como celebrada",
+    "Set Not Held": "Marcar como No celebrada",
     "Send Invitations": "Enviar Invitaciones",
     "on time": "a tiempo",
     "before": "antes"
@@ -42,7 +42,7 @@
   "presetFilters": {
     "planned": "Planeadas",
     "held": "Celebradas",
-    "todays": "De Hoy"
+    "todays": "De hoy"
   },
   "messages": {
     "nothingHasBeenSent": "No se ha enviado nada"

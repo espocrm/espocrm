@@ -2,22 +2,22 @@
   "fields": {
     "user": "Usuario",
     "ipAddress": "Dirección IP",
-    "lastAccess": "Fecha Último Acceso",
-    "createdAt": "Creado el",
-    "isActive": "Is Active",
+    "lastAccess": "Fecha del último acceso",
+    "createdAt": "Fecha de acceso",
+    "isActive": "Está activo",
     "portal": "Portal"
   },
   "links": {
-    "actionHistoryRecords": "Action History"
+    "actionHistoryRecords": "Histórico"
   },
   "presetFilters": {
-    "active": "Active",
-    "inactive": "Inactive"
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "labels": {
-    "Set Inactive": "Set Inactive"
+    "Set Inactive": "Establecer Inactivo"
   },
   "massActions": {
-    "setInactive": "Set Inactive"
+    "setInactive": "Establecer Inactivo"
   }
 }

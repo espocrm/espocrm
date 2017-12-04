@@ -6,13 +6,13 @@
     "teams": "Equipos",
     "users": "Usuarios",
     "portals": "Portales",
-    "type": "Type",
-    "isGlobal": "Is Global",
-    "isInternal": "Is Internal (for internal users)",
-    "related": "Related",
-    "createdByGender": "Created By Gender",
-    "data": "Data",
-    "number": "Number"
+    "type": "Tipo",
+    "isGlobal": "Es global",
+    "isInternal": "Es Interno (para usuarios internos)",
+    "related": "Relacionado",
+    "createdByGender": "Creado por género",
+    "data": "Datos",
+    "number": "Número"
   },
   "filters": {
     "all": "Todos",
@@ -24,11 +24,11 @@
   },
   "options": {
     "targetType": {
-      "self": "to myself",
-      "users": "to particular user(s)",
-      "teams": "to particular team(s)",
-      "all": "to all internal users",
-      "portals": "to portal users"
+      "self": "Para mí",
+      "users": "Para determinado/s usuario/s",
+      "teams": "Para determinado/s equipo/s",
+      "all": "Para todos los usuarios",
+      "portals": "Para los usuarios del portal"
     }
   }
 }

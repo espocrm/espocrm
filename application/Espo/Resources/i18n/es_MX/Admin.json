@@ -165,8 +165,7 @@
     "upgradeDone": "EspoCRM fué actualizado a la versión <strong>{version}</strong>.",
     "upgradeBackup": "Le recomendamos hacer un respaldo de sus datos y sistema EspoCRM antes de actualizarlo.",
     "thousandSeparatorEqualsDecimalMark": "El caracter separador de miles no puede ser el mismo que el separador decimal.",
-    "userHasNoEmailAddress": "Este usuario no tiene correo de contacto.",
-    "uninstallConfirmation": "¿Realmente desea desinstalar la extensión?"
+    "userHasNoEmailAddress": "Este usuario no tiene correo de contacto."
   },
   "descriptions": {
     "settings": "Configuración del sistema de aplicación.",

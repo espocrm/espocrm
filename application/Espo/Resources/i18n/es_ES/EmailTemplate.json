@@ -2,24 +2,24 @@
   "fields": {
     "name": "Nombre",
     "status": "Estado",
-    "isHtml": "Es Html",
+    "isHtml": "Es HTML",
     "body": "Cuerpo",
     "subject": "Asunto",
     "attachments": "Adjuntos",
-    "insertField": "Insertar Campo",
+    "insertField": "Insertar campo",
     "oneOff": "Único"
   },
   "labels": {
-    "Create EmailTemplate": "Crear Plantilla de Correo",
+    "Create EmailTemplate": "Crear plantilla de correo",
     "Info": "Información"
   },
   "tooltips": {
-    "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
+    "oneOff": "Marque la casilla si usted va a utilizar esta plantilla solo una vez. Por ejemplo para correo masivo."
   },
   "presetFilters": {
     "actual": "Actuales"
   },
   "messages": {
-    "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
+    "infoText": "Variables disponibles:\n\n{optOutUrl} &#8211; URL del enlace de baja.\n\n{optOutLink} &#8211;  Enlace de baja."
   }
 }

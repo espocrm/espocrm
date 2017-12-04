@@ -87,8 +87,8 @@
     "currencyFormat": "Formato Moneda",
     "currencyDecimalPlaces": "Decimales en Moneda",
     "aclStrictMode": "Modo estricto ACL",
-    "followCreatedEntities": "Follow created records",
-    "aclAllowDeleteCreated": "Allow to remove created records"
+    "followCreatedEntities": "Seguir los registros creados",
+    "aclAllowDeleteCreated": "Permitir la eliminación de registros creados"
   },
   "options": {
     "weekStart": {
@@ -133,7 +133,7 @@
     "currencyDecimalPlaces": "Posiciones decimales. Si está vacío, se mostrarán todos los decimales",
     "aclStrictMode": "Activado: El acceso a los alcances estará prohibido si no se especifica en los roles\nDesactivado: El acceso a los alcances será permitido si no se especifica en los roles",
     "outboundEmailIsShared": "Permitir a los usuarios enviar correos desde esta dirección",
-    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access."
+    "aclAllowDeleteCreated": "Los usuarios podrán eliminar los registros que hayan creado, aunque no tengan permiso de borrado."
   },
   "labels": {
     "System": "Sistema",

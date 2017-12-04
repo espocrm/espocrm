@@ -5,17 +5,17 @@
     "agendaWeek": "Semana",
     "day": "Día",
     "agendaDay": "Día",
-    "timeline": "Cronograma"
+    "timeline": "Línea de tiempo"
   },
   "labels": {
     "Today": "Hoy",
     "Create": "Crear",
     "Shared": "Compartido",
-    "Add User": "Agregar Usuario",
+    "Add User": "Agregar usuario",
     "current": "actual",
     "time": "hora",
-    "User List": "Lista de Usuarios",
-    "Manage Users": "Administrar Usuarios",
-    "View Calendar": "View Calendar"
+    "User List": "Lista de usuarios",
+    "Manage Users": "Administrar usuarios",
+    "View Calendar": "Ver calendario"
   }
 }

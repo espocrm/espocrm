@@ -9,12 +9,12 @@
     "mode": "Modo",
     "enabledScopeList": "Qué mostrar",
     "users": "Usuarios",
-    "entityType": "Entity Type",
-    "primaryFilter": "Primary Filter",
-    "boolFilterList": "Additional Filters",
-    "sortBy": "Order (field)",
-    "sortDirection": "Order (direction)",
-    "expandedLayout": "Layout"
+    "entityType": "Tipo de entidad",
+    "primaryFilter": "Filtro principal",
+    "boolFilterList": "Filtros adicionales",
+    "sortBy": "Ordenar (campo)",
+    "sortDirection": "Ordenar (dirección)",
+    "expandedLayout": "Diseño"
   },
   "options": {
     "mode": {
@@ -23,10 +23,10 @@
       "month": "Mes",
       "basicDay": "Día",
       "agendaDay": "Día (agenda)",
-      "timeline": "Cronograma"
+      "timeline": "Línea de tiempo"
     }
   },
   "messages": {
-    "selectEntityType": "Select Entity Type in dashlet options."
+    "selectEntityType": "Seleccione el tipo de entidad en las opciones de la caja."
   }
 }

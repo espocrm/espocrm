@@ -8,47 +8,47 @@
     "accounts": "Cuentas",
     "phoneNumber": "Teléfono",
     "accountType": "Tipo de Cuenta",
-    "doNotCall": "No Llamar",
+    "doNotCall": "No llamar",
     "address": "Dirección",
     "opportunityRole": "Rol de Oportunidad",
     "description": "Descripción",
     "campaign": "Campaña",
-    "targetLists": "Lista de Objetivos",
-    "targetList": "Lista de Objetivos",
-    "portalUser": "Usuario del Portal",
-    "originalLead": "Original Lead",
-    "acceptanceStatus": "Acceptance Status",
-    "accountIsInactive": "Account Inactive",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "targetLists": "Lista de objetivos",
+    "targetList": "Lista de objetivos",
+    "portalUser": "Usuario del portal",
+    "originalLead": "Posible cliente de origen",
+    "acceptanceStatus": "Estado de Aceptación",
+    "accountIsInactive": "Cuenta inactiva",
+    "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
+    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)"
   },
   "links": {
     "opportunities": "Oportunidades",
-    "cases": "Casos",
-    "targetLists": "Lista de Objetivos",
+    "cases": "Tickets",
+    "targetLists": "Lista de objetivos",
     "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
-    "account": "Cuentas (Primaria)",
+    "account": "Cuentas (principal)",
     "accounts": "Cuentas",
-    "casesPrimary": "Casos (Primaria)",
-    "portalUser": "Usuario del Portal",
-    "originalLead": "Original Lead",
+    "casesPrimary": "Tickets (principal)",
+    "portalUser": "Usuario del portal",
+    "originalLead": "Posible cliente de origen",
     "documents": "Documentos"
   },
   "labels": {
-    "Create Contact": "Crear Contacto"
+    "Create Contact": "Crear contacto"
   },
   "options": {
     "opportunityRole": {
       "": "--Ninguno--",
-      "Decision Maker": "Tomador de Desiciones",
+      "Decision Maker": "Tomador de decisiones",
       "Evaluator": "Evaluador",
-      "Influencer": "Factor de Influencia"
+      "Influencer": "Factor de influencia"
     }
   },
   "presetFilters": {
-    "portalUsers": "Usuarios del Portal",
-    "notPortalUsers": "No son Usuarios del Portal",
-    "accountActive": "Active"
+    "portalUsers": "Usuarios del portal",
+    "notPortalUsers": "No son usuarios del portal",
+    "accountActive": "Activo"
   }
 }

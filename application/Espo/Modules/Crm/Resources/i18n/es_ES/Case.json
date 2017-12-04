@@ -10,19 +10,21 @@
     "type": "Tipo",
     "description": "Descripción",
     "inboundEmail": "Cuenta de Correo",
-    "lead": "Referencia"
+    "lead": "Posible cliente",
+    "attachments": "Adjuntos"
   },
   "links": {
-    "inboundEmail": "Cuenta de Correo",
+    "inboundEmail": "Cuenta de correo",
     "account": "Cuenta",
-    "contact": "Contratos (Primaria)",
+    "contact": "Contratos (principal)",
     "Contacts": "Contactos",
     "meetings": "Reuniones",
     "calls": "Llamadas",
     "tasks": "Tareas",
     "emails": "Correos",
-    "articles": "Artículos de la Base de Conocimientos",
-    "lead": "Referencia"
+    "articles": "Artículos de la base de conocimiento",
+    "lead": "Posible cliente",
+    "attachments": "Adjuntos"
   },
   "options": {
     "status": {
@@ -46,7 +48,7 @@
     }
   },
   "labels": {
-    "Create Case": "Crear Caso",
+    "Create Case": "Crear ticket",
     "Close": "Cerrar",
     "Reject": "Rechazar",
     "Closed": "Cerrados",

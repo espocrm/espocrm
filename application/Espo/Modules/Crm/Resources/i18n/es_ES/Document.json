@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Create Document": "Crear Documento",
+    "Create Document": "Crear documento",
     "Details": "Detalles"
   },
   "fields": {
@@ -8,8 +8,8 @@
     "status": "Estado",
     "file": "Archivo",
     "type": "Tipo",
-    "publishDate": "Publicar Fecha",
-    "expirationDate": "Fecha de Expiración",
+    "publishDate": "Fecha de publicación",
+    "expirationDate": "Fecha de caducidad",
     "description": "Descripción",
     "accounts": "Cuentas",
     "folder": "Carpeta"
@@ -18,7 +18,7 @@
     "accounts": "Cuentas",
     "opportunities": "Oportunidades",
     "folder": "Carpeta",
-    "leads": "Referencias",
+    "leads": "Posibles clientes",
     "contacts": "Contactos"
   },
   "options": {

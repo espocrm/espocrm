@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "body": "Cuerpo",
-    "entityType": "Tipo de Entidad",
+    "entityType": "Tipo de entidad",
     "header": "Cabecera",
     "footer": "Pié",
     "leftMargin": "Margen Izquierdo",
@@ -11,13 +11,13 @@
     "bottomMargin": "Margen Inferior",
     "printFooter": "Imprimir Pié",
     "footerPosition": "Posición del Pié",
-    "variables": "Available Placeholders"
+    "variables": "Etiquetas disponibles."
   },
   "labels": {
-    "Create Template": "Crear Plantilla"
+    "Create Template": "Crear plantilla"
   },
   "tooltips": {
     "footer": "Use {pageNumber} para imprimir el número de página.",
-    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
+    "variables": "Copie y Pegue la etiqueta necesaria en el encabezado, cuerpo o pie de página."
   }
 }

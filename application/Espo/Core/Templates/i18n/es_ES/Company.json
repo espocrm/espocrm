@@ -1,8 +1,8 @@
 {
   "fields": {
-    "billingAddress": "Billing Address",
-    "shippingAddress": "Dirección de envio",
-    "website": "Sitio Web"
+    "billingAddress": "Dirección de facturación",
+    "shippingAddress": "Dirección de envío",
+    "website": "Sitio web"
   },
   "links": {
     "meetings": "Reuniones",
@@ -10,6 +10,6 @@
     "tasks": "Tareas"
   },
   "labels": {
-    "Create {entityType}": "Create {entityTypeTranslated}"
+    "Create {entityType}": "Crear {entityTypeTranslated}"
   }
 }

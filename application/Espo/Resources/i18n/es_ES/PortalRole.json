@@ -4,8 +4,8 @@
   },
   "labels": {
     "Access": "Acceder",
-    "Create PortalRole": "Crear Rol del Portal",
-    "Scope Level": "Alcance",
-    "Field Level": "Nivel del Campo"
+    "Create PortalRole": "Crear rol del portal",
+    "Scope Level": "Nivel de acceso a entidades",
+    "Field Level": "Nivel de acceso a campos"
   }
 }

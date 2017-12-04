@@ -1,44 +1,59 @@
 {
   "fields": {
     "name": "Nombre",
-    "emailAddress": "Correo Electrónico",
+    "emailAddress": "Dirección de correo electrónico",
     "status": "Estado",
-    "assignToUser": "Asignar al Usuario",
-    "host": "Host",
-    "username": "Nombre de Usuario",
+    "assignToUser": "Asignar al usuario",
+    "host": "Servidor",
+    "username": "Nombre de usuario",
     "password": "Contraseña",
     "port": "Puerto",
-    "monitoredFolders": "Carpetas supervisadas",
-    "trashFolder": "Carpeta de Papelera",
+    "monitoredFolders": "Carpetas sincronizadas",
+    "trashFolder": "Carpeta de papelera",
     "ssl": "SSL",
-    "createCase": "Crear Caso",
-    "reply": "Respuesta Automática",
-    "caseDistribution": "Distribución de Caso",
-    "replyEmailTemplate": "Plantilla de Respuesta de Correo",
-    "replyFromAddress": "Respuesta de la Dirección",
-    "replyToAddress": "Responder a la Dirección",
-    "replyFromName": "Respuesta de Nombre",
-    "targetUserPosition": "Objetivo Posición Usuario",
-    "fetchSince": "Traer Desde",
+    "createCase": "Crear ticket",
+    "reply": "Respuesta automática",
+    "caseDistribution": "Distribución de tickets",
+    "replyEmailTemplate": "Plantilla de respuesta de correo",
+    "replyFromAddress": "Responder a (dirección)",
+    "replyToAddress": "Responder a (dirección)",
+    "replyFromName": "Respuesta De (nombre):",
+    "targetUserPosition": "Objetivo posición usuario",
+    "fetchSince": "Traer correos desde",
     "addAllTeamUsers": "Para todos los usuarios del equipo",
-    "team": "Target Team",
-    "teams": "Teams"
+    "team": "Equipo objetivo",
+    "teams": "Equipos",
+    "sentFolder": "Carpeta de enviados",
+    "storeSentEmails": "Almacenar correos enviados",
+    "useSmtp": "Usar SMTP",
+    "smtpHost": "Servidor SMTP",
+    "smtpPort": "Puerto SMTP",
+    "smtpAuth": "Autentificación SMTP",
+    "smtpSecurity": "Seguridad SMTP",
+    "smtpUsername": "Usuario SMTP",
+    "smtpPassword": "Contraseña SMTP",
+    "fromName": "De (nombre):",
+    "smtpIsShared": "SMTP ¿Es compartido?",
+    "smtpIsForMassEmail": "SMTP es para envíos masivos"
   },
   "tooltips": {
-    "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
-    "createCase": "Automaticamente crear un Caso de los correos entrantes.",
+    "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\nSolo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
+    "createCase": "Automaticamente crear un ticket de los correos entrantes.",
     "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
-    "caseDistribution": "¿Cómo serán asignados a los casos? Asignados directamente a un usuario o al equipo.",
-    "assignToUser": "User cases will be assigned to.",
-    "team": "Team cases will be assigned to.",
-    "teams": "Teams emails will be assigned to.",
-    "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams.",
-    "targetUserPosition": "Users with specified position will be distributed with cases.",
-    "monitoredFolders": "Multiple folders should be separated by comma."
+    "caseDistribution": "¿Cómo serán asignados a los tickets? Asignados directamente a un usuario o al equipo.",
+    "assignToUser": "Los tickets de usuario se asignarán a.",
+    "team": "Los tickets del equipo serán asignados a.",
+    "teams": "Los correos de equipos serán asignados a.",
+    "addAllTeamUsers": "Los correos aparecerán en la bandeja de entrada de todos los usuarios de los equipos especificados.",
+    "targetUserPosition": "Los usuarios con la posición especificada serán distribuidos a los tickets.",
+    "monitoredFolders": "Las carpetas deben estar separadas por comas.",
+    "smtpIsShared": "Si se marca, entonces los usuarios podrán enviar correos usando este SMTP. La disponibilidad está controlada por Roles a través de los permisos de la cuenta de correo grupal.",
+    "smtpIsForMassEmail": "Si está marcado, SMTP estará disponible para correo masivo.",
+    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP."
   },
   "links": {
     "filters": "Filtros",
-    "emails": "Emails"
+    "emails": "Correos"
   },
   "options": {
     "status": {
@@ -48,12 +63,12 @@
     "caseDistribution": {
       "": "Ninguno",
       "Direct-Assignment": "Asignación directa",
-      "Round-Robin": "Round-Robin",
-      "Least-Busy": "Menos Ocupado"
+      "Round-Robin": "Todos contra todos",
+      "Least-Busy": "Menos ocupado"
     }
   },
   "labels": {
-    "Create InboundEmail": "Crear Cuenta de Correo Electrónico",
+    "Create InboundEmail": "Crear cuenta pesonal",
     "IMAP": "IMAP",
     "Actions": "Acciones",
     "Main": "Principal"

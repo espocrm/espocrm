@@ -29,12 +29,12 @@
     "receiveStreamEmailNotifications": "Notificar por correo las publicaciones y actualizaciones de estátus",
     "dashboardLayout": "Formato del Tablero",
     "emailReplyForceHtml": "Responder correo en HTML",
-    "autoFollowEntityTypeList": "Global Auto-Follow",
-    "emailReplyToAllByDefault": "Email Reply to all by default",
-    "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-    "followCreatedEntities": "Auto-follow created records",
-    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
+    "autoFollowEntityTypeList": "Seguimiento-automático Global",
+    "emailReplyToAllByDefault": "Responder a todos por omisión",
+    "doNotFillAssignedUserIfNotRequired": "No pre-llenar el campo de usuario al crear un registro",
+    "followEntityOnStreamPost": "Seguimiento-automático del registro al publicarlo en Seguimiento",
+    "followCreatedEntities": "Seguimiento-automático de los registros creados",
+    "followCreatedEntityTypeList": "Seguimiento-automático de los registros de tipos de entidad específicos"
   },
   "options": {
     "weekStart": {
@@ -50,9 +50,9 @@
     "Locale": "Localización"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
-    "followCreatedEntities": "When create new records they will be automatically followed even if assigned to another user.",
-    "followCreatedEntityTypeList": "When create new records of selected entity types they will be followed automatically even if assigned to another user."
+    "autoFollowEntityTypeList": "Seguir automáticamente TODOS los nuevos registros (de cualquier usuario) de los tipos de entidad seleccionados.  Así podrá ver información de seguimiento y recibir notificaciones sobre todo lo registrado en el sistema.",
+    "doNotFillAssignedUserIfNotRequired": "El registro creado por el usuario asignado no será llenado con el propio usuario, a menos que el campo sea requerido.",
+    "followCreatedEntities": "Los nuevos registros creados tendrán seguimiento-automático, incluso si son asignados a otro usuario.",
+    "followCreatedEntityTypeList": "Los nuevos registros creados de un tipo de entidad seleccionado tendrán seguimiento-automático, incluso si son asignados a otro usuario."
   }
 }

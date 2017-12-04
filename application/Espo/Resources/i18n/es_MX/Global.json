@@ -227,8 +227,6 @@
     "fieldShouldAfter": "{field} debe estar después de {otherField}",
     "fieldShouldBefore": "{field} debe estar antes de {otherField}",
     "fieldShouldBeBetween": "{field} debe estar entre {min} y {max}",
-    "fieldShouldBeLess": "{field} debe ser menor que {value}",
-    "fieldShouldBeGreater": "{field} debe ser mayor que {value}",
     "fieldBadPasswordConfirm": "{field} confirmado de forma incorrecta",
     "resetPreferencesDone": "Se han restablecido las preferencias por omisión",
     "confirmation": "¿Está seguro?",

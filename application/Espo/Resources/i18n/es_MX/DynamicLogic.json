@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Campo"
-  },
   "options": {
     "operators": {
       "equals": "Igual a",

@@ -1,51 +1,51 @@
 {
   "labels": {
     "Converted To": "Convertido a",
-    "Create Lead": "Crear Potencial",
+    "Create Lead": "Crear posible cliente",
     "Convert": "Convertir",
-    "convert": "convert"
+    "convert": "convertir"
   },
   "fields": {
     "name": "Nombre",
     "emailAddress": "Correo electrónico",
     "title": "Título",
-    "website": "Sito Web",
+    "website": "Sitio web",
     "phoneNumber": "Teléfono",
-    "accountName": "Nombre de Cuenta",
-    "doNotCall": "No Llamar",
+    "accountName": "Nombre de la cuenta",
+    "doNotCall": "No llamar",
     "address": "Dirección",
     "status": "Estado",
-    "source": "Fuente",
-    "opportunityAmount": "Costo de Oportunidad",
-    "opportunityAmountConverted": "Costo de Oportunidad (convertido)",
+    "source": "Toma de contacto",
+    "opportunityAmount": "Costo de oportunidad",
+    "opportunityAmountConverted": "Costo de oportunidad (convertido)",
     "description": "Descripción",
     "createdAccount": "Cuenta",
     "createdContact": "Contacto",
     "createdOpportunity": "Oportunidad",
     "campaign": "Campaña",
-    "targetLists": "Lista de Objetivos",
-    "targetList": "Lista de Objetivos",
+    "targetLists": "Listas de objetivos",
+    "targetList": "Lista objetivo",
     "industry": "Industria",
-    "acceptanceStatus": "Acceptance Status",
-    "opportunityAmountCurrency": "Opportunity Amount Currency",
-    "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-    "acceptanceStatusCalls": "Acceptance Status (Calls)"
+    "acceptanceStatus": "Estado de aceptación",
+    "opportunityAmountCurrency": "Moneda del costo de oportunidad",
+    "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
+    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)"
   },
   "links": {
-    "targetLists": "Lista de Objetivos",
-    "campaignLogRecords": "Registro de Campaña",
+    "targetLists": "Lista de objetivos",
+    "campaignLogRecords": "Registros de la campaña",
     "campaign": "Campaña",
     "createdAccount": "Cuenta",
     "createdContact": "Contacto",
     "createdOpportunity": "Oportunidad",
-    "cases": "Casos",
+    "cases": "Tickets",
     "documents": "Documentos"
   },
   "options": {
     "status": {
       "New": "Nuevo",
       "Assigned": "Asignado",
-      "In Process": "En Proceso",
+      "In Process": "En proceso",
       "Converted": "Convertidos",
       "Recycled": "Reciclado",
       "Dead": "Muerto"
@@ -57,7 +57,7 @@
       "Existing Customer": "Cliente Existente",
       "Partner": "Socio",
       "Public Relations": "Relaciones Públicas",
-      "Web Site": "Sitio Web",
+      "Web Site": "Sitio web",
       "Campaign": "Campaña",
       "Other": "Otro"
     }

@@ -4,9 +4,9 @@
     "link": "Enlace",
     "notSortable": "No ordenable",
     "align": "Alinear",
-    "panelName": "Panel Name",
-    "style": "Style",
-    "sticked": "Sticked"
+    "panelName": "Nombre del Panel",
+    "style": "Estilo",
+    "sticked": "Pegado"
   },
   "options": {
     "align": {
@@ -14,12 +14,12 @@
       "right": "Derecha"
     },
     "style": {
-      "default": "Default",
-      "success": "Success",
-      "danger": "Danger",
-      "info": "Info",
-      "warning": "Warning",
-      "primary": "Primary"
+      "default": "Borrador",
+      "success": "Exito",
+      "danger": "Peligro",
+      "info": "Información",
+      "warning": "Advertencia",
+      "primary": "Principal"
     }
   }
 }

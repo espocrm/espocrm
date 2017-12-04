@@ -2,43 +2,43 @@
   "labels": {
     "Fields": "Campos",
     "Relationships": "Relaciones",
-    "Schedule": "Schedule",
-    "Log": "Log",
-    "Formula": "Formula"
+    "Schedule": "Programar",
+    "Log": "Registros",
+    "Formula": "Fórmula"
   },
   "fields": {
     "name": "Nombre",
     "type": "Tipo",
-    "labelSingular": "Etiqueta en Singular",
-    "labelPlural": "Etiqueta en Plural",
-    "stream": "Actividad",
+    "labelSingular": "Etiqueta en singular",
+    "labelPlural": "Etiqueta en plural",
+    "stream": "Historia",
     "label": "Etiqueta",
     "linkType": "Tipo de enlace",
-    "entityForeign": "Entidad Foránea",
+    "entityForeign": "Entidad foránea",
     "linkForeign": "Enlace Foráneo",
     "link": "Enlace",
     "labelForeign": "Etiqueta Foránea",
     "sortBy": "Orden por defecto (campo)",
     "sortDirection": "Orden por defecto (dirección)",
     "relationName": "Nombre de la Tabla Intermedia",
-    "linkMultipleField": "Enlaza Múltiples Campos",
-    "linkMultipleFieldForeign": "Enlaza Múltiples Campos foráneos",
+    "linkMultipleField": "Enlaza múltiples campos",
+    "linkMultipleFieldForeign": "Enlaza múltiples campos foráneos",
     "disabled": "Desactivado",
-    "textFilterFields": "Campos de Filtros de Texto",
-    "audited": "Audited",
-    "auditedForeign": "Foreign Audited",
-    "statusField": "Status Field",
-    "beforeSaveCustomScript": "Before Save Custom Script"
+    "textFilterFields": "Los campos de filtro de texto",
+    "audited": "Auditado",
+    "auditedForeign": "Foráneo auditado",
+    "statusField": "Campo estado",
+    "beforeSaveCustomScript": "Antes de guardar la secuencia de comandos personalizada"
   },
   "options": {
     "type": {
       "": "Ninguno",
       "Base": "Base",
       "Person": "Persona",
-      "CategoryTree": "Árbol de Categorías",
-      "Event": "Event",
+      "CategoryTree": "Árbol de categorías",
+      "Event": "Evento",
       "BasePlus": "Base Plus",
-      "Company": "Company"
+      "Company": "Empresa"
     },
     "linkType": {
       "manyToMany": "Mucho-a-Muchos",
@@ -55,15 +55,15 @@
   "messages": {
     "entityCreated": "La entidad ha sido creada",
     "linkAlreadyExists": "Conflicto de nombres en el enlace.",
-    "linkConflict": "Un enlace con el mismo nombra ya existe."
+    "linkConflict": "Conflicto de nombres: un enlace o campo con el mismo nombre ya existe."
   },
   "tooltips": {
-    "statusField": "Updates of this field are logged in stream.",
-    "textFilterFields": "Fields used by text search.",
-    "stream": "Whether entity has a Stream.",
-    "disabled": "Check if you don't need this entity in your system.",
-    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
-    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-    "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
+    "statusField": "Las actualizaciones de este campo se registran en la historia.",
+    "textFilterFields": "Campos utilizados por la búsqueda de texto.",
+    "stream": "Marque para que la entidad tenga historia.",
+    "disabled": "Marque si no necesita esta entidad en su sistema.",
+    "linkAudited": "Crear un registro relacionado y vincularlo con el registro existente, hará que se registre en la historia.",
+    "linkMultipleField": "El campo de relaciones múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
+    "entityType": "Base: Sin elementos adicionales \n\nBase Plus - Similar a Posibles clientes y Oportunidades (tiene paneles de Actividades planeadas, Historial de actividades y Tareas).\n\nEvento - Similar a Reuniones y Llamadas (disponible en Calendario y en el Panel de Actividades).\n\nPersona - Similar a Contacto.\n\nEmpresa - Similar a Cuenta."
   }
 }

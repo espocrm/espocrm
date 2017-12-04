@@ -1,30 +1,30 @@
 {
   "fields": {
-    "name": "Nombre",
+    "name": "Nombre de la cuenta",
     "status": "Estado",
-    "host": "Host",
-    "username": "Nombre de Usuario",
+    "host": "Servidor",
+    "username": "Nombre de usuario",
     "password": "Contraseña",
     "port": "Puerto",
-    "monitoredFolders": "Carpetas supervisadas",
-    "ssl": "SSL",
-    "fetchSince": "Traer Desde",
-    "emailAddress": "Correo Electrónico",
-    "sentFolder": "Carpeta de Enviados",
-    "storeSentEmails": "Almacenar Correos Enviados",
-    "keepFetchedEmailsUnread": "Mantener los correo que se han obtenido sin leer",
-    "emailFolder": "Poner en la Carpeta",
+    "monitoredFolders": "Carpetas sincronizadas",
+    "ssl": "¿Usa SSL?",
+    "fetchSince": "Traer correos desde",
+    "emailAddress": "Correo electrónico",
+    "sentFolder": "Carpeta de enviados",
+    "storeSentEmails": "Almacenar correos enviados",
+    "keepFetchedEmailsUnread": "Mantener los correos que se han obtenido sin leer",
+    "emailFolder": "Poner en la carpeta",
     "useSmtp": "Usar SMTP",
-    "smtpHost": "Host SMTP",
+    "smtpHost": "Servidor SMTP",
     "smtpPort": "Puerto SMTP",
-    "smtpAuth": "Auth SMTP",
+    "smtpAuth": "Autentificación SMTP",
     "smtpSecurity": "Seguridad SMTP",
     "smtpUsername": "Usuario SMTP",
     "smtpPassword": "Contraseña SMTP"
   },
   "links": {
     "filters": "Filtros",
-    "emails": "Emails"
+    "emails": "Correos"
   },
   "options": {
     "status": {
@@ -33,11 +33,11 @@
     }
   },
   "labels": {
-    "Create EmailAccount": "Crear Cuenta de Correo Electrónico",
+    "Create EmailAccount": "Crear cuenta pesonal",
     "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
-    "Send Test Email": "Enviar Email de Prueba",
+    "Send Test Email": "Enviar correo electrónico de prueba",
     "SMTP": "SMTP"
   },
   "messages": {
@@ -45,7 +45,7 @@
     "connectionIsOk": "Conexión correcta"
   },
   "tooltips": {
-    "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
-    "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
+    "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos electrónicos enviados desde un cliente externo.",
+    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo electrónico debe coincidir con la dirección desde donde se enviarán los correos electrónicos."
   }
 }

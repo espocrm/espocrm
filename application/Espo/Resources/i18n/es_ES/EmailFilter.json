@@ -3,27 +3,27 @@
     "from": "De",
     "to": "Para",
     "subject": "Asunto",
-    "bodyContains": "Contenido del Cuerpo",
+    "bodyContains": "Contenido del cuerpo",
     "action": "Acción",
-    "isGlobal": "Es Global",
+    "isGlobal": "Es global",
     "emailFolder": "Carpeta"
   },
   "labels": {
     "Create EmailFilter": "Crear un filtro de email",
-    "Emails": "Emails"
+    "Emails": "Correos"
   },
   "tooltips": {
-    "from": "Los correos enviados desde la dirección especificada. Dejar en blanco si no es necesario.",
-    "to": "Los correos electrónicos que se envían a la dirección especificada. Dejar en blanco si no es necesario.",
-    "name": "Dar al filtro una descripción.",
-    "subject": "Usar una wildcard *:\n\ntexto* - empieza con texto,\n*texot* - contiene texto,\n*texto - termina con texto.",
-    "bodyContains": "El cuerpo del email contiene cualquiera de las palabras o frases especificadas.",
-    "isGlobal": "Aplica este filtro a todos los emails que entren en el sistema."
+    "from": "Filtra los correos enviados desde esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
+    "to": "Filtra los correos enviados a esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
+    "name": "Dé al filtro un nombre descriptivo.",
+    "subject": "Filtra los correos con el asunto. Dejar en blanco si no es necesario. Puede usar el comodín *:\n\ntexto* - empieza con texto,\n*texot* - contiene texto,\n*texto - termina con texto.",
+    "bodyContains": "Filtra los correos que en el cuerpo contengan cualquiera de estas palabras o frases.",
+    "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema."
   },
   "options": {
     "action": {
-      "Skip": "Ignarar",
-      "Move to Folder": "Poner en Carpeta"
+      "Skip": "Ignorar",
+      "Move to Folder": "Poner en la carpeta"
     }
   }
 }

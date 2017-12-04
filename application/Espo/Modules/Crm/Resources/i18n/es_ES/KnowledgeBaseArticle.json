@@ -1,20 +1,20 @@
 {
   "labels": {
-    "Create KnowledgeBaseArticle": "Crear Artículo",
+    "Create KnowledgeBaseArticle": "Crear artículo",
     "Any": "Cualquiera",
-    "Send in Email": "Enviar por Correo",
+    "Send in Email": "Enviar por correo",
     "Move Up": "Mover arriba",
     "Move Down": "Mover abajo",
-    "Move to Top": "Mover al principio",
+    "Move to Top": "Mover al inicio",
     "Move to Bottom": "Mover al final"
   },
   "fields": {
     "name": "Nombre",
-    "status": "Estatus",
+    "status": "Estado",
     "type": "Tipo",
-    "attachments": "Datos adjuntos",
-    "publishDate": "Fecha de Publicación",
-    "expirationDate": "Fecha de Expiración",
+    "attachments": "Adjuntos",
+    "publishDate": "Fecha de publicación",
+    "expirationDate": "Fecha de caducidad",
     "description": "Descripción",
     "body": "Cuerpo",
     "categories": "Categorías",
@@ -22,16 +22,16 @@
     "portals": "Portales"
   },
   "links": {
-    "cases": "Casos",
+    "cases": "Tickets",
     "opportunities": "Oportunidades",
     "categories": "Categorías",
     "portals": "Portales"
   },
   "options": {
     "status": {
-      "In Review": "En Revisión",
+      "In Review": "En revisión",
       "Draft": "Borrador",
-      "Archived": "Arcivado",
+      "Archived": "Archivado",
       "Published": "Publicado"
     },
     "type": {
@@ -42,6 +42,6 @@
     "published": "Publicado"
   },
   "tooltips": {
-    "portals": "Article will be available only in specified portals."
+    "portals": "El artículo estará disponible solo en los portales especificados."
   }
 }

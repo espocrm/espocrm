@@ -3,15 +3,15 @@
     "name": "Nombre",
     "status": "Estado",
     "target": "Objetivo",
-    "sentAt": "Enviado",
+    "sentAt": "Fecha de envío",
     "attemptCount": "Intentos",
-    "emailAddress": "Correo Electrónico",
-    "massEmail": "Email Masivo",
+    "emailAddress": "Correo electrónico",
+    "massEmail": "Correo masivo",
     "isTest": "Es una prueba"
   },
   "links": {
     "target": "Objetivo",
-    "massEmail": "Email Masivo"
+    "massEmail": "Correo masivo"
   },
   "options": {
     "status": {

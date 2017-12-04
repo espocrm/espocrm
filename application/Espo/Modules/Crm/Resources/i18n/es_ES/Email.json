@@ -1,10 +1,10 @@
 {
   "labels": {
-    "Create Lead": "Crear Potencial",
-    "Create Contact": "Crear Contacto",
-    "Create Task": "Crear Tarea",
-    "Create Case": "Crear Caso",
-    "Add to Contact": "Add to Contact",
-    "Add to Lead": "Add to Lead"
+    "Create Lead": "Crear posible cliente",
+    "Create Contact": "Crear contacto",
+    "Create Task": "Crear tarea",
+    "Create Case": "Crear ticket",
+    "Add to Contact": "Agregar a contacto",
+    "Add to Lead": "Agregar a posible cliente"
   }
 }

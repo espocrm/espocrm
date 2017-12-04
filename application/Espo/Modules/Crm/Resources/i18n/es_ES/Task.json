@@ -3,10 +3,10 @@
     "name": "Nombre",
     "parent": "Padre",
     "status": "Estado",
-    "dateStart": "Fecha de Comienzo",
+    "dateStart": "Fecha de comienzo",
     "dateEnd": "Fecha de vencimiento",
     "dateStartDate": "Fecha de Inicio (todo el día)",
-    "dateEndDate": "Fecha de fin (todo el día)",
+    "dateEndDate": "Fecha de finalización (todo el día)",
     "priority": "Prioridad",
     "description": "Descripción",
     "isOverdue": "Atrasado",
@@ -20,7 +20,7 @@
   },
   "options": {
     "status": {
-      "Not Started": "Sin Empezar",
+      "Not Started": "Sin empezar",
       "Started": "Comenzado",
       "Completed": "Completado",
       "Canceled": "Cancelado",
@@ -34,14 +34,14 @@
     }
   },
   "labels": {
-    "Create Task": "Crear Tarea",
+    "Create Task": "Crear tarea",
     "Complete": "Completada"
   },
   "presetFilters": {
     "actual": "Actuales",
     "completed": "Completado",
-    "todays": "De Hoy",
+    "todays": "De hoy",
     "overdue": "Atrazadas",
-    "deferred": "Deferred"
+    "deferred": "Diferido"
   }
 }

@@ -2,7 +2,7 @@
   "fields": {
     "status": "Estado",
     "executeTime": "Ejecutar a",
-    "attempts": "Intentos Izquierda",
+    "attempts": "Intentos restantes",
     "failedAttempts": "Intentos Fallidos",
     "serviceName": "Servicio",
     "method": "Método",

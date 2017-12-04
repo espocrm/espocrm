@@ -3,27 +3,27 @@
     "name": "Nombre",
     "status": "Estado",
     "job": "Trabajo",
-    "scheduling": "Programación (crontab anotación)"
+    "scheduling": "Programación (notación CRONTab)"
   },
   "links": {
-    "log": "Registro de Log"
+    "log": "Registro"
   },
   "labels": {
-    "Create ScheduledJob": "Crear Tarea programado"
+    "Create ScheduledJob": "Crear tarea programada"
   },
   "options": {
     "job": {
       "Cleanup": "Limpiar",
-      "CheckInboundEmails": "Comprobar Correos Entrantes",
-      "CheckEmailAccounts": "Compruebe cuentas de correo personales",
+      "CheckInboundEmails": "Comprobar cuentas de correo grupales",
+      "CheckEmailAccounts": "Comprobar cuentas de correo personales",
       "SendEmailReminders": "Enviar Recordatorios por Email",
       "AuthTokenControl": "Control del Token de Autenticación",
-      "SendEmailNotifications": "Send Email Notifications"
+      "SendEmailNotifications": "Enviar notificaciones por correo electrónico"
     },
     "cronSetup": {
-      "linux": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
-      "mac": "Nota: Añada esta línea al archivo crontab para ejecutar trabajos Espo programados:",
-      "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar trabajos programados de Espo usando tareas programadas de Windows:",
+      "linux": "Nota: añada esta línea al archivo crontab para que EspoCRM pueda ejecutar las tareas programadas:",
+      "mac": "Nota: añada esta línea al archivo crontab para que EspoCRM pueda ejecutar las tareas programadas:",
+      "windows": "Nota: Crear un archivo por lotes con los siguientes comandos para ejecutar tareas programadas de EspoCRM usando tareas programadas de Windows:",
       "default": "Nota: Agregar este comando a Cron Job (Tarea Programada):"
     },
     "status": {
@@ -32,6 +32,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Defines when and how often job will be run\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+    "scheduling": "Define cuándo y cada cuánto el trabajo será ejecutado\n\n*/5 * * * * - cada 5 minutos\n\n0 */2 * * * - cada 2 horas\n\n30 1 * * * - a las 01:30 cada día\n\n0 0 1 * * - el primer día del mes"
   }
 }

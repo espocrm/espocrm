@@ -4,22 +4,24 @@
     "roles": "Roles",
     "assignmentPermission": "Asignación de permisos",
     "userPermission": "Permisos de Usuario",
-    "portalPermission": "Permisos del Portal"
+    "portalPermission": "Permisos del portal",
+    "groupEmailAccountPermission": "Permiso de la cuenta de correo grupal"
   },
   "links": {
     "users": "Usuarios",
     "teams": "Equipos"
   },
   "tooltips": {
-    "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
-    "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users."
+    "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
+    "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y la historia de otros usuarios.\n\ntodo - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - solo las propias",
+    "portalPermission": "Define un acceso a la información del portal, la capacidad de publicar mensajes a los usuarios del portal.\n",
+    "groupEmailAccountPermission": "Define el acceso a las cuentas de correo grupales, la capacidad de enviar correos a través del SMTP grupal."
   },
   "labels": {
     "Access": "Acceso",
-    "Create Role": "Crear Rol",
-    "Scope Level": "Alcance",
-    "Field Level": "Nivel del Campo"
+    "Create Role": "Crear rol",
+    "Scope Level": "Nivel de acceso a entidades",
+    "Field Level": "Nivel de acceso a campos"
   },
   "options": {
     "accessList": {
@@ -28,21 +30,21 @@
       "disabled": "desactivado"
     },
     "levelList": {
-      "all": "todos",
-      "team": "equipo",
-      "account": "cuenta",
-      "contact": "contacto",
-      "own": "propio",
-      "no": "no",
-      "yes": "si",
-      "not-set": "sin establecer"
+      "all": "Todos",
+      "team": "Equipo",
+      "account": "Cuenta",
+      "contact": "Contacto",
+      "own": "Propio",
+      "no": "No",
+      "yes": "Si",
+      "not-set": "Sin establecer"
     }
   },
   "actions": {
     "read": "Leer",
     "edit": "Editar",
     "delete": "Borrar",
-    "stream": "Seguimiento",
+    "stream": "Historia",
     "create": "Crear"
   },
   "messages": {

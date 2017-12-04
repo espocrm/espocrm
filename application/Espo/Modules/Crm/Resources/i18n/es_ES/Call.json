@@ -3,14 +3,14 @@
     "name": "Nombre",
     "parent": "Padre",
     "status": "Estado",
-    "dateStart": "Fecha de Comienzo",
-    "dateEnd": "Fecha de Finalización",
+    "dateStart": "Fecha de comienzo",
+    "dateEnd": "Fecha de finalización",
     "direction": "Dirección",
     "duration": "Duración",
     "description": "Descripción",
     "users": "Usuarios",
     "contacts": "Contactos",
-    "leads": "Potenciales",
+    "leads": "Posibles clientes",
     "reminders": "Recordatorios",
     "account": "Cuenta",
     "acceptanceStatus": "Estado de aceptación"
@@ -19,7 +19,7 @@
     "status": {
       "Planned": "Planeadas",
       "Held": "Celebradas",
-      "Not Held": "Sin Celebrar"
+      "Not Held": "Sin celebrar"
     },
     "direction": {
       "Outbound": "Saliente",
@@ -33,18 +33,18 @@
     }
   },
   "massActions": {
-    "setHeld": "Marcar como Celebrada",
-    "setNotHeld": "Marcar como No Celebrada"
+    "setHeld": "Marcar como celebrada",
+    "setNotHeld": "Marcar como No celebrada"
   },
   "labels": {
-    "Create Call": "Crear Llamada",
-    "Set Held": "Marcar como Celebrada",
-    "Set Not Held": "Marcar como No Celebrada",
+    "Create Call": "Crear llamada",
+    "Set Held": "Marcar como celebrada",
+    "Set Not Held": "Marcar como No celebrada",
     "Send Invitations": "Enviar Invitaciones"
   },
   "presetFilters": {
     "planned": "Planeadas",
     "held": "Celebradas",
-    "todays": "De Hoy"
+    "todays": "De hoy"
   }
 }

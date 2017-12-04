@@ -2,32 +2,33 @@
   "fields": {
     "name": "Nombre",
     "status": "Estado",
-    "storeSentEmails": "Almacenar Correos Enviados",
-    "startAt": "Fecha de Comienzo",
-    "fromAddress": "De la dirección",
-    "fromName": "De Nombre",
-    "replyToAddress": "Responder a la dirección",
-    "replyToName": "Responder al Nombre",
+    "storeSentEmails": "Almacenar correos enviados",
+    "startAt": "Fecha de inicio",
+    "fromAddress": "De (email)",
+    "fromName": "De (nombre):",
+    "replyToAddress": "Responder a (dirección)",
+    "replyToName": "Responder a (nombre)",
     "campaign": "Campaña",
-    "emailTemplate": "Plantilla de Correo",
+    "emailTemplate": "Plantilla de correo",
     "inboundEmail": "Cuenta de correo",
-    "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
-    "optOutEntirely": "Opt-Out Entirely"
+    "targetLists": "Lista de objetivos",
+    "excludingTargetLists": "Lista de objetivos excluídos",
+    "optOutEntirely": "Dar de baja completamente",
+    "smtpAccount": "Cuenta SMTP"
   },
   "links": {
-    "targetLists": "Lista de Objetivos",
-    "excludingTargetLists": "Lista de Objetivos Excluídos",
-    "queueItems": "Items en cola",
+    "targetLists": "Lista de objetivos",
+    "excludingTargetLists": "Lista de objetivos excluídos",
+    "queueItems": "Elementos en cola",
     "campaign": "Campaña",
-    "emailTemplate": "Plantilla de Correo",
+    "emailTemplate": "Plantilla de correo",
     "inboundEmail": "Cuenta de correo"
   },
   "options": {
     "status": {
       "Draft": "Borrador",
       "Pending": "Pendiente",
-      "In Process": "En Proceso",
+      "In Process": "En proceso",
       "Complete": "Completada",
       "Canceled": "Cancelado",
       "Failed": "Falló"
@@ -35,19 +36,23 @@
   },
   "labels": {
     "Create MassEmail": "Crear correo masivo",
-    "Send Test": "Enviar prueba"
+    "Send Test": "Enviar prueba",
+    "System SMTP": "Sistema SMTP",
+    "system": "sistema",
+    "group": "grupo"
   },
   "messages": {
     "selectAtLeastOneTarget": "Seleccione al menos un objetivo.",
     "testSent": "Se supone que el/los email/s de preuebas fueron enviados"
   },
   "tooltips": {
-    "optOutEntirely": "Direcciones de correo de los destinatarios que se desuscribieron serán marcados como optado por salir y no van a recibir ningún correo masivo.",
+    "optOutEntirely": "Las direcciones de correo de los destinatarios que se desuscriban serán marcadas como dadas de baja y no van a recibir ningún correo masivo.",
     "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "excludingTargetLists": "Los objetivos que no deben recibir mensajes.",
+    "storeSentEmails": "Los correos se almacenarán en el CRM."
   },
   "presetFilters": {
-    "actual": "Real",
+    "actual": "Actuales",
     "complete": "Completo"
   }
 }
