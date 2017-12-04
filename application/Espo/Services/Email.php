@@ -757,9 +757,11 @@ class Email extends Record
         $selectParams = $selectManager->getEmptySelectParams();
         $selectManager->applyAccess($selectParams);
 
+        $draftsSelectParams = $selectParams;
+
         $selectParams['whereClause'][] = $selectManager->getWherePartIsNotReadIsTrue();
 
-        $folderIdList = ['inbox'];
+        $folderIdList = ['inbox', 'drafts'];
 
         $emailFolderList = $this->getEntityManager()->getRepository('EmailFolder')->where(['assignedUserId' => $this->getUser()->id])->find();
         foreach ($emailFolderList as $folder) {
@@ -767,7 +769,11 @@ class Email extends Record
         }
 
         foreach ($folderIdList as $folderId) {
-            $folderSelectParams = $selectParams;
+            if ($folderId === 'drafts') {
+                $folderSelectParams = $draftsSelectParams;
+            } else {
+                $folderSelectParams = $selectParams;
+            }
             $selectManager->applyFolder($folderId, $folderSelectParams);
             $selectManager->addUsersJoin($folderSelectParams);
             $data[$folderId] = $this->getEntityManager()->getRepository('Email')->count($folderSelectParams);

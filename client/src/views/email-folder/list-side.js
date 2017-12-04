@@ -66,6 +66,9 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
             this.listenTo(this.emailCollection, 'all-marked-read', function (m) {
                 this.countsData = this.countsData || {};
                 for (var id in this.countsData) {
+                    if (id === 'drafts') {
+                        continue;
+                    }
                     this.countsData[id] = 0;
                 }
                 this.renderCounts();
@@ -99,8 +102,15 @@ Espo.define('views/email-folder/list-side', 'view', function (Dep) {
         },
 
         manageModelRemoving: function (model) {
+            if (model.get('status') === 'Draft') {
+                this.decreaseNotReadCount('drafts');
+                this.renderCounts();
+                return;
+            }
+
             if (!model.get('isUsers')) return;
             if (model.get('isRead')) return;
+
             var folderId = model.get('folderId') || 'inbox';
             this.decreaseNotReadCount(folderId);
             this.renderCounts();

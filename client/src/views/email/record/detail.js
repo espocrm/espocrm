@@ -279,6 +279,7 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             var afterSend = function () {
                 Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
+                model.trigger('after:send');
                 this.trigger('after:send');
             };
 
