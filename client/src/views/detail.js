@@ -103,6 +103,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
             }, this);
+            if (this.options.params && this.options.params.rootUrl) {
+                o.rootUrl = this.options.params.rootUrl;
+            }
             this.createView('record', this.getRecordViewName(), o);
         },
 
