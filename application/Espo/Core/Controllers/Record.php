@@ -237,6 +237,10 @@ class Record extends Base
             throw new Forbidden();
         }
 
+        if ($this->getAcl()->get('exportPermission') !== 'yes' && !$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }

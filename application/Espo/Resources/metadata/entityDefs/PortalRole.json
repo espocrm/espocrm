@@ -11,6 +11,13 @@
         },
         "fieldData": {
             "type": "jsonObject"
+        },
+        "exportPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
         }
     },
     "links": {

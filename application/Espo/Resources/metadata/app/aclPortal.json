@@ -114,6 +114,15 @@
             }
         }
     },
+    "valuePermissionList": [
+        "exportPermission"
+    ],
+    "permissionsDefaults": {
+        "exportPermission": "no"
+    },
+    "permissionsStrictDefaults": {
+        "exportPermission": "no"
+    },
     "scopeLevelTypesDefaults": {
         "boolean": false,
         "record": false

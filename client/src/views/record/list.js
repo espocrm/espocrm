@@ -730,7 +730,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (
                 this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
                 ||
-                this.getUser().get('isPortalUser') && this.getConfig().get('exportInPortalDisabled')
+                this.getAcl().get('exportPermission') === 'no'
             ) {
             	this.removeMassAction('export');
             }

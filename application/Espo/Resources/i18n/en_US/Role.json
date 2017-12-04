@@ -5,7 +5,8 @@
         "assignmentPermission": "Assignment Permission",
         "userPermission": "User Permission",
         "portalPermission": "Portal Permission",
-        "groupEmailAccountPermission": "Group Email Account Permission"
+        "groupEmailAccountPermission": "Group Email Account Permission",
+        "exportPermission": "Export Permission"
     },
     "links": {
         "users": "Users",
@@ -15,7 +16,8 @@
         "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
         "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view",
         "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
-        "groupEmailAccountPermission": "Defines an access to group email accounts, an ability to send emails from group SMTP."
+        "groupEmailAccountPermission": "Defines an access to group email accounts, an ability to send emails from group SMTP.",
+        "exportPermission": "Defines wheter users have an ability to export records."
     },
     "labels": {
         "Access": "Access",
