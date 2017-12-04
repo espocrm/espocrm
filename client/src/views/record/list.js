@@ -772,6 +772,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.massActionList = [];
             }
 
+            if (!this.massActionList.length && !this.selectable) {
+                this.checkboxes = false;
+            }
+
             this.listenTo(this.collection, 'sync', function (c, r, options) {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) return;
                 if (this.noRebuild) {
