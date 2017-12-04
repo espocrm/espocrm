@@ -13,5 +13,17 @@
     "boolFilterList": ["onlyMy"],
     "selectDefaultFilters": {
         "filter": "active"
+    },
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "label": "Manage Folders",
+                    "link": "#DocumentFolder",
+                    "acl": "edit",
+                    "aclScope": "DocumentFolder"
+                }
+            ]
+        }
     }
 }
