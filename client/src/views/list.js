@@ -262,20 +262,20 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
-            if (this.storeViewAfterCreate) {
-                var returnDispatchParams = {
-                    controller: this.scope,
-                    action: null,
-                    options: {
-                        isReturn: true
-                    }
-                };
-                this.prepareCreateReturnDispatchParams(returnDispatchParams);
-                _.extend(options, {
-                    returnUrl: this.getRouter().getCurrentUrl(),
-                    returnDispatchParams: returnDispatchParams
-                });
-            }
+
+            var returnDispatchParams = {
+                controller: this.scope,
+                action: null,
+                options: {
+                    isReturn: true
+                }
+            };
+            this.prepareCreateReturnDispatchParams(returnDispatchParams);
+            _.extend(options, {
+                returnUrl: this.getRouter().getCurrentUrl(),
+                returnDispatchParams: returnDispatchParams
+            });
+
             this.createView('quickCreate', 'views/modals/edit', options, function (view) {
                 view.render();
                 view.notify(false);
@@ -297,20 +297,19 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
-            if (this.storeViewAfterCreate) {
-                var returnDispatchParams = {
-                    controller: this.scope,
-                    action: null,
-                    options: {
-                        isReturn: true
-                    }
-                };
-                this.prepareCreateReturnDispatchParams(returnDispatchParams);
-                _.extend(options, {
-                    returnUrl: this.getRouter().getCurrentUrl(),
-                    returnDispatchParams: returnDispatchParams
-                });
-            }
+
+            var returnDispatchParams = {
+                controller: this.scope,
+                action: null,
+                options: {
+                    isReturn: true
+                }
+            };
+            this.prepareCreateReturnDispatchParams(returnDispatchParams);
+            _.extend(options, {
+                returnUrl: this.getRouter().getCurrentUrl(),
+                returnDispatchParams: returnDispatchParams
+            });
 
             router.navigate(url, {trigger: false});
             router.dispatch(this.scope, 'create', options);
