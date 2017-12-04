@@ -161,6 +161,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     view.render();
                     this.listenTo(view, 'after:save', function (attributes) {
                         $label.text(attributes.panelName);
+                        $label.attr('data-is-custom', 'true');
                         $header.data('style', attributes.style);
                         view.close();
                     }, this);
@@ -182,9 +183,18 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 empty = true;
             }
 
-            data = data || {label: this.translate('New panel', 'labels', 'Admin'), rows: [[]]};
+            data = data || {customLabel: this.translate('New panel', 'labels', 'Admin'), rows: [[]]};
 
             data.label = data.label || '';
+
+            data.isCustomLabel = false;
+            if (data.customLabel) {
+                data.label = data.customLabel;
+                data.isCustomLabel = true;
+            } else {
+                data.label = this.translate(data.label, 'labels', this.scope);
+            }
+
             data.style = data.style || null;
 
             data.rows.forEach(function (row) {
@@ -279,11 +289,16 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             var layout = [];
             var self = this;
             $("#layout ul.panels > li").each(function () {
+                var $label = $(this).find('header label');
                 var o = {
-                    label: $(this).find('header label').text(),
                     style: $(this).find('header').data('style') || 'default',
                     rows: []
                 };
+                if ($label.attr('data-is-custom')) {
+                    o.customLabel = $label.text();
+                } else {
+                    o.label = $label.text();
+                }
                 $(this).find('ul.rows > li').each(function (i, li) {
                     var row = [];
                     $(li).find('ul.cells > li').each(function (i, li) {

@@ -1,8 +1,20 @@
 <% _.each(layout, function (panel, columnNumber) { %>
     <div class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"<% if (panel.name) print(' data-name="'+panel.name+'"') %>>
-        {{#if "<%= panel.label %>"}}
-        <div class="panel-heading"><h4 class="panel-title"><%= "{{translate \"" + panel.label + "\" scope=\""+model.name+"\"}}" %></h4></div>
-        {{/if}}
+        <%
+            var panelLabelString = null;
+            if ('customLabel' in panel) {
+                if (panel.customLabel) {
+                    panelLabelString = panel.customLabel;
+                }
+            } else {
+                if (panel.label) {
+                    panelLabelString = "{{translate \"" + panel.label + "\" scope=\""+model.name+"\"}}";
+                }
+            }
+        %>
+        <% if (panelLabelString) { %>
+        <div class="panel-heading"><h4 class="panel-title"><%= panelLabelString %></h4></div>
+        <% } %>
         <div class="panel-body">
         <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">

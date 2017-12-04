@@ -1001,6 +1001,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             for (var p in simplifiedLayout) {
                 var panel = {};
                 panel.label = simplifiedLayout[p].label || null;
+                if ('customLabel' in simplifiedLayout[p]) {
+                    panel.customLabel = simplifiedLayout[p].customLabel;
+                }
                 panel.name = simplifiedLayout[p].name || null;
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];

@@ -1,9 +1,9 @@
-    
+
 <% _.each(layout, function (row, rowNumber) { %>
     <div class="col-sm-6">
-    <% _.each(row, function (defs, key) { %>        
+    <% _.each(row, function (defs, key) { %>
         <%
-            var tag = 'tag' in defs ? defs.tag : 'div'; 
+            var tag = 'tag' in defs ? defs.tag : 'div';
             print( '<' + tag);
             if ('id' in defs) {
                 print(' id="'+defs.id+'"');
@@ -16,7 +16,7 @@
             print('>');
         %>
             {{{<%= defs.name %>}}}
-            <%= '</' + tag + '>' %>                
+            <%= '</' + tag + '>' %>
     <% }); %>
-    </div>    
+    </div>
 <% }); %>

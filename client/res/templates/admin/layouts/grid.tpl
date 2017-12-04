@@ -163,7 +163,7 @@
 <div id="layout-panel-tpl" style="display: none;">
     <li>
         <header data-style="<%= style %>">
-            <label><%= label %></label>&nbsp;
+            <label data-is-custom="<%= isCustomLabel ? 'true' : '' %>"><%= label %></label>&nbsp;
             <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="glyphicon glyphicon-pencil"></i></a>
             <a href="javascript:" style="float: right;" data-action="removePanel" class="remove-panel"><i class="glyphicon glyphicon-remove"></i></a>
         </header>
