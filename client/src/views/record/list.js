@@ -805,6 +805,33 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        filterListLayout: function (listLayout) {
+            if (this._cachedFilteredListLayout) {
+                return this._cachedFilteredListLayout;
+            }
+
+            var forbiddenFieldList =this._cachedScopeForbiddenFieldList =
+                this._cachedScopeForbiddenFieldList || this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+
+            if (!forbiddenFieldList.length) {
+                this._cachedFilteredListLayout = listLayout;
+                return this._cachedFilteredListLayout;
+            }
+
+            filteredListLayout = Espo.Utils.clone(listLayout);
+            for (var i in listLayout) {
+                var name = listLayout[i].name;
+                if (name && ~forbiddenFieldList.indexOf(name)) {
+                    filteredListLayout[i].customLabel = '';
+                    filteredListLayout[i].notSortable = true;
+                }
+            }
+
+            this._cachedFilteredListLayout = filteredListLayout;
+
+            return this._cachedFilteredListLayout;
+        },
+
         _loadListLayout: function (callback) {
             this.layoutLoadCallbackList.push(callback);
 
@@ -815,8 +842,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var layoutName = this.layoutName;
 
             this._helper.layoutManager.get(this.collection.name, layoutName, function (listLayout) {
-                this.layoutLoadCallbackList.forEach(function (c) {
-                    c(listLayout)
+                var filteredListLayout = this.filterListLayout(listLayout);
+                this.layoutLoadCallbackList.forEach(function (callbackItem) {
+                    callbackItem(filteredListLayout);
                     this.layoutLoadCallbackList = [];
                     this.layoutIsBeingLoaded = false;
                 }, this);
