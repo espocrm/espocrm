@@ -667,17 +667,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
-
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
                 this.removeMassAction('remove');
             }
-
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
                 this.removeMassAction('massUpdate');
                 this.removeMassAction('merge');
             }
-
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
@@ -770,7 +767,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if ('displayTotalCount' in this.options) {
                 this.displayTotalCount = this.options.displayTotalCount;
             }
-
 
             if (this.options.massActionsDisabled) {
                 this.massActionList = [];
