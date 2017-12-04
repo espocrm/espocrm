@@ -11,9 +11,9 @@
 
 <table class="table">
     <thead>
-        <th width="35%">{{translate 'Name'}}</td>
-        <th width="35%">{{translate 'Label'}}</td>
-        <th width="20%">{{translate 'Type'}}</td>
+        <th width="35%">{{translate 'Name' scope='FieldManager'}}</td>
+        <th width="35%">{{translate 'Label' scope='FieldManager'}}</td>
+        <th width="20%">{{translate 'Type' scope='FieldManager'}}</td>
         <th width="10%" align="right"></td>
     </thead>
     <tbody>

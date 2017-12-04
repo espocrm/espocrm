@@ -27,7 +27,8 @@
         "gender": "Gender",
         "position": "Position in Team",
         "ipAddress": "IP Address",
-        "passwordPreview": "Password Preview"
+        "passwordPreview": "Password Preview",
+        "isSuperAdmin": "Is Super Admin"
     },
     "links": {
         "teams": "Teams",

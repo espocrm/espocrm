@@ -219,7 +219,8 @@
         "Self-Assign": "Self-Assign",
         "Self-Assigned": "Self-Assigned",
         "Expand": "Expand",
-        "Collapse": "Collapse"
+        "Collapse": "Collapse",
+        "New notifications": "New notifications"
     },
     "messages": {
         "pleaseWait": "Please wait...",
