@@ -32,34 +32,27 @@ Espo.define('views/email-account/list', 'views/list', function (Dep) {
 
         createButton: false,
 
+        keepCurrentRootUrl: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.menu.buttons.unshift({
-                action: 'createEmailAccount',
+                action: 'create',
                 label: 'Create ' +  this.scope,
                 style: 'primary',
                 acl: 'edit'
             });
         },
 
-        actionCreateEmailAccount: function () {
+        getCreateAttributes: function () {
+            var attributes = {};
             if (this.options.userId) {
-                this.getRouter().dispatch('EmailAccount', 'create', {
-                    attributes: {
-                        assignedUserId: this.options.userId,
-                        assignedUserName: this.options.userId
-                    }
-                });
-                this.getRouter().navigate('#EmailAccount/create', {trigger: false});
-            } else {
-                this.getRouter().navigate('#EmailAccount/create', {trigger: true});
+                attributes.assignedUserId = this.options.userId;
+                attributes.assignedUserName = this.options.userName || this.options.userId;
             }
-
-
-        },
-
+            return attributes;
+        }
 
     });
 });
-

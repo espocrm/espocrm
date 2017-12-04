@@ -48,11 +48,6 @@
              {
                "label": "Filters",
                "link": "#EmailFilter"
-             },
-             {
-               "label": "Email Accounts",
-               "link": "#EmailAccount",
-               "aclScope": "EmailAccountScope"
              }
          ]
       },
