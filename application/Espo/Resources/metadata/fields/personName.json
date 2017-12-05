@@ -16,10 +16,12 @@
             "type":"enum"
         },
         "first":{
-            "type":"varchar"
+            "type":"varchar",
+            "trim": true
         },
         "last":{
-            "type":"varchar"
+            "type":"varchar",
+            "trim": true
         }
     },
     "naming":"prefix",

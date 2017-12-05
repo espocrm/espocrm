@@ -35,13 +35,15 @@
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
-            "default":""
+            "default":"",
+            "trim": true
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
             "required": true,
-            "default":""
+            "default":"",
+            "trim": true
         },
         "isActive": {
             "type": "bool",

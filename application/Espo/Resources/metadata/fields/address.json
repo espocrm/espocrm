@@ -13,16 +13,20 @@
           "dbType": "varchar"
       },
       "city":{
-         "type":"varchar"
+         "type":"varchar",
+         "trim": true
       },
       "state":{
-         "type":"varchar"
+         "type":"varchar",
+         "trim": true
       },
       "country":{
-         "type":"varchar"
+         "type":"varchar",
+         "trim": true
       },
       "postalCode":{
-         "type":"varchar"
+         "type":"varchar",
+         "trim": true
       },
       "map": {
          "type": "map",

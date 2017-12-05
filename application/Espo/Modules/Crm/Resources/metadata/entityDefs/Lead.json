@@ -10,12 +10,14 @@
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
-            "default":""
+            "default":"",
+            "trim": true
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "default":""
+            "default":"",
+            "trim": true
         },
         "title": {
             "type": "varchar",
@@ -65,16 +67,20 @@
             "dbType": "varchar"
         },
         "addressCity": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "addressState": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "addressCountry": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "addressPostalCode": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "emailAddress": {
             "type": "email"

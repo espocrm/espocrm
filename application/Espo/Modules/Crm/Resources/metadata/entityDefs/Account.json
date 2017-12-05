@@ -97,7 +97,8 @@
             "disabled": true
         },
         "billingAddress": {
-            "type": "address"
+            "type": "address",
+            "trim": true
         },
         "billingAddressStreet": {
             "type": "text",
@@ -105,16 +106,20 @@
             "dbType": "varchar"
         },
         "billingAddressCity": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "billingAddressState": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "billingAddressCountry": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "billingAddressPostalCode": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "shippingAddress": {
             "type": "address",
@@ -123,19 +128,24 @@
         "shippingAddressStreet": {
             "type": "text",
             "maxLength": 255,
-            "dbType": "varchar"
+            "dbType": "varchar",
+            "trim": true
         },
         "shippingAddressCity": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "shippingAddressState": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "shippingAddressCountry": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "shippingAddressPostalCode": {
-            "type": "varchar"
+            "type": "varchar",
+            "trim": true
         },
         "description": {
             "type": "text"
