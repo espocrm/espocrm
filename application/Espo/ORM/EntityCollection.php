@@ -29,56 +29,56 @@
 
 namespace Espo\ORM;
 
-class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator
+class EntityCollection implements \Iterator, \Countable, \ArrayAccess
 {
     private $entityFactory = null;
 
     private $entityName;
 
-    private $position = 0;
+    protected $container = [];
 
-    protected $container = array();
-
-    public function __construct($data = array(), $entityName = null, EntityFactory $entityFactory = null)
+    public function __construct($data = [], $entityName = null, EntityFactory $entityFactory = null)
     {
         $this->container = $data;
         $this->entityName = $entityName;
         $this->entityFactory = $entityFactory;
     }
 
+    public function first()
+    {
+        reset($this->container);
+        return $this->current();
+    }
+
+    public function last()
+    {
+        end($this->container);
+        return $this->current();
+    }
+
     public function rewind()
     {
-        $this->position = 0;
-
-        while (!$this->valid() && $this->position < count($this->container)) {
-            $this->position ++;
-        }
+        reset($this->container);
     }
 
     public function current()
     {
-        return $this->getEntityByOffset($this->position);
-    }
-
-    public function key()
-    {
-        return $this->position;
+        return $this->offsetGet($this->key());
     }
 
     public function next()
     {
-        do {
-            $this->position ++;
-            $next = false;
-            if (!$this->valid() && $this->position < count($this->container)) {
-                $next = true;
-            }
-        } while ($next);
+        next($this->container);
+    }
+
+    public function key()
+    {
+        return key($this->container);
     }
 
     public function valid()
     {
-        return isset($this->container[$this->position]);
+        return $this->offsetExists($this->key());
     }
 
     public function offsetExists($offset)
@@ -115,14 +115,6 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
     public function count()
     {
         return count($this->container);
-    }
-
-    public function seek($offset)
-    {
-        $this->position = $offset;
-        if (!$this->valid()) {
-            throw new \OutOfBoundsException("Invalid seek offset ($offset).");
-        }
     }
 
     public function append(Entity $entity)
