@@ -1,0 +1,43 @@
+{
+    "fields": {
+        "name": "Tên",
+        "team": "Nhóm",
+        "status": "Trạng thái",
+        "assignToUser": "Chỉ định",
+        "host": "Máy chủ",
+        "username": "Tên đăng nhập",
+        "password": "Mật khẩu",
+        "port": "Cổng",
+        "monitoredFolders": "Thư mục được theo dõi",
+        "trashFolder": "Thùng rác",
+        "ssl": "SSL",        
+        "createCase": "Tạo trường hợp",
+        "reply": "Trả lời",
+        "caseDistribution": "Trường hợp phân phối",
+        "replyEmailTemplate": "Mẫu email trả lời",
+        "replyFromAddress": "Địa chỉ email trả lời",
+        "replyFromName": "Tên người gửi"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Đang hoạt động",
+            "Inactive": "Chưa hoạt động"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Direct-Assignment",
+            "Round-Robin": "Round-Robin",
+            "Least-Busy": "Least-Busy"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Tạo email đến",
+        "IMAP": "IMAP",
+        "Actions": "Hoạt động",
+        "Main": "Chính"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Không thể kết nối với máy chủ IMAP"
+    }
+}

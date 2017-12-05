@@ -1,0 +1,43 @@
+{
+    "fields": {
+        "name": "Nume",
+        "team": "Echipa",
+        "status": "Status",
+        "assignToUser": "Atribuie utilizatorului",
+        "host": "Gazda",
+        "username": "Nume Utilizator",
+        "password": "Parola",
+        "port": "Port",
+        "monitoredFolders": "Directoare Monitorizate",
+        "trashFolder": "Gunoi",
+        "ssl": "SSL",        
+        "createCase": "Creare Caz",
+        "reply": "Raspunde",
+        "caseDistribution": "Distribuire Caz",
+        "replyEmailTemplate": "Template Raspuns Email ",
+        "replyFromAddress": "Raspunde cu Adresa",
+        "replyFromName": "Raspunde cu Numele"
+    },
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Activ",
+            "Inactive": "Inactiv"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Atribuire directa",
+            "Round-Robin": "Round-Robin",
+            "Least-Busy": "Cel putin, Ocupat"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Creare Email intrare",
+        "IMAP": "IMAP",
+        "Actions": "Actiuni",
+        "Main": "Principal"        
+    },
+    "messages": {
+        "couldNotConnectToImap": "Could neconectat la server-ul IMAP"
+    }
+}

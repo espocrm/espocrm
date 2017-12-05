@@ -1,0 +1,54 @@
+{
+    "fields": {
+        "name": "Nome",
+        "team": "Time",
+        "status": "Status",
+        "assignToUser": "Atribuído a",
+        "host": "Host",
+        "username": "Usuário",
+        "password": "Senha",
+        "port": "Porta",
+        "monitoredFolders": "Pastas Monitoradas",
+        "trashFolder": "Pasta da Lixeira",
+        "ssl": "SSL",
+        "createCase": "Criar Atendimento",
+        "reply": "Responder",
+        "caseDistribution": "Distribuição do Atendimento",
+        "replyEmailTemplate": "Template do E-mail de Resposta",
+		"replyFromAddress": "E-mail de Resposta (From)",
+		"replyToAddress": "Responder para o Endereço",
+        "replyFromName": "Nome de Resposta (FromName)",
+        "targetUserPosition": "Posição do usuário alvo"
+    },
+	"tooltips": {
+		"reply": "Notificar rementente que seus e-mails foram recebidos.",
+		"createCase": "Criar automaticamente um atendimento para os e-mais recebidos.",
+		"replyToAddress": "Especifique o endereço de e-mail desta caixa postal para que as respostas cheguem aqui.",
+		"caseDistribution": "Como os atendimentos serão distribuídos. Assinados diretamente ao usuário ou entregues ao time.",
+		"assignToUser": "Usuário responsável pelos e-mails/atendimentos.",
+		"team": "Time que será relacionado aos e-mails/atendimentos.",
+        "targetUserPosition": "Define a posição dos usuários para quem serão distribuídos os atendimentos."
+	},
+    "links": {
+    },
+    "options": {
+        "status": {
+            "Active": "Ativo",
+            "Inactive": "Inativo"
+        },
+        "caseDistribution": {
+            "Direct-Assignment": "Atribuição Direta",
+            "Round-Robin": "Rodízio",
+            "Least-Busy": "Menos Ocupado"
+        }
+    },
+    "labels": {
+        "Create InboundEmail": "Criar E-mail de Entrada",
+        "IMAP": "IMAP",
+        "Actions": "Ações",
+        "Main": "Principal"
+    },
+    "messages": {
+        "couldNotConnectToImap": "Não foi possível conectar ao servidor IMAP"
+    }
+}
