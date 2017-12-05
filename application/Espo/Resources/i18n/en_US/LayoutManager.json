@@ -21,5 +21,9 @@
             "warning": "Warning",
             "primary": "Primary"
         }
+    },
+    "labels": {
+        "New panel": "New panel",
+        "Layout": "Layout"
     }
 }

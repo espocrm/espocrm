@@ -183,7 +183,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 empty = true;
             }
 
-            data = data || {customLabel: this.translate('New panel', 'labels', 'Admin'), rows: [[]]};
+            data = data || {customLabel: this.translate('New panel', 'labels', 'LayoutManager'), rows: [[]]};
 
             data.label = data.label || '';
 

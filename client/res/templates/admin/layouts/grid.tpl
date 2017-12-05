@@ -141,7 +141,7 @@
 <div id="layout" class="row">
     <div class="col-md-8">
         <div class="well">
-            <header>Layout</header>
+            <header>{{translate 'Layout' scope='LayoutManager'}}</header>
             <a href="javascript:;" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a>
             <ul class="panels"></ul>
         </div>
