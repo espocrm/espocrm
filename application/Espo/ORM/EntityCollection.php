@@ -230,13 +230,22 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return false;
     }
 
-    public function toArray()
+    public function toArray($itemsAsObjects = false)
     {
-        $arr = array();
+        $arr = [];
         foreach ($this as $entity) {
-            $arr[] = $entity->toArray();
+            if ($itemsAsObjects) {
+                $item = $entity->getValueMap();
+            } else {
+                $item = $entity->toArray();
+            }
+            $arr[] = $item;
         }
         return $arr;
     }
 
+    public function getValueMapList()
+    {
+        return $this->toArray(true);
+    }
 }
