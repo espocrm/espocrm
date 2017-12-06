@@ -292,7 +292,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             var isCanceled = false;
 
             var exceedsMaxFileSize = false;
-            var maxFileSize = this.params.maxFileSize;
+
+            var maxFileSize = this.params.maxFileSize || 0;
+            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
+                maxFileSize = appMaxUploadSize;
+            }
+
             if (maxFileSize) {
                 if (file.size > maxFileSize * 1024 * 1024) {
                     exceedsMaxFileSize = true;

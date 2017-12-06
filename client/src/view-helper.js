@@ -66,6 +66,10 @@ Espo.define('view-helper', [], function () {
 
         language: null,
 
+        getAppParam: function (name) {
+            return (this.appParams || {})[name];
+        },
+
         stripTags: function (text) {
             text = text || '';
             if (typeof text === 'string' || text instanceof String) {

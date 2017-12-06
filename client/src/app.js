@@ -63,6 +63,8 @@ Espo.define(
         this.url = options.url || this.url;
         this.basePath = options.basePath || '';
 
+        this.appParams = {};
+
         this.loader = Espo.loader;
         this.loader.basePath = this.basePath;
 
@@ -348,6 +350,7 @@ Espo.define(
             helper.themeManager = this.themeManager;
             helper.sessionStorage = this.sessionStorage;
             helper.basePath = this.basePath;
+            helper.appParams = this.appParams;
 
             this.viewLoader = function (viewName, callback) {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
@@ -506,6 +509,10 @@ Espo.define(
 
                     this.settings.set(settingData);
                     this.acl.set(aclData);
+
+                    for (var param in options.appParams) {
+                        this.appParams[param] = options.appParams[param];
+                    }
 
                     if (!this.auth) {
                         return;

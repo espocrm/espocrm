@@ -78,7 +78,8 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 
     private function getLastValidKey()
     {
-        $i = end(array_keys($this->container));
+        $keys = array_keys($this->container);
+        $i = end($keys);
         while ($i > 0) {
             if (isset($this->container[$i])) {
                 break;
