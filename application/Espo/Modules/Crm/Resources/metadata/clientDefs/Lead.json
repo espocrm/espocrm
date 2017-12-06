@@ -1,144 +1,150 @@
 {
-   "controller": "crm:controllers/lead",
-   "views":{
-      "detail":"Crm:Lead.Detail"
-   },
-   "recordViews":{
-      "detail":"Crm:Lead.Record.Detail"
-   },
-   "formDependency": {
-      "status": {
-         "map": {
-            "Converted" : [
-               {
-                  "action": "show",
-                  "panels": ["convertedTo"]
-               }
+    "controller":"crm:controllers/lead",
+    "views":{
+        "detail":"crm:views/lead/detail"
+    },
+    "recordViews":{
+        "detail":"crm:views/lead/record/detail"
+    },
+    "formDependency":{
+        "status":{
+            "map":{
+                "Converted":[
+                    {
+                        "action":"show",
+                        "panels":[
+                            "convertedTo"
+                        ]
+                    }
+                ]
+            },
+            "default":[
+                {
+                    "action":"hide",
+                    "panels":[
+                        "convertedTo"
+                    ]
+                }
             ]
-         },
-         "default": [
+        }
+    },
+    "sidePanels":{
+        "detail":[
             {
-               "action": "hide",
-               "panels": ["convertedTo"]
+                "name":"convertedTo",
+                "label":"Converted To",
+                "view":"crm:views/lead/record/panels/converted-to",
+                "notRefreshable":true,
+                "hidden":true,
+                "style":"success"
+            },
+            {
+                "name":"activities",
+                "label":"Activities",
+                "view":"crm:views/record/panels/activities",
+                "aclScope":"Activities"
+            },
+            {
+                "name":"history",
+                "label":"History",
+                "view":"crm:views/record/panels/history",
+                "aclScope":"Activities"
+            },
+            {
+                "name":"tasks",
+                "label":"Tasks",
+                "view":"crm:views/record/panels/tasks",
+                "aclScope":"Task"
             }
-         ]
-      }
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"convertedTo",
-            "label":"Converted To",
-            "view": "crm:views/lead/record/panels/converted-to",
-            "notRefreshable": true,
-            "hidden": true,
-            "style": "success"
-         },
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ],
-      "edit": [
-         {
-            "name":"convertedTo",
-            "label":"Converted To",
-            "view": "crm:views/lead/record/panels/converted-to",
-            "notRefreshable": true,
-            "hidden": true,
-            "style": "success"
-         }
-      ],
-      "detailSmall": [
-         {
-            "name":"convertedTo",
-            "label":"Converted To",
-            "view": "crm:views/lead/record/panels/converted-to",
-            "notRefreshable": true,
-            "hidden": true,
-            "style": "success"
-         },
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ],
-      "editSmall": [
-         {
-            "name":"convertedTo",
-            "label":"Converted To",
-            "view": "crm:views/lead/record/panels/converted-to",
-            "notRefreshable": true,
-            "hidden": true,
-            "style": "success"
-         }
-      ]
-   },
-   "relationshipPanels": {
-      "campaignLogRecords": {
-        "rowActionsView": "Record.RowActions.Empty",
-        "select": false,
-        "create": false
-      },
-      "targetLists": {
-         "create": false,
-         "rowActionsView": "views/record/row-actions/relationship-unlink-only"
-      }
-   },
-   "filterList": [
-      {
-         "name":"actual"
-      },
-      {
-         "name":"converted",
-         "style": "success"
-      }
-   ],
-   "boolFilterList": ["onlyMy"],
-    "dynamicLogic": {
-        "fields": {
-            "name": {
-                "required": {
-                    "conditionGroup": [
+        ],
+        "edit":[
+            {
+                "name":"convertedTo",
+                "label":"Converted To",
+                "view":"crm:views/lead/record/panels/converted-to",
+                "notRefreshable":true,
+                "hidden":true,
+                "style":"success"
+            }
+        ],
+        "detailSmall":[
+            {
+                "name":"convertedTo",
+                "label":"Converted To",
+                "view":"crm:views/lead/record/panels/converted-to",
+                "notRefreshable":true,
+                "hidden":true,
+                "style":"success"
+            },
+            {
+                "name":"activities",
+                "label":"Activities",
+                "view":"crm:views/record/panels/activities",
+                "aclScope":"Activities"
+            },
+            {
+                "name":"history",
+                "label":"History",
+                "view":"crm:views/record/panels/history",
+                "aclScope":"Activities"
+            },
+            {
+                "name":"tasks",
+                "label":"Tasks",
+                "view":"crm:views/record/panels/tasks",
+                "aclScope":"Task"
+            }
+        ],
+        "editSmall":[
+            {
+                "name":"convertedTo",
+                "label":"Converted To",
+                "view":"crm:views/lead/record/panels/converted-to",
+                "notRefreshable":true,
+                "hidden":true,
+                "style":"success"
+            }
+        ]
+    },
+    "relationshipPanels":{
+        "campaignLogRecords":{
+            "rowActionsView":"Record.RowActions.Empty",
+            "select":false,
+            "create":false
+        },
+        "targetLists":{
+            "create":false,
+            "rowActionsView":"views/record/row-actions/relationship-unlink-only"
+        }
+    },
+    "filterList":[
+        {
+            "name":"actual"
+        },
+        {
+            "name":"converted",
+            "style":"success"
+        }
+    ],
+    "boolFilterList":[
+        "onlyMy"
+    ],
+    "dynamicLogic":{
+        "fields":{
+            "name":{
+                "required":{
+                    "conditionGroup":[
                         {
-                            "type": "isEmpty",
-                            "attribute": "accountName"
+                            "type":"isEmpty",
+                            "attribute":"accountName"
                         },
                         {
-                            "type": "isEmpty",
-                            "attribute": "emailAddress"
+                            "type":"isEmpty",
+                            "attribute":"emailAddress"
                         },
                         {
-                            "type": "isEmpty",
-                            "attribute": "phoneNumber"
+                            "type":"isEmpty",
+                            "attribute":"phoneNumber"
                         }
                     ]
                 }
