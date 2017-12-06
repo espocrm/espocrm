@@ -158,18 +158,18 @@ class App extends \Espo\Core\Services\Base
 
     private function getMaxUploadSize()
     {
-        $maxSize = -1;
+        $maxSize = 0;
 
         $postMaxSize = $this->convertPHPSizeToBytes(ini_get('post_max_size'));
         if ($postMaxSize > 0) {
             $maxSize = $postMaxSize;
         }
         $uploadMax = $this->convertPHPSizeToBytes(ini_get('upload_max_filesize'));
-        if ($uploadMax > 0 && $uploadMax < $maxSize) {
+        if ($uploadMax > 0 && (!$maxSize || $uploadMax < $maxSize)) {
             $maxSize = $uploadMax;
         }
         $attachmentUploadMaxSize = $this->getConfig()->get('attachmentUploadMaxSize');
-        if ($attachmentUploadMaxSize && $attachmentUploadMaxSize < $maxSize) {
+        if ($attachmentUploadMaxSize && (!$maxSize || $attachmentUploadMaxSize < $maxSize)) {
             $maxSize = $attachmentUploadMaxSize;
         }
 
