@@ -18,7 +18,8 @@
     {
         "label": "Admin Notifications",
         "rows": [
-            [{"name": "adminNotifications"}, false]
+            [{"name": "adminNotifications"}, false],
+            [{"name": "adminNotificationNewVersionCheckerDisabled"}, false]
         ]
     }
 ]
