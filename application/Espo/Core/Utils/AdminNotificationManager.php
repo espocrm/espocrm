@@ -117,7 +117,7 @@ class AdminNotificationManager
     {
         $config = $this->getConfig();
 
-        $latestVersion = $config->get('latestAvailableVersion');
+        $latestVersion = $config->get('latestVersion');
         if (isset($latestVersion)) {
             $currentVersion = $config->get('version');
             if (version_compare($latestVersion, $currentVersion, '>')) {
@@ -135,9 +135,9 @@ class AdminNotificationManager
 
         $extensions = [];
 
-        $latestAvailableExtensionsVersions = $config->get('latestAvailableExtensionsVersions');
-        if (!empty($latestAvailableExtensionsVersions) && is_array($latestAvailableExtensionsVersions)) {
-            foreach ($latestAvailableExtensionsVersions as $extensionName => $extensionLatestVersion) {
+        $latestExtensionVersions = $config->get('latestExtensionVersions');
+        if (!empty($latestExtensionVersions) && is_array($latestExtensionVersions)) {
+            foreach ($latestExtensionVersions as $extensionName => $extensionLatestVersion) {
                 $currentVersion = $this->getExtensionLatestInstalledVersion($extensionName);
                 if (isset($currentVersion) && version_compare($extensionLatestVersion, $currentVersion, '>')) {
                     $extensions[$extensionName] = array(

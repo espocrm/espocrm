@@ -48,6 +48,22 @@ Espo.define('views/admin/notifications', 'views/settings/record/edit', function 
                         fields: ['assignmentEmailNotificationsEntityList']
                     }
                 ]
+            },
+            'adminNotifications': {
+                map: {
+                    true: [
+                        {
+                            action: 'show',
+                            fields: ['adminNotificationNewVersionCheckerDisabled']
+                        }
+                    ]
+                },
+                default: [
+                    {
+                        action: 'hide',
+                        fields: ['adminNotificationNewVersionCheckerDisabled']
+                    }
+                ]
             }
         },
 

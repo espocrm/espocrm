@@ -90,7 +90,8 @@
         "currencyDecimalPlaces": "Currency Decimal Places",
         "aclStrictMode": "ACL Strict Mode",
         "aclAllowDeleteCreated": "Allow to remove created records",
-        "adminNotifications": "System notifications in administration panel"
+        "adminNotifications": "System notifications in administration panel",
+        "adminNotificationNewVersionCheckerDisabled": "Disable notification about new EspoCRM version"
     },
     "options": {
         "weekStart": {
