@@ -29,56 +29,68 @@
 
 namespace Espo\ORM;
 
-class EntityCollection implements \Iterator, \Countable, \ArrayAccess
+class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \SeekableIterator
 {
     private $entityFactory = null;
 
     private $entityName;
 
-    protected $container = [];
+    private $position = 0;
 
-    public function __construct($data = [], $entityName = null, EntityFactory $entityFactory = null)
+    protected $container = array();
+
+    public function __construct($data = array(), $entityName = null, EntityFactory $entityFactory = null)
     {
         $this->container = $data;
         $this->entityName = $entityName;
         $this->entityFactory = $entityFactory;
     }
 
-    public function first()
-    {
-        reset($this->container);
-        return $this->current();
-    }
-
-    public function last()
-    {
-        end($this->container);
-        return $this->current();
-    }
-
     public function rewind()
     {
-        reset($this->container);
+        $this->position = 0;
+
+        while (!$this->valid() && $this->position <= $this->getLastValidKey()) {
+            $this->position ++;
+        }
     }
 
     public function current()
     {
-        return $this->offsetGet($this->key());
-    }
-
-    public function next()
-    {
-        next($this->container);
+        return $this->getEntityByOffset($this->position);
     }
 
     public function key()
     {
-        return key($this->container);
+        return $this->position;
+    }
+
+    public function next()
+    {
+        do {
+            $this->position ++;
+            $next = false;
+            if (!$this->valid() && $this->position <= $this->getLastValidKey()) {
+                $next = true;
+            }
+        } while ($next);
+    }
+
+    private function getLastValidKey()
+    {
+        $i = end(array_keys($this->container));
+        while ($i > 0) {
+            if (isset($this->container[$i])) {
+                break;
+            }
+            $i--;
+        }
+        return $i;
     }
 
     public function valid()
     {
-        return $this->offsetExists($this->key());
+        return isset($this->container[$this->position]);
     }
 
     public function offsetExists($offset)
@@ -115,6 +127,14 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess
     public function count()
     {
         return count($this->container);
+    }
+
+    public function seek($offset)
+    {
+        $this->position = $offset;
+        if (!$this->valid()) {
+            throw new \OutOfBoundsException("Invalid seek offset ($offset).");
+        }
     }
 
     public function append(Entity $entity)
@@ -220,4 +240,3 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess
     }
 
 }
-
