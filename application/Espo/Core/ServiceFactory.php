@@ -95,7 +95,7 @@ class ServiceFactory
     {
         $className = $this->getClassName($name);
         if (empty($className)) {
-            throw new Error();
+            throw new Error("Service '{$name}' was not found.");
         }
         return $this->createByClassName($className);
     }
@@ -110,7 +110,7 @@ class ServiceFactory
             }
             return $service;
         }
-        throw new Error("Class '$className' does not exist");
+        throw new Error("Class '$className' does not exist.");
     }
 }
 

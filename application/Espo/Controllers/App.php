@@ -35,41 +35,7 @@ class App extends \Espo\Core\Controllers\Base
 {
     public function actionUser()
     {
-        $preferences = $this->getPreferences()->getValues();
-        unset($preferences['smtpPassword']);
-
-        $user = $this->getUser();
-        if (!$user->has('teamsIds')) {
-            $user->loadLinkMultipleField('teams');
-        }
-        if ($user->get('isPortalUser')) {
-            $user->loadAccountField();
-            $user->loadLinkMultipleField('accounts');
-        }
-
-        $userData = $user->getValues();
-
-
-        $userData['emailAddressList'] = $this->getEmailAddressList();
-
-        $settings = (object)[];
-        foreach ($this->getConfig()->get('userItems') as $item) {
-            $settings->$item = $this->getConfig()->get($item);
-        }
-
-        unset($userData['authTokenId']);
-        unset($userData['password']);
-
-        $language = \Espo\Core\Utils\Language::detectLanguage($this->getConfig(), $this->getPreferences());
-
-        return array(
-            'user' => $userData,
-            'acl' => $this->getAcl()->getMap(),
-            'preferences' => $preferences,
-            'token' => $this->getUser()->get('token'),
-            'settings' => $settings,
-            'language' => $language
-        );
+        return $this->getServiceFactory()->create('App')->getUserData();
     }
 
     public function postActionDestroyAuthToken($params, $data)
@@ -81,60 +47,5 @@ class App extends \Espo\Core\Controllers\Base
 
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         return $auth->destroyAuthToken($token);
-    }
-
-    protected function getEmailAddressList() {
-        $user = $this->getUser();
-
-        $emailAddressList = [];
-        foreach ($user->get('emailAddresses') as $emailAddress) {
-            if ($emailAddress->get('invalid')) continue;
-            if ($user->get('emailAddrses') === $emailAddress->get('name')) continue;
-            $emailAddressList[] = $emailAddress->get('name');
-        }
-        if ($user->get('emailAddrses')) {
-            array_unshift($emailAddressList, $user->get('emailAddrses'));
-        }
-
-        $entityManager = $this->getContainer()->get('entityManager');
-
-        $teamIdList = $user->getLinkMultipleIdList('teams');
-        $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
-        if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
-            if ($groupEmailAccountPermission === 'team') {
-                if (count($teamIdList)) {
-                    $selectParams = [
-                        'whereClause' => [
-                            'status' => 'Active',
-                            'useSmtp' => true,
-                            'smtpIsShared' => true,
-                            'teamsMiddle.teamId' => $teamIdList
-                        ],
-                        'joins' => ['teams'],
-                        'distinct' => true
-                    ];
-                    $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
-                    foreach ($inboundEmailList as $inboundEmail) {
-                        if (!$inboundEmail->get('emailAddress')) continue;
-                        $emailAddressList[] = $inboundEmail->get('emailAddress');
-                    }
-                }
-            } else if ($groupEmailAccountPermission === 'all') {
-                $selectParams = [
-                    'whereClause' => [
-                        'status' => 'Active',
-                        'useSmtp' => true,
-                        'smtpIsShared' => true
-                    ]
-                ];
-                $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
-                foreach ($inboundEmailList as $inboundEmail) {
-                    if (!$inboundEmail->get('emailAddress')) continue;
-                    $emailAddressList[] = $inboundEmail->get('emailAddress');
-                }
-            }
-        }
-
-        return $emailAddressList;
     }
 }

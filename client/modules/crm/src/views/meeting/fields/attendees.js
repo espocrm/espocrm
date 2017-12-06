@@ -34,6 +34,8 @@ Espo.define('crm:views/meeting/fields/attendees', 'views/fields/link-multiple-wi
 
         roleFieldIsForeign: false,
 
+        emptyRoleValue: 'None'
+
     });
 
 });

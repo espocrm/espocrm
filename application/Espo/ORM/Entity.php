@@ -311,6 +311,12 @@ abstract class Entity implements IEntity
         return $arr;
     }
 
+    public function getValueMap()
+    {
+        $array = $this->toArray();
+        return (object) $array;
+    }
+
     public function getFields()
     {
         return $this->fields;

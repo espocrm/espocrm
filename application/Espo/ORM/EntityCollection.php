@@ -50,7 +50,7 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
     {
         $this->position = 0;
 
-        while (!$this->valid() && $this->position < count($this->container)) {
+        while (!$this->valid() && $this->position <= $this->getLastValidKey()) {
             $this->position ++;
         }
     }
@@ -70,10 +70,23 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         do {
             $this->position ++;
             $next = false;
-            if (!$this->valid() && $this->position < count($this->container)) {
+            if (!$this->valid() && $this->position <= $this->getLastValidKey()) {
                 $next = true;
             }
         } while ($next);
+    }
+
+    private function getLastValidKey()
+    {
+        $keys = array_keys($this->container);
+        $i = end($keys);
+        while ($i > 0) {
+            if (isset($this->container[$i])) {
+                break;
+            }
+            $i--;
+        }
+        return $i;
     }
 
     public function valid()
@@ -218,14 +231,22 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         return false;
     }
 
-    public function toArray()
+    public function toArray($itemsAsObjects = false)
     {
-        $arr = array();
+        $arr = [];
         foreach ($this as $entity) {
-            $arr[] = $entity->toArray();
+            if ($itemsAsObjects) {
+                $item = $entity->getValueMap();
+            } else {
+                $item = $entity->toArray();
+            }
+            $arr[] = $item;
         }
         return $arr;
     }
 
+    public function getValueMapList()
+    {
+        return $this->toArray(true);
+    }
 }
-

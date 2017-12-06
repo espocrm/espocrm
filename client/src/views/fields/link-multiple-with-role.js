@@ -36,6 +36,8 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
         roleFieldIsForeign: true,
 
+        emptyRoleValue: null,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -70,6 +72,10 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
             var role = (this.columns[id] || {})[this.columnName] || '';
             var roleHtml = '';
+
+            if (this.emptyRoleValue && role === this.emptyRoleValue) {
+                role = '';
+            }
             if (role != '') {
                 roleHtml = '<span class="text-muted small"> &#187; ' +
                 this.getHelper().stripTags(this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)) +

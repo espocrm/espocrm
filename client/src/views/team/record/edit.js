@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Team.Record.Edit', 'Views.Record.Edit', function (Dep) {
+Espo.define('views/team/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'Role.Record.DetailSide',
+        sideView: null
 
     });
 

@@ -317,7 +317,13 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var totalCount = 0;
 
             var exceedsMaxFileSize = false;
-            var maxFileSize = this.params.maxFileSize;
+
+            var maxFileSize = this.params.maxFileSize || 0;
+            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
+                maxFileSize = appMaxUploadSize;
+            }
+
             if (maxFileSize) {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
