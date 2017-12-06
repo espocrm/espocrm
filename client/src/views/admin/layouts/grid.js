@@ -39,15 +39,17 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         columnCount: 2,
 
         data: function () {
-            return {
+            var data = {
                 scope: this.scope,
                 type: this.type,
                 buttonList: this.buttonList,
                 enabledFields: this.enabledFields,
                 disabledFields: this.disabledFields,
                 panels: this.panels,
-                columnCount: this.columnCount
+                columnCount: this.columnCount,
+                panelDataList: this.getPanelDataList()
             };
+            return data;
         },
 
         events: _.extend({
@@ -62,6 +64,21 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
                 });
                 $(e.target).closest('ul.panels > li').remove();
+
+                var number = $(e.currentTarget).data('number');
+                this.clearView('panels-' + number);
+
+                var index = -1;
+                this.panels.forEach(function (item, i) {
+                    if (item.number === number) {
+                        index = i;
+                    }
+                }, this);
+
+                if (~index) {
+                    this.panels.splice(index, 1);
+                }
+
                 this.normilizaDisabledItemList();
             },
             'click #layout a[data-action="addRow"]': function (e) {
@@ -175,16 +192,63 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }.bind(this));
         },
 
-        addPanel: function (data) {
-            var tpl = this.unescape($("#layout-panel-tpl").html());
+        addPanel: function () {
+            this.lastPanelNumber ++;
+            var number = this.lastPanelNumber;
+            var data = {
+                customLabel: this.translate('New panel', 'labels', 'LayoutManager'),
+                rows: [[]],
+                number: number
+            };
+            this.panels.push(data);
 
-            var empty = false;
-            if (!data) {
-                empty = true;
-            }
+            var $li = $('<li class="panel-layout"></li>');
+            $li.attr('data-number', number);
+            this.$el.find('ul.panels').append($li);
 
-            data = data || {customLabel: this.translate('New panel', 'labels', 'LayoutManager'), rows: [[]]};
+            this.createPanelView(data, true, function (view) {
+                view.render();
+            }, this);
+        },
 
+        getPanelDataList: function () {
+            var panelDataList = [];
+
+            this.panels.forEach(function (item) {
+                var o = {};
+                o.viewKey = 'panel-' + item.number;
+                o.number = item.number;
+                panelDataList.push(o);
+            }, this);
+
+            return panelDataList;
+        },
+
+        cancel: function () {
+            this.loadLayout(function () {
+                var countLoaded = 0;
+                this.setupPanels(function () {
+                    countLoaded ++;
+                    if (countLoaded === this.panels.length) {
+                        this.reRender();
+                    }
+                }.bind(this));
+            }.bind(this));
+        },
+
+        setupPanels: function (callback) {
+            this.lastPanelNumber = -1;
+
+            this.panels = Espo.Utils.cloneDeep(this.panels);
+
+            this.panels.forEach(function (panel, i) {
+                panel.number = i;
+                this.lastPanelNumber ++;
+                this.createPanelView(panel, false, callback);
+            }, this);
+        },
+
+        createPanelView: function (data, empty, callback) {
             data.label = data.label || '';
 
             data.isCustomLabel = false;
@@ -208,14 +272,21 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 for (var i in row) {
                     if (row[i] != false) {
                         row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
+                        if ('customLabel' in row[i]) {
+                            row[i].customLabel = row[i].customLabel;
+                            row[i].hasCustomLabel = true;
+                        }
                     }
-
                 }
-            }.bind(this));
+            }, this);
 
-
-            var html = _.template(tpl, data);
-            $("#layout .panels").append(html);
+            this.createView('panel-' + data.number, 'view', {
+                el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
+                template: 'admin/layouts/grid-panel',
+                data: function () {
+                    return data;
+                }
+            }, callback);
         },
 
         makeDraggable: function () {
@@ -279,9 +350,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         },
 
         afterRender: function () {
-            this.panels.forEach(function (panel) {
-                this.addPanel(panel);
-            }.bind(this));
             this.makeDraggable();
         },
 
@@ -306,6 +374,11 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                         if (!$(li).hasClass('empty')) {
                             cell = {};
                             self.dataAttributeList.forEach(function (attr) {
+                                if (attr === 'customLabel') {
+                                    $(li).get(0).hasAttribute('custom-label');
+                                    cell[attr] = $(li).data('custom-label');
+                                    return;
+                                }
                                 var value = $(li).data(Espo.Utils.toDom(attr)) || null;
                                 if (value) {
                                     cell[attr] = value;

@@ -30,13 +30,21 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'fullWidth'],
+        dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
 
         dataAttributesDefs: {
             fullWidth: {
                 type: 'bool'
             },
             name: {
+                readOnly: true
+            },
+            customLabel: {
+                type: 'varchar',
+                readOnly: true
+            },
+            noLabel: {
+                type: 'bool',
                 readOnly: true
             }
         },
@@ -48,6 +56,8 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
             this.wait(true);
             this.loadLayout(function () {
+
+                this.setupPanels();
                 this.wait(false);
             }.bind(this));
         },
