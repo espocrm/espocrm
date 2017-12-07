@@ -160,7 +160,7 @@ class ImporterTest extends \PHPUnit_Framework_TestCase
         $message = new \Espo\Core\Mail\MessageWrapper();
         $message->setFullRawContent($contents);
 
-        $email = $importer->importMessage('PhpMimeMailParser', $message, null, ['teamTestId'], ['userTestId']);
+        $email = $importer->importMessage('MailMimeParser', $message, null, ['teamTestId'], ['userTestId']);
 
         $this->assertEquals('test 3', $email->get('name'));
 
