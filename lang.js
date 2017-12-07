@@ -38,15 +38,12 @@ var PO = require('pofile');
 var isWin = /^win/.test(os.platform());
 
 var espoPath = path.dirname(fs.realpathSync(__filename)) + '';
-
 var resLang = process.argv[2] || 'lang_LANG';
-
 var poPath = process.argv[3] || espoPath + '/build/' + 'espocrm-' + resLang +'.po';
-
 
 var deleteFolderRecursive = function (path) {
     var files = [];
-    if( fs.existsSync(path) ) {
+    if (fs.existsSync(path)) {
         files = fs.readdirSync(path);
         files.forEach(function(file,index){
             var curPath = path + "/" + file;
@@ -59,7 +56,6 @@ var deleteFolderRecursive = function (path) {
         fs.rmdirSync(path);
     }
 };
-
 
 function Lang (poPath, espoPath) {
     this.poPath = poPath;
@@ -127,7 +123,6 @@ Lang.prototype.run = function () {
             translationData[file] = translationData[file] || [];
             translationData[file].push(o);
         });
-
 
         dirs.forEach(function (path) {
             var resDirPath = this.dirNames[path];
@@ -247,8 +242,6 @@ Lang.prototype.run = function () {
         }, this);
 
     }.bind(this))
-
-
 };
 
 var lang = new Lang(poPath, espoPath);
