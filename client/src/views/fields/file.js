@@ -464,9 +464,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         fetch: function () {
-            return {};
+            var data = {};
+            data[this.idName] = this.model.get(this.idName);
+            return data;
         }
 
     });
 });
-

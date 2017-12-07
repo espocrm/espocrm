@@ -564,8 +564,10 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         fetch: function () {
-            return {};
-        },
+            var data = {};
+            data[this.idsName] = this.model.get(this.idsName);
+            return data;
+        }
     });
 });
 
