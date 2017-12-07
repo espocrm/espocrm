@@ -98,12 +98,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (this.defs.selectBoolFilterList) {
                     data.boolFilterList = this.defs.selectBoolFilterList;
                 }
+
                 this.actionList.unshift({
                     label: 'Select',
                     action: this.defs.selectAction || 'selectRelated',
-                    data: data
+                    data: data,
+                    acl: 'edit',
+                    aclScope: this.model.name
                 });
             }
+
+            this.setupActions();
 
             var layoutName = 'listSmall';
             var listLayout = null;
@@ -170,6 +175,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.setupFilterActions();
         },
+
+        setupActions: function () {},
 
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {

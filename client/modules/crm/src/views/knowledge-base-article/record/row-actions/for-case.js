@@ -33,7 +33,7 @@ Espo.define('crm:views/knowledge-base-article/record/row-actions/for-case', 'vie
         getActionList: function () {
             var actionList = Dep.prototype.getActionList.call(this);
 
-            if (this.getAcl().checkScope('Email')) {
+            if (this.getAcl().checkScope('Email', 'create')) {
                 actionList.push({
                     action: 'sendInEmail',
                     label: 'Send in Email',

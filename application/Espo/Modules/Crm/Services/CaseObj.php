@@ -44,6 +44,10 @@ class CaseObj extends \Espo\Services\Record
         'inboundEmailId'
     ];
 
+    protected $noEditAccessRequiredLinkList = [
+        'articles'
+    ];
+
     public function beforeCreate(Entity $entity, array $data = array())
     {
         parent::beforeCreate($entity, $data);
