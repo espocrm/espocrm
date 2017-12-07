@@ -1,47 +1,7 @@
 {
-  "fields": {
-    "name": "Name",
-    "parent": "Parent",
-    "status": "Status",
-    "dateStart": "Date Start",
-    "dateEnd": "Date Due",
-    "dateStartDate": "Date Start (all day)",
-    "dateEndDate": "Date End (all day)",
-    "priority": "Priority",
-    "description": "Description",
-    "isOverdue": "Is Overdue",
-    "account": "Account",
-    "dateCompleted": "Date Completed",
-    "attachments": "Attachments",
-    "reminders": "Reminders"
-  },
-  "links": {
-    "attachments": "Attachments"
-  },
   "options": {
     "status": {
-      "Not Started": "Not Started",
-      "Started": "Started",
-      "Completed": "Completed",
-      "Canceled": "Cancelled",
-      "Deferred": "Deferred"
-    },
-    "priority": {
-      "Low": "Low",
-      "Normal": "Normal",
-      "High": "High",
-      "Urgent": "Urgent"
+      "Canceled": "Cancelled"
     }
-  },
-  "labels": {
-    "Create Task": "Create Task",
-    "Complete": "Complete"
-  },
-  "presetFilters": {
-    "actual": "Actual",
-    "completed": "Completed",
-    "todays": "Today's",
-    "overdue": "Overdue",
-    "deferred": "Deferred"
   }
 }

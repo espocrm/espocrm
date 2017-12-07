@@ -1,43 +1,7 @@
 {
-  "labels": {
-    "Create Document": "Create Document",
-    "Details": "Details"
-  },
-  "fields": {
-    "name": "Name",
-    "status": "Status",
-    "file": "File",
-    "type": "Type",
-    "publishDate": "Publish Date",
-    "expirationDate": "Expiration Date",
-    "description": "Description",
-    "accounts": "Accounts",
-    "folder": "Folder"
-  },
-  "links": {
-    "accounts": "Accounts",
-    "opportunities": "Opportunities",
-    "folder": "Folder",
-    "leads": "Leads",
-    "contacts": "Contacts"
-  },
   "options": {
     "status": {
-      "Active": "Active",
-      "Draft": "Draft",
-      "Expired": "Expired",
       "Canceled": "Cancelled"
-    },
-    "type": {
-      "": "None",
-      "Contract": "Contract",
-      "NDA": "NDA",
-      "EULA": "EULA",
-      "License Agreement": "License Agreement"
     }
-  },
-  "presetFilters": {
-    "active": "Active",
-    "draft": "Draft"
   }
 }

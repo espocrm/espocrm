@@ -1,51 +1,9 @@
 {
   "fields": {
-    "dateFormat": "Date Format",
-    "timeFormat": "Time Format",
-    "timeZone": "Time Zone",
-    "weekStart": "First Day of Week",
-    "thousandSeparator": "Thousand Separator",
-    "decimalMark": "Decimal Mark",
-    "defaultCurrency": "Default Currency",
-    "currencyList": "Currency List",
-    "language": "Language",
-    "smtpServer": "Server",
-    "smtpPort": "Port",
-    "smtpAuth": "Auth",
-    "smtpSecurity": "Security",
-    "smtpUsername": "Username",
-    "emailAddress": "Email",
-    "smtpPassword": "Password",
-    "smtpEmailAddress": "Email Address",
-    "exportDelimiter": "Export Delimiter",
     "autoFollowEntityTypeList": "Auto-Follow",
-    "signature": "Email Signature",
-    "dashboardTabList": "Tab List",
-    "tabList": "Tab List",
-    "defaultReminders": "Default Reminders",
-    "theme": "Theme",
-    "useCustomTabList": "Custom Tab List",
     "emailReplyToAllByDefault": "Email Reply to All by Default",
-    "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
-    "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
-    "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
-    "dashboardLayout": "Dashboard Layout",
-    "emailReplyForceHtml": "Email Reply in HTML",
     "doNotFillAssignedUserIfNotRequired": "Do not fill Assigned User if not required",
     "followEntityOnStreamPost": "Auto-follow entity after posting in Stream"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sunday",
-      "1": "Monday"
-    }
-  },
-  "labels": {
-    "Notifications": "Notifications",
-    "User Interface": "User Interface",
-    "SMTP": "SMTP",
-    "Misc": "Misc",
-    "Locale": "Locale"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications."

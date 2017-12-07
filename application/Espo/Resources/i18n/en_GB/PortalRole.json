@@ -1,11 +1,1 @@
-{
-  "links": {
-    "users": "Users"
-  },
-  "labels": {
-    "Access": "Access",
-    "Create PortalRole": "Create Portal Role",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
-  }
-}
+{}
