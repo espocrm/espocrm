@@ -52,6 +52,11 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             return data;
         },
 
+        emptyCellTemplate:
+                            '<li class="empty disabled cell">' +
+                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="glyphicon glyphicon-minus"></i></a>' +
+                            '</li>',
+
         events: _.extend({
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
@@ -103,7 +108,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
                 el.appendTo($("ul.disabled"));
 
-                var empty = $('<li class="empty disabled"></li>');
+                var empty = $(this.emptyCellTemplate);
                 if (el.data('full-width')) {
                     for (var i = 0; i < this.columnCount; i++) {
                         parent.append(empty.clone());
@@ -141,10 +146,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 $ul.children('li').data('full-width', true).attr('data-full-width', true);
 
                 if (isEmpty) {
-                    $ul.append($('<li class="empty disabled"></li>').data('full-width', true).attr('data-full-width', true));
+                    $ul.append($('<li class="empty"></li>').data('full-width', true).attr('data-full-width', true));
                     this.makeDraggable();
                 }
-
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
                 var $header = $(e.target).closest('header');
@@ -327,13 +331,19 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                         }
                     }
 
-                    var fullWidth = $(this).data('fullWidth');
+                    var $target = $(this);
+                    var $draggable = $(ui.draggable);
 
-                    $(this).data('fullWidth', $(ui.draggable).data('fullWidth'));
-                    $(ui.draggable).data('fullWidth', fullWidth);
+                    var targetFullWidth = $target.attr('data-full-width');
+                    var draggableFullWidth = $draggable.attr('data-full-width');
 
-                    $(this).attr('data-full-width', $(ui.draggable).attr('data-full-width'));
-                    $(ui.draggable).attr('data-full-width', fullWidth);
+                    if (draggableFullWidth && !targetFullWidth) {
+                        $draggable.attr('data-full-width', false);
+                        $target.attr('data-full-width', true);
+                    } else if (!draggableFullWidth && targetFullWidth) {
+                        $draggable.attr('data-full-width', true);
+                        $target.attr('data-full-width', false);
+                    }
 
                     ui.draggable.css({
                         top: 0,
