@@ -12,7 +12,8 @@
             "KnowledgeBaseArticle": {
                 "portals": false,
                 "order": false,
-                "status": false
+                "status": false,
+                "assignedUser": false
             },
             "Case": {
                 "status": {

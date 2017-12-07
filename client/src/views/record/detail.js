@@ -120,6 +120,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         printPdfAction: false,
 
+        portalLayoutDisabled: false,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -641,6 +643,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
+            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
+                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
+                    this.layoutName += 'Portal';
+                }
+            }
+
             this.on('remove', function () {
                 if (this.isChanged) {
                     this.model.set(this.attributes);
@@ -688,6 +696,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
+            this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
             this.setupActionItems();
             this.setupBeforeFinal();

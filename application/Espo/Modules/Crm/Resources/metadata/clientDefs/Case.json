@@ -65,5 +65,16 @@
     "selectDefaultFilters": {
         "filter": "open"
     },
-    "allowInternalNotes": true
+    "allowInternalNotes": true,
+    "additionalLayouts": {
+        "detailPortal": {
+            "type": "detail"
+        },
+        "detailSmallPortal": {
+            "type": "detail"
+        },
+        "listPortal": {
+            "type": "list"
+        }
+    }
 }

@@ -1,0 +1,6 @@
+[
+    {"name":"name", "link": true},
+    {"name":"number", "widthPx": 100},
+    {"name":"status", "width": 17},
+    {"name":"priority", "width": 17}
+]

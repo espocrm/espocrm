@@ -1,5 +1,5 @@
 [
-    {"name":"name", "width": 40, "link": true},
-    {"name":"status"},
-    {"name":"createdAt"}
+    {"name":"name",  "link": true},
+    {"name":"status", "width": 22},
+    {"name":"createdAt", "width": 22}
 ]
