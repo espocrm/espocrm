@@ -35,7 +35,7 @@ Espo.define('app-portal', ['app', 'acl-portal-manager'], function (Dep, AclPorta
         masterView: 'views/site-portal/master',
 
         createAclManager: function () {
-            return new AclPortalManager(this.user);
+            return new AclPortalManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
         },
 
     });

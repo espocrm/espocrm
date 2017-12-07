@@ -37,11 +37,12 @@
 
 Espo.define('acl-manager', ['acl'], function (Acl) {
 
-    var AclManager = function (user, implementationClassMap) {
+    var AclManager = function (user, implementationClassMap, aclAllowDeleteCreated) {
         this.setEmpty();
 
         this.user = user || null;
         this.implementationClassMap = implementationClassMap || {};
+        this.aclAllowDeleteCreated = aclAllowDeleteCreated;
     }
 
     _.extend(AclManager.prototype, {
@@ -70,7 +71,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope);
+                var obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
                 this.implementationHash[scope] = obj;
             }
             return this.implementationHash[scope];
@@ -124,16 +125,6 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             if (action == 'delete') {
                 if (!model.isRemovable()) {
                     return false;
-                }
-            }
-            if (action == 'edit') {
-                if (model.has('isEditable')) {
-                    return model.get('isEditable');
-                }
-            }
-            if (action == 'delete') {
-                if (model.has('isRemovable')) {
-                    return model.get('isRemovable');
                 }
             }
 
