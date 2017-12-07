@@ -39,12 +39,6 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             }, this);
         },
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-            data.valueIsSet = this.model.has(this.name);
-            return data;
-        },
-
         events: {
             'click [data-action="createContact"]': function (e) {
                 var address = $(e.currentTarget).data('address');
@@ -73,6 +67,8 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                     data.showCreate = true;
                 }
             }
+
+            data.valueIsSet = this.model.has('fromString') || this.model.has('fromName');
 
             return data;
         },
