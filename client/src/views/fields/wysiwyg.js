@@ -140,24 +140,26 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     this.$el.find('iframe').removeClass('hidden');
 
                     var $iframe = this.$el.find('iframe');
-                    var iframe = this.iframe = $iframe.get(0);
 
-                    if (!iframe) return;
+                    var iframeElement = this.iframe = $iframe.get(0);
+                    if (!iframeElement) return;
 
                     $iframe.load(function () {
                         $iframe.contents().find('a').attr('target', '_blank');
                     });
 
-                    var doc = iframe.contentWindow.document;
+                    var documentElement = iframeElement.contentWindow.document;
 
-                    var link = '<link href="'+this.getBasePath()+'client/css/iframe.css" rel="stylesheet" type="text/css"></link>';
+                    var linkElement = documentElement.createElement('link');
+                    linkElement.type = 'text/css';
+                    linkElement.rel = 'stylesheet';
+                    linkElement.href = this.getBasePath() + 'client/css/iframe.css';
 
-                    doc.open('text/html', 'replace');
                     var body = this.sanitizeHtml(this.model.get(this.name) || '');
-                    body += link;
+                    documentElement.write(body);
+                    documentElement.close();
 
-                    doc.write(body);
-                    doc.close();
+                    iframeElement.contentWindow.document.head.appendChild(linkElement);
 
                     var processHeight = function () {
                         var $body = $iframe.contents().find('html body');
@@ -166,7 +168,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             height = $body.children(0).height() + 100;
                         }
                         height += 30;
-                        iframe.style.height = height + 'px';
+                        iframeElement.style.height = height + 'px';
                     };
 
                     setTimeout(function () {
