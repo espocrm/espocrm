@@ -60,7 +60,12 @@ Espo.define('views/admin/index', 'view', function (Dep) {
                 return v1.order > v2.order;
             }.bind(this));
 
+            var iframeParams = [
+                'version=' + encodeURIComponent(this.getConfig().get('version')),
+                'css=' + encodeURIComponent(this.getConfig().get('siteUrl') + '/' + this.getThemeManager().getStylesheet())
+            ];
             this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
+            this.iframeUrl += '?' + iframeParams.join('&');
 
             if (!this.getConfig().get('adminNotificationsDisabled')) {
                 this.createView('notificationsPanel', 'views/admin/panels/notifications', {
