@@ -106,10 +106,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var index = el.index();
                 var parent = el.parent();
 
-                el.appendTo($("ul.disabled"));
+                el.appendTo($('ul.disabled'));
 
                 var empty = $(this.emptyCellTemplate);
-                if (el.data('full-width')) {
+                if (el.attr('data-full-width')) {
                     for (var i = 0; i < this.columnCount; i++) {
                         parent.append(empty.clone());
                     }
@@ -122,7 +122,6 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     }
                 }
 
-                el.data('full-width', null);
                 el.removeAttr('data-full-width');
 
                 this.makeDraggable();
@@ -143,10 +142,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
                 $ul.children('li.empty').remove();
                 $ul.children('li:not(:first-child)').remove();
-                $ul.children('li').data('full-width', true).attr('data-full-width', true);
+                $ul.children('li').attr('data-full-width', true);
 
                 if (isEmpty) {
-                    $ul.append($('<li class="empty"></li>').data('full-width', true).attr('data-full-width', true));
+                    $ul.append($('<li class="empty"></li>').attr('data-full-width', true));
                     this.makeDraggable();
                 }
             },
@@ -338,11 +337,11 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     var draggableFullWidth = $draggable.attr('data-full-width');
 
                     if (draggableFullWidth && !targetFullWidth) {
-                        $draggable.attr('data-full-width', false);
-                        $target.attr('data-full-width', true);
+                        $draggable.removeAttr('data-full-width');
+                        $target.attr('data-full-width', 'true');
                     } else if (!draggableFullWidth && targetFullWidth) {
-                        $draggable.attr('data-full-width', true);
-                        $target.attr('data-full-width', false);
+                        $draggable.attr('data-full-width', 'true');
+                        $target.removeAttr('data-full-width');
                     }
 
                     ui.draggable.css({
