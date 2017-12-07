@@ -32,8 +32,8 @@ Espo.define('crm:views/case/record/detail', 'views/record/detail', function (Dep
 
         selfAssignAction: true,
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
             if (this.getAcl().checkModel(this.model, 'edit')) {
                 if (['Closed', 'Rejected', 'Duplicate'].indexOf(this.model.get('status')) == -1) {
                     this.dropdownItemList.push({
@@ -48,30 +48,41 @@ Espo.define('crm:views/case/record/detail', 'views/record/detail', function (Dep
             }
         },
 
+        manageAccessEdit: function (second) {
+            Dep.prototype.manageAccessEdit.call(this, second);
+
+            if (second) {
+                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
+                    this.hideActionItem('close');
+                    this.hideActionItem('reject');
+                }
+            }
+        },
+
         actionClose: function () {
-                this.model.save({
-                    status: 'Closed'
-                }, {
-                    patch: true,
-                    success: function () {
-                        Espo.Ui.success(this.translate('Closed', 'labels', 'Case'));
-                        this.removeButton('close');
-                        this.removeButton('reject');
-                    }.bind(this),
-                });
+            this.model.save({
+                status: 'Closed'
+            }, {
+                patch: true,
+                success: function () {
+                    Espo.Ui.success(this.translate('Closed', 'labels', 'Case'));
+                    this.removeButton('close');
+                    this.removeButton('reject');
+                }.bind(this),
+            });
         },
 
         actionReject: function () {
-                this.model.save({
-                    status: 'Rejected'
-                }, {
-                    patch: true,
-                    success: function () {
-                        Espo.Ui.success(this.translate('Rejected', 'labels', 'Case'));
-                        this.removeButton('close');
-                        this.removeButton('reject');
-                    }.bind(this),
-                });
+            this.model.save({
+                status: 'Rejected'
+            }, {
+                patch: true,
+                success: function () {
+                    Espo.Ui.success(this.translate('Rejected', 'labels', 'Case'));
+                    this.removeButton('close');
+                    this.removeButton('reject');
+                }.bind(this),
+            });
         },
 
         getSelfAssignAttributes: function () {

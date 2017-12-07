@@ -32,8 +32,8 @@ Espo.define('crm:views/call/record/detail', 'views/record/detail', function (Dep
 
         duplicateAction: true,
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
             if (this.getAcl().checkModel(this.model, 'edit')) {
                 if (['Held', 'Not Held'].indexOf(this.model.get('status')) == -1) {
                     this.dropdownItemList.push({
@@ -44,6 +44,17 @@ Espo.define('crm:views/call/record/detail', 'views/record/detail', function (Dep
                         'label': 'Set Not Held',
                         'name': 'setNotHeld'
                     });
+                }
+            }
+        },
+
+        manageAccessEdit: function (second) {
+            Dep.prototype.manageAccessEdit.call(this, second);
+
+            if (second) {
+                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
+                    this.hideActionItem('setHeld');
+                    this.hideActionItem('setNotHeld');
                 }
             }
         },
