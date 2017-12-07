@@ -32,6 +32,7 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
         detailTemplate: 'email/fields/email-address-varchar/detail',
 
         setup: function () {
+            this.params.required = false;
             Dep.prototype.setup.call(this);
 
             this.on('render', function () {
@@ -62,13 +63,13 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             var data = Dep.prototype.data.call(this);
 
             var address = this.model.get(this.name);
-            if (!(address in this.idHash) && this.model.get('parentId')) {
+            if (address && !(address in this.idHash) && this.model.get('parentId')) {
                 if (this.getAcl().check('Contact', 'edit')) {
                     data.showCreate = true;
                 }
             }
 
-            data.valueIsSet = this.model.has('fromString') || this.model.has('fromName');
+            data.valueIsSet = this.model.has(this.name);
 
             return data;
         },

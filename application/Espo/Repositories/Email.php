@@ -77,6 +77,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         if ($entity->get('fromEmailAddressName')) {
             $entity->set('from', $entity->get('fromEmailAddressName'));
+        } else {
+            $entity->set('from', null);
         }
     }
 
