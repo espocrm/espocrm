@@ -77,6 +77,10 @@
         "Dummy": {
             "isSystem": true,
             "scheduling": "1 */12 * * *"
+        },
+        "NewVersionChecker": {
+            "isSystem": true,
+            "scheduling": "15 5 * * *"
         }
     }
 }
