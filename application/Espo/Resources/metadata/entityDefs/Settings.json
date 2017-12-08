@@ -437,7 +437,7 @@
         "adminNotifications": {
             "type": "bool"
         },
-        "adminNotificationNewVersionCheckerDisabled": {
+        "adminNotificationsNewVersion": {
             "type": "bool"
         }
     }

@@ -91,7 +91,7 @@
         "aclStrictMode": "ACL Strict Mode",
         "aclAllowDeleteCreated": "Allow to remove created records",
         "adminNotifications": "System notifications in administration panel",
-        "adminNotificationNewVersionCheckerDisabled": "Disable notification about new EspoCRM version"
+        "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available"
     },
     "options": {
         "weekStart": {

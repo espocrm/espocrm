@@ -69,7 +69,7 @@ class AdminNotificationManager
             return [];
         }
 
-        if (!$this->getConfig()->get('adminNotificationCronIsNotConfiguredDisabled')) {
+        if ($this->getConfig()->get('adminNotificationsCronIsNotConfigured')) {
             if (!$this->isCronConfigured()) {
                 $notificationList[] = array(
                     'id' => 'cronIsNotConfigured',
@@ -79,7 +79,7 @@ class AdminNotificationManager
             }
         }
 
-        if (!$this->getConfig()->get('adminNotificationNewVersionIsAvailableDisabled')) {
+        if ($this->getConfig()->get('adminNotificationsNewVersion')) {
             $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
             if (!empty($instanceNeedingUpgrade)) {
                 $message = $this->getLanguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
@@ -91,7 +91,7 @@ class AdminNotificationManager
             }
         }
 
-        if (!$this->getConfig()->get('adminNotificationNewExtensionVersionIsAvailableDisabled')) {
+        if ($this->getConfig()->get('adminNotificationsNewExtensionVersion')) {
             $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
             if (!empty($extensionsNeedingUpgrade)) {
                 foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {

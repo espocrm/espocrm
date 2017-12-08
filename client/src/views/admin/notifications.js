@@ -54,14 +54,14 @@ Espo.define('views/admin/notifications', 'views/settings/record/edit', function 
                     true: [
                         {
                             action: 'show',
-                            fields: ['adminNotificationNewVersionCheckerDisabled']
+                            fields: ['adminNotificationsNewVersion']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['adminNotificationNewVersionCheckerDisabled']
+                        fields: ['adminNotificationsNewVersion']
                     }
                 ]
             }
