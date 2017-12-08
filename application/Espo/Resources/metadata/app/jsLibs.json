@@ -30,7 +30,7 @@
         "exportsAs": "cropper"
     },
     "gridstack": {
-        "path": "client/lib/gridstack.min.js",
+        "path": "client/lib/gridstack.all.js",
         "exportsTo": "$",
         "exportsAs": "gridstack"
     },
