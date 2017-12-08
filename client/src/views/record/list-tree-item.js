@@ -168,11 +168,7 @@ Espo.define('views/record/list-tree-item', 'view', function (Dep) {
                 this.once('children-created', function () {
                     var childrenView = this.getView('children');
                     if (!this.model.lastAreChecked) {
-                        /*if (!childrenView.collection.length) {
-                            childrenView.collection.lastAreChecked = true;
-                        } else {*/
-                            this.checkLastChildren();
-                        //}
+                        this.checkLastChildren();
                     }
                 }, this);
             }
