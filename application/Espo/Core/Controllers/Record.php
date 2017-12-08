@@ -73,7 +73,7 @@ class Record extends Base
             throw new NotFound();
         }
 
-        return $entity->toArray();
+        return $entity->getValueMap();
     }
 
     public function actionPatch($params, $data, $request)
@@ -94,7 +94,7 @@ class Record extends Base
         $service = $this->getRecordService();
 
         if ($entity = $service->createEntity($data)) {
-            return $entity->toArray();
+            return $entity->getValueMap();
         }
 
         throw new Error();
@@ -113,7 +113,7 @@ class Record extends Base
         $id = $params['id'];
 
         if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
-            return $entity->toArray();
+            return $entity->getValueMap();
         }
 
         throw new Error();
@@ -156,7 +156,7 @@ class Record extends Base
 
         return array(
             'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->toArray() : $result['list']
+            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
         );
     }
 
@@ -209,7 +209,7 @@ class Record extends Base
 
         return array(
             'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->toArray() : $result['list']
+            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
         );
     }
 
