@@ -681,7 +681,7 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassUpdate(array $idList, array $data = array())
+    protected function afterMassUpdate(array $idList, $data)
     {
     }
 
@@ -988,14 +988,14 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function massUpdate($attributes = array(), array $params)
+    public function massUpdate($data, array $params)
     {
         $idsUpdated = array();
         $repository = $this->getRepository();
 
         $count = 0;
 
-        $data = get_object_vars($attributes);
+        $data = get_object_vars($data);
         $this->filterInput($data);
 
         if (array_key_exists('ids', $params) && is_array($params['ids'])) {
