@@ -39,6 +39,20 @@ Espo.define('crm:views/knowledge-base-article/record/detail', 'views/record/deta
                     'name': 'sendInEmail'
                 });
             }
+
+            if (this.getUser().isPortal()) {
+                if (!this.getAcl().checkScope(this.scope, 'edit')) {
+                    var at
+                    if (!this.model.getLinkMultipleIdList('attachments').length) {
+                        this.hideField('attachments');
+                        this.listenToOnce(this.model, 'sync', function () {
+                            if (this.model.getLinkMultipleIdList('attachments').length) {
+                                this.showField('attachments');
+                            }
+                        }, this);
+                    }
+                }
+            }
         },
 
         actionSendInEmail: function () {
