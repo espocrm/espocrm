@@ -14,7 +14,7 @@
             [{"name":"scheduledJob"}, false],
             [{"name":"serviceName"}, false],
             [{"name":"methodName"}, false],
-            [{"name": "data"}]
+            [{"name": "data", "fullWidth": true}]
         ]
     }
 ]
