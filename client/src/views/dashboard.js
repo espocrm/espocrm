@@ -210,18 +210,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             var grid = $gridstack.data('gridstack');
             grid.removeAll();
 
-            $gridstack.on('change', function (e, itemList) {
-                this.fetchLayout();
-                this.saveLayout();
-            }.bind(this));
-
-            $gridstack.on('resizestop', function (e, ui) {
-                var id = $(e.target).data('id');
-                var view = this.getView('dashlet-' + id);
-                if (!view) return;
-                view.trigger('resize');
-            }.bind(this));
-
             this.currentTabLayout.forEach(function (o) {
                 var $item = this.prepareGridstackItem(o.id, o.name);
                 grid.addWidget($item, o.x, o.y, o.width, o.height);
@@ -233,6 +221,18 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 if (!o.id || !o.name) return;
                 this.createDashletView(o.id, o.name);
             }, this);
+
+            $gridstack.on('change', function (e, itemList) {
+                this.fetchLayout();
+                this.saveLayout();
+            }.bind(this));
+
+            $gridstack.on('resizestop', function (e, ui) {
+                var id = $(e.target).data('id');
+                var view = this.getView('dashlet-' + id);
+                if (!view) return;
+                view.trigger('resize');
+            }.bind(this));
         },
 
         fetchLayout: function () {
