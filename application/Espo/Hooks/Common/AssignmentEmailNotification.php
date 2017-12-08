@@ -51,12 +51,12 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
                 $job = $this->getEntityManager()->getEntity('Job');
                 $job->set(array(
                     'serviceName' => 'EmailNotification',
-                    'method' => 'notifyAboutAssignmentJob',
+                    'methodName' => 'notifyAboutAssignmentJob',
                     'data' => json_encode(array(
                         'userId' => $userId,
                         'assignerUserId' => $this->getUser()->id,
                         'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityName()
+                        'entityType' => $entity->getEntityType()
                     )),
                     'executeTime' => date('Y-m-d H:i:s'),
                 ));
@@ -64,6 +64,4 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
             }
         }
     }
-
 }
-

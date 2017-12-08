@@ -74,18 +74,39 @@ class Job
         $jobConfigs = $this->getConfig()->get('cron');
         $limit = !empty($jobConfigs['maxJobNumber']) ? intval($jobConfigs['maxJobNumber']) : 0;
 
-        $jobList = $this->getJobList(CronManager::PENDING, $limit);
+        $selectParams = [
+            'select' => [
+                'id',
+                'scheduledJobId',
+                'scheduledJobJob',
+                'executeTime',
+                'targetId',
+                'targetType',
+                'methodName',
+                'method', // TODO remove deprecated
+                'serviceName'
+            ],
+            'whereClause' => [
+                'status' => 'Pending',
+                'executeTime<=' => date('Y-m-d H:i:s')
+            ],
+            'orderBy' => 'executeTime'
+        ];
+        if ($limit) {
+            $selectParams['offset'] = 0;
+            $selectParams['limit'] = $limit;
+        }
+        $jobList = $this->getEntityManager()->getRepository('Job')->find($selectParams);
 
         $runningScheduledJobIdList = $this->getRunningScheduledJobIdList();
 
-        $list = [];
-        foreach ($jobList as $row) {
-            if (!in_array($row['scheduled_job_id'], $runningScheduledJobIdList)) {
-                $list[] = $row;
-            }
+        $actualJobList = [];
+        foreach ($jobList as $job) {
+            if ($job->get('scheduledJobId') && in_array($job->get('scheduledJobId'), $runningScheduledJobIdList)) continue;
+            $actualJobList[] = $job;
         }
 
-        return $list;
+        return $actualJobList;
     }
 
     public function getRunningScheduledJobIdList()
@@ -112,41 +133,6 @@ class Job
         }
 
         return $list;
-    }
-
-    /**
-     * Get job list, which execution date in jobPeriod time
-     *
-     * @param  string $status
-     * @param  int $limit
-     *
-     * @return array
-     */
-    public function getJobList($status = CronManager::PENDING, $limit = null)
-    {
-        $currentTime = time();
-
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $query = "
-            SELECT * FROM job
-            WHERE
-                `status` = " . $pdo->quote($status) . "
-                AND execute_time <= '".date('Y-m-d H:i:s', $currentTime)."'
-                AND deleted = 0
-            ORDER BY execute_time ASC
-        ";
-
-        if ($limit) {
-            $query .= " LIMIT " . $limit ;
-        }
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-        return $rows;
     }
 
     /**

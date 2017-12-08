@@ -58,14 +58,14 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         return true;
     }
 
-    public function prepare($data, $executeTime)
+    public function prepare($scheduledJob, $executeTime)
     {
         $collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
             'status' => 'Active'
         ))->find();
         foreach ($collection as $entity) {
             $running = $this->getEntityManager()->getRepository('Job')->where(array(
-                'scheduledJobId' => $data['id'],
+                'scheduledJobId' => $scheduledJob->id,
                 'status' => 'Running',
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
@@ -73,21 +73,18 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
             if ($running) continue;
 
             $countPending = $this->getEntityManager()->getRepository('Job')->where(array(
-                'scheduledJobId' => $data['id'],
+                'scheduledJobId' => $scheduledJob->id,
                 'status' => 'Pending',
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
             ))->count();
             if ($countPending > 1) continue;
 
-            $job = $this->getEntityManager()->getEntity('Job');
-
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set(array(
-                'name' => $data['name'],
-                'scheduledJobId' => $data['id'],
+                'name' => $scheduledJob->get('name'),
+                'scheduledJobId' => $scheduledJob->id,
                 'executeTime' => $executeTime,
-                'method' => 'CheckEmailAccounts',
                 'targetType' => 'EmailAccount',
                 'targetId' => $entity->id
             ));
@@ -97,4 +94,3 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         return true;
     }
 }
-

@@ -238,7 +238,7 @@ class Stream extends \Espo\Core\Hooks\Base
                     $job = $this->getEntityManager()->getEntity('Job');
                     $job->set(array(
                         'serviceName' => 'Stream',
-                        'method' => 'afterRecordCreatedJob',
+                        'methodName' => 'afterRecordCreatedJob',
                         'data' => array(
                             'userIdList' => $autofollowUserIdList,
                             'entityType' => $entity->getEntityType(),
@@ -247,7 +247,6 @@ class Stream extends \Espo\Core\Hooks\Base
                     ));
                     $this->getEntityManager()->saveEntity($job);
                 }
-
             } else {
                 if (empty($options['noStream']) && empty($options['silent'])) {
                     if ($entity->isFieldChanged('assignedUserId')) {
@@ -297,7 +296,7 @@ class Stream extends \Espo\Core\Hooks\Base
                     $job = $this->getEntityManager()->getEntity('Job');
                     $job->set(array(
                         'serviceName' => 'Stream',
-                        'method' => 'controlFollowersJob',
+                        'methodName' => 'controlFollowersJob',
                         'data' => array(
                             'entityType' => $entity->getEntityType(),
                             'entityId' => $entity->id
@@ -306,7 +305,6 @@ class Stream extends \Espo\Core\Hooks\Base
                     $this->getEntityManager()->saveEntity($job);
                 }
             }
-
         }
 
         if ($entity->isNew() && empty($options['noStream']) && empty($options['silent']) && $this->getMetadata()->get(['scopes', $entityType, 'object'])) {

@@ -5,8 +5,10 @@
         "attempts": "Attempts Left",
         "failedAttempts": "Failed Attempts",
         "serviceName": "Service",
-        "method": "Method",
+        "method": "Method (deprecated)",
+        "methodName": "Method",
         "scheduledJob": "Scheduled Job",
+        "scheduledJobJob": "Scheduled Job Name",
         "data": "Data"
     },
     "options": {

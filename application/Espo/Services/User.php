@@ -178,11 +178,11 @@ class User extends Record
 
         $job->set(array(
             'serviceName' => 'User',
-            'method' => 'removeChangePasswordRequestJob',
-            'data' => json_encode(array(
-                'id' => $passwordChangeRequest->id,
-            )),
-            'executeTime' => $dt->format('Y-m-d H:i:s') ,
+            'methodName' => 'removeChangePasswordRequestJob',
+            'data' => [
+                'id' => $passwordChangeRequest->id
+            ],
+            'executeTime' => $dt->format('Y-m-d H:i:s')
         ));
 
         $this->getEntityManager()->saveEntity($job);
@@ -192,10 +192,10 @@ class User extends Record
 
     public function removeChangePasswordRequestJob($data)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             return;
         }
-        $id = $data['id'];
+        $id = $data->id;
 
         $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $id);
         if ($p) {

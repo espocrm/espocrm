@@ -94,15 +94,15 @@ class EmailNotification extends \Espo\Core\Services\Base
 
     public function notifyAboutAssignmentJob($data)
     {
-        if (empty($data['userId'])) return;
-        if (empty($data['assignerUserId'])) return;
-        if (empty($data['entityId'])) return;
-        if (empty($data['entityType'])) return;
+        if (empty($data->userId)) return;
+        if (empty($data->assignerUserId)) return;
+        if (empty($data->entityId)) return;
+        if (empty($data->entityType)) return;
 
-        $userId = $data['userId'];
-        $assignerUserId = $data['assignerUserId'];
-        $entityId = $data['entityId'];
-        $entityType = $data['entityType'];
+        $userId = $data->userId;
+        $assignerUserId = $data->assignerUserId;
+        $entityId = $data->entityId;
+        $entityType = $data->entityType;
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
 

@@ -123,12 +123,12 @@ class Stream extends \Espo\Core\Services\Base
         if (empty($data)) {
             return;
         }
-        if (empty($data['entityId']) || empty($data['entityType']) || empty($data['userIdList'])) {
+        if (empty($data->entityId) || empty($data->entityType) || empty($data->userIdList)) {
             return;
         }
-        $userIdList = $data['userIdList'];
-        $entityType = $data['entityType'];
-        $entityId = $data['entityId'];
+        $userIdList = $data->userIdList;
+        $entityType = $data->entityType;
+        $entityId = $data->entityId;
 
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
         if (!$entity) {
@@ -1119,10 +1119,10 @@ class Stream extends \Espo\Core\Services\Base
         if (empty($data)) {
             return;
         }
-        if (empty($data['entityId']) || empty($data['entityType'])) {
+        if (empty($data->entityId) || empty($data->entityType)) {
             return;
         }
-        $entity = $this->getEntityManager()->getEntity($data['entityType'], $data['entityId']);
+        $entity = $this->getEntityManager()->getEntity($data->entityType, $data->entityId);
         if (!$entity) return;
 
         $idList = $this->getEntityFolowerIdList($entity);
@@ -1144,7 +1144,5 @@ class Stream extends \Espo\Core\Services\Base
                 }
             }
         }
-
     }
 }
-

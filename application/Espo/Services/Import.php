@@ -277,14 +277,14 @@ class Import extends \Espo\Services\Record
 
     public function runIdleImport($data)
     {
-        $entityType = $data['entityType'];
+        $entityType = $data->entityType;
 
-        $params = json_decode(json_encode($data['params']), true);
+        $params = json_decode(json_encode($data->params), true);
 
-        $importFieldList = $data['importFieldList'];
-        $attachmentId = $data['attachmentId'];
+        $importFieldList = $data->importFieldList;
+        $attachmentId = $data->attachmentId;
 
-        $importId = $data['importId'];
+        $importId = $data->importId;
 
         $this->import($entityType, $importFieldList, $attachmentId, $params, $importId);
     }
@@ -332,7 +332,7 @@ class Import extends \Espo\Services\Record
             $job = $this->getEntityManager()->getEntity('Job');
             $job->set(array(
                 'serviceName' => 'Import',
-                'method' => 'runIdleImport',
+                'methodName' => 'runIdleImport',
                 'data' => array(
                     'entityType' => $scope,
                     'params' => $params,
