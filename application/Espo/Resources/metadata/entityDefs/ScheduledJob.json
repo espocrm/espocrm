@@ -78,7 +78,7 @@
             "isSystem": true,
             "scheduling": "1 */12 * * *"
         },
-        "SchecduleNewVersionChecker": {
+        "NewVersionChecker": {
             "isSystem": true,
             "scheduling": "15 5 * * *"
         }

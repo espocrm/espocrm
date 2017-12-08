@@ -27,53 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Services;
 
-use Espo\Core\Exceptions;
-
-class SchecduleNewVersionChecker extends \Espo\Core\Jobs\Base
+class AdminNotifications extends \Espo\Core\Services\Base
 {
-    public function run()
+    public function newVersionChecker($data)
     {
-        if (!$this->getConfig()->get('adminNotifications') || $this->getConfig()->get('adminNotificationNewVersionCheckerDisabled')) {
+        $config = $this->getConfig();
+
+        if (!$config->get('adminNotifications') || $config->get('adminNotificationNewVersionCheckerDisabled')) {
             return true;
         }
 
-        $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->where(array(
-            'job' => 'SchecduleNewVersionChecker',
-            'status' => 'Active',
-        ))->findOne();
-
-        if ($scheduledJob) {
-            $job = $this->getEntityManager()->getEntity('Job');
-            $job->set(array(
-                'name' => 'NewVersionChecker',
-                'method' => 'NewVersionChecker',
-                'scheduledJobId' => $scheduledJob->get('id'),
-                'executeTime' => $this->getRunTime(),
-            ));
-
-            $this->getEntityManager()->saveEntity($job);
+        $latestRelease = $this->getLatestRelease();
+        if (!empty($latestRelease['version']) && $config->get('latestVersion') != $latestRelease['version']) {
+            $config->set('latestVersion', $latestRelease['version']);
+            $config->save();
         }
 
         return true;
     }
 
-    protected function getRunTime()
+    protected function getLatestRelease($url = null, array $requestData = ['action' => 'latestRelease'])
     {
-        $hour = rand(0, 4);
-        $minute = rand(0, 60);
+        if (function_exists('curl_version')) {
+            $ch = curl_init();
 
-        $nextDay = new \DateTime('+ 1 day');
-        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
+            curl_setopt($ch, CURLOPT_URL, $url ? $url : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw=='));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
 
-        $timeZone = $this->getConfig()->get('timeZone');
-        if (empty($timeZone)) {
-            $timeZone = 'UTC';
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode === 200) {
+                $data = json_decode($result, true);
+                if (is_array($data)) {
+                    return $data;
+                }
+            }
         }
-
-        $datetime = new \DateTime($time, new \DateTimeZone($timeZone));
-
-        return $datetime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 }

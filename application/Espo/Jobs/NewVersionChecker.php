@@ -35,42 +35,39 @@ class NewVersionChecker extends \Espo\Core\Jobs\Base
 {
     public function run()
     {
-        $config = $this->getConfig();
-
-        if (!$config->get('adminNotifications') || $config->get('adminNotificationNewVersionCheckerDisabled')) {
+        if (!$this->getConfig()->get('adminNotifications') || $this->getConfig()->get('adminNotificationNewVersionCheckerDisabled')) {
             return true;
         }
 
-        $latestRelease = $this->getLatestRelease();
-        if (!empty($latestRelease['version']) && $config->get('latestVersion') != $latestRelease['version']) {
-            $config->set('latestVersion', $latestRelease['version']);
-            $config->save();
-        }
+        $job = $this->getEntityManager()->getEntity('Job');
+        $job->set(array(
+            'name' => 'NewVersionChecker',
+            'serviceName' => 'AdminNotifications',
+            'method' => 'newVersionChecker',
+            'methodName' => 'newVersionChecker',
+            'executeTime' => $this->getRunTime(),
+        ));
+
+        $this->getEntityManager()->saveEntity($job);
 
         return true;
     }
 
-    protected function getLatestRelease($url = null, array $requestData = ['action' => 'latestRelease'])
+    protected function getRunTime()
     {
-        if (function_exists('curl_version')) {
-            $ch = curl_init();
+        $hour = rand(0, 4);
+        $minute = rand(0, 60);
 
-            curl_setopt($ch, CURLOPT_URL, $url ? $url : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw=='));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        $nextDay = new \DateTime('+ 1 day');
+        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
 
-            $result = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($httpCode === 200) {
-                $data = json_decode($result, true);
-                if (is_array($data)) {
-                    return $data;
-                }
-            }
+        $timeZone = $this->getConfig()->get('timeZone');
+        if (empty($timeZone)) {
+            $timeZone = 'UTC';
         }
+
+        $datetime = new \DateTime($time, new \DateTimeZone($timeZone));
+
+        return $datetime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 }
