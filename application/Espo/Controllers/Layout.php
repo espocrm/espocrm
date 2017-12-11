@@ -48,6 +48,8 @@ class Layout extends \Espo\Core\Controllers\Base
 
     public function actionUpdate($params, $data, $request)
     {
+        $data = get_object_vars($data);
+
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
@@ -79,10 +81,10 @@ class Layout extends \Espo\Core\Controllers\Base
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        if (empty($data['scope']) || empty($data['name'])) {
+        if (empty($data->scope) || empty($data->name)) {
             throw new BadRequest();
         }
 
-        return $this->getContainer()->get('layout')->resetToDefault($data['scope'], $data['name']);
+        return $this->getContainer()->get('layout')->resetToDefault($data->scope, $data->name);
     }
 }

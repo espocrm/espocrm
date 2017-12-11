@@ -53,23 +53,23 @@ class LabelManager extends \Espo\Core\Controllers\Base
 
     public function postActionGetScopeData($params, $data, $request)
     {
-        if (empty($data['scope']) || empty($data['language'])) {
+        if (empty($data->scope) || empty($data->language)) {
             throw new BadRequest();
         }
         $labelManager = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Utils\\LabelManager');
-        return $labelManager->getScopeData($data['language'], $data['scope']);
+        return $labelManager->getScopeData($data->language, $data->scope);
     }
 
     public function postActionSaveLabels($params, $data)
     {
-        if (empty($data['scope']) || empty($data['language']) || !isset($data['labels'])) {
+        if (empty($data->scope) || empty($data->language) || !isset($data->labels)) {
             throw new BadRequest();
         }
 
-        $labels = get_object_vars($data['labels']);
+        $labels = get_object_vars($data->labels);
 
         $labelManager = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Utils\\LabelManager');
-        $returnData = $labelManager->saveLabels($data['language'], $data['scope'], $labels);
+        $returnData = $labelManager->saveLabels($data->language, $data->scope, $labels);
 
         $this->getContainer()->get('dataManager')->clearCache();
 

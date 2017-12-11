@@ -215,17 +215,17 @@ class User extends Record
     public function createEntity($data)
     {
         $newPassword = null;
-        if (array_key_exists('password', $data)) {
-            $newPassword = $data['password'];
-            $data['password'] = $this->hashPassword($data['password']);
+        if (property_exists($data, 'password')) {
+            $newPassword = $data->password;
+            $data->password = $this->hashPassword($data->password);
         }
         if (!$this->getUser()->get('isSuperAdmin')) {
-            unset($data['isSuperAdmin']);
+            unset($data->isSuperAdmin);
         }
 
         $user = parent::createEntity($data);
 
-        if (!is_null($newPassword) && !empty($data['sendAccessInfo'])) {
+        if (!is_null($newPassword) && !empty($data->sendAccessInfo)) {
             if ($user->isActive()) {
                 try {
                     $this->sendPassword($user, $newPassword);
@@ -242,24 +242,24 @@ class User extends Record
             throw new Forbidden();
         }
         $newPassword = null;
-        if (array_key_exists('password', $data)) {
-            $newPassword = $data['password'];
-            $data['password'] = $this->hashPassword($data['password']);
+        if (property_exists($data, 'password')) {
+            $newPassword = $data->password;
+            $data->password = $this->hashPassword($data->password);
         }
 
         if ($id == $this->getUser()->id) {
-            unset($data['isActive']);
-            unset($data['isPortalUser']);
+            unset($data->isActive);
+            unset($data->isPortalUser);
         }
         if (!$this->getUser()->get('isSuperAdmin')) {
-            unset($data['isSuperAdmin']);
+            unset($data->isSuperAdmin);
         }
 
         $user = parent::updateEntity($id, $data);
 
         if (!is_null($newPassword)) {
             try {
-                if ($user->isActive() && !empty($data['sendAccessInfo'])) {
+                if ($user->isActive() && !empty($data->sendAccessInfo)) {
                     $this->sendPassword($user, $newPassword);
                 }
             } catch (\Exception $e) {}
@@ -288,7 +288,7 @@ class User extends Record
         ))->count();
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data))
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             $userCount = $this->getInternalUserCount();
@@ -304,7 +304,7 @@ class User extends Record
         }
     }
 
-    protected function beforeUpdate(Entity $user, array $data = array())
+    protected function beforeUpdateEntity(Entity $user, $data)
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             if (

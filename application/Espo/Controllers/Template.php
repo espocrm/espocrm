@@ -35,4 +35,3 @@ class Template extends \Espo\Core\Controllers\Record
 {
 
 }
-

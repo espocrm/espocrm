@@ -501,40 +501,40 @@ class Record extends \Espo\Core\Services\Base
         return $value;
     }
 
-    protected function filterInput(&$data)
+    protected function filterInput($data)
     {
         foreach ($this->readOnlyAttributeList as $attribute) {
-            unset($data[$attribute]);
+            unset($data->$attribute);
         }
 
         foreach ($data as $key => $value) {
-            if (is_array($data[$key])) {
-                foreach ($data[$key] as $i => $v) {
-                    $data[$key][$i] = $this->filterInputAttribute($i, $data[$key][$i]);
+            if (is_array($data->$key)) {
+                foreach ($data->$key as $i => $v) {
+                    $data->$key[$i] = $this->filterInputAttribute($i, $data->$key[$i]);
                 }
-            } else if ($data[$key] instanceof \stdClass) {
-                $propertyList = get_object_vars($data[$key]);
+            } else if ($data->$key instanceof \stdClass) {
+                $propertyList = get_object_vars($data->$key);
                 foreach ($propertyList as $property => $value) {
-                    $data[$key]->$property = $this->filterInputAttribute($property, $data[$key]->$property);
+                    $data->$key->$property = $this->filterInputAttribute($property, $data->$key->$property);
                 }
             } else {
-                $data[$key] = $this->filterInputAttribute($key, $data[$key]);
+                $data->$key = $this->filterInputAttribute($key, $data->$key);
             }
         }
 
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
-            unset($data[$attribute]);
+            unset($data->$attribute);
         }
     }
 
-    protected function handleInput(&$data)
+    protected function handleInput($data)
     {
 
     }
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
-        if (empty($data['forceDuplicate'])) {
+        if (empty($data->forceDuplicate)) {
             $duplicates = $this->checkEntityForDuplicate($entity, $data);
             if (!empty($duplicates)) {
                 $reason = array(
@@ -557,12 +557,12 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
-        unset($data['modifiedById']);
-        unset($data['modifiedByName']);
-        unset($data['modifiedAt']);
-        unset($data['createdById']);
-        unset($data['createdByName']);
-        unset($data['createdAt']);
+        unset($data->modifiedById);
+        unset($data->modifiedByName);
+        unset($data->modifiedAt);
+        unset($data->createdById);
+        unset($data->createdByName);
+        unset($data->createdAt);
 
         $entity->set($data);
 
@@ -570,7 +570,7 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->beforeCreate($entity, $data);
+        $this->beforeCreateEntity($entity, $data);
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
@@ -583,7 +583,7 @@ class Record extends \Espo\Core\Services\Base
         $this->processDuplicateCheck($entity, $data);
 
         if ($this->storeEntity($entity)) {
-            $this->afterCreate($entity, $data);
+            $this->afterCreateEntity($entity, $data);
             $this->afterCreateProcessDuplicating($entity, $data);
             $this->prepareEntityForOutput($entity);
 
@@ -597,7 +597,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function updateEntity($id, $data)
     {
-        unset($data['deleted']);
+        unset($data->deleted);
 
         if (empty($id)) {
             throw BadRequest();
@@ -606,12 +606,12 @@ class Record extends \Espo\Core\Services\Base
         $this->filterInput($data);
         $this->handleInput($data);
 
-        unset($data['modifiedById']);
-        unset($data['modifiedByName']);
-        unset($data['modifiedAt']);
-        unset($data['createdById']);
-        unset($data['createdByName']);
-        unset($data['createdAt']);
+        unset($data->modifiedById);
+        unset($data->modifiedByName);
+        unset($data->modifiedAt);
+        unset($data->createdById);
+        unset($data->createdByName);
+        unset($data->createdAt);
 
         if ($this->getEntityBeforeUpdate) {
             $entity = $this->getEntity($id);
@@ -627,11 +627,9 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $dataBefore = $entity->getValues();
-
         $entity->set($data);
 
-        $this->beforeUpdate($entity, $data);
+        $this->beforeUpdateEntity($entity, $data);
 
         if (!$this->isValid($entity)) {
             throw new BadRequest();
@@ -646,7 +644,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
-            $this->afterUpdate($entity, $data);
+            $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
 
             $this->processActionHistoryRecord('update', $entity);
@@ -657,26 +655,63 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
+    protected function beforeCreateEntity(Entity $entity, $data)
+    {
+
+        $this->beforeCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+    }
+
+    protected function afterCreateEntity(Entity $entity, $data)
+    {
+        $this->afterCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+    }
+
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+         $this->beforeUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+    }
+
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        $this->afterUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+    }
+
+    protected function beforeDeleteEntity(Entity $entity)
+    {
+        $this->beforeDelete($entity); // TODO remove in 5.1.0
+    }
+
+    protected function afterDeleteEntity(Entity $entity)
+    {
+        $this->afterDelete($entity); // TODO remove in 5.1.0
+    }
+
+    /** Deprecated */
     protected function beforeCreate(Entity $entity, array $data = array())
     {
     }
 
+    /** Deprecated */
     protected function afterCreate(Entity $entity, array $data = array())
     {
     }
 
+    /** Deprecated */
     protected function beforeUpdate(Entity $entity, array $data = array())
     {
     }
 
+    /** Deprecated */
     protected function afterUpdate(Entity $entity, array $data = array())
     {
     }
 
+    /** Deprecated */
     protected function beforeDelete(Entity $entity)
     {
     }
 
+    /** Deprecated */
     protected function afterDelete(Entity $entity)
     {
     }
@@ -705,11 +740,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->beforeDelete($entity);
+        $this->beforeDeleteEntity($entity);
 
         $result = $this->getRepository()->remove($entity);
         if ($result) {
-            $this->afterDelete($entity);
+            $this->afterDeleteEntity($entity);
 
             $this->processActionHistoryRecord('delete', $entity);
 
@@ -1214,12 +1249,12 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
-    protected function getDuplicateWhereClause(Entity $entity, $data = array())
+    protected function getDuplicateWhereClause(Entity $entity, $data)
     {
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity, $data = array())
+    public function checkEntityForDuplicate(Entity $entity, $data)
     {
         $where = $this->getDuplicateWhereClause($entity, $data);
 
@@ -1683,8 +1718,8 @@ class Record extends \Espo\Core\Services\Base
             throw new NotFound();
         }
 
-        $attributes = $entity->getValues();
-        unset($attributes['id']);
+        $attributes = $entity->getValueMap();
+        unset($attributes->id);
 
         $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], array());
 
@@ -1697,7 +1732,7 @@ class Record extends \Espo\Core\Services\Base
             if (!empty($item['duplicateIgnore'])) {
                 $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
                 foreach ($attributeToIgnoreList as $attribute) {
-                    unset($attributes[$attribute]);
+                    unset($attributes->$attribute);
                 }
                 continue;
             }
@@ -1708,7 +1743,7 @@ class Record extends \Espo\Core\Services\Base
                     $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
                     $idAttribute = $field . 'Id';
                     if ($attachment) {
-                        $attributes[$idAttribute] = $attachment->id;
+                        $attributes->$idAttribute = $attachment->id;
                     }
                 }
             } else if (in_array($type, ['attachmentMultiple'])) {
@@ -1725,23 +1760,23 @@ class Record extends \Espo\Core\Services\Base
                             $typeHash->{$attachment->id} = $attachment->get('type');
                         }
                     }
-                    $attributes[$field . 'Ids'] = $idList;
-                    $attributes[$field . 'Names'] = $nameHash;
-                    $attributes[$field . 'Types'] = $typeHash;
+                    $attributes->{$field . 'Ids'} = $idList;
+                    $attributes->{$field . 'Names'} = $nameHash;
+                    $attributes->{$field . 'Types'} = $typeHash;
                 }
             }
         }
 
-        $attributes['_duplicatingEntityId'] = $id;
+        $attributes->_duplicatingEntityId = $id;
 
         return $attributes;
     }
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (!isset($data['_duplicatingEntityId'])) return;
+        if (!isset($data->_duplicatingEntityId)) return;
 
-        $duplicatingEntityId = $data['_duplicatingEntityId'];
+        $duplicatingEntityId = $data->_duplicatingEntityId;
         if (!$duplicatingEntityId) return;
         $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
         if (!$duplicatingEntity) return;

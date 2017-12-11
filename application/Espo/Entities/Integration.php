@@ -68,6 +68,10 @@ class Integration extends \Espo\Core\ORM\Entity
 
     public function set($p1, $p2 = null)
     {
+        if (is_object($p1)) {
+            $p1 = get_object_vars($p1);
+        }
+
         if (is_array($p1)) {
             if ($p2 === null) {
                 $p2 = false;
@@ -140,7 +144,6 @@ class Integration extends \Espo\Core\ORM\Entity
                     }
                 }
 
-
                 $this->set($field, $value);
             }
         }
@@ -175,5 +178,10 @@ class Integration extends \Espo\Core\ORM\Entity
         return $arr;
     }
 
-}
+    public function getValueMap()
+    {
+        $arr = $this->toArray();
 
+        return (object) $arr;
+    }
+}

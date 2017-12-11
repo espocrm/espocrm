@@ -38,7 +38,7 @@ class PhoneNumber extends \Espo\Core\ORM\Entity
         if (empty($value)) {
             throw new Error("Phone number can't be empty");
         }
-        $this->valuesContainer['name'] = $value;    
+        $this->valuesContainer['name'] = $value;
     }
 }
 

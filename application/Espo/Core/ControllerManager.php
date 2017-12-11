@@ -76,11 +76,6 @@ class ControllerManager
             $data = json_decode($data);
         }
 
-
-        if ($data instanceof \stdClass) {
-            $data = get_object_vars($data);
-        }
-
         if (!class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");
         }
@@ -109,6 +104,13 @@ class ControllerManager
             throw new NotFound("Action '$actionName' (".$request->getMethod().") does not exist in controller '$controllerName'");
         }
 
+        // TODO Remove in 5.1.0
+        if ($data instanceof \stdClass) {
+            if ($this->getMetadata()->get(['app', 'deprecatedControllerActions', $controllerName, $primaryActionMethodName])) {
+                $data = get_object_vars($data);
+            }
+        }
+
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request);
         }
@@ -125,6 +127,4 @@ class ControllerManager
 
         return $result;
     }
-
 }
-

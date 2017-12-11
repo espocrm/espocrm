@@ -1,0 +1,29 @@
+{
+    "BpmnProcess": {
+        "postActionStop": true
+    },
+    "GoogleContacts": {
+        "actionPush": true
+    },
+    "MailChimp": {
+        "actionUpdate": true
+    },
+    "MailChimpCampaign": {
+        "actionCreate": true
+    },
+    "MailChimpList": {
+        "actionCreate": true
+    },
+    "MailChimpListGroup": {
+        "actionCreate": true
+    },
+    "Quote": {
+        "postActionGetAttributesForEmail": true
+    },
+    "Report": {
+        "actionPopulateTargetList": true,
+        "actionSyncTargetListWithReports": true,
+        "postActionExportList": true,
+        "postActionGetEmailAttributes": true
+    }
+}

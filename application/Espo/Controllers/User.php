@@ -57,20 +57,20 @@ class User extends \Espo\Core\Controllers\Record
 
     public function postActionChangeOwnPassword($params, $data, $request)
     {
-        if (!array_key_exists('password', $data) || !array_key_exists('currentPassword', $data)) {
+        if (!property_exists($data, 'password') || !property_exists($data, 'currentPassword')) {
             throw new BadRequest();
         }
-        return $this->getService('User')->changePassword($this->getUser()->id, $data['password'], true, $data['currentPassword']);
+        return $this->getService('User')->changePassword($this->getUser()->id, $data->password, true, $data->currentPassword);
     }
 
     public function postActionChangePasswordByRequest($params, $data, $request)
     {
-        if (empty($data['requestId']) || empty($data['password'])) {
+        if (empty($data->requestId) || empty($data->password)) {
             throw new BadRequest();
         }
 
         $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
-            'requestId' => $data['requestId']
+            'requestId' => $data->requestId
         ))->findOne();
 
         if (!$p) {
@@ -83,7 +83,7 @@ class User extends \Espo\Core\Controllers\Record
 
         $this->getEntityManager()->removeEntity($p);
 
-        if ($this->getService('User')->changePassword($userId, $data['password'])) {
+        if ($this->getService('User')->changePassword($userId, $data->password)) {
             return array(
                 'url' => $p->get('url')
             );
@@ -92,15 +92,15 @@ class User extends \Espo\Core\Controllers\Record
 
     public function postActionPasswordChangeRequest($params, $data, $request)
     {
-        if (empty($data['userName']) || empty($data['emailAddress'])) {
+        if (empty($data->userName) || empty($data->emailAddress)) {
             throw new BadRequest();
         }
 
-        $userName = $data['userName'];
-        $emailAddress = $data['emailAddress'];
+        $userName = $data->userName;
+        $emailAddress = $data->emailAddress;
         $url = null;
-        if (!empty($data['url'])) {
-            $url = $data['url'];
+        if (!empty($data->url)) {
+            $url = $data->url;
         }
 
         return $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);

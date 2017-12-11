@@ -53,7 +53,7 @@ class Admin extends \Espo\Core\Controllers\Base
         return $result;
     }
 
-    public function postActionClearCache($params, $data)
+    public function postActionClearCache($params)
     {
         $result = $this->getContainer()->get('dataManager')->clearCache();
         return $result;
@@ -93,17 +93,17 @@ class Admin extends \Espo\Core\Controllers\Base
         }
 
         $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
-        $upgradeManager->install($data);
+        $upgradeManager->install(get_object_vars($data));
 
         return true;
     }
 
-    public function actionCronMessage($params, $data)
+    public function actionCronMessage($params)
     {
         return $this->getContainer()->get('scheduledJob')->getSetupMessage();
     }
 
-    public function actionAdminNotificationList($params, $data)
+    public function actionAdminNotificationList($params)
     {
         $adminNotificationManager = new \Espo\Core\Utils\AdminNotificationManager($this->getContainer());
         return $adminNotificationManager->getNotificationList();

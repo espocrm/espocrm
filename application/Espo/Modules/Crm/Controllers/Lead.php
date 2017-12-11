@@ -36,10 +36,13 @@ class Lead extends \Espo\Core\Controllers\Record
 {
     public function postActionConvert($params, $data, $request)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
-        $entity = $this->getRecordService()->convert($data['id'], $data['records']);
+        if (empty($data->records)) {
+            $data->records = (object) [];
+        }
+        $entity = $this->getRecordService()->convert($data->id, $data->records);
 
         if (!empty($entity)) {
             return $entity->toArray();
@@ -49,10 +52,10 @@ class Lead extends \Espo\Core\Controllers\Record
 
     public function postActionGetConvertAttributes($params, $data, $request)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->getConvertAttributes($data['id']);
+        return $this->getRecordService()->getConvertAttributes($data->id);
     }
 }

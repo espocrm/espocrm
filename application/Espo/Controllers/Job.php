@@ -76,4 +76,3 @@ class Job extends \Espo\Core\Controllers\Record
         throw new Forbidden();
     }
 }
-

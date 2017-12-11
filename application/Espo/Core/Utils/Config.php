@@ -126,6 +126,10 @@ class Config
      */
     public function set($name, $value = null, $dontMarkDirty = false)
     {
+        if (is_object($name)) {
+            $name = get_object_vars($name);
+        }
+
         if (!is_array($name)) {
             $name = array($name => $value);
         }
@@ -251,6 +255,10 @@ class Config
     {
         $restrictItems = $this->getRestrictItems($isAdmin);
 
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
+
         $values = array();
         foreach ($data as $key => $item) {
             if (!in_array($key, $restrictItems)) {
@@ -326,5 +334,3 @@ class Config
         return rtrim($this->get('siteUrl'), '/');
     }
 }
-
-?>

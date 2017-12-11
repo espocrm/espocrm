@@ -42,12 +42,17 @@ class AuthToken extends \Espo\Core\Controllers\Record
 
     public function actionUpdate($params, $data, $request)
     {
+        $dataAr = get_object_vars($data);
+
         if (
-            is_array($data) &&
-            array_key_exists('isActive', $data) &&
-            $data['isActive'] === false &&
-            count(array_keys($data)) === 1)
-        {
+            is_object($data)
+            &&
+            isset($data->isActive)
+            &&
+            $data->isActive === false
+            &&
+            count(array_keys($dataAr)) === 1
+        ) {
             return parent::actionUpdate($params, $data, $request);
         }
         throw new Forbidden();
@@ -55,16 +60,19 @@ class AuthToken extends \Espo\Core\Controllers\Record
 
     public function actionMassUpdate($params, $data, $request)
     {
-        if (empty($data['attributes'])) {
+        if (empty($data->attributes)) {
             throw new BadRequest();
         }
 
-        $attributes = $data['attributes'];
+        $attributes = $data->attributes;
 
         if (
-            is_object($attributes) &&
-            isset($attributes->isActive) &&
-            $attributes->isActive === false &&
+            is_object($attributes)
+            &&
+            isset($attributes->isActive)
+            &&
+            $attributes->isActive === false
+            &&
             count(array_keys(get_object_vars($attributes))) === 1
         ) {
             return parent::actionMassUpdate($params, $data, $request);
@@ -87,4 +95,3 @@ class AuthToken extends \Espo\Core\Controllers\Record
         throw new Forbidden();
     }
 }
-

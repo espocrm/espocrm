@@ -33,7 +33,7 @@ use \Espo\ORM\Entity;
 
 class Person extends \Espo\Services\Record
 {
-    protected function getDuplicateWhereClause(Entity $entity, $data = array())
+    protected function getDuplicateWhereClause(Entity $entity, $data)
     {
         $data = array(
             'OR' => []

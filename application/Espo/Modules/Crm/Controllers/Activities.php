@@ -127,10 +127,10 @@ class Activities extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
-        $id = $data['id'];
+        $id = $data->id;
 
         return $this->getService('Activities')->removeReminder($id);
     }

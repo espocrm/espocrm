@@ -88,14 +88,14 @@ class InboundEmail extends \Espo\Services\Record
         return $this->getInjection('crypt');
     }
 
-    protected function handleInput(&$data)
+    protected function handleInput($data)
     {
         parent::handleInput($data);
-        if (array_key_exists('password', $data)) {
-            $data['password'] = $this->getCrypt()->encrypt($data['password']);
+        if (property_exists($data, 'password')) {
+            $data->password = $this->getCrypt()->encrypt($data->password);
         }
-        if (array_key_exists('smtpPassword', $data)) {
-            $data['smtpPassword'] = $this->getCrypt()->encrypt($data['smtpPassword']);
+        if (property_exists($data, 'smtpPassword')) {
+            $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
         }
     }
 

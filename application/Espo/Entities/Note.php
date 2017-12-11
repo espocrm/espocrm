@@ -82,4 +82,3 @@ class Note extends \Espo\Core\ORM\Entity
         return in_array($userId, $userIdList);
     }
 }
-

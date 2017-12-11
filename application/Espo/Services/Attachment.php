@@ -66,29 +66,29 @@ class Attachment extends Record
 
     public function createEntity($data)
     {
-        if (!empty($data['file'])) {
-            $arr = explode(',', $data['file']);
+        if (!empty($data->file)) {
+            $arr = explode(',', $data->file);
             $contents = '';
             if (count($arr) > 1) {
                 $contents = $arr[1];
             }
 
             $contents = base64_decode($contents);
-            $data['contents'] = $contents;
+            $data->contents = $contents;
 
             $relatedEntityType = null;
             $field = null;
             $role = 'Attachment';
-            if (isset($data['parentType'])) {
-                $relatedEntityType = $data['parentType'];
-            } else if (isset($data['relatedType'])) {
-                $relatedEntityType = $data['relatedType'];
+            if (isset($data->parentType)) {
+                $relatedEntityType = $data->parentType;
+            } else if (isset($data->relatedType)) {
+                $relatedEntityType = $data->relatedType;
             }
-            if (isset($data['field'])) {
-                $field = $data['field'];
+            if (isset($data->field)) {
+                $field = $data->field;
             }
-            if (isset($data['role'])) {
-                $role = $data['role'];
+            if (isset($data->role)) {
+                $role = $data->role;
             }
             if (!$relatedEntityType || !$field) {
                 throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
@@ -144,14 +144,14 @@ class Attachment extends Record
 
         $entity = parent::createEntity($data);
 
-        if (!empty($data['file'])) {
+        if (!empty($data->file)) {
             $entity->clear('contents');
         }
 
         return $entity;
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
@@ -159,7 +159,7 @@ class Attachment extends Record
         }
     }
 
-    protected function beforeUpdate(Entity $entity, array $data = array())
+    protected function beforeUpdateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {

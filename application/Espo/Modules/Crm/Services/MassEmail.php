@@ -62,17 +62,17 @@ class MassEmail extends \Espo\Services\Record
         return $this->getInjection('language');
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        parent::beforeCreate($entity, $data);
+        parent::beforeCreateEntity($entity, $data);
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
     }
 
-    protected function afterRemove(Entity $massEmail, array $data = array())
+    protected function afterDeleteEntity(Entity $massEmail)
     {
-        parent::afterRemove($massEmail, $data);
+        parent::afterDeleteEntity($massEmail);
         $existingQueueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
             'status' => ['Pending', 'Failed'],
             'massEmailId' => $massEmail->id

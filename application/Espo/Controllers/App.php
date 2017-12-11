@@ -40,12 +40,11 @@ class App extends \Espo\Core\Controllers\Base
 
     public function postActionDestroyAuthToken($params, $data)
     {
-        $token = $data['token'];
-        if (empty($token)) {
+        if (empty($data->token)) {
             throw new BadRequest();
         }
 
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        return $auth->destroyAuthToken($token);
+        return $auth->destroyAuthToken($data->token);
     }
 }

@@ -31,7 +31,6 @@ namespace Espo\Entities;
 
 class Preferences extends \Espo\Core\ORM\Entity
 {
-
     public function getSmtpParams()
     {
         $smtpParams = array();
@@ -49,4 +48,3 @@ class Preferences extends \Espo\Core\ORM\Entity
         }
     }
 }
-

@@ -245,10 +245,10 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $ids = isset($data['ids']) ? $data['ids'] : null;
-        $where = isset($data['where']) ? json_decode(json_encode($data['where']), true) : null;
-        $byWhere = isset($data['byWhere']) ? $data['byWhere'] : false;
-        $selectData = isset($data['selectData']) ? json_decode(json_encode($data['selectData']), true) : null;
+        $ids = isset($data->ids) ? $data->ids : null;
+        $where = isset($data->where) ? json_decode(json_encode($data->where), true) : null;
+        $byWhere = isset($data->byWhere) ? $data->byWhere : false;
+        $selectData = isset($data->selectData) ? json_decode(json_encode($data->selectData), true) : null;
 
         $params = array();
         if ($byWhere) {
@@ -258,16 +258,16 @@ class Record extends Base
             $params['ids'] = $ids;
         }
 
-        if (isset($data['attributeList'])) {
-            $params['attributeList'] = $data['attributeList'];
+        if (isset($data->attributeList)) {
+            $params['attributeList'] = $data->attributeList;
         }
 
-        if (isset($data['fieldList'])) {
-            $params['fieldList'] = $data['fieldList'];
+        if (isset($data->fieldList)) {
+            $params['fieldList'] = $data->fieldList;
         }
 
-        if (isset($data['format'])) {
-            $params['format'] = $data['format'];
+        if (isset($data->format)) {
+            $params['format'] = $data->format;
         }
 
         return array(
@@ -284,21 +284,21 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
-        if (empty($data['attributes'])) {
+        if (empty($data->attributes)) {
             throw new BadRequest();
         }
 
         $params = array();
-        if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
-            $params['where'] = json_decode(json_encode($data['where']), true);
-            if (array_key_exists('selectData', $data)) {
-                $params['selectData'] = json_decode(json_encode($data['selectData']), true);
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
             }
-        } else if (array_key_exists('ids', $data)) {
-            $params['ids'] = $data['ids'];
+        } else if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
         }
 
-        $attributes = $data['attributes'];
+        $attributes = $data->attributes;
 
         $idsUpdated = $this->getRecordService()->massUpdate($attributes, $params);
 
@@ -315,15 +315,15 @@ class Record extends Base
         }
 
         $params = array();
-        if (array_key_exists('where', $data) && !empty($data['byWhere'])) {
-            $where = json_decode(json_encode($data['where']), true);
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
             $params['where'] = $where;
-            if (array_key_exists('selectData', $data)) {
-                $params['selectData'] = json_decode(json_encode($data['selectData']), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
             }
         }
-        if (array_key_exists('ids', $data)) {
-            $params['ids'] = $data['ids'];
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
         }
 
         return $this->getRecordService()->massRemove($params);
@@ -342,25 +342,25 @@ class Record extends Base
         $id = $params['id'];
         $link = $params['link'];
 
-        if (!empty($data['massRelate'])) {
-            if (!is_array($data['where'])) {
+        if (!empty($data->massRelate)) {
+            if (!is_array($data->where)) {
                 throw new BadRequest();
             }
-            $where = json_decode(json_encode($data['where']), true);
+            $where = json_decode(json_encode($data->where), true);
 
             $selectData = null;
-            if (isset($data['selectData']) && is_array($data['selectData'])) {
-                $selectData = json_decode(json_encode($data['selectData']), true);
+            if (isset($data->selectData) && is_array($data->selectData)) {
+                $selectData = json_decode(json_encode($data->selectData), true);
             }
 
             return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
         } else {
             $foreignIdList = array();
-            if (isset($data['id'])) {
-                $foreignIdList[] = $data['id'];
+            if (isset($data->id)) {
+                $foreignIdList[] = $data->id;
             }
-            if (isset($data['ids']) && is_array($data['ids'])) {
-                foreach ($data['ids'] as $foreignId) {
+            if (isset($data->ids) && is_array($data->ids)) {
+                foreach ($data->ids as $foreignId) {
                     $foreignIdList[] = $foreignId;
                 }
             }
@@ -392,18 +392,18 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        $foreignIds = array();
-        if (isset($data['id'])) {
-            $foreignIds[] = $data['id'];
+        $foreignIdList = [];
+        if (isset($data->id)) {
+            $foreignIdList[] = $data->id;
         }
-        if (isset($data['ids']) && is_array($data['ids'])) {
-            foreach ($data['ids'] as $foreignId) {
-                $foreignIds[] = $foreignId;
+        if (isset($data->ids) && is_array($data->ids)) {
+            foreach ($data->ids as $foreignId) {
+                $foreignIdList[] = $foreignId;
             }
         }
 
         $result = false;
-        foreach ($foreignIds as $foreignId) {
+        foreach ($foreignIdList as $foreignId) {
             if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {
                 $result = $result || true;
             }
@@ -445,12 +445,12 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (empty($data['targetId']) || empty($data['sourceIds']) || !is_array($data['sourceIds']) || !($data['attributes'] instanceof \StdClass)) {
+        if (empty($data->targetId) || empty($data->sourceIds) || !is_array($data->sourceIds) || !($data->attributes instanceof \StdClass)) {
             throw new BadRequest();
         }
-        $targetId = $data['targetId'];
-        $sourceIds = $data['sourceIds'];
-        $attributes = get_object_vars($data['attributes']);
+        $targetId = $data->targetId;
+        $sourceIds = $data->sourceIds;
+        $attributes = get_object_vars($data->attributes);
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
@@ -461,7 +461,7 @@ class Record extends Base
 
     public function postActionGetDuplicateAttributes($params, $data, $request)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
 
@@ -472,7 +472,7 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getDuplicateAttributes($data['id']);
+        return $this->getRecordService()->getDuplicateAttributes($data->id);
     }
 
     public function postActionMassFollow($params, $data, $request)
@@ -481,8 +481,8 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (array_key_exists('ids', $data)) {
-            $params['ids'] = $data['ids'];
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
         }
 
         return $this->getRecordService()->massFollow($params);
@@ -494,11 +494,10 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (array_key_exists('ids', $data)) {
-            $params['ids'] = $data['ids'];
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
         }
 
         return $this->getRecordService()->massUnfollow($params);
     }
 }
-

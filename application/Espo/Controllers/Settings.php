@@ -46,7 +46,7 @@ class Settings extends \Espo\Core\Controllers\Base
         $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
 
         foreach ($fieldDefs as $field => $d) {
-            if ($d['type'] == 'password') {
+            if ($d['type'] === 'password') {
                 unset($data[$field]);
             }
         }
@@ -77,9 +77,9 @@ class Settings extends \Espo\Core\Controllers\Base
         }
 
         if (
-            (isset($data['useCache']) && $data['useCache'] != $this->getConfig()->get('useCache'))
+            (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
             ||
-            (isset($data['aclStrictMode']) && $data['aclStrictMode'] !== $this->getConfig()->get('aclStrictMode'))
+            (isset($data->aclStrictMode) && $data->aclStrictMode !== $this->getConfig()->get('aclStrictMode'))
         ) {
             $this->getContainer()->get('dataManager')->clearCache();
         }
@@ -91,8 +91,8 @@ class Settings extends \Espo\Core\Controllers\Base
         }
 
         /** Rebuild for Currency Settings */
-        if (isset($data['baseCurrency']) || isset($data['currencyRates'])) {
-            $this->getContainer()->get('dataManager')->rebuildDatabase(array());
+        if (isset($data->baseCurrency) || isset($data->currencyRates)) {
+            $this->getContainer()->get('dataManager')->rebuildDatabase([]);
         }
         /** END Rebuild for Currency Settings */
 
@@ -105,9 +105,11 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new Forbidden();
         }
 
-        if (!isset($data['password'])) {
-            $data['password'] = $this->getConfig()->get('ldapPassword');
+        if (!isset($data->password)) {
+            $data->password = $this->getConfig()->get('ldapPassword');
         }
+
+        $data = get_object_vars($data);
 
         $ldapUtils = new \Espo\Core\Utils\Authentication\LDAP\Utils();
         $options = $ldapUtils->normalizeOptions($data);

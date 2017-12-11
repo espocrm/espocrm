@@ -37,7 +37,6 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\BadRequest;
 
-
 class Email extends Record
 {
     protected function init()
@@ -238,7 +237,7 @@ class Email extends Record
         return $entity;
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
         if ($entity->get('status') == 'Sending') {
             $messageId = \Espo\Core\Mail\Sender::generateMessageId($entity);
@@ -246,7 +245,7 @@ class Email extends Record
         }
     }
 
-    protected function afterUpdate(Entity $entity, array $data = array())
+    protected function afterUpdateEntity(Entity $entity, $data)
     {
         if ($entity && $entity->get('status') == 'Sending') {
             $this->send($entity);
@@ -716,7 +715,7 @@ class Email extends Record
         return true;
     }
 
-    protected function beforeUpdate(Entity $entity, array $data = array())
+    protected function beforeUpdateEntity(Entity $entity, $data)
     {
         $skipFilter = false;
 
@@ -782,4 +781,3 @@ class Email extends Record
         return $data;
     }
 }
-

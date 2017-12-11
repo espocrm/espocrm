@@ -47,9 +47,9 @@ class EmailFolder extends Record
         $this->addDependency('language');
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        parent::beforeCreate($entity, $data);
+        parent::beforeCreateEntity($entity, $data);
 
         if (!$this->getUser()->isAdmin() || !$entity->get('assignedUserId')) {
             $entity->set('assignedUserId', $this->getUser()->id);

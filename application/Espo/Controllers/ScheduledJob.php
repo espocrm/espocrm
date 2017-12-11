@@ -38,4 +38,3 @@ class ScheduledJob extends \Espo\Core\Controllers\Record
         }
     }
 }
-

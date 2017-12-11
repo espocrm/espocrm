@@ -42,7 +42,7 @@ class Account extends \Espo\Services\Record
         )
     );
 
-    protected function getDuplicateWhereClause(Entity $entity, $data = array())
+    protected function getDuplicateWhereClause(Entity $entity, $data)
     {
         if (!$entity->get('name')) {
             return false;

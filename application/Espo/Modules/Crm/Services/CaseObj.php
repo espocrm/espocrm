@@ -48,9 +48,9 @@ class CaseObj extends \Espo\Services\Record
         'articles'
     ];
 
-    public function beforeCreate(Entity $entity, array $data = array())
+    public function beforeCreateEntity(Entity $entity, $data)
     {
-        parent::beforeCreate($entity, $data);
+        parent::beforeCreateEntity($entity, $data);
 
         if ($this->getUser()->isPortal()) {
             if (!$entity->has('accountId')) {
@@ -69,11 +69,11 @@ class CaseObj extends \Espo\Services\Record
         }
     }
 
-    public function afterCreate(Entity $entity, array $data = array())
+    public function afterCreateEntity(Entity $entity, $data)
     {
-        parent::afterCreate($entity, $data);
-        if (!empty($data['emailId'])) {
-            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+        parent::afterCreateEntity($entity, $data);
+        if (!empty($data->emailId)) {
+            $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
             if ($email && !$email->get('parentId')) {
                 $email->set(array(
                     'parentType' => 'Case',
@@ -83,6 +83,5 @@ class CaseObj extends \Espo\Services\Record
             }
         }
     }
-
 }
 

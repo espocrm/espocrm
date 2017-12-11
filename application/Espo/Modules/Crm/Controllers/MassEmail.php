@@ -37,14 +37,14 @@ class MassEmail extends \Espo\Core\Controllers\Record
 {
     public function postActionSendTest($params, $data)
     {
-        if (empty($data['id']) || empty($data['targetList']) || !is_array($data['targetList'])) {
+        if (empty($data->id) || empty($data->targetList) || !is_array($data->targetList)) {
             throw new BadRequest();
         }
 
-        $id = $data['id'];
+        $id = $data->id;
 
         $targetList = [];
-        foreach ($data['targetList'] as $item) {
+        foreach ($data->targetList as $item) {
             if (empty($item->id) || empty($item->type)) continue;
             $targetId = $item->id;
             $targetType = $item->type;

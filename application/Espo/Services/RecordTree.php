@@ -159,11 +159,12 @@ class RecordTree extends Record
         return false;
     }
 
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        parent::beforeCreate($entity, $data);
-        if (!empty($data['parentId'])) {
-            $parent = $this->getEntityManager()->getEntity($this->getEntityType(), $data['parentId']);
+        parent::beforeCreateEntity($entity, $data);
+
+        if (!empty($data->parentId)) {
+            $parent = $this->getEntityManager()->getEntity($this->getEntityType(), $data->parentId);
             if (!$parent) {
                 throw new Error("Tried to create tree item entity with not existing parent.");
             }
@@ -175,7 +176,7 @@ class RecordTree extends Record
 
     public function updateEntity($id, $data)
     {
-        if (!empty($data['parentId']) && $data['parentId'] == $id) {
+        if (!empty($data->parentId) && $data->parentId == $id) {
             throw new Forbidden();
         }
 

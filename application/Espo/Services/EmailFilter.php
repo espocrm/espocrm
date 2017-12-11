@@ -35,13 +35,11 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class EmailFilter extends Record
 {
-
-    protected function beforeCreate(Entity $entity, array $data = array())
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        parent::beforeCreate($entity, $data);
+        parent::beforeCreateEntity($entity, $data);
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
     }
 }
-

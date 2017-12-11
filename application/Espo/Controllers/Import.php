@@ -101,24 +101,24 @@ class Import extends \Espo\Core\Controllers\Record
 
     public function actionRevert($params, $data, $request)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        return $this->getService('Import')->revert($data['id']);
+        return $this->getService('Import')->revert($data->id);
     }
 
     public function actionRemoveDuplicates($params, $data, $request)
     {
-        if (empty($data['id'])) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        return $this->getService('Import')->removeDuplicates($data['id']);
+        return $this->getService('Import')->removeDuplicates($data->id);
     }
 
     public function actionCreate($params, $data, $request)
@@ -127,87 +127,90 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!isset($data['fieldDelimiter'])) {
+        if (!isset($data->fieldDelimiter)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['textQualifier'])) {
+        if (!isset($data->textQualifier)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['dateFormat'])) {
+        if (!isset($data->dateFormat)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['timeFormat'])) {
+        if (!isset($data->timeFormat)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['personNameFormat'])) {
+        if (!isset($data->personNameFormat)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['decimalMark'])) {
+        if (!isset($data->decimalMark)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['defaultValues'])) {
+        if (!isset($data->defaultValues)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['action'])) {
+        if (!isset($data->action)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['attachmentId'])) {
+        if (!isset($data->attachmentId)) {
             throw new BadRequest();
         }
 
-        if (!isset($data['entityType'])) {
+        if (!isset($data->entityType)) {
+            throw new BadRequest();
+        }
+
+        if (!isset($data->fields)) {
             throw new BadRequest();
         }
 
         $timezone = 'UTC';
-        if (isset($data['timezone'])) {
-           $timezone = $data['timezone'];
+        if (isset($data->timezone)) {
+           $timezone = $data->timezone;
         }
 
         $importParams = array(
-            'headerRow' => !empty($data['headerRow']),
-            'fieldDelimiter' => $data['fieldDelimiter'],
-            'textQualifier' => $data['textQualifier'],
-            'dateFormat' => $data['dateFormat'],
-            'timeFormat' => $data['timeFormat'],
+            'headerRow' => !empty($data->headerRow),
+            'fieldDelimiter' => $data->fieldDelimiter,
+            'textQualifier' => $data->textQualifier,
+            'dateFormat' => $data->dateFormat,
+            'timeFormat' => $data->timeFormat,
             'timezone' => $timezone,
-            'personNameFormat' => $data['personNameFormat'],
-            'decimalMark' => $data['decimalMark'],
-            'currency' => $data['currency'],
-            'defaultValues' => $data['defaultValues'],
-            'action' => $data['action'],
-            'skipDuplicateChecking' => !empty($data['skipDuplicateChecking']),
-            'idleMode' => !empty($data['idleMode'])
+            'personNameFormat' => $data->personNameFormat,
+            'decimalMark' => $data->decimalMark,
+            'currency' => $data->currency,
+            'defaultValues' => $data->defaultValues,
+            'action' => $data->action,
+            'skipDuplicateChecking' => !empty($data->skipDuplicateChecking),
+            'idleMode' => !empty($data->idleMode)
         );
 
-        if (array_key_exists('updateBy', $data)) {
-            $importParams['updateBy'] = $data['updateBy'];
+        if (property_exists($data, 'updateBy')) {
+            $importParams['updateBy'] = $data->updateBy;
         }
 
-        $attachmentId = $data['attachmentId'];
+        $attachmentId = $data->attachmentId;
 
-        if (!$this->getAcl()->check($data['entityType'], 'edit')) {
+        if (!$this->getAcl()->check($data->entityType, 'edit')) {
             throw new Forbidden();
         }
 
-        return $this->getService('Import')->import($data['entityType'], $data['fields'], $attachmentId, $importParams);
+        return $this->getService('Import')->import($data->entityType, $data->fields, $attachmentId, $importParams);
     }
 
     public function postActionUnmarkAsDuplicate($params, $data)
     {
-        if (empty($data['id']) || empty($data['entityType']) || empty($data['entityId'])) {
+        if (empty($data->id) || empty($data->entityType) || empty($data->entityId)) {
             throw new BadRequest();
         }
-        $this->getService('Import')->unmarkAsDuplicate($data['id'], $data['entityType'], $data['entityId']);
+        $this->getService('Import')->unmarkAsDuplicate($data->id, $data->entityType, $data->entityId);
         return true;
     }
 }
-

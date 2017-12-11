@@ -79,7 +79,6 @@ class Integration extends \Espo\Core\Controllers\Record
 
         $this->getConfig()->save();
 
-
         return $entity->toArray();
     }
 }
