@@ -1030,7 +1030,7 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
-        $data = get_object_vars($data);
+        $data = $data;
         $this->filterInput($data);
 
         if (array_key_exists('ids', $params) && is_array($params['ids'])) {
