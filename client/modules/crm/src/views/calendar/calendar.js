@@ -48,7 +48,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         modeList: [],
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay'],
+        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
 
         defaultMode: 'agendaWeek',
 
@@ -389,10 +389,21 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             var slotDuration = '00:' + this.slotDuration + ':00';
 
+            var timeFormat = this.getDateTime().timeFormat;
+
+            var slotLabelFormat;
+            if (~timeFormat.indexOf('a')) {
+                slotLabelFormat = 'h(:mm)a';
+            } else if (~timeFormat.indexOf('A')) {
+                slotLabelFormat = 'h(:mm)A';
+            } else {
+                slotLabelFormat = timeFormat;
+            }
+
             var options = {
                 header: false,
-                axisFormat: this.getDateTime().timeFormat,
-                timeFormat: this.getDateTime().timeFormat,
+                slotLabelFormat: slotLabelFormat,
+                timeFormat: timeFormat,
                 defaultView: this.mode,
                 weekNumbers: true,
                 weekNumberCalculation: 'ISO',
@@ -547,11 +558,15 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 }.bind(this),
                 allDayText: '',
                 firstHour: 8,
-                columnFormat: {
-                    week: 'ddd DD',
-                    day: 'ddd DD',
-                },
                 weekNumberTitle: '',
+                views: {
+                    week: {
+                        columnFormat: 'ddd DD',
+                    },
+                    day: {
+                        columnFormat: 'ddd DD',
+                    }
+                }
             };
 
             if (!this.options.height) {

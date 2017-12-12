@@ -34,7 +34,7 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
         el: '#main',
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay'],
+        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
 
         setup: function () {
             this.mode = this.mode || this.options.mode || null;
