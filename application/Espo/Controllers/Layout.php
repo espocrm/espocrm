@@ -48,7 +48,9 @@ class Layout extends \Espo\Core\Controllers\Base
 
     public function actionUpdate($params, $data, $request)
     {
-        $data = get_object_vars($data);
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
 
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();

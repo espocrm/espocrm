@@ -288,7 +288,7 @@ class User extends Record
         ))->count();
     }
 
-    protected function beforeCreateEntity(Entity $entity, $data))
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             $userCount = $this->getInternalUserCount();
