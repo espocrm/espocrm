@@ -25,5 +25,21 @@
         "actionSyncTargetListWithReports": true,
         "postActionExportList": true,
         "postActionGetEmailAttributes": true
+    },
+    "Voip": {
+        "actionChangeUserSettings": true,
+        "actionAddConnector": true,
+        "actionRemoveConnector": true,
+        "postActionTestConnection": true
+    },
+    "VoipEvent": {
+        "actionCancel": true,
+        "actionSave": true,
+        "actionDial": true,
+        "actionDialFromCall": true,
+        "actionTestConnection": true
+    },
+    "VoipMessage": {
+        "actionCancel": true
     }
 }
