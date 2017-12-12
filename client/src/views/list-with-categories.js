@@ -213,6 +213,8 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.getView('nestedCategories').reRender();
             this.getView('nestedCategories').isLoading = false;
 
+            this.$el.find('.list-container').empty();
+
             this.currentCategoryId = id;
             this.currentCategoryName = name || id;
 
