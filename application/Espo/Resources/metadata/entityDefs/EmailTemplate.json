@@ -22,7 +22,7 @@
             "tooltip": true
         },
         "attachments": {
-            "type": "linkMultiple",
+            "type": "attachmentMultiple",
             "view": "views/fields/attachment-multiple"
         },
         "assignedUser": {
