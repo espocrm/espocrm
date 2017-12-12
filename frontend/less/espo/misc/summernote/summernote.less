@@ -5,6 +5,9 @@
 @border-color: #a9a9a9;
 @background-color: #f5f5f5;
 
+@img-margin-left: 10px;
+@img-margin-right: 10px;
+
 /* Layout
  ------------------------------------------*/
 .note-editor {
@@ -20,7 +23,6 @@
     color: @dropzone-color;
     background-color: white;
     opacity: 0.95;
-    pointer-event: none;
 
     .note-dropzone-message {
       display: table-cell;
@@ -44,6 +46,22 @@
 
     .note-editable {
       outline: none;
+
+      sup {
+        vertical-align: super;
+      }
+
+      sub {
+        vertical-align: sub;
+      }
+    }
+
+    img.note-float-left {
+      margin-right: @img-margin-right;
+    }
+
+    img.note-float-right {
+      margin-left: @img-margin-left;
     }
   }
 }
@@ -105,7 +123,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100% !important;
     z-index: 1050; /* bs3 modal-backdrop: 1030, bs2: 1040 */
     .note-editable {
       background-color: white;
@@ -211,9 +229,11 @@
       padding-left: 5px;
     }
     .dropdown-menu {
-      min-width: 340px;
-      .btn-group {
+      min-width: 337px;
+      .note-palette {
+        display: inline-block;
         margin: 0;
+        width: 160px;
         &:first-child {
           margin: 0 5px;
         }
@@ -324,6 +344,13 @@
       text-align: center;
       border: 4px dashed lightgray;
       margin-bottom: 10px;
+    }
+  }
+
+  // [workaround] firefox fileinput
+  @-moz-document url-prefix() {
+    .note-image-input {
+      height: auto;
     }
   }
 }
@@ -444,13 +471,4 @@
       }
     }
   }
-}
-
-/* Browser bug workarounds
-------------------------------------------*/
-sup {
-  vertical-align: super;
-}
-sub {
-  vertical-align: sub
 }
