@@ -113,6 +113,8 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $this->beforeSetUp();
+
         $params = array(
             'dataFile' => $this->dataFile,
             'pathToFiles' => $this->pathToFiles,
@@ -138,6 +140,11 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     protected function createUser($userData, array $role = null, $isPortal = false)
     {
         return $this->espoTester->createUser($userData, $role, $isPortal);
+    }
+
+    protected function beforeSetUp()
+    {
+
     }
 
     protected function beforeStartApplication()
