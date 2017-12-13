@@ -1395,6 +1395,13 @@ class Record extends \Espo\Core\Services\Base
             $fieldList = $params['fieldList'];
         }
 
+        foreach ($fieldList as $i => $field) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'exportDisabled'])) {
+                unset($fieldList[$i]);
+            }
+        }
+        $fieldList = array_values($fieldList);
+
         if (is_null($attributeList)) {
             $attributeList = [];
             $seed = $this->getEntityManager()->getEntity($this->entityType);
