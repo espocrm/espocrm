@@ -30,8 +30,6 @@ Espo.define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum
 
     return Dep.extend({
 
-        typeList: ['varchar', 'enum', 'enumInt', 'enumFloat', 'int', 'float', 'website', 'date', 'datetime'],
-
         setup: function () {
             Dep.prototype.setup.call(this);
             if (!this.model.isNew()) {
@@ -53,6 +51,8 @@ Espo.define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum
         },
 
         setupOptionsByLink: function () {
+            this.typeList = this.getMetadata().get(['fields', 'foreign', 'fieldTypeList']);
+
             var link = this.model.get('link');
 
             if (!link) {
@@ -116,6 +116,8 @@ Espo.define('views/admin/field-manager/fields/foreign/field', 'views/fields/enum
                 this.viewValue = 'views/fields/foreign-date';
             } else if (type == 'datetime') {
                 this.viewValue = 'views/fields/foreign-datetime';
+            } else if (type == 'text') {
+                this.viewValue = 'views/fields/foreign-text';
             } else {
                 this.viewValue = null;
             }
