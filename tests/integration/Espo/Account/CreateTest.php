@@ -40,11 +40,11 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
     {
         $service = $this->getContainer()->get('serviceFactory')->create('Account');
 
-        $entity = $service->createEntity(array(
+        $entity = $service->createEntity((object) [
             'name' => 'Test Account',
             'emailAddress' => 'test@tester.com',
             'phoneNumber' => '123-456-789',
-        ));
+        ]);
 
         $this->assertInstanceOf('\\Espo\\ORM\\Entity', $entity);
         $this->assertTrue(!empty($entity->id));
