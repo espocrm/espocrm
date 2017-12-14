@@ -62,7 +62,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             this.params.rows = this.params.rows || this.rowsDefault;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
 
-            this.fitHeightDisabled = this.options.fitHeightDisabled || this.params.fitHeightDisabled || this.fitHeightDisabled;
+            this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
         },
 
         setupSearch: function () {
@@ -91,10 +91,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 }
             }
             if (this.mode === 'edit') {
-                if (this.fitHeightDisabled) {
-                    this.rows = this.params.rows;
+                if (this.autoHeightDisabled) {
+                    data.rows = this.params.rows;
                 } else {
-                    this.rows = 1;
+                    data.rows = 1;
                 }
             }
             return data;
@@ -172,7 +172,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
             }
 
-            if (this.mode === 'edit' && !this.fitHeightDisabled) {
+            if (this.mode === 'edit' && !this.autoHeightDisabled) {
                 this.controlTextareaHeight();
                 this.$element.on('input', function () {
                     this.controlTextareaHeight();
