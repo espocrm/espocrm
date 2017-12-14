@@ -1,1 +1,17 @@
-{}
+{
+  "fields": {
+    "clientId": "Kliento ID",
+    "redirectUri": "Nukreipti URL",
+    "apiKey": "API raktas"
+  },
+  "messages": {
+    "selectIntegration": "Pasirinkite integraciją iš meniu.",
+    "noIntegrations": "Nėra galimų integracijų"
+  },
+  "titles": {
+    "GoogleMaps": "Google žemėlapiai"
+  },
+  "help": {
+    "GoogleMaps": "<p> Gaukite API raktą <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\"> čia </a>. </ p>"
+  }
+}

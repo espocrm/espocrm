@@ -5,11 +5,15 @@
     "status": "Statusas",
     "dateStart": "Pradžios data",
     "dateEnd": "Terminas",
+    "dateStartDate": "Pradžios data (visą dieną)",
+    "dateEndDate": "Pabaigos data (visą dieną)",
     "priority": "Prioritetas",
     "description": "Aprašymas",
     "isOverdue": "Vėluoja",
     "account": "Įmonė",
-    "attachments": "Prisegtukai"
+    "dateCompleted": "Įvykdymo data",
+    "attachments": "Prisegtukai",
+    "reminders": "Priminimai"
   },
   "links": {
     "attachments": "Prisegtukai"
@@ -17,9 +21,9 @@
   "options": {
     "status": {
       "Not Started": "Nepradėta",
-      "Started": "Started",
       "Completed": "Užbaigta",
-      "Canceled": "Atšaukta"
+      "Canceled": "Atšaukta",
+      "Deferred": "Atidėta"
     },
     "priority": {
       "Low": "Žemas",
@@ -29,11 +33,14 @@
     }
   },
   "labels": {
-    "Create Task": "Sukurti užduotį"
+    "Create Task": "Sukurti užduotį",
+    "Complete": "Įvykdyta"
   },
   "presetFilters": {
+    "actual": "Esamas",
     "completed": "Užbaigta",
     "todays": "Šiandienos",
-    "overdue": "Vėluoja"
+    "overdue": "Vėluoja",
+    "deferred": "Atidėta"
   }
 }

@@ -1,15 +1,27 @@
 {
   "fields": {
     "name": "Vardas",
-    "roles": "Rolės"
+    "roles": "Rolės",
+    "assignmentPermission": "Priskyrimo leidimas",
+    "userPermission": "Vartotojo leidimas",
+    "portalPermission": "Portalo leidimas",
+    "exportPermission": "Eksportuoti leidimą"
   },
   "links": {
     "users": "Vartotojai",
     "teams": "Komandos"
   },
+  "tooltips": {
+    "assignmentPermission": "Leidžia apriboti galimybę priskirti įrašus ir siųsti pranešimus kitiems vartotojams.\n\nvisi - jokių apribojimų\n\nkomanda - gali priskirti  tik komandos narius ir skelbti tik komandos nariams\n\nne - gali priskirti save ir skelbti tik sau",
+    "userPermission": "Leidžia apriboti vartotojų galimybę peržiūrėti kitų vartotojų veiklą, kalendorių ir srautą.\n\nvisi - gali peržiūrėti visus\n\nkomanda - gali matyti tik komandos narių veiklą\n\nNe - negali peržiūrėti",
+    "portalPermission": "Nurodo prieigą prie portalo informacijos, galimybė skelbti pranešimus portalo vartotojams.",
+    "exportPermission": "Nustato kurie vartotojai turi galimybę eksportuoti įrašus."
+  },
   "labels": {
     "Access": "Prieiga",
-    "Create Role": "Sukurti rolę"
+    "Create Role": "Sukurti rolę",
+    "Scope Level": "Taikymo lygis",
+    "Field Level": "Laukelių lygis"
   },
   "options": {
     "accessList": {
@@ -20,8 +32,11 @@
     "levelList": {
       "all": "visi",
       "team": "komanda",
+      "account": "paskyra",
+      "contact": "kontaktai",
       "own": "mano",
       "no": "ne",
+      "yes": "taip",
       "not-set": "Nenustatyta"
     }
   },
@@ -31,5 +46,8 @@
     "delete": "Ištrinti",
     "stream": "Srautas",
     "create": "Sukurti"
+  },
+  "messages": {
+    "changesAfterClearCache": "Visi prieigos kontrolės pakeitimai bus taikomi, kai išvaloma talpyklos atmintinė."
   }
 }

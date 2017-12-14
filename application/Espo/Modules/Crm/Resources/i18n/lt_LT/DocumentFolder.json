@@ -1,1 +1,10 @@
-{}
+{
+  "labels": {
+    "Create DocumentFolder": "Sukurti dokumento aplanką",
+    "Manage Categories": "Tvarkyti aplankus",
+    "Documents": "Dokumentai"
+  },
+  "links": {
+    "documents": "Dokumentai"
+  }
+}

@@ -4,6 +4,7 @@
     "action": "Veiksmas",
     "createdAt": "Data",
     "target": "Tikslas",
+    "targetType": "Adresatų tipas",
     "ipAddress": "IP Adresss"
   },
   "links": {

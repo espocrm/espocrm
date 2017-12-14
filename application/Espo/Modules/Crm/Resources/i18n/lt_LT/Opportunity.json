@@ -10,10 +10,13 @@
     "closeDate": "Uždarymo data",
     "contacts": "Kontaktai",
     "description": "Aprašymas",
-    "campaign": "Kampanija"
+    "amountConverted": "Suma (konvertuota)",
+    "campaign": "Kampanija",
+    "amountCurrency": "Valiutos suma"
   },
   "links": {
     "contacts": "Kontaktai",
+    "documents": "Dokumentai",
     "campaign": "Kampanija"
   },
   "options": {
@@ -35,6 +38,7 @@
   },
   "presetFilters": {
     "open": "Atidaryti",
-    "won": "Laimėta"
+    "won": "Laimėta",
+    "lost": "Pralaimėta"
   }
 }

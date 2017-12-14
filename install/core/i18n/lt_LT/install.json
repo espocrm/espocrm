@@ -12,30 +12,39 @@
     "Errors page title": "Klaidos",
     "Finish page title": "Diegimas baigtas",
     "Congratulation! Welcome to EspoCRM": "Sveikiname! EspoCRM buvo sėkmingai įdiegtas.",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
-    "Locale": "Locale",
+    "More Information": "Jei reikia daugiau informacijos, apsilankykite mūsų {BLOG} svetainėje, Sekite mus {TWITTER}. <br> <br> Jei turite kokių nors pasiūlymų ar klausimų, kreipkitės į {FORUM}.",
+    "share": "Jei jums patiko EspoCRM, pasidalinkite tai su draugais. Praneškite jiems apie šį produktą.",
+    "blog": "blogas",
+    "twitter": "twitter ",
+    "forum": "forumas",
+    "Installation Guide": "Diegimo vedlys",
     "Outbound Email Configuration": "Nustatymai išsiunčiamiems laiškams",
-    "SMTP": "SMTP",
     "Start": "Pradžia",
     "Back": "Atgal",
     "Next": "Kitas",
     "Go to EspoCRM": "Eiti į EspoCRM",
     "Re-check": "Pakartotinai patikrinti",
+    "Version": "Versija",
     "Test settings": "Patikrinti ryšį",
     "Database Settings Description": "Įveskite MySQL duomeno bazės prisijungimo informaciją (kompiuterio pavadinim?, vartotojo vardą ir slaptažodį). Galite nurodyti serverio prievadą, skirtą kompiuterio pavadinimui, pvz., Localhost: 3306.",
+    "Install": "Diegimas",
+    "SetupConfirmation page title": "Rekomenduojami nustatymai",
+    "PHP Configuration": "Rekomenduojami PHP nustatymai",
+    "MySQL Configuration": "MySQL konfigūracija",
+    "Configuration Instructions": "Konfigūracijos instrukcijos",
     "phpVersion": "PHP versija",
+    "mysqlVersion": "MySQL versija",
     "dbHostName": "Serverio pavadinimas",
     "dbName": "Duomenų bazės pavadinimas",
-    "dbUserName": "Duomenų bazės vartotojo vardas"
+    "dbUserName": "Duomenų bazės vartotojo vardas",
+    "OK": "Gerai"
   },
   "fields": {
     "Choose your language": "Pasirinkite kalb?",
     "Database Name": "Duomenų bazės pavadinimas",
     "Host Name": "Serverio pavadinimas",
-    "Port": "Port",
-    "smtpPort": "Port",
+    "Port": "Prievadas",
+    "smtpPort": "Prievadas",
     "Database User Name": "Duomenų bazės vartotojo vardas",
     "Database User Password": "Duomenų bazės vartotojo slaptažodis",
     "Database driver": "Duomenų bazės tvarkyklė",
@@ -56,16 +65,19 @@
     "Currency List": "Valiutų sąrašas",
     "Language": "Kalba",
     "smtpServer": "Serveris",
-    "smtpAuth": "Auth",
     "smtpSecurity": "Sauga",
     "smtpUsername": "Vartotojo vardas",
     "emailAddress": "El. paštas"
   },
   "messages": {
+    "1045": "Vartotojui prieiga yra uždrausta ",
     "1049": "Nežinoma duomenų bazė",
     "2005": "Nežinomas MySQL serverio kompiuteris",
+    "Bad init Permission": "Leidimas nesuteiktas \"{*}\" katalogui. Prašome nustatyti 775 teises \"{*}\" arba tiesiog paleiskite šią komandą į terminalą <pre> <b> (C) </ b> </ pre>\nOperacija neleidžiama? Išbandykite šį: {CSU}",
     "Some errors occurred!": "Įvyko kelios klaidos!",
     "phpVersion": "EspoCRM nepalaiko jūsų PHP versijos, bent jau atnaujinkite iki PHP {minVersion}",
+    "MySQLVersion": "Jūsų \"MySQL\" versija nepalaikoma EspoCRM, prašome atnaujinti bent iki \"MySQL\" (minVersion)",
+    "The PHP extension was not found...": "PHP klaida: plėtinys <b> {extName} </ b> nerastas.",
     "All Settings correct": "Visi nustatymai yra teisingi",
     "Failed to connect to database": "Nepavyko prisijungti prie duomenų bazės",
     "PHP version": "PHP versija",
@@ -74,21 +86,30 @@
     "Enable mod_rewrite in Apache server": "Įgalinti mod_rewrite \"Apache\" serveryje",
     "checkWritable error": "checkWritable klaida",
     "applySett error": "applySett klaida",
+    "buildDatabase error": "Kuriamos duomenų bazės klaida",
     "createUser error": "createUser klaida",
     "checkAjaxPermission error": "checkAjaxPermission klaida",
     "Ajax failed": "Ajax nepavyko",
+    "Cannot create user": "Negalima sukurti vartotojo",
     "Permission denied": "Leidimas nesuteiktas",
     "Permission denied to": "Leidimas nesuteiktas",
     "permissionInstruction": "<br>Paleiskite tai terminale<pre><b>\"{C}\"</b></pre>",
     "operationNotPermitted": "Operacija neleidžiamaa? Išbandykite šį: <br>{CSU}",
     "Can not save settings": "Nepavyko išsaugoti nustatymų",
     "Cannot save preferences": "Negalima išsaugoti nuostatų",
-    "Thousand Separator and Decimal Mark equal": "Tūkstančių atskyriklis ir dešimtainis ženklas negali būti vienodi"
+    "Thousand Separator and Decimal Mark equal": "Tūkstančių atskyriklis ir dešimtainis ženklas negali būti vienodi",
+    "extension": "Trūksta {0} plėtinio",
+    "option": "Rekomenduojama vertė yra {0} ",
+    "mysqlSettingError": "EspoCRM reikalauja, kad MySQL nustatymas \"{NAME}\" būtų nustatytas į \"{VALUE}\""
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
+    "modRewriteInstruction": {
+      "apache": {
+        "windows": "<br> <pre> 1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</ pre>"
+      }
+    },
+    "modRewriteTitle": {
+      "apache": "API Klaida: EspoCRM API nepasiekiamas. <br> Galimos problemos: išjungta \"mod_rewrite\" \"Apache\" serveryje, išjungtas .htaccess palaikymas arba \"RewriteBase\" problema. <br> Atlikite tik būtinus veiksmus. Po kiekvieno žingsnio patikrinkite, ar problema išspręsta."
     }
   }
 }

@@ -5,8 +5,8 @@
     "dateSent": "Išsiuntimo data",
     "from": "Nuo",
     "to": "Kam",
-    "cc": "CC",
-    "bcc": "BCC",
+    "replyTo": "Atsakyti kam",
+    "replyToString": "Atsakyti (eilutė)",
     "isHtml": "Html formatas",
     "body": "Laiško tekstas",
     "subject": "Tema",
@@ -15,15 +15,43 @@
     "fromEmailAddress": "Nuo adreso",
     "toEmailAddresses": "Adresui",
     "emailAddress": "El. pašto adresas",
+    "deliveryDate": "Pristatymo data",
     "account": "Įmonė",
-    "users": "Vartotojai"
+    "users": "Vartotojai",
+    "replied": "Atsakyta",
+    "replies": "Atsakymai",
+    "isRead": "Perskaityta",
+    "isNotRead": "Neeperskaityta",
+    "isImportant": "Svarbūs",
+    "isUsers": "Vartotojo",
+    "inTrash": "Šiukšlinėje",
+    "name": "Vardas (pavadinimas)",
+    "isReplied": "Yra atsakyta",
+    "isNotReplied": "Yra neatsakyta",
+    "folder": "Aplankas",
+    "inboundEmails": "Grupės paskyros",
+    "emailAccounts": "Asmeninės paskyros",
+    "hasAttachment": "Turi prisegtuką",
+    "sentBy": "Išsiųsta",
+    "assignedUsers": "Priskirti vartotojai",
+    "bodyPlain": "Tekstas (paprastas)"
+  },
+  "links": {
+    "replied": "Atsakyta",
+    "replies": "Atsakymai",
+    "inboundEmails": "Grupės paskyros",
+    "emailAccounts": "Asmeninės paskyros",
+    "assignedUsers": "Priskirti vartotojai",
+    "sentBy": "Išsiųsta"
   },
   "options": {
     "status": {
       "Draft": "Juodraštis",
       "Sending": "Siunčiama",
       "Sent": "Išsiųsta",
-      "Archived": "Suarchyvuota"
+      "Archived": "Suarchyvuota",
+      "Received": "Gauta",
+      "Failed": "Nepavyko"
     }
   },
   "labels": {
@@ -31,12 +59,50 @@
     "Archive Email": "Suarchyvuoti laiškai",
     "Compose": "Rašyti",
     "Reply": "Atsakyti",
+    "Reply to All": "Atsakyti visiems",
+    "Forward": "Persiųsti",
+    "Original message": "Originali žinutė",
+    "Forwarded message": "Persiųsti žinutę",
+    "Email Accounts": "Asmeninės el.pašto paskyros",
+    "Inbound Emails": "Grupės el.pašto paskyros",
     "Email Templates": "El. laiškų šabonai",
+    "Send Test Email": "Siųsti bandomąjį el. laišką",
+    "Send": "Siųsti",
     "Email Address": "El. pašto adresas",
-    "Sending...": "Siunčiama..."
+    "Mark Read": "Pažymėti, kaip skaitytą",
+    "Sending...": "Siunčiama...",
+    "Save Draft": "Išsaugoti juodraštį",
+    "Mark all as read": "Visus pažymėti kaip skaitytus",
+    "Show Plain Text": "Rodyti paprastą tekstą",
+    "Mark as Important": "Pažymėti kaip svarbų",
+    "Unmark Importance": "Atšaukti žymėtimą kaip svarbų",
+    "Move to Trash": "Perkelti į šiukšlinę",
+    "Retrieve from Trash": "Gražinti iš šiukšlinės",
+    "Move to Folder": "Perkelti į aplanką",
+    "Filters": "Filtrai",
+    "Folders": "Aplankai"
+  },
+  "messages": {
+    "noSmtpSetup": "Nėra SMTP nustatymų. {link}.",
+    "testEmailSent": "Bandomasis el. laiškas išsiųstas",
+    "emailSent": "El. laiškas yra išsiųstas",
+    "savedAsDraft": "Juodraštis šsaugotas"
   },
   "presetFilters": {
     "sent": "Išsiųsta",
-    "archived": "Suarchyvuota"
+    "archived": "Suarchyvuota",
+    "inbox": "Gautieji",
+    "drafts": "Juodraščiai",
+    "trash": "Šiukšlinė",
+    "important": "Svarbu"
+  },
+  "massActions": {
+    "markAsRead": "Pažymėti kaip skaitytą",
+    "markAsNotRead": "Pažymėti kaip neskaitytą",
+    "markAsImportant": "Pažymėti kaip svarbų",
+    "markAsNotImportant": "Atšaukti svarbą",
+    "moveToTrash": "Perkelti į šiukšlinę",
+    "moveToFolder": "Perkelti į aplanką",
+    "retrieveFromTrash": "Iškelti iš šiukšlinės"
   }
 }

@@ -3,9 +3,27 @@
     "from": "Nuo",
     "to": "Kam",
     "subject": "Tema",
-    "action": "Veiksmas"
+    "bodyContains": "Tekste yra",
+    "action": "Veiksmas",
+    "isGlobal": "yra globalus",
+    "emailFolder": "Aplankas"
   },
   "labels": {
+    "Create EmailFilter": "Sukurti el.pašto filtrą",
     "Emails": "El. laiška"
+  },
+  "tooltips": {
+    "from": "El. Laiškai siunčiami iš nurodyto adreso. Palikite tuščią, jei nereikia. Galite naudoti pakaitos simbolį *.",
+    "to": "El. Laiškai siunčiami į nurodytą adresą. Palikite tuščią, jei nereikia. Galite naudoti pakaitos simbolį *.",
+    "name": "Pavadinkite filtrą apibūdinančiu pavadinimu",
+    "subject": "Naudokite pakaitos simbolį *:\n\ntekstas * - prasideda tekstas,\n* tekstas * - yra teksto\n* tekstas - baigiasi tekstu.",
+    "bodyContains": "El. laiške yra bet kuris iš nurodytų žodžių ar frazių.",
+    "isGlobal": "Šis filtras taikomas visiems sistemoje gaunamiems el. laiškams."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignoruoti",
+      "Move to Folder": "Įkelti į aplanką"
+    }
   }
 }

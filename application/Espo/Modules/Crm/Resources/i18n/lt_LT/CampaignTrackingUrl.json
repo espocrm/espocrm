@@ -1,8 +1,12 @@
 {
   "fields": {
+    "urlToUse": "Įterpti kodą vietoj URL",
     "campaign": "Kampanija"
   },
   "links": {
     "campaign": "Kampanija"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Sukurkite stebėjimo URL"
   }
 }

@@ -10,7 +10,9 @@
     "users": "Vartotojai",
     "contacts": "Kontaktai",
     "leads": "Potencialūs klientai",
-    "account": "Įmonė"
+    "reminders": "Priminimai",
+    "account": "Įmonė",
+    "acceptanceStatus": "Priėmimo statusas"
   },
   "options": {
     "status": {
@@ -19,7 +21,10 @@
       "Not Held": "Neįvykdyta"
     },
     "acceptanceStatus": {
-      "None": "Joks"
+      "None": "Joks",
+      "Accepted": "Priimta",
+      "Declined": "Atšaukta",
+      "Tentative": "Preliminarus"
     }
   },
   "massActions": {
@@ -30,11 +35,16 @@
     "Create Meeting": "Sukurti susitikimą",
     "Set Held": "Pažymėti kaip įvykdytą",
     "Set Not Held": "Pažymėti kaip neįvykdytą",
-    "Send Invitations": "Siųsti pakvietimus"
+    "Send Invitations": "Siųsti pakvietimus",
+    "on time": "laiku",
+    "before": "prieš"
   },
   "presetFilters": {
     "planned": "Suplanuota",
     "held": "Įvykdyta",
     "todays": "Šiandienos"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nieko nebuvo išsiųsta"
   }
 }

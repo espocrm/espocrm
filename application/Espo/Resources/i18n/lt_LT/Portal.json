@@ -1,22 +1,36 @@
 {
   "fields": {
     "name": "Vardas",
+    "logo": "Logotipas",
+    "companyLogo": "Logotipas",
     "portalRoles": "Rolės",
+    "isActive": "Aktyvus",
+    "isDefault": "Numatytasis",
     "tabList": "Tabų sąrašas",
     "quickCreateList": "Greitai sukurti sąrašą",
+    "theme": "Tema",
     "language": "Kalba",
+    "dashboardLayout": "Prietaisų skydelio išdėstymas",
     "dateFormat": "Datos formatas",
     "timeFormat": "Laiko formatas",
     "timeZone": "Laiko zona",
     "weekStart": "Pirma savaitės diena",
-    "defaultCurrency": "Pagrindinė valiuta"
+    "defaultCurrency": "Pagrindinė valiuta",
+    "customUrl": "Pritaikytas URL",
+    "customId": "Pritaikytas ID"
   },
   "links": {
     "users": "Vartotojai",
-    "portalRoles": "Rolės"
+    "portalRoles": "Rolės",
+    "notes": "Pastabos"
+  },
+  "tooltips": {
+    "portalRoles": "Nurodyti portalo vaidmenys bus taikomi visiems šio portalo naudotojams."
   },
   "labels": {
+    "Create Portal": "Sukurti portalą",
     "User Interface": "Vartotojo sąsaja",
+    "General": "Pagrindinis",
     "Settings": "Nustatymai"
   }
 }

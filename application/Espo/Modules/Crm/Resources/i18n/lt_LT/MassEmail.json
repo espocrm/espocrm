@@ -2,22 +2,55 @@
   "fields": {
     "name": "Vardas",
     "status": "Statusas",
+    "storeSentEmails": "Saugoti išsiųstus el. laiškus",
     "startAt": "Pradžios data",
     "fromAddress": "Nuo adreso",
     "fromName": "Nuo vardo",
+    "replyToAddress": "Atsakyti adresu",
+    "replyToName": "Atsakyti vardui",
     "campaign": "Kampanija",
-    "emailTemplate": "el. pašto laiško šablonas"
+    "emailTemplate": "el. pašto laiško šablonas",
+    "inboundEmail": "El. pašto paskyra",
+    "targetLists": "Adresatų sarašai",
+    "excludingTargetLists": "Neįtraukiami sdresatų sarašai",
+    "optOutEntirely": "Atsisakyti visam laikui",
+    "smtpAccount": "SMTP paskyra"
   },
   "links": {
+    "targetLists": "Adresatų sarašai",
+    "excludingTargetLists": "Neįtraukiami sdresatų sarašai",
     "campaign": "Kampanija",
-    "emailTemplate": "el. pašto laiško šablonas"
+    "emailTemplate": "El. pašto laiško šablonas",
+    "inboundEmail": "El. pašto paskyra"
   },
   "options": {
     "status": {
       "Draft": "Juodraštis",
       "Pending": "Vykdoma",
       "In Process": "Vyksta",
-      "Canceled": "Atšaukta"
+      "Complete": "Įvykdyta",
+      "Canceled": "Atšaukta",
+      "Failed": "Nepavyko"
     }
+  },
+  "labels": {
+    "Send Test": "Siųsti bandomajį laišką",
+    "System SMTP": "Sistema SMTP",
+    "system": "sistema",
+    "group": "gripė"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Pasirinkiite bent vieną adresatą",
+    "testSent": "Bandomasis laiškas turėtų būti išsiųstas"
+  },
+  "tooltips": {
+    "optOutEntirely": "Atsisakiusių prenumeratos gavėjų el, pašto adresai bus pažymėti kaip nebenorintys gauti laiškų, kad ateityje nebegautų masinių pranešimų.",
+    "targetLists": "Adresatai, kuriems turėtų būti siunčiami laiškai.",
+    "excludingTargetLists": "Adresatai, kuriems turėtų būti siunčiami laiškai.",
+    "storeSentEmails": "El. laiškai bus saugomi CRM."
+  },
+  "presetFilters": {
+    "actual": "Esamas",
+    "complete": "Įvykdyta"
   }
 }

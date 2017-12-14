@@ -2,13 +2,28 @@
   "fields": {
     "name": "Vardas",
     "status": "Statusas",
-    "host": "Hostas",
+    "host": "Priegloba",
     "username": "Vartotojo vardas",
     "password": "Slaptažodis",
-    "port": "Port",
+    "port": "Prievadas",
     "monitoredFolders": "Stebimi aplankai",
-    "ssl": "SSL",
-    "emailAddress": "El. pašto adresas"
+    "fetchSince": "Surinkti nuo",
+    "emailAddress": "El. pašto adresas",
+    "sentFolder": "Išsiųstų laiškų aplankas",
+    "storeSentEmails": "Saugoti išsiųstus laiškus",
+    "keepFetchedEmailsUnread": "Laikyti surinktus el. laiškus kaip neskaitytus",
+    "emailFolder": "Įkelti į aplanką",
+    "useSmtp": "Naudoti SMTP",
+    "smtpHost": "SMTP priegloba",
+    "smtpPort": "SMTP prievadas",
+    "smtpAuth": "SMTP autentikavimas",
+    "smtpSecurity": "SMTP apsauga",
+    "smtpUsername": "SMTP vartotojo vardas",
+    "smtpPassword": "SMTP slaptažodis"
+  },
+  "links": {
+    "filters": "Filtrai",
+    "emails": "El. laiškai"
   },
   "options": {
     "status": {
@@ -17,15 +32,17 @@
     }
   },
   "labels": {
-    "IMAP": "IMAP",
+    "Create EmailAccount": "Sukurti el. pašto paskyrą",
     "Main": "Pagrindinis",
     "Test Connection": "Patikrinti ryšį",
-    "SMTP": "SMTP"
+    "Send Test Email": "Siųsti bandomąjį el. paštą"
   },
   "messages": {
-    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio"
+    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio",
+    "connectionIsOk": "Geras ryšys"
   },
-  "links": {
-    "emails": "El. laiška"
+  "tooltips": {
+    "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.\n\nGalite pridėti \"Išsiųsti\" aplanką, kad sinchronizuotumėte el. laiškus, siunčiamus iš išorinio el. pašto kliento.",
+    "storeSentEmails": "Siunčiami el. aiškai bus saugomi IMAP serveryje. El pašto adreso laukelis turi atitikti el pašto adresą, iš kurio bus siunčiamas laiškas"
   }
 }

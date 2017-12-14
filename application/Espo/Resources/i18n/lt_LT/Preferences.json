@@ -10,16 +10,28 @@
     "currencyList": "Valiutų sąrašas",
     "language": "Kalba",
     "smtpServer": "Serveris",
-    "smtpPort": "Port",
-    "smtpAuth": "Auth",
+    "smtpPort": "Prievadas",
     "smtpSecurity": "Sauga",
     "smtpUsername": "Vartotojo vardas",
     "emailAddress": "El. paštas",
     "smtpPassword": "Slaptažodis",
     "smtpEmailAddress": "El. pašto adresas",
     "exportDelimiter": "Eksporto delimiteris",
+    "signature": "El. pašto parašas",
     "dashboardTabList": "Tabų sąrašas",
-    "tabList": "Tabų sąrašas"
+    "tabList": "Tabų sąrašas",
+    "defaultReminders": "Numatyti priminimai",
+    "theme": "Tema",
+    "useCustomTabList": "Pritaikytas lentelių sąrašas",
+    "receiveStreamEmailNotifications": "Pranešimai el. paštu apie įrašus ir būsenos pasikeitimus",
+    "dashboardLayout": "Prietaisų skydelio išdėstymas",
+    "emailReplyForceHtml": "Siųsti atsakymą HTML formatu",
+    "autoFollowEntityTypeList": "Globalus auto-sekimas",
+    "emailReplyToAllByDefault": "Atsakyti visiems pagal numatytus nustatymus",
+    "doNotFillAssignedUserIfNotRequired": "Neužpildykite priskirto vartotojo įrašų kūrimo metu",
+    "followEntityOnStreamPost": "Automatiškai sekti  įrašus, paskelbus \"Sraute\"",
+    "followCreatedEntities": "Automatiškai sekti sukurtus įrašus",
+    "followCreatedEntityTypeList": "Automatiškai sekti specialių vedinių tipų sukurtus įrašus"
   },
   "options": {
     "weekStart": {
@@ -30,8 +42,11 @@
   "labels": {
     "Notifications": "Pranešimai",
     "User Interface": "Vartotojo sąsaja",
-    "SMTP": "SMTP",
-    "Misc": "Įvairūs",
-    "Locale": "Locale"
+    "Misc": "Įvairūs"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatiškai sekti visus naujus sukurtus įrašus (sukurtus bet kurio vartotojo) pasirinktų vedinių tipų, kad galėtumėte matyti sraute esančią informaciją ir gauti pranešimus apie visus sistemos įrašus.",
+    "doNotFillAssignedUserIfNotRequired": "Kurdamas įrašą priskirtas vartotojas nebus užpildytas, nebent laukelis yra privalomas.",
+    "followCreatedEntities": "Vartotojai kurdami naujus įrašus bus automatiškai priskirti sekti eigą, net jeigu patys priskirs kitą vartotoją."
   }
 }

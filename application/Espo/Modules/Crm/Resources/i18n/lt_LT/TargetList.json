@@ -1,19 +1,33 @@
 {
   "fields": {
     "name": "Vardas",
-    "description": "Aprašymas"
+    "description": "Aprašymas",
+    "campaigns": "Kampanijos",
+    "endDate": "Pabaigos data",
+    "targetLists": "Adresatų sarašai",
+    "includingActionList": "Įskaitant",
+    "excludingActionList": "Išskyrus"
   },
   "links": {
     "accounts": "Įmonės",
     "contacts": "Kontaktai",
-    "leads": "Potencialūs klientai"
+    "leads": "Potencialūs klientai",
+    "campaigns": "Kampanijos",
+    "massEmails": "Masiniai el. laiškai"
   },
   "options": {
     "type": {
-      "Email": "El. paštas"
+      "Email": "El. paštas",
+      "Web": "Internetas",
+      "Television": "Televizija",
+      "Radio": "Radijas",
+      "Newsletter": "Naujienlaiškis"
     }
   },
   "labels": {
-    "Opted Out": "Pasirinkta"
+    "Create TargetList": "Sukurti adresatų sąrašą",
+    "Opted Out": "Pasirinkta",
+    "Cancel Opt-Out": "Atšaukti atsisakymą",
+    "Opt-Out": "Atsisakyti"
   }
 }

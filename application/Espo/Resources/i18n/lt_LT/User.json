@@ -8,18 +8,37 @@
     "emailAddress": "El. paštas",
     "phoneNumber": "Telefonas",
     "roles": "Rolės",
+    "portals": "Portalai",
+    "portalRoles": "Portalų rolės",
+    "teamRole": "Pozicija",
     "password": "Slaptažodis",
+    "currentPassword": "Esamas lapažodis",
     "passwordConfirm": "Patvirtinti slaptažodį",
     "newPassword": "Naujas slaptažodis",
+    "newPasswordConfirm": "Patvirtinkite naują slaptažodį",
+    "avatar": "Kriptograma",
+    "isActive": "Aktyvus",
+    "isPortalUser": "Portalo vartotojas",
     "contact": "Kontaktas",
     "accounts": "Įmonės",
-    "ipAddress": "IP Adresss"
+    "account": "Paskyra (pirminė)",
+    "sendAccessInfo": "Siųsti el. laišką su prieigos informacija vartotojui",
+    "portal": "Portalas",
+    "gender": "Lytis",
+    "position": "Pozicija komandoje",
+    "ipAddress": "IP Adresss",
+    "passwordPreview": "Slaptažodžio peržiūra",
+    "isSuperAdmin": "Yra superadministratorius"
   },
   "links": {
     "teams": "Komandos",
     "roles": "Rolės",
+    "notes": "Pastabos",
+    "portals": "Portalai",
+    "portalRoles": "Portalo rolės",
     "contact": "Kontaktas",
     "accounts": "Įmonės",
+    "account": "Paskyra (pirminė)",
     "tasks": "Užduotys"
   },
   "labels": {
@@ -28,14 +47,54 @@
     "Access": "Prieiga",
     "Preferences": "Nustatymai",
     "Change Password": "Pakeisti slaptažodį",
-    "Email Address": "El. pašto adresas"
+    "Teams and Access Control": "Komandos ir prieigos kontrolė",
+    "Forgot Password?": "Pamiršote slaptažodį?",
+    "Password Change Request": "Slaptažodžio keitimo prašymas",
+    "Email Address": "El. pašto adresas",
+    "External Accounts": "Išorinės paskyros",
+    "Email Accounts": "El. pašto paskyros",
+    "Portal": "Portalas",
+    "Create Portal User": "Sukurti portalo vartotoją",
+    "Proceed w/o Contact": "Pereiti prie kontaktų"
+  },
+  "tooltips": {
+    "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
+    "userName": "Leidžiami raidės a-z, skaičiai 0-9, taškai, brūkšniai, @ -žymėjimai ir pabraukimai.",
+    "isAdmin": "Administratorius turi prieigą prie visko",
+    "isActive": "Jei nepažymėta, vartotojas negalės prisijungti.",
+    "teams": "Komandos,kurioms priklauso šis naudotojas. Prieigos kontrolės lygis yra perimtas iš komandos rolės.",
+    "roles": "Papildomos prieigos vaidmenys. Naudokite jį, jei naudotojas nepriklauso jokiai komandai arba jums reikia išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
+    "portalRoles": "Papildomos portalo rolės. Naudokite ją, kad galėtumėte išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
+    "portals": "Portalai, prie kurių šis vartotojas turi prieigą."
   },
   "messages": {
     "passwordWillBeSent": "Slaptažodis bus išsiųstas vartotojo el. pašto adresu.",
+    "accountInfoEmailSubject": "EspoCRM vartotojo prieigos informacija",
+    "accountInfoEmailBody": "Jūsų prisijungimo informacija:\n\nVartotojo vardas: {userName}\nSlaptažodis: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Slaptažodžio keitimo prašymas",
     "passwordChanged": "Slpatažodis buvo pakeistas",
-    "wrongUsernamePasword": "Neteisingas prisijungimo vardas/slaptažodis"
+    "userCantBeEmpty": "Vartotojo vardas negali būti tuščias",
+    "wrongUsernamePasword": "Neteisingas prisijungimo vardas/slaptažodis",
+    "emailAddressCantBeEmpty": "El. pašto adresas negali būti tuščias",
+    "userNameEmailAddressNotFound": "Vartotojo vardas/el. pašto adresas nerastas",
+    "forbidden": "Draudžiama, prašome pabandyti vėliau",
+    "uniqueLinkHasBeenSent": "Unikalus URL buvo išsiųstas nurodytu el. pašto adresu.",
+    "passwordChangedByRequest": "Slaptažodis pakeistas.",
+    "setupSmtpBefore": "Jūs turite nustatyti <a href=\"{url}\"> SMTP nustatymus </a>, kad sistema galėtų išsiųsti slaptažodį el. paštu."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Tik mano komanda"
   },
   "presetFilters": {
-    "active": "Aktyvus"
+    "active": "Aktyvus",
+    "activePortal": "Aktyvus portalas"
+  },
+  "options": {
+    "gender": {
+      "": "Nenustatyta",
+      "Male": "Vyras",
+      "Female": "Moteris",
+      "Neutral": "Neutrali lytis"
+    }
   }
 }

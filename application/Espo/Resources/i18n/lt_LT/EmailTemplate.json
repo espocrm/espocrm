@@ -5,9 +5,21 @@
     "isHtml": "Html formatas",
     "body": "Laiško tekstas",
     "subject": "Tema",
-    "attachments": "Prisegtukai"
+    "attachments": "Prisegtukai",
+    "insertField": "Įterpti laukelį",
+    "oneOff": "Vienkartinis"
   },
   "labels": {
-    "Create EmailTemplate": "Sukurti el. pašto laiško šabloną"
+    "Create EmailTemplate": "Sukurti el. pašto laiško šabloną",
+    "Info": "Informacija"
+  },
+  "tooltips": {
+    "oneOff": "Pažymėkite, jei ketinate naudoti šį šabloną tik vieną kartą. Pavyzdžiui masiniems el. laiškams."
+  },
+  "presetFilters": {
+    "actual": "Esamas"
+  },
+  "messages": {
+    "infoText": "Galimi kintamieji:\n\n{optOutUrl} - nuoroda \"unsubsbribe\"; URL;\n\n{optOutLink} - atsisakyti prenumeratos nuorodą."
   }
 }

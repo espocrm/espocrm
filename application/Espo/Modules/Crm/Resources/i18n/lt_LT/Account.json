@@ -12,13 +12,23 @@
     "type": "Tipas",
     "contactRole": "Pavadinimas",
     "campaign": "Kampanija",
+    "targetLists": "Adresatų sarašai",
+    "targetList": "Adresatų sarašas",
     "contactIsInactive": "Neaktyvus"
   },
   "links": {
     "contacts": "Kontaktai",
     "opportunities": "Galimybės",
     "cases": "Atvejai",
-    "campaign": "Kampanija"
+    "documents": "Dokumentai",
+    "meetingsPrimary": "Susitikimai (išplėsta)",
+    "callsPrimary": "Skambučiai (išplėsta)",
+    "tasksPrimary": "Užduotys (išplėsta)",
+    "emailsPrimary": "El. laiškai (išplėsta)",
+    "targetLists": "Adresatų sarašai ",
+    "campaignLogRecords": "Kampanijos žurnalas",
+    "campaign": "Kampanija",
+    "portalUsers": "Portalo vartotojai"
   },
   "options": {
     "type": {
@@ -28,14 +38,67 @@
       "Reseller": "Perpardavinėtojas"
     },
     "industry": {
+      "Agriculture": "Žemdirbystė",
+      "Advertising": "Reklama",
+      "Apparel & Accessories": "Drabužiai ir aksesuarai",
+      "Automotive": "Automobiliai",
       "Banking": "Bankininkystė",
+      "Biotechnology": "Biotechnologijos",
+      "Building Materials & Equipment": "Statybinės medžiagos ir įranga",
+      "Chemical": "Chemijos pramonė",
+      "Computer": "Kompiuterija",
       "Education": "Mokslas",
       "Electronics": "Elektronika",
+      "Energy": "Energetika",
+      "Entertainment & Leisure": "Pramogos ir laisvalaikis",
       "Finance": "Finansai",
-      "Insurance": "Draudimas"
+      "Food & Beverage": "Maistas ir gėrimai\n",
+      "Grocery": "Maisto prekių parduotuvė",
+      "Healthcare": "Sveikatos apsauga",
+      "Insurance": "Draudimas",
+      "Legal": "Teisė",
+      "Manufacturing": "Gamyba",
+      "Publishing": "Leidyba",
+      "Real Estate": "Nekilnojamas turtas",
+      "Service": "Paslaugos",
+      "Sports": "Sportas",
+      "Software": "Programinė įranga",
+      "Technology": "Technologijos",
+      "Telecommunications": "Telekomunikacijos",
+      "Television": "Televizija",
+      "Transportation": "Transportas",
+      "Venture Capital": "Rizikos kapitalas",
+      "Aerospace": "Aerokosmosas",
+      "Architecture": "Architektūra",
+      "Construction": "Statyba",
+      "Defense": "Ginyba",
+      "Creative": "Kūryba",
+      "Culture": "Kultūra",
+      "Consulting": "Konsultavimas",
+      "Electric Power": "Elektros energija",
+      "Hospitality": "Svetingumas",
+      "Mass Media": "Žiniasklaida",
+      "Mining": "Gavyba",
+      "Music": "Muzika",
+      "Marketing": "Marketingas",
+      "Petroleum": "Degalinės",
+      "Retail": "Mažmeninė prekyba",
+      "Shipping": "Siuntimas",
+      "Support": "Palaikymas",
+      "Testing, Inspection & Certification": "Testavimas, tikrinimas ir sertifikavimas",
+      "Wholesale": "Didmeninė prekyba",
+      "Water": "Vanduo",
+      "Travel": "Kelionės"
     }
   },
   "labels": {
-    "Create Account": "Sukurti paskyrą"
+    "Create Account": "Sukurti paskyrą",
+    "Copy Billing": "Kopijuoti pristatymo adresą",
+    "Set Primary": "Nutatyti pirminiu"
+  },
+  "presetFilters": {
+    "customers": "Klientai",
+    "partners": "Partneriai",
+    "recentlyCreated": "Neseniai sukurta"
   }
 }

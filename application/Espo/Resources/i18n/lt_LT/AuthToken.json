@@ -3,10 +3,17 @@
     "user": "Vartotojas",
     "ipAddress": "IP Adresss",
     "lastAccess": "Paskutinio prisijungimo data",
-    "createdAt": "Prisijungimo data"
+    "createdAt": "Prisijungimo data",
+    "portal": "Portalas"
+  },
+  "links": {
+    "actionHistoryRecords": "Veiksmų istorija"
   },
   "presetFilters": {
     "active": "Aktyvus",
     "inactive": "Neaktyvus"
+  },
+  "massActions": {
+    "setInactive": "Nustatyti kaip neaktyvų"
   }
 }

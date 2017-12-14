@@ -5,14 +5,28 @@
     "dateTo": "Data iki",
     "autorefreshInterval": "Automatinio atnaujinimo intervalas",
     "displayRecords": "Rodyti įrašus",
+    "isDoubleHeight": "Aukštis 2x",
+    "mode": "Režimas",
+    "enabledScopeList": "Ką rodyti",
     "users": "Vartotojai",
+    "entityType": "Vedinio tipas",
+    "primaryFilter": "Pirminis filtras",
+    "boolFilterList": "Papildomi filtrai",
+    "sortBy": "Rikiavimas (laukelių)",
+    "sortDirection": "Rikiavimas kryptis)",
     "expandedLayout": "Išdėstymas"
   },
   "options": {
     "mode": {
+      "agendaWeek": "Savaitė (darbotvarkė)",
       "basicWeek": "Savaitė",
       "month": "Mėnuo",
-      "basicDay": "Diena"
+      "basicDay": "Diena",
+      "agendaDay": "Diena (darbotvarkė) ",
+      "timeline": "Chronologija"
     }
+  },
+  "messages": {
+    "selectEntityType": "Pasirinkite vedinio tipą  iš skydelio variantų"
   }
 }

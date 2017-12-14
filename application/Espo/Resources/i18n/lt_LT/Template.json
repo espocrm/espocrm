@@ -1,6 +1,22 @@
 {
   "fields": {
     "name": "Vardas",
-    "body": "Laiško tekstas"
+    "body": "Laiško tekstas",
+    "entityType": "Vedinio tipas",
+    "header": "Antraštė",
+    "footer": "Poraštė",
+    "leftMargin": "Kairė paraštė",
+    "topMargin": "Viršutinė paraštė",
+    "rightMargin": "Dešinė paraštė",
+    "bottomMargin": "Apatinė paraštė",
+    "printFooter": "Spausdinti poraštę",
+    "footerPosition": "Poraštės pozicija",
+    "variables": "Galimi sandoriai"
+  },
+  "labels": {
+    "Create Template": "Sukurti šabloną"
+  },
+  "tooltips": {
+    "footer": "Naudokite {page Number}, jei norite spausdinti puslapio numerį."
   }
 }

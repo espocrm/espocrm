@@ -1,1 +1,10 @@
-{}
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Sukurti kategoriją",
+    "Manage Categories": "Tvarkyti kategorijas",
+    "Articles": "Straipsniai"
+  },
+  "links": {
+    "articles": "Straipsniai"
+  }
+}

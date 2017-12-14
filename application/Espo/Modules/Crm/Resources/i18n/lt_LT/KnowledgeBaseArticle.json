@@ -1,21 +1,44 @@
 {
+  "labels": {
+    "Create KnowledgeBaseArticle": "Sukurti straipsnį",
+    "Any": "Bet koks",
+    "Send in Email": "Siųsti el. laišku",
+    "Move Up": "Judėti aukštyn",
+    "Move Down": "Judėti žemyn",
+    "Move to Top": "Judėti į viršų",
+    "Move to Bottom": "Judėti į apačią"
+  },
   "fields": {
     "name": "Vardas",
     "status": "Statusas",
     "type": "Tipas",
     "attachments": "Prisegtukai",
+    "publishDate": "Paskelbimo data",
+    "expirationDate": "Galiojimo pabaigos data",
     "description": "Aprašymas",
     "body": "Laiško tekstas",
-    "language": "Kalba"
+    "categories": "Kategorijos",
+    "language": "Kalba",
+    "portals": "Portalai"
   },
   "links": {
     "cases": "Atvejai",
-    "opportunities": "Galimybės"
+    "opportunities": "Galimybės",
+    "categories": "Kategorijos",
+    "portals": "Portalai"
   },
   "options": {
     "status": {
+      "In Review": "Peržiūrima",
       "Draft": "Juodraštis",
-      "Archived": "Suarchyvuota"
+      "Archived": "Suarchyvuota",
+      "Published": "Paskelbta"
+    },
+    "type": {
+      "Article": "Straipsnis"
     }
+  },
+  "presetFilters": {
+    "published": "Paskelbta"
   }
 }

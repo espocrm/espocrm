@@ -10,6 +10,7 @@
     "emails": "El. laiška",
     "accounts": "Įmonės",
     "cases": "Atvejai",
+    "documents": "Dokumentai",
     "account": "Įmonė",
     "opportunity": "Galimybė",
     "contact": "Kontaktas"
@@ -18,28 +19,43 @@
     "Account": "Įmonė",
     "Contact": "Kontaktas",
     "Lead": "Potencialus klientas",
-    "Target": "Tikslas",
+    "Target": "Adresatas",
     "Opportunity": "Galimybė",
     "Meeting": "Susirinkimas",
     "Calendar": "Kalendorius",
     "Call": "Skambutis",
     "Task": "Užduotis",
     "Case": "Atvejis",
+    "Document": "Dokumentas",
+    "DocumentFolder": "Dokumento aplankas",
     "Campaign": "Kampanija",
-    "Activities": "Veikla"
+    "TargetList": "Adresatų sarašas",
+    "CampaignTrackingUrl": "Stebėjiimo URL",
+    "Activities": "Veikla",
+    "KnowledgeBaseArticle": "Žinių bazės straipsnis",
+    "KnowledgeBaseCategory": "Žinių bazės kategorija",
+    "CampaignLogRecord": "Kampanijos žurnalo įrašas"
   },
   "scopeNamesPlural": {
     "Account": "Įmonės",
     "Contact": "Kontaktai",
     "Lead": "Potencialūs klientai",
-    "Target": "Tikslai",
+    "Target": "Adresatai",
     "Opportunity": "Galimybės",
     "Meeting": "Susirinkimai",
     "Calendar": "Kalendorius",
     "Call": "Skambučiai",
     "Task": "Užduotys",
     "Case": "Atvejai",
-    "Activities": "Veikla"
+    "Document": "Dokumentai",
+    "DocumentFolder": "Dokumentų aplankai",
+    "Campaign": "Kampanijos",
+    "TargetList": "Adresatų sarašai",
+    "CampaignTrackingUrl": "Stebejimo URL",
+    "Activities": "Veikla",
+    "KnowledgeBaseArticle": "Žinių bazė",
+    "KnowledgeBaseCategory": "Žinių bazės kategorijos",
+    "CampaignLogRecord": "Kampanijos žurnalo įrašai"
   },
   "dashlets": {
     "Leads": "Mano potencialūs klientai",
@@ -47,10 +63,13 @@
     "Tasks": "Mano užduotys",
     "Cases": "Mano atvejai",
     "Calendar": "Kalendorius",
+    "Calls": "Mano skambučiai",
+    "Meetings": "Mano susitikimai",
     "OpportunitiesByStage": "Galimybės pagal etapą",
     "OpportunitiesByLeadSource": "Galimybės pagal potencialaus kliento šaltinį",
     "SalesByMonth": "Pardavimai pagal mėnesį",
-    "SalesPipeline": "Pardavimų planas"
+    "SalesPipeline": "Pardavimų planas",
+    "Activities": "Mano veikla"
   },
   "labels": {
     "Create InboundEmail": "Sukurti gaunamą el. laišką",
@@ -77,14 +96,18 @@
     "addressState": "Rajonas/regionas",
     "billingAddressStreet": "Gatvė",
     "addressStreet": "Gatvė",
+    "billingAddressMap": "Žemėlapis",
+    "addressMap": "Žemėlapis",
     "shippingAddressCity": "Miestas(Pristatymo)",
     "shippingAddressStreet": "Gatvė (Pristatymo)",
     "shippingAddressCountry": "Šalis (Pristatymo)",
     "shippingAddressState": "Raj./regionas (Pristatymo)",
-    "shippingAddressPostalCode": "Pašto kodas(Pristatymo)"
+    "shippingAddressPostalCode": "Pašto kodas(Pristatymo)",
+    "shippingAddressMap": "Žemėlapis (pristatymo)"
   },
   "options": {
     "reminderTypes": {
+      "Popup": "Iššokantis langas",
       "Email": "El. paštas"
     }
   }
