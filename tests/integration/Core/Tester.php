@@ -158,6 +158,7 @@ class Tester
     {
         $this->install();
         $this->loadData();
+        $this->getApplication(true)->runRebuild();
     }
 
     public function terminate()
