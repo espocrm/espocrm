@@ -48,7 +48,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsDefault: 10,
 
-        minRows: 2,
+        rowsMin: 2,
 
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
@@ -66,8 +66,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
 
-            if (this.params.rows < this.minRows) {
-                this.minRows = this.params.rows;
+            if (this.params.rows < this.rowsMin) {
+                this.rowsMin = this.params.rows;
             }
         },
 
@@ -100,7 +100,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 if (this.autoHeightDisabled) {
                     data.rows = this.params.rows;
                 } else {
-                    data.rows = this.minRows;
+                    data.rows = this.rowsMin;
                 }
             }
             return data;
@@ -161,7 +161,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.controlTextareaHeight(clientHeight);
             }
             if (this.$element.val().length === 0) {
-                this.$element.attr('rows', this.minRows);
+                this.$element.attr('rows', this.rowsMin);
             }
         },
 
