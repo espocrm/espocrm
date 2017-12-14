@@ -46,7 +46,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         seeMoreText: false,
 
-        rowsDefault: 4,
+        rowsDefault: 10,
 
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
@@ -61,6 +61,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             Dep.prototype.setup.call(this);
             this.params.rows = this.params.rows || this.rowsDefault;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
+
+            this.fitHeightDisabled = this.options.fitHeightDisabled || this.params.fitHeightDisabled || this.fitHeightDisabled;
         },
 
         setupSearch: function () {
@@ -86,6 +88,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
+                }
+            }
+            if (this.mode === 'edit') {
+                if (this.fitHeightDisabled) {
+                    this.rows = this.params.rows;
+                } else {
+                    this.rows = 1;
                 }
             }
             return data;
@@ -126,6 +135,30 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             return text || '';
         },
 
+        controlTextareaHeight: function (lastHeight) {
+            var scrollHeight = this.$element.prop('scrollHeight');
+            var clientHeight = this.$element.prop('clientHeight');
+
+            if (typeof lastHeight === 'undefined' && clientHeight === 0) {
+                setTimeout(this.controlTextareaHeight.bind(this), 10);
+                return;
+            }
+
+            if (clientHeight === lastHeight) return;
+
+            if (scrollHeight > clientHeight) {
+                var rows = this.$element.prop('rows');
+
+                if (this.params.rows && rows >= this.params.rows) return;
+
+                this.$element.attr('rows', rows + 1);
+                this.controlTextareaHeight(clientHeight);
+            }
+            if (this.$element.val().length === 0) {
+                this.$element.attr('rows', 1);
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
@@ -137,6 +170,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
+            }
+
+            if (this.mode === 'edit' && !this.fitHeightDisabled) {
+                this.controlTextareaHeight();
+                this.$element.on('input', function () {
+                    this.controlTextareaHeight();
+                }.bind(this));
             }
         },
 
