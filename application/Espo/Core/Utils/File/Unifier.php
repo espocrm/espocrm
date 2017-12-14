@@ -39,7 +39,6 @@ class Unifier
 
     protected $useObjects;
 
-
     protected $unsetFileName = 'unset.json';
 
     protected $pathToDefaults = 'application/Espo/Core/defaults';
@@ -81,12 +80,21 @@ class Unifier
 
             foreach ($moduleList as $moduleName) {
                 $curPath = str_replace('{*}', $moduleName, $paths['modulePath']);
-                $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
+
+                if ($this->useObjects) {
+                    $content = Utils\DataUtil::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
+                } else {
+                    $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
+                }
             }
         }
 
         if (!empty($paths['customPath'])) {
-            $content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
+            if ($this->useObjects) {
+                $content = Utils\DataUtil::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
+            } else {
+                $content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
+            }
         }
 
         return $content;
@@ -113,12 +121,21 @@ class Unifier
         $dirName = $this->getFileManager()->getDirName($dirPath, false);
         $defaultValues = $this->loadDefaultValues($dirName, $type);
 
-        $content = array();
-        $unsets = array();
+        $content = [];
+        $unsets = [];
+
+        if ($this->useObjects) {
+            $content = (object) [];
+            $unsets = (object) [];
+        }
 
         foreach ($fileList as $dirName => $fileName) {
-            if (is_array($fileName)) {
-                $content[$dirName]= $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName); //only first level of a sub directory
+            if (is_array($fileName)) { /*only first level of a sub directory*/
+                if ($this->useObjects) {
+                    $content->$dirName = $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName);
+                } else {
+                    $content[$dirName] = $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName);
+                }
 
             } else {
                 if ($fileName === $this->unsetFileName) {
@@ -135,7 +152,13 @@ class Unifier
 
                 if (!empty($mergedValues)) {
                     $name = $this->getFileManager()->getFileName($fileName, '.json');
-                    $content[$name] = $mergedValues;
+
+                    if ($this->useObjects) {
+                        $content->$name = $mergedValues;
+                    } else {
+                        $content[$name] = $mergedValues;
+                    }
+
                 }
             }
         }

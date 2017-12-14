@@ -391,5 +391,774 @@ class DataUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResultData, $data);
     }
 
+    public function testMerge7()
+    {
+        $obj1 = (object) [
+            'defaultPermissions',
+            'logger',
+            'devMode'
+        ];
+        $obj2Main = (object) [
+            //45 => '125',
+            'sub' => (object) [
+                'subV' => '125',
+            ],
+        ];
+        $expectedResultData = (object) [
+            'defaultPermissions',
+            'logger',
+            'devMode',
+            //45 => '125',
+            'sub' => (object) [
+                'subV' => '125',
+            ],
+        ];
+        $this->assertEquals($expectedResultData, DataUtil::merge($obj1, $obj2Main));
+
+        $obj1 = (object) [
+            'datetime' => (object) [
+                'dateFormat' => 'Y-m-d',
+                'timeFormat' => 'H:i:s',
+            ],
+        ];
+        $obj2Main = (object) [
+            'datetime' => (object) [
+                'dateFormat' => 'MyDateFormat',
+            ],
+        ];
+        $expectedResultData = (object) [
+            'datetime' => (object) [
+                'dateFormat' => 'MyDateFormat',
+                'timeFormat' => 'H:i:s',
+            ],
+        ];
+        $this->assertEquals($expectedResultData, DataUtil::merge($obj1, $obj2Main));
+
+        $obj1 = (object) [
+            'database' => (object) [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'dbname' => 'espocrm',
+                'user' => 'root',
+                'password' => '',
+            ],
+        ];
+        $obj2Main = (object) [
+            'database' => (object) [
+                'password' => 'MyPass',
+            ],
+        ];
+        $expectedResultData = (object) [
+            'database' => (object) [
+                'driver' => 'pdo_mysql',
+                'host' => 'localhost',
+                'dbname' => 'espocrm',
+                'user' => 'root',
+                'password' => 'MyPass',
+            ],
+        ];
+        $this->assertEquals($expectedResultData, DataUtil::merge($obj1, $obj2Main));
+    }
+
+    public function testMerge8()
+    {
+        $d1 = (object) [
+          'hello' => 'world',
+          'man' => (object) [
+            'test' => [
+              0 => ['name' => 'test 1'],
+              1 => ['name' => 'test 2']
+            ]
+          ]
+        ];
+        $d2 = (object) [
+          'test' => []
+        ];
+        $d3 = (object) [
+          'man' => (object) [
+            'test' => [
+              0 => '__APPEND__',
+              1 => ['name' => 'test 3']
+            ]
+          ]
+        ];
+        $expected = (object) [
+            'test' => [],
+            'hello' => 'world',
+            'man' => (object) [
+              'test' => [
+                0 => ['name' => 'test 1'],
+                1 => ['name' => 'test 2'],
+                2 => ['name' => 'test 3']
+              ]
+            ]
+        ];
+
+        $expectedResultData = DataUtil::merge(DataUtil::merge($d2, $d1), $d3);
+        $this->assertEquals($expected, $expectedResultData);
+    }
+
+    public function testMergeWithAppend()
+    {
+        $data1 = (object) [
+            'entityDefs' => (object) [
+                'Attachment' => (object) [
+                  'fields' => (object) [
+                    'name' => (object) [
+                      'type' => 'varchar',
+                      'required' => true,
+                    ],
+                    'type' => (object) [
+                      'type' => 'varchar',
+                      'maxLength' => 36,
+                    ],
+                    'size' => (object) [
+                      'type' => 'enum',
+                      'value' => ["v1", "v2", "v3"],
+                    ],
+                    'sizeInt' => (object) [
+                      'type' => 'enum',
+                      'value' => [0, 1, 2],
+                    ],
+                    'merged' => (object) [
+                      'type' => 'enum',
+                      'value' => ["v1", "v2", "v3"],
+                    ],
+                    'mergedInt' => (object) [
+                      'type' => 'enum',
+                      'value' => [0, 1, 2],
+                    ],
+                  ],
+                ],
+                'Contact' => (object) [
+                  'fields' => (object) [
+                    'name' => (object) [
+                      'type' => 'varchar',
+                      'required' => true,
+                    ],
+                    'type' => (object) [
+                      'type' => 'varchar',
+                      'maxLength' => 36,
+                    ],
+                    'size' => (object) [
+                      'type' => 'enum',
+                      'value' => ["v1", "v2", "v3"],
+                    ],
+                    'merged' => (object) [
+                      'type' => 'enum',
+                      'value' => ["v1", "v2", "v3"],
+                    ],
+                  ],
+                ],
+            ],
+        'MyCustom' => (object) [
+              'fields' => (object) [
+                'name' => (object) [
+                  'type' => 'varchar',
+                  'required' => true,
+                ],
+              ],
+            ],
+        ];
+
+        $data2 = (object) [
+            'entityDefs' => (object) [
+                'Attachment' => (object) [
+                  'fields' => (object) [
+                    'name' => (object) [
+                      'type' => 'varchar',
+                      'required' => false,
+                      'NEW' => 'NEWVAL',
+                    ],
+                    'type' => (object) [
+                      'type' => 'NETYPE',
+                    ],
+                    'size' => (object) [
+                      'type' => 'enum',
+                      'value' => ["B1", "B2", "B3"],
+                    ],
+                    'sizeInt' => (object) [
+                      'type' => 'enum',
+                      'value' => [5, 8, 9],
+                    ],
+                    'merged' => (object) [
+                      'type' => 'enum',
+                      'value' => ["__APPEND__", "B1", "B2", "B3"],
+                    ],
+                    'mergedInt' => (object) [
+                      'type' => 'enum',
+                      'value' => ['__APPEND__', 5, 8, 9],
+                    ],
+                  ],
+                  'list' => (object) [
+                    'test' => 'Here',
+                  ],
+                ],
+                'Contact' => (object) [
+                  'fields' => (object) [
+                    'name' => (object) [
+                      'type' => 'varchar',
+                      'required' => false,
+                      'NEW' => 'NEWVAL',
+                    ],
+                    'type' => (object) [
+                      'type' => 'NEW',
+                      'maxLength' => 1000000,
+                    ],
+                    'size' => (object) [
+                      'type' => 'enum',
+                      'value' => ["B1", "B2", "B3"],
+                    ],
+                    'merged' => (object) [
+                      'type' => 'enum',
+                      'value' => ["__APPEND__", "B1", "B2", "B3"],
+                    ],
+                  ],
+                ],
+            ],
+        ];
+
+        $expectedResultData = (object) [
+          'entityDefs' => (object) [
+            'Attachment' => (object) [
+              'fields' => (object) [
+                'name' => (object) [
+                  'type' => 'varchar',
+                  'required' => false,
+                  'NEW' => 'NEWVAL',
+                ],
+                'type' => (object) [
+                  'type' => 'NETYPE',
+                  'maxLength' => 36,
+                ],
+                'size' => (object) [
+                  'type' => 'enum',
+                  'value' => ['B1', 'B2', 'B3'],
+                ],
+                'sizeInt' => (object) [
+                  'type' => 'enum',
+                  'value' => [5, 8, 9],
+                ],
+                'merged' => (object) [
+                  'type' => 'enum',
+                  'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
+                ],
+                'mergedInt' => (object) [
+                  'type' => 'enum',
+                  'value' => [0, 1, 2, 5, 8, 9],
+                ],
+              ],
+              'list' => (object) [
+                'test' => 'Here',
+              ],
+            ],
+            'Contact' => (object) [
+              'fields' => (object) [
+                'name' => (object) [
+                  'type' => 'varchar',
+                  'required' => false,
+                  'NEW' => 'NEWVAL',
+                ],
+                'type' => (object) [
+                  'type' => 'NEW',
+                  'maxLength' => 1000000,
+                ],
+                'size' => (object) [
+                  'type' => 'enum',
+                  'value' => ['B1', 'B2', 'B3'],
+                ],
+                'merged' => (object) [
+                  'type' => 'enum',
+                  'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
+                ],
+              ],
+            ],
+          ],
+          'MyCustom' => (object) [
+            'fields' => (object) [
+              'name' => (object) [
+                'type' => 'varchar',
+                'required' => true,
+              ],
+            ],
+          ],
+        ];
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeWithAppend2()
+    {
+        $data1 = json_decode('{
+         "controller": "Controllers.Record",
+         "boolFilterList": ["onlyMy"],
+         "sidePanels":{
+            "detail":[
+               {
+                  "name":"optedOut",
+                  "label":"Opted Out",
+                  "view":"Crm:TargetList.Record.Panels.OptedOut"
+               }
+            ]
+         }
+        }');
+
+        $data2 = json_decode('{
+          "views":{
+               "detail":"Advanced:TargetList.Detail"
+           },
+          "recordViews": {
+            "detail": "Advanced:TargetList.Record.Detail"
+          },
+          "sidePanels": {
+            "detail": [
+              "__APPEND__",
+                {
+                   "name":"populating",
+                   "label":"Populating",
+                   "view":"Advanced:TargetList.Record.Panels.Populating"
+                }
+            ],
+            "edit": [
+              "__APPEND__",
+                {
+                   "name":"populating",
+                   "label":"Populating",
+                   "view":"Advanced:TargetList.Record.Panels.Populating"
+                }
+            ]
+          }
+        }');
+
+        $expectedResultData = json_decode('{
+          "controller": "Controllers.Record",
+          "boolFilterList": [
+            "onlyMy"
+          ],
+          "sidePanels": {
+            "detail": [
+              {
+                "name": "optedOut",
+                "label": "Opted Out",
+                "view": "Crm:TargetList.Record.Panels.OptedOut"
+              },
+              {
+                "name": "populating",
+                "label": "Populating",
+                "view": "Advanced:TargetList.Record.Panels.Populating"
+              }
+            ],
+            "edit": [
+              {
+                "name": "populating",
+                "label": "Populating",
+                "view": "Advanced:TargetList.Record.Panels.Populating"
+              }
+            ]
+          },
+          "views": {
+            "detail": "Advanced:TargetList.Detail"
+          },
+          "recordViews": {
+            "detail": "Advanced:TargetList.Record.Detail"
+          }
+        }');
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeWithBool()
+    {
+        $data1 = (object) [
+          'fields' => (object) [
+            'accountId' => (object) [
+              'type' => 'varchar',
+              'where' => (object) [
+                '=' => 'contact.id IN ({value})',
+              ],
+              'len' => 255,
+            ],
+            'deleted' => (object) [
+              'type' => 'bool',
+              'default' => false,
+              'trueValue' => true,
+            ],
+          ],
+          'relations' =>
+          (object) [
+          ],
+        ];
+
+        $data2 = (object) [
+          'fields' => (object) [
+            'accountName' => (object) [
+              'type' => 'foreign',
+              'relation' => 'account',
+              'foreign' => 'name',
+            ],
+            'accountId' => (object) [
+              'type' => 'foreignId',
+              'index' => true,
+            ],
+          ],
+          'relations' => (object) [
+            'createdBy' => (object) [
+              'type' => 'belongsTo',
+              'entity' => 'User',
+              'key' => 'createdById',
+              'foreignKey' => 'id',
+            ],
+          ],
+        ];
+
+        $expectedResultData = (object) [
+          'fields' => (object) [
+            'accountName' => (object) [
+              'type' => 'foreign',
+              'relation' => 'account',
+              'foreign' => 'name',
+            ],
+            'accountId' => (object) [
+              'type' => 'foreignId',
+              'index' => true,
+              'where' => (object) [
+                '=' => 'contact.id IN ({value})',
+              ],
+              'len' => 255,
+            ],
+            'deleted' => (object) [
+              'type' => 'bool',
+              'default' => false,
+              'trueValue' => true,
+            ],
+          ],
+          'relations' => (object) [
+            'createdBy' => (object) [
+              'type' => 'belongsTo',
+              'entity' => 'User',
+              'key' => 'createdById',
+              'foreignKey' => 'id',
+            ],
+          ],
+        ];
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeWithFieldsDefs()
+    {
+        $data1 = (object) [
+          'fields' => (object) [
+            'aaa1' => (object) [
+              'type' => 'enum',
+              'required' => false,
+              'options' => [
+                0 => 'a1',
+                1 => 'a3',
+                2 => 'a3',
+              ],
+              'isCustom' => true,
+            ],
+            'hfghgfh' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'hfghfgh',
+            ],
+            'jghjghj' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'jghjghjhg',
+            ],
+            'gdfgdfg' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'gdfgdfg',
+              'maxLength' => 70,
+            ],
+          ],
+        ];
+
+        $data2 = (object) [
+          'fields' => (object) [
+            'aaa1' => (object) [
+              'type' => 'enum',
+              'required' => false,
+              'options' => [
+                0 => 'a1',
+              ],
+              'isCustom' => true,
+            ],
+          ],
+        ];
+
+        $expectedResultData = (object) [
+          'fields' => (object) [
+            'aaa1' => (object) [
+              'type' => 'enum',
+              'required' => false,
+              'options' => [
+                0 => 'a1',
+              ],
+              'isCustom' => true,
+            ],
+            'hfghgfh' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'hfghfgh',
+            ],
+            'jghjghj' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'jghjghjhg',
+            ],
+            'gdfgdfg' => (object) [
+              'type' => 'varchar',
+              'required' => false,
+              'isCustom' => true,
+              'default' => 'gdfgdfg',
+              'maxLength' => 70,
+            ],
+          ],
+        ];
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeEmptyArray()
+    {
+        $data1 = (object) [
+          'Call' => (object) [
+            'fields' => (object) [
+              'accountId' => (object) [
+                'type' => 'varchar',
+                'where' => (object) [
+                  '=' => 'contact.id IN ({value})',
+                ],
+                'len' => 255,
+              ],
+              'deleted' => (object) [
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ],
+            ],
+          ],
+        ];
+
+        $data2 = (object) [
+          'Call' => (object) [
+            'fields' => (object) [
+            ],
+          ],
+        ];
+
+        $expectedResultData = $data1;
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeEmptyArray2()
+    {
+        $data1 = (object) [
+          'Call' => (object) [
+            'fields' => (object) [
+              'accountId' => (object) [
+                'type' => 'varchar',
+                'where' => (object) [
+                  '=' => 'contact.id IN ({value})',
+                ],
+                'len' => 255,
+              ],
+              'deleted' => (object) [
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ],
+            ],
+          ],
+        ];
+
+        $data2 = (object) [
+          'Call' => (object) [],
+        ];
+
+        $expectedResultData = $data1;
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeEmptyArray3()
+    {
+        $data1 = (object) [
+          'Call' => (object) [
+            'fields' => (object) [
+              'accountId' => (object) [
+                'type' => 'varchar',
+                'where' => (object) [
+                  '=' => 'contact.id IN ({value})',
+                ],
+                'len' => 255,
+              ],
+              'deleted' => (object) [
+                'type' => 'bool',
+                'default' => false,
+                'trueValue' => true,
+              ],
+            ],
+          ],
+        ];
+
+        $data2 = (object) [
+        ];
+
+        $expectedResultData = $data1;
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
+
+    public function testMergeCompleteTest()
+    {
+        $data1 = (object) [
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        0 => 'a1',
+                        1 => 'a3',
+                        2 => 'a3',
+                    ],
+                    'isCustom' => true,
+                ],
+                'append' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        'b1',
+                        'b3',
+                        'b3',
+                    ],
+                ],
+                't1111' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '11111',
+                ],
+                't2222' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '2222',
+                ],
+                't3333' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '3333',
+                    'maxLength' => 70,
+                ],
+            ],
+        ];
+
+        $data2 = (object) [
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        'a1',
+                    ],
+                    'isCustom' => false,
+                    'newValue' => 'NNNNN',
+                ],
+                'new111' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                ],
+                'append' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        '__APPEND__',
+                        'b4',
+                        'b5',
+                    ],
+                ],
+                'aloneAppend' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        '__APPEND__',
+                        'c1',
+                        'c2',
+                    ],
+                ],
+            ],
+        ];
+
+        $expectedResultData = (object) [
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        0 => 'a1',
+                    ],
+                    'isCustom' => false,
+                    'newValue' => 'NNNNN',
+                ],
+                'append' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        'b1',
+                        'b3',
+                        'b3',
+                        'b4',
+                        'b5',
+                    ],
+                ],
+                't1111' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '11111',
+                ],
+                't2222' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '2222',
+                ],
+                't3333' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => '3333',
+                    'maxLength' => 70,
+                ],
+                'new111' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                ],
+                'aloneAppend' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        'c1',
+                        'c2',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
+    }
 }
 
