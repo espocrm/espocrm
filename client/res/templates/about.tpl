@@ -70,6 +70,7 @@
                             <li>gridstack.js by Pavel Reznikov</li>
                             <li>vis.js by Almende B.V.</li>
                             <li>Ace</li>
+                            <li>Marked by Christopher Jeffrey</li>
                         </ul>
                         </section>
                     </div>
@@ -81,7 +82,7 @@
                                 <li>Doctrine (DBAL)</li>
                                 <li>Slim</li>
                                 <li>Cron Expression Parser by Michael Dowling</li>
-                                <li>Zendframework (Validator, Mail, Ldap)</li>
+                                <li>Zendframework (Mail, Ldap)</li>
                                 <li>Monolog</li>
                                 <li>Identicon by Don Park</li>
                                 <li>php-semver by Lars Vierbergen</li>

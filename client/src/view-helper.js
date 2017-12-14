@@ -26,32 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('view-helper', [], function () {
+Espo.define('view-helper', ['lib!client/lib/marked.min.js'], function () {
 
     var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\(])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
-        this.mdSearch = [
-            /\["?(.*?)"?\]\((.*?)\)/g,
-            /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
-            /\&\#x60;([\s\S]*?)\&\#x60;/g,
-            /(\*\*)(.*?)\1/g,
-            /(\*)(.*?)\1/g,
-            /\~\~(.*?)\~\~/g
-        ];
-        this.mdReplace = [
-            '<a href="$2">$1</a>',
-            function (s, string) {
-                return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
+        this.mdBeforeList = [
+            {
+                regex: /\["?(.*?)"?\]\((.*?)\)/g,
+                value: '<a href="$2">$1</a>'
             },
-            function (s, string) {
-                return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+            {
+                regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
+                value: function (s, string) {
+                    return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
+                }
             },
-            '<strong>$2</strong>',
-            '<em>$2</em>',
-            '<del>$1</del>'
+            {
+                regex: /\&\#x60;([\s\S]*?)\&\#x60;/g,
+                value: function (s, string) {
+                    return '<code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code>';
+                }
+            }
         ];
+
+        marked.setOptions({
+            breaks: true
+        });
     }
 
     _.extend(ViewHelper.prototype, {
@@ -75,47 +77,6 @@ Espo.define('view-helper', [], function () {
             if (typeof text === 'string' || text instanceof String) {
                 return text.replace(/<\/?[^>]+(>|$)/g, '');
             }
-            return text;
-        },
-
-        tranformTextMarkdown: function (text) {
-            var newline = text.indexOf('\r\n') != -1 ? '\r\n' : text.indexOf('\n') != -1 ? '\n' : '';
-
-            if (newline != '') {
-                var d = [];
-                var r = [];
-
-                var p = text.split(newline);
-                p.push('');
-
-                var isBlockLevel = false;
-                p.forEach(function (item, i) {
-                    if (item.length >= 5 && item.indexOf('&gt; ') === 0) {
-                        if (!isBlockLevel) {
-                            d = [];
-                            isBlockLevel = true;
-                        }
-                        d.push(item.replace(/&gt; /gm, ''));
-
-                    } else {
-                        if (isBlockLevel) {
-                            r.push('<blockquote>' + d.join(newline) + '</blockquote>' + item)
-                        } else {
-                            r.push(item);
-                        }
-                        isBlockLevel = false;
-                    }
-                }, this);
-
-                if (r.slice(-1)[0] == '') {
-                    r.pop();
-                }
-
-                var t = r.join(newline);
-
-                return t;
-            }
-
             return text;
         },
 
@@ -219,21 +180,19 @@ Espo.define('view-helper', [], function () {
             Handlebars.registerHelper('complexText', function (text) {
                 text = text || ''
 
-                text = text.replace(self.urlRegex, '$1[$2]($2)');
+                text = text.replace(this.urlRegex, '$1[$2]($2)');
 
-                text = Handlebars.Utils.escapeExpression(text);
+                text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
 
-                self.mdSearch.forEach(function (re, i) {
-                    text = text.replace(re, self.mdReplace[i]);
+                this.mdBeforeList.forEach(function (item) {
+                    text = text.replace(item.regex, item.value);
                 });
 
-                text = self.tranformTextMarkdown(text);
-
-                text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                text = marked(text);
 
                 text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
                 return new Handlebars.SafeString(text);
-            });
+            }.bind(this));
 
             Handlebars.registerHelper('translateOption', function (name, options) {
                 var scope = options.hash.scope || null;
