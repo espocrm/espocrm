@@ -2620,6 +2620,40 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test', $actual);
     }
 
+    function testLowerCase()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\lowerCase",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": " TeSt "
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(' test ', $actual);
+    }
+
+    function testUpperCase()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\upperCase",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "test"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals('TEST', $actual);
+    }
+
     function testSubstring()
     {
         $item = json_decode('
