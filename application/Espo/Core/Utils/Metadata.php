@@ -41,6 +41,8 @@ class Metadata
 
     private $unifier;
 
+    private $objUnifier;
+
     private $fileManager;
 
     private $moduleConfig;
@@ -51,7 +53,7 @@ class Metadata
 
     protected $cacheFile = 'data/cache/application/metadata.php';
 
-    protected $objCacheFile = 'data/cache/application/metadata.php';
+    protected $objCacheFile = 'data/cache/application/objMetadata.php';
 
     protected $paths = array(
         'corePath' => 'application/Espo/Resources/metadata',
@@ -95,6 +97,15 @@ class Metadata
         }
 
         return $this->unifier;
+    }
+
+    protected function getObjUnifier()
+    {
+        if (!isset($this->objUnifier)) {
+            $this->objUnifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this, true);
+        }
+
+        return $this->objUnifier;
     }
 
     protected function getModuleConfig()
@@ -204,6 +215,40 @@ class Metadata
         return $this->data;
     }
 
+    protected function objInit($reload = false)
+    {
+        if (!$this->useCache) {
+            $reload = true;
+        }
+
+        if (file_exists($this->objCacheFile) && !$reload) {
+            $this->objData = $this->getFileManager()->getPhpContents($this->objCacheFile);
+        } else {
+            $this->objData = $this->getObjUnifier()->unify('metadata', $this->paths, true);
+            $this->objData = $this->addAdditionalFieldsObj($this->objData);
+
+            if ($this->useCache) {
+                $isSaved = $this->getFileManager()->putPhpContents($this->objCacheFile, $this->objData, true);
+                if ($isSaved === false) {
+                    $GLOBALS['log']->emergency('Metadata:objInit() - metadata has not been saved to a cache file');
+                }
+            }
+        }
+    }
+
+    public function getAllObjects($isJSON = false, $reload = false)
+    {
+        if (!isset($this->objData) || $reload) {
+            $this->objInit(true);
+        }
+
+        if ($isJSON) {
+            return Json::encode($this->objData);
+        }
+
+        return $this->objData;
+    }
+
     public function getAllForFrontend()
     {
         $data = $this->getAll();
@@ -265,11 +310,9 @@ class Metadata
         return $data;
     }
 
-    protected function addAdditionalFieldsObj()
+    protected function addAdditionalFieldsObj($data)
     {
-        $data = &$this->data;
-
-        if (!isset($data->entityDefs)) return;
+        if (!isset($data->entityDefs)) return $data;
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
             if (!isset($entityDefsItem->fields)) continue;
@@ -285,6 +328,8 @@ class Metadata
                 }
             }
         }
+
+        return $data;
     }
 
     /**
