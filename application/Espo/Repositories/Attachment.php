@@ -95,7 +95,8 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
             'sourceId' => $entity->getSourceId(),
             'name' => $entity->get('name'),
             'type' => $entity->get('type'),
-            'size' => $entity->get('size')
+            'size' => $entity->get('size'),
+            'role' => $entity->get('role')
         ));
 
         if ($role) {
