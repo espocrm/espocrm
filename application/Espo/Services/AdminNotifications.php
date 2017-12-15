@@ -35,7 +35,7 @@ class AdminNotifications extends \Espo\Core\Services\Base
     {
         $config = $this->getConfig();
 
-        if (!$config->get('adminNotifications') || $config->get('adminNotificationNewVersionCheckerDisabled')) {
+        if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewVersion')) {
             return true;
         }
 

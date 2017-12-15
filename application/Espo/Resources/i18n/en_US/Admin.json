@@ -170,7 +170,7 @@
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
-        "cronIsNotConfigured": "Scheduled jobs are not running. Please follow the <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a> to setup cron job.",
+        "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a> to setup cron job.",
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
         "newExtensionVersionIsAvailable": "New release {latestVersion} of {extensionName} is available."
     },
