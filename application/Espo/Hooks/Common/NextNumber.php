@@ -64,6 +64,11 @@ class NextNumber extends \Espo\Core\Hooks\Base
 
         foreach ($fieldDefs as $fieldName => $defs) {
             if (isset($defs['type']) && $defs['type'] === 'number') {
+                if (!empty($options['import'])) {
+                    if ($entity->has($fieldName)) {
+                        continue;
+                    }
+                }
                 if (!$entity->isNew()) {
                     if ($entity->isAttributeChanged($fieldName)) {
                         $entity->set($fieldName, $entity->getFetched($fieldName));

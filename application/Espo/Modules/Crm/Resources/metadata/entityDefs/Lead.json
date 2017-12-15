@@ -124,6 +124,7 @@
         "acceptanceStatus": {
             "type": "varchar",
             "notStorable": true,
+            "exportDisabled": true,
             "disabled": true
         },
         "acceptanceStatusMeetings": {
@@ -132,6 +133,7 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "meetings",
             "column": "status"
@@ -142,6 +144,7 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "calls",
             "column": "status"

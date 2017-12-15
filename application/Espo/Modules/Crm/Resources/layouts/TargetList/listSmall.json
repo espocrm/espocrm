@@ -1,5 +1,5 @@
 [
     {"name":"name", "link":true},
-    {"name":"entryCount", "width": 25},
+    {"name":"entryCount", "width": 25, "notSortable": true},
     {"name":"createdAt", "width": 25}
 ]

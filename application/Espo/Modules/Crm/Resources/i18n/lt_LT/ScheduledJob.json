@@ -1,1 +1,8 @@
-{}
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Siųsti masinius el. laiškus",
+      "ControlKnowledgeBaseArticleStatus": "Kontroliuoti žinių bazės straipsnio statusą"
+    }
+  }
+}

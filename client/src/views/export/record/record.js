@@ -51,6 +51,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 if (defs.disabled) return;
                 if (defs.exportDisabled) return;
                 if (defs.type === 'map') return;
+                if (defs.type === 'attachmentMultiple') return;
 
                 return true;
             }, this);

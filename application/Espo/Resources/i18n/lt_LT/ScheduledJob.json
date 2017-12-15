@@ -2,17 +2,20 @@
   "fields": {
     "name": "Vardas",
     "status": "Statusas",
-    "job": "Darbas"
-  },
-  "links": {
-    "log": "Log"
+    "job": "Darbas",
+    "scheduling": "Planavimas"
   },
   "labels": {
     "Create ScheduledJob": "Sukurkite numatytą darbą"
   },
   "options": {
     "job": {
-      "Cleanup": "Išvalytis"
+      "Cleanup": "Išvalytis",
+      "CheckInboundEmails": "Patikrinkite grupės el. pašto paskyras",
+      "CheckEmailAccounts": "Patikrinkite asmenines el. pašto paskyras",
+      "SendEmailReminders": "Siųsti priminimus el. paštu",
+      "AuthTokenControl": "Autentikavimo žymės kontrolė",
+      "SendEmailNotifications": "Siųsti pranešimus el. paštu"
     },
     "cronSetup": {
       "linux": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",
@@ -24,5 +27,8 @@
       "Active": "Aktyvus",
       "Inactive": "Neaktyvus"
     }
+  },
+  "tooltips": {
+    "scheduling": "Cron užduočių žymėjimas. Nurodo darbo eigos dažnumą.\n\n* / 5 * * * * - kas 5 minutes\n\n0 * / 2 * * * - kas 2 valandas\n\n30 1 * * * -  tokiu laiku 01:30 kartą per dieną\n\n0 0 1 * * - pirmąją mėnesio dieną"
   }
 }

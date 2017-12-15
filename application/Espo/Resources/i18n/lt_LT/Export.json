@@ -1,1 +1,12 @@
-{}
+{
+  "fields": {
+    "fieldList": "Laukelių sąrašas",
+    "exportAllFields": "Eksportuoti visus laukus",
+    "format": "Formatas"
+  },
+  "options": {
+    "format": {
+      "xlsx": "XLSX (Excel) "
+    }
+  }
+}

@@ -12,13 +12,25 @@
     "address": "Adresas",
     "opportunityRole": "Galimybės rolė",
     "description": "Aprašymas",
-    "campaign": "Kampanija"
+    "campaign": "Kampanija",
+    "targetLists": "Adresatų sarašai",
+    "targetList": "Adresatų sarašas",
+    "portalUser": "Portalo vartotojas",
+    "originalLead": "Originalus potencialus klientas",
+    "acceptanceStatus": "Priėmimo statusas",
+    "accountIsInactive": "Įmonė neaktyvi"
   },
   "links": {
     "opportunities": "Galimybės",
     "cases": "Atvejai",
+    "targetLists": "Adresatų sarašai",
+    "campaignLogRecords": "Kampanijos žurnalas",
     "campaign": "Kampanija",
-    "accounts": "Įmonės"
+    "account": "Kontaktas (pirminis)",
+    "accounts": "Įmonės",
+    "portalUser": "Portalo vartotojas",
+    "originalLead": "Originalus potencialus klientas",
+    "documents": "Dokumentai"
   },
   "labels": {
     "Create Contact": "Sukurti kontaktą"
@@ -32,6 +44,8 @@
     }
   },
   "presetFilters": {
+    "portalUsers": "Portalo vartotojai",
+    "notPortalUsers": "Ne portalo vartotojas",
     "accountActive": "Aktyvus"
   }
 }

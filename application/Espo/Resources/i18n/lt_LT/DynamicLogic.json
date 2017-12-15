@@ -1,13 +1,28 @@
 {
-  "label": {
-    "Field": "Laukelis"
-  },
   "options": {
     "operators": {
       "equals": "Lygu",
       "notEquals": "Nelygu",
       "greaterThan": "Daugiau nei",
-      "lessThan": "Mažiau nei"
+      "lessThan": "Mažiau nei",
+      "greaterThanOrEquals": "Daugiau nei arba lygu",
+      "lessThanOrEquals": "Mažiau nei arba lygu",
+      "in": "yra",
+      "notIn": "Nėra",
+      "inPast": "Praeityje",
+      "inFuture": "Ateitis",
+      "isToday": "Šiandien",
+      "isTrue": "Yra teisinga",
+      "isFalse": "Yra klaidinga",
+      "isEmpty": "Yra tuščia",
+      "isNotEmpty": "Yra netuščia",
+      "contains": "Turi",
+      "has": "Turi",
+      "notContains": "Neturi",
+      "notHas": "Neturi"
     }
+  },
+  "labels": {
+    "Field": "Laukelis"
   }
 }

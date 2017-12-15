@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Create Document": "Sukurti dokumentą",
     "Details": "Išsamiau"
   },
   "fields": {
@@ -7,12 +8,16 @@
     "status": "Statusas",
     "file": "Failas",
     "type": "Tipas",
+    "publishDate": "Paskelbimo data",
+    "expirationDate": "Galiojimo pabaigos data",
     "description": "Aprašymas",
-    "accounts": "Įmonės"
+    "accounts": "Įmonės",
+    "folder": "Aplankas"
   },
   "links": {
     "accounts": "Įmonės",
     "opportunities": "Galimybės",
+    "folder": "Aplankas",
     "leads": "Potencialūs klientai",
     "contacts": "Kontaktai"
   },
@@ -20,10 +25,12 @@
     "status": {
       "Active": "Aktyvus",
       "Draft": "Juodraštis",
+      "Expired": "Pasibaigė",
       "Canceled": "Atšaukta"
     },
     "type": {
       "": "Joks",
+      "Contract": "Kontraktas",
       "License Agreement": "Licencijos sutartis"
     }
   },

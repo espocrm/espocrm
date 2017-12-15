@@ -2,7 +2,7 @@
     "fields": {
         "post": {
             "type": "text",
-            "rows": 8
+            "rows": 30
         },
         "data": {
             "type": "jsonObject",

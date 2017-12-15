@@ -3,5 +3,8 @@
     "meetings": "Susirinkimai",
     "calls": "Skambučiai",
     "tasks": "Užduotys"
+  },
+  "labels": {
+    "Create {entityType}": "Sukurti {entityTypeTranslated}"
   }
 }

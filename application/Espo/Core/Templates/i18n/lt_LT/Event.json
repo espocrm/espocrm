@@ -4,7 +4,8 @@
     "dateStart": "Pradžios data",
     "dateEnd": "Pabaigos data",
     "duration": "Trukmė",
-    "status": "Statusas"
+    "status": "Statusas",
+    "reminders": "Priminimai"
   },
   "links": {
     "parent": "Pagrindinis"
@@ -17,6 +18,9 @@
     }
   },
   "labels": {
+    "Create {entityType}": "Sukurti {entityTypeTranslated} ",
+    "Schedule {entityType}": "Suplanuoti {entityTypeTranslated}",
+    "Log {entityType}": "Žurnalas {entityTypeTranslated}",
     "Set Held": "Pažymėti kaip įvykdytą",
     "Set Not Held": "Pažymėti kaip neįvykdytą"
   },

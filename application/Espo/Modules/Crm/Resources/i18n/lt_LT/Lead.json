@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Konvertuota į",
     "Create Lead": "Sukurti potencialų klientą",
-    "Convert": "Konvertuoti"
+    "Convert": "Konvertuoti",
+    "convert": "konvertuoti"
   },
   "fields": {
     "name": "Vardas",
@@ -16,19 +17,26 @@
     "status": "Statusas",
     "source": "Šaltinis",
     "opportunityAmount": "Pardavimo galimybės suma",
+    "opportunityAmountConverted": "Galimybių suma (konvertuota)",
     "description": "Aprašymas",
     "createdAccount": "Įmonė",
     "createdContact": "Kontaktas",
     "createdOpportunity": "Galimybė",
     "campaign": "Kampanija",
-    "industry": "Pramonės šaka"
+    "targetLists": "Adresatų sarašai",
+    "targetList": "Adresatų sarašas",
+    "industry": "Pramonės šaka",
+    "acceptanceStatus": "Priėmimo statusas"
   },
   "links": {
+    "targetLists": "Adresatų sarašai",
+    "campaignLogRecords": "Kampanijos žurnalas",
     "campaign": "Kampanija",
     "createdAccount": "Įmonė",
     "createdContact": "Kontaktas",
     "createdOpportunity": "Galimybė",
-    "cases": "Atvejai"
+    "cases": "Atvejai",
+    "documents": "Dokumentai"
   },
   "options": {
     "status": {
@@ -53,6 +61,7 @@
   },
   "presetFilters": {
     "active": "Aktyvus",
+    "actual": "Esamas",
     "converted": "Konvertuota"
   }
 }

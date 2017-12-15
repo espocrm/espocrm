@@ -1,20 +1,58 @@
 {
   "labels": {
+    "Fields": "Laukeliai",
     "Relationships": "Sąsajos",
-    "Log": "Log"
+    "Schedule": "Tvarkaraštis",
+    "Log": "Žurnalas",
+    "Formula": "Formulė"
   },
   "fields": {
     "name": "Vardas",
     "type": "Tipas",
+    "labelSingular": "Etiketė vienaskaita",
+    "labelPlural": "Etiketė daugiskaita",
     "stream": "Srautas",
     "label": "Etiketė",
+    "linkType": "Nuorodos tipas",
     "link": "Nuoroda",
-    "disabled": "Išjungtas"
+    "sortBy": "Numatytas rikiavimas (laukeliai)",
+    "sortDirection": "Numatytas rikiavimas (kryptis)",
+    "relationName": "Vidurinis lentelės pavadinimas",
+    "linkMultipleField": "Susieti kelis laukelius",
+    "disabled": "Išjungtas",
+    "audited": "Patikrinta",
+    "auditedForeign": "Patikrinta iš išorės",
+    "statusField": "Būsenos laukelis",
+    "beforeSaveCustomScript": "Prieš išsaugant tinkintą tekstą"
   },
   "options": {
     "type": {
       "": "Joks",
-      "Person": "Asmuo"
+      "Base": "Pagrindas",
+      "Person": "Asmuo",
+      "CategoryTree": "Kategorijų medis",
+      "Event": "Įvykis",
+      "BasePlus": "Bazė Plius",
+      "Company": "Įmonė"
+    },
+    "linkType": {
+      "manyToMany": "Daugelis-daugeliui",
+      "oneToMany": "Vienas-daugeliui",
+      "manyToOne": "Daugelis-vienam",
+      "parentToChildren": "Pagrindinis-antriniui"
+    },
+    "sortDirection": {
+      "asc": "Didėjančia tvarka",
+      "desc": "Mažėjančia tvarka"
     }
+  },
+  "tooltips": {
+    "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
+    "textFilterFields": "Laukeliai, naudojami teksto paieškoje.",
+    "stream": "Nesvarbu, ar objektas turi srautą",
+    "disabled": "Patikrinkite, ar jums nereikia šio objekto sistemoje.",
+    "linkAudited": "Susijusio įrašo kūrimas ir susiejimas su esamu įrašu bus registruojamas sraute.",
+    "linkMultipleField": "\"Susieti daugelį laukelių\" yra patogus būdas redaguoti sasajas. Nenaudokite to, jei galite turėti daug panašių įrašų.",
+    "entityType": "Bazė plius - rodo \"Veiklos\", \"Istorija\" ir \"Užduotys\" skiltis.\nĮvykis - pasiekiamas skiltyje \"Kalendorius\" ir \"Veiklos\"."
   }
 }

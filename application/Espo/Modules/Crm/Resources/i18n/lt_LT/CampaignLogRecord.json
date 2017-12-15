@@ -4,16 +4,24 @@
     "actionDate": "Data",
     "data": "Duomenys",
     "campaign": "Kampanija",
-    "parent": "Tikslas"
+    "parent": "Adresatas",
+    "queueItem": "Eilės elementas",
+    "stringData": "Eilutės duomenys",
+    "isTest": "Testuojama"
   },
   "links": {
+    "queueItem": "Eilės elementas",
     "parent": "Pagrindinis",
+    "object": "Ojektas",
     "campaign": "Kampanija"
   },
   "options": {
     "action": {
       "Sent": "Išsiųsta",
-      "Opted Out": "Pasirinkta"
+      "Opened": "Atverta",
+      "Opted Out": "Pasirinkta",
+      "Clicked": "Paspausta",
+      "Lead Created": "Sukurtas potencialus klientas"
     }
   },
   "labels": {
@@ -21,6 +29,9 @@
   },
   "presetFilters": {
     "sent": "Išsiųsta",
-    "optedOut": "Pasirinkta"
+    "opened": "Atverta",
+    "optedOut": "Pasirinkta",
+    "clicked": "Paspausta",
+    "leadCreated": "Sukurtas potencialus klientas"
   }
 }

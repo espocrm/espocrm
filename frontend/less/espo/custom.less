@@ -13,6 +13,7 @@
 
 blockquote {
     font-size: @font-size-base;
+    border-left-width: 3px;
 }
 
 .pagination-sm > li > a {
@@ -1173,6 +1174,58 @@ stream-head-text-container .span {
 table.table td.cell .complex-text {
     word-wrap: break-word;
     white-space: normal;
+}
+
+.complex-text {
+    h1:first-child,
+    h2:first-child,
+    h3:first-child,
+    h4:first-child,
+    h5:first-child,
+    h6:first-child,
+    p:first-child,
+    ul:first-child,
+    ol:first-child,
+    blockquote:first-child {
+        margin-top: 0 !important;
+    }
+    h1 {
+        font-weight: bold;
+        margin-top: @line-height-computed;
+        margin-bottom: (@line-height-computed / 2);
+    }
+    h2, h3 {
+        font-weight: bold;
+        margin-top: (@line-height-computed / 2);
+        margin-bottom: (@line-height-computed / 2);
+    }
+    h4, h5, h6 {
+        font-weight: normal;
+        margin-top: (@line-height-computed / 2);
+        margin-bottom: (@line-height-computed / 2);
+    }
+    h1 {
+        font-size: floor(@font-size-base * 1.1);
+    }
+    h2, h3, h4, h5, h6 {
+        font-size: floor(@font-size-base);
+    }
+
+    p,
+    ul,
+    ol,
+    pre,
+    blockquote {
+        margin-top: @line-height-computed / 2;
+    }
+
+    ul > li {
+        list-style-type: disc;
+    }
+
+    ul, ol {
+        padding-left: 30px;
+    }
 }
 
 #popup-notifications-container {

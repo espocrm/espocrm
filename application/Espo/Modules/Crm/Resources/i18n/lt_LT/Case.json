@@ -16,11 +16,13 @@
   "links": {
     "inboundEmail": "Gaunami el. laiškai",
     "account": "Įmonė",
+    "contact": "Kontaktas (pirminis)",
     "Contacts": "Kontaktai",
     "meetings": "Susirinkimai",
     "calls": "Skambučiai",
     "tasks": "Užduotys",
     "emails": "El. laiška",
+    "articles": "Žinių bazės straipsniai",
     "lead": "Potencialus klientas",
     "attachments": "Prisegtukai"
   },
@@ -48,6 +50,7 @@
   "labels": {
     "Create Case": "Sukurti atvejį",
     "Close": "Uždaryti",
+    "Reject": "Atmesti",
     "Closed": "Uždaryta",
     "Rejected": "Atmesta"
   },

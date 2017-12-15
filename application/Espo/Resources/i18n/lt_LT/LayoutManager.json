@@ -1,12 +1,29 @@
 {
   "fields": {
+    "width": "Ilgis (%)",
     "link": "Nuoroda",
-    "style": "Stilius"
+    "notSortable": "Nerūšiuojama",
+    "align": "Lygiuoti",
+    "panelName": "Panelės pavadinimas",
+    "style": "Stilius",
+    "sticked": "Prikabinta"
   },
   "options": {
+    "align": {
+      "left": "Kairėje",
+      "right": "Dešinėje"
+    },
     "style": {
       "default": "Numatytas",
+      "success": "Sėminga",
+      "danger": "Pavojus",
+      "info": "Informacija",
+      "warning": "Įspėjimas",
       "primary": "Pirminis"
     }
+  },
+  "labels": {
+    "New panel": "Nauja panelė",
+    "Layout": "Išdėtymas"
   }
 }

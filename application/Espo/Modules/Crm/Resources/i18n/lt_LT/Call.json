@@ -11,7 +11,9 @@
     "users": "Vartotojai",
     "contacts": "Kontaktai",
     "leads": "Potencialūs klientai",
-    "account": "Įmonė"
+    "reminders": "Priminimai",
+    "account": "Įmonė",
+    "acceptanceStatus": "Priėmimo statusas"
   },
   "options": {
     "status": {
@@ -24,7 +26,10 @@
       "Inbound": "Gaunami"
     },
     "acceptanceStatus": {
-      "None": "Joks"
+      "None": "Joks",
+      "Accepted": "Priimta",
+      "Declined": "Atmesta",
+      "Tentative": "Preliminarus"
     }
   },
   "massActions": {

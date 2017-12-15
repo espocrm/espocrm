@@ -7,17 +7,48 @@
     "host": "Hostas",
     "username": "Vartotojo vardas",
     "password": "Slaptažodis",
-    "port": "Port",
+    "port": "Prievadas",
     "monitoredFolders": "Stebimi aplankai",
-    "trashFolder": "Trinti aplanką",
-    "ssl": "SSL",
+    "trashFolder": "Šiukliadėžės aplankas",
     "createCase": "Sukurti atvejį",
-    "caseDistribution": "Case Distribution",
+    "reply": "Auto-atsakymas",
     "replyEmailTemplate": "Atsakymo el. pašto šablonas",
     "replyFromAddress": "Atsakyti nuo adreso",
+    "replyToAddress": "Atsakyti adresatui",
     "replyFromName": "Atsakyti nuo vardo",
+    "targetUserPosition": "Adresato pozicija",
+    "addAllTeamUsers": "Visiems komandos nariams",
+    "team": "Adresatų komanda",
     "teams": "Komandos",
-    "fromName": "Nuo vardo"
+    "sentFolder": "Išsiųstų laiškų aplankas",
+    "storeSentEmails": "Išsaugoti išsiųstus el. laiškus",
+    "useSmtp": "Naudoti SMTP",
+    "smtpHost": "SMTP priegloba",
+    "smtpPort": "SMTP prievadas",
+    "smtpAuth": "SMTP autentikavimas",
+    "smtpSecurity": "SMTP sauga",
+    "smtpUsername": "SMTP vartotojo vardas",
+    "smtpPassword": "SMTP slaptažodis",
+    "fromName": "Nuo vardo",
+    "smtpIsShared": "SMTP yra bendrai naudojamas",
+    "smtpIsForMassEmail": "SMTP yra masinio el. pašto adresas"
+  },
+  "tooltips": {
+    "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
+    "createCase": "Automatiškai sukurkite atvejį iš gaunamų el. laiškų.",
+    "replyToAddress": "Patikslinkite pašto dėžutės el. pašto adresą, kad  jam galima būtų priskirti gaunamus laiškus",
+    "caseDistribution": "Kaip bus priskirtas aptarnavimas. Priskirtas tiesiogiai vartotojui arba tarp komandos narių.",
+    "assignToUser": "Vartotojo darbai bus priskirti.",
+    "team": "Komandos darbai bus priskirti.",
+    "teams": "Komandos el. laiškai bus priskirti.",
+    "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.",
+    "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
+    "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
+    "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje."
+  },
+  "links": {
+    "filters": "Filtrai",
+    "emails": "El. laiška"
   },
   "options": {
     "status": {
@@ -27,19 +58,15 @@
     "caseDistribution": {
       "": "Joks",
       "Direct-Assignment": "Tiesioginis priskyrimas",
-      "Round-Robin": "Round-Robin",
       "Least-Busy": "mažiausiai-užimta"
     }
   },
   "labels": {
-    "IMAP": "IMAP",
+    "Create InboundEmail": "Sukurti el. Pašto paskyrą",
     "Actions": "Veiksmai",
     "Main": "Pagrindinis"
   },
   "messages": {
     "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio"
-  },
-  "links": {
-    "emails": "El. laiška"
   }
 }

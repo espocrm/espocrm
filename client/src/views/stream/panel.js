@@ -150,30 +150,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
 
             this.on('remove', function () {
-                if (this.$textarea && this.$textarea.size()) {
-                    var text = this.$textarea.val();
-                    if (text.length) {
-                        this.getSessionStorage().set(this.storageTextKey, text);
-                    } else {
-                        if (this.hasStoredText) {
-                            this.getSessionStorage().clear(this.storageTextKey);
-                        }
-                    }
-
-                    var attachmetIdList = this.seed.get('attachmentsIds') || [];
-
-                    if (attachmetIdList.length) {
-                        this.getSessionStorage().set(this.storageAttachmentsKey, {
-                            idList: attachmetIdList,
-                            names: this.seed.get('attachmentsNames') || {}
-                        });
-                    } else {
-                        if (this.hasStoredAttachments) {
-                            this.getSessionStorage().clear(this.storageAttachmentsKey);
-                        }
-                    }
-                }
+                this.storeControl();
+                $(window).off('beforeunload.stream-'+ this.cid);
             }, this);
+            $(window).off('beforeunload.stream-'+ this.cid);
+            $(window).on('beforeunload.stream-'+ this.cid, function () {
+                this.storeControl();
+            }.bind(this));
 
             var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
@@ -191,6 +174,32 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.wait(false);
                 }, this);
             }, this);
+        },
+
+        storeControl: function () {
+            if (this.$textarea && this.$textarea.size()) {
+                var text = this.$textarea.val();
+                if (text.length) {
+                    this.getSessionStorage().set(this.storageTextKey, text);
+                } else {
+                    if (this.hasStoredText) {
+                        this.getSessionStorage().clear(this.storageTextKey);
+                    }
+                }
+
+                var attachmetIdList = this.seed.get('attachmentsIds') || [];
+
+                if (attachmetIdList.length) {
+                    this.getSessionStorage().set(this.storageAttachmentsKey, {
+                        idList: attachmetIdList,
+                        names: this.seed.get('attachmentsNames') || {}
+                    });
+                } else {
+                    if (this.hasStoredAttachments) {
+                        this.getSessionStorage().clear(this.storageAttachmentsKey);
+                    }
+                }
+            }
         },
 
         createCollection: function (callback, context) {

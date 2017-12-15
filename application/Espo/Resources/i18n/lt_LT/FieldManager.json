@@ -1,12 +1,80 @@
 {
+  "labels": {
+    "Dynamic Logic": "Dinaminė logika",
+    "Name": "Vardas",
+    "Label": "Etiketė",
+    "Type": "Tipas"
+  },
   "options": {
     "dateTimeDefault": {
-      "": "Joks"
+      "": "Joks",
+      "javascript: return this.dateTime.getNow(1);": "Dabar",
+      "javascript: return this.dateTime.getNow(5);": "Dabar (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Dabar (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Dabar (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 valanda",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 valandos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 valandų",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 valandų",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 diena",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dienos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dienos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dienos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dienos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dienos",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 savaitė"
     },
     "dateDefault": {
       "": "Joks",
-      "javascript: return this.dateTime.getToday();": "Šiandien"
+      "javascript: return this.dateTime.getToday();": "Šiandien",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 diena",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dienos",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dienų",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 savaitė",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 savaitės",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 savaitės",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mėnuo",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mėnesiai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mėnesių",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mėnesių",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 metai"
     }
+  },
+  "tooltips": {
+    "audited": "Atnaujinimai bus įrašomi sraute.",
+    "required": "Laukas bus privalomas. Negalima palikti tuščio.",
+    "default": "Vertė nustatoma pagal numatytuosius nustatymus.",
+    "min": "Minimali priimtina vertė.",
+    "max": "Maksimali priimtina vertė.",
+    "seeMoreDisabled": "Jeigu nepažymėta, ilgi tekstai bus sutrumpinti",
+    "lengthOfCut": "Kokio ilgio gali būti tekstas, prieš apkerpant",
+    "maxLength": "Maksimalus priimtinas teksto ilgis.",
+    "before": "Duomenų vertė turėtų būti prieš duomenų vertės nurodytą laukelį",
+    "after": "Duomenų vertė turėtų būti poduomenų vertės nurodyto laukelio",
+    "readOnly": "artotojas negali nurodyti laukelio vertės. Bet gali būti apskaičiuojamas pagal formulę.",
+    "maxFileSize": "Jei tuščia arba 0, tai nelimituojama"
   },
   "fieldParts": {
     "address": {
@@ -14,10 +82,16 @@
       "city": "Miestas",
       "state": "Rajonas/regionas",
       "country": "Šalis",
-      "postalCode": "Pašto kodas"
+      "postalCode": "Pašto kodas",
+      "map": "Žemėlapis"
     },
     "personName": {
-      "salutation": "Sveikinimas"
+      "salutation": "Sveikinimas",
+      "first": "Pirmas",
+      "last": "Paskutinis"
+    },
+    "currency": {
+      "converted": "(Konvertuota)"
     },
     "datetimeOptional": {
       "date": "Data"

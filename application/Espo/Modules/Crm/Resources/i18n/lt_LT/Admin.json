@@ -1,1 +1,6 @@
-{}
+{
+  "layouts": {
+    "detailConvert": "Konvertuoti potencialų klienta",
+    "listForAccount": "Sąrašas (paskyrai)"
+  }
+}

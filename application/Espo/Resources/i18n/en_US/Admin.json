@@ -94,11 +94,10 @@
         "enumInt": "Enum Integer",
         "enumFloat": "Enum Float",
         "float": "Float",
-        "int": "Int",
+        "int": "Integer",
         "link": "Link",
         "linkMultiple": "Link Multiple",
         "linkParent": "Link Parent",
-        "multienim": "Multienum",
         "phone": "Phone",
         "text": "Text",
         "url": "Url",
@@ -112,7 +111,7 @@
         "rangeCurrency": "Range Currency",
         "wysiwyg": "Wysiwyg",
         "map": "Map",
-        "number": "Number",
+        "number": "Number (auto-increment)",
         "colorpicker": "Color Picker"
     },
     "fields": {

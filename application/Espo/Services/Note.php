@@ -60,7 +60,7 @@ class Note extends Record
         return parent::createEntity($data);
     }
 
-    protected function afterCreateEntity(iEntity $entity, $data)
+    protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
 

@@ -6,7 +6,8 @@
             [{"name":"accounts", "fullWidth": true}],
             [{"name":"emailAddress", "fullWidth": true}],
             [{"name":"phoneNumber", "fullWidth": true}],
-            [{"name":"addressCity"}, {"name":"addressCountry"}]
+            [{"name":"addressCity"}, {"name":"addressCountry"}],
+            [{"name":"description", "fullWidth": true}]
         ]
     }
 ]

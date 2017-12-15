@@ -84,7 +84,8 @@ class Job
                 'targetType',
                 'methodName',
                 'method', // TODO remove deprecated
-                'serviceName'
+                'serviceName',
+                'data'
             ],
             'whereClause' => [
                 'status' => 'Pending',

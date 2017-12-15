@@ -4,29 +4,68 @@
     "description": "Aprašymas",
     "status": "Statusas",
     "type": "Tipas",
+    "startDate": "Pradžios data",
+    "endDate": "Pabaigos data",
+    "targetLists": "Adresatų sarašai ",
+    "excludingTargetLists": "Neįtraukti adresatų sąrašų",
     "sentCount": "Išsiųsta",
-    "optedOutCount": "Pasirinkta"
+    "openedCount": "Atverta",
+    "clickedCount": "Paspausta",
+    "optedOutCount": "Pasirinkta",
+    "leadCreatedCount": "Potencialūs klientai sukurti",
+    "revenue": "Pajamos",
+    "revenueConverted": "Pajamos (konvertuotos)",
+    "budget": "Biudžetas",
+    "budgetConverted": "Biudžetas (kovertuotas)"
   },
   "links": {
+    "targetLists": "Adresatų sąrašai",
+    "excludingTargetLists": "Neįtraukti adresatų sąrašų",
     "accounts": "Įmonės",
     "contacts": "Kontaktai",
     "leads": "Potencialūs klientai",
     "opportunities": "Galimybės",
-    "campaignLogRecords": "Log"
+    "massEmails": "Masiniai el. laiškai",
+    "trackingUrls": "Stebėjimo URL"
   },
   "options": {
     "type": {
-      "Email": "El. paštas"
+      "Email": "El. paštas",
+      "Web": "Internetas",
+      "Television": "Televizija",
+      "Radio": "Radijas",
+      "Newsletter": "Naujienlaiškis",
+      "Mail": "Paštas"
     },
     "status": {
+      "Planning": "Planuojama",
       "Active": "Aktyvus",
-      "Inactive": "Neaktyvus"
+      "Inactive": "Neaktyvus",
+      "Complete": "Įvykdyta"
     }
   },
   "labels": {
-    "Email Templates": "El. laiškų šabonai"
+    "Create Campaign": "Sukurti kampaniją",
+    "Target Lists": "Adresatų sąrašai",
+    "Statistics": "Statistika",
+    "hard": "kieta",
+    "soft": "minkšta",
+    "Unsubscribe": "Atsisakyti prenumeratos",
+    "Mass Emails": "Masiniai el. laiškai",
+    "Email Templates": "El. laiškų šabonai",
+    "Unsubscribe again": "Atsisakyti prenumeratos dar kartą",
+    "Subscribe again": "Užsisakyti prenumeratą dar kartą",
+    "Create Target List": "Sukurti adresatų sąrašą"
   },
   "presetFilters": {
     "active": "Aktyvus"
+  },
+  "messages": {
+    "unsubscribed": "Jūsų el, pašto adresas buvo pašalintas iš mūsų adresatų sąrašo.",
+    "subscribedAgain": "Jūs užsisakėte prenumeratą dar kartą"
+  },
+  "tooltips": {
+    "targetLists": "Adresatai, kurie turėtų gauti laiškus.",
+    "excludingTargetLists": "Adresatai, kurie neturėtų gauti laiškų."
   }
 }
