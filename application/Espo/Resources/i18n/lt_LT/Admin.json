@@ -60,9 +60,9 @@
   },
   "layouts": {
     "list": "Sąrašas",
-    "detail": "Išsamiau",
+    "detail": "Plati informacija",
     "listSmall": "Sąrašas (mažas)",
-    "detailSmall": "Išsamiau (mažas)",
+    "detailSmall": "Plati informacija (mažesnis variantas)",
     "filters": "Paieškos filtrai",
     "massUpdate": "Masinis atnaujinimas",
     "relationships": "Sąsajų skiltys",
@@ -70,6 +70,8 @@
     "sidePanelsEdit": "Šoninės panelės (redaguoti)",
     "sidePanelsDetailSmall": "Šoninės panelės (smulkios)",
     "sidePanelsEditSmall": "Šoninės panelės (redaguoti smulkias)",
+    "detailPortal": "Plati informacija (Portalas)",
+    "detailSmallPortal": "Plati informacija (mažesnis variantas, portalas)",
     "listPortal": "Sąrašas (Portalas)"
   },
   "fieldTypes": {
@@ -177,7 +179,7 @@
     "personalEmailAccounts": "Vartotojų el. pašto paskyros.",
     "emailTemplates": "Išsiunčiamų laiškų šablonai.",
     "import": "Importuoti duomenis iš CSV failo.",
-    "layoutManager": "Išdėstymo pritaikymas pagal save(sąrašas, išsamiau, keisti, iesškoti, masinis atnauninimas).",
+    "layoutManager": "Išdėstymo pritaikymas pagal save(sąrašas, plati informacija, keisti, ieškoti, masinis atnaujinimas).",
     "userInterface": "Konfiguruoti UI.",
     "authTokens": "Aktyvios utentikavimo sesijos. IP adresas ir paskutinio prisijungimo data.",
     "authentication": "Autentikavimo nustatymai.",
