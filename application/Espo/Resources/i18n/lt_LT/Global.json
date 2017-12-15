@@ -249,7 +249,6 @@
     "checkForNewNotifications": "Patikrinti, ar yra naujų pranešimų",
     "duplicate": "Jūsų sukurtas įrašas jau gali būti",
     "dropToAttach": "Įmeskite norėdami prisegti",
-    "streamPostInfo": "Įveskite<strong>@username</strong> norėdami paminėti vartotojus pranšime.\n\nGalima žymėjimo sintaksė::\n`<code>kodas</code>`\n**<strong>paryškintas tekstas</strong>**\n*<em>pabrėžtas tekstas</em>*\n~<del>ištrintas tekstas</del>~\n> blockquote\n[link text](url)",
     "writeMessageToSelf": "Parašykite žinutę savo sraute",
     "checkForNewNotes": "Patikrinkite srauto naujienas",
     "internalPost": "Prenšimą matys tik vidiniai vartotojai",

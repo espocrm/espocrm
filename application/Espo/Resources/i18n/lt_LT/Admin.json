@@ -101,7 +101,8 @@
     "rangeFloat": "Nuo... iki",
     "rangeCurrency": "Valiutų gruopė",
     "map": "Žemėlapis",
-    "currencyConverted": "Valiuta (konvertuota)"
+    "currencyConverted": "Valiuta (konvertuota)",
+    "colorpicker": "Spalvos pasirinkimas"
   },
   "fields": {
     "type": "Tipas",
@@ -157,7 +158,6 @@
     "upgradeBackup": "Prieš atnaujinant EspoCRM, rekomenduojame išsisaugoti failų ir duomenų bazės kopijas.",
     "thousandSeparatorEqualsDecimalMark": "Tūkstančių skirtukų simbolis negali būti toks pat kaip dešimtainio skirtuko simbolis.",
     "userHasNoEmailAddress": "Vartotojas neturi el. pašto adreso.",
-    "cronIsNotConfigured": "Supanuotos užduotys neveikia. Vadovaukitės <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\"> instrukcijomis </ a> nustatyti cron užduotis.",
     "newVersionIsAvailable": "Nauja EspoCRM versija {latestVersion} yra prieinama.",
     "newExtensionVersionIsAvailable": "Yra {extensionName} nauja versija {latestVersion}."
   },

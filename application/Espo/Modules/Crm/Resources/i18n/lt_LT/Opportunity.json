@@ -11,6 +11,7 @@
     "contacts": "Kontaktai",
     "description": "Aprašymas",
     "amountConverted": "Suma (konvertuota)",
+    "amountWeightedConverted": "Pasverta suma",
     "campaign": "Kampanija",
     "amountCurrency": "Valiutos suma"
   },

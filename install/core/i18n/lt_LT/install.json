@@ -105,11 +105,19 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre> 1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</ pre>"
+        "windows": "<br> <pre> 1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</ pre>",
+        "linux": "<br> <br> 1. Įgalinti \"mod_rewrite\". Norėdami tai padaryti, paleiskite tas komandas terminale: <pre> (APACHE1) </ pre> <br> 2. Įgalinti .htaccess palaikymą. Pridėti / redaguoti serverio konfigūracijos nustatymus (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre> (APACHE2) </ pre> \nVėliau paleiskite šią komandą į terminalą: <pre> (APACHE3) </ pre> <br> 3. Pabandykite įtraukti RewriteBase kelią, atidarykite failą {API_PATH} .htaccess ir pakeiskite šią eilutę: <pre> (APACHE4) </ pre> to <pre> (APACHE5) </ pre> <br> Daugiau informacijos rasite apsilankę <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> EspoCRM konfigūracija \"Apache\" </a>. <br> <br>"
+      },
+      "nginx": {
+        "linux": "<br>\n<pre>\n{NGINX}\n</ pre> <br> Daugiau informacijos rasite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx serverio konfigūracijoje EspoCRM </ a>. <br> <br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</ pre> <br> Daugiau informacijos rasite <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx serverio konfigūracijoje EspoCRM </ a>. <br> <br>"
       }
     },
     "modRewriteTitle": {
-      "apache": "API Klaida: EspoCRM API nepasiekiamas. <br> Galimos problemos: išjungta \"mod_rewrite\" \"Apache\" serveryje, išjungtas .htaccess palaikymas arba \"RewriteBase\" problema. <br> Atlikite tik būtinus veiksmus. Po kiekvieno žingsnio patikrinkite, ar problema išspręsta."
+      "apache": "API Klaida: EspoCRM API nepasiekiamas. <br> Galimos problemos: išjungta \"mod_rewrite\" \"Apache\" serveryje, išjungtas .htaccess palaikymas arba \"RewriteBase\" problema. <br> Atlikite tik būtinus veiksmus. Po kiekvieno žingsnio patikrinkite, ar problema išspręsta.",
+      "nginx": "API Klaida: EspoCRM API nepasiekiamas. <br> Pridėti šį kodą į jūsų Nginx serverio blokų konfigūracijos failą (/ etc / nginx / sites-available / YOUR_SITE) \"serverio\" skyriuje:",
+      "microsoft-iis": "API Klaida: EspoCRM API nepasiekiamas. <br> Galima problema: išjungta \"URL Rewrite\". Patikrinkite ir įjunkite \"URL Rewrite\" modulį IIS serveryje",
+      "default": "API Klaida: EspoCRM API nepasiekiamas. <br> Galima problema: neįgalintas Rewrite Module. Patikrinkite ir įjunkite \"Rewrite Module\" savo serveryje (pvz., Mod_rewrite \"Apache\") ir .htaccess palaikymą."
     }
   }
 }

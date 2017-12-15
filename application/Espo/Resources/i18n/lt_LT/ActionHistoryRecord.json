@@ -8,6 +8,7 @@
     "ipAddress": "IP Adresss"
   },
   "links": {
+    "authToken": "Autentikavimo žymė",
     "user": "Vartotojas",
     "target": "Tikslas"
   },
