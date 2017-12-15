@@ -112,15 +112,6 @@ class Unifier
      */
     protected function unifySingle($dirPath, $type, $recursively = false, $moduleName = '')
     {
-        if (empty($dirPath) || !file_exists($dirPath)) {
-            return false;
-        }
-
-        $fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
-
-        $dirName = $this->getFileManager()->getDirName($dirPath, false);
-        $defaultValues = $this->loadDefaultValues($dirName, $type);
-
         $content = [];
         $unsets = [];
 
@@ -128,6 +119,15 @@ class Unifier
             $content = (object) [];
             $unsets = (object) [];
         }
+
+        if (empty($dirPath) || !file_exists($dirPath)) {
+            return $content;
+        }
+
+        $fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
+
+        $dirName = $this->getFileManager()->getDirName($dirPath, false);
+        $defaultValues = $this->loadDefaultValues($dirName, $type);
 
         foreach ($fileList as $dirName => $fileName) {
             if (is_array($fileName)) { /*only first level of a sub directory*/
