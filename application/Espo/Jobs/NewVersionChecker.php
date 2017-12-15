@@ -35,7 +35,7 @@ class NewVersionChecker extends \Espo\Core\Jobs\Base
 {
     public function run()
     {
-        if (!$this->getConfig()->get('adminNotifications') || $this->getConfig()->get('adminNotificationNewVersionCheckerDisabled')) {
+        if (!$this->getConfig()->get('adminNotifications') || !$this->getConfig()->get('adminNotificationsNewVersion')) {
             return true;
         }
 
