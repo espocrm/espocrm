@@ -96,7 +96,11 @@ class Sender
             'connection_config' => array()
         );
         if ($params['auth']) {
-            $opts['connection_class'] = 'login';
+            if (!empty($params['smtpAuthMechanism'])) {
+                $opts['connection_class'] = $params['smtpAuthMechanism'];
+            } else {
+                $opts['connection_class'] = 'login';
+            }
             $opts['connection_config']['username'] = $params['username'];
             $opts['connection_config']['password'] = $params['password'];
         }
@@ -135,7 +139,7 @@ class Sender
             'connection_config' => array()
         );
         if ($config->get('smtpAuth')) {
-            $opts['connection_class'] = 'login';
+            $opts['connection_class'] = $config->get('smtpAuthMechanism', 'login');
             $opts['connection_config']['username'] = $config->get('smtpUsername');
             $opts['connection_config']['password'] = $config->get('smtpPassword');
         }

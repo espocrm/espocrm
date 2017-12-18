@@ -110,7 +110,7 @@ class Email extends \Espo\Core\Controllers\Record
             }
         }
 
-        return $this->getRecordService()->sendTestEmail($data);
+        return $this->getRecordService()->sendTestEmail(get_object_vars($data));
     }
 
     public function postActionMarkAsRead($params, $data, $request)
