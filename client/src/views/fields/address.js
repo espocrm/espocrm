@@ -353,7 +353,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             return this.model.getFieldParam(this.postalCodeField, 'required') ||
                    this.model.getFieldParam(this.streetField, 'required') ||
                    this.model.getFieldParam(this.stateField, 'required') ||
-                   this.model.getFieldParam(this.cityField, 'required');
+                   this.model.getFieldParam(this.cityField, 'required') ||
                    this.model.getFieldParam(this.countryField, 'required');
         },
 

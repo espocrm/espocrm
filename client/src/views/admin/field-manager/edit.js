@@ -95,6 +95,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.readOnlyControl();
             }, this);
 
+            var hasRequired = false;
+
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.isNew) {
                     this.type = model.getFieldType(this.field);
@@ -125,6 +127,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                     paramList.forEach(function (o) {
                         var item = o.name;
+                        if (item === 'required') {
+                            hasRequired = true;
+                        }
                         var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
                         if (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName)) {
                             return;
@@ -186,6 +191,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled'])
                             &&
                             !this.getMetadata().get(['fields', this.type, 'readOnly'])
+                            &&
+                            hasRequired
                         ) {
                             this.model.set('dynamicLogicRequired', this.getMetadata().get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']));
                             this.createFieldView(null, 'dynamicLogicRequired', null, {
@@ -278,7 +285,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         hideField: function (name) {
             var f = function () {
                 var view = this.getView(name)
-                console.log();
                 if (view) {
                     this.$el.find('.cell[data-name="'+name+'"]').addClass('hidden');
                     view.setDisabled();
