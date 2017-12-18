@@ -239,7 +239,7 @@ class Metadata
     public function getAllObjects($isJSON = false, $reload = false)
     {
         if (!isset($this->objData) || $reload) {
-            $this->objInit(true);
+            $this->objInit($reload);
         }
 
         if ($isJSON) {
@@ -251,27 +251,28 @@ class Metadata
 
     public function getAllForFrontend()
     {
-        $data = $this->getAll();
+        $data = $this->getAllObjects();
 
         foreach ($this->frontendHiddenPathList as $row) {
             $p =& $data;
             $path = [&$p];
             foreach ($row as $i => $item) {
-                if (!array_key_exists($item, $p)) break;
+                if (is_array($item)) break;
+                if (!property_exists($p, $item)) break;
                 if ($i == count($row) - 1) {
-                    unset($p[$item]);
+                    unset($p->$item);
                     $o =& $p;
                     for ($j = $i - 1; $j > 0; $j--) {
-                        if (is_array($o) && empty($o)) {
+                        if (is_object($o) && !count(get_object_vars($o))) {
                             $o =& $path[$j];
                             $k = $row[$j];
-                            unset($o[$k]);
+                            unset($o->$k);
                         } else {
                             break;
                         }
                     }
                 } else {
-                    $p =& $p[$item];
+                    $p =& $p->$item;
                     $path[] = &$p;
                 }
             }
