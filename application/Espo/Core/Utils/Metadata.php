@@ -155,8 +155,8 @@ class Metadata
             $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
         } else {
             $this->clearVars();
-            $this->data = $this->getUnifier()->unify('metadata', $this->paths, true);
-            $this->data = $this->addAdditionalFields($this->data);
+            $objData = $this->getAllObjects(false, $reload);
+            $this->data = Util::objectToArray($objData);
 
             if ($this->useCache) {
                 $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
@@ -206,7 +206,7 @@ class Metadata
     public function getAll($isJSON = false, $reload = false)
     {
         if ($reload) {
-            $this->init(true);
+            $this->init($reload);
         }
 
         if ($isJSON) {
@@ -280,37 +280,6 @@ class Metadata
         return $data;
     }
 
-    /**
-     * todo: move to a separate file
-     * Add additional fields defined from metadata -> fields
-     *
-     * @param array $data
-     */
-    protected function addAdditionalFields(array $data)
-    {
-        $dataCopy = $data;
-        $definitionList = $data['fields'];
-
-        foreach ($dataCopy['entityDefs'] as $entityName => $entityParams) {
-            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
-
-                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $fieldParams, $definitionList);
-                if (!empty($additionalFields)) {
-                    //merge or add to the end of data array
-                    foreach ($additionalFields as $subFieldName => $subFieldParams) {
-                        if (isset($entityParams['fields'][$subFieldName])) {
-                            $data['entityDefs'][$entityName]['fields'][$subFieldName] = Util::merge($subFieldParams, $entityParams['fields'][$subFieldName]);
-                        } else {
-                            $data['entityDefs'][$entityName]['fields'][$subFieldName] = $subFieldParams;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
     protected function addAdditionalFieldsObj($data)
     {
         if (!isset($data->entityDefs)) return $data;
@@ -319,6 +288,7 @@ class Metadata
             if (!isset($entityDefsItem->fields)) continue;
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), Util::objectToArray($data->fields));
+
                 if (!$additionalFields) continue;
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
                     if (isset($entityDefsItem->fields->$subFieldName)) {
