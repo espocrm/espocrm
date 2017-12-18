@@ -139,10 +139,14 @@ class Helper
             return;
         }
 
-        $fieldType = $fieldParams['type'];
-        $fieldDefinition = isset($definitionList[$fieldType]) ? $definitionList[$fieldType] : $this->getMetadata()->get('fields.'.$fieldType);
+        if (!isset($definitionList)) {
+            $definitionList = $this->getMetadata()->get('fields');
+        }
 
-        if (!empty($fieldDefinition['fields']) && is_array($fieldDefinition['fields'])) {
+        $fieldType = $fieldParams['type'];
+        $fieldDefinition = isset($definitionList[$fieldType]) ? $definitionList[$fieldType] : null;
+
+        if (isset($fieldDefinition) && !empty($fieldDefinition['fields']) && is_array($fieldDefinition['fields'])) {
 
             $copiedParams = array_intersect_key($fieldParams, array_flip($this->copiedDefParams));
 
