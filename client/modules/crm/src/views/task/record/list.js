@@ -51,8 +51,7 @@ Espo.define('crm:views/task/record/list', 'views/record/list', function (Dep) {
 
             this.notify('Saving...');
             model.save();
-
-        },
+        }
 
     });
 

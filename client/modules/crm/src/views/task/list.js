@@ -24,34 +24,12 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
-    
-Espo.define('Crm:Views.Task.List', 'Views.List', function (Dep) {
+ ************************************************************************/
+
+Espo.define('crm:views/task/list', 'views/list', function (Dep) {
 
     return Dep.extend({
-    
-        actionSetCompleted: function (data) {
-            var id = data.id;
-            if (!id) {
-                return;
-            }            
-            var model = this.collection.get(id);
-            if (!model) {
-                return;
-            }
-            
-            model.set('status', 'Completed');
-            
-            this.listenToOnce(model, 'sync', function () {
-                this.notify(false);
-                this.collection.fetch();
-            }, this);
-            
-            this.notify('Saving...');
-            model.save();        
-            
-        },
-    
+
     });
-    
+
 });
