@@ -30,28 +30,6 @@ Espo.define('crm:views/task/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        actionSetCompleted: function (data) {
-            if (data.isProcessed) return;
-
-            var id = data.id;
-            if (!id) {
-                return;
-            }
-            var model = this.collection.get(id);
-            if (!model) {
-                return;
-            }
-
-            model.set('status', 'Completed');
-
-            this.listenToOnce(model, 'sync', function () {
-                this.notify(false);
-                this.collection.fetch();
-            }, this);
-
-            this.notify('Saving...');
-            model.save();
-        }
     });
 
 });

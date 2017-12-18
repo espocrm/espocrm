@@ -33,8 +33,6 @@ Espo.define('crm:views/task/record/list', 'views/record/list', function (Dep) {
         rowActionsView: 'crm:views/task/record/row-actions/default',
 
         actionSetCompleted: function (data) {
-            data.isProcessed = true;
-
             var id = data.id;
             if (!id) {
                 return;
