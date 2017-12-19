@@ -34,7 +34,8 @@ Espo.define('views/admin/index', 'view', function (Dep) {
         data: function () {
             return {
                 panelDataList: this.panelDataList,
-                iframeUrl: this.iframeUrl
+                iframeUrl: this.iframeUrl,
+                iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 874
             };
         },
 

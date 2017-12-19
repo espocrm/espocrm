@@ -1532,6 +1532,19 @@ pre > code {
     overflow: hidden;
 }
 
+.admin-panel-iframe-container {
+    > .section {
+        padding: @padding-base-vertical @padding-base-horizontal;
+        margin-bottom: @padding-base-vertical;
+    }
+
+    > .section:first-child > h4 {
+        margin-top: 0;
+    }
+
+    height: 100%;
+}
+
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: 5px;
