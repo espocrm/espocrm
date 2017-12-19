@@ -1254,8 +1254,12 @@ class Record extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function checkEntityForDuplicate(Entity $entity, $data)
+    public function checkEntityForDuplicate(Entity $entity, $data = null)
     {
+        if (!$data) {
+            $data = (object) [];
+        }
+
         $where = $this->getDuplicateWhereClause($entity, $data);
 
         if ($where) {
