@@ -30,23 +30,50 @@ Espo.define('views/email-account/record/detail', 'views/record/detail', function
 
     return Dep.extend({
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
+            this.setupFieldsBehaviour();
             this.initSslFieldListening();
             this.initSmtpFieldsControl();
 
-            if (this.wasFetched()) {
-                this.setFieldReadOnly('fetchSince');
-            }
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
             if (this.getUser().isAdmin()) {
                 this.setFieldNotReadOnly('assignedUser');
             } else {
                 this.setFieldReadOnly('assignedUser');
+            }
+        },
+
+        setupFieldsBehaviour: function () {
+            this.controlStatusField();
+            this.listenTo(this.model, 'change:status', function (model, value, o) {
+                if (o.ui) {
+                    this.controlStatusField();
+                }
+            }, this);
+            this.listenTo(this.model, 'change:useImap', function (model, value, o) {
+                if (o.ui) {
+                    this.controlStatusField();
+                }
+            }, this);
+
+            if (this.wasFetched()) {
+                this.setFieldReadOnly('fetchSince');
+            } else {
+                this.setFieldNotReadOnly('fetchSince');
+            }
+        },
+
+        controlStatusField: function () {
+            var list = ['username', 'port', 'host', 'monitoredFolders'];
+            if (this.model.get('status') === 'Active' && this.model.get('useImap')) {
+                list.forEach(function (item) {
+                    this.setFieldRequired(item);
+                }, this);
+            } else {
+                list.forEach(function (item) {
+                    this.setFieldNotRequired(item);
+                }, this);
             }
         },
 

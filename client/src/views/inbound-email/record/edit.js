@@ -60,9 +60,9 @@ Espo.define('views/inbound-email/record/edit', ['views/record/edit', 'views/inbo
             Detail.prototype.controlSmtpAuthField.call(this);
         },
 
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        wasFetched: function () {
+            Detail.prototype.wasFetched.call(this);
         }
+
     });
 });

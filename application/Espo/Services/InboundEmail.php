@@ -155,8 +155,8 @@ class InboundEmail extends \Espo\Services\Record
 
     public function fetchFromMailServer(Entity $emailAccount)
     {
-        if ($emailAccount->get('status') != 'Active') {
-            throw new Error();
+        if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
+            throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
         $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig());

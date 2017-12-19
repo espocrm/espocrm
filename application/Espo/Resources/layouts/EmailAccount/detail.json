@@ -15,6 +15,7 @@
     {
         "label":"IMAP",
         "rows":[
+            [{"name": "useImap"}, false],
             [
                 {"name":"host"},{"name":"ssl"}
             ],

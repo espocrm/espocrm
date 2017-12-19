@@ -36,13 +36,6 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
             this.initSslFieldListening();
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.wasFetched()) {
-                this.setFieldReadOnly('fetchSince');
-            }
-        },
 
         wasFetched: function () {
             if (!this.model.isNew()) {
@@ -119,7 +112,7 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
 
         controlStatusField: function () {
             var list = ['username', 'port', 'host', 'monitoredFolders'];
-            if (this.model.get('status') === 'Active') {
+            if (this.model.get('status') === 'Active' && this.model.get('useImap')) {
                 list.forEach(function (item) {
                     this.setFieldRequired(item);
                 }, this);
@@ -137,6 +130,17 @@ Espo.define('views/inbound-email/record/detail', 'views/record/detail', function
                     this.controlStatusField();
                 }
             }, this);
+            this.listenTo(this.model, 'change:useImap', function (model, value, o) {
+                if (o.ui) {
+                    this.controlStatusField();
+                }
+            }, this);
+
+            if (this.wasFetched()) {
+                this.setFieldReadOnly('fetchSince');
+            } else {
+                this.setFieldNotReadOnly('fetchSince');
+            }
 
             this.initSmtpFieldsControl();
 

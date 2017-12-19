@@ -14,6 +14,7 @@
         "storeSentEmails": "Store Sent Emails",
         "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
         "emailFolder": "Put in Folder",
+        "useImap": "Fetch Emails",
         "useSmtp": "Use SMTP",
         "smtpHost": "SMTP Host",
         "smtpPort": "SMTP Port",

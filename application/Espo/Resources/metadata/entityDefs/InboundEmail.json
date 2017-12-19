@@ -74,6 +74,10 @@
             "type": "bool",
             "tooltip": true
         },
+        "useImap": {
+            "type": "bool",
+            "default": true
+        },
         "useSmtp": {
             "type": "bool"
         },

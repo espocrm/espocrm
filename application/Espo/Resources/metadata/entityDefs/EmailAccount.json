@@ -80,6 +80,10 @@
             "type": "link",
             "required": true
         },
+        "useImap": {
+            "type": "bool",
+            "default": true
+        },
         "useSmtp": {
             "type": "bool"
         },

@@ -61,7 +61,8 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
     public function prepare($scheduledJob, $executeTime)
     {
         $collection = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
-            'status' => 'Active'
+            'status' => 'Active',
+            'useImap' => true
         ))->find();
         foreach ($collection as $entity) {
             $running = $this->getEntityManager()->getRepository('Job')->where(array(

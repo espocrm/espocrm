@@ -36,7 +36,10 @@ class CheckInboundEmails extends \Espo\Core\Jobs\Base
     public function run()
     {
         $service = $this->getServiceFactory()->create('InboundEmail');
-        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array('status' => 'Active'))->find();
+        $collection = $this->getEntityManager()->getRepository('InboundEmail')->where(array(
+            'status' => 'Active',
+            'useImap' => true
+        ))->find();
         foreach ($collection as $entity) {
             try {
                 $service->fetchFromMailServer($entity);
