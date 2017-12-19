@@ -1,6 +1,7 @@
 [
-    {"name":"name","width":30,"link":true},
-    {"name":"host", "notSortable": true},
-    {"name":"status"},
-    {"name":"createCase", "notSortable": true}
+    {"name":"name","link":true},
+    {"name":"status", "width": 15},
+    {"name":"useImap", "width": 15},
+    {"name":"useSmtp", "width": 15},
+    {"name":"createCase", "width": 15}
 ]
