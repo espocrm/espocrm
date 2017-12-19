@@ -1,7 +1,7 @@
 <h4>{{translate 'Step 2' scope='Import'}}</h4>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><h5 class="panel-title">{{translate 'Field Mapping' scope='Import'}}</h5></div>
+        <div class="panel-heading"><h4 class="panel-title">{{translate 'Field Mapping' scope='Import'}}</h4></div>
         <div class="panel-body">
             <div id="mapping-container">
             </div>
@@ -9,7 +9,7 @@
     </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><h5 class="panel-title">{{translate 'Default Values' scope='Import'}}</h5></div>
+        <div class="panel-heading"><h4 class="panel-title">{{translate 'Default Values' scope='Import'}}</h4></div>
         <div class="panel-body">
             <div class="button-container">
                 <div class="btn-group">
