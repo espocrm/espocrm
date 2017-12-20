@@ -1545,6 +1545,15 @@ pre > code {
     height: 100%;
 }
 
+.sections-container {
+    > .section {
+        margin-bottom: 30px;
+    }
+    > .section:last-child {
+        margin-bottom: 0;
+    }
+}
+
 @media screen and (min-width: @screen-sm-min) {
     #global-search-panel {
         margin-top: 5px;
