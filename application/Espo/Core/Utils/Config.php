@@ -118,6 +118,32 @@ class Config
     }
 
     /**
+     * Whether parameter is set
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        $keys = explode('.', $name);
+
+        $lastBranch = $this->loadConfig();
+        foreach ($keys as $keyName) {
+            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
+                if (is_array($lastBranch)) {
+                    $lastBranch = $lastBranch[$keyName];
+                } else {
+                    $lastBranch = $lastBranch->$keyName;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Set an option to the config
      *
      * @param string $name
