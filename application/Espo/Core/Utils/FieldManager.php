@@ -258,6 +258,7 @@ class FieldManager
         }
 
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
+
         if (!empty($entityDefs)) {
             $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
             $metadataToBeSaved = true;
@@ -320,7 +321,6 @@ class FieldManager
             'dynamicLogic.fields.' . $name,
             'dynamicLogic.options.' . $name
         ]);
-
 
         $res = $this->getMetadata()->save();
         $this->deleteLabel($scope, $name);
@@ -487,10 +487,11 @@ class FieldManager
         $defs = array();
 
         $currentFieldDefs = (array) $this->getFieldDefs($scope, $fieldName);
-        $normalizedFieldDefs = Util::arrayDiff($currentFieldDefs, $fieldDefs);
-        if (!empty($normalizedFieldDefs)) {
+
+        $diffFieldDefs = $this->getDiffDefs($currentFieldDefs, $fieldDefs);
+        if (!empty($diffFieldDefs)) {
             $defs['fields'] = array(
-                $fieldName => $normalizedFieldDefs,
+                $fieldName => $diffFieldDefs,
             );
         }
 
@@ -510,6 +511,32 @@ class FieldManager
         }
 
         return $defs;
+    }
+
+    protected function getDiffDefs($defs, $newDefs)
+    {
+        $diff = array();
+
+        foreach ($newDefs as $optionName => $data) {
+            if (!array_key_exists($optionName, $defs)) {
+                $diff[$optionName] = $data;
+                continue;
+            }
+
+            if (is_object($data) || is_array($data)) {
+                $value = $this->getDiffDefs($defs[$optionName], $data);
+                if (!empty($value)) {
+                    $diff[$optionName] = $value;
+                }
+                continue;
+            }
+
+            if ($data !== $defs[$optionName]) {
+                $diff[$optionName] = $data;
+            }
+        }
+
+        return $diff;
     }
 
     /**
