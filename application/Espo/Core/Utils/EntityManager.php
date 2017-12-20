@@ -345,6 +345,12 @@ class EntityManager
         $res = $this->getMetadata()->delete('clientDefs', $name);
         $res = $this->getMetadata()->delete('scopes', $name);
 
+        foreach ($this->getMetadata()->get(['entityDefs', $name, 'links'], []) as $link => $item) {
+            try {
+                $this->deleteLink(['entity' => $name, 'link' => $link]);
+            } catch (\Exception $e) {}
+        }
+
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/{$name}.json");
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/scopes/{$name}.json");
@@ -736,7 +742,7 @@ class EntityManager
         $link = $params['link'];
 
         if (!$this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom")) {
-            throw new Error();
+            throw new Error("Could not delete link {$entity}.{$link}. Not isCustom.");
         }
 
         $entityForeign = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.entity");
