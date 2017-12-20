@@ -384,8 +384,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                             cell = {};
                             self.dataAttributeList.forEach(function (attr) {
                                 if (attr === 'customLabel') {
-                                    $(li).get(0).hasAttribute('custom-label');
-                                    cell[attr] = $(li).data('custom-label');
+                                    if ($(li).get(0).hasAttribute('data-custom-label')) {
+                                        cell[attr] = $(li).attr('data-custom-label');
+                                    }
                                     return;
                                 }
                                 var value = $(li).data(Espo.Utils.toDom(attr)) || null;
