@@ -330,7 +330,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('size', fileParams.size);
                         attachment.set('role', 'Attachment');
                         attachment.set('relatedType', this.model.name);
-                        attachment.set('file', e.target.result);
+                        attachment.set('file', result);
                         attachment.set('field', this.name);
 
                         attachment.save().then(function () {
