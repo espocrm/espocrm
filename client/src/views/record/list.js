@@ -951,6 +951,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         checkRecord: function (id, $target) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
+
+            if (!$target.size()) return;
+
             $target.get(0).checked = true;
 
             var index = this.checkedList.indexOf(id);
