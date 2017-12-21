@@ -284,10 +284,12 @@ class Metadata
     {
         if (!isset($data->entityDefs)) return $data;
 
+        $fieldDefinitionList = Util::objectToArray($data->fields);
+
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
             if (!isset($entityDefsItem->fields)) continue;
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), Util::objectToArray($data->fields));
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
 
                 if (!$additionalFields) continue;
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
@@ -345,13 +347,15 @@ class Metadata
         switch ($key1) {
             case 'entityDefs':
                 //unset related additional fields, e.g. a field with "address" type
+                $fieldDefinitionList = $this->get('fields');
+
                 $unsetList = $unsets;
                 foreach ($unsetList as $unsetItem) {
                     if (preg_match('/fields\.([^\.]+)/', $unsetItem, $matches) && isset($matches[1])) {
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath));
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath), $fieldDefinitionList);
                         if (is_array($additionalFields)) {
                             foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
                                 $unsets[] = 'fields.' . $additionalFieldName;
