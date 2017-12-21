@@ -133,14 +133,10 @@ class Helper
      *
      * @return array
      */
-    public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList = null)
+    public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList)
     {
-        if (empty($fieldParams['type'])) {
+        if (empty($fieldParams['type']) || empty($definitionList)) {
             return;
-        }
-
-        if (!isset($definitionList)) {
-            $definitionList = $this->getMetadata()->get('fields');
         }
 
         $fieldType = $fieldParams['type'];
