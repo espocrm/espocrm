@@ -98,6 +98,11 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             }
 
             this.applyCategoryToCollection();
+
+            this.listenTo(this.collection, 'sync', function (c, d, o) {
+                if (o.openCategory) return;
+                this.controlListVisibility();
+            }, this);
         },
 
         prepareCreateReturnDispatchParams: function (params) {
@@ -131,10 +136,14 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
             this.$nestedCategoriesContainer = this.$el.find('.nested-categories-container');
+            this.$listContainer = this.$el.find('.list-container');
 
+            if (!this.hasView('list')) {
+                this.loadList();
+            } else {
+                this.controlListVisibility();
+            }
             if (!this.categoriesDisabled && !this.hasView('categories')) {
                 this.loadCategories();
             }
@@ -158,6 +167,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.updateLastUrl();
 
             this.reRender();
+            this.$listContainer.empty();
 
             this.collection.fetch();
         },
@@ -176,6 +186,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.navigateToCurrentCategory();
 
             this.reRender();
+            this.$listContainer.empty();
 
             this.collection.fetch();
         },
@@ -213,7 +224,10 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.getView('nestedCategories').reRender();
             this.getView('nestedCategories').isLoading = false;
 
-            this.$el.find('.list-container').empty();
+            this.nestedCategoriesCollection.reset();
+            this.collection.reset();
+
+            this.$listContainer.empty();
 
             this.currentCategoryId = id;
             this.currentCategoryName = name || id;
@@ -222,13 +236,33 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             if (this.nestedCategoriesCollection) {
-                this.listenToOnce(this.nestedCategoriesCollection, 'sync', this.controlNestedCategoriesVisibility, this);
-                this.nestedCategoriesCollection.fetch();
+                Espo.Ui.notify(this.translate('loading', 'messages'));
+                Promise.all([
+                    this.nestedCategoriesCollection.fetch().then(function () {
+                        this.controlNestedCategoriesVisibility();
+                    }.bind(this)),
+                    this.collection.fetch({openCategory: true})
+                ]).then(function () {
+                    Espo.Ui.notify(false);
+                    this.controlListVisibility();
+                }.bind(this));
+            } else {
+                this.collection.fetch().then(function () {
+                    Espo.Ui.notify(false);
+                }.bind(this));
             }
+        },
 
-            this.collection.fetch().then(function () {
-                Espo.Ui.notify(false);
-            });
+        controlListVisibility: function () {
+            if (this.isExpanded) {
+                this.$listContainer.removeClass('hidden');
+                return;
+            }
+            if (!this.collection.models.length && this.nestedCategoriesCollection.models.length) {
+                this.$listContainer.addClass('hidden');
+            } else {
+                this.$listContainer.removeClass('hidden');
+            }
         },
 
         controlNestedCategoriesVisibility: function () {
@@ -282,11 +316,11 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
                 this.applyCategoryToNestedCategoriesCollection();
 
-                this.listenToOnce(collection, 'sync', function () {
+                collection.fetch().then(function () {
+                    this.controlListVisibility();
                     this.controlNestedCategoriesVisibility();
                     callback.call(this, collection);
-                }, this);
-                collection.fetch();
+                }.bind(this));
             }, this);
         },
 
