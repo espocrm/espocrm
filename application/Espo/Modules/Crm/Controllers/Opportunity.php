@@ -85,5 +85,23 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         return $this->getService('Opportunity')->reportSalesPipeline($dateFrom, $dateTo);
     }
+
+    public function postActionMassSetClosedLost($params, $data)
+    {
+        if (empty($data['ids']) && !is_array($data['ids'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->massSetClosedLost($data['ids']);
+    }
+
+    public function postActionMassSetClosedWon($params, $data)
+    {
+        if (empty($data['ids']) && !is_array($data['ids'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->massSetClosedWon($data['ids']);
+    }
 }
 

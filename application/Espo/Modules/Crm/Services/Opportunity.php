@@ -162,5 +162,29 @@ class Opportunity extends \Espo\Services\Record
         return $result;
     }
 
+    public function massSetClosedWon(array $ids)
+    {
+        foreach ($ids as $id) {
+            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            if ($entity && $this->getAcl()->check($entity, 'edit')) {
+                $entity->set('stage', 'Closed Won');
+                $this->getEntityManager()->saveEntity($entity);
+            }
+        }
+        return true;
+    }
+
+    public function massSetClosedLost(array $ids)
+    {
+        foreach ($ids as $id) {
+            $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
+            if ($entity && $this->getAcl()->check($entity, 'edit')) {
+                $entity->set('stage', 'Closed Lost');
+                $this->getEntityManager()->saveEntity($entity);
+            }
+        }
+        return true;
+    }
+
 }
 
