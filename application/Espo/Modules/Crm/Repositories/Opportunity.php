@@ -37,7 +37,7 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
     {
         if ($entity->isNew()) {
             if (!$entity->has('probability') && $entity->get('stage')) {
-                $probability = $this->getMetadata()->get('entityDefs.Opportunity.probabilityMap.' . $entity->get('stage'), 0);
+                $probability = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.probabilityMap.' . $entity->get('stage'), 0);
                 $entity->set('probability', $probability);
             }
         }
