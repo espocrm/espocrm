@@ -508,18 +508,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         foreach ($data as $key => $value) {
-            if (is_array($data->$key)) {
-                foreach ($data->$key as $i => $v) {
-                    $data->$key[$i] = $this->filterInputAttribute($i, $data->$key[$i]);
-                }
-            } else if ($data->$key instanceof \stdClass) {
-                $propertyList = get_object_vars($data->$key);
-                foreach ($propertyList as $property => $value) {
-                    $data->$key->$property = $this->filterInputAttribute($property, $data->$key->$property);
-                }
-            } else {
-                $data->$key = $this->filterInputAttribute($key, $data->$key);
-            }
+            $data->$key = $this->filterInputAttribute($key, $data->$key);
         }
 
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
