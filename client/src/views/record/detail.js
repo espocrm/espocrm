@@ -1237,13 +1237,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.returnUrl) {
                 url = this.returnUrl;
             } else {
-
                 if (after == 'delete') {
+                    url = this.options.rootUrl || '#' + this.scope;
+                    this.getRouter().navigate(url, {trigger: false});
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true
                     });
-                    url = this.options.rootUrl || '#' + this.scope;
-                    this.getRouter().navigate(url, {trigger: false});
                     return;
                 }
                 url = this.options.rootUrl || '#' + this.scope;
@@ -1267,4 +1266,3 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
     });
 
 });
-

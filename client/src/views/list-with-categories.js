@@ -100,7 +100,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             this.listenTo(this.collection, 'sync', function (c, d, o) {
-                if (o.openCategory) return;
+                if (o && o.openCategory) return;
                 this.controlListVisibility();
             }, this);
         },
