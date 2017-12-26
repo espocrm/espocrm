@@ -574,6 +574,11 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterCreateEntity($entity, $data);
             $this->afterCreateProcessDuplicating($entity, $data);
+
+            if ($this->getConfig()->get('apiAlwaysLoadAdditionalFields')) {
+                $this->loadAdditionalFields($entity);
+            }
+
             $this->prepareEntityForOutput($entity);
 
             $this->processActionHistoryRecord('create', $entity);
@@ -634,6 +639,11 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             $this->afterUpdateEntity($entity, $data);
+
+            if ($this->getConfig()->get('apiAlwaysLoadAdditionalFields')) {
+                $this->loadAdditionalFields($entity);
+            }
+
             $this->prepareEntityForOutput($entity);
 
             $this->processActionHistoryRecord('update', $entity);
