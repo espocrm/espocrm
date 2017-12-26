@@ -63,7 +63,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 {
                     name: 'update',
                     label: 'Update',
-                    style: 'danger'
+                    style: 'danger',
+                    disabled: true
                 },
                 {
                     name: 'cancel',
@@ -98,12 +99,10 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.fieldsToUpdate = [];
         },
 
-        afterRender: function () {
-            $(this.containerSelector + ' button[data-name="update"]').addClass('disabled');
-        },
+
 
         addField: function (name) {
-            $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
+            this.enableButton('update');
 
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
