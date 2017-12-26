@@ -180,10 +180,6 @@ class App extends \Espo\Core\Services\Base
         if ($postMaxSize > 0) {
             $maxSize = $postMaxSize;
         }
-        $uploadMax = $this->convertPHPSizeToBytes(ini_get('upload_max_filesize'));
-        if ($uploadMax > 0 && (!$maxSize || $uploadMax < $maxSize)) {
-            $maxSize = $uploadMax;
-        }
         $attachmentUploadMaxSize = $this->getConfig()->get('attachmentUploadMaxSize');
         if ($attachmentUploadMaxSize && (!$maxSize || $attachmentUploadMaxSize < $maxSize)) {
             $maxSize = $attachmentUploadMaxSize;
