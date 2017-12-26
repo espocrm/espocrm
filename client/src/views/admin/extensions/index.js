@@ -91,7 +91,7 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
 
                 this.wait(true);
                 this.listenToOnce(collection, 'sync', function () {
-                    this.createView('list', 'Extension.Record.List', {
+                    this.createView('list', 'views/extension/record/list', {
                         collection: collection,
                         el: this.options.el + ' > .list-container',
                     });
@@ -151,7 +151,7 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
                     return;
                 }
                 this.notify(false);
-                this.createView('popup', 'Admin.Extensions.Ready', {
+                this.createView('popup', 'views/admin/extensions/ready', {
                     upgradeData: data
                 }, function (view) {
                     view.render();
@@ -191,7 +191,7 @@ Espo.define('views/admin/extensions/index', 'view', function (Dep) {
                 if (cache) {
                     cache.clear();
                 }
-                this.createView('popup', 'Admin.Extensions.Done', {
+                this.createView('popup', 'views/admin/extensions/done', {
                     version: version,
                     name: name
                 }, function (view) {
