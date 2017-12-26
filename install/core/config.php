@@ -46,6 +46,7 @@ return array(
 			'mbstring',
 			'imap',
 			'curl',
+            'xml',
 			'max_execution_time' => 180,
 			'max_input_time' => 180,
 			'memory_limit' => '256M',
