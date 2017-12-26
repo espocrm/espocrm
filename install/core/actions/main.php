@@ -30,17 +30,17 @@
 $config = $installer->getConfig();
 
 $fields = array(
-	'user-lang' => array(
-		'default' => $config->get('language', 'en_US'),
-	),
+    'user-lang' => array(
+        'default' => $config->get('language', 'en_US'),
+    ),
 );
 
 foreach ($fields as $fieldName => $field) {
-	if (isset($_SESSION['install'][$fieldName])) {
-		$fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
-	} else {
-		$fields[$fieldName]['value'] = (isset($field['default']))? $field['default'] : '';
-	}
+    if (isset($_SESSION['install'][$fieldName])) {
+        $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
+    } else {
+        $fields[$fieldName]['value'] = (isset($field['default']))? $field['default'] : '';
+    }
 }
 
 $smarty->assign('fields', $fields);

@@ -46,10 +46,10 @@ $dbConfig['dbHostName'] = $installData['host-name'];
 unset($dbConfig['dbPort'], $dbConfig['dbUserPass']);
 
 foreach ($dbConfig as $name => $value) {
-	$mysqlConfig[$name] = array(
-		'current' => $value,
-		'acceptable' => true,
-	);
+    $mysqlConfig[$name] = array(
+        'current' => $value,
+        'acceptable' => true,
+    );
 }
 
 $smarty->assign('mysqlConfig', $mysqlConfig);

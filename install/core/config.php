@@ -29,51 +29,51 @@
 
 return array(
 
-	'apiPath' => '/api/v1',
+    'apiPath' => '/api/v1',
 
-	'requirements' => array(
-		'phpVersion' => '5.6',
+    'requirements' => array(
+        'phpVersion' => '5.6',
 
-		'phpRequires' => array(
-			'JSON',
-			'openssl',
-			'pdo_mysql'
-		),
+        'phpRequires' => array(
+            'JSON',
+            'openssl',
+            'pdo_mysql'
+        ),
 
-		'phpRecommendations' => array(
-			'zip',
-			'gd',
-			'mbstring',
-			'imap',
-			'curl',
+        'phpRecommendations' => array(
+            'zip',
+            'gd',
+            'mbstring',
+            'imap',
+            'curl',
             'xml',
-			'max_execution_time' => 180,
-			'max_input_time' => 180,
-			'memory_limit' => '256M',
-			'post_max_size' => '20M',
-			'upload_max_filesize' => '20M',
-		),
+            'max_execution_time' => 180,
+            'max_input_time' => 180,
+            'memory_limit' => '256M',
+            'post_max_size' => '20M',
+            'upload_max_filesize' => '20M',
+        ),
 
-		'mysqlVersion' => '5.1',
-		'mysqlRequires' => array(
+        'mysqlVersion' => '5.1',
+        'mysqlRequires' => array(
 
-		),
+        ),
 
-		'mysqlRecommendations' => array(
+        'mysqlRecommendations' => array(
 
-		),
-	),
+        ),
+    ),
 
-	'rewriteRules' => array(
-		'APACHE1' => 'a2enmod rewrite
+    'rewriteRules' => array(
+        'APACHE1' => 'a2enmod rewrite
 service apache2 restart',
-		'APACHE2' => '&#60;Directory /PATH_TO_ESPO/&#62;
+        'APACHE2' => '&#60;Directory /PATH_TO_ESPO/&#62;
  AllowOverride <b>All</b>
 &#60;/Directory&#62;',
-		'APACHE3' => 'service apache2 restart',
-		'APACHE4' => '# RewriteBase /',
-		'APACHE5' => 'RewriteBase {ESPO_PATH}{API_PATH}',
-		'NGINX' => 'server {
+        'APACHE3' => 'service apache2 restart',
+        'APACHE4' => '# RewriteBase /',
+        'APACHE5' => 'RewriteBase {ESPO_PATH}{API_PATH}',
+        'NGINX' => 'server {
     # ...
 
     client_max_body_size 50M;
@@ -132,10 +132,10 @@ service apache2 restart',
         deny all;
     }
 }',
-	),
+    ),
 
-	'blog' => 'http://blog.espocrm.com',
-	'twitter' => 'https://twitter.com/espocrm',
-	'forum' => 'http://forum.espocrm.com',
+    'blog' => 'http://blog.espocrm.com',
+    'twitter' => 'https://twitter.com/espocrm',
+    'forum' => 'http://forum.espocrm.com',
 
 );
