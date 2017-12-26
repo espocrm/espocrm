@@ -297,6 +297,7 @@ var Espo = Espo || {classMap:{}};
                 type: 'GET',
                 cache: useCache,
                 dataType: 'text',
+                mimeType: 'text/plain',
                 local: true,
                 url: this.basePath + path,
                 success: function (response) {
