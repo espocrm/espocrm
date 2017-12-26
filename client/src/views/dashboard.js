@@ -170,6 +170,15 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 this.layoutReadOnly = true;
                 this.dashletsReadOnly = true;
             }
+
+            this.once('remove', function () {
+                if (this.$gridstack) {
+                    var gridStack = this.$gridstack.data('gridstack');
+                    if (gridStack) {
+                        gridStack.destroy();
+                    }
+                }
+            }, this);
         },
 
         afterRender: function () {
