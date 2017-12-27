@@ -84,7 +84,13 @@ body > footer {
 }
 
 #header .more-icon {
-  display: none;
+    display: inline;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .more-icon {
+        top: 3px;
+    }
 }
 
 body > #header ul.tabs span.short-label {
