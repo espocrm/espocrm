@@ -180,6 +180,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var hideOneTab = function () {
                     var count = $tabs.children().size();
+                    if (count <= 1) return;
                     var $one = $tabs.children().eq(count - 2);
                     $one.prependTo($more);
                 };
