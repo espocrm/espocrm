@@ -215,6 +215,20 @@ Espo.define(
                     }
                 }, this);
 
+                if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
+                    promiseList.push(
+                        new Promise(function (resolve) {
+                            (function check () {
+                                if (!this.themeManager.isApplied()) {
+                                    setTimeout(check.bind(this), 10);
+                                    return;
+                                }
+                                resolve();
+                            }).call(this);
+                        }.bind(this))
+                    );
+                }
+
                 Promise.all(promiseList).then(function () {
                     this.acl.implementationClassMap = aclImplementationClassMap;
                     this.initRouter();

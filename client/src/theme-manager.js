@@ -51,6 +51,16 @@ Espo.define('theme-manager', [], function () {
             return this.config.get('theme');
         },
 
+        getAppliedName: function () {
+            return window.getComputedStyle(document.body).getPropertyValue('--theme-name');
+        },
+
+        isApplied: function () {
+            var appliedName = this.getAppliedName();
+            if (!appliedName) return true;
+            return this.getName() === appliedName;
+        },
+
         getStylesheet: function () {
             var link = this.metadata.get('themes.' + this.getName() + '.stylesheet') || 'client/css/espo.css';
             if (this.config.get('cacheTimestamp')) {
