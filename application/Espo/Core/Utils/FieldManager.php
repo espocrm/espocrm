@@ -524,10 +524,7 @@ class FieldManager
             }
 
             if (is_object($data) || is_array($data)) {
-                $value = $this->getDiffDefs($defs[$optionName], $data);
-                if (!empty($value)) {
-                    $diff[$optionName] = $value;
-                }
+                $diff[$optionName] = $data;
                 continue;
             }
 
