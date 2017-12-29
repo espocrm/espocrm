@@ -66,7 +66,7 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             if (!data[this.name].length) {
                 data[this.name] = false;
                 data.translatedOptions = {};
-                return;
+                return data;
             }
 
             data.translatedOptions = {};
