@@ -43,6 +43,8 @@ var Espo = Espo || {classMap:{}};
         this.libsConfig = {};
 
         this.cacheTimestamp = cacheTimestamp || null;
+
+        this.loadingSubject = null;
     }
 
     _.extend(Espo.Loader.prototype, {
@@ -102,14 +104,21 @@ var Espo = Espo || {classMap:{}};
         },
 
         define: function (subject, dependency, callback) {
-            subject = this.normalizeClassName(subject);
+            if (subject) {
+                subject = this.normalizeClassName(subject);
+            }
+            if (this.loadingSubject) {
+                subject = subject || this.loadingSubject;
+                this.loadingSubject = null;
+            }
 
             var self = this;
             var proceed = function (relObj) {
                 var o = callback.apply(this, arguments);
+
                 if (!o) {
                     if (self.cache) {
-                        self.cache.clear('script', name);
+                        self.cache.clear('script', subject);
                     }
                     throw new Error("Could not load '" + subject + "'");
                 }
@@ -127,21 +136,27 @@ var Espo = Espo || {classMap:{}};
         },
 
         require: function (subject, callback, errorCallback) {
+            var list;
             if (Object.prototype.toString.call(subject) === '[object Array]') {
-                var list = subject;
+                list = subject;
                 list.forEach(function (item, i) {
                     list[i] = this.normalizeClassName(list[i]);
                 }, this);
-            } else {
+            } else if (subject) {
                 subject = this.normalizeClassName(subject);
-                this.load(subject, callback, errorCallback);
-                return;
+                list = [subject];
+            } else {
+                list = [];
             }
             var totalCount = list.length;
-            var readyCount = 0;
-            var loaded = {};
 
-            if (list.length) {
+            if (totalCount === 1) {
+                this.load(list[0], callback, errorCallback);
+                return;
+            }
+            else if (totalCount) {
+                var readyCount = 0;
+                var loaded = {};
                 list.forEach(function (name) {
                     this.load(name, function (c) {
                         loaded[name] = c;
@@ -155,7 +170,8 @@ var Espo = Espo || {classMap:{}};
                         }
                     });
                 }, this);
-            } else {
+            }
+            else {
                 callback.apply(this);
             }
         },
@@ -257,6 +273,9 @@ var Espo = Espo || {classMap:{}};
             if (this.cache) {
                 var cached = this.cache.get(type, name);
                 if (cached) {
+                    if (type == 'class') {
+                        this.loadingSubject = name;
+                    }
                     if (dataType == 'script') {
                         this._execute(cached);
                     }
@@ -307,22 +326,27 @@ var Espo = Espo || {classMap:{}};
 
                     this._addLoadCallback(name, callback);
 
+                    if (type == 'class') {
+                        this.loadingSubject = name;
+                    }
+
                     if (dataType == 'script') {
                         this._execute(response);
                     }
 
+                    var data;
                     if (type == 'class') {
-                        var c = this._getClass(name);
-                        if (c && typeof c === 'function') {
-                            this._executeLoadCallback(name, c);
+                        data = this._getClass(name);
+                        if (data && typeof data === 'function') {
+                            this._executeLoadCallback(name, data);
                         }
                     } else {
-                        var d = response;
+                        data = response;
                         if (typeof fetchObject == 'function') {
-                            d = fetchObject(realName, response);
+                            data = fetchObject(realName, response);
                         }
-                        this.dataLoaded[name] = d;
-                        this._executeLoadCallback(name, d);
+                        this.dataLoaded[name] = data;
+                        this._executeLoadCallback(name, data);
                     }
                     return;
                 }.bind(this),
@@ -384,15 +408,31 @@ var Espo = Espo || {classMap:{}};
     });
 
     Espo.loader = new Espo.Loader();
-    Espo.require = function (subject, callback, context, errorCallback) {
+
+    root.require = Espo.require = function (subject, callback, context, errorCallback) {
         if (context) {
             callback = callback.bind(context);
         }
         Espo.loader.require(subject, callback, errorCallback);
     }
-    Espo.define = function (subject, dependency, callback) {
+
+    root.define = Espo.define = function (arg1, arg2, arg3) {
+        var subject = null;
+        var dependency = null;
+        var callback = null;
+        if (typeof arg1 === 'function') {
+            callback = arg1;
+        } else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
+            dependency = arg1;
+            callback = arg2;
+        } else {
+            subject = arg1;
+            dependency = arg2;
+            callback = arg3;
+        }
         Espo.loader.define(subject, dependency, callback);
     }
+
     Espo.loadLib = function (url, callback) {
         Espo.loader.loadLib(url, callback);
     }
