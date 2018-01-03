@@ -47,9 +47,11 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
 
     public function afterSave(Entity $entity, array $options = array())
     {
-        $amountConverted = $entity->get('amountConverted');
-        $probability = $entity->get('probability');
-        $amountWeightedConverted = round($amountConverted * $probability / 100, 2);
-        $entity->set('amountWeightedConverted', $amountWeightedConverted);
+        if ($entity->isAttributeChanged('amount') || $entity->isAttributeChanged('probability')) {
+            $amountConverted = $entity->get('amountConverted');
+            $probability = $entity->get('probability');
+            $amountWeightedConverted = round($amountConverted * $probability / 100, 2);
+            $entity->set('amountWeightedConverted', $amountWeightedConverted);
+        }
     }
 }
