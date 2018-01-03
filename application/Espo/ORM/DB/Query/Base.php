@@ -86,6 +86,7 @@ abstract class Base
         'WEEK',
         'WEEK_0',
         'WEEK_1',
+        'DAYOFMONTH',
         'DAYOFWEEK',
         'DAYOFWEEK_NUMBER',
         'MONTH_NUMBER',
@@ -254,7 +255,7 @@ abstract class Base
                 $function = 'MONTH';
                 break;
             case 'DATE_NUMBER':
-                $function = 'DATE';
+                $function = 'DAYOFMONTH';
                 break;
             case 'YEAR_NUMBER':
                 $function = 'YEAR';
