@@ -589,7 +589,7 @@ class Record extends \Espo\Core\Services\Base
         unset($data->deleted);
 
         if (empty($id)) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         $this->filterInput($data);
@@ -716,7 +716,7 @@ class Record extends \Espo\Core\Services\Base
     public function deleteEntity($id)
     {
         if (empty($id)) {
-            throw BadRequest();
+            throw new BadRequest();
         }
 
         $entity = $this->getRepository()->get($id);
