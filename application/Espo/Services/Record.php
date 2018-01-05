@@ -1490,7 +1490,7 @@ class Record extends \Espo\Core\Services\Base
                 case 'jsonArray':
                     $value = $entity->get($attribute);
                     if (is_array($value)) {
-                        return implode(',', $value);
+                        return \Espo\Core\Utils\Json::encode($value);
                     } else {
                         return null;
                     }
