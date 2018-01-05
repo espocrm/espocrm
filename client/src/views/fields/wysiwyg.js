@@ -153,7 +153,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     var linkElement = documentElement.createElement('link');
                     linkElement.type = 'text/css';
                     linkElement.rel = 'stylesheet';
-                    linkElement.href = this.getBasePath() + 'client/css/iframe.css';
+                    linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
 
                     var body = this.sanitizeHtml(this.model.get(this.name) || '');
                     documentElement.write(body);

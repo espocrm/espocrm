@@ -41,6 +41,40 @@ module.exports = function (grunt) {
         'client/src/utils.js'
     ];
 
+    var themeList = [
+        'Espo',
+        'EspoRtl',
+        'EspoVertical',
+        'Hazyblue',
+        'HazyblueVertical',
+        'Sakura',
+        'SakuraVertical',
+        'Violet',
+        'VioletVertical'
+    ];
+
+    function camelCaseToHyphen (string){
+        if (string == null) {
+            return string;
+        }
+        return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
+
+    var lessData = {};
+    themeList.forEach(function (theme) {
+        var name = camelCaseToHyphen(theme);
+        var files = {};
+        files['client/css/espo/'+name+'.css'] = 'frontend/less/'+name+'/main.less';
+        files['client/css/espo/'+name+'-iframe.css'] = 'frontend/less/'+name+'/iframe/main.less';
+        var o = {
+            options: {
+                yuicompress: true,
+            },
+            files: files
+        };
+        lessData[theme] = o;
+    });
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -59,89 +93,7 @@ module.exports = function (grunt) {
             start: ['build/*'],
             final: ['build/tmp'],
         },
-        less: {
-            espo: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/espo.css': 'frontend/less/espo/main.less',
-                }
-            },
-            espoVertical: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/espo-vertical.css': 'frontend/less/espo-vertical/main.less',
-                }
-            },
-            espoRtl: {
-                options: {
-                    yuicompress: true
-                },
-                files: {
-                    'client/css/espo-rtl.css': 'frontend/less/espo-rtl/main.less'
-                }
-            },
-            hazyblueVertical: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/hazyblue-vertical.css': 'frontend/less/hazyblue-vertical/main.less',
-                }
-            },
-            hazyblue: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/hazyblue.css': 'frontend/less/hazyblue/main.less',
-                }
-            },
-            sakura: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/sakura.css': 'frontend/less/sakura/main.less',
-                }
-            },
-            sakuraVertical: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/sakura-vertical.css': 'frontend/less/sakura-vertical/main.less',
-                }
-            },
-            violet: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/violet.css': 'frontend/less/violet/main.less',
-                }
-            },
-            violetVertical: {
-                options: {
-                    yuicompress: true,
-                },
-                files: {
-                    'client/css/violet-vertical.css': 'frontend/less/violet-vertical/main.less',
-                }
-            }
-        },
-        cssmin: {
-            minify: {
-                files: {
-                    'build/tmp/client/css/espo.css': [
-                        'client/css/espo.css',
-                    ]
-                }
-            },
-        },
+        less: lessData,
         uglify: {
             options: {
                 mangle: false,
@@ -167,10 +119,6 @@ module.exports = function (grunt) {
                     'custom/**'
                 ],
                 dest: 'build/tmp/client',
-            },
-            frontendHtml: {
-                src: 'frontend/reset.html',
-                dest: 'build/tmp/reset.html'
             },
             frontendLib: {
                 expand: true,
@@ -311,10 +259,8 @@ module.exports = function (grunt) {
         'clean:start',
         'mkdir:tmp',
         'less',
-        'cssmin',
         'uglify',
         'copy:frontendFolders',
-        'copy:frontendHtml',
         'copy:frontendLib',
         'copy:backend',
         'replace',

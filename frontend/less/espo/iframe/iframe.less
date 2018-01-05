@@ -1,0 +1,60 @@
+
+body, table {
+    font-size: @font-size-base;
+    font-family: 'Open Sans';
+    color: @text-color;
+}
+
+body {
+    margin: 0;
+}
+
+@font-face {
+     font-family: Open Sans;
+     src: url('../../fonts/open-sans-regular.eot?') format('eot'),
+          url('../../fonts/open-sans-regular.woff') format('woff'),
+          url('../../fonts/open-sans-regular.ttf')  format('truetype'),
+          url('../../fonts/open-sans-regular.svg#svgFontName') format('svg');
+}
+
+a {
+    color: @link-color;
+    text-decoration: none;
+}
+
+table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: #e8eced;
+    border-spacing: 0;
+}
+
+.table {
+    width: 100%;
+}
+
+.table-bordered {
+    border: 1px solid @default-border-color;
+}
+
+.table-bordered>thead>tr>th,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td {
+    border: 1px solid @default-border-color;
+}
+
+.table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
+    padding: 8px;
+    line-height: 1.36;
+    vertical-align: top;
+    border-top: 1px solid @default-border-color;
+}

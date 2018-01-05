@@ -1,5 +1,6 @@
 {
-    "stylesheet": "client/css/espo-vertical.css",
+    "stylesheet": "client/css/espo/espo-vertical.css",
+    "stylesheetIframe": "client/css/espo/espo-vertical-iframe.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,

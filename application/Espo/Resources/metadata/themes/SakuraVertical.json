@@ -1,5 +1,6 @@
 {
-    "stylesheet": "client/css/sakura-vertical.css",
+    "stylesheet": "client/css/espo/sakura-vertical.css",
+    "stylesheetIframe": "client/css/espo/sakura-vertical-iframe.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,

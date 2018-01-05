@@ -1,5 +1,6 @@
 {
-    "stylesheet": "client/css/sakura.css",
+    "stylesheet": "client/css/espo/sakura.css",
+    "stylesheetIframe": "client/css/espo/sakura-iframe.css",
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "navbarHeight": 44,

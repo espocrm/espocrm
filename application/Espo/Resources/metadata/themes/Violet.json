@@ -1,5 +1,6 @@
 {
-    "stylesheet": "client/css/violet.css",
+    "stylesheet": "client/css/espo/violet.css",
+    "stylesheetIframe": "client/css/espo/violet-iframe.css",
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "navbarHeight": 44,

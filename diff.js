@@ -76,15 +76,9 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
 
     fileList.push('client/espo.min.js');
 
-    fileList.push('client/css/espo.css');
-    fileList.push('client/css/espo-vertical.css');
-    fileList.push('client/css/sakura.css');
-    fileList.push('client/css/sakura-vertical.css');
-    fileList.push('client/css/violet.css');
-    fileList.push('client/css/violet-vertical.css');
-    fileList.push('client/css/hazyblue.css');
-    fileList.push('client/css/hazyblue-vertical.css');
-    fileList.push('client/css/espo-rtl.css');
+    fs.readdirSync('client/css/espo/').forEach(function (file) {
+        fileList.push('client/css/espo/' + file);
+    });
 
     fs.writeFileSync(diffFilePath, fileList.join('\n'));
 

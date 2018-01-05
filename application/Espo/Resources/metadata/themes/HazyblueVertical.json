@@ -1,5 +1,6 @@
 {
-    "stylesheet": "client/css/hazyblue-vertical.css",
+    "stylesheet": "client/css/espo/hazyblue-vertical.css",
+    "stylesheetIframe": "client/css/espo/hazyblue-vertical-iframe.css",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 65,
     "recordTopButtonsStickTop": 61,
