@@ -41,24 +41,19 @@ module.exports = function (grunt) {
         'client/src/utils.js'
     ];
 
-    var themeList = [
-        'Espo',
-        'EspoRtl',
-        'EspoVertical',
-        'Hazyblue',
-        'HazyblueVertical',
-        'Sakura',
-        'SakuraVertical',
-        'Violet',
-        'VioletVertical'
-    ];
-
     function camelCaseToHyphen (string){
         if (string == null) {
             return string;
         }
         return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
+
+    var fs = require('fs');
+
+    var themeList = [];
+    fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
+        themeList.push(file.substr(0, file.length - 5));
+    });
 
     var lessData = {};
     themeList.forEach(function (theme) {
