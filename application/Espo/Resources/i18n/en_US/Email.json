@@ -45,7 +45,8 @@
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
         "assignedUsers": "Assigned Users",
-        "sentBy": "Sent By"
+        "sentBy": "Sent By",
+        "attachments": "Attachments"
     },
     "options": {
         "status": {
