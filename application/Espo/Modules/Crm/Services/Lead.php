@@ -48,11 +48,10 @@ class Lead extends \Espo\Core\Templates\Services\Person
         return $this->getInjection('container')->get('fieldManager');
     }
 
-    public function afterCreate(Entity $entity, array $data = array())
+    protected function afterCreateEntity(Entity $entity, $data)
     {
-        parent::afterCreate($entity, $data);
-        if (!empty($data['emailId'])) {
-            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+        if (!empty($data->emailId)) {
+            $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
             if ($email && !$email->get('parentId')) {
                 $email->set(array(
                     'parentType' => 'Lead',

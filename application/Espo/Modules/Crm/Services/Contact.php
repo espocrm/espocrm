@@ -43,11 +43,10 @@ class Contact extends \Espo\Core\Templates\Services\Person
         'title'
     ];
 
-    public function afterCreate(Entity $entity, array $data = array())
+    protected function afterCreateEntity(Entity $entity, $data)
     {
-        parent::afterCreate($entity, $data);
-        if (!empty($data['emailId'])) {
-            $email = $this->getEntityManager()->getEntity('Email', $data['emailId']);
+        if (!empty($data->emailId)) {
+            $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
             if ($email && !$email->get('parentId')) {
                 if ($this->getConfig()->get('b2cMode')) {
                     $email->set(array(

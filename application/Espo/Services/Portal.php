@@ -47,9 +47,8 @@ class Portal extends Record
         $this->loadUrlField($entity);
     }
 
-    protected function afterUpdate(Entity $entity, array $data = array())
+    protected function afterUpdateEntity(Entity $entity, $data)
     {
-        parent::afterUpdate($entity, $data);
         $this->loadUrlField($entity);
     }
 
