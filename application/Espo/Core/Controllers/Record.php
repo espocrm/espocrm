@@ -450,7 +450,7 @@ class Record extends Base
         }
         $targetId = $data->targetId;
         $sourceIds = $data->sourceIds;
-        $attributes = get_object_vars($data->attributes);
+        $attributes = $data->attributes;
 
         if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();

@@ -1513,7 +1513,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function merge($id, array $sourceIdList = array(), array $attributes = array())
+    public function merge($id, array $sourceIdList = array(), $attributes)
     {
         if (empty($id)) {
             throw new Error();
@@ -1634,18 +1634,18 @@ class Record extends \Espo\Core\Services\Base
                 $o = (object) [];
                 $o->emailAddress = $emailAddress->get('name');
                 $o->primary = false;
-                if (empty($attributes['emailAddress'])) {
+                if (empty($attributes->emailAddress)) {
                     if ($i === 0) {
                         $o->primary = true;
                     }
                 } else {
-                    $o->primary = $o->emailAddress === $attributes['emailAddress'];
+                    $o->primary = $o->emailAddress === $attributes->emailAddress;
                 }
                 $o->optOut = $emailAddress->get('optOut');
                 $o->invalid = $emailAddress->get('invalid');
                 $emailAddressData[] = $o;
             }
-            $attributes['emailAddressData'] = $emailAddressData;
+            $attributes->emailAddressData = $emailAddressData;
         }
 
         if ($hasPhoneNumber) {
@@ -1654,17 +1654,17 @@ class Record extends \Espo\Core\Services\Base
                 $o = (object) [];
                 $o->phoneNumber = $phoneNumber->get('name');
                 $o->primary = false;
-                if (empty($attributes['phoneNumber'])) {
+                if (empty($attributes->phoneNumber)) {
                     if ($i === 0) {
                         $o->primary = true;
                     }
                 } else {
-                    $o->primary = $o->phoneNumber === $attributes['phoneNumber'];
+                    $o->primary = $o->phoneNumber === $attributes->phoneNumber;
                 }
                 $o->type = $phoneNumber->get('type');
                 $phoneNumberData[] = $o;
             }
-            $attributes['phoneNumberData'] = $phoneNumberData;
+            $attributes->phoneNumberData = $phoneNumberData;
         }
 
         $entity->set($attributes);
