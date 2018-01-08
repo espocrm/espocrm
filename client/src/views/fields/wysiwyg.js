@@ -96,6 +96,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             });
         },
 
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+
+            data.useIframe = this.useIframe;
+            data.isPlain = this.model.has('isHtml') && !this.model.get('isHtml');
+
+            return data;
+        },
+
         getValueForDisplay: function () {
             var value = Dep.prototype.getValueForDisplay.call(this);
             return this.sanitizeHtml(value);
@@ -137,46 +146,50 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             if (this.mode == 'detail') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
-                    this.$el.find('iframe').removeClass('hidden');
+                    if (!this.useIframe) {
+                        this.$element = this.$el.find('.html-container');
+                    } else {
+                        this.$el.find('iframe').removeClass('hidden');
 
-                    var $iframe = this.$el.find('iframe');
+                        var $iframe = this.$el.find('iframe');
 
-                    var iframeElement = this.iframe = $iframe.get(0);
-                    if (!iframeElement) return;
+                        var iframeElement = this.iframe = $iframe.get(0);
+                        if (!iframeElement) return;
 
-                    $iframe.load(function () {
-                        $iframe.contents().find('a').attr('target', '_blank');
-                    });
-
-                    var documentElement = iframeElement.contentWindow.document;
-
-                    var linkElement = documentElement.createElement('link');
-                    linkElement.type = 'text/css';
-                    linkElement.rel = 'stylesheet';
-                    linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
-
-                    var body = this.sanitizeHtml(this.model.get(this.name) || '');
-                    documentElement.write(body);
-                    documentElement.close();
-
-                    iframeElement.contentWindow.document.head.appendChild(linkElement);
-
-                    var processHeight = function () {
-                        var $body = $iframe.contents().find('html body');
-                        var height = $body.height();
-                        if (height === 0) {
-                            height = $body.children(0).height() + 100;
-                        }
-                        height += 30;
-                        iframeElement.style.height = height + 'px';
-                    };
-
-                    setTimeout(function () {
-                        processHeight();
                         $iframe.load(function () {
-                            processHeight();
+                            $iframe.contents().find('a').attr('target', '_blank');
                         });
-                    }, 50);
+
+                        var documentElement = iframeElement.contentWindow.document;
+
+                        var linkElement = documentElement.createElement('link');
+                        linkElement.type = 'text/css';
+                        linkElement.rel = 'stylesheet';
+                        linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
+
+                        var body = this.sanitizeHtml(this.model.get(this.name) || '');
+                        documentElement.write(body);
+                        documentElement.close();
+
+                        iframeElement.contentWindow.document.head.appendChild(linkElement);
+
+                        var processHeight = function () {
+                            var $body = $iframe.contents().find('html body');
+                            var height = $body.height();
+                            if (height === 0) {
+                                height = $body.children(0).height() + 100;
+                            }
+                            height += 30;
+                            iframeElement.style.height = height + 'px';
+                        };
+
+                        setTimeout(function () {
+                            processHeight();
+                            $iframe.load(function () {
+                                processHeight();
+                            });
+                        }, 50);
+                    }
 
                 } else {
                     this.$el.find('.plain').removeClass('hidden');

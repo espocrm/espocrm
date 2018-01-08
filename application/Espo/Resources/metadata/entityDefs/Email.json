@@ -160,7 +160,8 @@
         },
         "body": {
             "type": "wysiwyg",
-            "seeMoreDisabled": true
+            "seeMoreDisabled": true,
+            "view": "views/email/fields/body"
         },
         "isHtml": {
             "type": "bool",
