@@ -1531,12 +1531,11 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $this->filterInput($attributes);
+
         $entity->set($attributes);
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
         }
-
-        $pdo = $this->getEntityManager()->getPDO();
 
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
@@ -1546,6 +1545,8 @@ class Record extends \Espo\Core\Services\Base
                 throw new Forbidden();
             }
         }
+
+        $this->beforeMerge($entity, $sourceList, $attributes);
 
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
 
@@ -1574,6 +1575,8 @@ class Record extends \Espo\Core\Services\Base
                 $emailAddressToRelateList[] = $emailAddress;
             }
         }
+
+        $pdo = $this->getEntityManager()->getPDO();
 
         foreach ($sourceList as $source) {
             $sql = "
@@ -1627,7 +1630,6 @@ class Record extends \Espo\Core\Services\Base
             $this->getEntityManager()->removeEntity($source);
         }
 
-
         if ($hasEmailAddress) {
             $emailAddressData = [];
             foreach ($emailAddressToRelateList as $i => $emailAddress) {
@@ -1670,7 +1672,17 @@ class Record extends \Espo\Core\Services\Base
         $entity->set($attributes);
         $repository->save($entity);
 
+        $this->afterMerge($entity, $sourceList, $attributes);
+
         return true;
+    }
+
+    protected function beforeMerge(Entity $entity, array $sourceList, $attributes)
+    {
+    }
+
+    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
+    {
     }
 
     protected function findLinkedEntitiesFollowers($id, $params)
