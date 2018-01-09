@@ -40,6 +40,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         rowsDefault: 15,
 
+        seeMoreDisabled: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
