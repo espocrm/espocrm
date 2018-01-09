@@ -74,7 +74,10 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateCoreField()
     {
-        return;
+        $this->objects['language']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue('Name'));
 
         $this->objects['metadata']
             ->expects($this->once())
@@ -86,9 +89,51 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->will($this->returnValue(true));
 
+        $existData = array(
+            "type" => "varchar",
+            "maxLength" => 50,
+            "label" => "Name",
+        );
+
         $data = array(
             "type" => "varchar",
-            "maxLength" => "50",
+            "maxLength" => 100,
+            "label" => "Modified Name",
+        );
+
+        $map = array(
+            ['entityDefs.Account.fields.name', null, $existData],
+            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $existData['type']],
+            ['fields.varchar', null, null],
+            [['fields', 'varchar', 'hookClassName'], null, null],
+        );
+
+        $this->objects['metadata']
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap($map));
+
+        $this->object->update('Account', 'name', $data);
+    }
+
+    public function testUpdateCoreFieldWithNoChanges()
+    {
+        $this->objects['language']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue('Name'));
+
+        $this->objects['metadata']
+            ->expects($this->never())
+            ->method('set');
+
+        $this->objects['language']
+            ->expects($this->never())
+            ->method('save');
+
+        $data = array(
+            "type" => "varchar",
+            "maxLength" => 50,
             "label" => "Name",
         );
 
