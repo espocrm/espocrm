@@ -54,7 +54,7 @@ class Integration extends \Espo\Core\ORM\Entity
         return null;
     }
 
-    public function clear($name)
+    public function clear($name = null)
     {
         parent::clear($name);
 
