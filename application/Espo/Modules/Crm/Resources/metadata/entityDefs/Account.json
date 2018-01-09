@@ -195,6 +195,7 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
+            "exportDisabled": true,
             "entity": "TargetList"
         },
         "originalLead": {
