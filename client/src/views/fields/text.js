@@ -50,6 +50,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         rowsMin: 2,
 
+        seeMoreDisabled: false,
+
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         events: {
@@ -63,6 +65,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             Dep.prototype.setup.call(this);
             this.params.rows = this.params.rows || this.rowsDefault;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
+
+            this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
 
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
 
@@ -117,7 +121,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
 
-            if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText && !this.params.seeMoreDisabled) {
+            if (text && (this.mode == 'detail' || this.mode == 'list') && !this.seeMoreText && !this.seeMoreDisabled) {
                 var maxLength = this.detailMaxLength;
 
                 var isCut = false;

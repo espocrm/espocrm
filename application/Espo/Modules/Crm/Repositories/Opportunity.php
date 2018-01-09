@@ -47,6 +47,7 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
 
     public function afterSave(Entity $entity, array $options = array())
     {
+        parent::afterSave($entity, $options);
         if ($entity->isAttributeChanged('amount') || $entity->isAttributeChanged('probability')) {
             $amountConverted = $entity->get('amountConverted');
             $probability = $entity->get('probability');
