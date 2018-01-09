@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 class Integration extends \Espo\Core\ORM\Entity
 {
-    public function get($name)
+    public function get($name, $params = array())
     {
         if ($name == 'id') {
             return $this->id;
