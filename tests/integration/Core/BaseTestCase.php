@@ -29,7 +29,7 @@
 
 namespace tests\integration\Core;
 
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 {
     protected $espoTester;
 

@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
-class PasswordHashTest extends \PHPUnit_Framework_TestCase
+class PasswordHashTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
@@ -83,7 +83,7 @@ class PasswordHashTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSaltException()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->invokeMethod('getSalt');
     }

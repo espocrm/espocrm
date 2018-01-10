@@ -33,7 +33,7 @@ use tests\unit\ReflectionHelper,
     Espo\Core\ExtensionManager,
     Espo\Core\UpgradeManager;
 
-class ActionManagerTest extends \PHPUnit_Framework_TestCase
+class ActionManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
@@ -102,7 +102,7 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetObjectExtensionNotExists()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->object->setAction('CustomClass');
         $class = $this->reflection->invokeMethod('getObject');
@@ -128,7 +128,7 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetObjectUpgradeUninstall()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::UNINSTALL);
@@ -141,7 +141,7 @@ class ActionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetObjectUpgradeDelete()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->setProperty('managerName', 'Upgrade');
         $this->object->setAction(UpgradeManager::DELETE);

@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Json;
 
-class JsonTest extends \PHPUnit_Framework_TestCase
+class JsonTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

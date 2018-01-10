@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils\File;
 
 use tests\unit\ReflectionHelper;
 
-class PermissionTest extends \PHPUnit_Framework_TestCase
+class PermissionTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

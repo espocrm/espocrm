@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Mail;
 use \Espo\Entities\Attachment;
 use \Espo\Entities\Email;
 
-class ImporterTest extends \PHPUnit_Framework_TestCase
+class ImporterTest extends \PHPUnit\Framework\TestCase
 {
     function setUp()
     {
@@ -125,7 +125,10 @@ class ImporterTest extends \PHPUnit_Framework_TestCase
 
     function testImport2()
     {
-        if (extension_loaded('mailparse')) return;
+        if (extension_loaded('mailparse')) {
+            $this->assertTrue(true);
+            return;
+        }
 
         $entityManager = $this->entityManager;
         $config = $this->config;

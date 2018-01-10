@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Formula;
 
 use \Espo\ORM\Entity;
 
-class FormulaTest extends \PHPUnit_Framework_TestCase
+class FormulaTest extends \PHPUnit\Framework\TestCase
 {
 
     protected function setUp()
@@ -307,6 +307,8 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             ->with('teams', '1');
 
         $this->formula->process($item, $this->entity);
+
+        $this->assertTrue(true);
     }
 
     function testRemoveLinkMultipleId()
@@ -339,6 +341,8 @@ class FormulaTest extends \PHPUnit_Framework_TestCase
             ->with('teams', '1');
 
         $this->formula->process($item, $this->entity);
+
+        $this->assertTrue(true);
     }
 
     function testAnd()

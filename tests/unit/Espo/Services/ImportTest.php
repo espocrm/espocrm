@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core;
 use tests\unit\ReflectionHelper;
 
 
-class ImportTest extends \PHPUnit_Framework_TestCase
+class ImportTest extends \PHPUnit\Framework\TestCase
 {
     protected $objects;
 
@@ -69,7 +69,7 @@ class ImportTest extends \PHPUnit_Framework_TestCase
 
     function testImportRow()
     {
-
+        $this->assertTrue(true);
     }
 }
 

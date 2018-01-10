@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Utils;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 
-class SystemTest extends \PHPUnit_Framework_TestCase
+class SystemTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

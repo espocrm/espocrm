@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
-class LanguageTest extends \PHPUnit_Framework_TestCase
+class LanguageTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
