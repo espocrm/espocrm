@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Cron;
 
 use tests\unit\ReflectionHelper;
 
-class ScheduledJobTest extends \PHPUnit_Framework_TestCase
+class ScheduledJobTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

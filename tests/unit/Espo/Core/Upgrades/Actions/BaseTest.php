@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Upgrades\Actions;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
@@ -111,7 +111,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateProcessIdWithExists()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $processId = $this->reflection->invokeMethod('createProcessId', array());
     }
@@ -126,7 +126,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProcessId()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->setProperty('processId', null);
         $this->reflection->invokeMethod('getProcessId');
@@ -134,7 +134,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testGetManifestIncorrect()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $manifest = '{
             "name": "Upgrade 1.0-b3 to 1.0-b4"
@@ -220,7 +220,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
             $currentVersion = $this->currentVersion;
         }
 
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
     }
@@ -260,7 +260,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckPackageTypeUpgrade()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Error');
+        $this->expectException('\Espo\Core\Exceptions\Error');
 
         $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );

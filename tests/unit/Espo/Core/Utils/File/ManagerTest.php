@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils\File;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
 
-class ManagerTest extends \PHPUnit_Framework_TestCase
+class ManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

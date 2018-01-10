@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Formula;
 
 use \Espo\ORM\Entity;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\SelectManagers;
 
 use \tests\unit\testData\Entities\Test2;
 
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

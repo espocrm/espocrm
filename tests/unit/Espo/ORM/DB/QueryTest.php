@@ -39,7 +39,7 @@ require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
 
-class QueryTest extends PHPUnit_Framework_TestCase
+class QueryTest extends \PHPUnit\Framework\TestCase
 {
     protected $query;
 
@@ -49,7 +49,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->pdo = $this->getMock('MockPDO');
+        $this->pdo = $this->createMock('MockPDO');
         $this->pdo
                 ->expects($this->any())
                 ->method('quote')

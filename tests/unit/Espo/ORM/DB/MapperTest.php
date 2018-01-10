@@ -40,7 +40,7 @@ require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
 
-class DBMapperTest extends PHPUnit_Framework_TestCase
+class DBMapperTest extends \PHPUnit\Framework\TestCase
 {
     protected $db;
     protected $pdo;
@@ -51,7 +51,7 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->pdo = $this->getMock('MockPDO');
+        $this->pdo = $this->createMock('MockPDO');
         $this->pdo
                 ->expects($this->any())
                 ->method('quote')
@@ -417,12 +417,6 @@ class DBMapperTest extends PHPUnit_Framework_TestCase
         $this->post->id = '1';
         $this->tag->id = '100';
         $this->db->unrelate($this->post, 'tags', $this->tag);
-    }
-
-
-    public function testAddRelation()
-    {
-        // @todo
     }
 
     public function testMax()
