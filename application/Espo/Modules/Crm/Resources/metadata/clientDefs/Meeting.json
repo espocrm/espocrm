@@ -21,7 +21,8 @@
                         "leads"
                     ]
                 },
-                "sticked": true
+                "sticked": true,
+                "isForm": true
             }
         ],
         "detailSmall":[
@@ -29,7 +30,8 @@
                 "name":"attendees",
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
-                "sticked": true
+                "sticked": true,
+                "isForm": true
             }
         ],
         "edit":[
@@ -37,7 +39,8 @@
                 "name":"attendees",
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
-                "sticked": true
+                "sticked": true,
+                "isForm": true
             }
         ],
         "editSmall":[
@@ -45,7 +48,8 @@
                 "name":"attendees",
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
-                "sticked": true
+                "sticked": true,
+                "isForm": true
             }
         ]
     },

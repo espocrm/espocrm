@@ -2,10 +2,6 @@
     border-radius: @button-radius;
 }
 
-.panel-heading {
-    padding: 6px 10px;
-}
-
 .panel-body {
     padding: @panel-padding;
     .clearfix();
@@ -70,10 +66,6 @@ blockquote {
 .table thead > tr > th {
     border-bottom: 1px solid @table-border-color;
     font-weight: normal;
-}
-
-.form-group {
-  margin-bottom: 12px;
 }
 
 .form-group.hidden-cell {
@@ -324,6 +316,10 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .field .link-container {
     margin-bottom: -1px;
+}
+
+.panel > .panel-body.panel-body-form {
+    padding-bottom: @panel-padding - @form-group-margin-bottom;
 }
 
 .panel-body .field > .link-container > .list-group-item {
@@ -1251,7 +1247,7 @@ table.table td.cell .complex-text {
 
 .popup-notification {
     width: 400px;
-    padding: 14px;
+    padding: @panel-padding;
     background-color: @panel-bg;
     border: 2px solid @main-gray;
     margin-top: 10px;

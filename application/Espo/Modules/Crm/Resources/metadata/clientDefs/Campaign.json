@@ -39,7 +39,8 @@
             "name":"statistics",
             "label":"Statistics",
             "view":"crm:views/campaign/record/panels/campaign-stats",
-            "hidden": false
+            "hidden": false,
+            "isForm": true
          }
       ]
     },
