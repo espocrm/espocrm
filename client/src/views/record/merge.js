@@ -52,9 +52,11 @@ Espo.define('views/record/merge', 'view', function (Dep) {
             }.bind(this));
             return {
                 rows: rows,
-                models: this.models,
+                modelList: this.models,
                 scope: this.scope,
-                width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10
+                hasCreatedAt: this.hasCreatedAt,
+                width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10,
+                dataList: this.getDataList()
             };
         },
 
@@ -172,7 +174,7 @@ Espo.define('views/record/merge', 'view', function (Dep) {
 
                     this.createView(model.id + '-' + field, viewName, {
                         model: model,
-                        el: '.merge .' + model.id + ' .field[data-name="' + field + '"]',
+                        el: '.merge [data-id="'+model.id+'"] .field[data-name="' + field + '"]',
                         defs: {
                             name: field,
                         },
@@ -182,8 +184,34 @@ Espo.define('views/record/merge', 'view', function (Dep) {
                 }.bind(this));
 
             }.bind(this));
+
+            this.hasCreatedAt = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'createdAt']);
+
+            if (this.hasCreatedAt) {
+                this.models.forEach(function (model) {
+                    this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
+                        model: model,
+                        el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
+                        defs: {
+                            name: 'createdAt',
+                        },
+                        mode: 'detail',
+                        readOnly: true,
+                    });
+                }, this);
+            }
+        },
+
+        getDataList: function () {
+            var dataList = [];
+            this.models.forEach(function (model, i) {
+                var o = {};
+                o.id = model.id;
+                o.name = Handlebars.Utils.escapeExpression(model.get('name'));
+                o.createdAtViewName = model.id + '-' + 'createdAt';
+                dataList.push(o);
+            }, this);
+            return dataList;
         },
     });
 });
-
-
