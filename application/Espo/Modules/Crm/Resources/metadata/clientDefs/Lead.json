@@ -36,7 +36,8 @@
                 "view":"crm:views/lead/record/panels/converted-to",
                 "notRefreshable":true,
                 "hidden":true,
-                "style":"success"
+                "style":"success",
+                "isForm": true
             },
             {
                 "name":"activities",
@@ -64,7 +65,8 @@
                 "view":"crm:views/lead/record/panels/converted-to",
                 "notRefreshable":true,
                 "hidden":true,
-                "style":"success"
+                "style":"success",
+                "isForm": true
             }
         ],
         "detailSmall":[
@@ -74,7 +76,8 @@
                 "view":"crm:views/lead/record/panels/converted-to",
                 "notRefreshable":true,
                 "hidden":true,
-                "style":"success"
+                "style":"success",
+                "isForm": true
             },
             {
                 "name":"activities",
@@ -102,7 +105,8 @@
                 "view":"crm:views/lead/record/panels/converted-to",
                 "notRefreshable":true,
                 "hidden":true,
-                "style":"success"
+                "style":"success",
+                "isForm": true
             }
         ]
     },

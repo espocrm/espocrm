@@ -18,22 +18,26 @@
       "detail": {
         "name": "default",
         "label": false,
-        "view": "views/user/record/panels/default-side"
+        "view": "views/user/record/panels/default-side",
+        "isForm": true
       },
       "detailSmall": {
         "name": "default",
         "label": false,
-        "view": "views/user/record/panels/default-side"
+        "view": "views/user/record/panels/default-side",
+        "isForm": true
       },
       "edit": {
         "name": "default",
         "label": false,
-        "view": "views/user/record/panels/default-side"
+        "view": "views/user/record/panels/default-side",
+        "isForm": true
       },
       "editSmall": {
         "name": "default",
         "label": false,
-        "view": "views/user/record/panels/default-side"
+        "view": "views/user/record/panels/default-side",
+        "isForm": true
       }
    },
    "defaultSidePanelFieldLists": {
