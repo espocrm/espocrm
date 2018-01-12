@@ -238,18 +238,20 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 }.bind(this);
 
-                var processUpdateWidth = function () {
+                var processUpdateWidth = function (isRecursive) {
                     if ($navbar.height() > navbarNeededHeight) {
                         updateWidth();
                         setTimeout(function () {
-                            processUpdateWidth();
+                            processUpdateWidth(true);
                         }, 200);
                     } else {
+                        if (!isRecursive) {
+                            setTimeout(function () {
+                                processUpdateWidth(true);
+                            }, 10);
+                        }
                         setTimeout(function () {
-                            processUpdateWidth();
-                        }, 10);
-                        setTimeout(function () {
-                            processUpdateWidth();
+                            processUpdateWidth(true);
                         }, 1000);
                     }
                 };
