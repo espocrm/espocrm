@@ -31,7 +31,20 @@ if (process.argv.length < 3) {
     throw new Error("No 'version from' passed");
 }
 
-var acceptedVersionName = process.argv[3] || versionFrom;
+var acceptedVersionName = versionFrom;
+
+var isDev = false;
+
+if (process.argv.length > 2) {
+    for (var i in process.argv) {
+        if (process.argv[i] === '--dev') {
+            isDev = true;
+        }
+        if (~process.argv[i].indexOf('--acceptedVersion=')) {
+            acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
+        }
+    }
+}
 
 var path = require('path');
 var fs = require('fs');
@@ -118,6 +131,10 @@ execute('git diff --name-only ' + versionFrom, function (stdout) {
                         versionList.push(tag);
                     }
                 });
+
+                if (isDev) {
+                    versionList = [];
+                }
 
                 var manifest = {
                     "name": "EspoCRM Upgrade "+acceptedVersionName+" to "+version,
