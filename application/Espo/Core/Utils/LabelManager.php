@@ -111,6 +111,28 @@ class LabelManager extends \Espo\Core\Injectable
             }
         }
 
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $item) {
+            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'options'])) continue;
+            $optionsData = array();
+            $optionList = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'options'], []);
+            if (!array_key_exists('options', $data)) {
+                $data['options'] = array();
+            }
+            if (!array_key_exists($field, $data['options'])) {
+                $data['options'][$field] = array();
+            }
+            foreach ($optionList as $option) {
+                if (empty($option)) continue;
+                $optionsData[$option] = $option;
+                if (array_key_exists($option, $data['options'][$field])) {
+                    if (!empty($data['options'][$field][$option])) {
+                        $optionsData[$option] = $data['options'][$field][$option];
+                    }
+                }
+            }
+            $data['options'][$field] = $optionsData;
+        }
+
         if ($scope === 'Global') {
             if (empty($data['scopeNames'])) {
                 $data['scopeNames'] = array();
