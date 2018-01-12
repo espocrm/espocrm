@@ -198,7 +198,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 $moreDd = $('#nav-more-tabs-dropdown');
                 $moreLi = $moreDd.closest('li');
 
-                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 546;
+                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 512;
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
