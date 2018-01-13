@@ -34,7 +34,7 @@
         </h4>
     </div>
     {{/if}}
-    <div class="panel-body" data-name="{{name}}">
+    <div class="panel-body{{#if isForm}} panel-body-form{{/if}}" data-name="{{name}}">
         {{{var name ../this}}}
     </div>
 </div>

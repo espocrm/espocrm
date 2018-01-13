@@ -119,7 +119,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
-                    this.showValidationMessage(msg, '.attachment-button label');
+                    var $target;
+                    if (this.isUploading) {
+                        $target = this.$el.find('.gray-box');
+                    } else {
+                        $target = this.$el.find('.attachment-button label');
+                    }
+
+                    this.showValidationMessage(msg, $target);
                     return true;
                 }
             }
@@ -312,6 +319,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 return;
             }
 
+            this.isUploading = true;
+
             this.getModelFactory().create('Attachment', function (attachment) {
                 var $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
@@ -334,6 +343,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('field', this.name);
 
                         attachment.save().then(function () {
+                            this.isUploading = false;
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');
                                 this.setAttachment(attachment);
@@ -342,6 +352,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                             $attachmentBox.remove();
                             this.$el.find('.uploading-message').remove();
                             this.$el.find('.attachment-button').removeClass('hidden');
+                            this.isUploading = false;
                         }.bind(this));
                     }.bind(this));
                 }.bind(this);

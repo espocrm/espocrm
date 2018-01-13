@@ -33,7 +33,7 @@ use tests\unit\ReflectionHelper;
 
 use \Espo\Entities\Email;
 
-class EmailTest extends \PHPUnit_Framework_TestCase
+class EmailTest extends \PHPUnit\Framework\TestCase
 {
     // TODO defs test helper
     protected $defs = array(

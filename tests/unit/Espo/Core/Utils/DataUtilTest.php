@@ -31,7 +31,7 @@ namespace tests\Espo\Core\Utils;
 
 use Espo\Core\Utils\DataUtil;
 
-class DataUtilTest extends \PHPUnit_Framework_TestCase
+class DataUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function testUnsetByKey1()
     {

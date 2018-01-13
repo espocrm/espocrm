@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Utils\File;
 use tests\unit\ReflectionHelper;
 
 
-class ClassParserTest extends \PHPUnit_Framework_TestCase
+class ClassParserTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

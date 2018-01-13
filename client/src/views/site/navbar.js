@@ -196,13 +196,14 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 44) + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
+                $moreLi = $moreDd.closest('li');
 
-                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 546;
+                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 512;
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
                     var windowWidth = window.innerWidth;
-                    var moreWidth = $moreDd.width();
+                    var moreWidth = $moreLi.width();
 
                     $more.children('li.not-in-more').each(function (i, li) {
                         unhideOneTab();
@@ -237,15 +238,20 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     }
                 }.bind(this);
 
-                var processUpdateWidth = function () {
+                var processUpdateWidth = function (isRecursive) {
                     if ($navbar.height() > navbarNeededHeight) {
                         updateWidth();
                         setTimeout(function () {
-                            processUpdateWidth();
+                            processUpdateWidth(true);
                         }, 200);
                     } else {
+                        if (!isRecursive) {
+                            setTimeout(function () {
+                                processUpdateWidth(true);
+                            }, 10);
+                        }
                         setTimeout(function () {
-                            processUpdateWidth();
+                            processUpdateWidth(true);
                         }, 1000);
                     }
                 };

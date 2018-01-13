@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Htmlizer;
 
-class HtmlizerTest extends \PHPUnit_Framework_TestCase
+class HtmlizerTest extends \PHPUnit\Framework\TestCase
 {
     protected $htmlizer;
 

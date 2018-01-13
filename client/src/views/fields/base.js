@@ -526,10 +526,17 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.trigger('inline-edit-on');
         },
 
-        showValidationMessage: function (message, selector) {
-            selector = selector || '.main-element';
+        showValidationMessage: function (message, target) {
+            var $el;
 
-            var $el = this.$el.find(selector);
+            target = target || '.main-element';
+
+            if (typeof target === 'string' || target instanceof String) {
+                $el = this.$el.find(target);
+            } else {
+                $el = $(target);
+            }
+
             if (!$el.size() && this.$element) {
                 $el = this.$element;
             }

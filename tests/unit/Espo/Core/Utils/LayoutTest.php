@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Utils;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
 
-class LayoutTest extends \PHPUnit_Framework_TestCase
+class LayoutTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

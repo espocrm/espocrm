@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core;
 use tests\unit\ReflectionHelper;
 
 
-class EntryPointManagerTest extends \PHPUnit_Framework_TestCase
+class EntryPointManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

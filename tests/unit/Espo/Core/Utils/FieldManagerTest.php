@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
-class FieldManagerTest extends \PHPUnit_Framework_TestCase
+class FieldManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
@@ -57,7 +57,7 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateExistingField()
     {
-        $this->setExpectedException('\Espo\Core\Exceptions\Conflict');
+        $this->expectException('\Espo\Core\Exceptions\Conflict');
 
         $data = array(
             "type" => "varchar",
@@ -256,13 +256,5 @@ class FieldManagerTest extends \PHPUnit_Framework_TestCase
             ),
         );
         $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array('CustomEntity', $input1, $input2)));
-    }
-
-    public function testDeleteTestFile()
-    {
-        $file = 'custom/Espo/Custom/Resources/metadata/entityDefs/CustomEntity.json';
-        if (file_exists($file)) {
-            @unlink($file);
-        }
     }
 }

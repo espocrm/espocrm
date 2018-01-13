@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Mail;
 
 use tests\unit\ReflectionHelper;
 
-class FiltersMatcherTest extends \PHPUnit_Framework_TestCase
+class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 

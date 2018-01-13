@@ -5,5 +5,5 @@
     <div class="html-container">{{{value}}}</div>
     {{/if}}
 {{else}}
-<div class="plain hidden">{{complexText value}}</div>
+<div class="plain complex-text hidden">{{complexText value}}</div>
 {{/unless}}

@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core;
 
 use tests\unit\ReflectionHelper;
 
-class CronManagerTest extends \PHPUnit_Framework_TestCase
+class CronManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
