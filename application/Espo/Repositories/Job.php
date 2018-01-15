@@ -50,7 +50,7 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('executeTime', date('Y-m-d H:i:s'));
         }
 
-        if (!$entity->has('attempts')) {
+        if (!$entity->has('attempts') && $entity->isNew()) {
             $attempts = $this->getConfig()->get('cron.attempts', 0);
             $entity->set('attempts', $attempts);
         }
