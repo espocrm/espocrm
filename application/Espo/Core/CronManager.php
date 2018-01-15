@@ -171,6 +171,7 @@ class CronManager
             $this->getEntityManager()->saveEntity($job);
 
             $isSuccess = true;
+            $skipLog = false;
 
             try {
                 if ($job->get('scheduledJobId')) {
@@ -180,7 +181,12 @@ class CronManager
                 }
             } catch (\Exception $e) {
                 $isSuccess = false;
-                $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
+                if ($e->getCode() === -1) {
+                    $job->set('attempts', 0);
+                    $skipLog = true;
+                } else {
+                    $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
+                }
             }
 
             $status = $isSuccess ? self::SUCCESS : self::FAILED;
@@ -188,7 +194,7 @@ class CronManager
             $job->set('status', $status);
             $this->getEntityManager()->saveEntity($job);
 
-            if ($job->get('scheduledJobId')) {
+            if ($job->get('scheduledJobId') && !$skipLog) {
                 $this->getCronScheduledJobUtil()->addLogRecord($job->get('scheduledJobId'), $status, null, $job->get('targetId'), $job->get('targetType'));
             }
         }

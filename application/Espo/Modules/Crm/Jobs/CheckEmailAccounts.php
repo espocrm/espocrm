@@ -43,11 +43,11 @@ class CheckEmailAccounts extends \Espo\Core\Jobs\Base
         $entity = $this->getEntityManager()->getEntity('EmailAccount', $targetId);
 
         if (!$entity) {
-            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount does not exist.");
+            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount does not exist.", -1);
         };
 
         if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount is not active.");
+            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount is not active.", -1);
         }
 
         try {
