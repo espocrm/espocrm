@@ -96,6 +96,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     this.$summernote.summernote('destroy');
                 }
             });
+
+            this.once('remove', function () {
+                $(window).off('resize.' + this.cid);
+            }.bind(this));
         },
 
         data: function () {
@@ -176,11 +180,13 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         iframeElement.contentWindow.document.head.appendChild(linkElement);
 
                         var processHeight = function () {
+                            iframeElement.style.height = '0px';
                             var $body = $iframe.contents().find('html body');
                             var height = $body.height();
                             if (height === 0) {
-                                height = $body.children(0).height() + 100;
+                                height = $body.children(0).height() += 100;
                             }
+
                             height += 30;
                             iframeElement.style.height = height + 'px';
                         };
@@ -191,6 +197,11 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 processHeight();
                             });
                         }, 50);
+
+                        $(window).off('resize.' + this.cid);
+                        $(window).on('resize.' + this.cid, function() {
+                            processHeight();
+                        }.bind(this));
                     }
 
                 } else {

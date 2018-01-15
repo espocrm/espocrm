@@ -25,7 +25,7 @@
                         {{#each ../list}}
                             <td>
                                 {{#if levelList}}
-                                <select name="{{name}}" class="form-control{{#ifNotEqual ../../../access 'enabled'}} hidden{{/ifNotEqual}}" data-scope="{{../../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}}>
+                                <select name="{{name}}" class="form-control{{#ifNotEqual ../../../access 'enabled'}} hidden{{/ifNotEqual}}" data-scope="{{../../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}} title="{{translate action scope='Role' category='actions'}}">
                                 {{options levelList level field='levelList' scope='Role'}}
                                 </select>
                                 {{/if}}
@@ -67,7 +67,7 @@
                         <td><b>{{translate name category='fields' scope=../name}}</b></td>
                         {{#each list}}
                         <td>
-                            <select name="field-{{../../name}}-{{../name}}" class="form-control" data-field="{{../name}}" data-scope="{{../../name}}" data-action="{{name}}">{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
+                            <select name="field-{{../../name}}-{{../name}}" class="form-control" data-field="{{../name}}" data-scope="{{../../name}}" data-action="{{name}}" title="{{translate name scope='Role' category='actions'}}">{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
                         </td>
                         {{/each}}
                         <td colspan="2">
