@@ -54,6 +54,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/gif',
         ],
 
+        validations: ['ready', 'required'],
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -341,6 +343,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 return;
             }
 
+            this.isUploading = true;
+
             this.getModelFactory().create('Attachment', function (model) {
                 var canceledList = [];
 
@@ -356,7 +360,13 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                         canceledList.push(attachment.cid);
                         totalCount--;
-                    });
+                        if (uploadedCount == totalCount) {
+                            this.isUploading = false;
+                            if (totalCount) {
+                                this.afterAttachmentsUploaded.call(this);
+                            }
+                        }
+                    }.bind(this));
 
                     var attachment = model.clone();
 
@@ -376,7 +386,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                 this.pushAttachment(attachment);
                                 $attachmentBox.attr('data-id', attachment.id);
                                 uploadedCount++;
-                                if (uploadedCount == totalCount) {
+                                if (uploadedCount == totalCount && this.isUploading) {
+                                    this.isUploading = false;
                                     this.afterAttachmentsUploaded.call(this);
                                 }
                             }
@@ -384,9 +395,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                             $attachmentBox.remove();
                             totalCount--;
                             if (!totalCount) {
+                                this.isUploading = false;
                                 this.$el.find('.uploading-message').remove();
                             }
-                            if (uploadedCount == totalCount) {
+                            if (uploadedCount == totalCount && this.isUploading) {
+                                this.isUploading = false;
                                 this.afterAttachmentsUploaded.call(this);
                             }
                         }.bind(this));
@@ -560,6 +573,14 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     this.showValidationMessage(msg, 'label');
                     return true;
                 }
+            }
+        },
+
+        validateReady: function () {
+            if (this.isUploading) {
+                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                this.showValidationMessage(msg, 'label');
+                return true;
             }
         },
 
