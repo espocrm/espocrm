@@ -1,5 +1,5 @@
 
-<input type="text" class="form-control" name="{{name}}Country" value="{{countryValue}}" placeholder="{{translate 'Country'}}">
+<input type="text" class="form-control auto-height" name="{{name}}Country" value="{{countryValue}}" placeholder="{{translate 'Country'}}">
 <div class="row">
     <div class="col-sm-4 col-xs-4">
         <input type="text" class="form-control" name="{{name}}PostalCode" value="{{postalCodeValue}}" placeholder="{{translate 'PostalCode'}}">
