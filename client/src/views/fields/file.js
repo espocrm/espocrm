@@ -52,6 +52,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         previewSize: 'small',
 
+        validations: ['ready', 'required'],
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -129,6 +131,15 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     this.showValidationMessage(msg, $target);
                     return true;
                 }
+            }
+        },
+
+        validateReady: function () {
+            if (this.isUploading) {
+                var $target = this.$el.find('.gray-box');
+                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                this.showValidationMessage(msg, $target);
+                return true;
             }
         },
 
@@ -329,6 +340,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                     isCanceled = true;
                     this.$el.find('.attachment-button').removeClass('hidden');
+                    this.isUploading = false;
                 }.bind(this));
 
                 var fileReader = new FileReader();
