@@ -83,8 +83,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             var clientHeight = this.$textarea.prop('clientHeight');
 
             if (clientHeight === lastHeight) return;
-
-            if (scrollHeight > clientHeight) {
+            if (scrollHeight > clientHeight + 1) {
                 this.$textarea.attr('rows', this.$textarea.prop('rows') + 1);
                 this.controlTextareaHeight(clientHeight);
             }

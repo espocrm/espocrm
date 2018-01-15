@@ -1,4 +1,4 @@
-<textarea class="form-control" name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}">{{streetValue}}</textarea>
+<textarea class="form-control auto-height" name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}">{{streetValue}}</textarea>
 <div class="row">
     <div class="col-sm-6 col-xs-6">
         <input type="text" class="form-control" name="{{name}}PostalCode" value="{{postalCodeValue}}" placeholder="{{translate 'PostalCode'}}">

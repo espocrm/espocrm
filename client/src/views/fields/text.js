@@ -156,7 +156,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
             if (clientHeight === lastHeight) return;
 
-            if (scrollHeight > clientHeight) {
+            if (scrollHeight > clientHeight + 1) {
                 var rows = this.$element.prop('rows');
 
                 if (this.params.rows && rows >= this.params.rows) return;

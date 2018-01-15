@@ -1,5 +1,5 @@
 
-<textarea class="form-control" name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}">{{streetValue}}</textarea>
+<textarea class="form-control auto-height" name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}">{{streetValue}}</textarea>
 <input type="text" class="form-control" name="{{name}}City" value="{{cityValue}}" placeholder="{{translate 'City'}}">
 <div class="row">
     <div class="col-sm-5 col-xs-5">
