@@ -76,7 +76,14 @@ Espo.define('cache', [], function () {
             this._checkType(type);
 
             var key = this._composeKey(type, name);
-            var stored = localStorage.getItem(key);
+
+            try {
+                var stored = localStorage.getItem(key);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+
             if (stored) {
                 var result = stored;
 
@@ -99,7 +106,11 @@ Espo.define('cache', [], function () {
             if (value instanceof Object || Array.isArray(value)) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
-            localStorage.setItem(key, value);
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {
+                console.error(error);
+            }
         },
 
         clear: function (type, name) {
