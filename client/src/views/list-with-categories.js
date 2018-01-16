@@ -258,7 +258,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                 this.$listContainer.removeClass('hidden');
                 return;
             }
-            if (!this.collection.models.length && this.nestedCategoriesCollection.models.length) {
+            if (!this.collection.models.length && this.nestedCategoriesCollection && this.nestedCategoriesCollection.models.length) {
                 this.$listContainer.addClass('hidden');
             } else {
                 this.$listContainer.removeClass('hidden');
