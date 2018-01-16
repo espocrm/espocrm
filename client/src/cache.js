@@ -28,7 +28,11 @@
 
 Espo.define('cache', [], function () {
 
-    var Cache = function () {
+    var Cache = function (cacheTimestamp) {
+        this.basePrefix = this.prefix;
+        if (cacheTimestamp) {
+            this.prefix =  this.basePrefix + '-' + cacheTimestamp;
+        }
         if (!this.get('app', 'timestamp')) {
             this.storeTimestamp();
         }
@@ -36,7 +40,7 @@ Espo.define('cache', [], function () {
 
     _.extend(Cache.prototype, {
 
-        _prefix: 'cache',
+        prefix: 'cache',
 
         handleActuality: function (cacheTimestamp) {
             var stored = parseInt(this.get('app', 'cacheTimestamp'));
@@ -58,25 +62,32 @@ Espo.define('cache', [], function () {
             this.set('app', 'timestamp', frontendCacheTimestamp);
         },
 
-        _composeFullPrefix: function (type) {
-            return this._prefix + '-' + type;
+        composeFullPrefix: function (type) {
+            return this.prefix + '-' + type;
         },
 
-        _composeKey: function (type, name) {
-            return this._composeFullPrefix(type) + '-' + name;
+        composeKey: function (type, name) {
+            return this.composeFullPrefix(type) + '-' + name;
         },
 
-        _checkType: function (type) {
+        checkType: function (type) {
             if (typeof type === 'undefined' && toString.call(type) != '[object String]') {
                 throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
             }
         },
 
         get: function (type, name) {
-            this._checkType(type);
+            this.checkType(type);
 
-            var key = this._composeKey(type, name);
-            var stored = localStorage.getItem(key);
+            var key = this.composeKey(type, name);
+
+            try {
+                var stored = localStorage.getItem(key);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+
             if (stored) {
                 var result = stored;
 
@@ -94,24 +105,28 @@ Espo.define('cache', [], function () {
         },
 
         set: function (type, name, value) {
-            this._checkType(type);
-            var key = this._composeKey(type, name);
+            this.checkType(type);
+            var key = this.composeKey(type, name);
             if (value instanceof Object || Array.isArray(value)) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
-            localStorage.setItem(key, value);
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {
+                console.error(error);
+            }
         },
 
         clear: function (type, name) {
             var reText;
             if (typeof type !== 'undefined') {
                 if (typeof name === 'undefined') {
-                    reText = '^' + this._composeFullPrefix(type);
+                    reText = '^' + this.composeFullPrefix(type);
                 } else {
-                    reText = '^' + this._composeKey(type, name);
+                    reText = '^' + this.composeKey(type, name);
                 }
             } else {
-                reText = '^' + this._prefix + '-';
+                reText = '^' + this.basePrefix + '-';
             }
             var re = new RegExp(reText);
             for (var i in localStorage) {
@@ -126,7 +141,3 @@ Espo.define('cache', [], function () {
     return Cache;
 
 });
-
-
-
-

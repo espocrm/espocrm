@@ -118,7 +118,7 @@ var Espo = Espo || {classMap:{}};
 
                 if (!o) {
                     if (self.cache) {
-                        self.cache.clear('script', subject);
+                        self.cache.clear('a', subject);
                     }
                     throw new Error("Could not load '" + subject + "'");
                 }
@@ -271,7 +271,7 @@ var Espo = Espo || {classMap:{}};
             }
 
             if (this.cache) {
-                var cached = this.cache.get(type, name);
+                var cached = this.cache.get('a', name);
                 if (cached) {
                     if (type == 'class') {
                         this.loadingSubject = name;
@@ -321,7 +321,7 @@ var Espo = Espo || {classMap:{}};
                 url: this.basePath + path,
                 success: function (response) {
                     if (this.cache) {
-                        this.cache.set(type, name, response);
+                        this.cache.set('a', name, response);
                     }
 
                     this._addLoadCallback(name, callback);
@@ -363,7 +363,7 @@ var Espo = Espo || {classMap:{}};
 
         loadLib: function (url, callback) {
             if (this.cache) {
-                var script = this.cache.get('script', url);
+                var script = this.cache.get('a', url);
                 if (script) {
                     this._execute(script);
                     if (typeof callback == 'function') {

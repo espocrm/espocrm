@@ -35,10 +35,41 @@ module.exports = function (grunt) {
         'client/lib/bootstrap.min.js',
         'client/lib/bootstrap-datepicker.js',
         'client/lib/bull.js',
+        'client/lib/marked.min.js',
+
         'client/src/namespace.js',
         'client/src/exceptions.js',
         'client/src/loader.js',
-        'client/src/utils.js'
+        'client/src/utils.js',
+
+        'client/src/acl.js',
+        'client/src/model.js',
+        'client/src/model-offline.js',
+        'client/src/ajax.js',
+        'client/src/controller.js',
+
+        'client/src/ui.js',
+        'client/src/acl-manager.js',
+        'client/src/cache.js',
+        'client/src/storage.js',
+        'client/src/models/settings.js',
+        'client/src/language.js',
+        'client/src/metadata.js',
+        'client/src/field-manager.js',
+        'client/src/models/user.js',
+        'client/src/models/preferences.js',
+        'client/src/model-factory.js',
+        'client/src/collection-factory.js',
+        'client/src/pre-loader.js',
+        'client/src/controllers/base.js',
+        'client/src/router.js',
+        'client/src/date-time.js',
+        'client/src/layout-manager.js',
+        'client/src/theme-manager.js',
+        'client/src/session-storage.js',
+        'client/src/view-helper.js',
+
+        'client/src/app.js'
     ];
 
     function camelCaseToHyphen (string){

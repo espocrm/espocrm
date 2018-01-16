@@ -6,10 +6,10 @@
 		"header",
 		"list",
 		"login",
-		"modals.edit",
-		"modals.select-records",
-		"site.header",
-		"site.navbar"
+		"modals/edit",
+		"modals/select-records",
+		"site/header",
+		"site/navbar"
 	],
 	"layoutTypes": [
 		"columns-2",
