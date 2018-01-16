@@ -33,35 +33,35 @@ Espo.define('storage', [], function () {
 
     _.extend(Storage.prototype, {
 
-        _prefix: 'espo',
+        prefix: 'espo',
 
         storageObject: localStorage,
 
-        _composeFullPrefix: function (type) {
-            return this._prefix + '-' + type;
+        composeFullPrefix: function (type) {
+            return this.prefix + '-' + type;
         },
 
-        _composeKey: function (type, name) {
-            return this._composeFullPrefix(type) + '-' + name;
+        composeKey: function (type, name) {
+            return this.composeFullPrefix(type) + '-' + name;
         },
 
-        _checkType: function (type) {
+        checkType: function (type) {
             if (typeof type === 'undefined' && toString.call(type) != '[object String]' || type == 'cache') {
                 throw new TypeError("Bad type \"" + type + "\" passed to Espo.Storage.");
             }
         },
 
         has: function (type, name) {
-            this._checkType(type);
-            var key = this._composeKey(type, name);
+            this.checkType(type);
+            var key = this.composeKey(type, name);
 
             return this.storageObject.getItem(key) !== null;
         },
 
         get: function (type, name) {
-            this._checkType(type);
+            this.checkType(type);
 
-            var key = this._composeKey(type, name);
+            var key = this.composeKey(type, name);
 
             var stored = this.storageObject.getItem(key);
             if (stored) {
@@ -80,9 +80,9 @@ Espo.define('storage', [], function () {
         },
 
         set: function (type, name, value) {
-            this._checkType(type);
+            this.checkType(type);
 
-            var key = this._composeKey(type, name);
+            var key = this.composeKey(type, name);
             if (value instanceof Object) {
                 value = JSON.stringify(value);
             }
@@ -93,12 +93,12 @@ Espo.define('storage', [], function () {
             var reText;
             if (typeof type !== 'undefined') {
                 if (typeof name === 'undefined') {
-                    reText = '^' + this._composeFullPrefix(type);
+                    reText = '^' + this.composeFullPrefix(type);
                 } else {
-                    reText = '^' + this._composeKey(type, name);
+                    reText = '^' + this.composeKey(type, name);
                 }
             } else {
-                reText = '^' + this._prefix + '-';
+                reText = '^' + this.prefix + '-';
             }
             var re = new RegExp(reText);
             for (var i in this.storageObject) {

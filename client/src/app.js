@@ -44,15 +44,37 @@ Espo.define(
         'model-factory',
         'collection-factory',
         'pre-loader',
-        'view-helper',
         'controllers/base',
         'router',
         'date-time',
         'layout-manager',
         'theme-manager',
-        'session-storage'
+        'session-storage',
+        'view-helper'
     ],
-    function (Ui, Utils, AclManager, Cache, Storage, Settings, Language, Metadata, FieldManager, User, Preferences, ModelFactory, CollectionFactory, PreLoader, ViewHelper, BaseController, Router, DateTime, LayoutManager, ThemeManager, SessionStorage) {
+    function (
+        Ui,
+        Utils,
+        AclManager,
+        Cache,
+        Storage,
+        Settings,
+        Language,
+        Metadata,
+        FieldManager,
+        User,
+        Preferences,
+        ModelFactory,
+        CollectionFactory,
+        PreLoader,
+        BaseController,
+        Router,
+        DateTime,
+        LayoutManager,
+        ThemeManager,
+        SessionStorage,
+        ViewHelper
+    ) {
 
     var App = function (options, callback) {
         var options = options || {};
@@ -71,7 +93,7 @@ Espo.define(
         this.controllers = {};
 
         if (this.useCache) {
-            this.cache = new Cache();
+            this.cache = new Cache(options.cacheTimestamp);
             if (options.cacheTimestamp) {
                 this.cache.handleActuality(options.cacheTimestamp);
             } else {
