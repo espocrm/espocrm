@@ -184,7 +184,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             var $body = $iframe.contents().find('html body');
                             var height = $body.height();
                             if (height === 0) {
-                                height = $body.children(0).height() += 100;
+                                height = $body.children(0).height() + 100;
                             }
 
                             height += 30;
