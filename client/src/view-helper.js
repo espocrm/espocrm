@@ -52,7 +52,8 @@ Espo.define('view-helper', ['lib!client/lib/marked.min.js'], function () {
         ];
 
         marked.setOptions({
-            breaks: true
+            breaks: true,
+            tables: false
         });
     }
 
