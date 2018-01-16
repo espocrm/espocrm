@@ -542,29 +542,31 @@ class Record extends \Espo\Core\Services\Base
 
     public function populateDefaults(Entity $entity, $data)
     {
-        $forbiddenFieldList = null;
-        if ($entity->hasAttribute('assignedUserId')) {
-            $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-            if (in_array('assignedUser', $forbiddenFieldList)) {
-                $entity->set('assignedUserId', $this->getUser()->id);
-                $entity->set('assignedUserName', $this->getUser()->get('name'));
-            }
-        }
-
-        if ($entity->hasLinkMultipleField('teams')) {
-            if (is_null($forbiddenFieldList)) {
+        if (!$this->getUser()->isPortal()) {
+            $forbiddenFieldList = null;
+            if ($entity->hasAttribute('assignedUserId')) {
                 $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+                if (in_array('assignedUser', $forbiddenFieldList)) {
+                    $entity->set('assignedUserId', $this->getUser()->id);
+                    $entity->set('assignedUserName', $this->getUser()->get('name'));
+                }
             }
-            if (in_array('teams', $forbiddenFieldList)) {
-                if ($this->getUser()->get('defaultTeamId')) {
-                    $defaultTeamId = $this->getUser()->get('defaultTeamId');
-                    $entity->addLinkMultipleId('teams', $defaultTeamId);
-                    $teamsNames = $entity->get('teamsNames');
-                    if (!$teamsNames || !is_object($teamsNames)) {
-                        $teamsNames = (object) [];
+
+            if ($entity->hasLinkMultipleField('teams')) {
+                if (is_null($forbiddenFieldList)) {
+                    $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+                }
+                if (in_array('teams', $forbiddenFieldList)) {
+                    if ($this->getUser()->get('defaultTeamId')) {
+                        $defaultTeamId = $this->getUser()->get('defaultTeamId');
+                        $entity->addLinkMultipleId('teams', $defaultTeamId);
+                        $teamsNames = $entity->get('teamsNames');
+                        if (!$teamsNames || !is_object($teamsNames)) {
+                            $teamsNames = (object) [];
+                        }
+                        $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
+                        $entity->set('teamsNames', $teamsNames);
                     }
-                    $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
-                    $entity->set('teamsNames', $teamsNames);
                 }
             }
         }
