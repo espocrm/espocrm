@@ -109,12 +109,15 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.loadSearchData();
 
             if (this.presetName) {
-                var hasPresetListed = this.presetFilterList.find(function (item) {
+                var hasPresetListed = false;
+                for (var i in this.presetFilterList) {
+                    var item = this.presetFilterList[i] || {};
                     var name = (typeof item === 'string') ? item : item.name;
                     if (name === this.presetName) {
-                        return true;
+                        hasPresetListed = true;
+                        break;
                     }
-                }, this);
+                }
                 if (!hasPresetListed) {
                     this.presetFilterList.push(this.presetName);
                 }

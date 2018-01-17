@@ -32,6 +32,7 @@ table {
 
 .table {
     width: 100%;
+    border-collapse: collapse;
 }
 
 .table-bordered {
@@ -53,8 +54,8 @@ table {
 .table>thead>tr>td,
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
-    padding: 8px;
-    line-height: 1.36;
+    padding: @table-cell-padding;
+    line-height: @line-height-base;
     vertical-align: top;
     border-top: 1px solid @default-border-color;
 }
