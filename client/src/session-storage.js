@@ -33,27 +33,37 @@ Espo.define('session-storage', 'storage', function (Dep) {
         storageObject: sessionStorage,
 
         get: function (name) {
-            var stored = this.storageObject.getItem(name);
+            try {
+                var stored = this.storageObject.getItem(name);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+
             if (stored) {
-                var str = stored;
-                if (stored[0] == "{" || stored[0] == "[") {
+                var result = stored;
+                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
+                    var jsonString = stored.substr(9);
                     try {
-                        str = JSON.parse(stored);
+                        result = JSON.parse(jsonString);
                     } catch (error) {
-                        str = stored;
+                        result = stored;
                     }
-                    stored = str;
                 }
-                return stored;
+                return result;
             }
             return null;
         },
 
         set: function (name, value) {
-            if (value instanceof Object) {
-                value = JSON.stringify(value);
+            if (value instanceof Object || Array.isArray(value)) {
+                value = '__JSON__:' + JSON.stringify(value);
             }
-            this.storageObject.setItem(name, value);
+            try {
+                this.storageObject.setItem(name, value);
+            } catch (error) {
+                console.error(error);
+            }
         },
 
         clear: function (name) {

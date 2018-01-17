@@ -63,18 +63,31 @@ Espo.define('storage', [], function () {
 
             var key = this.composeKey(type, name);
 
-            var stored = this.storageObject.getItem(key);
+            try {
+                var stored = this.storageObject.getItem(key);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+
             if (stored) {
-                var str = stored;
-                if (stored[0] == "{" || stored[0] == "[") {
+                var result = stored;
+
+                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
+                    var jsonString = stored.substr(9);
                     try {
-                        str = JSON.parse(stored);
+                        result = JSON.parse(jsonString);
                     } catch (error) {
-                        str = stored;
+                        result = stored;
                     }
-                    stored = str;
+                } else if (stored[0] == "{" || stored[0] == "[") { // for backward compatibility
+                    try {
+                        result = JSON.parse(stored);
+                    } catch (error) {
+                        result = stored;
+                    }
                 }
-                return stored;
+                return result;
             }
             return null;
         },
@@ -83,10 +96,15 @@ Espo.define('storage', [], function () {
             this.checkType(type);
 
             var key = this.composeKey(type, name);
-            if (value instanceof Object) {
-                value = JSON.stringify(value);
+            if (value instanceof Object || Array.isArray(value)) {
+                value = '__JSON__:' + JSON.stringify(value);
             }
-            this.storageObject.setItem(key, value);
+            try {
+                this.storageObject.setItem(key, value);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
         },
 
         clear: function (type, name) {
