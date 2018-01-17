@@ -1241,6 +1241,47 @@ table.table td.cell .complex-text {
     }
 }
 
+.field > .html-container {
+    h1:first-child,
+    h2:first-child,
+    h3:first-child,
+    h4:first-child,
+    h5:first-child,
+    h6:first-child,
+    > p:first-child,
+    > ul:first-child,
+    > ol:first-child,
+    > pre:first-child,
+    > blockquote:first-child {
+        margin-top: 0;
+    }
+
+    > p:last-child,
+    > ul:last-child,
+    > ol:last-child,
+    > pre:last-child,
+    > blockquote:last-child,
+    > table:last-child {
+        margin-bottom: 0;
+    }
+
+    ul > li {
+        list-style-type: disc;
+    }
+
+    ul, ol {
+        padding-left: 30px;
+    }
+
+    p,
+    ul,
+    ol,
+    pre,
+    blockquote {
+        margin-top: @line-height-computed / 2;
+    }
+}
+
 #popup-notifications-container {
     overflow-y: auto;
     overflow-x: hidden;

@@ -13,9 +13,17 @@
         "select": "crm:views/knowledge-base-article/modals/select-records"
     },
     "filterList": [
-        "published"
+        {
+            "name": "published",
+            "inPortalDisabled": true
+        }
     ],
-    "boolFilterList": ["onlyMy"],
+    "boolFilterList": [
+        {
+            "name": "onlyMy",
+            "inPortalDisabled": true
+        }
+    ],
     "relationshipPanels": {
         "cases": {
             "create": false,
@@ -43,6 +51,9 @@
         },
         "listPortal": {
             "type": "list"
+        },
+        "relationshipsPortal": {
+            "type": "relationships"
         }
     }
 }

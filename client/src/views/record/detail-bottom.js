@@ -40,6 +40,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
         readOnly: false,
 
+        portalLayoutDisabled: false,
+
         data: function () {
             return {
                 panelList: this.panelList,
@@ -198,6 +200,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             this.readOnly = this.options.readOnly || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 
+            this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
+
             this.recordViewObject = this.options.recordViewObject;
         },
 
@@ -254,7 +258,13 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         },
 
         loadRelationshipsLayout: function (callback) {
-            this._helper.layoutManager.get(this.model.name, 'relationships', function (layout) {
+            var layoutName = 'relationships';
+            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
+                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', layoutName + 'Portal'])) {
+                    layoutName += 'Portal';
+                }
+            }
+            this._helper.layoutManager.get(this.model.name, layoutName, function (layout) {
                 this.relationshipsLayout = layout;
                 callback.call(this);
             }.bind(this));

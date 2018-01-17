@@ -212,6 +212,8 @@ var Espo = Espo || {classMap:{}};
             var dataType, type, path, fetchObject;
             var realName = name;
 
+            var noAppCache = false;
+
             if (name.indexOf('lib!') === 0) {
                 dataType = 'script';
                 type = 'lib';
@@ -223,9 +225,11 @@ var Espo = Espo || {classMap:{}};
                 var exportsAs = realName;
 
                 if (realName in this.libsConfig) {
-                    path = this.libsConfig[realName].path || path;
-                    exportsTo = this.libsConfig[realName].exportsTo || exportsTo;
-                    exportsAs = this.libsConfig[realName].exportsAs || exportsAs;
+                    var libData = this.libsConfig[realName] || {};
+                    path = libData.path || path;
+                    exportsTo = libData.exportsTo || exportsTo;
+                    exportsAs = libData.exportsAs || exportsAs;
+                    noAppCache = libData.noAppCache || noAppCache;
                 }
 
                 fetchObject = function (name, d) {
@@ -320,7 +324,7 @@ var Espo = Espo || {classMap:{}};
                 local: true,
                 url: this.basePath + path,
                 success: function (response) {
-                    if (this.cache) {
+                    if (this.cache && !noAppCache) {
                         this.cache.set('a', name, response);
                     }
 

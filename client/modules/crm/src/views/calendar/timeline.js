@@ -454,6 +454,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 });
 
                 timeline.on('click', function (e) {
+                    if (this.blockClick) return;
                     if (e.item) {
                         var $item = this.$el.find('.timeline .vis-item[data-id="'+e.item+'"]');
                         var id = $item.attr('data-record-id');
@@ -468,6 +469,11 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 }.bind(this));
 
                 timeline.on('rangechanged', function (e) {
+                    e.skipClick = true;
+
+                    this.blockClick = true;
+                    setTimeout(function () {this.blockClick = false}.bind(this), 100);
+
                     this.start = moment(e.start);
                     this.end = moment(e.end);
 

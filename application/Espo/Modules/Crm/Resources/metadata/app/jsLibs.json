@@ -6,6 +6,7 @@
     },
     "vis": {
         "path": "client/modules/crm/lib/vis.min.js",
-        "exportsAs": "vis"
+        "exportsAs": "vis",
+        "noAppCache": true
     }
 }
