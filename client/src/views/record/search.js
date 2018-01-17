@@ -84,7 +84,17 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 return this.fieldList != null && this.moreFieldList != null;
             }.bind(this));
 
-            this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []);
+            this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []).filter(function (item) {
+                if (typeof item === 'string') return true;
+                item = item || {};
+                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
+                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+                return true;
+            }, this).map(function (item) {
+                if (typeof item === 'string') return item;
+                item = item || {};
+                return item.name;
+            }, this);
 
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
@@ -97,7 +107,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.tryReady();
             }.bind(this));
 
-            this.presetFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.filterList') || []);
+            this.presetFilterList = (Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.filterList') || [])).filter(function (item) {
+                if (typeof item === 'string') return true;
+                item = item || {};
+                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
+                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+                return true;
+            }, this);
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilterList.push(item);
             }, this);
