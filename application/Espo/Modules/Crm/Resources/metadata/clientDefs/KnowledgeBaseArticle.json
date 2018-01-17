@@ -51,6 +51,9 @@
         },
         "listPortal": {
             "type": "list"
+        },
+        "relationshipsPortal": {
+            "type": "relationships"
         }
     }
 }
