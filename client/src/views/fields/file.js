@@ -395,10 +395,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 preview = this.getEditPreview(name, type, id);
             }
 
-            var $att = $('<div>').css('display', 'inline-block')
-                                 .css('width', '100%')
-                                 .css('max-width', '300px')
-                                 .append(removeLink)
+            var $att = $('<div>').append(removeLink)
                                  .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
                                  .addClass('gray-box');
 

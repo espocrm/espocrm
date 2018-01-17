@@ -283,10 +283,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 preview = '<a href="'+this.getBasePath()+'?entryPoint=download&id='+id+'" target="_BLANK">' + preview + '</a>';
             }
 
-            var $att = $('<div>').css('display', 'inline-block')
-                                 .css('width', '100%')
-                                 .css('max-width', '300px')
-                                 .addClass('gray-box')
+            var $att = $('<div>').addClass('gray-box')
                                  .append(removeLink)
                                  .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'));
 

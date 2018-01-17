@@ -908,10 +908,39 @@ td.cell[data-name="buttons"] > .btn-group {
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 
+label.attach-file-label {
+    overflow: hidden;
+    width: 50px;
+    cursor: pointer;
+    margin-bottom: 0;
+
+    > span.btn {
+        cursor: pointer;
+        margin-bottom: 0;
+    }
+
+    > input.file {
+        opacity: 0;
+        width: 1px;
+    }
+}
+
+.attachment-upload > .attachment-control > .dropdown > .btn {
+    margin-bottom: 0;
+}
+
+.attachment-upload > .attachments > div:first-child {
+    margin-top: 2px;
+}
+
 .gray-box {
     background-color: @gray-lighter;
     margin: 0 5px 3px 0;
     padding: 2px 3px 2px 5px;
+
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
 }
 
 .gray-box .preview {
