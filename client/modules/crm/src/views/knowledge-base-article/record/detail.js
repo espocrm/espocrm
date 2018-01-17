@@ -33,6 +33,10 @@ Espo.define('crm:views/knowledge-base-article/record/detail', 'views/record/deta
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.getUser().isPortal()) {
+                this.sideDisabled = true;
+            }
+
             if (this.getAcl().checkScope('Email', 'create')) {
                 this.dropdownItemList.push({
                     'label': 'Send in Email',
