@@ -75,7 +75,13 @@ Espo.define('views/modals/select-records-with-categories', ['views/modals/select
                         buttonsDisabled: true,
                         checkboxes: false
                     }, function (view) {
-                        view.render();
+                        if (this.isRendered()) {
+                            view.render();
+                        } else {
+                            this.listenToOnce(this, 'after:render', function () {
+                                view.render();
+                            }, this);
+                        }
 
                         this.listenTo(view, 'select', function (model) {
                             this.currentCategoryId = null;
