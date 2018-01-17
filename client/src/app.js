@@ -106,6 +106,10 @@ Espo.define(
 
         this.loader.cache = this.cache;
 
+        if (this.useCache && !this.loader.cacheTimestamp && options.cacheTimestamp) {
+            this.loader.cacheTimestamp = options.cacheTimestamp;
+        }
+
         this.setupAjax();
 
         this.settings = new Settings(null);
