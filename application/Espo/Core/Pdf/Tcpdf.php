@@ -51,10 +51,17 @@ class Tcpdf extends \TCPDF
     }
 
     public function Footer() {
+        $breakMargin = $this->getBreakMargin();
+        $autoPageBreak = $this->AutoPageBreak;
+
+        $this->SetAutoPageBreak(false, 0);
+
         $this->SetY((-1) * $this->footerPosition);
 
         $html = str_replace('{pageNumber}', '{:pnp:}', $this->footerHtml);
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false, 'T');
+
+        $this->SetAutoPageBreak($autoPageBreak, $breakMargin);
     }
 
     protected function _putpages() {
