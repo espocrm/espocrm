@@ -21,10 +21,6 @@
             [
                 {"name":"theme"},
                 false
-            ],
-            [
-                {"name":"useCustomTabList"},
-                {"name":"tabList"}
             ]
         ]
     },

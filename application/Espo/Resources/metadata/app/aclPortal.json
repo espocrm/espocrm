@@ -63,7 +63,9 @@
                 "signature": false,
                 "followCreatedEntities": false,
                 "followEntityOnStreamPost": false,
-                "doNotFillAssignedUserIfNotRequired": false
+                "doNotFillAssignedUserIfNotRequired": false,
+                "useCustomTabList": false,
+                "tabList": false
             },
             "Call": {
                 "reminders": false
