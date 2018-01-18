@@ -424,8 +424,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 var itemsDataSet = new Vis.DataSet(eventList);
                 var timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
-                    start: this.start.format(this.getDateTime().internalDateTimeFormat),
-                    end: this.end.format(this.getDateTime().internalDateTimeFormat),
+                    start: this.start.toDate(),
+                    end: this.end.toDate(),
                     moment: function (date) {
                         var m = moment(date);
                         if (date && date.noTimeZone) {
