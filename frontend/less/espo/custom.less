@@ -80,6 +80,10 @@ blockquote {
     display: none !important;
 }
 
+.hidden-cell .inline-edit-link {
+    display: none !important;
+}
+
 .panel-group .panel + .panel {
     margin-top: 4px;
 }
@@ -468,7 +472,7 @@ table.table > tbody td > .list-row-buttons button {
 .list > table th input[type="checkbox"] {
     margin: 0;
     position: relative;
-    top: 3px !important;
+    top: 2px !important;
 }
 
 .list > table th span.caret {
@@ -508,6 +512,10 @@ select[multiple].input-sm {
 
 .input-group .form-control:focus {
     z-index: 3;
+}
+
+.panel-body > p:last-child {
+    margin-bottom: 0;
 }
 
 .panel-body > div > .list-expanded {
@@ -747,10 +755,12 @@ table.list th {
 
 .list .checkbox-dropdown {
     margin-left: 3px;
+    top: -1px;
 }
 
 .list .checkbox-dropdown > a {
     padding: 0;
+    line-height: 1;
 }
 
 .list > table td > div.field {
@@ -1649,6 +1659,10 @@ pre > code {
 @media screen and (min-width: @screen-md-min) {
     .admin-content .admin-right-column {
         padding-top: 28px;
+    }
+
+    .col-md-12.hidden-cell {
+        min-height: 0;
     }
 }
 
