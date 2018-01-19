@@ -87,6 +87,10 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.model.get('isPortalUser')) {
+                this.layoutName = 'detailPortal';
+            }
+
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
                     var data = this.model.toJSON();
