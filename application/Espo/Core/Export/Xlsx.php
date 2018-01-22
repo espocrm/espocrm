@@ -78,6 +78,13 @@ class Xlsx extends \Espo\Core\Injectable
                 }
             }
         }
+        foreach ($fieldList as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']) === 'linkMultiple') {
+                if (!$entity->has($field . 'Ids')) {
+                    $entity->loadLinkMultipleField($field);
+                }
+            }
+        }
     }
 
     public function addAdditionalAttributes($entityType, &$attributeList, $fieldList)
@@ -366,6 +373,18 @@ class Xlsx extends \Espo\Core\Injectable
                             $value = $this->getInjection('language')->translateOption($row[$name], $name, $entityType);
                         }
                         $sheet->setCellValue("$col$rowNumber", $value);
+                    }
+                } else if ($type == 'linkMultiple') {
+                    if (array_key_exists($name . 'Ids', $row) && array_key_exists($name . 'Names', $row)) {
+                        $nameList = [];
+                        foreach ($row[$name . 'Ids'] as $relatedId) {
+                            $relatedName = $relatedId;
+                            if (property_exists($row[$name . 'Names'], $relatedId)) {
+                                $relatedName = $row[$name . 'Names']->$relatedId;
+                            }
+                            $nameList[] = $relatedName;
+                        }
+                        $sheet->setCellValue("$col$rowNumber", implode(', ', $nameList));
                     }
                 } else {
                     if (array_key_exists($name, $row)) {

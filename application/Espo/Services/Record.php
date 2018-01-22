@@ -1306,14 +1306,16 @@ class Record extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function checkAttributeIsAllowedForExport($entity, $attribute)
+    public function checkAttributeIsAllowedForExport($entity, $attribute, $isExportAllFields = false)
     {
         $entity = $this->getEntityManager()->getEntity($this->getEntityType());
 
         if (in_array($attribute, $this->internalAttributeList)) {
             return false;
         }
-
+        if (!$isExportAllFields) {
+            return true;
+        }
         $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
         if (!$isNotStorable) {
             return true;
@@ -1441,7 +1443,7 @@ class Record extends \Espo\Core\Services\Base
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
-                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
+                if ($this->checkAttributeIsAllowedForExport($seed, $attribute, true)) {
                     $attributeList[] = $attribute;
                 }
             }
