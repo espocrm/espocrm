@@ -282,13 +282,10 @@ class Record extends \Espo\Core\Services\Base
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
-                $id = $entity->get($field . 'Id');
-                $scope = $entity->get($field . 'Type');
-
-                if ($scope) {
-                    if ($foreignEntity = $this->getEntityManager()->getEntity($scope, $id)) {
-                        $entity->set($field . 'Name', $foreignEntity->get('name'));
-                    }
+                $parentId = $entity->get($field . 'Id');
+                $parentType = $entity->get($field . 'Type');
+                if ($parentId && $parentType) {
+                    $entity->loadParentNameField($field);
                 }
             }
         }

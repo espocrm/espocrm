@@ -41,6 +41,24 @@ class Entity extends \Espo\ORM\Entity
         return $this->hasAttribute($field . 'Id');
     }
 
+    public function loadParentNameField($field)
+    {
+        if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) return;
+
+        $parentId = $this->get($field . 'Id');
+        $parentType = $this->get($field . 'Type');
+
+        if ($parentId && $parentType) {
+            if (!$this->entityManager->hasRepository($parentType)) return;
+            $repository = $this->entityManager->getRepository($parentType);
+
+            $foreignEntity = $repository->select(['id', 'name'])->where(['id' => $parentId])->findOne();
+            if ($foreignEntity) {
+                $this->set($field . 'Name', $foreignEntity->get('name'));
+            }
+        }
+    }
+
     public function loadLinkMultipleField($field, $columns = null)
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) return;
