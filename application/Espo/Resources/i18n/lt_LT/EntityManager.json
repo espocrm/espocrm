@@ -46,6 +46,9 @@
       "desc": "Mažėjančia tvarka"
     }
   },
+  "messages": {
+    "linkAlreadyExists": "Sąsajos pavadinimo konfliktas."
+  },
   "tooltips": {
     "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
     "textFilterFields": "Laukeliai, naudojami teksto paieškoje.",

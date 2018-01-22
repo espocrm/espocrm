@@ -26,6 +26,7 @@
     "Header Row Value": "Antraštinės eilutės vertė",
     "Field": "Laukelis",
     "What to Import?": "Ką importuoti?",
+    "Entity Type": "Vedinio tipas",
     "What to do?": "Ką daryti?",
     "Properties": "Savybės",
     "Header Row": "Antraštinė eilutė",
@@ -56,6 +57,7 @@
   },
   "fields": {
     "file": "Failas",
+    "entityType": "Vedinio tipas",
     "imported": "Importuoti įrašai",
     "duplicates": "Dublikuoti įrašai",
     "updated": "Atnaujinti įrašai",

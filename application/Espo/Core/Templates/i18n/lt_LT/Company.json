@@ -2,10 +2,10 @@
   "fields": {
     "billingAddress": "Mokėtojo adresas",
     "shippingAddress": "Siuntimo adresas",
-    "website": "Interntinė Svetainė"
+    "website": "Internetinė Svetainė"
   },
   "links": {
-    "meetings": "Susirinkimai",
+    "meetings": "Susitikimai",
     "calls": "Skambučiai",
     "tasks": "Užduotys"
   },
