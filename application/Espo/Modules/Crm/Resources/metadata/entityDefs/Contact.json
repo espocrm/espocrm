@@ -253,7 +253,6 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "importDisabled": true,
-            "exportDisabled": true,
             "noLoad": true
         },
         "targetList": {
