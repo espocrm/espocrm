@@ -1106,6 +1106,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if ('noLabel' in cellDefs) {
                             cell.noLabel = cellDefs.noLabel;
                         }
+                        if ('span' in cellDefs) {
+                            cell.span = cellDefs.span;
+                        }
 
                         row.push(cell);
                     }
@@ -1123,9 +1126,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
 
+            var gridLayoutType = this.gridLayoutType || 'record';
+
             if (this.detailLayout) {
                 this.gridLayout = {
-                    type: 'record',
+                    type: gridLayoutType,
                     layout: this.convertDetailLayout(this.detailLayout)
                 };
                 callback(this.gridLayout);
@@ -1134,7 +1139,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
                 this.gridLayout = {
-                    type: 'record',
+                    type: gridLayoutType,
                     layout: this.convertDetailLayout(simpleLayout)
                 };
                 callback(this.gridLayout);

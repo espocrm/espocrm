@@ -19,8 +19,55 @@
         <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">
             <% _.each(row, function (cell, cellNumber) { %>
+
+                <%
+                    var spanClassBase;
+                    if (columnCount === 1) {
+                        spanClassBase = 'col-sm-12';
+                    } else if (columnCount === 2) {
+                        spanClassBase = 'col-sm-6';
+                    } else if (columnCount === 3) {
+                        spanClassBase = 'col-sm-4';
+                    } else if (columnCount === 4) {
+                        spanClassBase = 'col-md-3 col-sm-6';
+                    } else {
+                        spanClass = 'col-sm-12';
+                    }
+                %>
                 <% if (cell != false) { %>
-                    <div class="cell<% if (columnCount == 1 || cell.fullWidth) { %> col-sm-12<% } else {%> col-sm-6<% } %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.name %>">
+                    <%
+                        var spanClass;
+                        if (columnCount === 1 || cell.fullWidth) {
+                            spanClass = 'col-sm-12';
+                        } else if (columnCount === 2) {
+                            if (cell.span === 2) {
+                                spanClass = 'col-sm-12';
+                            } else {
+                                spanClass = 'col-sm-6';
+                            }
+                        } else if (columnCount === 3) {
+                            if (cell.span === 2) {
+                                spanClass = 'col-sm-8';
+                            } else if (cell.span === 3) {
+                                spanClass = 'col-sm-12';
+                            } else {
+                                spanClass = 'col-sm-4';
+                            }
+                        } else if (columnCount === 4) {
+                            if (cell.span === 2) {
+                                spanClass = 'col-sm-6';
+                            } else if (cell.span === 3) {
+                                spanClass = 'col-sm-9';
+                            } else if (cell.span === 4) {
+                                spanClass = 'col-sm-12';
+                            } else {
+                                spanClass = 'col-md-3 col-sm-6';
+                            }
+                        } else {
+                            spanClass = 'col-sm-12';
+                        }
+                    %>
+                    <div class="cell <%= spanClass %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.name %>">
                         <% if (!cell.noLabel) { %><label class="control-label<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>"><span class="label-text"><%
                             if ('customLabel' in cell) {
                                 print (cell.customLabel);
@@ -37,7 +84,7 @@
                         %></div>
                     </div>
                 <% } else { %>
-                    <div class="col-sm-6"></div>
+                    <div class="<%= spanClassBase %>"></div>
                 <% } %>
             <% }); %>
             </div>
