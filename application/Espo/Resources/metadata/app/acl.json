@@ -64,9 +64,6 @@
             "Attachment": {
                 "parent": false
             },
-            "User": {
-                "gender": false
-            },
             "EmailFolder": {
                 "assignedUser": false
             },
@@ -80,6 +77,11 @@
         "scopeLevel": {
         },
         "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
         }
     },
     "valuePermissionList": [
