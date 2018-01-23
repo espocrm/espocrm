@@ -512,7 +512,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
             this.createView('addField', 'views/role/modals/add-field', {
                 scope: scope,
-                ignoreFieldList: ignoreFieldList
+                ignoreFieldList: ignoreFieldList,
+                type: this.type
             }, function (view) {
                 view.render();
 

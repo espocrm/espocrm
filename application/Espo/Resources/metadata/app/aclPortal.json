@@ -80,8 +80,9 @@
                 "isInternal": false,
                 "isGlobal": false
             },
-            "User": {
-                "gender": false
+            "Email": {
+                "inboundEmails": false,
+                "emailAccounts": false
             }
         }
     },
@@ -113,6 +114,9 @@
                     "edit": "no"
                 },
                 "leads": false
+            },
+            "User": {
+                "gender": false
             }
         }
     },
