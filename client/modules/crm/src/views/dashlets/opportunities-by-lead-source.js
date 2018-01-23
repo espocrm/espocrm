@@ -55,7 +55,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
         drow: function () {
@@ -69,6 +69,11 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     lineWidth: 1,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
+                    labelFormatter: function (total, value) {
+                        var percentage = (100 * value / total).toFixed(2);
+                        if (percentage < 5) return '';
+                        return '<span class="small">'+ percentage.toString() +'%' + '</span>';
+                    }
                 },
                 grid: {
                     horizontalLines: false,
@@ -89,8 +94,13 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     track: true,
                     relative: true,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.y) + ' ' + self.currency;
-                    },
+                        var value = self.currencySymbol + self.formatNumber(obj.y);
+
+                        var fraction = obj.fraction || 0;
+                        var percentage = (100 * fraction).toFixed(2).toString();
+
+                        return (obj.series.label || self.translate('None')) + ':<br>' + value + ' / ' + percentage + '%';
+                    }
                 },
                 legend: {
                     show: true,

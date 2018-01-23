@@ -80,7 +80,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
 
             var data = [
                 {
@@ -181,7 +181,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                         if (obj.x >= self.chartData.length) {
                             return null;
                         }
-                        return self.formatNumber(obj.y) + ' ' + self.currency;
+                        return self.currencySymbol + self.formatNumber(obj.y);
                     },
                 },
                 legend: {

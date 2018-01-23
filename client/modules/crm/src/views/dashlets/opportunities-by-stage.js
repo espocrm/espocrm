@@ -73,7 +73,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
         drow: function () {
@@ -102,7 +102,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     min: 0,
                     tickFormatter: function (value) {
                         if (value != 0) {
-                            return self.formatNumber(value) + ' ' + self.currency;
+                            return self.currencySymbol + self.formatNumber(value);
                         }
                         return '';
                     },
@@ -112,7 +112,9 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     relative: true,
                     position: 's',
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.x) + ' ' + self.currency;
+                        var label = (obj.series.label || self.translate('None'));
+                        var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x);
+                        return value;
                     },
                 },
                 legend: {

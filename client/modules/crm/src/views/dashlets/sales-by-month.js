@@ -41,6 +41,10 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
             return 'Opportunity/action/reportSalesByMonth?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
         },
 
+        getLegentHeight: function () {
+            return 0;
+        },
+
         prepareData: function (response) {
             var months = this.months = Object.keys(response).sort();
 
@@ -71,7 +75,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
 
             this.colorBad = this.successColor;
         },
@@ -101,7 +105,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                         if (value == 0) {
                             return '';
                         }
-                        return self.formatNumber(value) + ' ' + self.currency;
+                        return self.currencySymbol + self.formatNumber(value);
                     },
                 },
                 xaxis: {
@@ -120,7 +124,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     track: true,
                     relative: true,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.y) + ' ' + self.currency;
+                        return self.currencySymbol + self.formatNumber(obj.y);
                     },
                 }
             });

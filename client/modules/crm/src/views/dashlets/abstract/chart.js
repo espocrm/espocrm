@@ -85,18 +85,26 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             return '';
         },
 
+        getLegentHeight: function () {
+            if (this.chartData.length > 5) {
+                legendHeight = this.getThemeManager().getParam('dashletChartLegent2RowHeight') || 52;
+            } else {
+                legendHeight = this.getThemeManager().getParam('dashletChartLegent1RowHeight') || 22;
+            }
+            return legendHeight;
+        },
+
         afterRender: function () {
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
                 var $container = this.$container = this.$el.find('.chart-container');
 
-                var height = 'calc(100% - 22px)';
-                if (this.chartData.length > 5) {
-                    height = 'calc(100% - 42px)';
-                }
+                var legendHeight = this.getLegentHeight();
 
-                $container.css('height', height);
+                var heightCss = 'calc(100% - '+legendHeight.toString()+'px)';
+
+                $container.css('height', heightCss);
 
                 setTimeout(function () {
                     if (!$container.size() || !$container.is(":visible")) return;
