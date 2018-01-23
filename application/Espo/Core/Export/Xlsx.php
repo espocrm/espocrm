@@ -386,6 +386,40 @@ class Xlsx extends \Espo\Core\Injectable
                         }
                         $sheet->setCellValue("$col$rowNumber", implode(', ', $nameList));
                     }
+                } else if ($type == 'address') {
+                    $value = '';
+                    if (!empty($row[$name . 'Street'])) {
+                        $value = $value .= $row[$name.'Street'];
+                    }
+                    if (!empty($row[$name.'City']) || !empty($row[$name.'State']) || !empty($row[$name.'PostalCode'])) {
+                        if ($value) {
+                            $value .= "\n";
+                        }
+                        if (!empty($row[$name.'City'])) {
+                            $value .= $row[$name.'City'];
+                            if (
+                                !empty($row[$name.'State']) || !empty($row[$name.'PostalCode'])
+                            ) {
+                                $value .= ', ';
+                            }
+                        }
+                        if (!empty($row[$name.'State'])) {
+                            $value .= $row[$name.'State'];
+                            if (!empty($row[$name.'PostalCode'])) {
+                                $value .= ' ';
+                            }
+                        }
+                        if (!empty($row[$name.'PostalCode'])) {
+                            $value .= $row[$name.'PostalCode'];
+                        }
+                    }
+                    if (!empty($row[$name.'Country'])) {
+                        if ($value) {
+                            $value .= "\n";
+                        }
+                        $value .= $row[$name.'Country'];
+                    }
+                    $sheet->setCellValue("$col$rowNumber", $value);
                 } else {
                     if (array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name]);
