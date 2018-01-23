@@ -86,7 +86,7 @@
             }
         }
     },
-    "default": {
+    "strictDefault": {
         "scopeLevel": {
         },
         "fieldLevel": {
@@ -115,6 +115,9 @@
                 },
                 "leads": false
             },
+            "KnowledgeBaseArticle": {
+                "assignedUser": false
+            },
             "User": {
                 "gender": false
             }
@@ -123,15 +126,8 @@
     "valuePermissionList": [
         "exportPermission"
     ],
-    "permissionsDefaults": {
-        "exportPermission": "no"
-    },
     "permissionsStrictDefaults": {
         "exportPermission": "no"
-    },
-    "scopeLevelTypesDefaults": {
-        "boolean": false,
-        "record": false
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

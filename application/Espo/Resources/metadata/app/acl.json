@@ -75,6 +75,23 @@
     },
     "default": {
         "scopeLevel": {
+            "User": {
+                "read": "all"
+            }
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
+        }
+    },
+    "strictDefault": {
+        "scopeLevel": {
+            "User": {
+                "read": "own"
+            }
         },
         "fieldLevel": {
         },
