@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Export;
 
-use \Espo\Exceptions\Error;
+use \Espo\Core\Exceptions\Error;
 
 use \Espo\Core\ORM\Entity;
 
