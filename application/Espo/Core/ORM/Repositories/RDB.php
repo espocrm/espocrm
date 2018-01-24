@@ -176,7 +176,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function beforeRemove(Entity $entity, array $options = array())
     {
         parent::beforeRemove($entity, $options);
-        if (!$this->hooksDisabled) {
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeRemove', $entity, $options);
         }
 
@@ -192,14 +192,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        if (!$this->hooksDisabled) {
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
         }
     }
 
     protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
     {
-        if (!$this->hooksDisabled) {
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $hookData = array(
                 'relationName' => $relationName,
                 'relationParams' => $params
@@ -220,7 +220,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($foreign instanceof Entity) {
             $foreignEntity = $foreign;
-            if (!$this->hooksDisabled) {
+            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
                 $hookData = array(
                     'relationName' => $relationName,
                     'relationData' => $data,
@@ -237,7 +237,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($foreign instanceof Entity) {
             $foreignEntity = $foreign;
-            if (!$this->hooksDisabled) {
+            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
                 $hookData = array(
                     'relationName' => $relationName,
                     'foreignEntity' => $foreignEntity
@@ -251,7 +251,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
-        if (!$this->hooksDisabled) {
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
         }
     }
@@ -271,7 +271,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $this->processFileFieldsSave($entity);
         }
 
-        if (!$this->hooksDisabled) {
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterSave', $entity, $options);
         }
     }
