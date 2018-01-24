@@ -154,31 +154,7 @@ class Importer
         }
 
         if ($duplicate = $this->findDuplicate($email)) {
-            if ($assignedUserId) {
-                $duplicate->addLinkMultipleId('users', $assignedUserId);
-                $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
-            }
-            if (!empty($userIdList)) {
-                foreach ($userIdList as $uId) {
-                    $duplicate->addLinkMultipleId('users', $uId);
-                }
-            }
-
-            if ($folderData) {
-                foreach ($folderData as $uId => $folderId) {
-                    $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-                }
-            }
-
-            $duplicate->set('isBeingImported', true);
-
-            $this->getEntityManager()->saveEntity($duplicate);
-
-            if (!empty($teamsIdList)) {
-                foreach ($teamsIdList as $teamId) {
-                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
-                }
-            }
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
             return $duplicate;
         }
 
@@ -299,6 +275,11 @@ class Importer
             }
         }
 
+        if ($duplicate = $this->findDuplicate($email)) {
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+            return $duplicate;
+        }
+
         $this->getEntityManager()->saveEntity($email);
 
         foreach ($inlineAttachmentList as $attachment) {
@@ -357,6 +338,35 @@ class Importer
             ))->findOne();
             if ($duplicate) {
                 return $duplicate;
+            }
+        }
+    }
+
+    protected function processDuplicate(Entity $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
+    {
+        if ($assignedUserId) {
+            $duplicate->addLinkMultipleId('users', $assignedUserId);
+            $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
+        }
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $uId) {
+                $duplicate->addLinkMultipleId('users', $uId);
+            }
+        }
+
+        if ($folderData) {
+            foreach ($folderData as $uId => $folderId) {
+                $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+            }
+        }
+
+        $duplicate->set('isBeingImported', true);
+
+        $this->getEntityManager()->saveEntity($duplicate);
+
+        if (!empty($teamsIdList)) {
+            foreach ($teamsIdList as $teamId) {
+                $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
             }
         }
     }
