@@ -1062,7 +1062,7 @@ class Record extends \Espo\Core\Services\Base
             $ids = $params['ids'];
             foreach ($ids as $id) {
                 $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'edit')) {
+                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
@@ -1092,7 +1092,7 @@ class Record extends \Espo\Core\Services\Base
             $collection = $repository->find($selectParams);
 
             foreach ($collection as $entity) {
-                if ($this->getAcl()->check($entity, 'edit')) {
+                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
                         if ($repository->save($entity)) {
@@ -1121,6 +1121,11 @@ class Record extends \Espo\Core\Services\Base
     }
 
     protected function checkEntityForMassRemove(Entity $entity)
+    {
+        return true;
+    }
+
+    protected function checkEntityForMassUpdate(Entity $entity, $data)
     {
         return true;
     }
