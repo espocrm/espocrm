@@ -158,6 +158,10 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
                 this.enabledScopeList = [];
             }
+
+            this.once('remove', function () {
+                this.isRemoved = true;
+            }, this);
         },
 
         toggleScopeFilter: function (name) {
@@ -376,6 +380,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         adjustSize: function () {
+            if (this.isRemoved) return;
             var height = this.getCalculatedHeight();
             this.$calendar.fullCalendar('option', 'contentHeight', height);
         },
