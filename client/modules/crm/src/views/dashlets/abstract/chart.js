@@ -95,6 +95,10 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
         },
 
         afterRender: function () {
+            this.$el.closest('.panel-body').css({
+                'overflow-y': 'visible',
+                'overflow-x': 'visible'
+            });
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
