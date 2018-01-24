@@ -320,8 +320,8 @@ class EmailAccount extends Record
                 }
 
                 if (!empty($email)) {
+                    $this->getEntityManager()->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
                     if (!$email->isFetched()) {
-                        $this->getEntityManager()->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
                         $this->noteAboutEmail($email);
                     }
                 }
