@@ -33,7 +33,7 @@ use \PhpMimeMailParser\Attachment;
 
 class Parser extends \PhpMimeMailParser\Parser
 {
-    public function getAttachments()
+    public function getAttachments($include_inline = true)
     {
         $attachments = [];
         $dispositions = ['attachment', 'inline'];
