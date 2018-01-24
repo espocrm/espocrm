@@ -119,9 +119,11 @@ class Email extends Record
                     }
                 }
             }
+
+            $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+            $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $fromAddress);
+
             if (!$smtpParams) {
-                $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
-                $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $fromAddress);
                 if ($emailAccount) {
                     $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
                     if ($smtpParams) {
