@@ -65,10 +65,20 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
                 }
             ];
 
+            var fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
+            for (var scope in fieldTable) {
+                var scopeData = fieldTable[scope] || {};
+                for (var field in scopeData) {
+                    if (this.getMetadata().get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null) {
+                        delete scopeData[field];
+                    }
+                }
+            }
+
             this.createView('table', 'views/role/record/table', {
                 acl: {
                     data: this.options.aclData.table,
-                    fieldData: this.options.aclData.fieldTable,
+                    fieldData: fieldTable,
                 },
                 final: true
             });
