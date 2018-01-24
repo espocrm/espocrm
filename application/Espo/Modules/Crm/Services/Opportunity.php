@@ -159,8 +159,46 @@ class Opportunity extends \Espo\Services\Record
             $result[$row['month']] = floatval($row['amount']);
         }
 
-        return $result;
+        $dt = new \DateTime($dateFrom);
+        $dtTo = new \DateTime($dateTo);
+        $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+        if ($dt && $dtTo) {
+            $interval = new \DateInterval('P1M');
+            while ($dt->getTimestamp() <= $dtTo->getTimestamp()) {
+                $month = $dt->format('Y-m');
+                if (!array_key_exists($month, $result)) {
+                    $result[$month] = 0;
+                }
+                $dt->add($interval);
+            }
+        }
+
+
+        $keyList = array_keys($result);
+        sort($keyList);
+
+        $today = new \DateTime();
+
+        $endPosition = count($keyList) - 1;
+        for ($i = count($keyList) - 1; $i >= 0; $i--) {
+            $key = $keyList[$i];
+            $dt = new \DateTime($key . '-01');
+
+            if ($dt->getTimestamp() < $today->getTimestamp()) {
+                break;
+            }
+            if (empty($result[$key])) {
+                $endPosition = $i;
+            } else {
+                break;
+            }
+        }
+
+        $keyList = array_slice($keyList, 0, $endPosition);
+
+        return (object) [
+            'keyList' => $keyList,
+            'dataMap' => $result
+        ];
     }
-
 }
-

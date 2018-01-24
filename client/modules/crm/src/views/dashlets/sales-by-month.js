@@ -46,13 +46,15 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
         },
 
         prepareData: function (response) {
-            var months = this.months = Object.keys(response).sort();
+            var monthList = this.monthList = response.keyList;
+
+            var dataMap = response.dataMap || {};
 
             var values = [];
 
-            for (var month in response) {
-                values.push(response[month]);
-            }
+            monthList.forEach(function (month) {
+                values.push(dataMap[month]);
+            }, this);
 
             this.chartData = [];
 
@@ -113,8 +115,8 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     tickFormatter: function (value) {
                         if (value % 1 == 0) {
                             var i = parseInt(value);
-                            if (i in self.months) {
-                                return moment(self.months[i] + '-01').format('MMM YYYY');
+                            if (i in self.monthList) {
+                                return moment(self.monthList[i] + '-01').format('MMM YYYY');
                             }
                         }
                         return '';
@@ -124,10 +126,15 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     track: true,
                     relative: true,
                     trackFormatter: function (obj) {
-                        return self.currencySymbol + self.formatNumber(obj.y);
+                        var i = parseInt(obj.x);
+                        var value = '';
+                        if (i in self.monthList) {
+                            value += moment(self.monthList[i] + '-01').format('MMM YYYY') + ':<br>';
+                        }
+                        return value + self.currencySymbol + self.formatNumber(obj.y);
                     },
                 }
-            });
+            })
         },
     });
 });
