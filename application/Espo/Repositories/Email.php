@@ -322,8 +322,8 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
-        if ($entity->get('isBeingImportered')) {
-            $entity->set('isBeingImportered', false);
+        if ($entity->get('isBeingImported')) {
+            $entity->set('isBeingImported', false);
         }
     }
 
