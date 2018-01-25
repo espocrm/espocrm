@@ -82,7 +82,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
             this.colorBad = this.successColor;
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 shadowSize: false,
@@ -98,11 +98,13 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     horizontalLines: true,
                     verticalLines: false,
                     outline: 'sw',
-                    color: this.outlineColor
+                    color: this.tickColor,
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     showLabels: true,
+                    color: this.textColor,
                     tickFormatter: function (value) {
                         if (value == 0) {
                             return '';
@@ -112,6 +114,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                 },
                 xaxis: {
                     min: 0,
+                    color: this.textColor,
                     tickFormatter: function (value) {
                         if (value % 1 == 0) {
                             var i = parseInt(value);
@@ -125,6 +128,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                 mouse: {
                     track: true,
                     relative: true,
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var i = parseInt(obj.x);
                         var value = '';
@@ -132,7 +136,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                             value += moment(self.monthList[i] + '-01').format('MMM YYYY') + ':<br>';
                         }
                         return value + self.currencySymbol + self.formatNumber(obj.y);
-                    },
+                    }
                 }
             })
         },

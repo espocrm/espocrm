@@ -60,7 +60,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     data: [[item.value, d.length - i]],
                     label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
                 }
-                if (item.stage == 'Closed Won') {
+                if (item.stagsuccessColore == 'Closed Won') {
                     o.color = this.successColor;
                 }
                 data.push(o);
@@ -76,10 +76,10 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
             this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
-                colors: this.colors,
+                colors: this.colorList,
                 shadowSize: false,
                 bars: {
                     show: true,
@@ -87,46 +87,50 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5,
+                    barWidth: 0.5
                 },
                 grid: {
                     horizontalLines: false,
                     outline: 'sw',
-                    color: this.outlineColor
+                    color: this.tickColor,
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     showLabels: false,
+                    color: this.textColor
                 },
                 xaxis: {
                     min: 0,
+                    color: this.textColor,
                     tickFormatter: function (value) {
                         if (value != 0) {
                             return self.currencySymbol + self.formatNumber(value);
                         }
                         return '';
-                    },
+                    }
                 },
                 mouse: {
                     track: true,
                     relative: true,
                     position: 's',
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var label = (obj.series.label || self.translate('None'));
                         var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x);
                         return value;
-                    },
+                    }
                 },
                 legend: {
                     show: true,
-                    noColumns: 5,
+                    noColumns: this.getLegentColumnNumber(),
                     container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0
-                },
+                    labelBoxMargin: 0,
+                    labelFormatter: self.labelFormatter.bind(self),
+                    labelBoxBorderColor: 'transparent',
+                    backgroundOpacity: 0
+                }
             });
-        },
-
+        }
     });
 });
-
-

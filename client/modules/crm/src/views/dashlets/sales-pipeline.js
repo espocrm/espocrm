@@ -82,61 +82,13 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
             this.currency = this.getConfig().get('defaultCurrency');
             this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
 
-            var data = [
-                {
-                    value: 12000,
-                    stage: 'Prospecting'
-                },
-                {
-                    value: 5050,
-                    stage: 'Qualification'
-                },
-                {
-                    value: 4050,
-                    stage: 'Needs Analysis'
-                },
-                {
-                    value: 3230,
-                    stage: 'Value Proposition'
-                },
-                {
-                    value: 2000,
-                    stage: 'Proposal/Price Quote'
-                },
-                {
-                    value: 1200.5,
-                    stage: 'Negotiation/Review'
-                },
-                {
-                    value: 700,
-                    stage: 'Closed Won'
-                },
-            ];
-
             this.chartData = [];
-
-            for (var i = 0; i < data.length; i++) {
-                var item = data[i];
-                var value = item.value;
-                var nextValue = ((i + 1) < data.length) ? data[i + 1].value : value;
-                var o = {
-                    data: [[i, value], [i + 1, nextValue]],
-                    label: item.stage
-                };
-
-                this.chartData.push(o);
-            }
-
-            this.maxY = 1000;
-            if (data.length) {
-                this.maxY = data[0].value + (data[0].value / 20);
-            }
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
 
-            var colors = Espo.Utils.clone(this.colors);
+            var colors = Espo.Utils.clone(this.colorList);
 
             this.chartData.forEach(function (item, i) {
                 if (i + 1 > colors.length) {
@@ -154,46 +106,51 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 lines: {
                     show: true,
                     fill: true,
-                    fillOpacity: 1,
+                    fillOpacity: 1
                 },
                 points: {
-                    show: true,
+                    show: true
                 },
                 grid: {
-                    horizontalLines: false,
-                    outline: 'sw',
-                    color: this.outlineColor
+                    color: this.tickColor,
+                    verticalLines: false,
+                    outline: 'ew',
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     max: this.maxY,
-                    showLabels: false,
+                    showLabels: false
                 },
                 xaxis: {
                     min: 0,
-                    showLabels: false,
+                    showLabels: false
                 },
                 mouse: {
                     track: true,
                     relative: true,
                     position: 'ne',
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         if (obj.x >= self.chartData.length) {
                             return null;
                         }
-                        return self.currencySymbol + self.formatNumber(obj.y);
-                    },
+                        var label = self.chartData[parseInt(obj.x)].label;
+                        var label = (label || self.translate('None'));
+                        return label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.y);
+                    }
                 },
                 legend: {
                     show: true,
-                    noColumns: 5,
+                    noColumns: this.getLegentColumnNumber(),
                     container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0
-                },
+                    labelBoxMargin: 0,
+                    labelFormatter: self.labelFormatter.bind(self),
+                    labelBoxBorderColor: 'transparent',
+                    backgroundOpacity: 0
+                }
             });
-        },
+        }
 
     });
 });
-
-

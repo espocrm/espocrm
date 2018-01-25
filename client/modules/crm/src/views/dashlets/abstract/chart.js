@@ -36,16 +36,34 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         thousandSeparator: ',',
 
-        colors: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
+        defaultColorList: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
 
         successColor: '#85b75f',
 
-        outlineColor: '#333',
+        tickColor: '#ddd',
+
+        textColor: '#333',
+
+        hoverColor: '#FF3F19',
+
+        legendColumnWidth: 90,
+
+        legendColumnNumber: 6,
+
+        labelFormatter: function (v) {
+            return '<span style="color:'+this.textColor+'">' + v + '</span>';
+        },
 
         init: function () {
             Dep.prototype.init.call(this);
 
             this.flotr = Flotr;
+
+            this.successColor = this.getThemeManager().getParam('chartSuccessColor') || this.successColor;
+            this.colorList = this.getThemeManager().getParam('chartColorList') || this.defaultColorList;
+            this.tickColor = this.getThemeManager().getParam('chartTickColor') || this.tickColor;
+            this.textColor = this.getThemeManager().getParam('textColor') || this.textColor;
+            this.hoverColor = this.getThemeManager().getParam('hoverColor') || this.hoverColor;
 
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark')
@@ -64,7 +82,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
             this.once('after:render', function () {
                 $(window).on('resize.chart' + this.name, function () {
-                    this.drow();
+                    this.draw();
                 }.bind(this));
             }, this);
 
@@ -85,11 +103,19 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             return '';
         },
 
+        getLegentColumnNumber: function () {
+            var width = this.$el.closest('.panel-body').width();
+            var legendColumnNumber = Math.floor(width / this.legendColumnWidth);
+            return legendColumnNumber || this.legendColumnNumber;
+        },
+
         getLegentHeight: function () {
-            if (this.chartData.length > 5) {
-                legendHeight = this.getThemeManager().getParam('dashletChartLegent2RowHeight') || 52;
-            } else {
-                legendHeight = this.getThemeManager().getParam('dashletChartLegent1RowHeight') || 22;
+            var lineNumber = Math.ceil(this.chartData.length / this.getLegentColumnNumber());
+            var legendHeight = 0;
+
+            var lineHeight = this.getThemeManager().getParam('dashletChartLegentRowHeight') || 22;
+            if (lineNumber > 0) {
+                legendHeight = lineHeight * lineNumber;
             }
             return legendHeight;
         },
@@ -103,16 +129,13 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 this.chartData = this.prepareData(data);
 
                 var $container = this.$container = this.$el.find('.chart-container');
-
                 var legendHeight = this.getLegentHeight();
-
                 var heightCss = 'calc(100% - '+legendHeight.toString()+'px)';
-
                 $container.css('height', heightCss);
 
                 setTimeout(function () {
                     if (!$container.size() || !$container.is(":visible")) return;
-                    this.drow();
+                    this.draw();
                 }.bind(this), 1);
             });
         },
@@ -135,4 +158,3 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
     });
 });
-

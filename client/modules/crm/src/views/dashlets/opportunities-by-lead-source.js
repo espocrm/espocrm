@@ -58,10 +58,10 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
             this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
-                colors: this.colors,
+                colors: this.colorList,
                 shadowSize: false,
                 pie: {
                     show: true,
@@ -72,20 +72,22 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     labelFormatter: function (total, value) {
                         var percentage = (100 * value / total).toFixed(2);
                         if (percentage < 5) return '';
-                        return '<span class="small">'+ percentage.toString() +'%' + '</span>';
+                        return '<span class="small" style="color:'+this.textColor+'">'+ percentage.toString() +'%' + '</span>';
                     }
                 },
                 grid: {
                     horizontalLines: false,
                     verticalLines: false,
                     outline: '',
-                    color: this.outlineColor
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     showLabels: false,
+                    color: this.textColor
                 },
                 xaxis: {
                     showLabels: false,
+                    color: this.textColor
                 },
                 legend: {
                     show: false,
@@ -93,6 +95,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 mouse: {
                     track: true,
                     relative: true,
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var value = self.currencySymbol + self.formatNumber(obj.y);
 
@@ -104,14 +107,14 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 },
                 legend: {
                     show: true,
-                    noColumns: 8,
+                    noColumns: this.getLegentColumnNumber(),
                     container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0
-                },
+                    labelBoxMargin: 0,
+                    labelFormatter: self.labelFormatter.bind(self),
+                    labelBoxBorderColor: 'transparent',
+                    backgroundOpacity: 0
+                }
             });
-        },
-
+        }
     });
 });
-
-
