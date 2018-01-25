@@ -71,8 +71,8 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     sizeRatio: 0.8,
                     labelFormatter: function (total, value) {
                         var percentage = (100 * value / total).toFixed(2);
-                        if (percentage < 5) return '';
-                        return '<span class="small" style="color:'+this.textColor+'">'+ percentage.toString() +'%' + '</span>';
+                        if (percentage < 7) return '';
+                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">'+ percentage.toString() +'%' + '</span>';
                     }
                 },
                 grid: {
