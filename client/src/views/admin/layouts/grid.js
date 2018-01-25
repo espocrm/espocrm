@@ -371,6 +371,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     style: $(this).find('header').data('style') || 'default',
                     rows: []
                 };
+                var name = $(this).find('header').data('name');
+                if (name) {
+                    o.name = name;
+                }
                 if ($label.attr('data-is-custom')) {
                     o.customLabel = $label.text();
                 } else {
