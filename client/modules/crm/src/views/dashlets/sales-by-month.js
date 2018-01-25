@@ -109,7 +109,10 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                         if (value == 0) {
                             return '';
                         }
-                        return self.currencySymbol + self.formatNumber(value);
+                        if (value % 1 == 0) {
+                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
+                        }
+                        return '';
                     },
                 },
                 xaxis: {
@@ -135,7 +138,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                         if (i in self.monthList) {
                             value += moment(self.monthList[i] + '-01').format('MMM YYYY') + ':<br>';
                         }
-                        return value + self.currencySymbol + self.formatNumber(obj.y);
+                        return value + self.currencySymbol + self.formatNumber(obj.y, true);
                     }
                 }
             })

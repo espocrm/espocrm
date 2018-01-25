@@ -97,7 +97,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     relative: true,
                     lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
-                        var value = self.currencySymbol + self.formatNumber(obj.y);
+                        var value = self.currencySymbol + self.formatNumber(obj.y, true);
 
                         var fraction = obj.fraction || 0;
                         var percentage = (100 * fraction).toFixed(2).toString();

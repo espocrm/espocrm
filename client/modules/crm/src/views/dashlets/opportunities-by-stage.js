@@ -104,8 +104,11 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     min: 0,
                     color: this.textColor,
                     tickFormatter: function (value) {
-                        if (value != 0) {
-                            return self.currencySymbol + self.formatNumber(value);
+                        if (value == 0) {
+                            return '';
+                        }
+                        if (value % 1 == 0) {
+                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
                         }
                         return '';
                     }
@@ -117,7 +120,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var label = (obj.series.label || self.translate('None'));
-                        var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x);
+                        var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x, true);
                         return value;
                     }
                 },

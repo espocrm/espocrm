@@ -91,14 +91,49 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             }, this);
         },
 
-        formatNumber: function (value) {
+        formatNumber: function (value, isCurrency) {
             if (value !== null) {
+                var maxDecimalPlaces = 2;
+                var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+
+                if (isCurrency) {
+                    if (currencyDecimalPlaces === 0) {
+                        value = Math.round(value);
+                    } else if (currencyDecimalPlaces) {
+                        value = Math.round(value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces));
+                    } else {
+                        value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
+                    }
+                } else {
+                    var maxDecimalPlaces = 4;
+                    value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
+                }
+
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-                if (parts[1] == 0) {
-                    parts.splice(1, 1);
+
+                if (isCurrency) {
+                    if (currencyDecimalPlaces === 0) {
+                        delete parts[1];
+                    } else if (currencyDecimalPlaces) {
+                        var decimalPartLength = 0;
+                        if (parts.length > 1) {
+                            decimalPartLength = parts[1].length;
+                        } else {
+                            parts[1] = '';
+                        }
+
+                        if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
+                            var limit = currencyDecimalPlaces - decimalPartLength;
+                            for (var i = 0; i < limit; i++) {
+                                parts[1] += '0';
+                            }
+                        }
+                    }
                 }
-                return parts.join(this.decimalMark);
+
+                var value = parts.join(this.decimalMark);
+                return value;
             }
             return '';
         },

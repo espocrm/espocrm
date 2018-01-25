@@ -137,7 +137,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                         }
                         var label = self.chartData[parseInt(obj.x)].label;
                         var label = (label || self.translate('None'));
-                        return label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.y);
+                        return label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.y, true);
                     }
                 },
                 legend: {
