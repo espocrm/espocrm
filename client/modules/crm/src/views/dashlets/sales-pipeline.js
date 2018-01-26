@@ -112,7 +112,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                     show: true
                 },
                 grid: {
-                    color: this.tickColor,
+                    color: this.gridColor,
                     verticalLines: false,
                     outline: 'ew',
                     tickColor: this.tickColor

@@ -40,7 +40,9 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         successColor: '#85b75f',
 
-        tickColor: '#ddd',
+        gridColor: '#ddd',
+
+        tickColor: '#e8eced',
 
         textColor: '#333',
 
@@ -62,6 +64,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             this.successColor = this.getThemeManager().getParam('chartSuccessColor') || this.successColor;
             this.colorList = this.getThemeManager().getParam('chartColorList') || this.defaultColorList;
             this.tickColor = this.getThemeManager().getParam('chartTickColor') || this.tickColor;
+            this.gridColor = this.getThemeManager().getParam('chartGridColor') || this.gridColor;
             this.textColor = this.getThemeManager().getParam('textColor') || this.textColor;
             this.hoverColor = this.getThemeManager().getParam('hoverColor') || this.hoverColor;
 

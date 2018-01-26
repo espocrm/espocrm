@@ -92,7 +92,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 grid: {
                     horizontalLines: false,
                     outline: 'sw',
-                    color: this.tickColor,
+                    color: this.gridColor,
                     tickColor: this.tickColor
                 },
                 yaxis: {
