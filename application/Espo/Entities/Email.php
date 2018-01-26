@@ -174,5 +174,9 @@ class Email extends \Espo\Core\ORM\Entity
         }
         return [];
     }
-}
 
+    public function setDummyMessageId()
+    {
+        $this->set('messageId', 'dummy:' . \Espo\Core\Utils\Util::generateId());
+    }
+}

@@ -185,6 +185,10 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function beforeSave(Entity $entity, array $options = array())
     {
+        if ($entity->isNew() && !$entity->get('messageId')) {
+            $entity->setDummyMessageId();
+        }
+
         $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
 
         if ($entity->has('attachmentsIds')) {

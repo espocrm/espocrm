@@ -349,7 +349,7 @@ class Sender
 
         try {
             $messageId = $email->get('messageId');
-            if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4) {
+            if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4 || strpos($messageId, 'dummy:') === 0) {
                 $messageId = $this->generateMessageId($email);
                 $email->set('messageId', '<' . $messageId . '>');
             } else {
