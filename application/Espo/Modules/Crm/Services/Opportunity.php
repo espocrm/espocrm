@@ -36,8 +36,12 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Opportunity extends \Espo\Services\Record
 {
-    public function reportSalesPipeline($dateFrom, $dateTo)
+    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
+            list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
@@ -48,8 +52,16 @@ class Opportunity extends \Espo\Services\Record
             JOIN currency ON currency.id = opportunity.amount_currency
             WHERE
                 opportunity.deleted = 0 AND
+        ";
+
+        if ($dateFilter !== 'ever') {
+            $sql .= "
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
+            ";
+        }
+
+        $sql .= "
                 opportunity.stage <> 'Closed Lost'
             GROUP BY opportunity.stage
             ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
@@ -68,8 +80,12 @@ class Opportunity extends \Espo\Services\Record
         return $result;
     }
 
-    public function reportByLeadSource($dateFrom, $dateTo)
+    public function reportByLeadSource($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
+            list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "
@@ -78,8 +94,15 @@ class Opportunity extends \Espo\Services\Record
             JOIN currency ON currency.id = opportunity.amount_currency
             WHERE
                 opportunity.deleted = 0 AND
+        ";
+        if ($dateFilter !== 'ever') {
+            $sql .= "
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
+            ";
+        }
+
+        $sql .= "
                 opportunity.stage <> 'Closed Lost' AND
                 opportunity.lead_source <> ''
             GROUP BY opportunity.lead_source
@@ -98,8 +121,12 @@ class Opportunity extends \Espo\Services\Record
         return $result;
     }
 
-    public function reportByStage($dateFrom, $dateTo)
+    public function reportByStage($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
+            list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
@@ -110,8 +137,16 @@ class Opportunity extends \Espo\Services\Record
             JOIN currency ON currency.id = opportunity.amount_currency
             WHERE
                 opportunity.deleted = 0 AND
+        ";
+
+        if ($dateFilter !== 'ever') {
+            $sql .= "
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
+            ";
+        }
+
+        $sql .= "
                 opportunity.stage <> 'Closed Lost' AND
                 opportunity.stage <> 'Closed Won'
             GROUP BY opportunity.stage
@@ -131,8 +166,12 @@ class Opportunity extends \Espo\Services\Record
         return $result;
     }
 
-    public function reportSalesByMonth($dateFrom, $dateTo)
+    public function reportSalesByMonth($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
+            list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "
@@ -141,10 +180,17 @@ class Opportunity extends \Espo\Services\Record
             JOIN currency ON currency.id = opportunity.amount_currency
             WHERE
                 opportunity.deleted = 0 AND
+        ";
+
+        if ($dateFilter !== 'ever') {
+            $sql .= "
                 opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
                 opportunity.close_date < ".$pdo->quote($dateTo)." AND
-                opportunity.stage = 'Closed Won'
+            ";
+        }
 
+        $sql .= "
+            opportunity.stage = 'Closed Won'
             GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
             ORDER BY `month`
         ";
@@ -200,5 +246,32 @@ class Opportunity extends \Espo\Services\Record
             'keyList' => $keyList,
             'dataMap' => $result
         ];
+    }
+
+    protected function getDateRangeByFilter($dateFilter)
+    {
+        switch ($dateFilter) {
+            case 'currentYear':
+                $dt = new \DateTime();
+                return [
+                    $dt->modify('first day of January this year')->format('Y-m-d'),
+                    $dt->add(new \DateInterval('P1Y'))->format('Y-m-d')
+                ];
+            case 'currentQuarter':
+                $dt = new \DateTime();
+                $quarter = ceil($dt->format('m') / 3);
+                $dt->modify('first day of January this year');
+                return [
+                    $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                    $dt->add(new \DateInterval('P3M'))->format('Y-m-d')
+                ];
+            case 'currentMonth':
+                $dt = new \DateTime();
+                return [
+                    $dt->modify('first day of this month')->format('Y-m-d'),
+                    $dt->add(new \DateInterval('P1M'))->format('Y-m-d')
+                ];
+        }
+        return [0, 0];
     }
 }

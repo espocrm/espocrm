@@ -2,6 +2,7 @@
     "view":"crm:views/dashlets/opportunities-by-stage",
     "aclScope": "Opportunity",
     "options": {
+        "view": "crm:views/dashlets/options/chart",
         "fields": {
             "title": {
                 "type": "varchar",
@@ -14,6 +15,12 @@
             "dateTo": {
                 "type": "date",
                 "required": true
+            },
+            "dateFilter": {
+                "type": "enum",
+                "options": ["currentYear", "currentQuarter", "currentMonth", "ever", "between"],
+                "default": "currentYear",
+                "translation": "Global.options.dateSearchRanges"
             }
         },
         "layout": [
@@ -23,11 +30,18 @@
                         {"name": "title"}
                     ],
                     [
+                        {"name": "dateFilter"},
+                        false
+                    ],
+                    [
                         {"name": "dateFrom"},
                         {"name": "dateTo"}
                     ]
                 ]
             }
-        ]
+        ],
+        "defaults": {
+            "dateFilter": "currentYear"
+        }
     }
 }

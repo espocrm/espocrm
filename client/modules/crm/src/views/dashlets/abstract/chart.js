@@ -194,5 +194,9 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             });
         },
 
+        getDateFilter: function () {
+            return this.getOption('dateFilter') || 'currentYear';
+        }
+
     });
 });

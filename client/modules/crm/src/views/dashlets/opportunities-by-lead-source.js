@@ -33,7 +33,12 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
         name: 'OpportunitiesByLeadSource',
 
         url: function () {
-            return 'Opportunity/action/reportByLeadSource?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            var url = 'Opportunity/action/reportByLeadSource?dateFilter='+ this.getDateFilter();
+
+            if (this.getDateFilter() === 'between') {
+                url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            }
+            return url;
         },
 
         prepareData: function (response) {

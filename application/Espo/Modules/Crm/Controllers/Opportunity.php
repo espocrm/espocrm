@@ -43,8 +43,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
+        $dateFilter = $request->get('dateFilter');
 
-        return $this->getService('Opportunity')->reportByLeadSource($dateFrom, $dateTo);
+        return $this->getService('Opportunity')->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
     }
 
     public function actionReportByStage($params, $data, $request)
@@ -56,8 +57,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
+        $dateFilter = $request->get('dateFilter');
 
-        return $this->getService('Opportunity')->reportByStage($dateFrom, $dateTo);
+        return $this->getService('Opportunity')->reportByStage($dateFilter, $dateFrom, $dateTo);
     }
 
     public function actionReportSalesByMonth($params, $data, $request)
@@ -69,8 +71,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
+        $dateFilter = $request->get('dateFilter');
 
-        return $this->getService('Opportunity')->reportSalesByMonth($dateFrom, $dateTo);
+        return $this->getService('Opportunity')->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
     }
 
     public function actionReportSalesPipeline($params, $data, $request)
@@ -82,8 +85,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
+        $dateFilter = $request->get('dateFilter');
 
-        return $this->getService('Opportunity')->reportSalesPipeline($dateFrom, $dateTo);
+        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo);
     }
 }
 
