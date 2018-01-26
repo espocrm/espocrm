@@ -209,4 +209,14 @@ class App extends \Espo\Core\Services\Base
             }
         return $value;
     }
+
+    public function jobClearCache()
+    {
+        $this->getInjection('container')->get('dataManager')->clearCache();
+    }
+
+    public function jobRebuild()
+    {
+        $this->getInjection('container')->get('dataManager')->rebuild();
+    }
 }
