@@ -131,7 +131,8 @@
         "messageId": {
             "type": "varchar",
             "maxLength": 255,
-            "readOnly": true
+            "readOnly": true,
+            "index": true
         },
         "messageIdInternal": {
             "type": "varchar",
@@ -416,9 +417,6 @@
         "textFilterFields": ["name", "bodyPlain", "body"]
     },
     "indexes": {
-        "dateSentAssignedUser": {
-            "columns": ["dateSent", "assignedUserId"]
-        },
         "dateSent": {
             "columns": ["dateSent", "deleted"]
         },
