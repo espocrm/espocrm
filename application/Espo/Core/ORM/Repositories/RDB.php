@@ -285,35 +285,40 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->has('id')) {
                 $entity->set('id', Util::generateId());
             }
+        }
 
-            if ($entity->hasAttribute('createdAt')) {
-                if (empty($options['import']) || !$entity->has('createdAt')) {
-                    $entity->set('createdAt', $nowString);
-                }
-            }
-            if ($entity->hasAttribute('modifiedAt')) {
-                $entity->set('modifiedAt', $nowString);
-            }
-            if ($entity->hasAttribute('createdById')) {
-                if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
-                    if ($this->getEntityManager()->getUser()) {
-                        $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+        if (empty($options['skipAll'])) {
+            if ($entity->isNew()) {
+                if ($entity->hasAttribute('createdAt')) {
+                    if (empty($options['import']) || !$entity->has('createdAt')) {
+                        $entity->set('createdAt', $nowString);
                     }
                 }
-            }
-        } else {
-            if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
                 if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
-                if ($entity->hasAttribute('modifiedById')) {
-                    if ($this->getEntityManager()->getUser()) {
-                        $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                        $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                if ($entity->hasAttribute('createdById')) {
+                    if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                        if ($this->getEntityManager()->getUser()) {
+                            $entity->set('createdById', $this->getEntityManager()->getUser()->id);
+                        }
+                    }
+                }
+            } else {
+                if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
+                    if ($entity->hasAttribute('modifiedAt')) {
+                        $entity->set('modifiedAt', $nowString);
+                    }
+                    if ($entity->hasAttribute('modifiedById')) {
+                        if ($this->getEntityManager()->getUser()) {
+                            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+                            $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
+                        }
                     }
                 }
             }
         }
+
         $this->restoreData = $restoreData;
 
         $result = parent::save($entity, $options);
