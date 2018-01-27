@@ -168,7 +168,7 @@ return array (
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',
     'currencyFormat' => 1,
-    'currencyDecimalPlaces' => null,
+    'currencyDecimalPlaces' => 2,
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
     'inlineAttachmentUploadMaxSize' => 20,
