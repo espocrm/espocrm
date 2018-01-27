@@ -64,11 +64,14 @@ class Job
         return $this->cronScheduledJob;
     }
 
-    /**
-     * Get Pending Jobs
-     *
-     * @return array
-     */
+    public function isJobPending($id)
+    {
+        return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where([
+            'id' => $id,
+            'status' => CronManager::PENDING
+        ])->findOne();
+    }
+
     public function getPendingJobList()
     {
         $jobConfigs = $this->getConfig()->get('cron');
@@ -88,7 +91,7 @@ class Job
                 'data'
             ],
             'whereClause' => [
-                'status' => 'Pending',
+                'status' => CronManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s')
             ],
             'orderBy' => 'executeTime'
@@ -97,17 +100,21 @@ class Job
             $selectParams['offset'] = 0;
             $selectParams['limit'] = $limit;
         }
-        $jobList = $this->getEntityManager()->getRepository('Job')->find($selectParams);
 
-        $runningScheduledJobIdList = $this->getRunningScheduledJobIdList();
+        return $this->getEntityManager()->getRepository('Job')->find($selectParams);
+    }
 
-        $actualJobList = [];
-        foreach ($jobList as $job) {
-            if ($job->get('scheduledJobId') && in_array($job->get('scheduledJobId'), $runningScheduledJobIdList)) continue;
-            $actualJobList[] = $job;
+    public function isScheduledJobRunning($scheduledJobId, $targetId = null, $targetType = null)
+    {
+        $where = [
+            'scheduledJobId' => $scheduledJobId,
+            'status' => CronManager::RUNNING
+        ];
+        if ($targetId && $targetType) {
+            $where['targetId'] = $targetId;
+            $where['targetType'] = $targetType;
         }
-
-        return $actualJobList;
+        return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where($where)->findOne();
     }
 
     public function getRunningScheduledJobIdList()

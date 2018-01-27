@@ -33,6 +33,10 @@ use Espo\ORM\Entity;
 
 class Job extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected $hooksDisabled = true;
+
+    protected $processFieldsAfterSaveDisabled = true;
+
     protected function init()
     {
         parent::init();

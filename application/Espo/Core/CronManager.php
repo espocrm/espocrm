@@ -167,8 +167,26 @@ class CronManager
         $pendingJobList = $this->getCronJobUtil()->getPendingJobList();
 
         foreach ($pendingJobList as $job) {
+            $skip = false;
+            $this->getEntityManager()->getPdo()->query('LOCK TABLES `job` WRITE');
+            if ($this->getCronJobUtil()->isJobPending($job->id)) {
+                if ($job->get('scheduledJobId')) {
+                    if ($this->getCronJobUtil()->isScheduledJobRunning($job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))) {
+                        $skip = true;
+                    }
+                }
+            } else {
+                $skip = true;
+            }
+
+            if ($skip) {
+                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+                continue;
+            }
+
             $job->set('status', self::RUNNING);
             $this->getEntityManager()->saveEntity($job);
+            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
 
             $isSuccess = true;
             $skipLog = false;
