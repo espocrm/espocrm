@@ -41,11 +41,10 @@ class NewVersionChecker extends \Espo\Core\Jobs\Base
 
         $job = $this->getEntityManager()->getEntity('Job');
         $job->set(array(
-            'name' => 'NewVersionChecker',
+            'name' => 'New Version Checker',
             'serviceName' => 'AdminNotifications',
-            'method' => 'newVersionChecker',
             'methodName' => 'newVersionChecker',
-            'executeTime' => $this->getRunTime(),
+            'executeTime' => $this->getRunTime()
         ));
 
         $this->getEntityManager()->saveEntity($job);

@@ -79,6 +79,7 @@
             "scheduling": "1 */12 * * *"
         },
         "NewVersionChecker": {
+            "name": "New Version Checker",
             "isSystem": true,
             "scheduling": "15 5 * * *"
         }

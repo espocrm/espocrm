@@ -143,13 +143,17 @@ class DataManager
                     if ($job) {
                         $entityManager->removeEntity($job);
                     }
+                    $name = $jobName;
+                    if (!empty($defs['name'])) {
+                        $name = $defs['name'];
+                    }
                     $job = $entityManager->getEntity('ScheduledJob');
                     $job->set(array(
                         'job' => $jobName,
                         'status' => 'Active',
                         'scheduling' => $defs['scheduling'],
                         'isInternal' => true,
-                        'name' => $jobName
+                        'name' => $name
                     ));
                     $entityManager->saveEntity($job);
                 }
