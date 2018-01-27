@@ -50,7 +50,7 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
 
     public function beforeSave(Entity $entity, array $options = array())
     {
-        if (!$entity->has('executeTime')) {
+        if (!$entity->has('executeTime') && $entity->isNew()) {
             $entity->set('executeTime', date('Y-m-d H:i:s'));
         }
 
