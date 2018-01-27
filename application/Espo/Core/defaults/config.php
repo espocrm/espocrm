@@ -167,7 +167,7 @@ return array (
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',
-    'currencyFormat' => 1,
+    'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
