@@ -32,6 +32,7 @@ namespace Espo\Repositories;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\Conflict;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
@@ -50,7 +51,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             ))->findOne();
 
             if ($user) {
-                throw new Error();
+                throw new Conflict(json_encode(['reason' => 'userNameExists']));
             }
         } else {
             if ($entity->isFieldChanged('userName')) {
@@ -64,7 +65,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                     'id!=' => $entity->id
                 ))->findOne();
                 if ($user) {
-                    throw new Error();
+                    throw new Conflict(json_encode(['reason' => 'userNameExists']));
                 }
             }
         }
@@ -113,4 +114,3 @@ class User extends \Espo\Core\ORM\Repositories\RDB
         return false;
     }
 }
-
