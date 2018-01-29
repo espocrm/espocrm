@@ -851,7 +851,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.enableButtons();
         },
 
-        showDuplicate: function (duplicates) {
+        errorHandlerDuplicate: function (duplicates) {
             this.notify(false);
             this.createView('duplicate', 'views/modals/duplicate', {
                 scope: this.entityType,

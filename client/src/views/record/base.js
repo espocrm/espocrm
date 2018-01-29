@@ -476,10 +476,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         }
                     }
 
-                    if (response) {
-                        if (response.reason == 'Duplicate') {
+                    if (response && response.reason) {
+                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
+                        if (methodName in this) {
                             xhr.errorIsHandled = true;
-                            self.showDuplicate(response.data);
+                            this[methodName](response.data);
                         }
                     }
 
@@ -599,7 +600,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.model.set(defaultHash, {silent: true});
         },
 
-        showDuplicate: function (duplicates) {
+        errorHandlerDuplicate: function (duplicates) {
         },
 
         _handleDependencyAttributes: function () {
