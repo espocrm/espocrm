@@ -149,4 +149,7 @@ span.ok {
 	font-size: 15px;
 }
 
-
+.main-header.panel-heading {
+    background-color: #546e7a !important;
+    padding: 0px 2px;
+}
