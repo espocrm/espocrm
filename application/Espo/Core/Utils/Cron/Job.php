@@ -74,8 +74,7 @@ class Job
 
     public function getPendingJobList()
     {
-        $jobConfigs = $this->getConfig()->get('cron');
-        $limit = !empty($jobConfigs['maxJobNumber']) ? intval($jobConfigs['maxJobNumber']) : 0;
+        $limit = intval($this->getConfig()->get('jobMaxPortion', 0));
 
         $selectParams = [
             'select' => [
@@ -182,10 +181,8 @@ class Job
      */
     public function markFailedJobs()
     {
-        $jobConfigs = $this->getConfig()->get('cron');
-
         $currentTime = time();
-        $periodTime = $currentTime - intval($jobConfigs['jobPeriod']);
+        $periodTime = $currentTime - intval($this->getConfig()->get('jobPeriod', 0));
 
         $pdo = $this->getEntityManager()->getPDO();
 

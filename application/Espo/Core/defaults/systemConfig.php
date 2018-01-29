@@ -56,16 +56,10 @@ return array (    'defaultPermissions' =>
             'reset.html',
         ),
     ),
-    'cron' => array(
-        /** Max number of jobs per one execution. */
-        'maxJobNumber' => 15,
-        /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
-        'jobPeriod' => 7800,
-        /** Min time (in seconds) between two cron runs. */
-        'minExecutionTime' => 50,
-        /** Attempts to re-run failed jobs. */
-        'attempts' => 2
-    ),
+    'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
+    'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
+    'jobRerunAttemptNumber' => 1, /** Number of attempts to re-run failed jobs. */
+    'cronMinInterval' => 4, /** Min interval (in seconds) between two cron runs. */
     'crud' => array(
         'get' => 'read',
         'post' => 'create',
@@ -117,7 +111,10 @@ return array (    'defaultPermissions' =>
         'smtpSecurity',
         'smtpUsername',
         'smtpPassword',
-        'cron',
+        'jobMaxPortion',
+        'jobPeriod',
+        'jobRerunAttemptNumber',
+        'cronMinInterval',
         'authenticationMethod',
         'adminPanelIframeUrl',
         'ldapHost',

@@ -116,9 +116,10 @@ class CronManager
     {
         $lastRunData = $this->getFileManager()->getPhpContents($this->lastRunTime);
 
-        $lastRunTime = time() - intval($this->getConfig()->get('cron.minExecutionTime')) - 1;
         if (is_array($lastRunData) && !empty($lastRunData['time'])) {
             $lastRunTime = $lastRunData['time'];
+        } else {
+            $lastRunTime = time() - intval($this->getConfig()->get('cronMinInterval', 0)) - 1;
         }
 
         return $lastRunTime;
@@ -136,9 +137,9 @@ class CronManager
     {
         $currentTime = time();
         $lastRunTime = $this->getLastRunTime();
-        $minTime = $this->getConfig()->get('cron.minExecutionTime');
+        $cronMinInterval = $this->getConfig()->get('cronMinInterval', 0);
 
-        if ($currentTime > ($lastRunTime + $minTime) ) {
+        if ($currentTime > ($lastRunTime + $cronMinInterval)) {
             return true;
         }
 
