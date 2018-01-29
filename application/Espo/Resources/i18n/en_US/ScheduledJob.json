@@ -19,7 +19,7 @@
             "SendEmailReminders": "Send Email Reminders",
             "AuthTokenControl": "Auth Token Control",
             "SendEmailNotifications": "Send Email Notifications",
-            "NewVersionChecker": "New Version Checker"
+            "CheckNewVersion": "Check for New Version"
         },
         "cronSetup": {
             "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",

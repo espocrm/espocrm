@@ -31,7 +31,7 @@ namespace Espo\Jobs;
 
 use Espo\Core\Exceptions;
 
-class NewVersionChecker extends \Espo\Core\Jobs\Base
+class CheckNewVersion extends \Espo\Core\Jobs\Base
 {
     public function run()
     {
@@ -41,9 +41,9 @@ class NewVersionChecker extends \Espo\Core\Jobs\Base
 
         $job = $this->getEntityManager()->getEntity('Job');
         $job->set(array(
-            'name' => 'New Version Checker',
+            'name' => 'Check for New Version (job)',
             'serviceName' => 'AdminNotifications',
-            'methodName' => 'newVersionChecker',
+            'methodName' => 'jobCheckNewVersion',
             'executeTime' => $this->getRunTime()
         ));
 

@@ -31,7 +31,7 @@ namespace Espo\Services;
 
 class AdminNotifications extends \Espo\Core\Services\Base
 {
-    public function newVersionChecker($data)
+    public function jobCheckNewVersion($data)
     {
         $config = $this->getConfig();
 
