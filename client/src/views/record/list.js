@@ -1149,12 +1149,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.notify('Loading...');
 
             var final = function () {
-                $showMore.parent().append($showMore);
                 if (
-                    (collection.total > collection.length || collection.total == -1)
+                    (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
                 ) {
-                    this.$el.find('.more-count').text(collection.total - this.collection.length);
-                    $showMore.removeClass('hide');
+                    this.$el.find('.more-count').text(collection.total - collection.length - collection.lengthCorrection);
+                    $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');
 
@@ -1169,12 +1168,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var success = function () {
                 this.notify(false);
-                $showMore.addClass('hide');
-
-                var temp = collection.models[initialCount - 1];
+                $showMore.addClass('hidden');
 
                 var rowCount = collection.length - initialCount;
                 var rowsReady = 0;
+                if (collection.length <= initialCount) {
+                    final();
+                }
                 for (var i = initialCount; i < collection.length; i++) {
                     var model = collection.at(i);
                     this.buildRow(i, model, function (view) {
@@ -1196,6 +1196,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
                 this.noRebuild = true;
             }.bind(this);
+
+            this.listenToOnce(collection, 'update', function (collection, o) {
+                if (o.changes.merged.length) {
+                    collection.lengthCorrection += o.changes.merged.length;
+                }
+            }, this);
 
             collection.fetch({
                 success: success,

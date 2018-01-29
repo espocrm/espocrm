@@ -46,6 +46,8 @@ Espo.define('collection', [], function () {
 
         whereAdditional: null,
 
+        lengthCorrection: 0,
+
         _user: null,
 
         initialize: function (models, options) {
@@ -122,7 +124,7 @@ Espo.define('collection', [], function () {
                 options.data.maxSize = options.maxSize;
             }
 
-            options.data.offset = options.more ? this.length : this.offset;
+            options.data.offset = options.more ? this.length + this.lengthCorrection : this.offset;
             options.data.sortBy = this.sortBy;
             options.data.asc = this.asc;
             options.data.where = this.getWhere();
@@ -143,5 +145,3 @@ Espo.define('collection', [], function () {
     return Collection;
 
 });
-
-
