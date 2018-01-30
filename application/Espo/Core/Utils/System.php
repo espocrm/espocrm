@@ -142,7 +142,9 @@ class System
      */
     public function getPid()
     {
-        return getmypid();
+        if (function_exists('getmypid')) {
+            return getmypid();
+        }
     }
 
     /**

@@ -213,7 +213,7 @@ class Job
         switch ($period) {
             case 'jobPeriod':
                 while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-                    if (!$this->getSystemUtils()->isProcessActive($row['pid'])) {
+                    if (empty($row['pid']) || !$this->getSystemUtils()->isProcessActive($row['pid'])) {
                         $jobData[$row['id']] = $row;
                     }
                 }
@@ -223,20 +223,24 @@ class Job
                 while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
                     $jobData[$row['id']] = $row;
                 }
-                $additionalSetQuery = ", attempts = 0";
                 break;
         }
 
         if (!empty($jobData)) {
+            $jobIds = [];
+            foreach ($jobData as $jobId => $job) {
+                $jobIds[] = $pdo->quote($jobId);
+            }
+
             $update = "
                 UPDATE job
-                SET `status` = '" . CronManager::FAILED . "'" . (isset($additionalSetQuery) ? $additionalSetQuery : "") . "
-                WHERE id IN ('".implode("', '", array_keys($jobData))."')
+                SET `status` = '" . CronManager::FAILED . "', attempts = 0
+                WHERE id IN (".implode(", ", $jobIds).")
             ";
+
             $sth = $pdo->prepare($update);
             $sth->execute();
 
-            //add status 'Failed' to SchediledJobLog
             $cronScheduledJob = $this->getCronScheduledJob();
             foreach ($jobData as $jobId => $job) {
                 if (!empty($job['scheduled_job_id'])) {
@@ -280,8 +284,8 @@ class Job
                 $query = "
                     SELECT id FROM `job`
                     WHERE
-                        scheduled_job_id = '" . $row['scheduled_job_id'] . "' AND
-                        `status` = '" . CronManager::PENDING ."'
+                        scheduled_job_id = ".$pdo->quote($row['scheduled_job_id'])."
+                        AND `status` = '" . CronManager::PENDING ."'
                         ORDER BY execute_time
                         DESC LIMIT 1, 100000
                     ";
@@ -289,11 +293,16 @@ class Job
                 $sth->execute();
                 $jobIds = $sth->fetchAll(PDO::FETCH_COLUMN);
 
+                $quotedJobIds = [];
+                foreach ($jobIds as $jobId) {
+                    $quotedJobIds[] = $pdo->quote($jobId);
+                }
+
                 $update = "
                     UPDATE job
                     SET deleted = 1
                     WHERE
-                        id IN ('". implode("', '", $jobIds)."')
+                        id IN (".implode(", ", $quotedJobIds).")
                 ";
 
                 $sth = $pdo->prepare($update);
@@ -334,10 +343,10 @@ class Job
                     UPDATE job
                     SET
                         `status` = '" . CronManager::PENDING ."',
-                        attempts = '".$attempts."',
-                        failed_attempts = '".$failedAttempts."'
+                        attempts = ".$pdo->quote($attempts).",
+                        failed_attempts = ".$pdo->quote($failedAttempts)."
                     WHERE
-                        id = '".$row['id']."'
+                        id = ".$pdo->quote($row['id'])."
                 ";
                 $pdo->prepare($update)->execute();
             }
