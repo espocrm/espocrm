@@ -9,6 +9,7 @@
     "dashboardCellMargin": 19,
     "modalFooterAtTheTop": true,
     "modalFullHeight": true,
+    "fontSize": 14,
     "textColor": "#333",
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",

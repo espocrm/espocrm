@@ -6,6 +6,7 @@
     "navbarHeight": 44,
     "modalFooterAtTheTop": true,
     "modalFullHeight": true,
+    "fontSize": 14,
     "textColor": "#333",
     "chartGridColor": "#ddd",
     "chartSuccessColor": "#87C956",

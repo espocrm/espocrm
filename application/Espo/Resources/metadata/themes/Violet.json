@@ -7,6 +7,7 @@
     "modalFooterAtTheTop": true,
     "modalFullHeight": true,
     "textColor": "#333",
+    "fontSize": 14,
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",
     "chartSuccessColor": "#7BC169",
