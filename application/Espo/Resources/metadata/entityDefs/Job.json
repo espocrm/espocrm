@@ -82,9 +82,6 @@
         },
         "status": {
             "columns": ["status", "deleted"]
-        },
-        "pid": {
-            "columns": ["status", "pid"]
-         }
+        }
     }
 }
