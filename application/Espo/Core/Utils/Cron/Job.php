@@ -227,15 +227,15 @@ class Job
         }
 
         if (!empty($jobData)) {
-            $jobIds = [];
+            $jobQuotedIdList = [];
             foreach ($jobData as $jobId => $job) {
-                $jobIds[] = $pdo->quote($jobId);
+                $jobQuotedIdList[] = $pdo->quote($jobId);
             }
 
             $update = "
                 UPDATE job
                 SET `status` = '" . CronManager::FAILED . "', attempts = 0
-                WHERE id IN (".implode(", ", $jobIds).")
+                WHERE id IN (".implode(", ", $jobQuotedIdList).")
             ";
 
             $sth = $pdo->prepare($update);
@@ -291,18 +291,22 @@ class Job
                     ";
                 $sth = $pdo->prepare($query);
                 $sth->execute();
-                $jobIds = $sth->fetchAll(PDO::FETCH_COLUMN);
+                $jobIdList = $sth->fetchAll(PDO::FETCH_COLUMN);
 
-                $quotedJobIds = [];
-                foreach ($jobIds as $jobId) {
-                    $quotedJobIds[] = $pdo->quote($jobId);
+                if (empty($jobIdList)) {
+                    continue;
+                }
+
+                $quotedJobIdList = [];
+                foreach ($jobIdList as $jobId) {
+                    $quotedJobIdList[] = $pdo->quote($jobId);
                 }
 
                 $update = "
                     UPDATE job
                     SET deleted = 1
                     WHERE
-                        id IN (".implode(", ", $quotedJobIds).")
+                        id IN (".implode(", ", $quotedJobIdList).")
                 ";
 
                 $sth = $pdo->prepare($update);
