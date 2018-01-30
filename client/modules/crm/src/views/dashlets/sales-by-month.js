@@ -97,7 +97,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5,
+                    barWidth: 0.5
                 },
                 grid: {
                     horizontalLines: true,
@@ -118,7 +118,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                             return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
                         }
                         return '';
-                    },
+                    }
                 },
                 xaxis: {
                     min: 0,
@@ -147,8 +147,6 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     }
                 }
             })
-        },
+        }
     });
 });
-
-
