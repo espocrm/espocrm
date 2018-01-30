@@ -1,6 +1,5 @@
 <div class="panel-body body">
     <div id="msg-box" class="alert alert-danger">{$errors}</div>
-    <div class="loading-icon hide"></div>
     <form id="nav">
         <div class="row">
             <div class=" col-md-13">
@@ -9,6 +8,11 @@
             </div>
         </div>
     </form>
+</div>
+<div class="loading-panel hide">
+    <div class="text-right">
+        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+    </div>
 </div>
 <footer class="modal-footer">
     <button class="btn btn-warning" type="button" id="re-check">{$langs['labels']['Re-check']}</button>

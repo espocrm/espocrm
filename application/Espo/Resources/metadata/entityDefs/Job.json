@@ -39,6 +39,9 @@
             "link": "scheduledJob",
             "field": "job"
         },
+        "pid": {
+            "type": "int"
+        },
         "attempts": {
             "type": "int"
         },
@@ -79,6 +82,9 @@
         },
         "status": {
             "columns": ["status", "deleted"]
-        }
+        },
+        "pid": {
+            "columns": ["status", "pid"]
+         }
     }
 }

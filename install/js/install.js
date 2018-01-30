@@ -566,11 +566,11 @@ InstallScript.prototype.hideMsg = function() {
 }
 
 InstallScript.prototype.showLoading = function() {
-	$('.loading-icon').removeClass('hide');
+	$('.loading-panel').removeClass('hide');
 }
 
 InstallScript.prototype.hideLoading = function() {
-	$('.loading-icon').addClass('hide');
+	$('.loading-panel').addClass('hide');
 }
 
 InstallScript.prototype.checkPass = function(opt) {
