@@ -461,12 +461,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     var r = xhr.getAllResponseHeaders();
                     var response = null;
 
-                    if (xhr.status == 409) {
-                        var header = xhr.getResponseHeader('X-Status-Reason');
-                        try {
-                            var response = JSON.parse(header);
-                        } catch (e) {
-                            console.error('Error while parsing response');
+                    if (~[409, 500].indexOf(xhr.status)) {
+                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        if (statusReasonHeader) {
+                            try {
+                                var response = JSON.parse(statusReasonHeader);
+                            } catch (e) {
+                                console.error('Could not parse X-Status-Reason header');
+                            }
                         }
                     }
 
