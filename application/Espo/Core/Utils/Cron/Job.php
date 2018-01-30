@@ -28,10 +28,11 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Cron;
-use \PDO;
-use \Espo\Core\CronManager;
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
+
+use PDO;
+use Espo\Core\CronManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\ORM\EntityManager;
 
 class Job
 {
@@ -41,12 +42,15 @@ class Job
 
     private $cronScheduledJob;
 
+    private $systemUtils;
+
     public function __construct(Config $config, EntityManager $entityManager)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
 
         $this->cronScheduledJob = new ScheduledJob($this->config, $this->entityManager);
+        $this->systemUtils = new \Espo\Core\Utils\System();
     }
 
     protected function getConfig()
@@ -62,6 +66,11 @@ class Job
     protected function getCronScheduledJob()
     {
         return $this->cronScheduledJob;
+    }
+
+    protected function getSystemUtils()
+    {
+        return $this->systemUtils;
     }
 
     public function isJobPending($id)
@@ -181,37 +190,58 @@ class Job
      */
     public function markFailedJobs()
     {
-        $currentTime = time();
-        $periodTime = $currentTime - intval($this->getConfig()->get('jobPeriod', 0));
+        $this->markFailedJobsByPeriod('jobPeriodForActiveProcess');
+        $this->markFailedJobsByPeriod('jobPeriod');
+    }
+
+    protected function markFailedJobsByPeriod($period)
+    {
+        $time = time() - $this->getConfig()->get($period);
 
         $pdo = $this->getEntityManager()->getPDO();
 
         $select = "
-            SELECT id, scheduled_job_id, execute_time, target_id, target_type FROM `job`
+            SELECT id, scheduled_job_id, execute_time, target_id, target_type, pid FROM `job`
             WHERE
-            `status` = '" . CronManager::RUNNING ."' AND execute_time < '".date('Y-m-d H:i:s', $periodTime)."'
+            `status` = '" . CronManager::RUNNING ."' AND execute_time < '".date('Y-m-d H:i:s', $time)."'
         ";
         $sth = $pdo->prepare($select);
         $sth->execute();
 
         $jobData = array();
-        while ($row = $sth->fetch(PDO::FETCH_ASSOC)){
-           $jobData[$row['id']] = $row;
+
+        switch ($period) {
+            case 'jobPeriod':
+                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                    if (!$this->getSystemUtils()->isProcessActive($row['pid'])) {
+                        $jobData[$row['id']] = $row;
+                    }
+                }
+                break;
+
+            case 'jobPeriodForActiveProcess':
+                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                    $jobData[$row['id']] = $row;
+                }
+                $additionalSetQuery = ", attempts = 0";
+                break;
         }
 
-        $update = "
-            UPDATE job
-            SET `status` = '". CronManager::FAILED ."'
-            WHERE id IN ('".implode("', '", array_keys($jobData))."')
-        ";
-        $sth = $pdo->prepare($update);
-        $sth->execute();
+        if (!empty($jobData)) {
+            $update = "
+                UPDATE job
+                SET `status` = '" . CronManager::FAILED . "'" . (isset($additionalSetQuery) ? $additionalSetQuery : "") . "
+                WHERE id IN ('".implode("', '", array_keys($jobData))."')
+            ";
+            $sth = $pdo->prepare($update);
+            $sth->execute();
 
-        //add status 'Failed' to SchediledJobLog
-        $cronScheduledJob = $this->getCronScheduledJob();
-        foreach ($jobData as $jobId => $job) {
-            if (!empty($job['scheduled_job_id'])) {
-                $cronScheduledJob->addLogRecord($job['scheduled_job_id'], CronManager::FAILED, $job['execute_time'], $job['target_id'], $job['target_type']);
+            //add status 'Failed' to SchediledJobLog
+            $cronScheduledJob = $this->getCronScheduledJob();
+            foreach ($jobData as $jobId => $job) {
+                if (!empty($job['scheduled_job_id'])) {
+                    $cronScheduledJob->addLogRecord($job['scheduled_job_id'], CronManager::FAILED, $job['execute_time'], $job['target_id'], $job['target_type']);
+                }
             }
         }
     }
@@ -312,5 +342,10 @@ class Job
                 $pdo->prepare($update)->execute();
             }
         }
+    }
+
+    public function getPid()
+    {
+        return $this->getSystemUtils()->getPid();
     }
 }

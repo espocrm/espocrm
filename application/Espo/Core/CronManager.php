@@ -186,6 +186,7 @@ class CronManager
             }
 
             $job->set('status', self::RUNNING);
+            $job->set('pid', $this->getCronJobUtil()->getPid());
             $this->getEntityManager()->saveEntity($job);
             $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
 

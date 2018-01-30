@@ -134,4 +134,38 @@ class System
 
         return $version;
     }
+
+    /**
+     * Pet process ID
+     *
+     * @return integer
+     */
+    public function getPid()
+    {
+        return getmypid();
+    }
+
+    /**
+     * Check if process is active
+     *
+     * @param  integer  $pid
+     *
+     * @return boolean
+     */
+    public function isProcessActive($pid)
+    {
+        if (empty($pid)) {
+            return false;
+        }
+
+        if (!function_exists('posix_getsid')) {
+            return false;
+        }
+
+        if (posix_getsid($pid) === false) {
+            return false;
+        }
+
+        return true;
+    }
 }

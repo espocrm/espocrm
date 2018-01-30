@@ -58,6 +58,7 @@ return array (    'defaultPermissions' =>
     ),
     'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
     'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
+    'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
     'jobRerunAttemptNumber' => 1, /** Number of attempts to re-run failed jobs. */
     'cronMinInterval' => 4, /** Min interval (in seconds) between two cron runs. */
     'crud' => array(
