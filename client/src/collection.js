@@ -68,6 +68,11 @@ Espo.define('collection', [], function () {
             Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
         },
 
+        reset: function (models, options) {
+            this.lengthCorrection = 0;
+            Backbone.Collection.prototype.reset.call(this, models, options);
+        },
+
         sort: function (field, asc) {
             this.sortBy = field;
             this.asc = asc;
