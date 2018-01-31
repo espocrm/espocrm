@@ -1149,6 +1149,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.notify('Loading...');
 
             var final = function () {
+                $showMore.parent().append($showMore);
                 if (
                     (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
                 ) {
