@@ -606,6 +606,21 @@ select[multiple].input-sm {
         border-left: 0;
         border-right: 0;
     }
+
+    > .table-bordered {
+        border-left: 0;
+        border-right: 0;
+
+        td:last-child,
+        th:last-child {
+            border-right: 0;
+        }
+
+        td:first-child,
+        th:first-child {
+            border-left: 0;
+        }
+    }
 }
 
 .panel-body .no-bottom-margin {
