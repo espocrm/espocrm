@@ -140,7 +140,7 @@ class System
      *
      * @return integer
      */
-    public function getPid()
+    public static function getPid()
     {
         if (function_exists('getmypid')) {
             return getmypid();
@@ -154,7 +154,7 @@ class System
      *
      * @return boolean
      */
-    public function isProcessActive($pid)
+    public static function isProcessActive($pid)
     {
         if (empty($pid)) {
             return false;
