@@ -186,11 +186,10 @@ class AdminNotificationManager
         $notification->set(array(
             'type' => 'message',
             'data' => array(
-                'userId' => $this->getUser()->id,
-                'userName' => $this->getUser()->get('name')
+                'userId' => $userId,
             ),
-            'userId' => $user->id,
-            'message' => $actionData['messageTemplate']
+            'userId' => $userId,
+            'message' => $message
         ));
         $this->getEntityManager()->saveEntity($notification);
     }
