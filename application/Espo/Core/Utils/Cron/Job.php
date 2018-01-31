@@ -33,6 +33,7 @@ use PDO;
 use Espo\Core\CronManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\System;
 
 class Job
 {
@@ -42,15 +43,12 @@ class Job
 
     private $cronScheduledJob;
 
-    private $systemUtils;
-
     public function __construct(Config $config, EntityManager $entityManager)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
 
         $this->cronScheduledJob = new ScheduledJob($this->config, $this->entityManager);
-        $this->systemUtils = new \Espo\Core\Utils\System();
     }
 
     protected function getConfig()
@@ -66,11 +64,6 @@ class Job
     protected function getCronScheduledJob()
     {
         return $this->cronScheduledJob;
-    }
-
-    protected function getSystemUtils()
-    {
-        return $this->systemUtils;
     }
 
     public function isJobPending($id)
@@ -213,7 +206,7 @@ class Job
         switch ($period) {
             case 'jobPeriod':
                 while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-                    if (empty($row['pid']) || !$this->getSystemUtils()->isProcessActive($row['pid'])) {
+                    if (empty($row['pid']) || !System::isProcessActive($row['pid'])) {
                         $jobData[$row['id']] = $row;
                     }
                 }
@@ -359,6 +352,6 @@ class Job
 
     public function getPid()
     {
-        return $this->getSystemUtils()->getPid();
+        return System::getPid();
     }
 }
