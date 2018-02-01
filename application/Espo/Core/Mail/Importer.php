@@ -154,31 +154,8 @@ class Importer
         }
 
         if ($duplicate = $this->findDuplicate($email)) {
-            if ($assignedUserId) {
-                $duplicate->addLinkMultipleId('users', $assignedUserId);
-                $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
-            }
-            if (!empty($userIdList)) {
-                foreach ($userIdList as $uId) {
-                    $duplicate->addLinkMultipleId('users', $uId);
-                }
-            }
-
-            if ($folderData) {
-                foreach ($folderData as $uId => $folderId) {
-                    $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-                }
-            }
-
-            $duplicate->set('isBeingImported', true);
-
-            $this->getEntityManager()->saveEntity($duplicate);
-
-            if (!empty($teamsIdList)) {
-                foreach ($teamsIdList as $teamId) {
-                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
-                }
-            }
+            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
             return $duplicate;
         }
 
@@ -299,6 +276,26 @@ class Importer
             }
         }
 
+        $this->getEntityManager()->getPdo()->query('LOCK TABLES `email` WRITE');
+
+        if ($duplicate = $this->findDuplicate($email)) {
+            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+            $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+            return $duplicate;
+        }
+
+        if (!$email->get('messageId')) {
+            $email->setDummyMessageId();
+        }
+
+        $this->getEntityManager()->saveEntity($email, [
+            'skipAll' => true,
+            'keepNew' => true
+        ]);
+
+        $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
+
         $this->getEntityManager()->saveEntity($email);
 
         foreach ($inlineAttachmentList as $attachment) {
@@ -352,11 +349,40 @@ class Importer
     protected function findDuplicate(Entity $email)
     {
         if ($email->get('messageId')) {
-            $duplicate = $this->getEntityManager()->getRepository('Email')->where(array(
+            $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id'])->where(array(
                 'messageId' => $email->get('messageId')
             ))->findOne();
             if ($duplicate) {
                 return $duplicate;
+            }
+        }
+    }
+
+    protected function processDuplicate(Entity $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
+    {
+        if ($assignedUserId) {
+            $duplicate->addLinkMultipleId('users', $assignedUserId);
+            $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
+        }
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $uId) {
+                $duplicate->addLinkMultipleId('users', $uId);
+            }
+        }
+
+        if ($folderData) {
+            foreach ($folderData as $uId => $folderId) {
+                $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+            }
+        }
+
+        $duplicate->set('isBeingImported', true);
+
+        $this->getEntityManager()->saveEntity($duplicate);
+
+        if (!empty($teamsIdList)) {
+            foreach ($teamsIdList as $teamId) {
+                $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
             }
         }
     }

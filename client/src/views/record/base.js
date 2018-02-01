@@ -461,12 +461,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     var r = xhr.getAllResponseHeaders();
                     var response = null;
 
-                    if (xhr.status == 409) {
-                        var header = xhr.getResponseHeader('X-Status-Reason');
-                        try {
-                            var response = JSON.parse(header);
-                        } catch (e) {
-                            console.error('Error while parsing response');
+                    if (~[409, 500].indexOf(xhr.status)) {
+                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        if (statusReasonHeader) {
+                            try {
+                                var response = JSON.parse(statusReasonHeader);
+                            } catch (e) {
+                                console.error('Could not parse X-Status-Reason header');
+                            }
                         }
                     }
 
@@ -476,10 +478,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         }
                     }
 
-                    if (response) {
-                        if (response.reason == 'Duplicate') {
+                    if (response && response.reason) {
+                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
+                        if (methodName in this) {
                             xhr.errorIsHandled = true;
-                            self.showDuplicate(response.data);
+                            this[methodName](response.data);
                         }
                     }
 
@@ -599,7 +602,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.model.set(defaultHash, {silent: true});
         },
 
-        showDuplicate: function (duplicates) {
+        errorHandlerDuplicate: function (duplicates) {
         },
 
         _handleDependencyAttributes: function () {

@@ -38,7 +38,12 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
         },
 
         url: function () {
-            return 'Opportunity/action/reportByStage?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            var url = 'Opportunity/action/reportByStage?dateFilter='+ this.getDateFilter();
+
+            if (this.getDateFilter() === 'between') {
+                url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            }
+            return url;
         },
 
         prepareData: function (response) {
@@ -60,7 +65,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     data: [[item.value, d.length - i]],
                     label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
                 }
-                if (item.stage == 'Closed Won') {
+                if (item.stagsuccessColore == 'Closed Won') {
                     o.color = this.successColor;
                 }
                 data.push(o);
@@ -73,13 +78,13 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
-                colors: this.colors,
+                colors: this.colorList,
                 shadowSize: false,
                 bars: {
                     show: true,
@@ -87,44 +92,53 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5,
+                    barWidth: 0.5
                 },
                 grid: {
                     horizontalLines: false,
                     outline: 'sw',
-                    color: this.outlineColor
+                    color: this.gridColor,
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     showLabels: false,
+                    color: this.textColor
                 },
                 xaxis: {
                     min: 0,
+                    color: this.textColor,
                     tickFormatter: function (value) {
-                        if (value != 0) {
-                            return self.formatNumber(value) + ' ' + self.currency;
+                        if (value == 0) {
+                            return '';
+                        }
+                        if (value % 1 == 0) {
+                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
                         }
                         return '';
-                    },
+                    }
                 },
                 mouse: {
                     track: true,
                     relative: true,
                     position: 's',
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.x) + ' ' + self.currency;
-                    },
+                        var label = (obj.series.label || self.translate('None'));
+                        var value = label  + ':<br>' + self.currencySymbol + self.formatNumber(obj.x, true);
+                        return value;
+                    }
                 },
                 legend: {
                     show: true,
-                    noColumns: 5,
+                    noColumns: this.getLegentColumnNumber(),
                     container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0
-                },
+                    labelBoxMargin: 0,
+                    labelFormatter: self.labelFormatter.bind(self),
+                    labelBoxBorderColor: 'transparent',
+                    backgroundOpacity: 0
+                }
             });
-        },
-
+        }
     });
 });
-
-

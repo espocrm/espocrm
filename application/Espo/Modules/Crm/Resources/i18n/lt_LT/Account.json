@@ -2,7 +2,7 @@
   "fields": {
     "name": "Vardas",
     "emailAddress": "El. paštas",
-    "website": "Interntinė Svetainė",
+    "website": "Internetinė Svetainė",
     "phoneNumber": "Telefonas",
     "billingAddress": "Mokėtojo adresas",
     "shippingAddress": "Siuntimo adresas",

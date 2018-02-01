@@ -185,9 +185,12 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             }
 
             return data;
+        },
+
+        errorHandlerUserNameExists: function () {
+            Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
         }
 
     });
 
 });
-

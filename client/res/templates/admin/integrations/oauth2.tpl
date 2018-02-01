@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-sm-6">
         <div class="panel">
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 <div class="cell form-group" data-name="enabled">
                     <label class="control-label" data-name="enabled">{{translate 'enabled' scope='Integration' category='fields'}}</label>
                     <div class="field" data-name="enabled">{{{enabled}}}</div>

@@ -212,15 +212,21 @@ class User extends Record
         return $passwordHash->hash($password);
     }
 
+    protected function filterInput($data)
+    {
+        parent::filterInput($data);
+
+        if (!$this->getUser()->get('isSuperAdmin')) {
+            unset($data->isSuperAdmin);
+        }
+    }
+
     public function createEntity($data)
     {
         $newPassword = null;
         if (property_exists($data, 'password')) {
             $newPassword = $data->password;
             $data->password = $this->hashPassword($data->password);
-        }
-        if (!$this->getUser()->get('isSuperAdmin')) {
-            unset($data->isSuperAdmin);
         }
 
         $user = parent::createEntity($data);
@@ -250,9 +256,6 @@ class User extends Record
         if ($id == $this->getUser()->id) {
             unset($data->isActive);
             unset($data->isPortalUser);
-        }
-        if (!$this->getUser()->get('isSuperAdmin')) {
-            unset($data->isSuperAdmin);
         }
 
         $user = parent::updateEntity($id, $data);
@@ -466,6 +469,25 @@ class User extends Record
         }
         if ($entity->id == $this->getUser()->id) {
             return false;
+        }
+        return true;
+    }
+
+    protected function checkEntityForMassUpdate(Entity $entity, $data)
+    {
+        if ($entity->id == 'system') {
+            return false;
+        }
+        if ($entity->id == $this->getUser()->id) {
+            if (property_exists($data, 'isActive')) {
+                return false;
+            }
+            if (property_exists($data, 'isPortalUser')) {
+                return false;
+            }
+            if (property_exists($data, 'isSuperAdmin')) {
+                return false;
+            }
         }
         return true;
     }

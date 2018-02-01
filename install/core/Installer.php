@@ -299,7 +299,15 @@ class Installer
         }
 
         if (!isset($entity)) {
-            $entity = $this->getEntityManager()->getEntity($entityName);
+            if (isset($data['name'])) {
+                $entity = $this->getEntityManager()->getRepository($entityName)->where(array(
+                    'name' => $data['name'],
+                ))->findOne();
+            }
+
+            if (!isset($entity)) {
+                $entity = $this->getEntityManager()->getEntity($entityName);
+            }
         }
 
         $entity->set($data);

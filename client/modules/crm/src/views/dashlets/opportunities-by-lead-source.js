@@ -33,7 +33,12 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
         name: 'OpportunitiesByLeadSource',
 
         url: function () {
-            return 'Opportunity/action/reportByLeadSource?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            var url = 'Opportunity/action/reportByLeadSource?dateFilter='+ this.getDateFilter();
+
+            if (this.getDateFilter() === 'between') {
+                url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            }
+            return url;
         },
 
         prepareData: function (response) {
@@ -55,13 +60,13 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
-                colors: this.colors,
+                colors: this.colorList,
                 shadowSize: false,
                 pie: {
                     show: true,
@@ -69,18 +74,25 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     lineWidth: 1,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
+                    labelFormatter: function (total, value) {
+                        var percentage = (100 * value / total).toFixed(2);
+                        if (percentage < 7) return '';
+                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">'+ percentage.toString() +'%' + '</span>';
+                    }
                 },
                 grid: {
                     horizontalLines: false,
                     verticalLines: false,
                     outline: '',
-                    color: this.outlineColor
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     showLabels: false,
+                    color: this.textColor
                 },
                 xaxis: {
                     showLabels: false,
+                    color: this.textColor
                 },
                 legend: {
                     show: false,
@@ -88,20 +100,26 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 mouse: {
                     track: true,
                     relative: true,
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.y) + ' ' + self.currency;
-                    },
+                        var value = self.currencySymbol + self.formatNumber(obj.y, true);
+
+                        var fraction = obj.fraction || 0;
+                        var percentage = (100 * fraction).toFixed(2).toString();
+
+                        return (obj.series.label || self.translate('None')) + ':<br>' + value + ' / ' + percentage + '%';
+                    }
                 },
                 legend: {
                     show: true,
-                    noColumns: 8,
+                    noColumns: this.getLegentColumnNumber(),
                     container: this.$el.find('.legend-container'),
-                    labelBoxMargin: 0
-                },
+                    labelBoxMargin: 0,
+                    labelFormatter: self.labelFormatter.bind(self),
+                    labelBoxBorderColor: 'transparent',
+                    backgroundOpacity: 0
+                }
             });
-        },
-
+        }
     });
 });
-
-

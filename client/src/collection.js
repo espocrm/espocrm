@@ -46,6 +46,8 @@ Espo.define('collection', [], function () {
 
         whereAdditional: null,
 
+        lengthCorrection: 0,
+
         _user: null,
 
         initialize: function (models, options) {
@@ -64,6 +66,11 @@ Espo.define('collection', [], function () {
         _onModelEvent: function(event, model, collection, options) {
             if (event === 'sync' && collection !== this) return;
             Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
+        },
+
+        reset: function (models, options) {
+            this.lengthCorrection = 0;
+            Backbone.Collection.prototype.reset.call(this, models, options);
         },
 
         sort: function (field, asc) {
@@ -122,7 +129,7 @@ Espo.define('collection', [], function () {
                 options.data.maxSize = options.maxSize;
             }
 
-            options.data.offset = options.more ? this.length : this.offset;
+            options.data.offset = options.more ? this.length + this.lengthCorrection : this.offset;
             options.data.sortBy = this.sortBy;
             options.data.asc = this.asc;
             options.data.where = this.getWhere();
@@ -143,5 +150,3 @@ Espo.define('collection', [], function () {
     return Collection;
 
 });
-
-

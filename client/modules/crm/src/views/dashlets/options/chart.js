@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,36 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+Espo.define('crm:views/dashlets/options/chart', 'views/dashlets/options/base', function (Dep) {
 
-use Espo\ORM\Entity;
+    return Dep.extend({
 
-class Job extends \Espo\Core\ORM\Repositories\RDB
-{
-    protected $hooksDisabled = true;
+        setupBeforeFinal: function () {
+            this.listenTo(this.model, 'change:dateFilter', this.controlDateFilter);
+            this.controlDateFilter();
+        },
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    public function beforeSave(Entity $entity, array $options = array())
-    {
-        if (!$entity->has('executeTime') && $entity->isNew()) {
-            $entity->set('executeTime', date('Y-m-d H:i:s'));
+        controlDateFilter: function () {
+            if (this.model.get('dateFilter') === 'between') {
+                this.showField('dateFrom');
+                this.showField('dateTo');
+            } else {
+                this.hideField('dateFrom');
+                this.hideField('dateTo');
+            }
         }
 
-        if (!$entity->has('attempts') && $entity->isNew()) {
-            $attempts = $this->getConfig()->get('jobRerunAttemptNumber', 0);
-            $entity->set('attempts', $attempts);
-        }
-    }
-}
+    });
+});

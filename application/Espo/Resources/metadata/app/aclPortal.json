@@ -80,12 +80,13 @@
                 "isInternal": false,
                 "isGlobal": false
             },
-            "User": {
-                "gender": false
+            "Email": {
+                "inboundEmails": false,
+                "emailAccounts": false
             }
         }
     },
-    "default": {
+    "strictDefault": {
         "scopeLevel": {
         },
         "fieldLevel": {
@@ -113,21 +114,20 @@
                     "edit": "no"
                 },
                 "leads": false
+            },
+            "KnowledgeBaseArticle": {
+                "assignedUser": false
+            },
+            "User": {
+                "gender": false
             }
         }
     },
     "valuePermissionList": [
         "exportPermission"
     ],
-    "permissionsDefaults": {
-        "exportPermission": "no"
-    },
     "permissionsStrictDefaults": {
         "exportPermission": "no"
-    },
-    "scopeLevelTypesDefaults": {
-        "boolean": false,
-        "record": false
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

@@ -41,6 +41,24 @@ class Entity extends \Espo\ORM\Entity
         return $this->hasAttribute($field . 'Id');
     }
 
+    public function loadParentNameField($field)
+    {
+        if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) return;
+
+        $parentId = $this->get($field . 'Id');
+        $parentType = $this->get($field . 'Type');
+
+        if ($parentId && $parentType) {
+            if (!$this->entityManager->hasRepository($parentType)) return;
+            $repository = $this->entityManager->getRepository($parentType);
+
+            $foreignEntity = $repository->select(['id', 'name'])->where(['id' => $parentId])->findOne();
+            if ($foreignEntity) {
+                $this->set($field . 'Name', $foreignEntity->get('name'));
+            }
+        }
+    }
+
     public function loadLinkMultipleField($field, $columns = null)
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) return;
@@ -69,12 +87,20 @@ class Entity extends \Espo\ORM\Entity
             }
         }
 
+        $defs['select'] = ['id', 'name'];
+
+        $hasType = false;
+        if ($this->hasField($field . 'Types')) {
+            $hasType = true;
+            $defs['select'][] = 'type';
+        }
+
         $collection = $this->get($field, $defs);
-        $ids = array();
-        $names = new \stdClass();
-        $types = new \stdClass();
+        $ids = [];
+        $names = (object) [];
+        $types = (object) [];
         if (!empty($columns)) {
-            $columnsData = new \stdClass();
+            $columnsData = (object) [];
         }
 
         if ($collection) {
@@ -82,7 +108,9 @@ class Entity extends \Espo\ORM\Entity
                 $id = $e->id;
                 $ids[] = $id;
                 $names->$id = $e->get('name');
-                $types->$id = $e->get('type');
+                if ($hasType) {
+                    $types->$id = $e->get('type');
+                }
                 if (!empty($columns)) {
                     $columnsData->$id = new \stdClass();
                     foreach ($columns as $column => $f) {
@@ -94,7 +122,9 @@ class Entity extends \Espo\ORM\Entity
 
         $this->set($field . 'Ids', $ids);
         $this->set($field . 'Names', $names);
-        $this->set($field . 'Types', $types);
+        if ($hasType) {
+            $this->set($field . 'Types', $types);
+        }
         if (!empty($columns)) {
             $this->set($field . 'Columns', $columnsData);
         }

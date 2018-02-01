@@ -36,16 +36,37 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         thousandSeparator: ',',
 
-        colors: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
+        defaultColorList: ['#6FA8D6', '#4E6CAD', '#EDC555', '#ED8F42', '#DE6666', '#7CC4A4', '#8A7CC2', '#D4729B'],
 
         successColor: '#85b75f',
 
-        outlineColor: '#333',
+        gridColor: '#ddd',
+
+        tickColor: '#e8eced',
+
+        textColor: '#333',
+
+        hoverColor: '#FF3F19',
+
+        legendColumnWidth: 90,
+
+        legendColumnNumber: 6,
+
+        labelFormatter: function (v) {
+            return '<span style="color:'+this.textColor+'">' + v + '</span>';
+        },
 
         init: function () {
             Dep.prototype.init.call(this);
 
             this.flotr = Flotr;
+
+            this.successColor = this.getThemeManager().getParam('chartSuccessColor') || this.successColor;
+            this.colorList = this.getThemeManager().getParam('chartColorList') || this.defaultColorList;
+            this.tickColor = this.getThemeManager().getParam('chartTickColor') || this.tickColor;
+            this.gridColor = this.getThemeManager().getParam('chartGridColor') || this.gridColor;
+            this.textColor = this.getThemeManager().getParam('textColor') || this.textColor;
+            this.hoverColor = this.getThemeManager().getParam('hoverColor') || this.hoverColor;
 
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark')
@@ -64,7 +85,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
             this.once('after:render', function () {
                 $(window).on('resize.chart' + this.name, function () {
-                    this.drow();
+                    this.draw();
                 }.bind(this));
             }, this);
 
@@ -73,34 +94,86 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             }, this);
         },
 
-        formatNumber: function (value) {
+        formatNumber: function (value, isCurrency) {
             if (value !== null) {
+                var maxDecimalPlaces = 2;
+                var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+
+                if (isCurrency) {
+                    if (currencyDecimalPlaces === 0) {
+                        value = Math.round(value);
+                    } else if (currencyDecimalPlaces) {
+                        value = Math.round(value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces));
+                    } else {
+                        value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
+                    }
+                } else {
+                    var maxDecimalPlaces = 4;
+                    value = Math.round(value * Math.pow(10, maxDecimalPlaces)) / (Math.pow(10, maxDecimalPlaces));
+                }
+
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-                if (parts[1] == 0) {
-                    parts.splice(1, 1);
+
+                if (isCurrency) {
+                    if (currencyDecimalPlaces === 0) {
+                        delete parts[1];
+                    } else if (currencyDecimalPlaces) {
+                        var decimalPartLength = 0;
+                        if (parts.length > 1) {
+                            decimalPartLength = parts[1].length;
+                        } else {
+                            parts[1] = '';
+                        }
+
+                        if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
+                            var limit = currencyDecimalPlaces - decimalPartLength;
+                            for (var i = 0; i < limit; i++) {
+                                parts[1] += '0';
+                            }
+                        }
+                    }
                 }
-                return parts.join(this.decimalMark);
+
+                var value = parts.join(this.decimalMark);
+                return value;
             }
             return '';
         },
 
+        getLegentColumnNumber: function () {
+            var width = this.$el.closest('.panel-body').width();
+            var legendColumnNumber = Math.floor(width / this.legendColumnWidth);
+            return legendColumnNumber || this.legendColumnNumber;
+        },
+
+        getLegentHeight: function () {
+            var lineNumber = Math.ceil(this.chartData.length / this.getLegentColumnNumber());
+            var legendHeight = 0;
+
+            var lineHeight = this.getThemeManager().getParam('dashletChartLegentRowHeight') || 22;
+            if (lineNumber > 0) {
+                legendHeight = lineHeight * lineNumber;
+            }
+            return legendHeight;
+        },
+
         afterRender: function () {
+            this.$el.closest('.panel-body').css({
+                'overflow-y': 'visible',
+                'overflow-x': 'visible'
+            });
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
                 var $container = this.$container = this.$el.find('.chart-container');
-
-                var height = 'calc(100% - 22px)';
-                if (this.chartData.length > 5) {
-                    height = 'calc(100% - 42px)';
-                }
-
-                $container.css('height', height);
+                var legendHeight = this.getLegentHeight();
+                var heightCss = 'calc(100% - '+legendHeight.toString()+'px)';
+                $container.css('height', heightCss);
 
                 setTimeout(function () {
                     if (!$container.size() || !$container.is(":visible")) return;
-                    this.drow();
+                    this.draw();
                 }.bind(this), 1);
             });
         },
@@ -121,6 +194,9 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             });
         },
 
+        getDateFilter: function () {
+            return this.getOption('dateFilter') || 'currentYear';
+        }
+
     });
 });
-

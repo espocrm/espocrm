@@ -37,7 +37,15 @@
         "emailAccounts": "Personal Accounts",
         "hasAttachment": "Has Attachment",
         "assignedUsers": "Assigned Users",
-        "sentBy": "Sent By"
+        "sentBy": "Sent By",
+        "ccEmailAddresses": "CC Email Addresses",
+        "messageId": "Message Id",
+        "messageIdInternal": "Message Id (Internal)",
+        "folderId": "Folder Id",
+        "fromName": "From Name",
+        "fromString": "From String",
+        "isSystem": "Is System"
+
     },
     "links": {
         "replied": "Replied",

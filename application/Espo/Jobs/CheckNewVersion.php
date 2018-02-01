@@ -27,36 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Jobs;
 
-use Espo\ORM\Entity;
+use Espo\Core\Exceptions;
 
-class Job extends \Espo\Core\ORM\Repositories\RDB
+class CheckNewVersion extends \Espo\Core\Jobs\Base
 {
-    protected $hooksDisabled = true;
-
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected function init()
+    public function run()
     {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    public function beforeSave(Entity $entity, array $options = array())
-    {
-        if (!$entity->has('executeTime') && $entity->isNew()) {
-            $entity->set('executeTime', date('Y-m-d H:i:s'));
+        if (!$this->getConfig()->get('adminNotifications') || !$this->getConfig()->get('adminNotificationsNewVersion')) {
+            return true;
         }
 
-        if (!$entity->has('attempts') && $entity->isNew()) {
-            $attempts = $this->getConfig()->get('jobRerunAttemptNumber', 0);
-            $entity->set('attempts', $attempts);
+        $job = $this->getEntityManager()->getEntity('Job');
+        $job->set(array(
+            'name' => 'Check for New Version (job)',
+            'serviceName' => 'AdminNotifications',
+            'methodName' => 'jobCheckNewVersion',
+            'executeTime' => $this->getRunTime()
+        ));
+
+        $this->getEntityManager()->saveEntity($job);
+
+        return true;
+    }
+
+    protected function getRunTime()
+    {
+        $hour = rand(0, 4);
+        $minute = rand(0, 60);
+
+        $nextDay = new \DateTime('+ 1 day');
+        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
+
+        $timeZone = $this->getConfig()->get('timeZone');
+        if (empty($timeZone)) {
+            $timeZone = 'UTC';
         }
+
+        $datetime = new \DateTime($time, new \DateTimeZone($timeZone));
+
+        return $datetime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 }

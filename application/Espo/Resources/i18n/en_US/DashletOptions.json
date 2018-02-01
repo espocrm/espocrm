@@ -14,7 +14,8 @@
         "boolFilterList": "Additional Filters",
         "sortBy": "Order (field)",
         "sortDirection": "Order (direction)",
-        "expandedLayout": "Layout"
+        "expandedLayout": "Layout",
+        "dateFilter": "Date Filter"
     },
     "options": {
     	"mode": {

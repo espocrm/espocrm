@@ -337,10 +337,14 @@
             "tooltip": true
         },
         "inboundEmailMaxPortionSize": {
-            "type": "int"
+            "type": "int",
+            "min": 1,
+            "max": 500
         },
         "personalEmailMaxPortionSize": {
-            "type": "int"
+            "type": "int",
+            "min": 1,
+            "max": 500
         },
         "maxEmailAccountCount": {
             "type": "int"

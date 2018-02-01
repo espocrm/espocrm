@@ -26,14 +26,6 @@ select[name="user-lang"] {
 	margin-left: 16.6667%;
 }
 
-.loading-icon {
-    background-image: url("../img/loading-icon.gif");
-    background-repeat: no-repeat;
-    height: 31px;
-    width: 31px;
-	float: right;
-}
-
 .devices {
 	width: 50%;
 	height: 50%;
@@ -68,7 +60,6 @@ select[name="user-lang"] {
 	text-align: center;
 	width: 4%;
 	float: left;
-
 }
 
 .semicolon-sign {
@@ -109,8 +100,13 @@ input[type=checkbox].btn-default {
 	margin-right: 10px;
 }
 
-.setup-confirmation .loading-icon {
-	margin-top: 10px;
+.loading-panel {
+    padding: 0 14px 10px 0;
+    margin-top: -29px;
+}
+
+.space {
+    padding: 14px;
 }
 
 span.remark {
@@ -149,4 +145,29 @@ span.ok {
 	font-size: 15px;
 }
 
+.main-header.panel-heading {
+    background-color: #546e7a !important;
+    padding: 0px 2px;
+}
 
+.glyphicon-refresh-animate {
+    -animation: front .5s infinite linear;
+    -ms-animation: front .5s infinite linear;
+    -webkit-animation: right .5s infinite linear;
+    -moz-animation: left .5s infinite linear;
+}
+
+@keyframes front {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes right {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes left {
+    from { -moz-transform: rotate(0deg);}
+    to { -moz-transform: rotate(360deg);}
+}

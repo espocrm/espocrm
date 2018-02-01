@@ -42,7 +42,7 @@
     "PhoneNumber": "Telefono numeris"
   },
   "scopeNamesPlural": {
-    "Email": "El. laiška",
+    "Email": "El. laiškai",
     "User": "Vartotojai",
     "Team": "Komandos",
     "Role": "Rolės",
@@ -54,7 +54,7 @@
     "ExternalAccount": "Išorinės paskyros",
     "Extension": "Plėtiniai",
     "Dashboard": "Prietaisų skydelis",
-    "InboundEmail": "Grupės el. pašto paskyros ",
+    "InboundEmail": "Grupės el. pašto paskyros",
     "Stream": "Srautas",
     "Import": "Importuoti rezultatus",
     "Template": "Šablonai",
@@ -196,6 +196,7 @@
     "List View": "Rodyti kaip sąrašą\n",
     "Tree View": "Rodyti kaip medį",
     "Unlink All": "Atsieti visus",
+    "Total": "Iš viso",
     "Print to PDF": "Spausdinti į PDF",
     "Default": "Numatytas",
     "Number": "Numeris",
@@ -291,7 +292,7 @@
     "firstName": "Vardas",
     "lastName": "Pavardė",
     "salutationName": "Sveikinimas",
-    "assignedUser": "Priskirta vartotojas",
+    "assignedUser": "Priskirtas darbuotojas",
     "assignedUsers": "Priskirti vartotojai",
     "emailAddress": "El. paštas",
     "assignedUserName": "Priskirto vartotojo vardas",
@@ -313,7 +314,7 @@
     "children": "Antrinis"
   },
   "links": {
-    "assignedUser": "Priskirta vartotojas",
+    "assignedUser": "Priskirtas darbuotojas",
     "createdBy": "Sukurta",
     "modifiedBy": "Koreguota",
     "team": "Komanda",

@@ -80,11 +80,11 @@ class CronManagerTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue(false));
 
         $this->objects['config']
-            ->expects($this->exactly(2))
+            ->expects($this->any())
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()) );
+        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()));
     }
 
     public function testCheckLastRunTime()
@@ -97,11 +97,11 @@ class CronManagerTest extends \PHPUnit\Framework\TestCase
             )));
 
         $this->objects['config']
-            ->expects($this->exactly(2))
+            ->expects($this->any())
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()) );
+        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()));
     }
 
     public function testCheckLastRunTimeTooFrequency()
@@ -114,10 +114,10 @@ class CronManagerTest extends \PHPUnit\Framework\TestCase
             )));
 
         $this->objects['config']
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertFalse( $this->reflection->invokeMethod('checkLastRunTime', array()) );
+        $this->assertFalse($this->reflection->invokeMethod('checkLastRunTime', array()));
     }
 }

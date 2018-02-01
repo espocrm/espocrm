@@ -88,13 +88,14 @@
             <div class="cell cell-website pull-right" align="right">
                 <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:bold;">{$langs['labels']['Configuration Instructions']}</a>
             </div>
-
-            <br>
-
-            <div class="loading-icon hide"></div>
-
         </div>
     </form>
+    <div class="space"></div>
+</div>
+<div class="loading-panel hide">
+    <div class="text-right">
+        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+    </div>
 </div>
 <footer class="modal-footer">
     <button class="btn btn-default" type="button" id="back">{$langs['labels']['Back']}</button>

@@ -11,12 +11,10 @@
     {
         "label": "Locale",
         "rows": [
-            [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "language"}, false],
-            [{"name": "currencyFormat"}, {"name": "thousandSeparator"}],
-            [{"name": "currencyDecimalPlaces"}, {"name": "decimalMark"}],
-            [{"name": "addressFormat"}, false],
+            [{"name": "language"}, {"name": "timeZone"}],
+            [{"name": "dateFormat"}, {"name": "weekStart"}],
+            [{"name": "timeFormat"},  {"name": "thousandSeparator"}],
+            [{"name": "addressFormat"}, {"name": "decimalMark"}],
             [{"name": "addressPreview"}, false]
 
         ]

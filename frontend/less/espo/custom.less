@@ -220,9 +220,24 @@ table.table > thead th {
     padding: 0 0 10px;
 }
 
-
 .margin {
-    margin: 8px 0;
+    margin: @table-cell-padding 0;
+}
+
+.margin-top {
+    margin-top: @table-cell-padding;
+}
+
+.margin-bottom {
+    margin-bottom: @table-cell-padding;
+}
+
+.margin-bottom.margin {
+    margin-top: 0;
+}
+
+.margin.list-group-item:first-child {
+    margin-top: 0;
 }
 
 ul.dropdown-menu > li.checkbox {
@@ -319,15 +334,43 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .field .link-container {
-    margin-bottom: -1px;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    margin-bottom: 0;
+    border-top-width: 0;
+}
+
+.list-group-item:first-child {
+    border-top-width: 1px;
+}
+
+.list-group-item.ui-sortable-helper {
+    border-top-width: 1px !important;
+    border-bottom-width: 1px !important;
+    border-left-width: 1px !important;
+    border-right-width: 1px !important;
 }
 
 .panel > .panel-body.panel-body-form {
     padding-bottom: @panel-padding - @form-group-margin-bottom;
 }
 
+.list-group-item {
+    background-color: transparent;
+}
+
 .panel-body .field > .link-container > .list-group-item {
     background-color: @panel-bg;
+}
+
+.panel-body .list-group-item {
+    background-color: @panel-bg;
+}
+
+.field .link-container .list-group-item:last-child {
+    border-bottom-width: 0;
 }
 
 .field .link-container .list-group-item > div {
@@ -514,7 +557,26 @@ select[multiple].input-sm {
     z-index: 3;
 }
 
-.panel-body > p:last-child {
+.panel-body,
+section {
+    > p:first-child,
+    > h1:first-child,
+    > h2:first-child,
+    > h3:first-child,
+    > h4:first-child,
+    > h5:first-child {
+        margin-top: 0;
+    }
+
+    > p:last-child,
+    ul,
+    li,
+    .table {
+        margin-bottom: 0;
+    }
+}
+
+.well > p:last-child {
     margin-bottom: 0;
 }
 
@@ -578,10 +640,30 @@ select[multiple].input-sm {
     > table th:last-child {
         padding-right: @panel-padding;
     }
+
+    > .list-group-item {
+        border-left-width: 0;
+        border-right-width: 0;
+    }
+
+    > .table-bordered {
+        border-left: 0;
+        border-right: 0;
+
+        td:last-child,
+        th:last-child {
+            border-right: 0;
+        }
+
+        td:first-child,
+        th:first-child {
+            border-left: 0;
+        }
+    }
 }
 
 .panel-body .no-bottom-margin {
-    margin-bottom: -@panel-padding;
+    margin-bottom: -@panel-padding !important;
 }
 
 .table.less-padding > thead > tr > th,
@@ -1194,17 +1276,46 @@ stream-head-text-container .span {
     line-height: @line-height-computed;
 }
 
-.list-group-item {
-    background-color: transparent;
-}
-
 .note-editable blockquote {
     font-size: @font-size-base;
+}
+
+.dashlet-body .legend-container {
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .legend-container table td {
     padding: 2px 2px;
     line-height: 1em;
+}
+
+.flotr-mouse-value {
+    cursor: default;
+    font-size: 0.9em;
+}
+
+.flotr-grid-label-x {
+    max-height: 2.1em;
+    line-height: 1.1em;
+    overflow: hidden;
+}
+
+.dashlet-body .legend-container td.flotr-legend-label > span {
+    max-height: 2em;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.legend-container .flotr-legend-color-box > div {
+    position: relative;
+    top: 1px;
+}
+
+.legend-container .flotr-legend-color-box > div > div > div {
+    position: relative;
+    top: -2px;
+    left: -2px;
 }
 
 .textcomplete-item a {

@@ -64,9 +64,6 @@
             "Attachment": {
                 "parent": false
             },
-            "User": {
-                "gender": false
-            },
             "EmailFolder": {
                 "assignedUser": false
             },
@@ -78,8 +75,30 @@
     },
     "default": {
         "scopeLevel": {
+            "User": {
+                "read": "all"
+            }
         },
         "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
+        }
+    },
+    "strictDefault": {
+        "scopeLevel": {
+            "User": {
+                "read": "own"
+            }
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
         }
     },
     "valuePermissionList": [

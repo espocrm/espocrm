@@ -1158,7 +1158,11 @@ var Bull = Bull || {};
 
 			var proceed = function (layoutTemplate) {
 				var injection = _.extend(layoutDefs, data || {});
-				callback(_.template(layoutTemplate, injection));
+				var template = _.template(layoutTemplate, injection);
+				if (typeof template === 'function') {
+					template = template(injection);
+				}
+				callback(template);
 			}.bind(this);
 
 			var layoutTemplate = this._getCachedLayoutTemplate(layoutType);

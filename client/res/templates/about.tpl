@@ -6,7 +6,6 @@
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
-            <section>
                 <h5>Version {{version}}</h5>
                 <p>
                     Copyright &copy; 2014-2018 EspoCRM: Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko.
@@ -39,7 +38,6 @@
                     In accordance with Section 7(b) of the GNU General Public License version 3,
                     these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
                 </p>
-            </section>
             </div>
         </div>
 

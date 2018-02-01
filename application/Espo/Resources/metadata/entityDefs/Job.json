@@ -39,6 +39,9 @@
             "link": "scheduledJob",
             "field": "job"
         },
+        "pid": {
+            "type": "int"
+        },
         "attempts": {
             "type": "int"
         },

@@ -1,4 +1,4 @@
-<div style="background-color: #4A6492; padding: 3px 10px;" class="panel-heading">
+<div class="panel-heading main-header">
     <img src="../client/img/logo.png">
 </div>
 <header class="panel-heading">

@@ -66,8 +66,8 @@
         "asc": true
     },
     "jobSchedulingMap": {
-        "CheckInboundEmails": "*/4 * * * *",
-        "CheckEmailAccounts": "*/5 * * * *",
+        "CheckInboundEmails": "*/2 * * * *",
+        "CheckEmailAccounts": "*/1 * * * *",
         "SendEmailReminders": "*/2 * * * *",
         "Cleanup": "1 1 * * 0",
         "AuthTokenControl": "*/6 * * * *",
@@ -78,7 +78,8 @@
             "isSystem": true,
             "scheduling": "1 */12 * * *"
         },
-        "NewVersionChecker": {
+        "CheckNewVersion": {
+            "name": "Check for New Version",
             "isSystem": true,
             "scheduling": "15 5 * * *"
         }

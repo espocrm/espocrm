@@ -3,13 +3,11 @@
         "rows": [
             [
                 {"name": "name"},
-                {"name": "exportPermission"}
-            ],
-            [
-                {"name": "assignmentPermission"},
+                {"name": "exportPermission"},
                 {"name": "userPermission"}
             ],
             [
+                {"name": "assignmentPermission"},
                 {"name": "portalPermission"},
                 {"name": "groupEmailAccountPermission"}
             ]

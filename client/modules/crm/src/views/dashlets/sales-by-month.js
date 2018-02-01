@@ -38,17 +38,28 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
         },
 
         url: function () {
-            return 'Opportunity/action/reportSalesByMonth?dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            var url = 'Opportunity/action/reportSalesByMonth?dateFilter='+ this.getDateFilter();
+
+            if (this.getDateFilter() === 'between') {
+                url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
+            }
+            return url;
+        },
+
+        getLegentHeight: function () {
+            return 0;
         },
 
         prepareData: function (response) {
-            var months = this.months = Object.keys(response).sort();
+            var monthList = this.monthList = response.keyList;
+
+            var dataMap = response.dataMap || {};
 
             var values = [];
 
-            for (var month in response) {
-                values.push(response[month]);
-            }
+            monthList.forEach(function (month) {
+                values.push(dataMap[month]);
+            }, this);
 
             this.chartData = [];
 
@@ -71,12 +82,12 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
 
         setup: function () {
             this.currency = this.getConfig().get('defaultCurrency');
-            this.currencySymbol = '';
+            this.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', this.currency]) || '';
 
             this.colorBad = this.successColor;
         },
 
-        drow: function () {
+        draw: function () {
             var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 shadowSize: false,
@@ -86,31 +97,37 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5,
+                    barWidth: 0.5
                 },
                 grid: {
                     horizontalLines: true,
                     verticalLines: false,
                     outline: 'sw',
-                    color: this.outlineColor
+                    color: this.gridColor,
+                    tickColor: this.tickColor
                 },
                 yaxis: {
                     min: 0,
                     showLabels: true,
+                    color: this.textColor,
                     tickFormatter: function (value) {
                         if (value == 0) {
                             return '';
                         }
-                        return self.formatNumber(value) + ' ' + self.currency;
-                    },
+                        if (value % 1 == 0) {
+                            return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
+                        }
+                        return '';
+                    }
                 },
                 xaxis: {
                     min: 0,
+                    color: this.textColor,
                     tickFormatter: function (value) {
                         if (value % 1 == 0) {
                             var i = parseInt(value);
-                            if (i in self.months) {
-                                return moment(self.months[i] + '-01').format('MMM YYYY');
+                            if (i in self.monthList) {
+                                return moment(self.monthList[i] + '-01').format('MMM YYYY');
                             }
                         }
                         return '';
@@ -119,13 +136,17 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                 mouse: {
                     track: true,
                     relative: true,
+                    lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
-                        return self.formatNumber(obj.y) + ' ' + self.currency;
-                    },
+                        var i = parseInt(obj.x);
+                        var value = '';
+                        if (i in self.monthList) {
+                            value += moment(self.monthList[i] + '-01').format('MMM YYYY') + ':<br>';
+                        }
+                        return value + self.currencySymbol + self.formatNumber(obj.y, true);
+                    }
                 }
-            });
-        },
+            })
+        }
     });
 });
-
-

@@ -163,14 +163,14 @@ class EntityManager
 
     public function saveEntity(Entity $entity, array $options = array())
     {
-        $entityName = $entity->getEntityName();
-        return $this->getRepository($entityName)->save($entity, $options);
+        $entityType = $entity->getEntityType();
+        return $this->getRepository($entityType)->save($entity, $options);
     }
 
     public function removeEntity(Entity $entity, array $options = array())
     {
-        $entityName = $entity->getEntityName();
-        return $this->getRepository($entityName)->remove($entity, $options);
+        $entityType = $entity->getEntityType();
+        return $this->getRepository($entityType)->remove($entity, $options);
     }
 
     public function getRepository($name)
@@ -184,6 +184,11 @@ class EntityManager
     public function setMetadata(array $data)
     {
         $this->metadata->setData($data);
+    }
+
+    public function hasRepository($name)
+    {
+        return $this->getMetadata()->has($name);
     }
 
     public function getMetadata()
