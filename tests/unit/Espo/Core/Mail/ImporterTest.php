@@ -42,10 +42,22 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $emailRepository = $this->getMockBuilder('\\Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
         $emptyRepository = $this->getMockBuilder('\\Espo\\Core\\ORM\\Repositories\\RDB')->disableOriginalConstructor()->getMock();
 
+        $pdo = $this->getMockBuilder('\\Pdo')->disableOriginalConstructor()->getMock();
+
         $emailRepository
             ->expects($this->any())
             ->method('where')
             ->will($this->returnSelf());
+
+        $emailRepository
+            ->expects($this->any())
+            ->method('select')
+            ->will($this->returnSelf());
+
+        $entityManager
+            ->expects($this->any())
+            ->method('getPdo')
+            ->will($this->returnValue($pdo));
 
         $emptyRepository
             ->expects($this->any())
@@ -84,7 +96,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValueMap($this->repositoryMap));
 
         $entityManager
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('saveEntity')
             ->with($this->isInstanceOf('\\Espo\\Entities\\Email'));
 
@@ -140,7 +152,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValueMap($this->repositoryMap));
 
         $entityManager
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('saveEntity')
             ->with($this->isInstanceOf('\\Espo\\Entities\\Email'));
 
