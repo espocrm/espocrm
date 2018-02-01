@@ -12,8 +12,8 @@
                     </div>
                 {{/if}}
 
-                <div style="margin-bottom: 10px;" class="hidden message-container"><span class="text-success"></span></div>
-                <div class="button-container">
+                <div class="hidden message-container margin-bottom"><span class="text-success"></span></div>
+                <div>
                     <button class="btn btn-default action {{#if cacheIsEnabled}}hidden{{/if}}" data-action="returnToApplication">{{translate 'Return to Application'}}</button>
                 </div>
             </div>
