@@ -334,7 +334,21 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .field .link-container {
-    margin-bottom: -1px;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    margin-bottom: 0;
+    border-top-width: 0;
+}
+
+.list-group-item:first-child {
+    border-top-width: 1px;
+}
+
+.list-group-item.ui-sortable-helper {
+    border-top-width: 1px !important;
+    border-bottom-width: 1px !important;
 }
 
 .panel > .panel-body.panel-body-form {
@@ -347,6 +361,10 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .panel-body .list-group-item {
     background-color: @panel-bg;
+}
+
+.field .link-container .list-group-item:last-child {
+    border-bottom-width: 0;
 }
 
 .field .link-container .list-group-item > div {
@@ -533,8 +551,23 @@ select[multiple].input-sm {
     z-index: 3;
 }
 
-.panel-body > p:last-child {
-    margin-bottom: 0;
+.panel-body,
+section {
+    > p:first-child,
+    > h1:first-child,
+    > h2:first-child,
+    > h3:first-child,
+    > h4:first-child,
+    > h5:first-child {
+        margin-top: 0;
+    }
+
+    > p:last-child,
+    ul,
+    li,
+    .table {
+        margin-bottom: 0;
+    }
 }
 
 .well > p:last-child {
@@ -1235,10 +1268,6 @@ stream-head-text-container .span {
 .link-container .list-group-item {
     padding: @padding-base-vertical @padding-base-horizontal;
     line-height: @line-height-computed;
-}
-
-.list-group-item {
-    background-color: transparent;
 }
 
 .note-editable blockquote {
