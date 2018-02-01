@@ -416,7 +416,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE WEEK(comment.created_at, 1) = '2' AND comment.deleted = '0'";
+            "WHERE WEEK(comment.created_at, 5) = '2' AND comment.deleted = '0'";
         $this->assertEquals($expectedSql, $sql);
     }
 
