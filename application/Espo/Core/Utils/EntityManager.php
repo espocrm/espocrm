@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils;
 
 use \Espo\Core\Exceptions\Error;
+use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Utils\Json;
@@ -122,16 +123,27 @@ class EntityManager
         return false;
     }
 
-    public function create($name, $type, $params = array())
+    public function create($name, $type, $params = [], $replaceData = [])
     {
         $name = ucfirst($name);
         $name = trim($name);
 
+        if (empty($name) || empty($type)) {
+            throw new BadRequest();
+        }
+
+        if (!in_array($type, $this->getMetadata()->get(['app', 'entityTemplateList'], []))) {
+            throw new Error('Type \''.$type.'\' does not exist.');
+        }
+
+        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
+
+        if (!empty($templateDefs['isNotCreatable']) && empty($params['forceCreate'])) {
+            throw new Error('Type \''.$type.'\' is not creatable.');
+        }
+
         if ($this->getMetadata()->get('scopes.' . $name)) {
             throw new Conflict('Entity \''.$name.'\' already exists.');
-        }
-        if (empty($name) || empty($type)) {
-            throw new Error();
         }
 
         if ($this->checkControllerExists($name)) {
@@ -149,9 +161,20 @@ class EntityManager
 
         $normalizedName = Util::normilizeClassName($name);
 
+        $templateNamespace = "\Espo\Core\Templates";
+        $templatePath = "application/Espo/Core/Templates";
+
+        $templateModuleName = null;
+        if (!empty($templateDefs['module'])) {
+            $templateModuleName = $templateDefs['module'];
+            $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
+            $templateNamespace = "\Espo\Modules\\{$normalizedTemplateModuleName}\Core\Templates";
+            $templatePath = "application/Espo/Modules/".$normalizedTemplateModuleName."/Core/Templates";
+        }
+
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Entities;\n\n".
-            "class {$normalizedName} extends \Espo\Core\Templates\Entities\\{$type}\n".
+            "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n".
             "{\n".
             "    protected \$entityType = \"$name\";\n".
             "}\n";
@@ -161,7 +184,7 @@ class EntityManager
 
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Controllers;\n\n".
-            "class {$normalizedName} extends \Espo\Core\Templates\Controllers\\{$type}\n".
+            "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n".
             "{\n".
             "}\n";
         $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
@@ -169,7 +192,7 @@ class EntityManager
 
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Services;\n\n".
-            "class {$normalizedName} extends \Espo\Core\Templates\Services\\{$type}\n".
+            "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n".
             "{\n".
             "}\n";
         $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
@@ -177,17 +200,17 @@ class EntityManager
 
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Repositories;\n\n".
-            "class {$normalizedName} extends \Espo\Core\Templates\Repositories\\{$type}\n".
+            "class {$normalizedName} extends {$templateNamespace}\Repositories\\{$type}\n".
             "{\n".
             "}\n";
 
         $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        if (file_exists('application/Espo/Core/Templates/SelectManagers/' . $type . '.php')) {
+        if (file_exists($templatePath . '/SelectManagers/' . $type . '.php')) {
             $contents = "<" . "?" . "php\n\n".
                 "namespace Espo\Custom\SelectManagers;\n\n".
-                "class {$normalizedName} extends \Espo\Core\Templates\SelectManagers\\{$type}\n".
+                "class {$normalizedName} extends {$templateNamespace}\SelectManagers\\{$type}\n".
                 "{\n".
                 "}\n";
 
@@ -214,19 +237,26 @@ class EntityManager
 
         $languageList = $this->getConfig()->get('languageList', []);
         foreach ($languageList as $language) {
-            $filePath = 'application/Espo/Core/Templates/i18n/' . $language . '/' . $type . '.json';
+            $filePath = $templatePath . '/i18n/' . $language . '/' . $type . '.json';
             if (!file_exists($filePath)) continue;
             $languageContents = $this->getFileManager()->getContents($filePath);
             $languageContents = str_replace('{entityType}', $name, $languageContents);
             $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
+            foreach ($replaceData as $key => $value) {
+                $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
+            }
 
             $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
             $this->getFileManager()->putContents($destinationFilePath, $languageContents);
         }
 
-        $filePath = "application/Espo/Core/Templates/Metadata/{$type}/scopes.json";
+        $filePath = $templatePath . "/Metadata/{$type}/scopes.json";
         $scopesDataContents = $this->getFileManager()->getContents($filePath);
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
+        foreach ($replaceData as $key => $value) {
+            $scopesDataContents = str_replace('{'.$key.'}', $value, $scopesDataContents);
+        }
+
         $scopesData = Json::decode($scopesDataContents, true);
 
         $scopesData['stream'] = $stream;
@@ -236,18 +266,28 @@ class EntityManager
         $scopesData['object'] = true;
         $scopesData['isCustom'] = true;
 
+        if (!empty($templateDefs['isNotRemovable']) ||!empty($params['isNotRemovable'])) {
+            $scopesData['isNotRemovable'] = true;
+        }
+
         $this->getMetadata()->set('scopes', $name, $scopesData);
 
-        $filePath = "application/Espo/Core/Templates/Metadata/{$type}/entityDefs.json";
+        $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
+        foreach ($replaceData as $key => $value) {
+            $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
+        }
         $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
-        $filePath = "application/Espo/Core/Templates/Metadata/{$type}/clientDefs.json";
+        $filePath = $templatePath . "/Metadata/{$type}/clientDefs.json";
         $clientDefsContents = $this->getFileManager()->getContents($filePath);
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
+        foreach ($replaceData as $key => $value) {
+            $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
+        }
         $clientDefsData = Json::decode($clientDefsContents, true);
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
@@ -257,7 +297,7 @@ class EntityManager
         $this->getMetadata()->save();
         $this->getLanguage()->save();
 
-        $layoutsPath = "application/Espo/Core/Templates/Layouts/{$type}";
+        $layoutsPath = $templatePath . "/Layouts/{$type}";
         if ($this->getFileManager()->isDir($layoutsPath)) {
             $this->getFileManager()->copy($layoutsPath, 'custom/Espo/Custom/Resources/layouts/' . $name);
         }
@@ -326,7 +366,7 @@ class EntityManager
         return true;
     }
 
-    public function delete($name)
+    public function delete($name, $params = [])
     {
         if (!$this->isCustom($name)) {
             throw new Forbidden;
@@ -335,6 +375,19 @@ class EntityManager
         $normalizedName = Util::normilizeClassName($name);
 
         $type = $this->getMetadata()->get(['scopes', $name, 'type']);
+
+        $isNotRemovable = $this->getMetadata()->get(['scopes', $name, 'isNotRemovable']);
+
+        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
+
+        $templateModuleName = null;
+        if (!empty($templateDefs['module'])) {
+            $templateModuleName = $templateDefs['module'];
+        }
+
+        if ((!empty($templateDefs['isNotRemovable']) || $isNotRemovable) && empty($params['forceRemove'])) {
+            throw new Error('Type \''.$type.'\' is not removable.');
+        }
 
         $unsets = array(
             'entityDefs',
@@ -786,8 +839,20 @@ class EntityManager
 
     protected function getHook($type)
     {
+        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
+
         $className = '\\Espo\\Core\\Utils\\EntityManager\\Hooks\\' . $type . 'Type';
-        $className = $this->getMetadata()->get(['entityTemplates', $type, 'hookClassName'], $className);
+
+        $templateModuleName = null;
+        if (!empty($templateDefs['module'])) {
+            $templateModuleName = $templateDefs['module'];
+            $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
+            $className = '\\Espo\\Modules\\'.$normalizedTemplateModuleName.'\\Core\\Utils\\EntityManager\\Hooks\\' . $type . 'Type';
+        }
+
+
+
+        $className = $this->getMetadata()->get(['app', 'entityTemplates', $type, 'hookClassName'], $className);
 
         if (class_exists($className)) {
             $hook = new $className();
