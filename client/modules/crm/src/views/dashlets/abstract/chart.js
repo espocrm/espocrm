@@ -152,7 +152,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             var lineNumber = Math.ceil(this.chartData.length / this.getLegendColumnNumber());
             var legendHeight = 0;
 
-            var lineHeight = this.getThemeManager().getParam('dashletChartLegendRowHeight') || 18;
+            var lineHeight = this.getThemeManager().getParam('dashletChartLegendRowHeight') || 19;
             var paddingTopHeight = this.getThemeManager().getParam('dashletChartLegendPaddingTopHeight') || 7;
 
             if (lineNumber > 0) {
