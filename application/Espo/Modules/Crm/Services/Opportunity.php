@@ -207,7 +207,14 @@ class Opportunity extends \Espo\Services\Record
 
         $dt = new \DateTime($dateFrom);
         $dtTo = new \DateTime($dateTo);
-        $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+
+        if (intval($dtTo->format('d')) !== 1) {
+            $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+            $dtTo->modify('+ 1 month');
+        } else {
+            $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+        }
+
         if ($dt && $dtTo) {
             $interval = new \DateInterval('P1M');
             while ($dt->getTimestamp() <= $dtTo->getTimestamp()) {
