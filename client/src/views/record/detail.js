@@ -223,7 +223,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.printPdfAction) {
+            var printPdfAction = this.printPdfAction;
+
+            if (!printPdfAction) {
+                if (~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
+                    printPdfAction = true;
+                }
+            }
+
+            if (printPdfAction && !this.getAcl().check('Template', 'read')) {
+                printPdfAction = false
+            }
+
+            if (printPdfAction) {
                 this.dropdownItemList.push({
                     'label': 'Print to PDF',
                     'name': 'printPdf'
