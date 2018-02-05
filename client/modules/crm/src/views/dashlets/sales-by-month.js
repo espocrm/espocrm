@@ -46,7 +46,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
             return url;
         },
 
-        getLegentHeight: function () {
+        getLegendHeight: function () {
             return 0;
         },
 

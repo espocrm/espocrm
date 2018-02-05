@@ -1280,9 +1280,10 @@ stream-head-text-container .span {
     font-size: @font-size-base;
 }
 
-.dashlet-body .legend-container {
+.legend-container {
     overflow-x: hidden;
     overflow-y: hidden;
+    padding-top: 7px;
 }
 
 .legend-container table td {
@@ -1301,10 +1302,15 @@ stream-head-text-container .span {
     overflow: hidden;
 }
 
-.dashlet-body .legend-container td.flotr-legend-label > span {
-    max-height: 2em;
-    display: inline-block;
+.legend-container td.flotr-legend-label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.legend-container td.flotr-legend-label > span {
+    max-height: 1em;
+    display: inline-block;
 }
 
 .legend-container .flotr-legend-color-box > div {

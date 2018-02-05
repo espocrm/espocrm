@@ -48,7 +48,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
         hoverColor: '#FF3F19',
 
-        legendColumnWidth: 90,
+        legendColumnWidth: 110,
 
         legendColumnNumber: 6,
 
@@ -85,6 +85,7 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
             this.once('after:render', function () {
                 $(window).on('resize.chart' + this.name, function () {
+                    this.adjustContainer();
                     this.draw();
                 }.bind(this));
             }, this);
@@ -141,21 +142,47 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             return '';
         },
 
-        getLegentColumnNumber: function () {
+        getLegendColumnNumber: function () {
             var width = this.$el.closest('.panel-body').width();
             var legendColumnNumber = Math.floor(width / this.legendColumnWidth);
             return legendColumnNumber || this.legendColumnNumber;
         },
 
-        getLegentHeight: function () {
-            var lineNumber = Math.ceil(this.chartData.length / this.getLegentColumnNumber());
+        getLegendHeight: function () {
+            var lineNumber = Math.ceil(this.chartData.length / this.getLegendColumnNumber());
             var legendHeight = 0;
 
-            var lineHeight = this.getThemeManager().getParam('dashletChartLegentRowHeight') || 22;
+            var lineHeight = this.getThemeManager().getParam('dashletChartLegendRowHeight') || 17;
+
+            var paddingTopHeight = this.getThemeManager().getParam('dashletChartLegendPaddingTopHeight') || 7;
+
             if (lineNumber > 0) {
-                legendHeight = lineHeight * lineNumber;
+                legendHeight = lineHeight * lineNumber + paddingTopHeight;
             }
             return legendHeight;
+        },
+
+        adjustContainer: function () {
+            var legendHeight = this.getLegendHeight();
+            var heightCss = 'calc(100% - ' + legendHeight.toString() + 'px)';
+            this.$container.css('height', heightCss);
+        },
+
+        adjustLegend: function () {
+            var number = this.getLegendColumnNumber();
+            if (!number) return;
+
+            var dashletChartLegendBoxWidth = this.getThemeManager().getParam('dashletChartLegendBoxWidth') || 21;
+
+            var containerWidth = this.$legendContainer.width();
+
+            var width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
+
+            this.$legendContainer.find('> table')
+                .css('table-layout', 'fixed')
+                .attr('width', '100%');
+            this.$legendContainer.find('td.flotr-legend-label').attr('width', width);
+            this.$legendContainer.find('td.flotr-legend-color-box').attr('width', dashletChartLegendBoxWidth);
         },
 
         afterRender: function () {
@@ -163,16 +190,17 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 'overflow-y': 'visible',
                 'overflow-x': 'visible'
             });
+
+            this.$legendContainer = this.$el.find('.legend-container');
+            this.$container = this.$el.find('.chart-container');
+
             this.fetch(function (data) {
                 this.chartData = this.prepareData(data);
 
-                var $container = this.$container = this.$el.find('.chart-container');
-                var legendHeight = this.getLegentHeight();
-                var heightCss = 'calc(100% - '+legendHeight.toString()+'px)';
-                $container.css('height', heightCss);
+                this.adjustContainer();
 
                 setTimeout(function () {
-                    if (!$container.size() || !$container.is(":visible")) return;
+                    if (!this.$container.size() || !this.$container.is(":visible")) return;
                     this.draw();
                 }.bind(this), 1);
             });
