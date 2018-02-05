@@ -127,6 +127,9 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                         if (value % 1 == 0) {
                             var i = parseInt(value);
                             if (i in self.monthList) {
+                                if (self.monthList.length > 12 && i === self.monthList.length - 1) {
+                                    return '';
+                                }
                                 return moment(self.monthList[i] + '-01').format('MMM YYYY');
                             }
                         }
