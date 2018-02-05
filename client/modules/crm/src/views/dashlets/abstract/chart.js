@@ -153,7 +153,6 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
             var legendHeight = 0;
 
             var lineHeight = this.getThemeManager().getParam('dashletChartLegendRowHeight') || 17;
-
             var paddingTopHeight = this.getThemeManager().getParam('dashletChartLegendPaddingTopHeight') || 7;
 
             if (lineNumber > 0) {
@@ -183,6 +182,10 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
                 .attr('width', '100%');
             this.$legendContainer.find('td.flotr-legend-label').attr('width', width);
             this.$legendContainer.find('td.flotr-legend-color-box').attr('width', dashletChartLegendBoxWidth);
+
+            this.$legendContainer.find('td.flotr-legend-label > span').each(function(i, span) {
+                span.setAttribute('title', span.textContent);
+            }.bind(this));
         },
 
         afterRender: function () {
