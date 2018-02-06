@@ -35,6 +35,8 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.setupNonAdminFieldsAccess();
+
             if (this.model.id == this.getUser().id) {
                 this.listenTo(this.model, 'after:save', function () {
                     this.getUser().set(this.model.toJSON());
@@ -77,6 +79,10 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             }, this);
         },
 
+        setupNonAdminFieldsAccess: function () {
+            Detail.prototype.setupNonAdminFieldsAccess.call(this);
+        },
+
         controlFieldAppearance: function () {
             Detail.prototype.controlFieldAppearance.call(this);
         },
@@ -103,7 +109,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     ]
                 });
 
-                if (this.type == 'edit') {
+                if (this.type == 'edit' && this.getUser().isAdmin()) {
                     layout.push({
                         label: 'Password',
                         rows: [

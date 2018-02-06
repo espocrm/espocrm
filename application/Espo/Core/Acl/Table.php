@@ -713,25 +713,5 @@ class Table
     private function buildCache()
     {
         $this->fileManager->putPhpContents($this->cacheFilePath, $this->data, true);
-        /*$contents = '<' . '?'. 'php return ' .  $this->varExport($this->data)  . ';';
-        $this->fileManager->putContents($this->cacheFilePath, $contents);*/
     }
-
-    /*private function varExport($variable)
-    {
-        if ($variable instanceof \StdClass) {
-            $result = '(object) ' . $this->varExport(get_object_vars($variable), true);
-        } else if (is_array($variable)) {
-            $array = array();
-            foreach ($variable as $key => $value) {
-                $array[] = var_export($key, true).' => ' . $this->varExport($value, true);
-            }
-            $result = '['.implode(', ', $array).']';
-        } else {
-            $result = var_export($variable, true);
-        }
-
-        return $result;
-    }*/
 }
-

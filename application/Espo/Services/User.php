@@ -49,6 +49,20 @@ class User extends Record
 
     protected $internalAttributeList = ['password'];
 
+    protected $nonAdminReadOnlyAttributeList = [
+        'userName',
+        'isActive',
+        'isAdmin',
+        'isPortalUser',
+        'teamsIds',
+        'rolesIds',
+        'password',
+        'portalsIds',
+        'portalRolesIds',
+        'contactId',
+        'accountsIds'
+    ];
+
     protected function getMailSender()
     {
         return $this->getContainer()->get('mailSender');
@@ -218,6 +232,15 @@ class User extends Record
 
         if (!$this->getUser()->get('isSuperAdmin')) {
             unset($data->isSuperAdmin);
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
+                unset($data->$attribute);
+            }
+            if (!$this->getAcl()->checkScope('Team')) {
+                unset($data->defaultTeamId);
+            }
         }
     }
 

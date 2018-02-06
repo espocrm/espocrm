@@ -26,17 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/edit-quick', ['views/record/edit-small', 'views/user/record/detail'], function (Dep, Detail) {
+Espo.define('acl/user', 'acl', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'views/user/record/edit-side',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            Detail.prototype.setupNonAdminFieldsAccess.call(this);
+        checkIsOwner: function (model) {
+            return this.getUser().id === model.id;
         }
 
     });
-
 });

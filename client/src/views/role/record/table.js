@@ -177,34 +177,31 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                             }
                         }
 
-                        var level = 'all';
+                        var level = 'no';
                         if (~this.booleanActionList.indexOf(action)) {
-                            level = 'yes';
+                            level = 'no';
                         }
                         if (scope in aclData) {
                             if (access == 'enabled') {
                                 if (aclData[scope] !== true) {
                                     if (action in aclData[scope]) {
                                         level = aclData[scope][action];
-                                    } else {
-                                        // TODO remove it
-                                        if (~this.booleanActionList.indexOf(action)) {
-                                            level = 'yes';
-                                        } else {
-                                            if (j > 0) {
-                                                level = (list[j - 1] || {}).level;
-                                            }
-                                        }
                                     }
                                 }
                             } else {
                                 level = 'no';
                             }
                         }
-                        var levelList = this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) || this.levelListMap[type] || [];
+                        var levelList =
+                            this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
+                            this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
+                            this.levelListMap[type] ||
+                            [];
+
                         if (~this.booleanActionList.indexOf(action)) {
                             levelList = this.booleanLevelList;
                         }
+
                         list.push({
                             level: level,
                             name: scope + '-' + action,

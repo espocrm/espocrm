@@ -39,6 +39,8 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.setupNonAdminFieldsAccess();
+
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
                 if (!this.model.get('isPortalUser')) {
                     this.buttonList.push({
@@ -64,6 +66,32 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }
 
             this.setupFieldAppearance();
+        },
+
+        setupNonAdminFieldsAccess: function () {
+            if (this.getUser().isAdmin()) return;
+
+            var nonAdminReadOnlyFieldList = [
+                'userName',
+                'isActive',
+                'isAdmin',
+                'isPortalUser',
+                'teams',
+                'roles',
+                'password',
+                'portals',
+                'portalRoles',
+                'contact',
+                'accounts'
+            ];
+
+            nonAdminReadOnlyFieldList.forEach(function (field) {
+                this.setFieldReadOnly(field, true);
+            }, this);
+
+            if (!this.getAcl().checkScope('Team')) {
+                this.setFieldReadOnly('defaultTeam', true);
+            }
         },
 
         setupFieldAppearance: function () {
@@ -168,23 +196,25 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
                 var layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                layout.push({
-                    "label": "Teams and Access Control",
-                    "name": "accessControl",
-                    "rows": [
-                        [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, {"name":"isPortalUser"}],
-                        [{"name":"roles"}, {"name":"defaultTeam"}]
-                    ]
-                });
-                layout.push({
-                    "label": "Portal",
-                    "name": "portal",
-                    "rows": [
-                        [{"name":"portals"}, {"name":"contact"}],
-                        [{"name":"portalRoles"}, {"name":"accounts"}]
-                    ]
-                });
+                if (!this.getUser().isPortal()) {
+                    layout.push({
+                        "label": "Teams and Access Control",
+                        "name": "accessControl",
+                        "rows": [
+                            [{"name":"isActive"}, {"name":"isAdmin"}],
+                            [{"name":"teams"}, {"name":"isPortalUser"}],
+                            [{"name":"roles"}, {"name":"defaultTeam"}]
+                        ]
+                    });
+                    layout.push({
+                        "label": "Portal",
+                        "name": "portal",
+                        "rows": [
+                            [{"name":"portals"}, {"name":"contact"}],
+                            [{"name":"portalRoles"}, {"name":"accounts"}]
+                        ]
+                    });
+                }
 
                 var gridLayout = {
                     type: 'record',
@@ -193,9 +223,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
                 callback(gridLayout);
             }.bind(this));
-        },
-
+        }
     });
 
 });
-

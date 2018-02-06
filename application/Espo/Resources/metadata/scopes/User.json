@@ -3,7 +3,10 @@
 	"layouts": true,
 	"tab": true,
 	"acl": true,
-    "aclActionList": ["read"],
+    "aclActionList": ["read", "edit"],
+    "aclActionLevelListMap": {
+        "edit": ["own", "no"]
+    },
 	"customizable": true,
     "object": true
 }

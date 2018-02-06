@@ -70,13 +70,18 @@
             "Email": {
                 "inboundEmails": false,
                 "emailAccounts": false
+            },
+            "User": {
+                "password": false,
+                "passwordConfirm": false
             }
         }
     },
     "default": {
         "scopeLevel": {
             "User": {
-                "read": "all"
+                "read": "all",
+                "edit": "no"
             }
         },
         "fieldLevel": {
@@ -90,7 +95,8 @@
     "strictDefault": {
         "scopeLevel": {
             "User": {
-                "read": "own"
+                "read": "own",
+                "edit": "no"
             }
         },
         "fieldLevel": {

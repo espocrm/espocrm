@@ -83,6 +83,14 @@
             "Email": {
                 "inboundEmails": false,
                 "emailAccounts": false
+            },
+            "User": {
+                "isAdmin": false,
+                "contact": false,
+                "accounts": false,
+                "portalRoles": false,
+                "portals": false,
+                "isActive": false
             }
         }
     },
