@@ -177,9 +177,14 @@ Espo.define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base'
 
             var width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
 
+            var columnNumber = this.$legendContainer.find('> table tr:first-child > td').size() / 2;
+
+            var tableWidth = (width + dashletChartLegendBoxWidth) * columnNumber;
+
             this.$legendContainer.find('> table')
                 .css('table-layout', 'fixed')
-                .attr('width', '100%');
+                .attr('width', tableWidth);
+
             this.$legendContainer.find('td.flotr-legend-label').attr('width', width);
             this.$legendContainer.find('td.flotr-legend-color-box').attr('width', dashletChartLegendBoxWidth);
 
