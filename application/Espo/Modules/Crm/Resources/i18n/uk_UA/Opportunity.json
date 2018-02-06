@@ -26,12 +26,14 @@
     "stage": {
       "Prospecting": "Проспектінг",
       "Qualification": "Кваліфікація",
+      "Proposal": "Пропозиція",
+      "Negotiation": "Переговори",
       "Needs Analysis": "Вимагає аналізу",
       "Value Proposition": "Цінова пропозиція",
       "Id. Decision Makers": "Визначення осіб, що приймають рішення",
       "Perception Analysis": "Аналізу сприйняття",
       "Proposal/Price Quote": "Квота пропозицій/цін",
-      "Negotiation/Review": "Заперечення/перегляд",
+      "Negotiation/Review": "Переговори/перегляд",
       "Closed Won": "Закрито переможно",
       "Closed Lost": "Закрито провалом"
     }

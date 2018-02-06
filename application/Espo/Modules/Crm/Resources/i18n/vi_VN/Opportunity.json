@@ -24,8 +24,10 @@
             "Perception Analysis": "Phân tích khả năng",
             "Proposal/Price Quote": "Giá đặt ra",
             "Negotiation/Review": "Đàm phán / đánh giá",
+              "Proposal": "Giá đặt ra",
+              "Negotiation": "Đàm phán",
             "Closed Won": "Thắng thầu",
-            "Closed Lost": "Thua thầu" 
+            "Closed Lost": "Thua thầu"
         }
     },
     "labels": {

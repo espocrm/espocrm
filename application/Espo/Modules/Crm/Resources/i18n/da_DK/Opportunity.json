@@ -26,6 +26,8 @@
     "stage": {
       "Prospecting": "Undersøges",
       "Qualification": "Kvalifikation",
+      "Proposal": "Tilbud",
+      "Negotiation": "Forhandler",
       "Needs Analysis": "Behovsanalyse",
       "Value Proposition": "Vejledende Tilbud",
       "Id. Decision Makers": "Identifikation af Beslutningstagere",

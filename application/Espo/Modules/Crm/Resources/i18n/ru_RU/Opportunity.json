@@ -26,6 +26,8 @@
     "stage": {
       "Prospecting": "Привлечение клиента",
       "Qualification": "Оценка возможности",
+      "Proposal": "Предложение",
+      "Negotiation": "Согласование",
       "Needs Analysis": "Требует анализа",
       "Value Proposition": "Выбор предложения/оферты",
       "Id. Decision Makers": "Определение ответственного лица",
