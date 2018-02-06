@@ -182,7 +182,23 @@ PO.prototype.fixString = function (savedString) {
     return savedString;
 }
 
-var po = new PO(espoPath, language);
 
-po.run();
+if (language === '--all') {
+    var pathToLanguage = espoPath + '/application/Espo/Resources/i18n/';
 
+    var languageList = [];
+    fs.readdirSync(pathToLanguage).forEach(function (dir) {
+        if (dir.indexOf('_') == 2) {
+            languageList.push(dir);
+        }
+    });
+
+    languageList.forEach(function (language) {
+        var po = new PO(espoPath, language);
+        po.run();
+    });
+
+} else {
+    var po = new PO(espoPath, language);
+    po.run();
+}
