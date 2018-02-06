@@ -117,7 +117,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }.bind(this))
                 ]).then(function () {
                     this.paramList = [];
-                    var paramList = this.getFieldManager().getParams(this.type) || [];
+                    var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
 
                     if (!this.isNew) {
                         (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
