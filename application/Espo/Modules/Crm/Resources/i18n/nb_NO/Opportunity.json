@@ -25,6 +25,8 @@
     "stage": {
       "Prospecting": "Undersøkes",
       "Qualification": "Kvalitetskontrolleres",
+      "Proposal": "Prisforslag",
+      "Negotiation": "Forhandler",
       "Needs Analysis": "Trenger analyse",
       "Value Proposition": "Verdivurdering",
       "Id. Decision Makers": "Ser etter beslutningstagere",

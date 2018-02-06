@@ -1280,9 +1280,10 @@ stream-head-text-container .span {
     font-size: @font-size-base;
 }
 
-.dashlet-body .legend-container {
+.legend-container {
     overflow-x: hidden;
     overflow-y: hidden;
+    padding-top: 7px;
 }
 
 .legend-container table td {
@@ -1301,10 +1302,18 @@ stream-head-text-container .span {
     overflow: hidden;
 }
 
-.dashlet-body .legend-container td.flotr-legend-label > span {
-    max-height: 2em;
-    display: inline-block;
+.legend-container td.flotr-legend-label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.legend-container td.flotr-legend-label > span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 1.3em;
+    max-height: 15px;
 }
 
 .legend-container .flotr-legend-color-box > div {
@@ -1341,6 +1350,7 @@ table.table td.cell .complex-text {
     p:first-child,
     ul:first-child,
     ol:first-child,
+    pre:first-child,
     blockquote:first-child {
         margin-top: 0 !important;
     }
@@ -1828,5 +1838,14 @@ pre > code {
 
     .panel-body > div:first-child > .list:first-child {
         margin-top: 0;
+    }
+
+    .list > .table {
+        .dropdown-menu {
+            position: static !important;
+        }
+        .pull-right.open > .btn {
+            float: right;
+        }
     }
 }

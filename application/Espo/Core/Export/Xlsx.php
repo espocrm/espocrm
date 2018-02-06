@@ -87,6 +87,20 @@ class Xlsx extends \Espo\Core\Injectable
         }
     }
 
+    public function filterFieldList($entityType, $fieldList, $exportAllFields)
+    {
+        if ($exportAllFields) {
+            foreach ($fieldList as $i => $field) {
+                $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+                if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
+                    unset($fieldList[$i]);
+                }
+            }
+        }
+
+        return array_values($fieldList);
+    }
+
     public function addAdditionalAttributes($entityType, &$attributeList, $fieldList)
     {
         $linkList = [];

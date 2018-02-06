@@ -90,9 +90,15 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
             scopeList.forEach(function (scope) {
                 var d = this.getMetadata().get('scopes.' + scope);
 
+                var isRemovable = !!d.isCustom;
+                if (d.isNotRemovable) {
+                    isRemovable = false;
+                }
+
                 this.scopeDataList.push({
                     name: scope,
                     isCustom: d.isCustom,
+                    isRemovable: isRemovable,
                     customizable: d.customizable,
                     type: d.type,
                     label: this.getLanguage().translate(scope, 'scopeNames'),

@@ -23,6 +23,8 @@
         "stage": {
             "Prospecting": "Prospectie",
             "Qualification": "Kwalificatie",
+            "Proposal": "Voorstel",
+            "Negotiation": "Onderhandeling",
             "Needs Analysis": "Analyse behoefte",
             "Value Proposition": "Waarde voorstel",
             "Id. Decision Makers": "Id. Beslissers",

@@ -18,6 +18,8 @@
         "stage": {
             "Prospecting": "Prospectare",
             "Qualification": "Calificari",
+              "Proposal": "Propunere",
+              "Negotiation": "Negociere",
             "Needs Analysis": "Necesita Analiza",
             "Value Proposition": "Valoare Propunere",
             "Id. Decision Makers": "Id. Factori de Decizie",
@@ -25,7 +27,7 @@
             "Proposal/Price Quote": "Propunere/Oferta Pret",
             "Negotiation/Review": "Negociere/Revizuire",
             "Closed Won": "Inchide ca Castigat",
-            "Closed Lost": "Inchide ca Pierdut" 
+            "Closed Lost": "Inchide ca Pierdut"
         }
     },
     "labels": {

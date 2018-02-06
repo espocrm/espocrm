@@ -27,6 +27,8 @@
     "stage": {
       "Prospecting": "Prospección",
       "Qualification": "Calificación",
+      "Proposal": "Cotización con Propuesta",
+      "Negotiation": "Negociación",
       "Needs Analysis": "Análisis de Necesidades",
       "Value Proposition": "Propuesta de Valor",
       "Id. Decision Makers": "Id. Tomadores de Decisiones",

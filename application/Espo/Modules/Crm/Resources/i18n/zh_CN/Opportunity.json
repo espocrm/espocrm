@@ -27,6 +27,8 @@
     "stage": {
       "Prospecting": "预期",
       "Qualification": "评价",
+      "Proposal": "提案",
+      "Negotiation": "协商",
       "Needs Analysis": "需求分析",
       "Value Proposition": "价值主张",
       "Id. Decision Makers": "Id决策者",

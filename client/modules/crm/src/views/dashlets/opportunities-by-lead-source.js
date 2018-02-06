@@ -112,7 +112,7 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                 },
                 legend: {
                     show: true,
-                    noColumns: this.getLegentColumnNumber(),
+                    noColumns: this.getLegendColumnNumber(),
                     container: this.$el.find('.legend-container'),
                     labelBoxMargin: 0,
                     labelFormatter: self.labelFormatter.bind(self),
@@ -120,6 +120,8 @@ Espo.define('crm:views/dashlets/opportunities-by-lead-source', 'crm:views/dashle
                     backgroundOpacity: 0
                 }
             });
+
+            this.adjustLegend();
         }
     });
 });

@@ -55,7 +55,7 @@
                     </button>
                     <ul class="dropdown-menu pull-right">
                         <li><a href="javascript:" data-action="editFormula" data-scope="{{name}}">{{translate 'Formula' scope='EntityManager'}}</a></li>
-                        {{#if isCustom}}
+                        {{#if isRemovable}}
                             <li><a href="javascript:" data-action="removeEntity" data-scope="{{name}}">{{translate 'Remove'}}</a></li>
                         {{/if}}
                     </ul>

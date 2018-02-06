@@ -73,6 +73,16 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 i++;
             }, this);
 
+            var max = 0;
+            if (d.length) {
+                d.forEach(function (item) {
+                    if ( item.value && item.value > max) {
+                        max = item.value;
+                    }
+                }, this);
+            }
+            this.max = max;
+
             return data;
         },
 
@@ -108,11 +118,15 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 xaxis: {
                     min: 0,
                     color: this.textColor,
+                    max: this.max + 0.08 * this.max,
                     tickFormatter: function (value) {
                         if (value == 0) {
                             return '';
                         }
                         if (value % 1 == 0) {
+                            if (value > self.max + 0.05 * this.max) {
+                                return '';
+                            }
                             return self.currencySymbol + self.formatNumber(Math.floor(value)).toString();
                         }
                         return '';
@@ -131,7 +145,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 },
                 legend: {
                     show: true,
-                    noColumns: this.getLegentColumnNumber(),
+                    noColumns: this.getLegendColumnNumber(),
                     container: this.$el.find('.legend-container'),
                     labelBoxMargin: 0,
                     labelFormatter: self.labelFormatter.bind(self),
@@ -139,6 +153,8 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                     backgroundOpacity: 0
                 }
             });
+
+            this.adjustLegend();
         }
     });
 });

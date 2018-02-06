@@ -147,7 +147,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 },
                 legend: {
                     show: true,
-                    noColumns: this.getLegentColumnNumber(),
+                    noColumns: this.getLegendColumnNumber(),
                     container: this.$el.find('.legend-container'),
                     labelBoxMargin: 0,
                     labelFormatter: self.labelFormatter.bind(self),
@@ -155,6 +155,8 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                     backgroundOpacity: 0
                 }
             });
+
+            this.adjustLegend();
         }
 
     });
