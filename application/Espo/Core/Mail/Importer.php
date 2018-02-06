@@ -351,7 +351,7 @@ class Importer
         if ($email->get('messageId')) {
             $duplicate = $this->getEntityManager()->getRepository('Email')->select(['id'])->where(array(
                 'messageId' => $email->get('messageId')
-            ))->findOne();
+            ))->findOne(['skipAdditionalSelectParams' => true]);
             if ($duplicate) {
                 return $duplicate;
             }
