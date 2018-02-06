@@ -1424,10 +1424,12 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!array_key_exists('fieldList', $params)) {
+            $exportAllFields = true;
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
             $fieldList = array_keys($fieldDefs);
             array_unshift($fieldList, 'id');
         } else {
+            $exportAllFields = false;
             $fieldList = $params['fieldList'];
         }
 
@@ -1437,6 +1439,10 @@ class Record extends \Espo\Core\Services\Base
             }
         }
         $fieldList = array_values($fieldList);
+
+        if (method_exists($exportObj, 'filterFieldList')) {
+            $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
+        }
 
         if (is_null($attributeList)) {
             $attributeList = [];
