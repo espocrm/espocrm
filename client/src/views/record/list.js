@@ -745,6 +745,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('unfollow');
             }
 
+            this.setupMassActionItems();
+
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
                     e.preventDefault();
@@ -814,6 +816,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
         },
+
+        setupMassActionItems: function () {},
 
         filterListLayout: function (listLayout) {
             if (this._cachedFilteredListLayout) {
