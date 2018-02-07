@@ -42,7 +42,7 @@ Espo.define('crm:views/task/record/row-actions/dashlet', 'views/record/row-actio
                     }
                 });
             }
-            if (this.options.acl.edit) {
+            if (this.options.acl.delete) {
                 actionList.push({
                     action: 'quickRemove',
                     label: 'Remove',

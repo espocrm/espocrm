@@ -56,7 +56,7 @@ Espo.define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-a
                     }
                 });
             }
-            if (this.options.acl.edit) {
+            if (this.options.acl.delete) {
                 actionList.push({
                     action: 'quickRemove',
                     label: 'Remove',

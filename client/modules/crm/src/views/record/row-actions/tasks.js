@@ -56,8 +56,8 @@ Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/rela
                         }
                     });
                 }
-
-
+            }
+            if (this.options.acl.delete) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',
@@ -65,7 +65,6 @@ Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/rela
                         id: this.model.id
                     }
                 });
-
             }
             return list;
         }
@@ -73,4 +72,3 @@ Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/rela
     });
 
 });
-

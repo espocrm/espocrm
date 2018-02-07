@@ -55,15 +55,17 @@ Espo.define('crm:views/record/row-actions/history', 'views/record/row-actions/re
                         data: {
                             id: this.model.id
                         }
-                    },
-                    {
-                        action: 'removeRelated',
-                        label: 'Remove',
-                        data: {
-                            id: this.model.id
-                        }
                     }
                 ]);
+            }
+            if (this.options.acl.delete) {
+                list.push({
+                    action: 'removeRelated',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id
+                    }
+                });
             }
             return list;
         }
@@ -71,4 +73,3 @@ Espo.define('crm:views/record/row-actions/history', 'views/record/row-actions/re
     });
 
 });
-

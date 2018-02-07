@@ -79,7 +79,7 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
 
 
             }
-            if (this.getAcl().checkModel(this.model, 'delete')) {
+            if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',

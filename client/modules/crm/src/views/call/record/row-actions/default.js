@@ -26,32 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/call/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
+Espo.define('crm:views/call/record/row-actions/default', ['views/record/row-actions/view-and-edit'], function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
-            var actions = Dep.prototype.getActionList.call(this);
+            var actionList = Dep.prototype.getActionList.call(this);
 
             if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                actions.push({
+                actionList.push({
                     action: 'setHeld',
                     label: 'Set Held',
                     data: {
                         id: this.model.id
                     }
                 });
-                actions.push({
+                actionList.push({
                     action: 'setNotHeld',
                     label: 'Set Not Held',
                     data: {
                         id: this.model.id
                     }
                 });
+                if (this.options.acl.delete) {
+                    actionList.push({
+                        action: 'quickRemove',
+                        label: 'Remove',
+                        data: {
+                            id: this.model.id,
+                            scope: this.model.name
+                        }
+                    });
+                }
             }
 
-            return actions;
-        },
+            return actionList;
+        }
     });
 
 });

@@ -1078,11 +1078,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
+                var acl =  {
+                    edit: this.getAcl().checkModel(model, 'edit'),
+                    delete: this.getAcl().checkModel(model, 'delete')
+                };
+
                 this.createView(key, 'views/base', {
                     model: model,
-                    acl: {
-                        edit: this.getAcl().checkModel(model, 'edit')
-                    },
+                    acl: acl,
                     el: this.options.el + ' .list-row[data-id="'+key+'"]',
                     optionsToPass: ['acl'],
                     noCache: true,
