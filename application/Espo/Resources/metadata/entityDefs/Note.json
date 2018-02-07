@@ -124,7 +124,6 @@
     },
     "statusStyles": {
         "Lead": {
-            "New" : "primary",
             "Assigned" : "primary",
             "In Process" : "primary",
             "Converted" : "success",
@@ -140,14 +139,8 @@
             "Duplicate" : "danger"
         },
         "Opportunity": {
-            "Prospecting": "primary",
-            "Qualification": "primary",
-            "Needs Analysis": "primary",
-            "Value Proposition": "primary",
-            "Id. Decision Makers": "primary",
-            "Perception Analysis": "primary",
-            "Proposal/Price Quote": "primary",
-            "Negotiation/Review": "primary",
+            "Proposal": "primary",
+            "Negotiation": "primary",
             "Closed Won" : "success",
             "Closed Lost" : "danger"
         },
