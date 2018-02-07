@@ -63,6 +63,11 @@ class User extends \Espo\Core\Acl\Base
         if ($entity->id === 'system') {
             return false;
         }
+        if (!$user->isAdmin()) {
+            if ($user->id !== $entity->id) {
+                return false;
+            }
+        }
         return $this->checkEntity($user, $entity, $data, 'edit');
     }
 }
