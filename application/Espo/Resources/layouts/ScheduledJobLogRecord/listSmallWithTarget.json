@@ -1,0 +1,5 @@
+[
+    {"name":"status", "width": 30, "notSortable": true},
+    {"name":"target", "notSortable": true},
+    {"name":"executionTime", "width": 25, "notSortable": true}
+]

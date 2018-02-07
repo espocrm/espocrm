@@ -111,6 +111,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.setupActions();
 
             var layoutName = 'listSmall';
+            this.setupListLayout();
+
+            if (this.listLayoutName) {
+                layoutName = this.listLayoutName;
+            }
+
             var listLayout = null;
             var layout = this.defs.layout || null;
             if (layout) {
@@ -120,7 +126,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                      layoutName = 'listRelationshipCustom';
                      listLayout = layout;
                 }
-             }
+            }
+
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
@@ -175,6 +182,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.setupFilterActions();
         },
+
+        setupListLayout: function () {},
 
         setupActions: function () {},
 
