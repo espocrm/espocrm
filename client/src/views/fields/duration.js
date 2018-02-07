@@ -112,13 +112,13 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
             var parts = [];
             if (days) {
-                parts.push(days + '' + this.getLanguage().translate('d'));
+                parts.push(days + '' + this.getLanguage().translate('d', 'durationUnits'));
             }
             if (hours) {
-                parts.push(hours + '' + this.getLanguage().translate('h'));
+                parts.push(hours + '' + this.getLanguage().translate('h', 'durationUnits'));
             }
             if (minutes) {
-                parts.push(minutes + '' + this.getLanguage().translate('m'));
+                parts.push(minutes + '' + this.getLanguage().translate('m', 'durationUnits'));
             }
             return parts.join(' ');
         },
