@@ -437,6 +437,12 @@
         "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
     },
+    "durationUnits": {
+        "d": "d",
+        "h": "h",
+        "m": "m",
+        "s": "s"
+    },
     "options": {
         "salutationName": {
             "Mr.": "Mr.",
