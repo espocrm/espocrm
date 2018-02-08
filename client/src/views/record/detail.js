@@ -223,23 +223,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            var printPdfAction = this.printPdfAction;
+            if (this.type === 'detail') {
+                var printPdfAction = this.printPdfAction;
 
-            if (!printPdfAction) {
-                if (~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
-                    printPdfAction = true;
+                if (!printPdfAction) {
+                    if (~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
+                        printPdfAction = true;
+                    }
                 }
-            }
 
-            if (printPdfAction && !this.getAcl().check('Template', 'read')) {
-                printPdfAction = false
-            }
+                if (printPdfAction && !this.getAcl().check('Template', 'read')) {
+                    printPdfAction = false
+                }
 
-            if (printPdfAction) {
-                this.dropdownItemList.push({
-                    'label': 'Print to PDF',
-                    'name': 'printPdf'
-                });
+                if (printPdfAction) {
+                    this.dropdownItemList.push({
+                        'label': 'Print to PDF',
+                        'name': 'printPdf'
+                    });
+                }
             }
         },
 
