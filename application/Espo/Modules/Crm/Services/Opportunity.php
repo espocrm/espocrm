@@ -38,34 +38,41 @@ class Opportunity extends \Espo\Services\Record
 {
     public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+            throw new Forbidden();
+        }
+
         if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
+        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
-        $sql = "
-            SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
-            FROM opportunity
-            JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE
-                opportunity.deleted = 0 AND
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+
+        $selectParams = [
+            'select' => ['stage', ['SUM:amountConverted', 'amount']],
+            'whereClause' => [
+                'stage!=' => 'Closed Lost'
+            ],
+            'orderBy' => 'LIST:stage:' . implode(',', $options),
+            'groupBy' => ['stage']
+        ];
 
         if ($dateFilter !== 'ever') {
-            $sql .= "
-                opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
-                opportunity.close_date < ".$pdo->quote($dateTo)." AND
-            ";
+            $selectParams['whereClause'][] = [
+                'closeDate>=' => $dateFrom,
+                'closeDate<' => $dateTo
+            ];
         }
 
-        $sql .= "
-                opportunity.stage <> 'Closed Lost'
-            GROUP BY opportunity.stage
-            ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
-        ";
+        $selectManager->applyAccess($selectParams);
+
+        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -82,31 +89,46 @@ class Opportunity extends \Espo\Services\Record
 
     public function reportByLeadSource($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+            throw new Forbidden();
+        }
+        if (in_array('leadSource', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+            throw new Forbidden();
+        }
+
         if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "
-            SELECT opportunity.lead_source AS `leadSource`, SUM(opportunity.amount * currency.rate * opportunity.probability / 100) as `amount`
-            FROM opportunity
-            JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE
-                opportunity.deleted = 0 AND
-        ";
+        $options = $this->getMetadata()->get('entityDefs.Lead.fields.source.options', []);
+
+        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+
+        $selectParams = [
+            'select' => ['leadSource', ['SUM:amountWeightedConverted', 'amount']],
+            'whereClause' => [
+                'stage!=' => 'Closed Lost',
+                ['leadSource!=' => ''],
+                ['leadSource!=' => null]
+            ],
+            'orderBy' => 'LIST:leadSource:' . implode(',', $options),
+            'groupBy' => ['leadSource']
+        ];
+
         if ($dateFilter !== 'ever') {
-            $sql .= "
-                opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
-                opportunity.close_date < ".$pdo->quote($dateTo)." AND
-            ";
+            $selectParams['whereClause'][] = [
+                'closeDate>=' => $dateFrom,
+                'closeDate<' => $dateTo
+            ];
         }
 
-        $sql .= "
-                opportunity.stage <> 'Closed Lost' AND
-                opportunity.lead_source <> ''
-            GROUP BY opportunity.lead_source
-        ";
+        $selectManager->applyAccess($selectParams);
+
+        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -123,35 +145,42 @@ class Opportunity extends \Espo\Services\Record
 
     public function reportByStage($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+            throw new Forbidden();
+        }
+
         if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options');
+        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
-        $sql = "
-            SELECT opportunity.stage AS `stage`, SUM(opportunity.amount * currency.rate) as `amount`
-            FROM opportunity
-            JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE
-                opportunity.deleted = 0 AND
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+
+        $selectParams = [
+            'select' => ['stage', ['SUM:amountConverted', 'amount']],
+            'whereClause' => [
+                'stage!=' => 'Closed Lost',
+                'stage!=' => 'Closed Won'
+            ],
+            'orderBy' => 'LIST:stage:' . implode(',', $options),
+            'groupBy' => ['stage']
+        ];
 
         if ($dateFilter !== 'ever') {
-            $sql .= "
-                opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
-                opportunity.close_date < ".$pdo->quote($dateTo)." AND
-            ";
+            $selectParams['whereClause'][] = [
+                'closeDate>=' => $dateFrom,
+                'closeDate<' => $dateTo
+            ];
         }
 
-        $sql .= "
-                opportunity.stage <> 'Closed Lost' AND
-                opportunity.stage <> 'Closed Won'
-            GROUP BY opportunity.stage
-            ORDER BY FIELD(opportunity.stage, '".implode("','", $options)."')
-        ";
+        $selectManager->applyAccess($selectParams);
+
+        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -168,32 +197,40 @@ class Opportunity extends \Espo\Services\Record
 
     public function reportSalesByMonth($dateFilter, $dateFrom = null, $dateTo = null)
     {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+            throw new Forbidden();
+        }
+
         if ($dateFilter !== 'between' && $dateFilter !== 'ever') {
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "
-            SELECT DATE_FORMAT(opportunity.close_date, '%Y-%m') AS `month`, SUM(opportunity.amount * currency.rate) as `amount`
-            FROM opportunity
-            JOIN currency ON currency.id = opportunity.amount_currency
-            WHERE
-                opportunity.deleted = 0 AND
-        ";
+        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+
+        $selectParams = [
+            'select' => [['MONTH:closeDate', 'month'], ['SUM:amountConverted', 'amount']],
+            'whereClause' => [
+                'stage' => 'Closed Won'
+            ],
+            'orderBy' => 1,
+            'groupBy' => ['MONTH:closeDate']
+        ];
 
         if ($dateFilter !== 'ever') {
-            $sql .= "
-                opportunity.close_date >= ".$pdo->quote($dateFrom)." AND
-                opportunity.close_date < ".$pdo->quote($dateTo)." AND
-            ";
+            $selectParams['whereClause'][] = [
+                'closeDate>=' => $dateFrom,
+                'closeDate<' => $dateTo
+            ];
         }
 
-        $sql .= "
-            opportunity.stage = 'Closed Won'
-            GROUP BY DATE_FORMAT(opportunity.close_date, '%Y-%m')
-            ORDER BY `month`
-        ";
+        $selectManager->applyAccess($selectParams);
+
+        $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Opportunity', $selectParams);
+
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -225,7 +262,6 @@ class Opportunity extends \Espo\Services\Record
                 $dt->add($interval);
             }
         }
-
 
         $keyList = array_keys($result);
         sort($keyList);
