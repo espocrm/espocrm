@@ -69,16 +69,15 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 });
             }
 
-            this.maxY = 1000;
+            var max = 0;
             if (d.length) {
-                for (var i = 0; i < d.length; i++) {
-                    var y = d[i].value + (d[i].value / 20);
-                    if (y > this.maxY) {
-                        this.maxY = y;
+                d.forEach(function (item) {
+                    if ( item.value && item.value > max) {
+                        max = item.value;
                     }
-                }
-
+                }, this);
             }
+            this.max = max;
 
             return data;
         },
@@ -124,7 +123,7 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
                 },
                 yaxis: {
                     min: 0,
-                    max: this.maxY,
+                    max: this.max + 0.08 * this.max,
                     showLabels: false
                 },
                 xaxis: {
