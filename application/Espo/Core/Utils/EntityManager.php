@@ -132,6 +132,14 @@ class EntityManager
             throw new BadRequest();
         }
 
+        if (strlen($name) > 100) {
+            throw new Error('Entity name should be less than 100.');
+        }
+
+        if (is_numeric($name[0])) {
+            throw new Error('Bad entity name.');
+        }
+
         if (!in_array($type, $this->getMetadata()->get(['app', 'entityTemplateList'], []))) {
             throw new Error('Type \''.$type.'\' does not exist.');
         }
