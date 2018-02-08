@@ -95,6 +95,18 @@ class FieldManager
 
     public function create($scope, $name, $fieldDefs)
     {
+        if (empty($name)) {
+            throw new BadRequest();
+        }
+
+        if (strlen($name) > 255) {
+            throw new Error('Field name should not be longer than 255.');
+        }
+
+        if (is_numeric($name[0])) {
+            throw new Error('Bad field name.');
+        }
+
         $existingField = $this->getFieldDefs($scope, $name);
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);

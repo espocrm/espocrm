@@ -133,7 +133,7 @@ class EntityManager
         }
 
         if (strlen($name) > 100) {
-            throw new Error('Entity name should be less than 100.');
+            throw new Error('Entity name should not be longer than 100.');
         }
 
         if (is_numeric($name[0])) {
@@ -473,6 +473,18 @@ class EntityManager
             } else {
                 $relationName = lcfirst($entity) . $entityForeign;
             }
+        }
+
+        if (empty($link) || empty($linkForeign)) {
+            throw new BadRequest();
+        }
+
+        if (strlen($link) > 255 || strlen($linkForeign) > 255) {
+            throw new Error('Link name should not be longer than 255.');
+        }
+
+        if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
+            throw new Error('Bad link name.');
         }
 
         $linkMultipleField = false;
