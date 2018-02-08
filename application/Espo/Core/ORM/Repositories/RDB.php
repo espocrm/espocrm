@@ -368,14 +368,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function processEmailAddressSave(Entity $entity)
     {
         if ($entity->hasRelation('emailAddresses') && $entity->hasAttribute('emailAddress')) {
-            $emailAddressRepository = $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
+            $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
         }
     }
 
     protected function processPhoneNumberSave(Entity $entity)
     {
         if ($entity->hasRelation('phoneNumbers') && $entity->hasAttribute('phoneNumber')) {
-            $emailAddressRepository = $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
+            $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }
 
