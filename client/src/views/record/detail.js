@@ -473,9 +473,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         cancelEdit: function () {
-            this.model.set(this.attributes);
+            this.resetModelChanges();
+
             this.setDetailMode();
             this.setIsNotChanged();
+        },
+
+        resetModelChanges: function () {
+            var attributes = this.model.attributes;
+            for (var attr in attributes) {
+                if (!(attr in this.attributes)) {
+                    this.model.unset(attr);
+                }
+            }
+
+            this.model.set(this.attributes);
         },
 
         delete: function () {
@@ -663,9 +675,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            this.on('remove', function () {
+            this.once('remove', function () {
                 if (this.isChanged) {
-                    this.model.set(this.attributes);
+                    this.resetModelChanges();
                 }
                 this.setIsNotChanged();
                 $(window).off('scroll.detail-' + this.numId);
