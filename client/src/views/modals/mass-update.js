@@ -49,13 +49,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             },
             'click a[data-action="add-field"]': function (e) {
                 var field = $(e.currentTarget).data('name');
-                var $ul = $(e.currentTarget).closest('ul');
-                $(e.currentTarget).parent().remove();
-                if ($ul.children().size() == 0) {
-                    $ul.parent().find('button').addClass('disabled');
-                }
                 this.addField(field);
             },
+            'click button[data-action="reset"]': function (e) {
+                this.reset();
+            }
         },
 
         setup: function () {
@@ -96,17 +94,23 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 }.bind(this));
             }.bind(this));
 
-            this.fieldsToUpdate = [];
+            this.fieldList = [];
         },
-
-
 
         addField: function (name) {
             this.enableButton('update');
 
+            this.$el.find('[data-action="reset"]').removeClass('hidden');
+
+            this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
+
+            if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
+                this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
+            }
+
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
-            var html = '<div class="cell form-group col-sm-6"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
+            var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
             this.$el.find('.fields-container').append(html);
 
             var type = this.model.getFieldType(name);
@@ -121,7 +125,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 },
                 mode: 'edit'
             }, function (view) {
-                this.fieldsToUpdate.push(name);
+                this.fieldList.push(name);
                 view.render();
                 view.notify(false);
             }.bind(this));
@@ -131,7 +135,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             var self = this;
 
             var attributes = {};
-            this.fieldsToUpdate.forEach(function (field) {
+            this.fieldList.forEach(function (field) {
                 var view = self.getView(field);
                 _.extend(attributes, view.fetch());
             });
@@ -139,7 +143,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.model.set(attributes);
 
             var notValid = false;
-            this.fieldsToUpdate.forEach(function (field) {
+            this.fieldList.forEach(function (field) {
                 var view = self.getView(field);
                 notValid = view.validate() || notValid;
             });
@@ -164,12 +168,29 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     },
                     error: function () {
                         self.notify('Error occurred', 'error');
-                    },
+                    }
                 });
             } else {
                 this.notify('Not valid', 'error');
             }
         },
+
+        reset: function () {
+            this.fieldList.forEach(function (field) {
+                this.clearView(field);
+                this.$el.find('.cell[data-name="'+field+'"]').remove();
+            }, this);
+
+            this.fieldList = [];
+
+            this.model.clear();
+
+            this.$el.find('[data-action="reset"]').addClass('hidden');
+
+            this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('ul.filter-list').find('li').removeClass('hidden');
+
+            this.disableButton('update');
+        }
     });
 });
-

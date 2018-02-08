@@ -1,12 +1,13 @@
 {{#unless fields}}
     {{translate 'No fields available for Mass Update'}}
-{{else}}    
+{{else}}
 <div class="button-container">
+    <button class="btn btn-default pull-right hidden" data-action="reset">{{translate 'Reset'}}</button>
     <div class="btn-group">
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">{{translate 'Select Field'}} <span class="caret"></span></button>
+        <button class="btn btn-default dropdown-toggle select-field" data-toggle="dropdown" tabindex="-1">{{translate 'Select Field'}} <span class="caret"></span></button>
         <ul class="dropdown-menu pull-left filter-list">
         {{#each ../fields}}
-            <li><a href="javascript:" data-name="{{./this}}" data-action="add-field">{{translate this scope=../../scope category='fields'}}</a></li>
+            <li data-name="{{./this}}"><a href="javascript:" data-name="{{./this}}" data-action="add-field">{{translate this scope=../../scope category='fields'}}</a></li>
         {{/each}}
         </ul>
     </div>

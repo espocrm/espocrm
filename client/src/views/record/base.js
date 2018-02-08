@@ -253,9 +253,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             this.recordHelper = new ViewRecordHelper();
 
-            this.on('remove', function () {
+            this.once('remove', function () {
                 if (this.isChanged) {
-                    this.model.set(this.attributes);
+                    this.resetModelChanges();
                 }
                 this.setIsNotChanged();
             }, this);
@@ -300,6 +300,17 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         checkAttributeIsChanged: function (name) {
             return !_.isEqual(this.attributes[name], this.model.get(name));
+        },
+
+        resetModelChanges: function () {
+            var attributes = this.model.attributes;
+            for (var attr in attributes) {
+                if (!(attr in this.attributes)) {
+                    this.model.unset(attr);
+                }
+            }
+
+            this.model.set(this.attributes);
         },
 
         initDynamicLogic: function () {
@@ -474,7 +485,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
                     if (xhr.status == 400) {
                         if (!this.isNew) {
-                            this.model.set(this.attributes);
+                            this.resetModelChanges();
                         }
                     }
 

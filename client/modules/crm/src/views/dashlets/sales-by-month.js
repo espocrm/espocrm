@@ -70,12 +70,19 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
 
             var data = [];
 
+            var max = 0;
+
             values.forEach(function (value, i) {
+                if (value && value > max) {
+                    max = value;
+                }
                 data.push({
                     data: [[i, value]],
                     color: (value >= mid) ? this.successColor : this.colorBad
                 });
             }, this);
+
+            this.max = max;
 
             return data;
         },
@@ -110,6 +117,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     min: 0,
                     showLabels: true,
                     color: this.textColor,
+                    max: this.max + 0.08 * this.max,
                     tickFormatter: function (value) {
                         if (value == 0) {
                             return '';
