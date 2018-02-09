@@ -55,7 +55,7 @@ class Task extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function filterActualStartingNotInPast(&$result)
+    protected function filterActualStartingNotInFuture(&$result)
     {
         $result['whereClause'][] = array(
             array(

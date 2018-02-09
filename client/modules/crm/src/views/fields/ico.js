@@ -50,7 +50,7 @@ Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
                     tpl = icoTpl.replace('{icoName}', 'envelope');
                     break;
                 default:
-                    tpl = icoTpl.replace('{icoName}', 'calendar');
+                    tpl = icoTpl.replace('{icoName}', 'list-alt');
                     break;
             }
 

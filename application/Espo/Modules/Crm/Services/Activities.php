@@ -1181,17 +1181,16 @@ class Activities extends \Espo\Core\Services\Base
                 $selectManager->applyTextFilter($params['textFilter'], $selectParams);
             }
 
-            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
 
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
 
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
-            $selectManager->addAndWhere([
-                'status' => $statusList
-            ], $selectParams);
+
 
             if ($entityType === 'Task') {
+                $selectManager->applyPrimaryFilter('actualStartingNotInFuture', $selectParams);
+
                 $selectManager->addOrWhere([
                     ['dateEnd' => null],
                     $selectManager->convertDateTimeWhere(array(
@@ -1209,6 +1208,8 @@ class Activities extends \Espo\Core\Services\Base
                     ]
                 ], $selectParams);
             } else {
+                $selectManager->applyPrimaryFilter('planned', $selectParams);
+
                 $selectManager->addOrWhere([
                     $selectManager->convertDateTimeWhere(array(
                         'type' => 'today',
