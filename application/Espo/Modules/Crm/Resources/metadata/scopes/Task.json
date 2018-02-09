@@ -5,6 +5,8 @@
     "acl": true,
     "aclPortal": true,
     "aclPortalLevelList": ["all", "account", "contact", "own", "no"],
+    "activityStatusList": ["Not Started", "Started"],
+    "historyStatusList": ["Completed"],
     "module": "Crm",
     "customizable": true,
     "importable": true,
