@@ -1,5 +1,5 @@
 {
-    "labels": {
-        "Create {entityType}": "Creare {entityTypeTranslated}"
-    }
+  "labels": {
+    "Create {entityType}": "Creare {entityTypeTranslated}"
+  }
 }

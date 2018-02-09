@@ -1,37 +1,29 @@
 {
-    "fields": {
-        "name": "Nume",
-        "parent": "Parinte",
-        "status": "Status",
-        "dateStart": "Data inceput",
-        "dateEnd": "Data scadenta",
-        "priority": "Prioritate",
-        "description": "Descriere",
-        "isOverdue": "Este Restant"
+  "fields": {
+    "name": "Nume",
+    "parent": "Parinte",
+    "dateStart": "Data inceput",
+    "dateEnd": "Data scadenta",
+    "priority": "Prioritate",
+    "description": "Descriere",
+    "isOverdue": "Este Restant"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Ne inceput",
+      "Started": "Inceput",
+      "Completed": "Completat",
+      "Canceled": "Anulat"
     },
-    "links": {
-    },
-    "options": {
-        "status": {
-            "Not Started": "Ne inceput",
-            "Started": "Inceput",
-            "Completed": "Completat",
-            "Canceled": "Anulat"
-        },
-        "priority" : {
-            "Low": "Scazut",
-            "Normal": "Normal",
-            "High": "Inalt",
-            "Urgent": "Urgent"
-        }
-    },
-    "labels": {
-        "Create Task": "Creaza Activitate"
-    },
-    "presetFilters": {
-        "active": "Activ",
-        "completed": "Completat",
-        "todays": "Today's",
-        "overdue": "Overdue"
+    "priority": {
+      "Low": "Scazut",
+      "High": "Inalt"
     }
+  },
+  "labels": {
+    "Create Task": "Creaza Activitate"
+  },
+  "presetFilters": {
+    "completed": "Completat"
+  }
 }

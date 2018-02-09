@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Field": "Câmp"
+  },
+  "options": {
+    "operators": {
+      "equals": "Egal",
+      "notEquals": "Nu este egal",
+      "greaterThan": "Mai mare decât",
+      "lessThan": "Mai mic decât",
+      "greaterThanOrEquals": "Mai mare sau egal",
+      "lessThanOrEquals": "Mai mic sau egal",
+      "in": "În",
+      "notIn": "Nu în",
+      "inPast": "În Trecut",
+      "inFuture": "În Viitor",
+      "isToday": "Este Astăzi",
+      "isTrue": "Este Adevărat",
+      "isFalse": "Este Fals",
+      "isEmpty": "Este Gol",
+      "isNotEmpty": "Nu este Gol",
+      "contains": "Conține",
+      "has": "Conține",
+      "notContains": "Nu Conține",
+      "notHas": "Nu Conține"
+    }
+  }
+}

@@ -1,42 +1,35 @@
 {
-    "fields": {
-        "name": "Nume",
-        "number": "Numar",
-        "status": "Status",
-        "account": "Cont",
-        "contact": "Contact",
-        "priority": "Prioritate",
-        "type": "Tip",
-        "description": "Descriere"
+  "fields": {
+    "name": "Nume",
+    "number": "Numar",
+    "account": "Cont",
+    "priority": "Prioritate",
+    "type": "Tip",
+    "description": "Descriere"
+  },
+  "options": {
+    "status": {
+      "New": "Nou",
+      "Assigned": "Alocat",
+      "Pending": "In asteptare",
+      "Closed": "Inchis",
+      "Rejected": "Respins",
+      "Duplicate": "Duplicat"
     },
-    "links": {
+    "priority": {
+      "Low": "Scazut",
+      "High": "Inalt"
     },
-    "options": {
-        "status": {
-            "New": "Nou",
-            "Assigned": "Alocat",
-            "Pending": "In asteptare",
-            "Closed": "Inchis",
-            "Rejected": "Respins",
-            "Duplicate": "Duplicat"
-        },
-        "priority" : {
-            "Low": "Scazut",
-            "Normal": "Normal",
-            "High": "Inalt",
-            "Urgent": "Urgent"
-        },
-        "type": {
-            "Question": "Intrebare",
-            "Incident": "Incident",
-            "Problem": "Problema"
-        }
-    },
-    "labels": {
-        "Create Case": "Creare Caz"
-    },
-    "presetFilters": {
-        "open": "Deschide",
-        "closed": "Inchis"
+    "type": {
+      "Question": "Intrebare",
+      "Problem": "Problema"
     }
+  },
+  "labels": {
+    "Create Case": "Creare Caz"
+  },
+  "presetFilters": {
+    "open": "Deschide",
+    "closed": "Inchis"
+  }
 }
