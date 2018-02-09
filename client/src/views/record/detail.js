@@ -118,7 +118,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         inlineEditDisabled: false,
 
-        printPdfAction: false,
+        printPdfAction: true,
 
         portalLayoutDisabled: false,
 
@@ -223,17 +223,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.type === 'detail') {
-                var printPdfAction = this.printPdfAction;
+            if (this.type === 'detail' && this.printPdfAction) {
+                var printPdfAction = true;
 
-                if (!printPdfAction) {
-                    if (~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
-                        printPdfAction = true;
-                    }
-                }
-
-                if (printPdfAction && !this.getAcl().check('Template', 'read')) {
-                    printPdfAction = false
+                if (!~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
+                    printPdfAction = false;
                 }
 
                 if (printPdfAction) {
