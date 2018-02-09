@@ -420,4 +420,26 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testHaving()
+    {
+        $sql = $this->query->createSelectQuery('Comment', array(
+            'select' => ['COUNT:comment.id', 'postId', 'postName'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['postId'],
+            'whereClause' => array(
+                'post.createdById' => 'id_1'
+            ),
+            'havingClause' => [
+                'COUNT:comment.id>' => 1
+            ]
+        ));
+
+        $expectedSql =
+            "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
+            "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "WHERE post.created_by_id = 'id_1' AND comment.deleted = '0' " .
+            "GROUP BY comment.post_id " .
+            "HAVING COUNT(comment.id) > '1'";
+        $this->assertEquals($expectedSql, $sql);
+    }
 }

@@ -52,6 +52,8 @@ abstract class Base
         'aggregation',
         'aggregationBy',
         'groupBy',
+        'havingClause',
+        'customHaving',
         'skipTextColumns',
         'maxTextColumnsLength'
     );
@@ -158,6 +160,12 @@ abstract class Base
 
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
+        $havingClause = $params['havingClause'];
+        $havingPart = '';
+        if (!empty($havingClause)) {
+            $havingPart = $this->getWhere($entity, $havingClause, 'AND', $params);
+        }
+
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength']);
             $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
@@ -184,9 +192,18 @@ abstract class Base
 
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
 
-
         if (!empty($params['customWhere'])) {
-            $wherePart .= ' ' . $params['customWhere'];
+            if (!empty($wherePart)) {
+                $wherePart .= ' ';
+            }
+            $wherePart .= $params['customWhere'];
+        }
+
+        if (!empty($params['customHaving'])) {
+            if (!empty($havingPart)) {
+                $havingPart .= ' ';
+            }
+            $havingPart .= $params['customHaving'];
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
@@ -228,9 +245,9 @@ abstract class Base
         }
 
         if (empty($params['aggregation'])) {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
         } else {
-            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation']);
+            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation'], $groupByPart, $havingPart);
         }
 
         return $sql;
@@ -1092,7 +1109,7 @@ abstract class Base
         return false;
     }
 
-    public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null)
+    public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null, $having = null)
     {
         $sql = "SELECT";
 
@@ -1112,6 +1129,10 @@ abstract class Base
 
         if (!empty($groupBy)) {
             $sql .= " GROUP BY {$groupBy}";
+        }
+
+        if (!empty($having)) {
+            $sql .= " HAVING {$having}";
         }
 
         if (!empty($order)) {
