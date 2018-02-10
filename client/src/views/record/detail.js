@@ -777,15 +777,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             var id = model.id;
 
+            var scope = model.name || this.scope;
+
             var url;
             if (this.mode === 'edit') {
-                url = '#' + this.scope + '/edit/' + id;
+                url = '#' + scope + '/edit/' + id;
             } else {
-                url = '#' + this.scope + '/view/' + id;
+                url = '#' + scope + '/view/' + id;
             }
 
-            this.getRouter().navigate('#' + this.scope + '/view/' + id, {trigger: false});
-            this.getRouter().dispatch(this.scope, 'view', {
+            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+            this.getRouter().dispatch(scope, 'view', {
                 id: id,
                 model: model,
                 indexOfRecord: indexOfRecord
