@@ -26,17 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/create-related', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.create-related',
+        template: 'stream/notes/create-related',
 
         messageName: 'createRelated',
 
         data: function () {
             return _.extend({
-                relatedTypeString: this.translateEntityType(this.entityType)
+                relatedTypeString: this.translateEntityType(this.entityType),
+                iconHtml: this.getIconHtml(this.entityType, this.entityId)
             }, Dep.prototype.data.call(this));
         },
 
@@ -58,7 +59,7 @@ Espo.define('Views.Stream.Notes.CreateRelated', 'Views.Stream.Note', function (D
             this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
 
             this.createMessage();
-        },
+        }
     });
 });
 

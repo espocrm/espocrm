@@ -182,8 +182,14 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 id = 'system';
             }
             return '<img class="avatar" width="20" src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
+        },
+
+        getIconHtml: function (scope, id) {
+            if (this.isThis && scope === this.parentModel.name) return;
+            var iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+            if (!iconClass) return;
+            return '<span class="'+iconClass+' action text-muted icon" style="cursor: pointer;" title="'+this.translate('View')+'" data-action="quickView" data-id="'+id+'" data-scope="'+scope+'"></span>';
         }
 
     });
 });
-

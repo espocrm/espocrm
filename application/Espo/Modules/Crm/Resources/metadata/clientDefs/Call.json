@@ -88,5 +88,6 @@
                 }
             }
         }
-    }
+    },
+    "iconClass": "glyphicon glyphicon-phone-alt"
 }

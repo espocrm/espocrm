@@ -69,5 +69,6 @@
          "name":"deferred"
       }
    ],
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy"],
+    "iconClass": "glyphicon glyphicon-list-alt"
 }
