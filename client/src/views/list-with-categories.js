@@ -235,7 +235,10 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToNestedCategoriesCollection();
             this.applyCategoryToCollection();
 
+            this.collection.abortLastFetch();
+
             if (this.nestedCategoriesCollection) {
+                this.nestedCategoriesCollection.abortLastFetch();
                 Espo.Ui.notify(this.translate('loading', 'messages'));
                 Promise.all([
                     this.nestedCategoriesCollection.fetch().then(function () {
@@ -376,6 +379,8 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                         }
 
                         this.applyCategoryToCollection();
+
+                        this.collection.abortLastFetch();
 
                         this.notify('Please wait...');
                         this.listenToOnce(this.collection, 'sync', function () {
