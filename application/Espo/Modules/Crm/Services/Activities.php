@@ -1190,23 +1190,6 @@ class Activities extends \Espo\Core\Services\Base
 
             if ($entityType === 'Task') {
                 $selectManager->applyPrimaryFilter('actualStartingNotInFuture', $selectParams);
-
-                $selectManager->addOrWhere([
-                    ['dateEnd' => null],
-                    $selectManager->convertDateTimeWhere(array(
-                        'type' => 'today',
-                        'field' => 'dateEnd',
-                        'timeZone' => $selectManager->getUserTimeZone()
-                    )),
-                    [
-                        $selectManager->convertDateTimeWhere(array(
-                            'type' => 'before',
-                            'field' => 'dateEnd',
-                            'value' => (new \DateTime())->modify('+' . self::UPCOMING_ACTIVITIES_FUTURE_DAYS . ' days')->format('Y-m-d H:i:s'),
-                            'timeZone' => $selectManager->getUserTimeZone()
-                        ))
-                    ]
-                ], $selectParams);
             } else {
                 $selectManager->applyPrimaryFilter('planned', $selectParams);
 
