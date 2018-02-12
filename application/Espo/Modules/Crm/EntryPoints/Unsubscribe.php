@@ -115,7 +115,7 @@ class Unsubscribe extends \Espo\Core\EntryPoints\Base
                         }
                         echo $this->getLanguage()->translate('unsubscribed', 'messages', 'Campaign');
                         echo '<br><br>';
-                        echo '<a href="?entryPoint=subscribeAgain&id='.$queueItemId.'">' . $this->getLanguage()->translate('Subscribe again', 'labels', 'Campaign') . '</a>';
+                        echo '<a href="?entryPoint=subscribeAgain&id='.htmlspecialchars($queueItemId).'">' . $this->getLanguage()->translate('Subscribe again', 'labels', 'Campaign') . '</a>';
                     }
                 }
             }
