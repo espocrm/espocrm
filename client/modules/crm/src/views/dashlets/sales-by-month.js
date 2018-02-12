@@ -32,6 +32,8 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
 
         name: 'SalesByMonth',
 
+        columnWidth: 50,
+
         setupDefaultOptions: function () {
             this.defaultOptions['dateFrom'] = this.defaultOptions['dateFrom'] || moment().format('YYYY') + '-01-01';
             this.defaultOptions['dateTo'] = this.defaultOptions['dateTo'] || moment().format('YYYY') + '-12-31';
@@ -94,8 +96,17 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
             this.colorBad = this.successColor;
         },
 
+        getTickNumber: function () {
+            var containerWidth = this.$container.width();
+            var tickNumber = Math.floor(containerWidth / this.columnWidth);
+
+            return tickNumber;
+        },
+
         draw: function () {
             var self = this;
+            var tickNumber = this.getTickNumber();
+
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 shadowSize: false,
                 bars: {
@@ -131,11 +142,12 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                 xaxis: {
                     min: 0,
                     color: this.textColor,
+                    noTicks: tickNumber,
                     tickFormatter: function (value) {
                         if (value % 1 == 0) {
                             var i = parseInt(value);
                             if (i in self.monthList) {
-                                if (self.monthList.length > 12 && i === self.monthList.length - 1) {
+                                if (self.monthList.length - tickNumber > 5 && i === self.monthList.length - 1) {
                                     return '';
                                 }
                                 return moment(self.monthList[i] + '-01').format('MMM YYYY');
