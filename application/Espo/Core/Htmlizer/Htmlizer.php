@@ -50,13 +50,19 @@ class Htmlizer
 
     protected $entityManager;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null, $entityManager = null)
+    protected $metadata;
+
+    protected $language;
+
+    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null, $entityManager = null, $metadata = null, $language = null)
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
         $this->number = $number;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+        $this->language = $language;
     }
 
     protected function getAcl()
@@ -148,6 +154,14 @@ class Htmlizer
             if (array_key_exists($field, $data)) {
                 $keyRaw = $field . '_RAW';
                 $data[$keyRaw] = $data[$field];
+
+                $fieldType = $this->getFieldType($entity->getEntityType(), $field);
+                if ($fieldType === 'enum') {
+                    if ($this->language) {
+                        $data[$field] = $this->language->translateOption($data[$field], $field, $entity->getEntityType());
+                    }
+                }
+
                 $data[$field] = $this->format($data[$field]);
             }
         }
@@ -268,5 +282,10 @@ class Htmlizer
         }
 
         return $html;
+    }
+
+    protected function getFieldType($entityType, $field) {
+        if (!$this->metadata) return;
+        return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 }
