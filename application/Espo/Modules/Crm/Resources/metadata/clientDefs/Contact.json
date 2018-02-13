@@ -101,5 +101,19 @@
     },
     "filterList": [
         "portalUsers"
-    ]
+    ],
+    "dynamicLogic": {
+        "fields": {
+            "title": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "accountId"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }
