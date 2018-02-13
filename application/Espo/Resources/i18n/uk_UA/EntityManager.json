@@ -14,10 +14,6 @@
     "stream": "Потік",
     "label": "Мітка",
     "linkType": "Тип посилання",
-    "entityForeign": "Foreign Entity",
-    "linkForeign": "Foreign Link",
-    "link": "Link",
-    "labelForeign": "Foreign Label",
     "sortBy": "Сортування за замовчуванням (поле)",
     "sortDirection": "Сортування за замовчуванням (напрямок)",
     "relationName": "Назва середньої таблиці",
@@ -35,7 +31,6 @@
       "": "Нема",
       "Base": "База",
       "Person": "Особа",
-      "CategoryTree": "Category Tree",
       "Event": "Подія",
       "BasePlus": "База плюс",
       "Company": "Компанія"
@@ -46,10 +41,6 @@
       "manyToOne": "Багато-до-одного",
       "parentToChildren": "Від батька до сина",
       "childrenToParent": "Від сина до батька"
-    },
-    "sortDirection": {
-      "asc": "Ascending",
-      "desc": "Descending"
     }
   },
   "messages": {

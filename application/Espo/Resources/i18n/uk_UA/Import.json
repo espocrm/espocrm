@@ -1,6 +1,5 @@
 {
   "labels": {
-    "Revert Import": "Revert Import",
     "Return to Import": "Повернутися до імпорту",
     "Run Import": "Запустити імпорт",
     "Back": "Назад",
@@ -11,10 +10,6 @@
     "Updated": "Поновлено",
     "Result": "Результат",
     "Show records": "Показати записи",
-    "Remove Duplicates": "Remove Duplicates",
-    "importedCount": "Imported (count)",
-    "duplicateCount": "Duplicates (count)",
-    "updatedCount": "Updated (count)",
     "Create Only": "Тільки створення",
     "Create and Update": "Створення та оновлення",
     "Update Only": "Тільки оновлення",
@@ -53,15 +48,10 @@
   },
   "messages": {
     "utf8": "Мусить бути в кодуванні utf-8",
-    "duplicatesRemoved": "Duplicates removed",
     "inIdle": "Виконати у фоновому режимі (для великих даних; через cron)"
   },
   "fields": {
     "file": "Файл",
-    "entityType": "Entity Type",
-    "imported": "Imported Records",
-    "duplicates": "Duplicate Records",
-    "updated": "Updated Records",
     "status": "Статус"
   },
   "options": {

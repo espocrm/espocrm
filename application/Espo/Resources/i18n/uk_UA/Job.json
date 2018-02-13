@@ -5,9 +5,10 @@
     "attempts": "Залишилось спроб",
     "failedAttempts": "Невдалі спроби",
     "serviceName": "Обслуговування",
-    "method": "Метод",
+    "methodName": "Метод",
     "scheduledJob": "Запланована робота",
-    "data": "Дата"
+    "data": "Дата",
+    "method": "Метод"
   },
   "options": {
     "status": {

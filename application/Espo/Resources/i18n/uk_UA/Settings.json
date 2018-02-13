@@ -35,25 +35,19 @@
     "globalSearchEntityList": "Список сутнотей для Глобального пошуку",
     "authenticationMethod": "Метод автентифікації",
     "ldapHost": "Хост",
-    "ldapAccountCanonicalForm": "Account Canonical Form",
-    "ldapAccountDomainName": "Account Domain Name",
     "ldapTryUsernameSplit": "Спробувати відділити ім'я користувача",
     "ldapCreateEspoUser": "Створити користувача в EspoCRM",
     "ldapUserLoginFilter": "Фільтр логіну користувача",
-    "ldapAccountDomainNameShort": "Account Domain Name Short",
     "ldapOptReferrals": "Оптові реферали",
     "exportDisabled": "Вимкнути експортування (доступно лише адміністру)",
     "b2cMode": "Режим В2С",
     "avatarsDisabled": "Вимкнути аватари",
-    "followCreatedEntities": "Підписатися на створені сутності",
     "displayListViewRecordCount": "Дисплей Загальна кількість (у вигляді списку)",
     "theme": "Тема",
     "userThemesDisabled": "Відключення теми користувача",
     "emailMessageMaxSize": "Емайл Максимальний розмір (Мб)",
-    "massEmailMaxPerHourCount": "Максимальна кількість відісланих за годину листів",
     "personalEmailMaxPortionSize": "Максимальний розмір частини електронної пошти для витягнення особистого облікового запису",
     "inboundEmailMaxPortionSize": "Максимальний розмір частини електронної пошти для вибірки облікових записів груп",
-    "maxEmailAccountCount": "Максимальна кількість особистих болікових записів на користувача",
     "authTokenLifetime": "Час існування токенів аутентифікації (в годинах)",
     "authTokenMaxIdleTime": "Максимальний час простою токену аутентифікації (години)",
     "dashboardLayout": "Макет панелі дашлетів (за замовчуванням)",
@@ -86,7 +80,9 @@
     "activitiesEntityList": "Список сутностей Діяльності",
     "historyEntityList": "Список сутностей Історії",
     "currencyFormat": "Формат валюти",
-    "currencyDecimalPlaces": "Currency Decimal Places"
+    "followCreatedEntities": "Підписатися на створені сутності",
+    "massEmailMaxPerHourCount": "Максимальна кількість відісланих за годину листів",
+    "maxEmailAccountCount": "Максимальна кількість особистих болікових записів на користувача"
   },
   "options": {
     "weekStart": {
@@ -101,7 +97,6 @@
   "tooltips": {
     "recordsPerPage": "Кількість записів, що початково відображаються у списках.",
     "recordsPerPageSmall": "Кількість записів, що початково відображаються у панелях зв'язків.",
-    "outboundEmailIsShared": "Дозволити користувачам надсилати повідомлення через цей SMTP.",
     "followCreatedEntities": "Користувачі будуть автоматично підписані на записи, які вони створюють",
     "emailMessageMaxSize": "Усі вхідні повідомлення електронної пошти, що перевищують зазначений розмір вивантажуватимуться без тексту і вкладень.",
     "authTokenLifetime": "Визначає, як довго можуть існувати токени.\n0 - означає відсутність закінчення терміну дії.",
@@ -129,15 +124,14 @@
     "ldapUserTeams": "Команди для створеного користувача. Детальніше в профілі користувача.",
     "ldapUserDefaultTeam": "Команди для створеного користувача за замовчуванням. Детальніше про це читайте профіль користувача.",
     "b2cMode": "За замовчуванням EspoCRM адаптований для B2B. Ви можете переключити його на B2C.",
-    "currencyDecimalPlaces": "Кількість знаків після десяткової коми. "
+    "currencyDecimalPlaces": "Кількість знаків після десяткової коми. ",
+    "outboundEmailIsShared": "Дозволити користувачам надсилати повідомлення через цей SMTP."
   },
   "labels": {
     "System": "Система",
     "Locale": "Локаль",
     "SMTP": "Протокол SMTP",
     "Configuration": "Конфігурація",
-    "In-app Notifications": "In-app Notifications",
-    "Email Notifications": "Email Notifications",
     "Currency Settings": "Налаштування валюти",
     "Currency Rates": "Курси валют",
     "Mass Email": "Масова розсилка електронної пошти",

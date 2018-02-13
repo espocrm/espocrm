@@ -30,11 +30,11 @@
     "name": "Тема",
     "isReplied": "Відповіли",
     "isNotReplied": "Без відповіді",
-    "sentBy": "Надіслав (Користувач)",
     "folder": "Папка",
     "inboundEmails": "Група облікових записів",
     "emailAccounts": "Особисті облікові записи",
-    "hasAttachment": "Має Вкладення"
+    "hasAttachment": "Має Вкладення",
+    "sentBy": "Надіслав (Користувач)"
   },
   "links": {
     "replied": "Відповіли",
@@ -70,8 +70,6 @@
     "Mark Read": "Прочитане",
     "Sending...": "Шле...",
     "Save Draft": "Зберегти чернетку",
-    "Mark all as read": "Mark all as read",
-    "Show Plain Text": "Show Plain Text",
     "Mark as Important": "Відмітити важливим",
     "Unmark Importance": "Відмітити не важливим",
     "Move to Trash": "Видалити в сміття",
@@ -89,8 +87,6 @@
   "presetFilters": {
     "sent": "Відправлено",
     "archived": "В архіві",
-    "inbox": "Inbox",
-    "drafts": "Drafts",
     "trash": "Сміття",
     "important": "Важливо"
   },

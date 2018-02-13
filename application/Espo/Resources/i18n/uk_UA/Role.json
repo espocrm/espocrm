@@ -18,8 +18,7 @@
   "labels": {
     "Access": "Доступ",
     "Create Role": "Створити роль",
-    "Scope Level": "Область застосування Рівень",
-    "Field Level": "Field Level"
+    "Scope Level": "Область застосування Рівень"
   },
   "options": {
     "accessList": {

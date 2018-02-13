@@ -10,7 +10,6 @@
     "port": "Порт",
     "monitoredFolders": "Відслідковувані теки",
     "trashFolder": "Кошик",
-    "ssl": "SSL",
     "createCase": "Створити Звернення",
     "reply": "Авто-Відповідь",
     "caseDistribution": "Дистрибуція Звернень",
@@ -45,7 +44,7 @@
       "Inactive": "Неактивний"
     },
     "caseDistribution": {
-      "": "Жоден",
+      "": "Немає",
       "Direct-Assignment": "Пряме призначення",
       "Round-Robin": "Циклічне",
       "Least-Busy": "Найвільнішим"
@@ -53,7 +52,6 @@
   },
   "labels": {
     "Create InboundEmail": "Створити емейл-акаунт",
-    "IMAP": "IMAP",
     "Actions": "Дії",
     "Main": "Основне"
   },
