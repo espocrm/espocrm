@@ -1,1 +1,6 @@
-{}
+{
+  "labels": {
+    "Connect": "Conectare",
+    "Connected": "Conectat"
+  }
+}

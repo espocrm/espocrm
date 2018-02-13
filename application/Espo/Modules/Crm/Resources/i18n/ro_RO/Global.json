@@ -1,4 +1,14 @@
 {
+  "links": {
+    "parent": "Părinte",
+    "contacts": "Contacte",
+    "opportunities": "Oportunitati",
+    "leads": "Lead-uri",
+    "meetings": "Intalniri",
+    "calls": "Apeluri",
+    "tasks": "Activitati",
+    "emails": "Email-uri"
+  },
   "scopeNames": {
     "Account": "Cont",
     "Target": "Tinta",
@@ -54,14 +64,5 @@
     "addressState": "Stat",
     "billingAddressStreet": "Strada",
     "addressStreet": "Strada"
-  },
-  "links": {
-    "contacts": "Contacte",
-    "opportunities": "Oportunitati",
-    "leads": "Lead-uri",
-    "meetings": "Intalniri",
-    "calls": "Apeluri",
-    "tasks": "Activitati",
-    "emails": "Email-uri"
   }
 }
