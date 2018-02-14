@@ -51,7 +51,7 @@
     }
   },
   "messages": {
-    "entityCreated": "Entitatea a fost creeată",
+    "entityCreated": "Entitatea a fost creată",
     "linkAlreadyExists": "Confict nume link.",
     "linkConflict": "Confilct nume: link-ul sau câmpul cu același nume există deja."
   },

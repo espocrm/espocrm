@@ -8,5 +8,8 @@
   "labels": {
     "Uninstall": "Dezinstalează",
     "Install": "Instalează"
+  },
+  "messages": {
+    "uninstalled": "Extenisa {name} a fost dezinstalată"
   }
 }
