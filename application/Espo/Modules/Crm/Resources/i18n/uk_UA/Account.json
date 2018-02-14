@@ -96,8 +96,6 @@
     "Copy Billing": "Копія рахунку"
   },
   "presetFilters": {
-    "customers": "Customers",
-    "partners": "Partners",
     "recentlyCreated": "Нещодавно Створений"
   }
 }

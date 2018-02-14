@@ -54,7 +54,8 @@
     },
     "links": {
         "filters": "Filters",
-        "emails": "Emails"
+        "emails": "Emails",
+        "assignToUser": "Assign to User"
     },
     "options": {
         "status": {

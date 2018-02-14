@@ -1,73 +1,76 @@
 {
-   "controller": "controllers/record",
-   "recordViews":{
-      "list": "crm:views/task/record/list",
-      "detail": "crm:views/task/record/detail"
-   },
-   "views": {
-      "list": "crm:views/task/list",
-      "detail": "crm:views/task/detail"
-   },
-   "dynamicLogic": {
-      "fields": {
-         "dateCompleted": {
-            "visible": {
-               "conditionGroup": [
-                  {
-                     "type": "equals",
-                     "attribute": "status",
-                     "value": "Completed"
-                  }
-               ]
-            }
-         },
-         "reminders": {
-            "visible": {
-               "conditionGroup": [
-                  {
-                     "type": "and",
-                     "value": [
+    "controller": "controllers/record",
+    "recordViews": {
+        "list": "crm:views/task/record/list",
+        "detail": "crm:views/task/record/detail"
+    },
+    "views": {
+        "list": "crm:views/task/list",
+        "detail": "crm:views/task/detail"
+    },
+    "dynamicLogic": {
+        "fields": {
+            "dateCompleted": {
+                "visible": {
+                    "conditionGroup": [
                         {
-                           "type": "isNotEmpty",
-                           "attribute": "dateEnd"
-                        },
-                        {
-                           "type": "isEmpty",
-                           "attribute": "dateEndDate"
-                        },
-                        {
-                           "type": "notEquals",
-                           "attribute": "status",
-                           "value": "Completed"
-                        },
-                        {
-                           "type": "notEquals",
-                           "attribute": "status",
-                           "value": "Canceled"
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Completed"
                         }
-                     ]
-                  }
-               ]
+                    ]
+                }
+            },
+            "reminders": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "dateEnd"
+                                },
+                                {
+                                    "type": "isEmpty",
+                                    "attribute": "dateEndDate"
+                                },
+                                {
+                                    "type": "notEquals",
+                                    "attribute": "status",
+                                    "value": "Completed"
+                                },
+                                {
+                                    "type": "notEquals",
+                                    "attribute": "status",
+                                    "value": "Canceled"
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
-         }
-      }
-   },
-   "filterList": [
-      "actual",
-      {
-         "name":"completed",
-         "style": "success"
-      },
-      {
-         "name":"todays"
-      },
-      {
-         "name":"overdue",
-         "style": "danger"
-      },
-      {
-         "name":"deferred"
-      }
-   ],
-   "boolFilterList": ["onlyMy"]
+        }
+    },
+    "filterList": [
+        "actual",
+        {
+            "name": "completed",
+            "style": "success"
+        },
+        {
+            "name": "todays"
+        },
+        {
+            "name": "overdue",
+            "style": "danger"
+        },
+        {
+            "name": "deferred"
+        }
+    ],
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "glyphicon glyphicon-list-alt"
 }

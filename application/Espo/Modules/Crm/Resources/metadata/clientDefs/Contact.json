@@ -1,103 +1,119 @@
 {
-   "controller": "controllers/record",
-   "aclPortal": "crm:acl-portal/contact",
-   "views":{
-      "detail":"crm:views/contact/detail"
-   },
-   "recordViews":{
-      "detail": "crm:views/contact/record/detail",
-      "detailQuick": "crm:views/contact/record/detail-small"
-   },
-   "defaultSidePanelFieldLists": {
-      "detail": [
-         {
-            "name": "assignedUser"
-         },
-         {
-            "name": "teams"
-         },
-         {
-            "name": "portalUser"
-         }
-      ],
-      "detailSmall": [
-         {
-            "name": "assignedUser"
-         },
-         {
-            "name": "teams"
-         },
-         {
-            "name": "portalUser"
-         }
-      ]
-   },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ],
-      "detailSmall":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
-      ]
-   },
-   "relationshipPanels": {
-      "campaignLogRecords": {
-        "rowActionsView": "views/record/row-actions/empty",
-        "select": false,
-        "create": false
-      },
-      "opportunities":{
-         "layout":"listForAccount"
-      },
-      "targetLists": {
-         "create": false,
-         "rowActionsView": "views/record/row-actions/relationship-unlink-only"
-      }
-   },
-   "boolFilterList": ["onlyMy"],
-   "additionalLayouts": {
-      "detailConvert": {
-         "type": "detail"
-      },
-      "listForAccount": {
-         "type": "listSmall"
-      }
-   },
-   "filterList": [
-      "portalUsers"
-   ]
+    "controller": "controllers/record",
+    "aclPortal": "crm:acl-portal/contact",
+    "views": {
+        "detail": "crm:views/contact/detail"
+    },
+    "recordViews": {
+        "detail": "crm:views/contact/record/detail",
+        "detailQuick": "crm:views/contact/record/detail-small"
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": [
+            {
+                "name": "assignedUser"
+            },
+            {
+                "name": "teams"
+            },
+            {
+                "name": "portalUser"
+            }
+        ],
+        "detailSmall": [
+            {
+                "name": "assignedUser"
+            },
+            {
+                "name": "teams"
+            },
+            {
+                "name": "portalUser"
+            }
+        ]
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "tasks",
+                "label": "Tasks",
+                "view": "crm:views/record/panels/tasks",
+                "aclScope": "Task"
+            }
+        ],
+        "detailSmall": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "tasks",
+                "label": "Tasks",
+                "view": "crm:views/record/panels/tasks",
+                "aclScope": "Task"
+            }
+        ]
+    },
+    "relationshipPanels": {
+        "campaignLogRecords": {
+            "rowActionsView": "views/record/row-actions/empty",
+            "select": false,
+            "create": false
+        },
+        "opportunities": {
+            "layout": "listForAccount"
+        },
+        "targetLists": {
+            "create": false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
+        }
+    },
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "additionalLayouts": {
+        "detailConvert": {
+            "type": "detail"
+        },
+        "listForAccount": {
+            "type": "listSmall"
+        }
+    },
+    "filterList": [
+        "portalUsers"
+    ],
+    "dynamicLogic": {
+        "fields": {
+            "title": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "accountId"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }

@@ -114,7 +114,8 @@ Espo.define('views/login', 'view', function (Dep) {
                             user: data.user,
                             preferences: data.preferences,
                             acl: data.acl,
-                            settings: data.settings
+                            settings: data.settings,
+                            appParams: data.appParams
                         });
                     }.bind(this),
                     error: function (xhr) {

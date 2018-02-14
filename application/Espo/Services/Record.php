@@ -397,13 +397,6 @@ class Record extends \Espo\Core\Services\Base
 
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
-        if (empty($assignedUserId)) {
-            if ($assignmentPermission === 'no') {
-                return false;
-            }
-            return true;
-        }
-
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
             return true;
         }
@@ -419,6 +412,12 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($toProcess) {
+            if (empty($assignedUserId)) {
+                if ($assignmentPermission == 'no') {
+                    return false;
+                }
+                return true;
+            }
             if ($assignmentPermission == 'no') {
                 if ($this->getUser()->id != $assignedUserId) {
                     return false;

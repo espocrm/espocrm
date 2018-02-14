@@ -9,11 +9,9 @@
     "priority": "Пріоритет",
     "type": "Тип",
     "description": "Опис",
-    "inboundEmail": "Вхідний лист",
     "lead": "Лід"
   },
   "links": {
-    "inboundEmail": "Вхідний лист",
     "account": "Контрагент",
     "contact": "Контакт (Основний)",
     "Contacts": "Контакти",

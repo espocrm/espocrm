@@ -11,9 +11,7 @@
             {{{avatar}}}
         </div>
         <div class="stream-head-text-container">
-            {{#if statusText}}
-            <span class="label label-{{statusStyle}}">{{statusText}}</span>
-            {{/if}}
+            {{#if statusText}}<span class="label label-{{statusStyle}}">{{statusText}}</span>{{/if}}
             <span class="text-muted message">{{{message}}}</span>
         </div>
     </div>

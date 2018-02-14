@@ -134,7 +134,15 @@ Espo.define('collection', [], function () {
             options.data.asc = this.asc;
             options.data.where = this.getWhere();
 
-            return Backbone.Collection.prototype.fetch.call(this, options);
+            this.lastXhr = Backbone.Collection.prototype.fetch.call(this, options);
+
+            return this.lastXhr;
+        },
+
+        abortLastFetch: function () {
+            if (this.lastXhr && this.lastXhr.readyState < 4) {
+                this.lastXhr.abort();
+            }
         },
 
         getWhere: function () {

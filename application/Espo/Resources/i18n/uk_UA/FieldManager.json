@@ -4,7 +4,7 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "Жоден",
+      "": "Немає",
       "javascript: return this.dateTime.getNow(1);": "На даний час",
       "javascript: return this.dateTime.getNow(5);": "На даний час (5m)",
       "javascript: return this.dateTime.getNow(15);": "На даний час (15m)",
@@ -30,7 +30,7 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 тиждень"
     },
     "dateDefault": {
-      "": "Жоден",
+      "": "Немає",
       "javascript: return this.dateTime.getToday();": "Сьогодні",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 день",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 дні",

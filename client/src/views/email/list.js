@@ -116,6 +116,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
         },
 
         loadFolders: function () {
+            var xhr = null;
             this.getFolderCollection(function (collection) {
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
@@ -129,10 +130,16 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                         this.selectedFolderId = id;
                         this.applyFolder();
 
+                        if (xhr && xhr.readyState < 4) {
+                            xhr.abort();
+                        }
+
                         this.notify('Please wait...');
-                        this.collection.fetch().then(function () {
-                            this.notify(false);
-                        }.bind(this));
+                        xhr = this.collection.fetch({
+                            success: function () {
+                                this.notify(false);
+                            }.bind(this)
+                        });
 
                         if (id !== this.defaultFolderId) {
                             this.getRouter().navigate('#Email/list/folder=' + id);

@@ -1,6 +1,5 @@
 {
   "fields": {
-    "url": "URL",
     "urlToUse": "Код для вставки замість URL",
     "campaign": "Кампанія"
   },

@@ -34,25 +34,15 @@ Espo.define('crm:views/fields/ico', 'views/fields/base', function (Dep) {
 
             var icoTpl;
             if (this.params.notRelationship) {
-                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
+                icoTpl = '<span class="{iconClass} text-muted action icon" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'" data-scope="'+this.model.name+'"></span>';
             } else {
-                icoTpl = '<span class="glyphicon glyphicon-{icoName} text-muted action" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
+                icoTpl = '<span class="{iconClass} text-muted action icon" style="cursor: pointer" title="'+this.translate('View')+'" data-action="quickView" data-id="'+this.model.id+'"></span>';
             }
 
-            switch (this.model.name) {
-                case 'Meeting':
-                    tpl = icoTpl.replace('{icoName}', 'briefcase');
-                    break;
-                case 'Call':
-                    tpl = icoTpl.replace('{icoName}', 'phone-alt');
-                    break;
-                case 'Email':
-                    tpl = icoTpl.replace('{icoName}', 'envelope');
-                    break;
-                default:
-                    tpl = icoTpl.replace('{icoName}', 'calendar');
-                    break;
-            }
+            var iconClass = this.getMetadata().get(['clientDefs', this.model.name, 'iconClass']) || 'glyphicon glyphicon-briefcase';
+
+            tpl = icoTpl.replace('{iconClass}', iconClass);
+
 
             this._template = tpl;
         }

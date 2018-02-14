@@ -1,7 +1,4 @@
 {
-  "label": {
-    "Field": "Поле"
-  },
   "options": {
     "operators": {
       "equals": "Так само",

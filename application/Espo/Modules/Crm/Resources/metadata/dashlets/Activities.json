@@ -24,7 +24,7 @@
         "defaults": {
             "displayRecords": 5,
             "autorefreshInterval": 0.5,
-            "enabledScopeList": ["Meeting", "Call"]
+            "enabledScopeList": ["Meeting", "Call", "Task"]
         },
         "layout": [
             {

@@ -139,7 +139,7 @@ return array (
                     'x' => 2,
                     'y' => 2,
                     'width' => 2,
-                    'height' => 2
+                    'height' => 4
                 ],
                 (object) [
                     'id' => 'default-stream',
@@ -148,14 +148,6 @@ return array (
                     'y' => 0,
                     'width' => 2,
                     'height' => 4
-                ],
-                (object) [
-                    'id' => 'default-tasks',
-                    'name' => 'Tasks',
-                    'x' => 2,
-                    'y' => 0,
-                    'width' => 2,
-                    'height' => 2
                 ]
             ]
         ]

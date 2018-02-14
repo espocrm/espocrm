@@ -76,5 +76,6 @@
    ],
    "defaultFilterData": {
    },
-   "boolFilterList": []
+   "boolFilterList": [],
+    "iconClass": "glyphicon glyphicon-envelope"
 }

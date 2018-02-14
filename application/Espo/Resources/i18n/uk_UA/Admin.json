@@ -9,7 +9,6 @@
     "Customization": "Користувацькі налаштування",
     "Available Fields": "Доступні поля",
     "Layout": "Макет",
-    "Entity Manager": "Entity Manager",
     "Add Panel": "Додати панель",
     "Add Field": "Додати поле",
     "Settings": "Налаштування",
@@ -82,17 +81,11 @@
     "currency": "Валюта",
     "date": "Дата",
     "datetime": "Дата, час",
-    "datetimeOptional": "Date/DateTime",
     "email": "Емейл",
     "enum": "Список",
     "enumInt": "Список цілі числа",
     "enumFloat": "Список дробні числа",
     "float": "Десятовий дріб",
-    "int": "Ціле число",
-    "link": "Link",
-    "linkMultiple": "Link Multiple",
-    "linkParent": "Link Parent",
-    "multienim": "Множинний список",
     "phone": "Телефон",
     "text": "Текст",
     "url": "URL-адреса",
@@ -107,6 +100,7 @@
     "wysiwyg": "Редактор",
     "map": "Карта",
     "currencyConverted": "Валюта (ковертована)",
+    "int": "Ціле число",
     "number": "Номер"
   },
   "fields": {
@@ -119,14 +113,11 @@
     "options": "Опції",
     "after": "Після (поле)",
     "before": "Перед (поле)",
-    "link": "Link",
     "field": "Поле",
     "min": "Мінімум",
     "max": "Максимум",
     "translation": "Переклад",
     "previewSize": "Розмір передперегляду",
-    "noEmptyString": "Немає вільного рядка",
-    "defaultType": "Default Type",
     "seeMoreDisabled": "Відключити обрізку тексту",
     "entityList": "Список об'єктів",
     "isSorted": "Відсортовано (за алфавітом)",
@@ -149,7 +140,8 @@
     "dynamicLogicRequired": "Умови, які роблять поле обов’язковим",
     "dynamicLogicOptions": "Умовні варіанти",
     "probabilityMap": "Стадія імовірності (%)",
-    "readOnly": "Виключно читання"
+    "readOnly": "Виключно читання",
+    "noEmptyString": "Немає вільного рядка"
   },
   "messages": {
     "selectEntityType": "Оберіть тип сутности у лівому меню.",
@@ -163,8 +155,7 @@
     "upgradeDone": "EspoCRM оновлено до версії <strong>{version}</strong>.",
     "upgradeBackup": "Перед оновленням рекомендуємо створити резевну копію файлів EspoCRM та даних",
     "thousandSeparatorEqualsDecimalMark": "Розділювач тисячних не може бути таким самим, як розділювач десяткових.",
-    "userHasNoEmailAddress": "В користувача не вказана адреса електронної скриньки.",
-    "uninstallConfirmation": "Ви впевнені, що хочете видалити розширення?"
+    "userHasNoEmailAddress": "В користувача не вказана адреса електронної скриньки."
   },
   "descriptions": {
     "settings": "Системні налаштування додатку.",
@@ -189,10 +180,8 @@
     "currency": "Налаштування валюти та курсу обміну.",
     "extensions": "Встановлення або видалення розширень.",
     "integrations": "Інтеграція зі сторонніми сервісами.",
-    "notifications": "In-app and email notification settings.",
     "inboundEmails": "Групувати поштові акаунти IMAP. Імпорт пошти та інтерфейс доступу до звернення через електронну пошту.",
     "portalUsers": "Користувачі порталу.",
-    "entityManager": "Create and edit custom entities. Manage fields and relationships.",
     "emailFilters": "Електронні повідомлення, які відповідають вказаному фільтру, імпортуватися не будуть",
     "actionHistory": "Лоґ дій користуча."
   },

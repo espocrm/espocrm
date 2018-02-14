@@ -34,7 +34,7 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        rowActionsView: 'crm:views/meeting/record/row-actions/dashlet',
+        rowActionsView: 'crm:views/record/row-actions/activities-dashlet',
 
         defaultListLayout: {
             rows: [
@@ -57,6 +57,29 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             ]
         },
 
+        listLayoutEntityTypeMap: {
+            Task: {
+                rows: [
+                    [
+                        {
+                            name: 'ico',
+                            view: 'crm:views/fields/ico',
+                            params: {
+                                notRelationship: true
+                            }
+                        },
+                        {
+                            name: 'name',
+                            link: true,
+                        },
+                    ],
+                    [
+                        {name: 'dateEnd'}
+                    ]
+                ]
+            }
+        },
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -68,6 +91,10 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
             this.listLayout = {};
             this.scopeList.forEach(function (item) {
+                if (item in this.listLayoutEntityTypeMap) {
+                    this.listLayout[item] = this.listLayoutEntityTypeMap[item];
+                    return;
+                }
                 this.listLayout[item] = this.defaultListLayout;
             }, this);
 
@@ -106,7 +133,7 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             this.collection.data.entityTypeList = this.scopeList;
 
             this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', 'crm:views/meeting/record/list-expanded', {
+                this.createView('list', 'crm:views/record/list-activities-dashlet', {
                     el: this.options.el + ' > .list-container',
                     pagination: false,
                     type: 'list',

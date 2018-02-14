@@ -45,7 +45,6 @@
     "Dashboard": "Панель дашлетів",
     "InboundEmail": "Inbound Email Accounts",
     "Stream": "Потік",
-    "Import": "Import Results",
     "Template": "Шаблони",
     "Job": "Завдання",
     "EmailFilter": "Фільтри пошти",
@@ -106,7 +105,6 @@
     "Details": "Деталі",
     "Add Field": "Додати поле",
     "Add Dashlet": "Додати дашлет",
-    "Filter": "Filter",
     "Edit Dashboard": "Змінити панель дашлетів",
     "Add": "Додати",
     "Add Item": "Додати елемент",
@@ -167,7 +165,6 @@
     "change": "змінити",
     "Change": "Зміна",
     "Primary": "Первинне",
-    "Save Filter": "Save Filter",
     "Administration": "Адміністрування",
     "Run Import": "Запустити імпорт",
     "Duplicate": "Дуплікат",
@@ -181,10 +178,6 @@
     "Close": "Закрити",
     "Yes": "Так",
     "No": "Немає",
-    "Value": "Value",
-    "Current version": "Current version",
-    "List View": "List View",
-    "Tree View": "Tree View",
     "Unlink All": "Від’єднати всі",
     "Total": "Загальний",
     "Print to PDF": "Друк в PDF",
@@ -208,14 +201,11 @@
   "messages": {
     "pleaseWait": "Будь ласка, зачекайте...",
     "posting": "Постимо...",
-    "confirmLeaveOutMessage": "Are you sure you want to leave the form?",
     "notModified": "Ви не внесли змін до запису",
     "fieldIsRequired": "{field} обов'язкове",
     "fieldShouldAfter": "{field} мусить бути після {otherField}",
     "fieldShouldBefore": "{field} мусить бути до {otherField}",
     "fieldShouldBeBetween": "{field} мусить бути між {min} і {max}",
-    "fieldShouldBeLess": "{field} мусить бути менше ніж {value}",
-    "fieldShouldBeGreater": "{field} мусить бути більше ніж {value}",
     "fieldBadPasswordConfirm": "Правильність {field} не підтверджено",
     "resetPreferencesDone": "Налаштування скинуті до значень за замовчуванням",
     "confirmation": "Ви певні?",
@@ -237,7 +227,6 @@
     "checkForNewNotifications": "Перевірити інформування",
     "duplicate": "Створений Вами запис був дубльований",
     "dropToAttach": "Відкріпити прикріплення",
-    "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[текст](url)",
     "writeMessageToSelf": "Написати повідомлення в своєму потоці",
     "checkForNewNotes": "Перевірити наявність оновлень потоку",
     "internalPost": "Повідомлення буде видно тільки внутрішнім користувачам",
@@ -255,7 +244,10 @@
     "fieldShouldBeInt": "{field} повинно бути цілим числом",
     "fieldShouldBeDate": "{field} має бути дійсною дата",
     "fieldShouldBeDatetime": "{field} має бути дійсним дата/час",
-    "internalPostTitle": "Повідомлення бачитимуть тільки внутрішні користувачі"
+    "internalPostTitle": "Повідомлення бачитимуть тільки внутрішні користувачі",
+    "fieldShouldBeLess": "{field} мусить бути менше ніж {value}",
+    "fieldShouldBeGreater": "{field} мусить бути більше ніж {value}",
+    "streamPostInfo": "Тип <strong>@username</strong> для згадування користувачів у дописі.\nПрипустимий синтаксис розмітки:`<code>code</code>`\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~<del>deleted text</del>~\n> blockquote\n[текст](url)"
   },
   "boolFilters": {
     "onlyMy": "Тільки моє",
@@ -290,15 +282,8 @@
     "description": "Опис",
     "address": "Адреса",
     "phoneNumber": "Телефон",
-    "phoneNumberMobile": "Phone (Mobile)",
-    "phoneNumberHome": "Phone (Home)",
-    "phoneNumberFax": "Phone (Fax)",
-    "phoneNumberOffice": "Phone (Office)",
-    "phoneNumberOther": "Phone (Other)",
     "order": "Сортування",
-    "parent": "Батько",
-    "children": "Children",
-    "id": "ID"
+    "parent": "Батько"
   },
   "links": {
     "assignedUser": "Відповідальний",
@@ -324,7 +309,6 @@
   "streamMessages": {
     "post": "{user} написав на {entityType} {entity}",
     "attach": "{user} прикрипив до {entityType} {entity}",
-    "status": "{user} updated {field} of {entityType} {entity}",
     "update": "{user} поновив {entityType} {entity}",
     "postTargetTeam": "{user} написав команді {target}",
     "postTargetTeams": "{user} написав командам {target}",
@@ -334,7 +318,6 @@
     "postTargetYou": "{user} написав для вас",
     "postTargetYouAndOthers": "{user} написав для {target} та вас",
     "postTargetAll": "{user} написав для всіх",
-    "mentionInPost": "{user} mentioned {mentioned} in {entityType} {entity}",
     "mentionYouInPost": "{user} згадав вас в {entityType} {entity} ",
     "mentionInPostTarget": "{user} згаданий {mentioned} в повідомленні",
     "mentionYouInPostTarget": "{user} згадав вас у повідомленні також {target}",
@@ -537,7 +520,6 @@
       "afterXDays": "Після Х днів"
     },
     "searchRanges": {
-      "is": "Is",
       "isEmpty": "Пусто",
       "isNotEmpty": "Не пусто",
       "isFromTeams": "Від команди",
@@ -550,9 +532,7 @@
     "varcharSearchRanges": {
       "equals": "Дорівнює",
       "like": "Це довподоби (%)",
-      "startsWith": "Starts With",
       "endsWith": "Закінчується",
-      "contains": "Contains",
       "isEmpty": "Пусто",
       "isNotEmpty": "Не пусто"
     },
@@ -687,10 +667,8 @@
     }
   },
   "themes": {
-    "Espo": "Espo",
     "Sakura": "Сакура",
     "Violet": "Фіолетовий",
-    "EspoRtl": "RTL Espo",
     "EspoVertical": "Espo бокова панель",
     "SakuraVertical": "Сакура бокова панель",
     "VioletVertical": "Фіолет бокова панель",

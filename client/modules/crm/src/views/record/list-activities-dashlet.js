@@ -26,40 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/create-related', 'views/stream/note', function (Dep) {
+Espo.define('crm:views/record/list-activities-dashlet', ['views/record/list-expanded', 'crm:views/meeting/record/list', 'crm:views/task/record/list'], function (Dep, MeetingList, TaskList) {
 
     return Dep.extend({
 
-        template: 'stream/notes/create-related',
-
-        messageName: 'createRelated',
-
-        data: function () {
-            return _.extend({
-                relatedTypeString: this.translateEntityType(this.entityType),
-                iconHtml: this.getIconHtml(this.entityType, this.entityId)
-            }, Dep.prototype.data.call(this));
+        actionSetHeld: function (data) {
+            MeetingList.prototype.actionSetHeld.call(this, data);
         },
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
-            Dep.prototype.init.call(this);
+        actionSetNotHeld: function (data) {
+            MeetingList.prototype.actionSetNotHeld.call(this, data);
         },
 
-        setup: function () {
-            var data = this.model.get('data') || {};
-
-            this.entityType = this.model.get('relatedType') || data.entityType || null;
-            this.entityId = this.model.get('relatedId') || data.entityId || null;
-            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
-
-            this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
-            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
-
-            this.createMessage();
+        actionSetCompleted: function (data) {
+            TaskList.prototype.actionSetCompleted.call(this, data);
         }
-    });
-});
 
+    });
+
+});

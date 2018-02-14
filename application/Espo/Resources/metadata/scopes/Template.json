@@ -3,6 +3,8 @@
     "layouts": false,
     "tab": true,
     "acl": "recordAllTeamNo",
+    "aclPortal": true,
+    "aclPortalLevelList": ["all", "no"],
     "customizable": true,
     "disabled": false
 }

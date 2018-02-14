@@ -53,6 +53,7 @@ class Pdf extends \Espo\Core\Services\Base
         $this->addDependency('dateTime');
         $this->addDependency('number');
         $this->addDependency('entityManager');
+        $this->addDependency('defaultLanguage');
     }
 
     protected function getAcl()
@@ -95,7 +96,15 @@ class Pdf extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $htmlizer = new Htmlizer($this->getFileManager(), $this->getInjection('dateTime'), $this->getInjection('number'), $this->getAcl(), $this->getInjection('entityManager'));
+        $htmlizer = new Htmlizer(
+            $this->getFileManager(),
+            $this->getInjection('dateTime'),
+            $this->getInjection('number'),
+            $this->getAcl(),
+            $this->getInjection('entityManager'),
+            $this->getInjection('metadata'),
+            $this->getInjection('defaultLanguage')
+        );
 
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 

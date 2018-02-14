@@ -5,13 +5,10 @@
     "status": "Статус",
     "dateStart": "Дата початку",
     "dateEnd": "Кінцева дата",
-    "dateStartDate": "Date Start (all day)",
-    "dateEndDate": "Date End (all day)",
     "priority": "Пріоритет",
     "description": "Опис",
     "isOverdue": "Прострочено",
     "account": "Контрагент",
-    "dateCompleted": "Date Completed",
     "attachments": "Вкладення",
     "reminders": "Нагадування"
   },

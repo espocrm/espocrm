@@ -9,12 +9,12 @@
         "priority": "Priority",
         "type": "Type",
         "description": "Description",
-        "inboundEmail": "Inbound Email",
+        "inboundEmail": "Group Email Account",
         "lead": "Lead",
         "attachments": "Attachments"
     },
     "links": {
-        "inboundEmail": "Inbound Email",
+        "inboundEmail": "Group Email Account",
         "account": "Account",
         "contact": "Contact (Primary)",
         "Contacts": "Contacts",

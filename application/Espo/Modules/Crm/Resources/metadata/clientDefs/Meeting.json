@@ -95,5 +95,6 @@
                 }
             }
         }
-    }
+    },
+    "iconClass": "glyphicon glyphicon-briefcase"
 }

@@ -18,9 +18,6 @@
     "twitter": "Твіттер",
     "forum": "форум",
     "Installation Guide": "Керівництво з установки",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Локаль",
     "Outbound Email Configuration": "Налаштування вихідної пошти",
     "SMTP": "Протокол SMTP",
@@ -109,10 +106,6 @@
     "mysqlSettingError": "EspoCRM потребує, щоби MySQL \"{NAME}\" було встановлено на {VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Знайти файл httpd.conf файл (зазвичай його можна знайти у теці, званій conf, config або ще якось так)<br> Н2. Всередині файла httpd.conf розкоментувати рядок LoadModule rewrite_module модулі/через mod_rewrite.so (видалити знак '#' на початку рядка)<br> 3. Також пересвідчитися, що рядок ClearModuleList некоментований і переконайтеся, що рядок AddModule mod_rewrite.c не закомментирований.</pre>",

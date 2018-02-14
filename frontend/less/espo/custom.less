@@ -1224,6 +1224,24 @@ body > footer > p a:visited {
     }
 }
 
+.label {
+    padding: .09em .5em .2em;
+}
+
+.expanded-row {
+    span.label {
+        position: relative;
+        top: -2px;
+    }
+}
+
+.stream-head-text-container {
+    span.label {
+        position: relative;
+        top: -1px;
+    }
+}
+
 .stream-head-container {
     padding-bottom: 3px;
 }
@@ -1296,10 +1314,19 @@ stream-head-text-container .span {
     font-size: 0.9em;
 }
 
+.flotr-grid-label-y {
+    min-height: 1.2em;
+    line-height: 1.1em;
+    max-height: 2.1em;
+    overflow: hidden;
+}
+
 .flotr-grid-label-x {
+    min-height: 1.2em;
     max-height: 2.1em;
     line-height: 1.1em;
     overflow: hidden;
+    padding: 0 1px;
 }
 
 .legend-container td.flotr-legend-label {

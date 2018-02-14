@@ -235,14 +235,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.resetFilters();
             },
             'click button[data-action="refresh"]': function (e) {
-                this.notify('Loading...');
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.notify(false);
-                }.bind(this));
-
-                this.collection.reset();
-                this.collection.fetch();
-
+                this.refresh();
             },
             'click a[data-action="selectPreset"]': function (e) {
                 var presetName = $(e.currentTarget).data('name') || null;
@@ -277,6 +270,15 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.search();
                 this.manageLabels();
             }
+        },
+
+        refresh: function () {
+            this.notify('Loading...');
+            this.collection.abortLastFetch();
+            this.collection.reset();
+            this.collection.fetch().then(function () {
+                Espo.Ui.notify(false);
+            });
         },
 
         selectPreset: function (presetName, forceClearAdvancedFilters) {
@@ -546,13 +548,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         updateCollection: function () {
+            this.collection.abortLastFetch();
             this.collection.reset();
             this.notify('Please wait...');
-            this.listenTo(this.collection, 'sync', function () {
-                this.notify(false);
-            }.bind(this));
             this.collection.where = this.searchManager.getWhere();
-            this.collection.fetch();
+            this.collection.fetch().then(function () {
+                Espo.Ui.notify(false);
+            });
         },
 
 		getPresetFilterList: function () {
