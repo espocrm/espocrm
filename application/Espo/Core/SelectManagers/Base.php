@@ -186,7 +186,6 @@ class Base
     {
         $this->prepareResult($result);
 
-        $whereClause = array();
         foreach ($where as $item) {
             if (!isset($item['type'])) continue;
 
@@ -207,10 +206,17 @@ class Base
             }
         }
 
+        $whereClause = $this->convertWhere($where);
+
+        $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+    }
+
+    public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false)
+    {
+        $whereClause = [];
 
         $ignoreTypeList = array_merge(['bool', 'primary'], $this->additionalFilterTypeList);
 
-        $additionalFilters = array();
         foreach ($where as $item) {
             if (!isset($item['type'])) continue;
 
@@ -221,7 +227,7 @@ class Base
                     $whereClause[] = $part;
                 }
             } else {
-                if (in_array($type, $this->additionalFilterTypeList)) {
+                if (!$ignoreAdditionaFilterTypes && in_array($type, $this->additionalFilterTypeList)) {
                     if (!empty($item['value'])) {
                         $methodName = 'apply' . ucfirst($type);
 
@@ -242,7 +248,7 @@ class Base
             }
         }
 
-        $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+        return $whereClause;
     }
 
     protected function applyLinkedWith($link, $idsValue, &$result)
@@ -1563,4 +1569,3 @@ class Base
         $this->filterFollowed($result);
     }
 }
-
