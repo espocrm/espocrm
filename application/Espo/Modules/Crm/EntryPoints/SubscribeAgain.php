@@ -113,9 +113,19 @@ class SubscribeAgain extends \Espo\Core\EntryPoints\Base
                                 $this->getHookManager()->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
                             }
                         }
-                        echo $this->getLanguage()->translate('subscribedAgain', 'messages', 'Campaign');
-                        echo '<br><br>';
-                        echo '<a href="?entryPoint=unsubscribe&id='.htmlspecialchars($queueItemId).'">' . $this->getLanguage()->translate('Unsubscribe again', 'labels', 'Campaign') . '</a>';
+
+                        $data = [
+                            'queueItemId' => $queueItemId
+                        ];
+
+                        $runScript = "
+                            Espo.require('crm:controllers/unsubscribe', function (Controller) {
+                                var controller = new Controller(app.baseController.params, app.getControllerInjection());
+                                controller.masterView = app.masterView;
+                                controller.doAction('subscribeAgain', ".json_encode($data).");
+                            });
+                        ";
+                        $this->getClientManager()->display($runScript);
                     }
                 }
             }

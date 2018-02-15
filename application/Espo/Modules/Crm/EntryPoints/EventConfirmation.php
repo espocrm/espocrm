@@ -86,18 +86,31 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
                 ];
                 $this->getEntityManager()->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
 
-                $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], [
+                $actionData = [
+                    'eventName' => $event->get('name'),
+                    'eventType' => $event->getEntityType(),
+                    'eventId' => $event->id,
+                    'dateStart' => $event->get('dateStart'),
                     'action' => $action,
                     'status' => $status,
                     'link' => $link,
                     'inviteeType' => $invitee->getEntityType(),
                     'inviteeId' => $invitee->id
-                ]);
+                ];
+
+                $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
 
                 $this->getEntityManager()->getRepository('UniqueId')->remove($uniqueId);
 
-                echo $status;
-                return;
+                $runScript = "
+                    Espo.require('crm:controllers/event-confirmation', function (Controller) {
+                        var controller = new Controller(app.baseController.params, app.getControllerInjection());
+                        controller.masterView = app.masterView;
+                        controller.doAction('confirmEvent', ".json_encode($actionData).");
+                    });
+                ";
+
+                $this->getClientManager()->display($runScript);
             }
         }
 
