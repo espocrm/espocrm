@@ -71,10 +71,8 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
             $event = $this->getEntityManager()->getEntity($eventType, $eventId);
             $invitee = $this->getEntityManager()->getEntity($inviteeType, $inviteeId);
             if ($event && $invitee) {
-                $relDefs = $event->getRelations();
-                $tableName = Util::toUnderscore($relDefs[$link]['relationName']);
-
                 $status = 'None';
+                $hookMethodName = 'afterConfirmation';
                 if ($action == 'accept') {
                     $status = 'Accepted';
                 } else if ($action == 'decline') {
@@ -83,14 +81,18 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
                     $status = 'Tentative';
                 }
 
-                $pdo = $this->getEntityManager()->getPDO();
-                $sql = "
-                    UPDATE `{$tableName}` SET status = '{$status}'
-                    WHERE ".strtolower($eventType)."_id = '{$eventId}' AND ".strtolower($inviteeType)."_id = '{$inviteeId}'
-                ";
+                $data = (object) [
+                    'status' => $status
+                ];
+                $this->getEntityManager()->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
 
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
+                $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], [
+                    'action' => $action,
+                    'status' => $status,
+                    'link' => $link,
+                    'inviteeType' => $invitee->getEntityType(),
+                    'inviteeId' => $invitee->id
+                ]);
 
                 $this->getEntityManager()->getRepository('UniqueId')->remove($uniqueId);
 
@@ -102,4 +104,3 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
         throw new Error();
     }
 }
-
