@@ -41,6 +41,7 @@ Espo.define('views/site/header', 'view', function (Dep) {
         navbarView: 'views/site/navbar',
 
         setup: function () {
+            this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
             this.createView('navbar', this.navbarView, {el: '#navbar', title: this.title});
         }
 
