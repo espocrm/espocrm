@@ -25,58 +25,52 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe("Acl", function () {
+describe('Acl', function () {
 	var acl;
 
-	beforeEach(function () {
-		acl = new Espo.Acl();
-		acl.user = {
-			isAdmin: function () {
-				return false;
-			}
-		};
-	});
+	require('acl-manager', function (Acl) {
 
-	it("should check an access properly", function () {
-		acl.set({
-			table: {
-				Lead: {
-					read: 'team',
-					edit: 'own',
-					delete: 'no',
-				},
-				Contact: {
-					read: true,
-					edit: false,
-					delete: false,
-				},
-				Opportunity: false,
-				Meeting: true
-			}
+		beforeEach(function () {
+			acl = new Acl();
+			acl.user = {
+				isAdmin: function () {
+					return false;
+				}
+			};
 		});
 
-		expect(acl.check('Lead', 'read')).toBe(true);
+		it("should check an access properly", function () {
+			acl.set({
+				table: {
+					Lead: {
+						read: 'team',
+						edit: 'own',
+						delete: 'no',
+					},
+					Opportunity: false,
+					Meeting: true
+				}
+			});
 
-		expect(acl.check('Lead', 'read', false, false)).toBe(true);
-		expect(acl.check('Lead', 'read', false, true)).toBe(true);
-		expect(acl.check('Lead', 'read', true)).toBe(true);
+			expect(acl.check('Lead', 'read')).toBe(true);
 
-		expect(acl.check('Lead', 'edit')).toBe(true);
-		expect(acl.check('Lead', 'edit', false, true)).toBe(false);
-		expect(acl.check('Lead', 'edit', true, false)).toBe(true);
+			expect(acl.check('Lead', 'read', false, false)).toBe(true);
+			expect(acl.check('Lead', 'read', false, true)).toBe(true);
+			expect(acl.check('Lead', 'read', true)).toBe(true);
 
-		expect(acl.check('Lead', 'delete')).toBe(true);
+			expect(acl.check('Lead', 'edit')).toBe(true);
+			expect(acl.check('Lead', 'edit', false, true)).toBe(true);
+			expect(acl.check('Lead', 'edit', true, false)).toBe(true);
 
-		expect(acl.check('Contact', 'read')).toBe(true);
-		expect(acl.check('Contact', 'edit')).toBe(false);
+			expect(acl.check('Lead', 'delete')).toBe(false);
 
-		expect(acl.check('Lead', 'convert')).toBe(true);
-		expect(acl.check('Account', 'edit')).toBe(true);
+			expect(acl.check('Account', 'edit')).toBe(true);
 
-		expect(acl.check('Opportunity', 'edit')).toBe(false);
-		expect(acl.check('Meeting', 'edit')).toBe(true);
+			expect(acl.check('Opportunity', 'edit')).toBe(false);
+			expect(acl.check('Meeting', 'edit')).toBe(true);
+		});
+
 	});
 
 });

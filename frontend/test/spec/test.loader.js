@@ -27,24 +27,11 @@
  ************************************************************************/
 var Espo = Espo || {};
 
-describe("Loader", function () {
-	var loader;
-
-	beforeEach(function () {
-		loader = new Espo.Loader();
-		Espo.Testing = 'test';
-	});
-
-	afterEach(function () {
-		delete Espo.Testing;
-	});
-
-
+describe('Loader', function () {
 
 	it("should convert name to path", function () {
-		expect(loader._nameToPath('Views.Record.Edit')).toBe('client/src/views/record/edit.js');
-		expect(loader._nameToPath('Views.Home.DashletHeader')).toBe('client/src/views/home/dashlet-header.js');
+		expect(Espo.loader._nameToPath('views/record/edit')).toBe('../../client/src/views/record/edit.js');
+		expect(Espo.loader._nameToPath('views/home/dashlet-header')).toBe('../../client/src/views/home/dashlet-header.js');
 	});
-
 
 });

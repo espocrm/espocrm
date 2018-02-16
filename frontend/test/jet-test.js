@@ -29,8 +29,6 @@
 
 	var root = this;
 
-	root.Espo = {};
-
 	this.EspoTest = {
 
 		include: function (path, options) {

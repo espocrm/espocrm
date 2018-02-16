@@ -27,16 +27,19 @@
  ************************************************************************/
 var Espo = Espo || {};
 
-describe("Cache", function () {
+describe('Cache', function () {
 	var cache;
 
-	beforeEach(function () {
-		cache = new Espo.Cache();
-	});
+    require('cache', function (Cache) {
 
-	it('should have \'cache\' prefix', function () {
-		expect(cache._prefix).toBe('cache');
-	});
+    	beforeEach(function () {
+    		cache = new Cache();
+    	});
 
+    	it('should have \'cache\' prefix', function () {
+    		expect(cache.prefix).toBe('cache');
+    	});
+
+    });
 
 });

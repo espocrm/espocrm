@@ -27,27 +27,31 @@
  ************************************************************************/
 var Espo = Espo || {};
 
-describe("Metadata", function () {
+describe('Metadata', function () {
 	var metadata;
 
-	Espo.Metadata.prototype.key = 'test';
+	require('metadata', function (Metadata) {
 
-	beforeEach(function () {
-		Espo.Metadata.prototype.load = function () {};
-		metadata = new Espo.Metadata();
-		metadata.data = {
-			recordDefs: {
-				Lead: {
-					some: {type: 'varchar'},
-				}
-			},
-		};
-	});
+		Metadata.prototype.key = 'test';
 
-	it('#get should work correctly', function () {
-		expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
+		beforeEach(function () {
+			Metadata.prototype.load = function () {};
+			metadata = new Metadata();
+			metadata.data = {
+				recordDefs: {
+					Lead: {
+						some: {type: 'varchar'},
+					}
+				},
+			};
+		});
 
-		expect(metadata.get('recordDefs.Contact')).toBe(null);
+		it('#get should work correctly', function () {
+			expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
+
+			expect(metadata.get('recordDefs.Contact')).toBe(null);
+		});
+
 	});
 
 

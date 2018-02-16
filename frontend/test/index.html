@@ -8,60 +8,36 @@
 	<script type="text/javascript" src="jasmine/jasmine.js"></script>
 	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
 
-	<script type="text/javascript" src="../client/lib/jquery-2.0.2.min.js"></script>
-	<script type="text/javascript" src="../client/lib/underscore-min.js"></script>
-	<script type="text/javascript" src="../client/lib/backbone-min.js"></script>
-	<script type="text/javascript" src="../client/lib/handlebars.js"></script>
-	<script type="text/javascript" src="../client/lib/moment.min.js"></script>
-	<script type="text/javascript" src="../client/lib/moment-timezone-with-data.min.js"></script>
+	<script type="text/javascript" src="../../client/lib/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../../client/lib/underscore-min.js"></script>
+	<script type="text/javascript" src="../../client/lib/backbone-min.js"></script>
+	<script type="text/javascript" src="../../client/lib/handlebars.js"></script>
+	<script type="text/javascript" src="../../client/lib/moment.min.js"></script>
+	<script type="text/javascript" src="../../client/lib/moment-timezone-with-data.min.js"></script>
 
-	<script type="text/javascript" src="../client/lib/bull.min.js"></script>
+	<script type="text/javascript" src="../../client/lib/bull.js"></script>
 
+	<script type="text/javascript" src="../../client/src/loader.js"></script>
 	<script type="text/javascript" src="jet-test.js"></script>
-
-	<script type="text/javascript" src="../client/src/loader.js"></script>
-	<script type="text/javascript" src="spec/test.loader.js"></script>
-
-	<script type="text/javascript" src="../client/src/model.js"></script>
-	<script type="text/javascript" src="spec/test.model.js"></script>
-
-	<script type="text/javascript" src="../client/src/collection.js"></script>
-	<script type="text/javascript" src="spec/test.collection.js"></script>
-
-	<script type="text/javascript" src="../client/src/router.js"></script>
-	<script type="text/javascript" src="spec/test.router.js"></script>
-
-	<script type="text/javascript" src="../client/src/controller.js"></script>
-	<script type="text/javascript" src="spec/test.controller.js"></script>
-
-	<script type="text/javascript" src="../client/src/utils.js"></script>
-	<script type="text/javascript" src="spec/test.utils.js"></script>
-
-	<script type="text/javascript" src="../client/src/cache.js"></script>
-	<script type="text/javascript" src="spec/test.cache.js"></script>
-
-	<script type="text/javascript" src="../client/src/metadata.js"></script>
-	<script type="text/javascript" src="spec/test.metadata.js"></script>
-
-	<script type="text/javascript" src="../client/src/layout-manager.js"></script>
-	<script type="text/javascript" src="spec/test.layout-manager.js"></script>
-
-	<script type="text/javascript" src="../client/src/acl.js"></script>
-	<script type="text/javascript" src="spec/test.acl.js"></script>
-
-	<script type="text/javascript" src="../client/src/date-time.js"></script>
-	<script type="text/javascript" src="spec/test.date-time.js"></script>
-
-	<script type="text/javascript" src="../client/src/search-manager.js"></script>
-	<script type="text/javascript" src="spec/test.search-manager.js"></script>
-
-	<script type="text/javascript" src="../client/src/field-manager.js"></script>
-	<script type="text/javascript" src="spec/test.field-manager.js"></script>
-
-	<script type="text/javascript" src="../client/src/view.js"></script>
 
 
 	<script type="text/javascript">
+		var specList = [
+			'spec/test.loader.js',
+			'spec/test.model.js',
+			'spec/test.collection.js',
+			'spec/test.router.js',
+			'spec/test.controller.js',
+			'spec/test.utils.js',
+			'spec/test.cache.js',
+			'spec/test.metadata.js',
+			'spec/test.layout-manager.js',
+			'spec/test.acl.js',
+			'spec/test.date-time.js',
+			'spec/test.search-manager.js',
+			'spec/test.field-manager.js'
+		];
+
 		(function() {
 			var jasmineEnv = jasmine.getEnv();
 			jasmineEnv.updateInterval = 1000;
@@ -77,17 +53,35 @@
 			var currentWindowOnload = window.onload;
 
 			window.onload = function() {
+				Espo.loader._nameToPathOriginal = Espo.loader._nameToPath;
+				Espo.loader._nameToPath = function (name) {
+					var path = this._nameToPathOriginal(name);
+					return '../../' + path;
+				}
+
+				var head = document.getElementsByTagName('head')[0];
+				specList.forEach(function (item) {
+					var script = document.createElement('script');
+					script.type = 'text/javascript';
+					script.src = item;
+					head.appendChild(script);
+				});
+
 				if (currentWindowOnload) {
 					currentWindowOnload();
 				}
+
 				execJasmine();
+
 			};
 
 			function execJasmine() {
 				jasmineEnv.execute();
 			}
+
 		})();
 	</script>
+
 </head>
 <body>
 </body>
