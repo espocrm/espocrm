@@ -15,7 +15,8 @@
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true,
-                "isForm": true
+                "isForm": true,
+                "notRefreshable": true
             }
         ],
         "detailSmall":[
@@ -24,7 +25,8 @@
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true,
-                "isForm": true
+                "isForm": true,
+                "notRefreshable": true
             }
         ],
         "edit":[
@@ -33,7 +35,8 @@
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true,
-                "isForm": true
+                "isForm": true,
+                "notRefreshable": true
             }
         ],
         "editSmall":[
@@ -42,7 +45,8 @@
                 "label":"Attendees",
                 "view":"crm:views/meeting/record/panels/attendees",
                 "sticked": true,
-                "isForm": true
+                "isForm": true,
+                "notRefreshable": true
             }
         ]
     },
