@@ -1,12 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Espo Spec Runner</title>
+	<meta charset="utf-8">
+	<title>EspoCRM Fronted Tests</title>
 
-	<link rel="shortcut icon" type="image/png" href="jasmine_favicon.png">
-	<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+	<link rel="shortcut icon" type="image/png" href="jasmine/jasmine_favicon.png">
+	<link rel="stylesheet" href="jasmine/jasmine.css">
+
 	<script type="text/javascript" src="jasmine/jasmine.js"></script>
 	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+	<script type="text/javascript" src="jasmine/boot.js"></script>
 
 	<script type="text/javascript" src="../../client/lib/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="../../client/lib/underscore-min.js"></script>
@@ -14,75 +17,30 @@
 	<script type="text/javascript" src="../../client/lib/handlebars.js"></script>
 	<script type="text/javascript" src="../../client/lib/moment.min.js"></script>
 	<script type="text/javascript" src="../../client/lib/moment-timezone-with-data.min.js"></script>
-
 	<script type="text/javascript" src="../../client/lib/bull.js"></script>
 
 	<script type="text/javascript" src="../../client/src/loader.js"></script>
+	<script type="text/javascript">
+		Espo.loader._nameToPathOriginal = Espo.loader._nameToPath;
+		Espo.loader._nameToPath = function (name) {
+			var path = this._nameToPathOriginal(name);
+			return '../../' + path;
+		}
+	</script>
 	<script type="text/javascript" src="jet-test.js"></script>
 
-
-	<script type="text/javascript">
-		var specList = [
-			'spec/test.loader.js',
-			'spec/test.model.js',
-			'spec/test.collection.js',
-			'spec/test.router.js',
-			'spec/test.controller.js',
-			'spec/test.utils.js',
-			'spec/test.cache.js',
-			'spec/test.metadata.js',
-			'spec/test.layout-manager.js',
-			'spec/test.acl.js',
-			'spec/test.date-time.js',
-			'spec/test.search-manager.js',
-			'spec/test.field-manager.js'
-		];
-
-		(function() {
-			var jasmineEnv = jasmine.getEnv();
-			jasmineEnv.updateInterval = 1000;
-
-			var htmlReporter = new jasmine.HtmlReporter();
-
-			jasmineEnv.addReporter(htmlReporter);
-
-			jasmineEnv.specFilter = function(spec) {
-				return htmlReporter.specFilter(spec);
-			};
-
-			var currentWindowOnload = window.onload;
-
-			window.onload = function() {
-				Espo.loader._nameToPathOriginal = Espo.loader._nameToPath;
-				Espo.loader._nameToPath = function (name) {
-					var path = this._nameToPathOriginal(name);
-					return '../../' + path;
-				}
-
-				var head = document.getElementsByTagName('head')[0];
-				specList.forEach(function (item) {
-					var script = document.createElement('script');
-					script.type = 'text/javascript';
-					script.src = item;
-					head.appendChild(script);
-				});
-
-				if (currentWindowOnload) {
-					currentWindowOnload();
-				}
-
-				execJasmine();
-
-			};
-
-			function execJasmine() {
-				jasmineEnv.execute();
-			}
-
-		})();
-	</script>
+	<script type="text/javascript" src="spec/test.loader.js"></script>
+	<script type="text/javascript" src="spec/test.model.js"></script>
+	<script type="text/javascript" src="spec/test.collection.js"></script>
+	<script type="text/javascript" src="spec/test.router.js"></script>
+	<script type="text/javascript" src="spec/test.controller.js"></script>
+	<script type="text/javascript" src="spec/test.utils.js"></script>
+	<script type="text/javascript" src="spec/test.cache.js"></script>
+	<script type="text/javascript" src="spec/test.metadata.js"></script>
+	<script type="text/javascript" src="spec/test.layout-manager.js"></script>
+	<script type="text/javascript" src="spec/test.acl-manager.js"></script>
+	<script type="text/javascript" src="spec/test.date-time.js"></script>
+	<script type="text/javascript" src="spec/test.field-manager.js"></script>
 
 </head>
-<body>
-</body>
 </html>

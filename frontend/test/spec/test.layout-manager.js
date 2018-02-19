@@ -25,24 +25,21 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe("LayoutManager", function () {
+describe('layout-manager', function () {
 	var layoutManager;
 
-	require('layout-manager', function (LayoutManager) {
-
-		beforeEach(function () {
+	beforeEach(function (done) {
+		require('layout-manager', function (LayoutManager) {
 			layoutManager = new LayoutManager();
-			spyOn(layoutManager, 'ajax').andCallFake(function (options) {
-			});
+			spyOn(layoutManager, 'ajax').and.callFake(function (options) {});
+
+			done();
 		});
+	});
 
-		it("should call ajax to fetch new layout", function () {
-			layoutManager.get('some', 'list');
-			expect(layoutManager.ajax.mostRecentCall.args[0].url).toBe('some/layout/list');
-
-		});
-
+	it("should call ajax to fetch new layout", function () {
+		layoutManager.get('some', 'list');
+		expect(layoutManager.ajax.calls.mostRecent().args[0].url).toBe('some/layout/list');
 	});
 });

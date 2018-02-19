@@ -25,15 +25,18 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe("Utils", function () {
-		
-	beforeEach(function () {
-	});
-	
+describe('utils', function () {
+    var Utils;
+
+    beforeEach(function (done) {
+        require(['utils'], function (UtilsD) {
+            Utils = UtilsD;
+            done();
+        });
+    });
+
 	it('#upperCaseFirst should make first letter upercase', function () {
-		expect(Espo.Utils.upperCaseFirst('someTest')).toBe('SomeTest');
+		expect(Utils.upperCaseFirst('someTest')).toBe('SomeTest');
 	});
-
 });

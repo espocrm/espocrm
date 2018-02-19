@@ -25,21 +25,18 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe('Cache', function () {
+describe('cache', function () {
 	var cache;
 
-    require('cache', function (Cache) {
+	beforeEach(function (done) {
+        require('cache', function (Cache) {
+		  cache = new Cache();
+          done();
+        });
+	});
 
-    	beforeEach(function () {
-    		cache = new Cache();
-    	});
-
-    	it('should have \'cache\' prefix', function () {
-    		expect(cache.prefix).toBe('cache');
-    	});
-
-    });
-
+	it('should have \'cache\' prefix', function () {
+		expect(cache.prefix).toBe('cache');
+	});
 });

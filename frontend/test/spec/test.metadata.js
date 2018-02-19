@@ -25,34 +25,27 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe('Metadata', function () {
+describe('metadata', function () {
 	var metadata;
 
-	require('metadata', function (Metadata) {
-
-		Metadata.prototype.key = 'test';
-
-		beforeEach(function () {
-			Metadata.prototype.load = function () {};
+	beforeEach(function (done) {
+		require('metadata', function (Metadata) {
 			metadata = new Metadata();
 			metadata.data = {
 				recordDefs: {
 					Lead: {
 						some: {type: 'varchar'},
 					}
-				},
+				}
 			};
+			done();
 		});
-
-		it('#get should work correctly', function () {
-			expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
-
-			expect(metadata.get('recordDefs.Contact')).toBe(null);
-		});
-
 	});
 
+	it('#get should work correctly', function () {
+		expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
+		expect(metadata.get('recordDefs.Contact')).toBe(null);
+	});
 
 });

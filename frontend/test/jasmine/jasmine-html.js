@@ -1,681 +1,636 @@
-jasmine.HtmlReporterHelpers = {};
+/*
+Copyright (c) 2008-2018 Pivotal Labs
 
-jasmine.HtmlReporterHelpers.createDom = function(type, attrs, childrenVarArgs) {
-  var el = document.createElement(type);
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-  for (var i = 2; i < arguments.length; i++) {
-    var child = arguments[i];
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-    if (typeof child === 'string') {
-      el.appendChild(document.createTextNode(child));
-    } else {
-      if (child) {
-        el.appendChild(child);
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+jasmineRequire.html = function(j$) {
+  j$.ResultsNode = jasmineRequire.ResultsNode();
+  j$.HtmlReporter = jasmineRequire.HtmlReporter(j$);
+  j$.QueryString = jasmineRequire.QueryString();
+  j$.HtmlSpecFilter = jasmineRequire.HtmlSpecFilter();
+  j$.matchers.toHaveClass = jasmineRequire.toHaveClass(j$);
+};
+
+jasmineRequire.HtmlReporter = function(j$) {
+
+  var noopTimer = {
+    start: function() {},
+    elapsed: function() { return 0; }
+  };
+
+  function ResultsStateBuilder() {
+    this.topResults = new j$.ResultsNode({}, '', null);
+    this.currentParent = this.topResults;
+    this.specsExecuted = 0;
+    this.failureCount = 0;
+    this.pendingSpecCount = 0;
+  }
+
+  ResultsStateBuilder.prototype.suiteStarted = function(result) {
+    this.currentParent.addChild(result, 'suite');
+    this.currentParent = this.currentParent.last();
+  };
+
+  ResultsStateBuilder.prototype.suiteDone = function(result) {
+    this.currentParent.updateResult(result);
+    if (this.currentParent !== this.topResults) {
+      this.currentParent = this.currentParent.parent;
+    }
+
+    if (result.status === 'failed') {
+      this.failureCount++;
+    }
+  };
+
+  ResultsStateBuilder.prototype.specStarted = function(result) {
+  };
+
+  ResultsStateBuilder.prototype.specDone = function(result) {
+    this.currentParent.addChild(result, 'spec');
+
+    if (result.status !== 'excluded') {
+      this.specsExecuted++;
+    }
+
+    if (result.status === 'failed') {
+      this.failureCount++;
+    }
+
+    if (result.status == 'pending') {
+      this.pendingSpecCount++;
+    }
+  };
+
+
+
+  function HtmlReporter(options) {
+    var env = options.env || {},
+      getContainer = options.getContainer,
+      createElement = options.createElement,
+      createTextNode = options.createTextNode,
+      navigateWithNewParam = options.navigateWithNewParam || function() {},
+      addToExistingQueryString = options.addToExistingQueryString || defaultQueryString,
+      filterSpecs = options.filterSpecs,
+      timer = options.timer || noopTimer,
+      htmlReporterMain,
+      symbols,
+      deprecationWarnings = [];
+
+    this.initialize = function() {
+      clearPrior();
+      htmlReporterMain = createDom('div', {className: 'jasmine_html-reporter'},
+        createDom('div', {className: 'jasmine-banner'},
+          createDom('a', {className: 'jasmine-title', href: 'http://jasmine.github.io/', target: '_blank'}),
+          createDom('span', {className: 'jasmine-version'}, j$.version)
+        ),
+        createDom('ul', {className: 'jasmine-symbol-summary'}),
+        createDom('div', {className: 'jasmine-alert'}),
+        createDom('div', {className: 'jasmine-results'},
+          createDom('div', {className: 'jasmine-failures'})
+        )
+      );
+      getContainer().appendChild(htmlReporterMain);
+    };
+
+    var totalSpecsDefined;
+    this.jasmineStarted = function(options) {
+      totalSpecsDefined = options.totalSpecsDefined || 0;
+      timer.start();
+    };
+
+    var summary = createDom('div', {className: 'jasmine-summary'});
+
+    var stateBuilder = new ResultsStateBuilder();
+
+    this.suiteStarted = function(result) {
+      stateBuilder.suiteStarted(result);
+    };
+
+    this.suiteDone = function(result) {
+      stateBuilder.suiteDone(result);
+
+      if (result.status === 'failed') {
+        failures.push(failureDom(result));
       }
-    }
-  }
+      addDeprecationWarnings(result);
+    };
 
-  for (var attr in attrs) {
-    if (attr == "className") {
-      el[attr] = attrs[attr];
-    } else {
-      el.setAttribute(attr, attrs[attr]);
-    }
-  }
+    this.specStarted = function(result) {
+      stateBuilder.specStarted(result);
+    };
 
-  return el;
-};
+    var failures = [];
+    this.specDone = function(result) {
+      stateBuilder.specDone(result);
 
-jasmine.HtmlReporterHelpers.getSpecStatus = function(child) {
-  var results = child.results();
-  var status = results.passed() ? 'passed' : 'failed';
-  if (results.skipped) {
-    status = 'skipped';
-  }
+      if(noExpectations(result) && typeof console !== 'undefined' && typeof console.error !== 'undefined') {
+        console.error('Spec \'' + result.fullName + '\' has no expectations.');
+      }
 
-  return status;
-};
+      if (!symbols){
+        symbols = find('.jasmine-symbol-summary');
+      }
 
-jasmine.HtmlReporterHelpers.appendToSummary = function(child, childElement) {
-  var parentDiv = this.dom.summary;
-  var parentSuite = (typeof child.parentSuite == 'undefined') ? 'suite' : 'parentSuite';
-  var parent = child[parentSuite];
+      symbols.appendChild(createDom('li', {
+          className: noExpectations(result) ? 'jasmine-empty' : 'jasmine-' + result.status,
+          id: 'spec_' + result.id,
+          title: result.fullName
+        }
+      ));
 
-  if (parent) {
-    if (typeof this.views.suites[parent.id] == 'undefined') {
-      this.views.suites[parent.id] = new jasmine.HtmlReporter.SuiteView(parent, this.dom, this.views);
-    }
-    parentDiv = this.views.suites[parent.id].element;
-  }
+      if (result.status === 'failed') {
+        failures.push(failureDom(result));
+      }
 
-  parentDiv.appendChild(childElement);
-};
+      addDeprecationWarnings(result);
+    };
 
+    this.jasmineDone = function(doneResult) {
+      var banner = find('.jasmine-banner');
+      var alert = find('.jasmine-alert');
+      var order = doneResult && doneResult.order;
+      alert.appendChild(createDom('span', {className: 'jasmine-duration'}, 'finished in ' + timer.elapsed() / 1000 + 's'));
 
-jasmine.HtmlReporterHelpers.addHelpers = function(ctor) {
-  for(var fn in jasmine.HtmlReporterHelpers) {
-    ctor.prototype[fn] = jasmine.HtmlReporterHelpers[fn];
-  }
-};
+      banner.appendChild(optionsMenu(env));
 
-jasmine.HtmlReporter = function(_doc) {
-  var self = this;
-  var doc = _doc || window.document;
+      if (stateBuilder.specsExecuted < totalSpecsDefined) {
+        var skippedMessage = 'Ran ' + stateBuilder.specsExecuted + ' of ' + totalSpecsDefined + ' specs - run all';
+        var skippedLink = addToExistingQueryString('spec', '');
+        alert.appendChild(
+          createDom('span', {className: 'jasmine-bar jasmine-skipped'},
+            createDom('a', {href: skippedLink, title: 'Run all specs'}, skippedMessage)
+          )
+        );
+      }
+      var statusBarMessage = '';
+      var statusBarClassName = 'jasmine-overall-result jasmine-bar ';
+      var globalFailures = (doneResult && doneResult.failedExpectations) || [];
+      var failed = stateBuilder.failureCount + globalFailures.length > 0;
 
-  var reporterView;
+      if (totalSpecsDefined > 0 || failed) {
+        statusBarMessage += pluralize('spec', stateBuilder.specsExecuted) + ', ' + pluralize('failure', stateBuilder.failureCount);
+        if (stateBuilder.pendingSpecCount) { statusBarMessage += ', ' + pluralize('pending spec', stateBuilder.pendingSpecCount); }
+      }
 
-  var dom = {};
-
-  // Jasmine Reporter Public Interface
-  self.logRunningSpecs = false;
-
-  self.reportRunnerStarting = function(runner) {
-    var specs = runner.specs() || [];
-
-    if (specs.length == 0) {
-      return;
-    }
-
-    createReporterDom(runner.env.versionString());
-    doc.body.appendChild(dom.reporter);
-    setExceptionHandling();
-
-    reporterView = new jasmine.HtmlReporter.ReporterView(dom);
-    reporterView.addSpecs(specs, self.specFilter);
-  };
-
-  self.reportRunnerResults = function(runner) {
-    reporterView && reporterView.complete();
-  };
-
-  self.reportSuiteResults = function(suite) {
-    reporterView.suiteComplete(suite);
-  };
-
-  self.reportSpecStarting = function(spec) {
-    if (self.logRunningSpecs) {
-      self.log('>> Jasmine Running ' + spec.suite.description + ' ' + spec.description + '...');
-    }
-  };
-
-  self.reportSpecResults = function(spec) {
-    reporterView.specComplete(spec);
-  };
-
-  self.log = function() {
-    var console = jasmine.getGlobal().console;
-    if (console && console.log) {
-      if (console.log.apply) {
-        console.log.apply(console, arguments);
+      if (doneResult.overallStatus === 'passed') {
+        statusBarClassName += ' jasmine-passed ';
+      } else if (doneResult.overallStatus === 'incomplete') {
+        statusBarClassName += ' jasmine-incomplete ';
+        statusBarMessage = 'Incomplete: ' + doneResult.incompleteReason + ', ' + statusBarMessage;
       } else {
-        console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
-      }
-    }
-  };
-
-  self.specFilter = function(spec) {
-    if (!focusedSpecName()) {
-      return true;
-    }
-
-    return spec.getFullName().indexOf(focusedSpecName()) === 0;
-  };
-
-  return self;
-
-  function focusedSpecName() {
-    var specName;
-
-    (function memoizeFocusedSpec() {
-      if (specName) {
-        return;
+        statusBarClassName += ' jasmine-failed ';
       }
 
-      var paramMap = [];
-      var params = jasmine.HtmlReporter.parameters(doc);
-
-      for (var i = 0; i < params.length; i++) {
-        var p = params[i].split('=');
-        paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
+      var seedBar;
+      if (order && order.random) {
+        seedBar = createDom('span', {className: 'jasmine-seed-bar'},
+          ', randomized with seed ',
+          createDom('a', {title: 'randomized with seed ' + order.seed, href: seedHref(order.seed)}, order.seed)
+        );
       }
 
-      specName = paramMap.spec;
-    })();
+      alert.appendChild(createDom('span', {className: statusBarClassName}, statusBarMessage, seedBar));
 
-    return specName;
-  }
+      var errorBarClassName = 'jasmine-bar jasmine-errored';
+      var afterAllMessagePrefix = 'AfterAll ';
 
-  function createReporterDom(version) {
-    dom.reporter = self.createDom('div', { id: 'HTMLReporter', className: 'jasmine_reporter' },
-      dom.banner = self.createDom('div', { className: 'banner' },
-        self.createDom('span', { className: 'title' }, "Jasmine "),
-        self.createDom('span', { className: 'version' }, version)),
-
-      dom.symbolSummary = self.createDom('ul', {className: 'symbolSummary'}),
-      dom.alert = self.createDom('div', {className: 'alert'},
-        self.createDom('span', { className: 'exceptions' },
-          self.createDom('label', { className: 'label', 'for': 'no_try_catch' }, 'No try/catch'),
-          self.createDom('input', { id: 'no_try_catch', type: 'checkbox' }))),
-      dom.results = self.createDom('div', {className: 'results'},
-        dom.summary = self.createDom('div', { className: 'summary' }),
-        dom.details = self.createDom('div', { id: 'details' }))
-    );
-  }
-
-  function noTryCatch() {
-    return window.location.search.match(/catch=false/);
-  }
-
-  function searchWithCatch() {
-    var params = jasmine.HtmlReporter.parameters(window.document);
-    var removed = false;
-    var i = 0;
-
-    while (!removed && i < params.length) {
-      if (params[i].match(/catch=/)) {
-        params.splice(i, 1);
-        removed = true;
+      for(i = 0; i < globalFailures.length; i++) {
+        alert.appendChild(createDom('span', {className: errorBarClassName}, globalFailureMessage(globalFailures[i])));
       }
-      i++;
-    }
-    if (jasmine.CATCH_EXCEPTIONS) {
-      params.push("catch=false");
-    }
 
-    return params.join("&");
-  }
+      function globalFailureMessage(failure) {
+        if (failure.globalErrorType === 'load') {
+          var prefix = 'Error during loading: ' + failure.message;
 
-  function setExceptionHandling() {
-    var chxCatch = document.getElementById('no_try_catch');
+          if (failure.filename) {
+            return prefix + ' in ' + failure.filename + ' line ' + failure.lineno;
+          } else {
+            return prefix;
+          }
+        } else {
+          return afterAllMessagePrefix + failure.message;
+        }
+      }
 
-    if (noTryCatch()) {
-      chxCatch.setAttribute('checked', true);
-      jasmine.CATCH_EXCEPTIONS = false;
-    }
-    chxCatch.onclick = function() {
-      window.location.search = searchWithCatch();
-    };
-  }
-};
-jasmine.HtmlReporter.parameters = function(doc) {
-  var paramStr = doc.location.search.substring(1);
-  var params = [];
+      addDeprecationWarnings(doneResult);
 
-  if (paramStr.length > 0) {
-    params = paramStr.split('&');
-  }
-  return params;
-}
-jasmine.HtmlReporter.sectionLink = function(sectionName) {
-  var link = '?';
-  var params = [];
+      var warningBarClassName = 'jasmine-bar jasmine-warning';
+      for(i = 0; i < deprecationWarnings.length; i++) {
+        var warning = deprecationWarnings[i];
+        alert.appendChild(createDom('span', {className: warningBarClassName}, 'DEPRECATION: ' + warning));
+      }
 
-  if (sectionName) {
-    params.push('spec=' + encodeURIComponent(sectionName));
-  }
-  if (!jasmine.CATCH_EXCEPTIONS) {
-    params.push("catch=false");
-  }
-  if (params.length > 0) {
-    link += params.join("&");
-  }
+      var results = find('.jasmine-results');
+      results.appendChild(summary);
 
-  return link;
-};
-jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter);
-jasmine.HtmlReporter.ReporterView = function(dom) {
-  this.startedAt = new Date();
-  this.runningSpecCount = 0;
-  this.completeSpecCount = 0;
-  this.passedCount = 0;
-  this.failedCount = 0;
-  this.skippedCount = 0;
+      summaryList(stateBuilder.topResults, summary);
 
-  this.createResultsMenu = function() {
-    this.resultsMenu = this.createDom('span', {className: 'resultsMenu bar'},
-      this.summaryMenuItem = this.createDom('a', {className: 'summaryMenuItem', href: "#"}, '0 specs'),
-      ' | ',
-      this.detailsMenuItem = this.createDom('a', {className: 'detailsMenuItem', href: "#"}, '0 failing'));
+      if (failures.length) {
+        alert.appendChild(
+          createDom('span', {className: 'jasmine-menu jasmine-bar jasmine-spec-list'},
+            createDom('span', {}, 'Spec List | '),
+            createDom('a', {className: 'jasmine-failures-menu', href: '#'}, 'Failures')));
+        alert.appendChild(
+          createDom('span', {className: 'jasmine-menu jasmine-bar jasmine-failure-list'},
+            createDom('a', {className: 'jasmine-spec-list-menu', href: '#'}, 'Spec List'),
+            createDom('span', {}, ' | Failures ')));
 
-    this.summaryMenuItem.onclick = function() {
-      dom.reporter.className = dom.reporter.className.replace(/ showDetails/g, '');
+        find('.jasmine-failures-menu').onclick = function() {
+          setMenuModeTo('jasmine-failure-list');
+        };
+        find('.jasmine-spec-list-menu').onclick = function() {
+          setMenuModeTo('jasmine-spec-list');
+        };
+
+        setMenuModeTo('jasmine-failure-list');
+
+        var failureNode = find('.jasmine-failures');
+        for (i = 0; i < failures.length; i++) {
+          failureNode.appendChild(failures[i]);
+        }
+      }
     };
 
-    this.detailsMenuItem.onclick = function() {
-      showDetails();
-    };
-  };
+    return this;
 
-  this.addSpecs = function(specs, specFilter) {
-    this.totalSpecCount = specs.length;
+    function failureDom(result) {
+      var failure =
+        createDom('div', {className: 'jasmine-spec-detail jasmine-failed'},
+          failureDescription(result, stateBuilder.currentParent),
+          createDom('div', {className: 'jasmine-messages'})
+        );
+      var messages = failure.childNodes[1];
 
-    this.views = {
-      specs: {},
-      suites: {}
-    };
-
-    for (var i = 0; i < specs.length; i++) {
-      var spec = specs[i];
-      this.views.specs[spec.id] = new jasmine.HtmlReporter.SpecView(spec, dom, this.views);
-      if (specFilter(spec)) {
-        this.runningSpecCount++;
+      for (var i = 0; i < result.failedExpectations.length; i++) {
+        var expectation = result.failedExpectations[i];
+        messages.appendChild(createDom('div', {className: 'jasmine-result-message'}, expectation.message));
+        messages.appendChild(createDom('div', {className: 'jasmine-stack-trace'}, expectation.stack));
       }
-    }
-  };
 
-  this.specComplete = function(spec) {
-    this.completeSpecCount++;
-
-    if (isUndefined(this.views.specs[spec.id])) {
-      this.views.specs[spec.id] = new jasmine.HtmlReporter.SpecView(spec, dom);
+      return failure;
     }
 
-    var specView = this.views.specs[spec.id];
-
-    switch (specView.status()) {
-      case 'passed':
-        this.passedCount++;
-        break;
-
-      case 'failed':
-        this.failedCount++;
-        break;
-
-      case 'skipped':
-        this.skippedCount++;
-        break;
-    }
-
-    specView.refresh();
-    this.refresh();
-  };
-
-  this.suiteComplete = function(suite) {
-    var suiteView = this.views.suites[suite.id];
-    if (isUndefined(suiteView)) {
-      return;
-    }
-    suiteView.refresh();
-  };
-
-  this.refresh = function() {
-
-    if (isUndefined(this.resultsMenu)) {
-      this.createResultsMenu();
-    }
-
-    // currently running UI
-    if (isUndefined(this.runningAlert)) {
-      this.runningAlert = this.createDom('a', { href: jasmine.HtmlReporter.sectionLink(), className: "runningAlert bar" });
-      dom.alert.appendChild(this.runningAlert);
-    }
-    this.runningAlert.innerHTML = "Running " + this.completeSpecCount + " of " + specPluralizedFor(this.totalSpecCount);
-
-    // skipped specs UI
-    if (isUndefined(this.skippedAlert)) {
-      this.skippedAlert = this.createDom('a', { href: jasmine.HtmlReporter.sectionLink(), className: "skippedAlert bar" });
-    }
-
-    this.skippedAlert.innerHTML = "Skipping " + this.skippedCount + " of " + specPluralizedFor(this.totalSpecCount) + " - run all";
-
-    if (this.skippedCount === 1 && isDefined(dom.alert)) {
-      dom.alert.appendChild(this.skippedAlert);
-    }
-
-    // passing specs UI
-    if (isUndefined(this.passedAlert)) {
-      this.passedAlert = this.createDom('span', { href: jasmine.HtmlReporter.sectionLink(), className: "passingAlert bar" });
-    }
-    this.passedAlert.innerHTML = "Passing " + specPluralizedFor(this.passedCount);
-
-    // failing specs UI
-    if (isUndefined(this.failedAlert)) {
-      this.failedAlert = this.createDom('span', {href: "?", className: "failingAlert bar"});
-    }
-    this.failedAlert.innerHTML = "Failing " + specPluralizedFor(this.failedCount);
-
-    if (this.failedCount === 1 && isDefined(dom.alert)) {
-      dom.alert.appendChild(this.failedAlert);
-      dom.alert.appendChild(this.resultsMenu);
-    }
-
-    // summary info
-    this.summaryMenuItem.innerHTML = "" + specPluralizedFor(this.runningSpecCount);
-    this.detailsMenuItem.innerHTML = "" + this.failedCount + " failing";
-  };
-
-  this.complete = function() {
-    dom.alert.removeChild(this.runningAlert);
-
-    this.skippedAlert.innerHTML = "Ran " + this.runningSpecCount + " of " + specPluralizedFor(this.totalSpecCount) + " - run all";
-
-    if (this.failedCount === 0) {
-      dom.alert.appendChild(this.createDom('span', {className: 'passingAlert bar'}, "Passing " + specPluralizedFor(this.passedCount)));
-    } else {
-      showDetails();
-    }
-
-    dom.banner.appendChild(this.createDom('span', {className: 'duration'}, "finished in " + ((new Date().getTime() - this.startedAt.getTime()) / 1000) + "s"));
-  };
-
-  return this;
-
-  function showDetails() {
-    if (dom.reporter.className.search(/showDetails/) === -1) {
-      dom.reporter.className += " showDetails";
-    }
-  }
-
-  function isUndefined(obj) {
-    return typeof obj === 'undefined';
-  }
-
-  function isDefined(obj) {
-    return !isUndefined(obj);
-  }
-
-  function specPluralizedFor(count) {
-    var str = count + " spec";
-    if (count > 1) {
-      str += "s"
-    }
-    return str;
-  }
-
-};
-
-jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter.ReporterView);
-
-
-jasmine.HtmlReporter.SpecView = function(spec, dom, views) {
-  this.spec = spec;
-  this.dom = dom;
-  this.views = views;
-
-  this.symbol = this.createDom('li', { className: 'pending' });
-  this.dom.symbolSummary.appendChild(this.symbol);
-
-  this.summary = this.createDom('div', { className: 'specSummary' },
-    this.createDom('a', {
-      className: 'description',
-      href: jasmine.HtmlReporter.sectionLink(this.spec.getFullName()),
-      title: this.spec.getFullName()
-    }, this.spec.description)
-  );
-
-  this.detail = this.createDom('div', { className: 'specDetail' },
-      this.createDom('a', {
-        className: 'description',
-        href: '?spec=' + encodeURIComponent(this.spec.getFullName()),
-        title: this.spec.getFullName()
-      }, this.spec.getFullName())
-  );
-};
-
-jasmine.HtmlReporter.SpecView.prototype.status = function() {
-  return this.getSpecStatus(this.spec);
-};
-
-jasmine.HtmlReporter.SpecView.prototype.refresh = function() {
-  this.symbol.className = this.status();
-
-  switch (this.status()) {
-    case 'skipped':
-      break;
-
-    case 'passed':
-      this.appendSummaryToSuiteDiv();
-      break;
-
-    case 'failed':
-      this.appendSummaryToSuiteDiv();
-      this.appendFailureDetail();
-      break;
-  }
-};
-
-jasmine.HtmlReporter.SpecView.prototype.appendSummaryToSuiteDiv = function() {
-  this.summary.className += ' ' + this.status();
-  this.appendToSummary(this.spec, this.summary);
-};
-
-jasmine.HtmlReporter.SpecView.prototype.appendFailureDetail = function() {
-  this.detail.className += ' ' + this.status();
-
-  var resultItems = this.spec.results().getItems();
-  var messagesDiv = this.createDom('div', { className: 'messages' });
-
-  for (var i = 0; i < resultItems.length; i++) {
-    var result = resultItems[i];
-
-    if (result.type == 'log') {
-      messagesDiv.appendChild(this.createDom('div', {className: 'resultMessage log'}, result.toString()));
-    } else if (result.type == 'expect' && result.passed && !result.passed()) {
-      messagesDiv.appendChild(this.createDom('div', {className: 'resultMessage fail'}, result.message));
-
-      if (result.trace.stack) {
-        messagesDiv.appendChild(this.createDom('div', {className: 'stackTrace'}, result.trace.stack));
-      }
-    }
-  }
-
-  if (messagesDiv.childNodes.length > 0) {
-    this.detail.appendChild(messagesDiv);
-    this.dom.details.appendChild(this.detail);
-  }
-};
-
-jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter.SpecView);jasmine.HtmlReporter.SuiteView = function(suite, dom, views) {
-  this.suite = suite;
-  this.dom = dom;
-  this.views = views;
-
-  this.element = this.createDom('div', { className: 'suite' },
-    this.createDom('a', { className: 'description', href: jasmine.HtmlReporter.sectionLink(this.suite.getFullName()) }, this.suite.description)
-  );
-
-  this.appendToSummary(this.suite, this.element);
-};
-
-jasmine.HtmlReporter.SuiteView.prototype.status = function() {
-  return this.getSpecStatus(this.suite);
-};
-
-jasmine.HtmlReporter.SuiteView.prototype.refresh = function() {
-  this.element.className += " " + this.status();
-};
-
-jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter.SuiteView);
-
-/* @deprecated Use jasmine.HtmlReporter instead
- */
-jasmine.TrivialReporter = function(doc) {
-  this.document = doc || document;
-  this.suiteDivs = {};
-  this.logRunningSpecs = false;
-};
-
-jasmine.TrivialReporter.prototype.createDom = function(type, attrs, childrenVarArgs) {
-  var el = document.createElement(type);
-
-  for (var i = 2; i < arguments.length; i++) {
-    var child = arguments[i];
-
-    if (typeof child === 'string') {
-      el.appendChild(document.createTextNode(child));
-    } else {
-      if (child) { el.appendChild(child); }
-    }
-  }
-
-  for (var attr in attrs) {
-    if (attr == "className") {
-      el[attr] = attrs[attr];
-    } else {
-      el.setAttribute(attr, attrs[attr]);
-    }
-  }
-
-  return el;
-};
-
-jasmine.TrivialReporter.prototype.reportRunnerStarting = function(runner) {
-  var showPassed, showSkipped;
-
-  this.outerDiv = this.createDom('div', { id: 'TrivialReporter', className: 'jasmine_reporter' },
-      this.createDom('div', { className: 'banner' },
-        this.createDom('div', { className: 'logo' },
-            this.createDom('span', { className: 'title' }, "Jasmine"),
-            this.createDom('span', { className: 'version' }, runner.env.versionString())),
-        this.createDom('div', { className: 'options' },
-            "Show ",
-            showPassed = this.createDom('input', { id: "__jasmine_TrivialReporter_showPassed__", type: 'checkbox' }),
-            this.createDom('label', { "for": "__jasmine_TrivialReporter_showPassed__" }, " passed "),
-            showSkipped = this.createDom('input', { id: "__jasmine_TrivialReporter_showSkipped__", type: 'checkbox' }),
-            this.createDom('label', { "for": "__jasmine_TrivialReporter_showSkipped__" }, " skipped")
+    function summaryList(resultsTree, domParent) {
+      var specListNode;
+      for (var i = 0; i < resultsTree.children.length; i++) {
+        var resultNode = resultsTree.children[i];
+        if (filterSpecs && !hasActiveSpec(resultNode)) {
+          continue;
+        }
+        if (resultNode.type === 'suite') {
+          var suiteListNode = createDom('ul', {className: 'jasmine-suite', id: 'suite-' + resultNode.result.id},
+            createDom('li', {className: 'jasmine-suite-detail jasmine-' + resultNode.result.status},
+              createDom('a', {href: specHref(resultNode.result)}, resultNode.result.description)
             )
-          ),
+          );
 
-      this.runnerDiv = this.createDom('div', { className: 'runner running' },
-          this.createDom('a', { className: 'run_spec', href: '?' }, "run all"),
-          this.runnerMessageSpan = this.createDom('span', {}, "Running..."),
-          this.finishedAtSpan = this.createDom('span', { className: 'finished-at' }, ""))
+          summaryList(resultNode, suiteListNode);
+          domParent.appendChild(suiteListNode);
+        }
+        if (resultNode.type === 'spec') {
+          if (domParent.getAttribute('class') !== 'jasmine-specs') {
+            specListNode = createDom('ul', {className: 'jasmine-specs'});
+            domParent.appendChild(specListNode);
+          }
+          var specDescription = resultNode.result.description;
+          if(noExpectations(resultNode.result)) {
+            specDescription = 'SPEC HAS NO EXPECTATIONS ' + specDescription;
+          }
+          if(resultNode.result.status === 'pending' && resultNode.result.pendingReason !== '') {
+            specDescription = specDescription + ' PENDING WITH MESSAGE: ' + resultNode.result.pendingReason;
+          }
+          specListNode.appendChild(
+            createDom('li', {
+                className: 'jasmine-' + resultNode.result.status,
+                id: 'spec-' + resultNode.result.id
+              },
+              createDom('a', {href: specHref(resultNode.result)}, specDescription)
+            )
+          );
+        }
+      }
+    }
+
+    function optionsMenu(env) {
+      var optionsMenuDom = createDom('div', { className: 'jasmine-run-options' },
+        createDom('span', { className: 'jasmine-trigger' }, 'Options'),
+        createDom('div', { className: 'jasmine-payload' },
+          createDom('div', { className: 'jasmine-stop-on-failure' },
+            createDom('input', {
+              className: 'jasmine-fail-fast',
+              id: 'jasmine-fail-fast',
+              type: 'checkbox'
+            }),
+            createDom('label', { className: 'jasmine-label', 'for': 'jasmine-fail-fast' }, 'stop execution on spec failure')),
+          createDom('div', { className: 'jasmine-throw-failures' },
+            createDom('input', {
+              className: 'jasmine-throw',
+              id: 'jasmine-throw-failures',
+              type: 'checkbox'
+            }),
+            createDom('label', { className: 'jasmine-label', 'for': 'jasmine-throw-failures' }, 'stop spec on expectation failure')),
+          createDom('div', { className: 'jasmine-random-order' },
+            createDom('input', {
+              className: 'jasmine-random',
+              id: 'jasmine-random-order',
+              type: 'checkbox'
+            }),
+            createDom('label', { className: 'jasmine-label', 'for': 'jasmine-random-order' }, 'run tests in random order'))
+        )
       );
 
-  this.document.body.appendChild(this.outerDiv);
+      var failFastCheckbox = optionsMenuDom.querySelector('#jasmine-fail-fast');
+      failFastCheckbox.checked = env.stoppingOnSpecFailure();
+      failFastCheckbox.onclick = function() {
+        navigateWithNewParam('failFast', !env.stoppingOnSpecFailure());
+      };
 
-  var suites = runner.suites();
-  for (var i = 0; i < suites.length; i++) {
-    var suite = suites[i];
-    var suiteDiv = this.createDom('div', { className: 'suite' },
-        this.createDom('a', { className: 'run_spec', href: '?spec=' + encodeURIComponent(suite.getFullName()) }, "run"),
-        this.createDom('a', { className: 'description', href: '?spec=' + encodeURIComponent(suite.getFullName()) }, suite.description));
-    this.suiteDivs[suite.id] = suiteDiv;
-    var parentDiv = this.outerDiv;
-    if (suite.parentSuite) {
-      parentDiv = this.suiteDivs[suite.parentSuite.id];
+      var throwCheckbox = optionsMenuDom.querySelector('#jasmine-throw-failures');
+      throwCheckbox.checked = env.throwingExpectationFailures();
+      throwCheckbox.onclick = function() {
+        navigateWithNewParam('throwFailures', !env.throwingExpectationFailures());
+      };
+
+      var randomCheckbox = optionsMenuDom.querySelector('#jasmine-random-order');
+      randomCheckbox.checked = env.randomTests();
+      randomCheckbox.onclick = function() {
+        navigateWithNewParam('random', !env.randomTests());
+      };
+
+      var optionsTrigger = optionsMenuDom.querySelector('.jasmine-trigger'),
+        optionsPayload = optionsMenuDom.querySelector('.jasmine-payload'),
+        isOpen = /\bjasmine-open\b/;
+
+      optionsTrigger.onclick = function() {
+        if (isOpen.test(optionsPayload.className)) {
+          optionsPayload.className = optionsPayload.className.replace(isOpen, '');
+        } else {
+          optionsPayload.className += ' jasmine-open';
+        }
+      };
+
+      return optionsMenuDom;
     }
-    parentDiv.appendChild(suiteDiv);
-  }
 
-  this.startedAt = new Date();
+    function failureDescription(result, suite) {
+      var wrapper = createDom('div', {className: 'jasmine-description'},
+        createDom('a', {title: result.description, href: specHref(result)}, result.description)
+      );
+      var suiteLink;
 
-  var self = this;
-  showPassed.onclick = function(evt) {
-    if (showPassed.checked) {
-      self.outerDiv.className += ' show-passed';
-    } else {
-      self.outerDiv.className = self.outerDiv.className.replace(/ show-passed/, '');
+      while (suite && suite.parent) {
+        wrapper.insertBefore(createTextNode(' > '), wrapper.firstChild);
+        suiteLink = createDom('a', {href: suiteHref(suite)}, suite.result.description);
+        wrapper.insertBefore(suiteLink, wrapper.firstChild);
+
+        suite = suite.parent;
+      }
+
+      return wrapper;
     }
-  };
 
-  showSkipped.onclick = function(evt) {
-    if (showSkipped.checked) {
-      self.outerDiv.className += ' show-skipped';
-    } else {
-      self.outerDiv.className = self.outerDiv.className.replace(/ show-skipped/, '');
+    function suiteHref(suite) {
+      var els = [];
+
+      while (suite && suite.parent) {
+        els.unshift(suite.result.description);
+        suite = suite.parent;
+      }
+
+      return addToExistingQueryString('spec', els.join(' '));
     }
-  };
-};
 
-jasmine.TrivialReporter.prototype.reportRunnerResults = function(runner) {
-  var results = runner.results();
-  var className = (results.failedCount > 0) ? "runner failed" : "runner passed";
-  this.runnerDiv.setAttribute("class", className);
-  //do it twice for IE
-  this.runnerDiv.setAttribute("className", className);
-  var specs = runner.specs();
-  var specCount = 0;
-  for (var i = 0; i < specs.length; i++) {
-    if (this.specFilter(specs[i])) {
-      specCount++;
+    function addDeprecationWarnings(result) {
+      if (result && result.deprecationWarnings) {
+        for(var i = 0; i < result.deprecationWarnings.length; i++) {
+          var warning = result.deprecationWarnings[i].message;
+          if (!j$.util.arrayContains(warning)) {
+            deprecationWarnings.push(warning);
+          }
+        }
+      }
     }
-  }
-  var message = "" + specCount + " spec" + (specCount == 1 ? "" : "s" ) + ", " + results.failedCount + " failure" + ((results.failedCount == 1) ? "" : "s");
-  message += " in " + ((new Date().getTime() - this.startedAt.getTime()) / 1000) + "s";
-  this.runnerMessageSpan.replaceChild(this.createDom('a', { className: 'description', href: '?'}, message), this.runnerMessageSpan.firstChild);
 
-  this.finishedAtSpan.appendChild(document.createTextNode("Finished at " + new Date().toString()));
-};
+    function find(selector) {
+      return getContainer().querySelector('.jasmine_html-reporter ' + selector);
+    }
 
-jasmine.TrivialReporter.prototype.reportSuiteResults = function(suite) {
-  var results = suite.results();
-  var status = results.passed() ? 'passed' : 'failed';
-  if (results.totalCount === 0) { // todo: change this to check results.skipped
-    status = 'skipped';
-  }
-  this.suiteDivs[suite.id].className += " " + status;
-};
+    function clearPrior() {
+      // return the reporter
+      var oldReporter = find('');
 
-jasmine.TrivialReporter.prototype.reportSpecStarting = function(spec) {
-  if (this.logRunningSpecs) {
-    this.log('>> Jasmine Running ' + spec.suite.description + ' ' + spec.description + '...');
-  }
-};
+      if(oldReporter) {
+        getContainer().removeChild(oldReporter);
+      }
+    }
 
-jasmine.TrivialReporter.prototype.reportSpecResults = function(spec) {
-  var results = spec.results();
-  var status = results.passed() ? 'passed' : 'failed';
-  if (results.skipped) {
-    status = 'skipped';
-  }
-  var specDiv = this.createDom('div', { className: 'spec '  + status },
-      this.createDom('a', { className: 'run_spec', href: '?spec=' + encodeURIComponent(spec.getFullName()) }, "run"),
-      this.createDom('a', {
-        className: 'description',
-        href: '?spec=' + encodeURIComponent(spec.getFullName()),
-        title: spec.getFullName()
-      }, spec.description));
+    function createDom(type, attrs, childrenVarArgs) {
+      var el = createElement(type);
 
+      for (var i = 2; i < arguments.length; i++) {
+        var child = arguments[i];
 
-  var resultItems = results.getItems();
-  var messagesDiv = this.createDom('div', { className: 'messages' });
-  for (var i = 0; i < resultItems.length; i++) {
-    var result = resultItems[i];
+        if (typeof child === 'string') {
+          el.appendChild(createTextNode(child));
+        } else {
+          if (child) {
+            el.appendChild(child);
+          }
+        }
+      }
 
-    if (result.type == 'log') {
-      messagesDiv.appendChild(this.createDom('div', {className: 'resultMessage log'}, result.toString()));
-    } else if (result.type == 'expect' && result.passed && !result.passed()) {
-      messagesDiv.appendChild(this.createDom('div', {className: 'resultMessage fail'}, result.message));
+      for (var attr in attrs) {
+        if (attr == 'className') {
+          el[attr] = attrs[attr];
+        } else {
+          el.setAttribute(attr, attrs[attr]);
+        }
+      }
 
-      if (result.trace.stack) {
-        messagesDiv.appendChild(this.createDom('div', {className: 'stackTrace'}, result.trace.stack));
+      return el;
+    }
+
+    function pluralize(singular, count) {
+      var word = (count == 1 ? singular : singular + 's');
+
+      return '' + count + ' ' + word;
+    }
+
+    function specHref(result) {
+      return addToExistingQueryString('spec', result.fullName);
+    }
+
+    function seedHref(seed) {
+      return addToExistingQueryString('seed', seed);
+    }
+
+    function defaultQueryString(key, value) {
+      return '?' + key + '=' + value;
+    }
+
+    function setMenuModeTo(mode) {
+      htmlReporterMain.setAttribute('class', 'jasmine_html-reporter ' + mode);
+    }
+
+    function noExpectations(result) {
+      return (result.failedExpectations.length + result.passedExpectations.length) === 0 &&
+        result.status === 'passed';
+    }
+
+    function hasActiveSpec(resultNode) {
+      if (resultNode.type == 'spec' && resultNode.result.status != 'excluded') {
+        return true;
+      }
+
+      if (resultNode.type == 'suite') {
+        for (var i = 0, j = resultNode.children.length; i < j; i++) {
+          if (hasActiveSpec(resultNode.children[i])) {
+            return true;
+          }
+        }
       }
     }
   }
 
-  if (messagesDiv.childNodes.length > 0) {
-    specDiv.appendChild(messagesDiv);
-  }
-
-  this.suiteDivs[spec.suite.id].appendChild(specDiv);
+  return HtmlReporter;
 };
 
-jasmine.TrivialReporter.prototype.log = function() {
-  var console = jasmine.getGlobal().console;
-  if (console && console.log) {
-    if (console.log.apply) {
-      console.log.apply(console, arguments);
-    } else {
-      console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
+jasmineRequire.HtmlSpecFilter = function() {
+  function HtmlSpecFilter(options) {
+    var filterString = options && options.filterString() && options.filterString().replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    var filterPattern = new RegExp(filterString);
+
+    this.matches = function(specName) {
+      return filterPattern.test(specName);
+    };
+  }
+
+  return HtmlSpecFilter;
+};
+
+jasmineRequire.ResultsNode = function() {
+  function ResultsNode(result, type, parent) {
+    this.result = result;
+    this.type = type;
+    this.parent = parent;
+
+    this.children = [];
+
+    this.addChild = function(result, type) {
+      this.children.push(new ResultsNode(result, type, this));
+    };
+
+    this.last = function() {
+      return this.children[this.children.length - 1];
+    };
+
+    this.updateResult = function(result) {
+      this.result = result;
+    };
+  }
+
+  return ResultsNode;
+};
+
+jasmineRequire.QueryString = function() {
+  function QueryString(options) {
+
+    this.navigateWithNewParam = function(key, value) {
+      options.getWindowLocation().search = this.fullStringWithNewParam(key, value);
+    };
+
+    this.fullStringWithNewParam = function(key, value) {
+      var paramMap = queryStringToParamMap();
+      paramMap[key] = value;
+      return toQueryString(paramMap);
+    };
+
+    this.getParam = function(key) {
+      return queryStringToParamMap()[key];
+    };
+
+    return this;
+
+    function toQueryString(paramMap) {
+      var qStrPairs = [];
+      for (var prop in paramMap) {
+        qStrPairs.push(encodeURIComponent(prop) + '=' + encodeURIComponent(paramMap[prop]));
+      }
+      return '?' + qStrPairs.join('&');
     }
+
+    function queryStringToParamMap() {
+      var paramStr = options.getWindowLocation().search.substring(1),
+        params = [],
+        paramMap = {};
+
+      if (paramStr.length > 0) {
+        params = paramStr.split('&');
+        for (var i = 0; i < params.length; i++) {
+          var p = params[i].split('=');
+          var value = decodeURIComponent(p[1]);
+          if (value === 'true' || value === 'false') {
+            value = JSON.parse(value);
+          }
+          paramMap[decodeURIComponent(p[0])] = value;
+        }
+      }
+
+      return paramMap;
+    }
+
   }
+
+  return QueryString;
 };
 
-jasmine.TrivialReporter.prototype.getLocation = function() {
-  return this.document.location;
-};
+jasmineRequire.toHaveClass = function(j$) {
+  /**
+   * {@link expect} the actual value to be a DOM element that has the expected class
+   * @function
+   * @name matchers#toHaveClass
+   * @param {Object} expected - The class name to test for
+   * @example
+   * var el = document.createElement('div');
+   * el.className = 'foo bar baz';
+   * expect(el).toHaveClass('bar');
+   */
+  function toHaveClass(util, customEqualityTesters) {
+    return {
+      compare: function(actual, expected) {
+        if (!isElement(actual)) {
+          throw new Error(j$.pp(actual) + ' is not a DOM element');
+        }
 
-jasmine.TrivialReporter.prototype.specFilter = function(spec) {
-  var paramMap = {};
-  var params = this.getLocation().search.substring(1).split('&');
-  for (var i = 0; i < params.length; i++) {
-    var p = params[i].split('=');
-    paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
+        return {
+          pass: actual.classList.contains(expected)
+        };
+      }
+    };
   }
 
-  if (!paramMap.spec) {
-    return true;
+  function isElement(maybeEl) {
+    return maybeEl &&
+      maybeEl.classList &&
+      j$.isFunction_(maybeEl.classList.contains);
   }
-  return spec.getFullName().indexOf(paramMap.spec) === 0;
+
+  return toHaveClass;
 };

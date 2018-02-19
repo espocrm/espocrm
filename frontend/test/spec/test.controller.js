@@ -25,18 +25,19 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-var Espo = Espo || {};
 
-describe('Controller', function () {
+describe('controller', function () {
 	var controller;
 	var viewFactory;
 	var view;
 
-	require('controller', function (Controller) {
+	var ControllerClass;
 
-		beforeEach(function () {
+	beforeEach(function (done) {
+		require('controller', function (Controller) {
+			ControllerClass = Controller;
 			viewFactory = {
-				create: {},
+				create: {}
 			};
 			view = {
 				render: {},
@@ -44,27 +45,27 @@ describe('Controller', function () {
 			};
 
 			controller = new Controller({}, {viewFactory: viewFactory});
-			spyOn(viewFactory, 'create').andReturn(view);
+			spyOn(viewFactory, 'create').and.returnValue(view);
 			spyOn(view, 'render');
 			spyOn(view, 'setView');
+			done();
 		});
+	});
 
-		it ('#set should set param', function () {
-			controller.set('some', 'test');
-			expect(controller.params['some']).toBe('test');
-		});
+	it ('#set should set param', function () {
+		controller.set('some', 'test');
+		expect(controller.params['some']).toBe('test');
+	});
 
-		it ('#get should get param', function () {
-			controller.set('some', 'test');
-			expect(controller.get('some')).toBe('test');
-		});
+	it ('#get should get param', function () {
+		controller.set('some', 'test');
+		expect(controller.get('some')).toBe('test');
+	});
 
-		it ("different controllers should use same param set", function () {
-			var someController = new Controller(controller.params, {viewFactory: viewFactory});
-			someController.set('some', 'test');
-			expect(controller.get('some')).toBe(someController.get('some'));
-		});
-
+	it ("different controllers should use same param set", function () {
+		var someController = new ControllerClass(controller.params, {viewFactory: viewFactory});
+		someController.set('some', 'test');
+		expect(controller.get('some')).toBe(someController.get('some'));
 	});
 
 });
