@@ -28,14 +28,17 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
-use Espo\Core\Utils\Util,
-    Espo\ORM\Entity,
-    Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 
 class Converter
 {
     private $dbalSchema;
+
+    private $databaseSchema;
 
     private $fileManager;
 
@@ -76,10 +79,11 @@ class Converter
         'foreign'
     );
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->databaseSchema = $databaseSchema;
 
         $this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
     }
@@ -108,6 +112,11 @@ class Converter
         }
 
         return $this->dbalSchema;
+    }
+
+    protected function getDatabaseSchema()
+    {
+        return $this->databaseSchema;
     }
 
     /**
@@ -154,6 +163,9 @@ class Converter
 
         $schema = $this->getSchema(true);
 
+        $indexList = SchemaUtils::getIndexList($ormMeta);
+        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getDatabaseSchema()->getMaxIndexLength());
+
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
 
@@ -177,7 +189,7 @@ class Converter
 
             $primaryColumns = array();
             $uniqueColumns = array();
-            $indexList = array(); //list of indexes like array( array(comlumn1, column2), array(column3))
+
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
                 if ((isset($fieldParams['notStorable']) && $fieldParams['notStorable']) || in_array($fieldParams['type'], $this->notStorableTypes)) {
@@ -197,37 +209,26 @@ class Converter
                     continue;
                 }
 
+                if (isset($fieldListExceededIndexMaxLength[$entityName]) && in_array($fieldName, $fieldListExceededIndexMaxLength[$entityName])) {
+                    $fieldParams['utf8mb3'] = true;
+                }
+
                 $columnName = Util::toUnderScore($fieldName);
                 if (!$tables[$entityName]->hasColumn($columnName)) {
                     $tables[$entityName]->addColumn($columnName, $fieldType, $this->getDbFieldParams($fieldParams));
                 }
 
                 //add unique
-                if ($fieldParams['type']!= 'id' && isset($fieldParams['unique'])) {
+                if ($fieldParams['type'] != 'id' && isset($fieldParams['unique'])) {
                     $uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns);
                 } //END: add unique
-
-                //add index. It can be defined in entityDefs as "index"
-                if (isset($fieldParams['index'])) {
-                    $indexList = $this->getKeyList($columnName, $fieldParams['index'], $indexList);
-                } //END: add index
             }
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
-            //add indexes
-            if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
-                foreach ($entityParams['indexes'] as $indexName => $indexParams) {
-                    if (is_array($indexParams['columns'])) {
-                        $tableIndexName = $this->generateIndexName($indexName, $entityName);
-                        $indexList[$tableIndexName] = Util::toUnderScore($indexParams['columns']);
-                    }
-                }
-            }
-            if (!empty($indexList)) {
-                foreach($indexList as $indexName => $indexItem) {
-                    $tableIndexName = is_string($indexName) ? $indexName : null;
-                    $tables[$entityName]->addIndex($indexItem, $tableIndexName);
+            if (!empty($indexList[$entityName])) {
+                foreach($indexList[$entityName] as $indexName => $indexColumnList) {
+                    $tables[$entityName]->addIndex($indexColumnList, $indexName);
                 }
             }
 
@@ -285,14 +286,21 @@ class Converter
         }
 
         $table = $this->getSchema()->createTable($tableName);
-        $table->addColumn('id', 'int', array('length'=>$this->defaultLength['int'], 'autoincrement' => true, 'notnull' => true,));  //'unique' => true,
+        $table->addColumn('id', 'int', $this->getDbFieldParams(array(
+            'type' => 'int',
+            'len' => $this->defaultLength['int'],
+            'autoincrement' => true,
+        )));
 
         //add midKeys to a schema
         $uniqueIndex = array();
         foreach($relationParams['midKeys'] as $index => $midKey) {
 
             $columnName = Util::toUnderScore($midKey);
-            $table->addColumn($columnName, $this->idParams['dbType'], array('length'=>$this->idParams['len']));
+            $table->addColumn($columnName, $this->idParams['dbType'], $this->getDbFieldParams(array(
+                'type' => 'foreignId',
+                'len' => $this->idParams['len'],
+            )));
             $table->addIndex(array($columnName));
 
             $uniqueIndex[] = $columnName;
@@ -306,7 +314,7 @@ class Converter
                 if (!isset($fieldParams['type'])) {
                     $fieldParams = array_merge($fieldParams, array(
                         'type' => 'varchar',
-                        'length' => $this->defaultLength['varchar'],
+                        'len' => $this->defaultLength['varchar'],
                     ));
                 }
 
@@ -326,7 +334,11 @@ class Converter
         }
         //END: add unique indexes
 
-        $table->addColumn('deleted', 'bool', array('default' => 0));
+        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
+            'type' => 'bool',
+            'default' => false,
+        )));
+
         $table->setPrimaryKey(array("id"));
 
         return $table;
@@ -337,13 +349,18 @@ class Converter
         $dbFieldParams = array();
 
         foreach($this->allowedDbFieldParams as $espoName => $dbalName) {
-
             if (isset($fieldParams[$espoName])) {
                 $dbFieldParams[$dbalName] = $fieldParams[$espoName];
             }
         }
 
         switch ($fieldParams['type']) {
+            case 'id':
+            case 'foreignId':
+            case 'foreignType':
+                $fieldParams['utf8mb3'] = true;
+                break;
+
             case 'array':
             case 'jsonArray':
             case 'text':
@@ -360,10 +377,15 @@ class Converter
                 break;
         }
 
-
-        if ( isset($fieldParams['autoincrement']) && $fieldParams['autoincrement'] ) {
+        if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
             $dbFieldParams['unique'] = true;
             $dbFieldParams['notnull'] = true;
+        }
+
+        if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
+            $dbFieldParams['platformOptions'] = array(
+                'collation' => 'utf8_unicode_ci',
+            );
         }
 
         return $dbFieldParams;
@@ -378,9 +400,11 @@ class Converter
     protected function getKeyList($columnName, $keyValue, array $keyList)
     {
         if ($keyValue === true) {
-            $keyList[] = array($columnName);
+            $tableIndexName = SchemaUtils::generateIndexName($columnName);
+            $keyList[$tableIndexName] = array($columnName);
         } else if (is_string($keyValue)) {
-            $keyList[$keyValue][] = $columnName;
+            $tableIndexName = SchemaUtils::generateIndexName($keyValue);
+            $keyList[$tableIndexName][] = $columnName;
         }
 
         return $keyList;
@@ -449,23 +473,6 @@ class Converter
         }
 
         return $dependentEntities;
-    }
-
-    /**
-     * Generate index name
-     *
-     * @return string
-     */
-    protected function generateIndexName($name, $entityName)
-    {
-        $names = array(
-            'IDX',
-        );
-
-        $names[] = strtoupper( Util::toUnderScore($entityName) );
-        $names[] = strtoupper( Util::toUnderScore($name) );
-
-        return implode('_', $names);
     }
 
     protected function loadData($path)
