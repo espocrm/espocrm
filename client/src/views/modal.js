@@ -93,7 +93,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 }
 
                 $(containerSelector).remove();
-                $('<div />').css('display', 'none').attr('id', id).appendTo('body');
+                $('<div />').css('display', 'none').attr('id', id).addClass('modal-container').appendTo('body');
 
                 var buttonListExt = [];
 

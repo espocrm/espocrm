@@ -42,6 +42,10 @@ Espo.define('views/header', 'view', function (Dep) {
 
             data.isXsSingleRow = this.options.isXsSingleRow;
 
+            if ((data.items.buttons || []).length < 2) {
+                data.isHeaderAdditionalSpace = true;
+            }
+
             return data;
         },
 
