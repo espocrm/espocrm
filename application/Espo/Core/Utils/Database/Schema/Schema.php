@@ -94,7 +94,7 @@ class Schema
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
 
-        $this->schemaConverter = new Converter($this->metadata, $this->fileManager);
+        $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this);
 
         $this->ormMetadata = $ormMetadata;
     }
@@ -312,5 +312,54 @@ class Schema
         }
     }
 
+    public function getMaxIndexLength()
+    {
+        $connection = $this->getConnection();
+        $schema = new \Espo\Core\Utils\Database\DBAL\Schema\Schema();
 
+        $tableName = 'temp_' . uniqid();
+        $table = $schema->createTable($tableName);
+
+        $table->addColumn('id', 'varchar', array(
+            'length' => 50,
+        ));
+
+        $table->addColumn('column3072', 'varchar', array(
+            'length' => 1020,
+            'platformOptions' => array(
+                'collation' => 'utf8_unicode_ci',
+            ),
+        ));
+
+        $table->addColumn('column1000', 'varchar', array(
+            'length' => 332,
+            'platformOptions' => array(
+                'collation' => 'utf8_unicode_ci',
+            ),
+        ));
+
+        $table->setPrimaryKey(array("id"));
+
+        $table->addIndex(['column3072'], 'IDX_COLUMN3072');
+        $queries = $schema->toSql($this->getPlatform());
+
+        try {
+            $connection->executeQuery($queries[0]);
+            $connection->getSchemaManager()->dropTable($tableName);
+            return 3072; //InnoDB, MySQL 5.7+
+        } catch (\Exception $e) {}
+
+        $table->dropIndex('IDX_COLUMN3072');
+        $table->addIndex(['column1000'], 'IDX_COLUMN1000');
+        $queries = $schema->toSql($this->getPlatform());
+
+        try {
+            $connection->executeQuery($queries[0]);
+            $connection->getSchemaManager()->dropTable($tableName);
+            return 1000; //MyISAM
+        } catch (\Exception $e) {}
+
+        $connection->getSchemaManager()->dropTable($tableName);
+        return 767; //InnoDB
+    }
 }

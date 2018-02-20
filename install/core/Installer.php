@@ -191,11 +191,11 @@ class Installer
     public function saveData($database, $language)
     {
         $initData = include('install/core/afterInstall/config.php');
-
         $siteUrl = $this->getSystemHelper()->getBaseUrl();
+        $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
 
         $data = array(
-            'database' => $database,
+            'database' => array_merge($databaseDefaults, $database),
             'language' => $language,
             'siteUrl' => $siteUrl,
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
