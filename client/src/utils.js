@@ -51,6 +51,78 @@ Espo.define('utils', [], function () {
             return hasAccess;
         },
 
+        checkAccessDataList: function (dataList, acl, user, entity) {
+            if (!dataList || !dataList.length) {
+                return true;
+            }
+
+            for (var i in dataList) {
+                var item = dataList[i];
+                if (item.scope) {
+                    if (item.action) {
+                        if (!acl.check(item.scope, item.action)) {
+                            return false;
+                        }
+                    } else {
+                        if (!acl.checkScope(item.scope)) {
+                            return false;
+                        }
+                    }
+                } else if (item.action) {
+                    if (entity) {
+                        if (!acl.check(entity, item.action)) {
+                            return false;
+                        }
+                    }
+                }
+                if (item.teamIdList) {
+                    if (user) {
+                        var inTeam = false;
+                        user.getLinkMultipleIdList('teams').forEach(function (teamId) {
+                            if (~item.teamIdList.indexOf(teamId)) {
+                                inTeam = true;
+                            }
+                        });
+                        if (!inTeam) return false;
+                    }
+                }
+                if (item.portalIdList) {
+                    if (user) {
+                        var inPortal = false;
+                        user.getLinkMultipleIdList('portals').forEach(function (portalId) {
+                            if (~item.portalIdList.indexOf(portalId)) {
+                                inPortal = true;
+                            }
+                        });
+                        if (!inPortal) return false;
+                    }
+                }
+                if (item.isPortalOnly) {
+                    if (user) {
+                        if (!user.isPortal()) {
+                            return false;
+                        }
+                    }
+                } else if (item.inPortalDisabled) {
+                    if (user) {
+                        if (user.isPortal()) {
+                            return false;
+                        }
+                    }
+                }
+
+                if (item.isAdminOnly) {
+                    if (user) {
+                        if (!user.isAdmin()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        },
+
         convert: function (string, p) {
             if (string == null) {
                 return string;
