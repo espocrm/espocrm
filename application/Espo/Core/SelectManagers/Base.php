@@ -206,12 +206,12 @@ class Base
             }
         }
 
-        $whereClause = $this->convertWhere($where);
+        $whereClause = $this->convertWhere($where, false, $result);
 
         $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
     }
 
-    public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false)
+    public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
     {
         $whereClause = [];
 
