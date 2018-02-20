@@ -89,6 +89,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 item = item || {};
                 if (item.inPortalDisabled && this.getUser().isPortal()) return false;
                 if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+                if (item.accessDataList) {
+                    if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                        return false;
+                    }
+                }
                 return true;
             }, this).map(function (item) {
                 if (typeof item === 'string') return item;
@@ -112,6 +117,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 item = item || {};
                 if (item.inPortalDisabled && this.getUser().isPortal()) return false;
                 if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+                if (item.accessDataList) {
+                    if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                        return false;
+                    }
+                }
                 return true;
             }, this);
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {

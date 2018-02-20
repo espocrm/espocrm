@@ -244,6 +244,11 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                             return;
                         }
                     }
+                    if (p.accessDataList) {
+                        if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
+                            return false;
+                        }
+                    }
                     return true;
                 }, this);
 
