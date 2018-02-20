@@ -77,7 +77,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             return {
                 mode: this.mode,
-                modeList: this.modeList,
+                modeDataList: this.getModeDataList(),
                 header: this.header,
                 calendarType: this.calendarType,
                 scopeFilterDataList: scopeFilterDataList,
@@ -197,6 +197,18 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (!~this.calendarTypeList.indexOf(this.calendarType)) {
                 this.calendarType = 'single';
             }
+        },
+
+        getModeDataList: function () {
+            var list = [];
+            this.modeList.forEach(function (name) {
+                var o = {
+                    name: name,
+                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2)
+                };
+                list.push(o);
+            }, this);
+            return list;
         },
 
         getCalendarTypeDataList: function () {
