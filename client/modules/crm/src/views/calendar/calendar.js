@@ -74,8 +74,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             }, this);
 
             return {
+                todayShortLabel: this.translate('Today', 'labels', 'Calendar').substr(0, 2),
                 mode: this.mode,
-                modeList: this.modeList,
+                modeDataList: this.getModeDataList(),
                 header: this.header,
                 scopeFilterDataList: scopeFilterDataList
             };
@@ -171,6 +172,18 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.storeEnabledScopeList(this.enabledScopeList);
 
             this.$calendar.fullCalendar('refetchEvents');
+        },
+
+        getModeDataList: function () {
+            var list = [];
+            this.modeList.forEach(function (name) {
+                var o = {
+                    name: name,
+                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2)
+                };
+                list.push(o);
+            }, this);
+            return list;
         },
 
         getStoredEnabledScopeList: function () {
