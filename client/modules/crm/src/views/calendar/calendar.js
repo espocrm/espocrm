@@ -417,6 +417,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 slotDuration: slotDuration,
                 snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
+                longPressDelay: 300,
                 windowResize: function () {
                     this.adjustSize();
                 }.bind(this),
