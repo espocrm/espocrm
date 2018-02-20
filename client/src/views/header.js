@@ -39,6 +39,9 @@ Espo.define('views/header', 'view', function (Dep) {
             }
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
+
+            data.isXsSingleRow = this.options.isXsSingleRow;
+
             return data;
         },
 

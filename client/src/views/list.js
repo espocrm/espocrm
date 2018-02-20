@@ -96,7 +96,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.createView('header', this.headerView, {
                 collection: this.collection,
                 el: '#main > .page-header',
-                scope: this.scope
+                scope: this.scope,
+                isXsSingleRow: true
             });
         },
 
