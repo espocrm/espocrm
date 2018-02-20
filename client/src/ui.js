@@ -237,6 +237,13 @@ Espo.define('ui', [], function () {
             }
         }.bind(this));
 
+        var $modalConainer = $('.modal-container');
+        $modalConainer.each(function (i, el) {
+            if (i < $modalConainer.size() - 1) {
+                $(el).addClass('overlaid');
+            }
+        }.bind(this));
+
         this.$el.off('click.dismiss.bs.modal');
         this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
             this.close();
@@ -253,6 +260,10 @@ Espo.define('ui', [], function () {
     Dialog.prototype.close = function () {
         var $modalBackdrop = $('.modal-backdrop');
         $modalBackdrop.last().removeClass('hidden');
+
+        var $modalConainer = $('.modal-container');
+        $($modalConainer.get($modalConainer.size() - 2)).removeClass('overlaid');
+
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     };
