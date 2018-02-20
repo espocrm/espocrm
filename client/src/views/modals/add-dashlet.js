@@ -74,6 +74,12 @@ Espo.define('views/modals/add-dashlet', 'views/modal', function (Dep) {
                         return;
                     }
                 }
+                var accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
+                if (accessDataList) {
+                    if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
+                        return false;
+                    }
+                }
                 this.dashletList.push(item);
             }, this);
         },
