@@ -1,148 +1,148 @@
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
+                    GNU KADAGHANAN PUBLIKO LISENSYA
+                       BERSYON 3, 29 HUNYO 2007
 
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
+ Copyright (C) 2007 Libre Software Pundasyon, Inc. <http://fsf.org/>
+ Ge tugtan ang tanan pa copyahon og eh hatag ang verbatim copies
+ ni ining lisensyadong dokumento, busa dili pwedeng mausab.
 
-                            Preamble
+                           Pamulong
 
-  The GNU General Public License is a free, copyleft license for
-software and other kinds of works.
+  Ang GNU Kadaghanan Publiko Lisensya kay libre, copyleft lisensya para
+software og bisag unsang trabahoun.
 
-  The licenses for most software and other practical works are designed
-to take away your freedom to share and change the works.  By contrast,
-the GNU General Public License is intended to guarantee your freedom to
-share and change all versions of a program--to make sure it remains free
-software for all its users.  We, the Free Software Foundation, use the
-GNU General Public License for most of our software; it applies also to
-any other work released this way by its authors.  You can apply it to
-your programs, too.
+  Ang lisensya para sa naglabing software og ubang mga practical na trabahoun para designed
+kuhaon og ipalayo inyong kaluwasan mo ambit og utrohon ang trabaho.  Sa kalainan,
+Ang GNU Kadaghanan Publiko Lisensya maoy gituyo para pasalig imong  kaluwasan para
+ambit og utrohon ang tanang bersyon sa programa--para masiguro magpa biling libre
+software para sa tanang manggagamit. Kami, Ang Libreng Software Pundasyon, gagamit og
+GNU General Publiko Lisensya para sa kadaghanan sa atong software; kini ma aplay pod sa
+laing mga trabahoun mahatag kini sa taga sulat.  Pwede pod nimo ma aplay sa
+imong programa, pud.
 
-  When we speak of free software, we are referring to freedom, not
-price.  Our General Public Licenses are designed to make sure that you
-have the freedom to distribute copies of free software (and charge for
-them if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs, and that you know you can do these things.
+  Kanus-a Kami mo storya sa libreng software, Kami kay nag referring sa kaluwasan, dili
+presyo.  Among Kadaghanan Publiko Lisensya kay nag designed para ma sigurong ikaw
+naay kaluwasan para ma apod-apod copya sa libreng software (og kargahan para
+saila og gusto ka), kana imong receive source code o pwede makuha kong imong
+kagustohan, kana ikaw pwedeng mautro ang software o magamit isa-isa kana sa bag-ong
+libreng programa, og kana ikaw nakahibaw na makahimo ining butanga.
 
-  To protect your rights, we need to prevent others from denying you
-these rights or asking you to surrender the rights.  Therefore, you have
-certain responsibilities if you distribute copies of the software, or if
-you modify it: responsibilities to respect the freedom of others.
+  Ug protektahan nimo imong dignidad, Kita kailangan nato pugngan ang uban gikan sa pag ilad saimong
+mga dignidad o pahibaw-on na ikaw dapat mo suko saimong dignidad.  Busa, ikaw naay
+tinong responsibilities kong ikaw nag apod-apod sa copya sa software, o kong
+imong ge usab kana: responsibilities nimo respitohon ang kaluwasan sa lain.
 
-  For example, if you distribute copies of such a program, whether
-gratis or for a fee, you must pass on to the recipients the same
-freedoms that you received.  You must make sure that they, too, receive
-or can get the source code.  And you must show them these terms so they
-know their rights.
+  Pananglitan, og ikaw nag apod-apod copya sa kining programa, whether
+gratis o kundi libre, ikaw dapat mag pass og sa niining recipients ang parehang
+kaluwasan saimong na dawat.  Ikaw dapat kailangan siguradoun nga sila, pod, dawata
+o kwaon ang source code. Ug ikaw dapat makig kita saila sa mga terms para sila
+maka hibaw sailang dignidad.
 
-  Developers that use the GNU GPL protect your rights with two steps:
-(1) assert copyright on the software, and (2) offer you this License
-giving you legal permission to copy, distribute and/or modify it.
+  Palamboun kadtong nagamit ang GNU GPL protekta imong dignidad sa duha ka steps:
+(1) assert copyright sa software, og (2) mo halad ka kining Lisensya
+  hatagan ikaw og legal na permisyon mo copya, apod-apod og/o usaban kana.
 
-  For the developers' and authors' protection, the GPL clearly explains
-that there is no warranty for this free software.  For both users' and
-authors' sake, the GPL requires that modified versions be marked as
-changed, so that their problems will not be attributed erroneously to
-authors of previous versions.
+  Para ang developers' og taga sulat' protektahan, Ang GPL malinawon explinasyon
+kana naa jud dili garantiya para sa libreng software.  Para sa duha ka users' og
+taga sulat' hinungdan, Ang GPL kinahanglan na usbon ang bersyon og mamarkahan nga
+usbon, para maoy ilang problema dili kana ma hiyas erroneously sa
+taga sulat sa nahauna bersyon.
 
-  Some devices are designed to deny users access to install or run
-modified versions of the software inside them, although the manufacturer
-can do so.  This is fundamentally incompatible with the aim of
-protecting users' freedom to change the software.  The systematic
-pattern of such abuse occurs in the area of products for individuals to
-use, which is precisely where it is most unacceptable.  Therefore, we
-have designed this version of the GPL to prohibit the practice for those
-products.  If such problems arise substantially in other domains, we
-stand ready to extend this provision to those domains in future versions
-of the GPL, as needed to protect the freedom of users.
+  Pipilang kasangkapan ay plano sa limod users pag sulod sa pag taod o pag dagan
+usbon bersyon sa software sulod nila, bisan ang tigpabrika
+maka buhat pod.  Kining fundamentally incompatible uban ang plano sa
+nagprotektas users' kaluwasan sa pag bag-o ang software.  Ang sistematiko
+hulmahan sa ingong abusong hitabu lugar sa produkto para indibidwal sa
+gamiton, ikapila ta mag impunto diin kana maong kadaghanan dili madawat.  Busa, kami
+naay plano para bersyon sa ang GPL kay did-an ang praktis sa mga
+produkto.  Ug ingon sa problema tigbabaw substantially sa laing domains, kaming tanan
+ni tindog og andam sa sumpay nga probesyon sa mga domains sa kaogmaong bersion
+mao ang GPL, kina kailangan og protekta ang kaluwasan sa users.
 
-  Finally, every program is threatened constantly by software patents.
-States should not allow patents to restrict development and use of
-software on general-purpose computers, but in those that do, we wish to
-avoid the special danger that patents applied to a free program could
+  Kataposan, taga programa mao gehadlok permenti sa mga software patents.
+Pamahalaan dili pwede mo patents sa ipag bawal sa development og gamit sa
+software sa heneral-purpose komputers, pero sa mga kantigo, kami gusto na ma
+likayan ang spesyal nga delikado sa patents para aplyan sa libreng programa inig
 make it effectively proprietary.  To prevent this, the GPL assures that
-patents cannot be used to render the program non-free.
+patents dili dayun ma gamit sa render ang programa dili-libre.
 
-  The precise terms and conditions for copying, distribution and
-modification follow.
+  Ang takbo terms og kondisyon sa pag copya, distribusyon og
+modipikasyon isunod.
 
-                       TERMS AND CONDITIONS
+                       TERMS OG KONDISYON
 
-  0. Definitions.
+  0. Depinasyon.
 
-  "This License" refers to version 3 of the GNU General Public License.
+  "Kining Lisenya" para sa bersyon 3 ng GNU Heneral Publiko Lisenya.
 
-  "Copyright" also means copyright-like laws that apply to other kinds of
-works, such as semiconductor masks.
+  "Copyright" og sa copyright-kining balaod nga ge aplay sa mga laeng
+trabahoun, kining sa semiconductor maskara.
 
-  "The Program" refers to any copyrightable work licensed under this
-License.  Each licensee is addressed as "you".  "Licensees" and
-"recipients" may be individuals or organizations.
+  "Ang Programa" paingon sa bisag unsang copyrightable trabaho lisensya ilalom kinis
+Lisensya.  taga usa sa lisensya nga addressed sa "imo".  "Linsensya" og
+"recipients" nga pwede indibidwal o organisasyon.
 
-  To "modify" a work means to copy from or adapt all or part of the work
-in a fashion requiring copyright permission, other than the making of an
-exact copy.  The resulting work is called a "modified version" of the
-earlier work or a work "based on" the earlier work.
+  Para "usbon" dapat trabaho pariha sa kopya gikan o adapt sa tanan o parti sa trabaho
+inig ka pasyon ge inkwarye copyright permisyon, lain kaysa ang pag himo sa dili
+parihang copya.  Ang resultas trabaho ang tawag kay "usbon bersyon" sa maong
+sayung trabahoun o inig trabaho "basihon" ang sayu nga trabaho.
 
-  A "covered work" means either the unmodified Program or a work based
-on the Program.
+  A "getabunang trabaho" kini basin ang dili usbong Programa o ang trabahoun basi
+sa Programa.
 
-  To "propagate" a work means to do anything with it that, without
-permission, would make you directly or secondarily liable for
-infringement under applicable copyright law, except executing it on a
-computer or modifying a private copy.  Propagation includes copying,
-distribution (with or without modification), making available to the
-public, and in some countries other activities as well.
+  Para "propagate" ang trabaho daw kay buhaton bisag unsa kauban bisag kana, maskin wala
+tugote, kanang dali raka direktahon o ikaduha liable para
+infringement ilalom sa applikable copyright balaod, pero naay pipila na buhaton para sa
+kumpyoter o usbanonon ang pribadong kopya.  Propagation ma apil ang kopya,
+distribusyon (naa o walay usabanonon), naghimo og available na ang
+publiko, og sa laing nasud laing programa niini.
 
-  To "convey" a work means any kind of propagation that enables other
-parties to make or receive copies.  Mere interaction with a user through
-a computer network, with no transfer of a copy, is not conveying.
+  Para "convey" ang trabaho dapat naay laing lahi nga propagation kanang pwede sa laing
+partis para maka buhat o hatagan og copya. Mere interaksyon sa mga user lahos
+sa kompyoter trabahoun, sa dili ma trasnfer sa dili conveying
 
-  An interactive user interface displays "Appropriate Legal Notices"
-to the extent that it includes a convenient and prominently visible
-feature that (1) displays an appropriate copyright notice, and (2)
-tells the user that there is no warranty for the work (except to the
-extent that warranties are provided), that licensees may convey the
-work under this License, and how to view a copy of this License.  If
-the interface presents a list of user commands or options, such as a
-menu, a prominent item in the list meets this criterion.
+  Ang interaktibong user interface display "Appropriate Legal Notices"
+para ang extensyon ay ma apil ang hamugaway og promenently inbesibol
+feature mao nang (1) displays og dili ba balik ang pagka copyright notice, og (2)
+nag sulte ang user nga naay walay waranti para sa trabaho (busa sa kadtong naay
+extent nga warranties nga apilon), ang lisensya nag pa toud nga convey ang
+trabaho ilalom sa lisensya, og unsa ang tan aw sa kopya nga lisensya. Ug
+ang interface nag presenta og listahan sa user commands o opsyon, mao ang
+menu, ang prominent nga item sa listahan sa makig kita sa criterion.
 
   1. Source Code.
 
-  The "source code" for a work means the preferred form of the work
-for making modifications to it.  "Object code" means any non-source
-form of a work.
+  Ang "source code" para sa trabaho nag pa toud ang preferred form sa mga trabho
+para makabuhat og usabanonon pod. "Object code" nag pamatoud lain laing dili-source
+form sa trabaho.
 
-  A "Standard Interface" means an interface that either is an official
-standard defined by a recognized standards body, or, in the case of
-interfaces specified for a particular programming language, one that
-is widely used among developers working in that language.
+  Ang "Standard Interface" ay an interface mao na nga opisyal o dili
+standard kay sa iyang pag recognized ang standard na lawas, o ang iyang kaso sa
+interfaces ge klaro ang partikular nga programming linguahe, isa ang
+pag laki ng nagawa sa ibang debelopers trabahante sa kaning linguahe.
 
-  The "System Libraries" of an executable work include anything, other
-than the work as a whole, that (a) is included in the normal form of
-packaging a Major Component, but which is not part of that Major
-Component, and (b) serves only to enable use of the work with that
-Major Component, or to implement a Standard Interface for which an
-implementation is available to the public in source code form.  A
-"Major Component", in this context, means a major essential component
-(kernel, window system, and so on) of the specific operating system
-(if any) on which the executable work runs, or a compiler used to
-produce the work, or an object code interpreter used to run it.
+  Ang "Sistema Libraries" sa an executable trabaho apil ang bisan unsa, laen
+kaysa ang trabaho nga kita tanan, kana (a) mao apil ang normal nga form sa
+mag tabon sa Major Component, pero dili siya apil sa kanang Major
+Component, og (b) serbisyo lang sa mga magamit sa trabaho apil kadtong
+Major Component, o mao ang pag implemment sa Standard Interface sa kanang
+implementation na available sa public inig source code form. Ang
+"Major Component", kining conteksto, kini siya ang major essential component
+(kernel, window system, og uban pa) og ang iyang klarong ayohanan nga sistema
+(ug naa) kini maoy atong executable trabo padaganon, o ang kompayler ni gamit sa
+ge produs nga trabaho, o isa ka object code ne gamit og interpreter para mo dagan kini.
 
-  The "Corresponding Source" for a work in object code form means all
-the source code needed to generate, install, and (for an executable
-work) run the object code and to modify the work, including scripts to
-control those activities.  However, it does not include the work's
-System Libraries, or general-purpose tools or generally available free
-programs which are used unmodified in performing those activities but
-which are not part of the work.  For example, Corresponding Source
-includes interface definition files associated with source files for
-the work, and the source code for shared libraries and dynamically
-linked subprograms that the work is specifically designed to require,
-such as by intimate data communication or control flow between those
-subprograms and other parts of the work.
+  Ang "Corresponding Source" para sa trabaho kining object code form sa tanan
+ang source code kailangang pa kini ma generate, install, og (sa kining executable
+trabaho) padaganon usa ang object code og kini ma modify ang trabaho, apil ang scripts og
+controlon dayun ang activities. Pero, walay labot ang trabaho
+Systema Libraries, o heneral-purpose tools o generally available libreng
+programa para sa nag gamit og dili usbon nga perpormans nga activities pero
+ikapila nga dili parti nga trabahoun. Para ani, Corresponding Source
+labot ang interface depinisyon files ge associated uban sa source nga files para
+ang trabaho, og ang source code nga ge shared libraries og dynamically
+linked subprograma kini ang trabaho sa klarohon nga desinsyo nga ge require,
+nga ge intimate data nag ka sinabot o nag control sa usag usa nila
+subprograma og laing parti nga trabaho.
 
   The Corresponding Source need not include anything that users
 can regenerate automatically from other parts of the Corresponding
