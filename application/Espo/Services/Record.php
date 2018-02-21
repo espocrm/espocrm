@@ -1824,6 +1824,17 @@ class Record extends \Espo\Core\Services\Base
                     $attributes->{$field . 'Names'} = $nameHash;
                     $attributes->{$field . 'Types'} = $typeHash;
                 }
+            } else if ($type === 'linkMultiple') {
+                $foreignLink = $entity->getRelationParam($field, 'foreign');
+                $foreignEntityType = $entity->getRelationParam($field, 'entity');
+                if ($foreignEntityType && $foreignLink) {
+                    $foreignRelationType = $this->getMetadata()->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']);
+                    if ($foreignRelationType !== 'hasMany') {
+                        unset($attributes->{$field . 'Ids'});
+                        unset($attributes->{$field . 'Names'});
+                        unset($attributes->{$field . 'Columns'});
+                    }
+                }
             }
         }
 
