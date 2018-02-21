@@ -422,8 +422,8 @@ InstallScript.prototype.checkSett = function(opt) {
 				if (typeof(errors.phpVersion) !== 'undefined') {
 					msg += self.getLang('phpVersion', 'messages').replace('{minVersion}', errors.phpVersion) + rowDelim;
 				}
-				if (typeof(errors.MySQLVersion) !== 'undefined') {
-					msg += self.getLang('MySQLVersion', 'messages').replace('{minVersion}', errors.MySQLVersion) + rowDelim;
+				if (typeof(errors.mysqlVersion) !== 'undefined') {
+					msg += self.getLang('mysqlVersion', 'messages').replace('{minVersion}', errors.mysqlVersion) + rowDelim;
 				}
 
 				if (typeof(errors.phpRequires) !== 'undefined') {

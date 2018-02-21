@@ -82,7 +82,7 @@
     "Bad init Permission": "Permesso negato a \"{*}\" directory. Impostare 775 per \"{*}\" o semplicemente eseguire questo comando nel terminale <pre><b>{C}</b></pre>\n\tOperazione non permessa? Prova questo: {CSU}",
     "Some errors occurred!": "Alcuni errori si sono verificati!",
     "phpVersion": "la versione di PHP in uso non è supportata da EspoCRM, aggiornare PHP dalla versione {minVersion} in poi.",
-    "MySQLVersion": "la versione di MySQL in uso non è supportata da EspoCRM, si raccomanda di aggiornare MySQL almeno alla versione {minVersion}.",
+    "mysqlVersion": "la versione di MySQL in uso non è supportata da EspoCRM, si raccomanda di aggiornare MySQL almeno alla versione {minVersion}.",
     "The PHP extension was not found...": "PHP Errore: l'Estensione <b>{extName}</b> non è stata trovata.",
     "All Settings correct": "Tutte le impostazioni sono corrette",
     "Failed to connect to database": "Impossibile connettersi al database",

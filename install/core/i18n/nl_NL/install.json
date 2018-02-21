@@ -80,7 +80,7 @@
 		"Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in voor \"{*}\" of voer deze opdracht uit in Terminal <pre><b>{C}</b></pre>\n\tHandeling niet toegestaan? Probeer deze: {CSU}",
 		"Some errors occurred!": "Er zijn fouten gevonden!",
 		"phpVersion": "Uw PHP versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar PHP {minVersion}",
-		"MySQLVersion": "Uw MySQL versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar MySQL {minVersion}",
+		"mysqlVersion": "Uw MySQL versie wordt niet ondersteund door EspoCRM, u moet minimaal updaten naar MySQL {minVersion}",
 		"The PHP extension was not found...": "PHP Error: Extension <b>{extName}</b> is not found.",
 		"All Settings correct": "Alle Instellingen zijn juist",
 		"Failed to connect to database": "Kan geen verbinding maken met de database",

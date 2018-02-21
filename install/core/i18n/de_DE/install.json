@@ -82,7 +82,7 @@
     "Bad init Permission": "Zugriff auf Verzeichnis \"{*}\" verweigert. Bitte setzen Sie die Berechtigung 775 für \"{*}\" oder führen Sie dieses Kommando in einem Terminalfenster aus <pre><b>{C}</b></pre> Operation nicht erlaubt? Versuchen Sie folgendes: {CSU}",
     "Some errors occurred!": "Es sind Fehler aufgetreten!",
     "phpVersion": "Ihre PHP Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf {minVersion}",
-    "MySQLVersion": "Ihre MySQL Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MySQL {minVersion}",
+    "mysqlVersion": "Ihre MySQL Version wird von EspoCRM nicht unterstützt. Bitte aktualisieren Sie zumindest auf MySQL {minVersion}",
     "The PHP extension was not found...": "PHP Fehler: Erweiterung <b>{extName}</b> wurde nicht gefunden.",
     "All Settings correct": "Alle Einstellungen sind korrekt",
     "Failed to connect to database": "Konnte nicht zur Datenbank verbinden",

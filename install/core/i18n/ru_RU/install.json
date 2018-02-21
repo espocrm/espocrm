@@ -82,7 +82,7 @@
     "Bad init Permission": "Запрещен доступ к директории \"{*}\". Пожалуйста, установите права 775 для \"{*}\" или просто выполните эту команду в терминале <pre><b>{C}</b></pre>\n\tОперация не разрешена? Попробуйте это: {CSU}",
     "Some errors occurred!": "Произошло несколько ошибок!",
     "phpVersion": "Установленная версия PHP не поддерживается EspoCRM, обновите РНР по крайней мере до версии {MinVersion}",
-    "MySQLVersion": "Установленная версия MySQL не поддерживается EspoCRM, обновите MySQL по крайней мере до версии {minVersion}",
+    "mysqlVersion": "Установленная версия MySQL не поддерживается EspoCRM, обновите MySQL по крайней мере до версии {minVersion}",
     "The PHP extension was not found...": "Ошибка PHP: расширение <b>{extName}</b> не найдено.",
     "All Settings correct": "Все настройки верны",
     "Failed to connect to database": "Не удалось подключиться к базе данных",

@@ -82,7 +82,7 @@
     "Bad init Permission": "权限被拒绝对“{*}”目录中。为请设置775“{*}”，或只是在终端执行此命令<pre> <B> {C}里</ B> </ pre>\n不允许操作？试试这个：{CSU}",
     "Some errors occurred!": "发生了一些错误！",
     "phpVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
-    "MySQLVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
+    "mysqlVersion": "你的PHP版本不支持EspoCRM，请升级到 {minVersion} 或更高版本",
     "The PHP extension was not found...": "未找到PHP错误：未找到扩展名<b> {extName} </ b>。",
     "All Settings correct": "所有设置正确",
     "Failed to connect to database": "无法连接到数据库",

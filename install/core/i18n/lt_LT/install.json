@@ -76,7 +76,7 @@
     "Bad init Permission": "Leidimas nesuteiktas \"{*}\" katalogui. Prašome nustatyti 775 teises \"{*}\" arba tiesiog paleiskite šią komandą į terminalą <pre> <b> (C) </ b> </ pre>\nOperacija neleidžiama? Išbandykite šį: {CSU}",
     "Some errors occurred!": "Įvyko kelios klaidos!",
     "phpVersion": "EspoCRM nepalaiko jūsų PHP versijos, bent jau atnaujinkite iki PHP {minVersion}",
-    "MySQLVersion": "Jūsų \"MySQL\" versija nepalaikoma EspoCRM, prašome atnaujinti bent iki \"MySQL\" (minVersion)",
+    "mysqlVersion": "Jūsų \"MySQL\" versija nepalaikoma EspoCRM, prašome atnaujinti bent iki \"MySQL\" (minVersion)",
     "The PHP extension was not found...": "PHP klaida: plėtinys <b> {extName} </ b> nerastas.",
     "All Settings correct": "Visi nustatymai yra teisingi",
     "Failed to connect to database": "Nepavyko prisijungti prie duomenų bazės",

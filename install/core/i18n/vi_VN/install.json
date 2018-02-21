@@ -69,7 +69,7 @@
 		"Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation not permitted? Try this one: {CSU}",
 		"Some errors occurred!": "Đã có lỗi xảy ra!",
 		"phpVersion": "Your PHP version is not supported by EspoCRM, please update to PHP {minVersion} at least",
-		"MySQLVersion": "Your MySQL version is not supported by EspoCRM, please update to MySQL {minVersion} at least",
+		"mysqlVersion": "Your MySQL version is not supported by EspoCRM, please update to MySQL {minVersion} at least",
 		"The PHP extension was not found...": "Không tìm thấy phần mở rộng <b>{extName}</b> của PHP",
 		"All Settings correct": "cài đặt thành công",
 		"Failed to connect to database": "Không thể kết nối tới csdl",
