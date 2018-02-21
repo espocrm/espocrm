@@ -26,9 +26,16 @@
             "teams": "to particular team(s)",
             "all": "to all internal users",
             "portals": "to portal users"
+        },
+        "type": {
+            "Post": "Post"
         }
     },
     "messages": {
         "writeMessage": "Write your message here"
+    },
+    "links": {
+        "superParent": "Super Parent",
+        "related": "Related"
     }
 }
