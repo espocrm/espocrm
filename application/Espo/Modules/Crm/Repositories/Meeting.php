@@ -36,16 +36,18 @@ class Meeting extends \Espo\Core\Repositories\Event
 {
     protected function beforeSave(Entity $entity, array $options = array())
     {
+        if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
+            $entity->set('accountId', null);
+        }
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
-        if (!empty($parentId) || !empty($parentType)) {
+        if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-            if (!empty($parent)) {
+            if ($parent) {
                 $accountId = null;
                 if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
-                } else if ($parent->get('accountId')) {
-                    $accountId = $parent->get('accountId');
                 } else if ($parent->getEntityType() == 'Lead') {
                     if ($parent->get('status') == 'Converted') {
                         if ($parent->get('createdAccountId')) {
@@ -53,7 +55,10 @@ class Meeting extends \Espo\Core\Repositories\Event
                         }
                     }
                 }
-                if (!empty($accountId)) {
+                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+                    $accountId = $parent->get('accountId');
+                }
+                if ($accountId) {
                     $entity->set('accountId', $accountId);
                 }
             }

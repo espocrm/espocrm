@@ -16,7 +16,9 @@
         "reminders": "Reminders"
     },
     "links": {
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "account": "Account",
+        "contact": "Contact"
     },
     "options": {
         "status": {

@@ -249,17 +249,23 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
             $entity->setLinkMultipleColumn('users', 'isRead', $entity->get('createdById'), true);
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
+            $entity->set('accountId', null);
+        }
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
-        if (!empty($parentId) || !empty($parentType)) {
+        if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-            if (!empty($parent)) {
+            if ($parent) {
+                $accountId = null;
                 if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
-                } else if ($parent->has('accountId')) {
+                }
+                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
                     $accountId = $parent->get('accountId');
                 }
-                if (!empty($accountId)) {
+                if ($accountId) {
                     $account = $this->getEntityManager()->getEntity('Account', $accountId);
                     if ($account) {
                         $entity->set('accountId', $accountId);

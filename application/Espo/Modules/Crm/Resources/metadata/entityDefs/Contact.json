@@ -395,6 +395,12 @@
             "entity": "Document",
             "foreign": "contacts",
             "audited": true
+        },
+        "tasksPrimary": {
+            "type": "hasMany",
+            "entity": "Task",
+            "foreign": "contact",
+            "layoutRelationshipsDisabled": true
         }
     },
     "collection": {
