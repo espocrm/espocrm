@@ -31,6 +31,7 @@
         "account": "Account (Primary)",
         "accounts": "Accounts",
         "casesPrimary": "Cases (Primary)",
+        "tasksPrimary": "Tasks (expanded)",
         "portalUser": "Portal User",
         "originalLead": "Original Lead",
         "documents": "Documents"

@@ -103,25 +103,45 @@ class Task extends \Espo\Core\Repositories\Event
             }
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('parentId')) {
+            $entity->set('accountId', null);
+            $entity->set('contactId', null);
+        }
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
-        if (!empty($parentId) || !empty($parentType)) {
+        if ($parentId && $parentType) {
             $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-            if (!empty($parent)) {
+            if ($parent) {
                 $accountId = null;
+                $contactId = null;
                 if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
-                } else if ($parent->get('accountId')) {
-                    $accountId = $parent->get('accountId');
                 } else if ($parent->getEntityType() == 'Lead') {
                     if ($parent->get('status') == 'Converted') {
                         if ($parent->get('createdAccountId')) {
                             $accountId = $parent->get('createdAccountId');
                         }
+                        if ($parent->get('createdContactId')) {
+                            $contactId = $parent->get('createdContactId');
+                        }
                     }
+                } else if ($parent->getEntityType() == 'Contact') {
+                    $contactId = $parent->id;
                 }
-                if (!empty($accountId)) {
+
+                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+                    $accountId = $parent->get('accountId');
+                }
+                if (!$contactId && $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact') {
+                    $contactId = $parent->get('contactId');
+                }
+
+                if ($accountId) {
                     $entity->set('accountId', $accountId);
+                }
+                if ($contactId) {
+                    $entity->set('contactId', $contactId);
                 }
             }
         }

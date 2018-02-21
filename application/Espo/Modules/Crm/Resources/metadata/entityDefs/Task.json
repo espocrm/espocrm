@@ -66,6 +66,10 @@
             "type": "link",
             "readOnly": true
         },
+        "contact": {
+            "type": "link",
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -126,6 +130,10 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account"
+        },
+        "contact": {
+            "type": "belongsTo",
+            "entity": "Contact"
         }
     },
     "collection": {
