@@ -82,7 +82,7 @@
     "Bad init Permission": "Izin ditolak untuk \"{*}\" direktori. Silakan set 775 untuk \"{*}\" atau hanya menjalankan perintah ini di terminal <pre> <b> {C} </ b> </ pre>\nOperasi tidak diizinkan? Coba yang ini: {CSU}",
     "Some errors occurred!": "Terjadi kesalahan!",
     "phpVersion": "Versi PHP Anda tidak didukung oleh EspoCRM, silahkan update ke PHP {minVersion} setidaknya",
-    "MySQLVersion": "Versi MySQL anda tidak didukung oleh EspoCRM, silahkan update ke MySQL {minVersion} setidaknya",
+    "mysqlVersion": "Versi MySQL anda tidak didukung oleh EspoCRM, silahkan update ke MySQL {minVersion} setidaknya",
     "The PHP extension was not found...": "PHP error: Ekstensien <b> {extName} </ b> tidak ditemukan.",
     "All Settings correct": "Semua Pengaturan benar",
     "Failed to connect to database": "Gagal koneksi ke database",

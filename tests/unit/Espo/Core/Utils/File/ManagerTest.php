@@ -413,5 +413,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals($result, $this->reflection->invokeMethod('getExistsPath', array($input)) );
     }
-}
 
+    public function testCopyTestCase1()
+    {
+        $path = 'tests/unit/testData/FileManager/copy/testCase1';
+        $cachePath = $this->cachePath . '/copy/testCase1';
+
+        $expectedResult = [
+            'custom/Espo/Custom/Modules/ExtensionTest/File.json',
+            'custom/Espo/Custom/Modules/ExtensionTest/File.php',
+            'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
+        ];
+
+        $result = $this->object->copy($path, $cachePath, true);
+
+        if ($result) {
+            $this->assertEquals($expectedResult, $this->object->getFileList($cachePath, true, '', true, true));
+            $this->object->removeInDir($cachePath);
+        }
+    }
+}

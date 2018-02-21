@@ -54,7 +54,7 @@ return array(
             'upload_max_filesize' => '20M',
         ),
 
-        'mysqlVersion' => '5.1',
+        'mysqlVersion' => '5.5.3',
         'mysqlRequires' => array(
 
         ),

@@ -82,7 +82,7 @@
     "Bad init Permission": "Tilladelse nægtet for \"{*}\" mappe. Venligst sæt 775 for \"{*}\" eller kør denne kommando i et terminalvindue <pre><b>{C}</b></pre>\n    Handlingen ikke tilladt? Prøv dette: {CSU}",
     "Some errors occurred!": "Der opstod nogle fejl!",
     "phpVersion": "Din PHP version er ikke supporteret af EspoCRM, venligst opdater som minimum til PHP {minVersion}",
-    "MySQLVersion": "Din MySQL version er ikke supporteret af EspoCRM, venligst opdater som minimum til MySQL {minVersion}",
+    "mysqlVersion": "Din MySQL version er ikke supporteret af EspoCRM, venligst opdater som minimum til MySQL {minVersion}",
     "The PHP extension was not found...": "PHP-fejl: Udvidelsen <b>{extName}</b> blev ikke fundet.",
     "All Settings correct": "Alle indstillinger er korrekte.",
     "Failed to connect to database": "Kunne ikke forbinde til database.",

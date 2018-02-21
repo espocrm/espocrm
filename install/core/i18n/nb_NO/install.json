@@ -82,7 +82,7 @@
     "Bad init Permission": "Nektet tilgang til mappen \"{*}\". Vennligst endre rettighetene for \"{*}\" til 775 eller kjør følgende kommando i terminalen: <pre><b>{C}</b></pre>\n\tEr kommandoen ikke tillatt? Prøv denne: <pre>{CSU}</pre>",
     "Some errors occurred!": "Det oppstod noen feil!",
     "phpVersion": "Din PHP-versjon er ikke støtte av EspoCRM, Vennligst oppgrader til {minVersion} eller nyere.",
-    "MySQLVersion": "Din MySQL-versjon er ikke støttet av EspoCRM. Vennligst oppgrader til {minVersion} eller nyere.",
+    "mysqlVersion": "Din MySQL-versjon er ikke støttet av EspoCRM. Vennligst oppgrader til {minVersion} eller nyere.",
     "The PHP extension was not found...": "PHP-feil: Utvidelsen <b>{extName}</b> ble ikke funnet.",
     "All Settings correct": "Alle innstillingene er riktig",
     "Failed to connect to database": "Klarte ikke å koble til databasen",

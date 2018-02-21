@@ -82,7 +82,7 @@
     "Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre>\n\tOperation not permitted? Try this one: {CSU}",
     "Some errors occurred!": "Wystapiły błędy!",
     "phpVersion": "Wersja PHP nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji PHP {minVersion}",
-    "MySQLVersion": "Wersja MySQL nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MySQL {minVersion}",
+    "mysqlVersion": "Wersja MySQL nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MySQL {minVersion}",
     "The PHP extension was not found...": "PHP Error: Extension <b>{extName}</b> is not found.",
     "All Settings correct": "Wszystkie ustwienia są poprawne",
     "Failed to connect to database": "Błąd połączenia z bazą danych",
