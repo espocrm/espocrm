@@ -472,6 +472,13 @@ class Xlsx extends \Espo\Core\Injectable
 
                 $link = false;
 
+                $foreignLink = null;
+                $isForeign = false;
+                if (strpos($name, '_')) {
+                    $isForeign = true;
+                    list($foreignLink, $foreignField) = explode('_', $name);
+                }
+
                 if ($name == 'name') {
                     if (array_key_exists('id', $row)) {
                         $link = $this->getConfig()->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
@@ -482,7 +489,13 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                 } else if ($type == 'link') {
                     if (array_key_exists($name.'Id', $row)) {
-                        $foreignEntity = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $name, 'entity']);
+                        $foreignEntity = null;
+                        if (!$isForeign) {
+                            $foreignEntity = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $name, 'entity']);
+                        } else {
+                            $foreignEntity1 = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $foreignLink, 'entity']);
+                            $foreignEntity = $this->getMetadata()->get(['entityDefs', $foreignEntity1, 'links', $foreignField, 'entity']);
+                        }
                         if ($foreignEntity) {
                             $link = $this->getConfig()->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
                         }

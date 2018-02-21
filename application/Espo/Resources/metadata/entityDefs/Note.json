@@ -10,7 +10,9 @@
         },
         "type": {
             "type": "varchar",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/enum",
+            "options": ["Post"]
         },
         "targetType": {
             "type": "varchar"
