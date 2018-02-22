@@ -43,6 +43,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->metadata = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
         $this->entityManager = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
         $this->user = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
+        $this->injectableFactory = $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
 
         $this->entityManager
             ->expects($this->any())
@@ -85,7 +86,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testTestEmptySelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $selectParams = $selectManager->getEmptySelectParams();
@@ -98,7 +99,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testGetEmptySelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $selectParams = $selectManager->getEmptySelectParams();
@@ -111,7 +112,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testAccessOnlyOwn()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $this->user
@@ -145,7 +146,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testAccessOnlyTeam()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $this->user
@@ -182,7 +183,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testTextFilter()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $this->metadata
@@ -201,7 +202,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParams()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(
@@ -246,7 +247,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParamsNot()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(
@@ -276,7 +277,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     function testBuildSelectParamsComplex()
     {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config);
+        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType('Test2');
 
         $params = array(
