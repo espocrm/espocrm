@@ -36,6 +36,7 @@ use \Espo\Core\Acl;
 use \Espo\Core\AclManager;
 use \Espo\Core\Utils\Metadata;
 use \Espo\Core\Utils\Config;
+use \Espo\Core\InjectableFactory;
 
 class Base
 {
@@ -63,15 +64,15 @@ class Base
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
-    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config)
+    public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
         $this->aclManager = $aclManager;
-
         $this->metadata = $metadata;
         $this->config = $config;
+        $this->injectableFactory = $injectableFactory;
     }
 
     protected function getEntityManager()
@@ -102,6 +103,11 @@ class Base
     protected function getAclManager()
     {
         return $this->aclManager;
+    }
+
+    protected function getInjectableFactory()
+    {
+        return $this->injectableFactory;
     }
 
     public function setEntityType($entityType)
@@ -1333,6 +1339,20 @@ class Base
         $method = 'filter' . ucfirst($filterName);
         if (method_exists($this, $method)) {
             $this->$method($result);
+        } else {
+            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filterName, 'className']);
+            if ($className) {
+                if (!class_exists($className)) {
+                    $GLOBALS['log']->error("Could find class for filter {$filterName}.");
+                    return;
+                }
+                $impl = $this->getInjectableFactory()->createByClassName($className);
+                if (!$impl) {
+                    $GLOBALS['log']->error("Could not create filter {$filterName} implementation.");
+                    return;
+                }
+                $impl->applyFilter($filterName, $result);
+            }
         }
     }
 
