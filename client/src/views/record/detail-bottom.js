@@ -256,6 +256,18 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     this.setupRelationshipPanels();
                 }
 
+                var list1 = [];
+                var list2 = [];
+                this.panelList.forEach(function (item) {
+                    if (item.isBottom) {
+                        list2.push(item);
+                    } else {
+                        list1.push(item);
+                    }
+                });
+
+                this.panelList = list1.concat(list2);
+
                 this.setupPanelViews();
                 this.wait(false);
 
