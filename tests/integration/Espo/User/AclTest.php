@@ -190,6 +190,24 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         } catch (\Exception $e) {};
 
         $this->assertNull($result);
+
+
+        $params = [
+            'id' => $user1->id
+        ];
+        $data = [
+            'id' => $user1->id,
+            'isAdmin' => 1,
+            'teamsIds' => ['id']
+        ];
+        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+        $resultData = json_decode($result);
+
+        $this->assertTrue(!property_exists($resultData, 'isAdmin') || !$resultData->isAdmin);
+        $this->assertTrue(
+            !property_exists($resultData, 'teamsIds') || !is_array($resultData->teamsIds) || !in_array('id', $$resultData->teamsIds)
+        );
     }
 
     public function testUserAccessEditOwn2()
