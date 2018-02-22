@@ -45,28 +45,24 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' =>
-            array (
+            'data' => array(
                 'Account' => false,
                 'Call' =>
                 array (
                     'create' => 'yes',
                     'read' => 'team',
                     'edit' => 'team',
-                    'delete' => 'no',
-                ),
+                    'delete' => 'no'
+                )
             ),
-            'fieldData' =>
-            array (
-                'Call' =>
-                array (
-                    'direction' =>
-                    array (
+            'fieldData' => array(
+                'Call' => array(
+                    'direction' => array(
                         'read' => 'yes',
-                        'edit' => 'no',
-                    ),
-                ),
-            ),
+                        'edit' => 'no'
+                    )
+                )
+            )
         ));
 
         $this->auth('tester');
@@ -104,8 +100,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'userName' => 'tester',
                 'lastName' => 'tester',
                 'portalsIds' => array(
-                    'testPortalId',
-                ),
+                    'testPortalId'
+                )
             ), array(
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
@@ -117,10 +113,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'Call' => array (
                     'direction' => array (
                         'read' => 'yes',
-                        'edit' => 'no',
-                    ),
-                ),
-            ),
+                        'edit' => 'no'
+                    )
+                )
+            )
         ), true);
 
         $this->auth('tester', null, 'testPortalId');
