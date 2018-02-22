@@ -74,7 +74,6 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             }, this);
 
             return {
-                todayShortLabel: this.translate('Today', 'labels', 'Calendar').substr(0, 2),
                 mode: this.mode,
                 modeDataList: this.getModeDataList(),
                 header: this.header,
