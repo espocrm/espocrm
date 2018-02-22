@@ -306,6 +306,53 @@ class Metadata
     }
 
     /**
+     * Get metadata definition in custom directory
+     *
+     * @param  string|array $key
+     * @param  mixed $default
+     *
+     * @return array|null
+     */
+    public function getCustom($key = null, $default = null)
+    {
+        $keyList = is_array($key) ? $key : explode('.', $key);
+
+        if (!isset($keyList[0]) || !isset($keyList[1])) {
+            return $default;
+        }
+
+        list($key1, $key2) = $keyList;
+        unset($keyList[0], $keyList[1]);
+
+        $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+        $fileContent = $this->getFileManager()->getContents($filePath);
+
+        if ($fileContent) {
+            $data = Json::getArrayData($fileContent);
+            return Util::getValueByKey($data, $keyList, $default);
+        }
+
+        return $default;
+    }
+
+    /**
+     * Set and save metadata in custom directory. The data is not merging with existing data. Use getCustom() to get existing data.
+     *
+     * @param  string $key1
+     * @param  string $key2
+     * @param  array $data
+     *
+     * @return boolean
+     */
+    public function saveCustom($key1, $key2, $data)
+    {
+        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+
+        return $this->getFileManager()->putContents($filePath, $changedData);
+    }
+
+    /**
     * Set Metadata data
     * Ex. $key1 = menu, $key2 = Account then will be created a file metadataFolder/menu/Account.json
     *

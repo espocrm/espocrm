@@ -229,4 +229,112 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
     }
 
+    public function testGetCustom()
+    {
+        $customPath = 'tests/unit/testData/cache/metadata/custom';
+
+        $paths = $this->reflection->getProperty('paths');
+        $paths['customPath'] = $customPath;
+        $this->reflection->setProperty('paths', $paths);
+
+        $this->assertNull($this->object->getCustom(['entityDefs', 'Lead']));
+        $this->assertNull($this->object->getCustom('entityDefs.Lead'));
+        $this->assertNull($this->object->getCustom('entityDefs.Lead.fields'));
+
+        $customData = $this->object->getCustom('entityDefs.Lead', []);
+        $this->assertTrue(is_array($customData));
+
+        $data = array (
+          'fields' =>
+          array (
+            'status' =>
+            array (
+              "type" => "enum",
+              "options" => ["__APPEND__", "Test1", "Test2"],
+            ),
+          ),
+        );
+        $this->object->saveCustom('entityDefs', 'Lead', $data);
+
+        $this->assertEquals($data, $this->object->getCustom('entityDefs.Lead'));
+        $this->assertEquals($data['fields'], $this->object->getCustom('entityDefs.Lead.fields'));
+        $this->assertEquals($data['fields'], $this->object->getCustom(['entityDefs', 'Lead', 'fields']));
+
+        unlink($customPath . '/entityDefs/Lead.json');
+    }
+
+    public function testSaveCustom()
+    {
+        $customPath = 'tests/unit/testData/cache/metadata/custom';
+
+        $paths = $this->reflection->getProperty('paths');
+        $paths['customPath'] = $customPath;
+        $this->reflection->setProperty('paths', $paths);
+
+        $data = array (
+          'fields' =>
+          array (
+            'status' =>
+            array (
+              "type" => "enum",
+              "options" => ["__APPEND__", "Test1", "Test2"],
+            ),
+          ),
+        );
+
+        $this->object->saveCustom('entityDefs', 'Lead', $data);
+
+        $savedFile = $customPath . '/entityDefs/Lead.json';
+        $fileContent = $this->objects['fileManager']->getContents($savedFile);
+        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+
+        $this->assertEquals($data, $savedData);
+
+        unlink($savedFile);
+    }
+
+    public function testSaveCustom2()
+    {
+        $customPath = 'tests/unit/testData/cache/metadata/custom';
+
+        $paths = $this->reflection->getProperty('paths');
+        $paths['customPath'] = $customPath;
+        $this->reflection->setProperty('paths', $paths);
+
+        $initData = array (
+          'fields' =>
+          array (
+            'status' =>
+            array (
+              "type" => "enum",
+              "options" => ["__APPEND__", "Test1", "Test2"],
+            ),
+          ),
+        );
+
+        $this->object->saveCustom('entityDefs', 'Lead', $initData);
+
+        $customData = $this->object->getCustom(['entityDefs', 'Lead']);
+        unset($customData['fields']['status']['type']);
+        $customData['fields']['status']['options'] = ["__APPEND__", "Test1"];
+        $this->object->saveCustom('entityDefs', 'Lead', $customData);
+
+        $savedFile = $customPath . '/entityDefs/Lead.json';
+        $fileContent = $this->objects['fileManager']->getContents($savedFile);
+        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+
+        $expectedData = array (
+          'fields' =>
+          array (
+            'status' =>
+            array (
+              "options" => ["__APPEND__", "Test1"],
+            ),
+          ),
+        );
+
+        $this->assertEquals($expectedData, $savedData);
+
+        unlink($savedFile);
+    }
 }
