@@ -148,4 +148,84 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test Account',
         ));
     }*/
+
+    public function testUserAccessEditOwn1()
+    {
+        $user1 = $this->createUser('test-1', [
+            "id" => "test-1",
+            'data' => [
+                'User' => [
+                    'read' => 'all',
+                    'edit' => 'own'
+                ]
+            ]
+        ]);
+
+        $this->createUser('test-2', []);
+
+        $this->auth('test-1');
+        $app = $this->createApplication();
+        $controllerManager = $app->getContainer()->get('controllerManager');
+
+        $params = [
+            'id' => $user1->id
+        ];
+        $data = [
+            'id' => $user1->id,
+            'title' => 'Test'
+        ];
+        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+        $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+
+        $this->assertTrue(is_string($result));
+
+        $params = [
+            'id' => $user2->id
+        ];
+        $data = [
+            'id' => $user2->id,
+            'title' => 'Test'
+        ];
+        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+
+        $result = null;
+        try {
+            $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+        } catch (\Exception $e) {};
+
+        $this->assertNull($result);
+    }
+
+    public function testUserAccessEditOwn2()
+    {
+        $user1 = $this->createUser('test-1', [
+            "id" => "test-1",
+            'data' => [
+                'User' => [
+                    'read' => 'all',
+                    'edit' => 'no'
+                ]
+            ]
+        ]);
+
+        $this->auth('test-1');
+        $app = $this->createApplication();
+        $controllerManager = $app->getContainer()->get('controllerManager');
+
+        $params = [
+            'id' => $user1->id
+        ];
+        $data = [
+            'id' => $user1->id,
+            'title' => 'Test'
+        ];
+        $request = $this->createRequest('PATCH', $params, ['CONTENT_TYPE' => 'application/json']);
+
+        $result = null;
+        try {
+            $result = $controllerManager->process('User', 'update', $params, json_encode($data), $request);
+        } catch (\Exception $e) {};
+
+        $this->assertNull($result);
+    }
 }
