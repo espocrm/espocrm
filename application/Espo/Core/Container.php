@@ -217,7 +217,8 @@ class Container
             $this->get('acl'),
             $this->get('aclManager'),
             $this->get('metadata'),
-            $this->get('config')
+            $this->get('config'),
+            $this->get('injectableFactory')
         );
     }
 
