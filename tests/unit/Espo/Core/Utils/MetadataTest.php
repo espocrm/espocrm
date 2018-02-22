@@ -64,6 +64,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     protected function tearDown()
     {
+        $this->object->clearChanges();
         $this->object = NULL;
     }
 
@@ -265,6 +266,8 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveCustom()
     {
+        $initStatusOptions = $this->object->get('entityDefs.Lead.fields.status.options');
+
         $customPath = 'tests/unit/testData/cache/metadata/custom';
 
         $paths = $this->reflection->getProperty('paths');
@@ -289,6 +292,10 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
 
         $this->assertEquals($data, $savedData);
+
+        $initStatusOptions[] = 'Test1';
+        $initStatusOptions[] = 'Test2';
+        $this->assertEquals($initStatusOptions, $this->object->get('entityDefs.Lead.fields.status.options'));
 
         unlink($savedFile);
     }

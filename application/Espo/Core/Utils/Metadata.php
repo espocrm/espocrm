@@ -349,7 +349,11 @@ class Metadata
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
 
-        return $this->getFileManager()->putContents($filePath, $changedData);
+        $result = $this->getFileManager()->putContents($filePath, $changedData);
+
+        $this->init(true);
+
+        return true;
     }
 
     /**
