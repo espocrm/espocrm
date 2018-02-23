@@ -768,7 +768,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.dynamicHandler = new DynamicHandler(this);
 
                     this.listenTo(this.model, 'change', function (model, o) {
-                        this.dynamicHandler.onChange(model, o);
+                        if ('onChange' in this.dynamicHandler) {
+                            this.dynamicHandler.onChange(model, o);
+                        }
 
                         var changedAttributes = model.changedAttributes();
                         for (var attribute in changedAttributes) {
@@ -779,7 +781,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                     }, this);
 
-                    this.dynamicHandler.init();
+                    if ('init' in this.dynamicHandler) {
+                        this.dynamicHandler.init();
+                    }
 
                     this.tryReady();
                 }.bind(this));
