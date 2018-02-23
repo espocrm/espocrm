@@ -476,24 +476,109 @@
       "eu_ES": "Bască",
       "fa_IR": "Persană",
       "fi_FI": "Finlandeză",
-      "ro_RO": "Romana"
+      "fo_FO": "Feroeză",
+      "fr_CA": "Franceză (Canada)",
+      "fr_FR": "Franceză (Franța)",
+      "ga_IE": "Irlandeză",
+      "gl_ES": "Galiciană",
+      "he_IL": "Ebraică",
+      "hi_IN": "Hindusă",
+      "hr_HR": "Croată",
+      "hu_HU": "Maghiară",
+      "hy_AM": "Armeană",
+      "id_ID": "Indoneziană",
+      "is_IS": "Islandeză",
+      "it_IT": "Italiană",
+      "ja_JP": "Japoneză",
+      "ka_GE": "Georgiană",
+      "km_KH": "Khmeră",
+      "ko_KR": "Coreană",
+      "ku_TR": "Curdă",
+      "lt_LT": "Lituaniană",
+      "lv_LV": "Letonă",
+      "mk_MK": "Macedoneană",
+      "ms_MY": "Malai",
+      "nb_NO": "Norvegiană Bokmål",
+      "nn_NO": "Norvegiană Nynorsk",
+      "ne_NP": "Nepaleză",
+      "nl_NL": "Olandeză",
+      "pl_PL": "Poloneză",
+      "pt_BR": "Portugheză (Brazilia)",
+      "pt_PT": "Portugheză (Portugalia)",
+      "ro_RO": "Română",
+      "ru_RU": "Rusă",
+      "sk_SK": "Slovacă",
+      "sl_SI": "Slovenă",
+      "sq_AL": "Albaneză",
+      "sr_RS": "Sârbă",
+      "sv_SE": "Suedeză",
+      "ta_IN": "Tamilă",
+      "th_TH": "Tailandeză",
+      "tl_PH": "Tagalogă",
+      "tr_TR": "Turcă",
+      "uk_UA": "Ucraineană",
+      "vi_VN": "Vietnameză",
+      "zh_CN": "Chineză Simplificată (China)",
+      "zh_HK": "Chineză Tradițională (Honk Kong)",
+      "zh_TW": "Chineză Tradițională (Taiwan)"
     },
     "dateSearchRanges": {
       "on": "Pornit",
       "notOn": "Oprit",
-      "after": "Dupa",
-      "before": "Inainte",
-      "between": "Intre",
-      "today": "Astazi"
+      "after": "După",
+      "before": "Înainte",
+      "between": "Între",
+      "today": "Astăzi",
+      "past": "În trecut",
+      "future": "În viitor",
+      "currentMonth": "Luna curentă",
+      "lastMonth": "Luna trecută",
+      "nextMonth": "Luna viitoare",
+      "currentQuarter": "Trimestru actual",
+      "lastQuarter": "Trimestrul trecut",
+      "currentYear": "Anul curent",
+      "lastYear": "Anul trecut",
+      "lastSevenDays": "În ultimele 7 zile",
+      "lastXDays": "Ultimele X zile",
+      "nextXDays": "Următoarele X zile",
+      "ever": "Vreodată",
+      "isEmpty": "Este gol",
+      "olderThanXDays": "Mai vechi decât X zile",
+      "afterXDays": "După X zile"
+    },
+    "searchRanges": {
+      "is": "Este",
+      "isEmpty": "Este gol",
+      "isNotEmpty": "Nu este gol",
+      "isOneOf": "Oricare dintre",
+      "anyOf": "Oricare dintre",
+      "isFromTeams": "Face parte din echipa",
+      "isNot": "Nu este",
+      "isNotOneOf": "Nici unul dintre",
+      "noneOf": "Nici unul dintre"
+    },
+    "varcharSearchRanges": {
+      "equals": "Egal",
+      "like": "Este ca (%)",
+      "notLike": "Nu este ca (%)",
+      "startsWith": "Începe cu",
+      "endsWith": "Se termină cu",
+      "contains": "Conține",
+      "notContains": "Nu Conține",
+      "isEmpty": "Este gol",
+      "isNotEmpty": "Nu este gol",
+      "notEquals": "Nu este egal"
     },
     "intSearchRanges": {
       "equals": "Egal",
-      "notEquals": "Inegal",
-      "greaterThan": "Mai mare de",
-      "lessThan": "Mai mic de",
+      "notEquals": "Nu este egal",
+      "greaterThan": "Mai mare decât",
+      "lessThan": "Mai mic decât",
       "greaterThanOrEquals": "Mai mare sau egal",
       "lessThanOrEquals": "Mai mic sau egal",
-      "between": "Intre"
+      "between": "Între",
+      "isEmpty": "Este gol",
+      "isNotEmpty": "Nu este gol"
     },
     "autorefreshInterval": {
       "0": "Nici unul",
@@ -504,89 +589,105 @@
       "0.5": "30 secunde"
     },
     "phoneNumber": {
+      "Mobile": "Mobil",
+      "Office": "Birou",
+      "Home": "Acasă",
       "Other": "Altele"
     }
   },
   "sets": {
     "summernote": {
-      "NOTICE": "Puteti gasi traducerea aici: https://github.com/HackerWins/summernote/tree/master/lang",
+      "NOTICE": "Puteți găsi traducerea aici: https://github.com/HackerWins/summernote/tree/master/lang",
       "font": {
         "underline": "Subliniat",
-        "clear": "Sterge stil font",
-        "height": "Inaltime linie",
-        "name": "Familie Font ",
-        "size": "Marime Font"
+        "strike": "Tăiat",
+        "clear": "Șterge stil font",
+        "height": "Înălțime linie",
+        "name": "Familie Font",
+        "size": "Mărime Font"
       },
       "image": {
         "image": "Imagine",
         "insert": "Inserare Imagine",
-        "resizeFull": "Redimensionare completa",
+        "resizeFull": "Redimensionare completă",
         "resizeHalf": "Redimensionare la jumatate",
         "resizeQuarter": "Redimensionare la sfert",
-        "floatLeft": "Aliniere la stanga",
-        "floatRight": "Aliniere la dreapta",
-        "floatNone": "Fara aliniere",
-        "dragImageHere": "Trage imaginea aici",
-        "selectFromFiles": "Selecteaza din fisiere",
+        "floatLeft": "Plutire la stânga",
+        "floatRight": "Plutire la dreapta",
+        "floatNone": "Fără plutire",
+        "dragImageHere": "Trage o imaginea aici",
+        "selectFromFiles": "Selectează din fișiere",
         "url": "URL Imagine",
-        "remove": "Stergere imagine"
+        "remove": "Ștergere imagine"
       },
       "link": {
         "insert": "Inserare Link",
-        "unlink": "Dezleaga",
+        "unlink": "Dezleagă",
         "edit": "Editare",
-        "textToDisplay": "Text de afisat",
-        "openInNewWindow": "Deschidere in fereastra noua"
+        "textToDisplay": "Text de afișat",
+        "url": "Către ce URL să ducă acest link?",
+        "openInNewWindow": "Deschidere în fereastră noua"
       },
       "video": {
-        "videoLink": "Link Video ",
-        "insert": "Inserare Video"
+        "videoLink": "Link Video",
+        "insert": "Inserare Video",
+        "url": "URL Video?",
+        "providers": "(YouTube, Vimeo, Vine, Instagram, sau DailyMotion)"
       },
       "table": {
         "table": "Tabel"
       },
       "hr": {
-        "insert": "Inserare Linie Orizontala"
+        "insert": "Inserare Linie Orizontală"
       },
       "style": {
         "style": "Stil",
-        "blockquote": "Citat",
+        "blockquote": "Ofertă",
         "pre": "Cod"
       },
       "lists": {
-        "unordered": "Lista neordonata",
-        "ordered": "Lista ordonata"
+        "unordered": "Listă neordonată",
+        "ordered": "Listă ordonată"
       },
       "options": {
         "help": "Ajutor",
-        "fullscreen": "Ecran complet",
+        "fullscreen": "Pe tot ecranul",
         "codeview": "Vizualizare cod"
       },
       "paragraph": {
         "paragraph": "Paragraf",
         "outdent": "Neindentat",
         "indent": "Indentat",
-        "left": "Aliniere stanga",
+        "left": "Aliniere stânga",
         "center": "Aliniere centru",
         "right": "Aliniere dreapta",
         "justify": "Justify complet"
       },
       "color": {
-        "recent": "Culoarea recenta",
+        "recent": "Culoarea recentă",
         "more": "Mai multe culori",
         "background": "Culoare fundal",
         "foreground": "Culoare font",
-        "setTransparent": "Setare transparenta",
-        "resetToDefault": "Reinitializare setari"
+        "setTransparent": "Setare transparență",
+        "reset": "Resetare",
+        "resetToDefault": "Resetare la implicit"
       },
       "shortcut": {
-        "shortcuts": "Scurtaturi taste",
-        "close": "Inchide",
+        "shortcuts": "Scurtături tastatură",
+        "close": "Închide",
         "textFormatting": "Formatare Text",
-        "action": "Actiune",
+        "action": "Acțiune",
         "paragraphFormatting": "Formatare Paragraf",
-        "documentStyle": "Stil Document "
+        "documentStyle": "Stil Document"
+      },
+      "history": {
+        "undo": "Anulează",
+        "redo": "Reface"
       }
     }
+  },
+  "themes": {
+    "Hazyblue": "Azur",
+    "HazyblueVertical": "Azur w/ sidebar "
   }
 }

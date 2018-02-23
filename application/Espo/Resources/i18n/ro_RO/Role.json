@@ -1,7 +1,10 @@
 {
   "fields": {
     "name": "Nume",
-    "roles": "Roluri"
+    "roles": "Roluri",
+    "assignmentPermission": "Permisiuni Sarcină",
+    "userPermission": "Permisiuni Utilizator",
+    "portalPermission": "Permisiuni Portal"
   },
   "links": {
     "users": "Utilizatori",
@@ -9,24 +12,30 @@
   },
   "labels": {
     "Access": "Acces",
-    "Create Role": "Creare Rol"
+    "Create Role": "Creare Rol",
+    "Scope Level": "Nivel Domeniu",
+    "Field Level": "Nivel Câmp"
   },
   "options": {
     "accessList": {
-      "not-set": "ne setat",
+      "not-set": "nu a fost setat",
       "enabled": "activat",
       "disabled": "dezactivat"
     },
     "levelList": {
       "all": "toate",
       "team": "echipa",
+      "account": "cont",
       "own": "personal",
-      "no": "nu"
+      "no": "nu",
+      "yes": "da",
+      "not-set": "nu a fost setat"
     }
   },
   "actions": {
-    "read": "Citeste",
+    "read": "Citește",
     "edit": "Editare",
-    "delete": "Sterge"
+    "delete": "Șterge",
+    "create": "Creați"
   }
 }
