@@ -753,6 +753,37 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDynamicLogic();
 
             this.setupFieldLevelSecurity();
+
+            this.initDynamicHandler();
+        },
+
+        initDynamicHandler: function () {
+            var dynamicHandlerClassName = this.dynamicHandlerClassName || this.getMetadata().get(['clientDefs', this.model.name, 'dynamicHandler']);
+            if (dynamicHandlerClassName) {
+                this.addReadyCondition(function () {
+                    return !!this.dynamicHandler;
+                }.bind(this));
+
+                require(dynamicHandlerClassName, function (DynamicHandler) {
+                    this.dynamicHandler = new DynamicHandler(this);
+
+                    this.listenTo(this.model, 'change', function (model, o) {
+                        this.dynamicHandler.onChange(model, o);
+
+                        var changedAttributes = model.changedAttributes();
+                        for (var attribute in changedAttributes) {
+                            var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
+                            if (methodName in this.dynamicHandler) {
+                                this.dynamicHandler[methodName](model, changedAttributes[attribute], o);
+                            }
+                        }
+                    }, this);
+
+                    this.dynamicHandler.init();
+
+                    this.tryReady();
+                }.bind(this));
+            }
         },
 
         setupFinal: function () {
