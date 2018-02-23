@@ -179,4 +179,42 @@ describe('utils', function () {
             }
         ], acl, user)).toBe(true);
     });
+
+
+    it('#checkAccessDataList should check access 3', function () {
+        var user = {
+            isPortal:  function () {},
+            getLinkMultipleIdList: function () {},
+            isAdmin: function () {}
+        };
+        var acl = {
+            check: function () {},
+            checkScope: function () {}
+        };
+        var entity = {
+            name: 'Account'
+        };
+        spyOn(user, 'getLinkMultipleIdList').and.callFake(function (link) {
+            if (link === 'teams') {
+                return ['team1', 'team2'];
+            }
+            if (link === 'portals') {
+                return ['portal1', 'portal2'];
+            }
+        });
+        spyOn(user, 'isPortal').and.returnValue(false);
+        spyOn(user, 'isAdmin').and.returnValue(true);
+
+        expect(Utils.checkAccessDataList([
+            {
+                portalIdList: ['portal3']
+            }
+        ], acl, user, null, true)).toBe(true);
+
+        expect(Utils.checkAccessDataList([
+            {
+                teamIdList: ['team3']
+            }
+        ], acl, user, null, true)).toBe(true);
+    });
 });
