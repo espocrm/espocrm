@@ -28,7 +28,7 @@
    "notActualFields":[
       "name"
    ],
-   "filter": false,
+   "filter": true,
    "linkDefs": {
       "type": "belongsTo",
       "entity": "Attachment",
