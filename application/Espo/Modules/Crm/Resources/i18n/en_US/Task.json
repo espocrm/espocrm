@@ -13,7 +13,8 @@
         "account": "Account",
         "dateCompleted": "Date Completed",
         "attachments": "Attachments",
-        "reminders": "Reminders"
+        "reminders": "Reminders",
+        "contact": "Contact"
     },
     "links": {
         "attachments": "Attachments",
