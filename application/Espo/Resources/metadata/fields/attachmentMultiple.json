@@ -30,7 +30,7 @@
       "layoutRelationshipsDisabled": true,
       "relationName": "attachments"
    },
-   "filter": false,
+   "filter": true,
    "fieldDefs": {
       "layoutListDisabled": true
    },
