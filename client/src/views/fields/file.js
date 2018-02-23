@@ -54,6 +54,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         validations: ['ready', 'required'],
 
+        searchTypeList: ['isNotEmpty', 'isEmpty'],
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -209,6 +211,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.$el.on('dragleave', function (e) {
                     e.preventDefault();
                 }.bind(this));
+            }
+
+            if (this.mode == 'search') {
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
             }
         },
 

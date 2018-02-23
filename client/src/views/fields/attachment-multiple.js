@@ -38,6 +38,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         editTemplate: 'fields/attachments-multiple/edit',
 
+        searchTemplate: 'fields/link-multiple/search',
+
         nameHashName: null,
 
         idsName: null,
@@ -55,6 +57,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         ],
 
         validations: ['ready', 'required'],
+
+        searchTypeList: ['isNotEmpty', 'isEmpty'],
 
         events: {
             'click a.remove-attachment': function (e) {
@@ -181,6 +185,15 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             if (!this.model.get(this.idsName)) {
                 this.clearIds(true);
             }
+        },
+
+        setupSearch: function () {
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    var type = $(e.currentTarget).val();
+                    this.handleSearchType(type);
+                },
+            }, this.events || {});
         },
 
         empty: function () {
@@ -447,6 +460,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     e.preventDefault();
                 }.bind(this));
             }
+
+            if (this.mode == 'search') {
+                var type = this.$el.find('select.search-type').val();
+                this.handleSearchType(type);
+            }
         },
 
         isTypeIsImage: function (type) {
@@ -585,7 +603,33 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var data = {};
             data[this.idsName] = this.model.get(this.idsName);
             return data;
+        },
+
+        handleSearchType: function (type) {
+            this.$el.find('div.link-group-container').addClass('hidden');
+        },
+
+        fetchSearch: function () {
+            var type = this.$el.find('select.search-type').val();
+
+            if (type === 'isEmpty') {
+                var data = {
+                    type: 'isNotLinked',
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            } else if (type === 'isNotEmpty') {
+                var data = {
+                    type: 'isLinked',
+                    data: {
+                        type: type
+                    }
+                };
+                return data;
+            }
         }
+
     });
 });
-
