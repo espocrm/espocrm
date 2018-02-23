@@ -40,5 +40,7 @@ define('dynamic-handler', [], function () {
         onChange: function (model, o) {}
     });
 
+    DynamicHandler.extend = Backbone.Router.extend;
+
     return DynamicHandler;
 });
