@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Sări peste Notificări"
+  },
+  "labels": {
+    "Create EmailFolder": "Creează Dosar",
+    "Manage Folders": "Gestionează Dosare",
+    "Emails": "Email-uri"
+  }
+}

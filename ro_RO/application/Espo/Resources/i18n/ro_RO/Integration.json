@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "enabled": "Activat",
+    "redirectUri": "Redirecționare URI",
+    "apiKey": "Cheie API"
+  },
+  "messages": {
+    "selectIntegration": "Selectați o integrare din meniu",
+    "noIntegrations": "Nu este disponibilă nici o integrare"
+  },
+  "help": {
+    "GoogleMaps": "<p>Obține cheia API <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">here</a>.</p>"
+  }
+}

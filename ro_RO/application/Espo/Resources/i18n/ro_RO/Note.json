@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "Publică",
+    "attachments": "Atașamente",
+    "targetType": "Țintă",
+    "teams": "Echipe",
+    "users": "Utilizatori",
+    "portals": "Portale",
+    "type": "Tip",
+    "isGlobal": "Este Global",
+    "isInternal": "Este Intern (nu pentru utilizatori interni)",
+    "related": "Legat",
+    "createdByGender": "Creat de genul",
+    "data": "Date",
+    "number": "Număr"
+  },
+  "filters": {
+    "all": "Tot",
+    "posts": "Postări",
+    "updates": "Actualizări"
+  },
+  "options": {
+    "targetType": {
+      "self": "către mine",
+      "users": "către utilizatori anume",
+      "teams": "către echipe anume",
+      "all": "către toți utilizatorii interni",
+      "portals": "către utilizatorii portalului"
+    },
+    "type": {
+      "Post": "Postare"
+    }
+  },
+  "messages": {
+    "writeMessage": "Scrieți mesajul aici"
+  },
+  "links": {
+    "superParent": "Super Părinte",
+    "related": "Legat"
+  }
+}

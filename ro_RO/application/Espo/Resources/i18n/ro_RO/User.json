@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "name": "Nume",
+    "userName": "Nume Utilizator",
+    "title": "Titlu",
+    "isAdmin": "Este Admin",
+    "defaultTeam": "Echipa Initiala",
+    "phoneNumber": "Telefon",
+    "roles": "Roluri",
+    "password": "Parola",
+    "passwordConfirm": "Confirmare Parola",
+    "newPassword": "Parola Noua"
+  },
+  "links": {
+    "teams": "Echipe",
+    "roles": "Roluri"
+  },
+  "labels": {
+    "Create User": "Creare Utilizator",
+    "Generate": "Generare",
+    "Access": "Acces",
+    "Preferences": "Preferinte",
+    "Change Password": "Schimbare Parola"
+  },
+  "tooltips": {
+    "portals": "Portalurile la care are acces acest utilizator."
+  },
+  "messages": {
+    "passwordWillBeSent": "Parola va fi trimisă in email-ul utilizatorului.",
+    "accountInfoEmailSubject": "Informații Acces Utilizator EspoCRM",
+    "accountInfoEmailBody": "Informațiile tale de acces :\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Cerere Schimbare Parolă",
+    "passwordChanged": "Parola a fost schimbată",
+    "userCantBeEmpty": "Numele de utilizator nu poate fi necompletat",
+    "wrongUsernamePasword": "Nume utilizator/parolă greșit(e).",
+    "emailAddressCantBeEmpty": "Adresa de Email nu poate fi necompletată",
+    "userNameEmailAddressNotFound": "Nume utilizator/Adresă de email nu a(u) fost găsi(e)",
+    "forbidden": "Înterzis, încercați mai târziu",
+    "passwordChangedByRequest": "Parola a fost schimbată.",
+    "setupSmtpBefore": "Pentru a face sistemul să poată trimite parola în email , trebui să setați <a href=\"{url}\">setările SMTP</a>.",
+    "userNameExists": "Acest nume de utilizator există deja"
+  },
+  "options": {
+    "gender": {
+      "": "Nu este setat"
+    }
+  }
+}

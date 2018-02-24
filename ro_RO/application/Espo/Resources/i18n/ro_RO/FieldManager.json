@@ -1,0 +1,98 @@
+{
+  "labels": {
+    "Dynamic Logic": "Logică Dinamică",
+    "Name": "Nume",
+    "Label": "Etichetă",
+    "Type": "Tip"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Nici unul",
+      "javascript: return this.dateTime.getNow(1);": "Acum",
+      "javascript: return this.dateTime.getNow(5);": "Acum (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Acum (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Acum (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 oră",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+0 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ore",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 zi",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 zile",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 zile",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 zile",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 zile",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 zile",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 săptămână"
+    },
+    "dateDefault": {
+      "": "Nici unul",
+      "javascript: return this.dateTime.getToday();": "Astăzi",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 zi",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 zile",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 săptâmână",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 săptămâni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 săptămâni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 lună",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 luni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 an"
+    }
+  },
+  "tooltips": {
+    "audited": "Actualizătile o să fie autentificate în stream",
+    "required": "Câmpul o să fie obligatoriu. Nu poate fi lăsat necompletat.",
+    "default": "La creeare, valoarea o să fie setată la valoarea implicită.",
+    "min": "Valoarea min acceptată.",
+    "max": "Valoarea max acceptată",
+    "seeMoreDisabled": "Dacă nu este bifat, textele lungi o să fie scurtate.",
+    "lengthOfCut": "Cum o să fie textele înainte să fie tăiate",
+    "maxLength": "Lungimea max acceptată a textului.",
+    "before": "Valoarea datei ar trebui să fie înaintea valorii datei câmpului specificat.",
+    "after": "Valoarea datei ar trebui să fie după valorea datei câmpului specificat.",
+    "readOnly": "Valoare câmpului nu poate fi specificată de utilizator. Dar poate fi calculată cu ajutorul formulei.",
+    "maxFileSize": "Dacă este necompletat sau 0, atunci nici o limită."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Stradă",
+      "city": "Oraș",
+      "state": "Stat",
+      "country": "Țară",
+      "postalCode": "Cod Poștal",
+      "map": "Hartă"
+    },
+    "personName": {
+      "salutation": "Salutare"
+    },
+    "currency": {
+      "converted": "(Convertit)"
+    },
+    "datetimeOptional": {
+      "date": "Dată"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": "Nume",
+    "portalRoles": "Roluri",
+    "isActive": "Este Activ",
+    "isDefault": "Este Implicit",
+    "tabList": "Listă filă",
+    "quickCreateList": "Crează listă rapidă",
+    "theme": "Temă",
+    "language": "Limbă",
+    "dashboardLayout": "Aspect bord",
+    "dateFormat": "Format dată",
+    "timeFormat": "Format oră",
+    "timeZone": "Fus orar",
+    "weekStart": "Prima zi a săptămânii",
+    "defaultCurrency": "Valută implicită",
+    "customUrl": "URL particularizat",
+    "customId": "ID particularizat"
+  },
+  "links": {
+    "users": "Utilizatori",
+    "portalRoles": "Roluri",
+    "notes": "Note"
+  },
+  "tooltips": {
+    "portalRoles": "Rolurile specificate ale portalului o să fie aplicate la toți utilizatorii portalului."
+  },
+  "labels": {
+    "Create Portal": "Crați portal",
+    "User Interface": "Interfață utilizator",
+    "Settings": "Setări"
+  }
+}
