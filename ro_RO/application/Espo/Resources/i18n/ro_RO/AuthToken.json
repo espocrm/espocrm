@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "user": "Utilizator",
+    "ipAddress": "Adresa IP",
+    "lastAccess": "Data ultimei accesări",
+    "createdAt": "Data conectării",
+    "isActive": "Este Activă"
+  },
+  "links": {
+    "actionHistoryRecords": "Istoric Acțiune"
+  },
+  "presetFilters": {
+    "active": "Activ",
+    "inactive": "Inactiv"
+  },
+  "labels": {
+    "Set Inactive": "Setează Inactiv"
+  },
+  "massActions": {
+    "setInactive": "Setează Inactiv"
+  }
+}

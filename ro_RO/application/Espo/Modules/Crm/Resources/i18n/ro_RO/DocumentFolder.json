@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Creați Dosarul Documentului",
+    "Manage Categories": "Gestionare Dosare",
+    "Documents": "Documente"
+  },
+  "links": {
+    "documents": "Documente"
+  }
+}

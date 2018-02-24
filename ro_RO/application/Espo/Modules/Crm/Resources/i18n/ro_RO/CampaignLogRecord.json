@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Acțiune",
+    "actionDate": "Dată",
+    "data": "Date",
+    "campaign": "Campanie",
+    "parent": "Țintă",
+    "object": "Obiect",
+    "application": "Aplicație",
+    "queueItem": "Elementul de așteptare",
+    "stringData": "Șir Date",
+    "stringAdditionalData": "Șir de Date Adiționale",
+    "isTest": "Este Test"
+  },
+  "links": {
+    "queueItem": "Elementul de așteptare",
+    "parent": "Părinte",
+    "object": "Obiect",
+    "campaign": "Campanie"
+  },
+  "options": {
+    "action": {
+      "Sent": "Trimis",
+      "Opened": "Deschis",
+      "Opted Out": "Ales să nu",
+      "Clicked": "Apăsat",
+      "Lead Created": "Lead-ul a fost creat"
+    }
+  },
+  "labels": {
+    "All": "Tot"
+  },
+  "presetFilters": {
+    "sent": "Trimis",
+    "opened": "Deschis",
+    "optedOut": "Ales să nu",
+    "clicked": "Apăsat",
+    "leadCreated": "Lead-ul a fost creat"
+  }
+}

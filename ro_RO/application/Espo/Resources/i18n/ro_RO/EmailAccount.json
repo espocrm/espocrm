@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Nume",
+    "host": "Gazdă",
+    "username": "Nume utilizator",
+    "password": "Parolă",
+    "monitoredFolders": "Dosare monitorizate",
+    "fetchSince": "Ia începând din",
+    "emailAddress": "Adresă Email",
+    "sentFolder": "Trimite Dosar",
+    "storeSentEmails": "Trimite Email-uri Magazin",
+    "keepFetchedEmailsUnread": "Păstrează Email-urile luate ca necitite",
+    "emailFolder": "Pune în Dosar",
+    "useImap": "Ia Email-uri",
+    "useSmtp": "Folosește SMTP",
+    "smtpHost": "Gazdă SMTP",
+    "smtpPort": "Port SMTP",
+    "smtpAuth": "Autentificare SMTP",
+    "smtpSecurity": "Securitate SMTP",
+    "smtpUsername": "Nume Utilizator SMTP",
+    "smtpPassword": "Parolă SMTP"
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Email-uri"
+  },
+  "options": {
+    "status": {
+      "Active": "Activ",
+      "Inactive": "Inactiv"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Creează Cont Email",
+    "Main": "Principal",
+    "Test Connection": "Conexiune Test",
+    "Send Test Email": "Trimite Email Test"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nu s-a putut conecta la server-ul IMAP",
+    "connectionIsOk": "Conexiunea este Ok"
+  },
+  "tooltips": {
+    "monitoredFolders": "Dosarele multiple nu ar trebui separate prin virgulă. \n\nPoți trimite un dosar 'Trmis' pentru a sincroniza email-urile trimise dintr-un client extern de email-uri.",
+    "storeSentEmails": "Mesajele trmise o să fie stocate pe serverul IMAP. Câmpul adresei de email trebuie să se potrivească cu adresa de email de unde vor fi trimise email-urile."
+  }
+}

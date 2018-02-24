@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "executeTime": "Execută la",
+    "attempts": "Încercări rămase",
+    "failedAttempts": "Încercări nereușite",
+    "serviceName": "Serviciu",
+    "method": "Metodă (depreciată)",
+    "methodName": "Metodă",
+    "scheduledJob": "Activitate Planificată",
+    "scheduledJobJob": "Nume Activitate Planificată",
+    "data": "Date"
+  },
+  "options": {
+    "status": {
+      "Pending": "În așteptare",
+      "Success": "Succes",
+      "Running": "Rulează",
+      "Failed": "Eșuat"
+    }
+  }
+}

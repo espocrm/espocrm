@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Return to Import": "Revenire la importare",
+    "Run Import": "Rulează Importarea",
+    "Back": "Înapoi",
+    "Field Mapping": "Câmp mapare",
+    "Default Values": "Valori implicite",
+    "Add Field": "Adăugare Câmp",
+    "Created": "Creat",
+    "Updated": "Actualizat",
+    "Result": "Rezultat",
+    "Show records": "Arată înregistrările",
+    "Remove Duplicates": "Elimină duplicatele",
+    "importedCount": "Importat (numără)",
+    "duplicateCount": "Duplicate (numără)",
+    "updatedCount": "Actualizat (numără)",
+    "Create Only": "Doar crearea",
+    "Create and Update": "Creare % Actualizare",
+    "Update Only": "Doar actualizare",
+    "Update by": "Actualizat de",
+    "Set as Not Duplicate": "Setat ca Nu Duplicat",
+    "File (CSV)": "Fișier (CSV)",
+    "First Row Value": "Prima Valoare Rând",
+    "Skip": "Sări",
+    "Header Row Value": "Valoarea Header Rând",
+    "Field": "Câmp",
+    "What to Import?": "Ce să se importe?",
+    "Entity Type": "Tip Entitate",
+    "What to do?": "Ce să se întâmple?",
+    "Properties": "Proprietăți",
+    "Header Row": "Rând Header",
+    "Person Name Format": "Format Nume Persoană",
+    "Field Delimiter": "Delimitator Câmp",
+    "Date Format": "Format Dată",
+    "Decimal Mark": "Marcaj zecimal",
+    "Text Qualifier": "Textul calificare",
+    "Time Format": "Format timp",
+    "Currency": "Valută",
+    "Preview": "Previzualizare",
+    "Next": "Următorul",
+    "Step 1": "Pasul 1",
+    "Step 2": "Pasul 2",
+    "Double Quote": "Ofertă dublă",
+    "Single Quote": "Ofertă unică",
+    "Imported": "Importat",
+    "Duplicates": "Duplicate",
+    "Skip searching for duplicates": "Sări peste căutarea duplicatelor",
+    "Timezone": "Fus orar"
+  },
+  "messages": {
+    "utf8": "Ar trebui să fie codificat UTF-8",
+    "duplicatesRemoved": "Duplicatele au fost înlăturate",
+    "inIdle": "Executați în modul inactiv (pentru date mari; via crom)"
+  },
+  "fields": {
+    "file": "Fișier",
+    "entityType": "Tip Entitate",
+    "imported": "Înregistrări Importate",
+    "duplicates": "Înregistrări duplicate",
+    "updated": "Înregistrări actualizate"
+  },
+  "options": {
+    "status": {
+      "Failed": "Nu s-a reușit",
+      "In Process": "În Proces",
+      "Complete": "Terminat"
+    }
+  }
+}

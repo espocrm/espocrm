@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "useCache": "Foloseste Cache",
+    "dateFormat": "Format Data ",
+    "timeFormat": "Format Timp",
+    "timeZone": "Fus orar",
+    "weekStart": "Prima zi a săptămânii",
+    "thousandSeparator": "Separator mii",
+    "decimalMark": "Marcaj zecimal",
+    "defaultCurrency": "Valută implicită",
+    "baseCurrency": "Valută de Bază",
+    "currencyList": "Lista valute",
+    "language": "Limba",
+    "companyLogo": "Logo Companie",
+    "smtpAuth": "Autorizare",
+    "ldapAuth": "Autorizare",
+    "smtpSecurity": "Securitate",
+    "ldapSecurity": "Securitate",
+    "smtpUsername": "Nume Utilizator",
+    "smtpPassword": "Parola",
+    "ldapPassword": "Parola",
+    "outboundEmailFromName": "De la",
+    "outboundEmailFromAddress": "De la adresa",
+    "outboundEmailIsShared": "Este Partajat",
+    "recordsPerPage": "Inregistrari pe pagina",
+    "tabList": "Lista Tab-uri",
+    "quickCreateList": "Creare lista rapida",
+    "exportDelimiter": "Delimitator Export",
+    "ldapHost": "Gazda",
+    "ldapUsername": "Nume Utilizator",
+    "ldapBindRequiresDn": "Bind Requires Dn",
+    "ldapBaseDn": "Base Dn"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Duminica",
+      "1": "Luni"
+    }
+  },
+  "labels": {
+    "System": "Sistem",
+    "Locale": "Localizare",
+    "Configuration": "Configuratie"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "dateFormat": "Format Dată",
+    "timeFormat": "Format oră",
+    "timeZone": "Fus orar",
+    "weekStart": "Prima zi a săptămânii",
+    "thousandSeparator": "Separator mii",
+    "decimalMark": "Marcaj zecimal",
+    "defaultCurrency": "Valută implicită",
+    "currencyList": "Listă valute",
+    "language": "Limbă",
+    "smtpAuth": "Autorizare",
+    "smtpSecurity": "Securitate",
+    "smtpUsername": "Nume Utilizator",
+    "smtpPassword": "Parolă",
+    "smtpEmailAddress": "Adresă Email",
+    "exportDelimiter": "Delimitator Exportare",
+    "receiveAssignmentEmailNotifications": "Notificări email pentru sarcină",
+    "receiveMentionEmailNotifications": "Notificări email despre mențiuni în postări",
+    "receiveStreamEmailNotifications": "Notificări email despre postări și actualizare statusului",
+    "autoFollowEntityTypeList": "Auto-urmărire globală",
+    "signature": "Semnătură Email",
+    "dashboardTabList": "Listă filă",
+    "tabList": "Listă filă",
+    "theme": "Temă",
+    "useCustomTabList": "Listă Personalizată Personalizată",
+    "emailReplyToAllByDefault": "Răspunde cu un email la tot, în mod implicit",
+    "dashboardLayout": "Aspect bord",
+    "emailReplyForceHtml": "Răspunde la email în HTML",
+    "followEntityOnStreamPost": "După publicare în Stream, auto-urmărește înregistrarea",
+    "followCreatedEntities": "Auto-urmărire înregistrări create",
+    "followCreatedEntityTypeList": "Auto-urmărire înregistrări create sau anumite tipuri de entitate"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Duminică",
+      "1": "Luni"
+    }
+  },
+  "labels": {
+    "Notifications": "Notificări",
+    "User Interface": "Interfață utilizator",
+    "Misc": "Amestecat",
+    "Locale": "Local"
+  }
+}

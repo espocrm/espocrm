@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "De la",
+    "to": "Către",
+    "subject": "Subiect",
+    "bodyContains": "Conținutul Conține",
+    "action": "Acțiune",
+    "isGlobal": "Este Global",
+    "emailFolder": "Dosar"
+  },
+  "labels": {
+    "Create EmailFilter": "Creează Filtru Email",
+    "Emails": "Email-uri"
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignoră",
+      "Move to Folder": "Pune în Dosar"
+    }
+  },
+  "tooltips": {
+    "name": "Dă-i filtrului un nume descriptiv.",
+    "subject": "Folosește un wildcard *:\n\ntext* - începe cu text,\n*text* - conține text,\n*text - se termină cu text. ",
+    "bodyContains": "Conținutul email-ului conține unul dintre cuvintele sau frazele specificate.",
+    "from": "Email-urile trimise de la adresa specificată. Dacă nu este necesar, lasă gol. Poți folosi un wildcard *.",
+    "to": "Email-urile trimise de la adresa specificată. Dacă nu este necesar, lasă gol. Poți folosi un wildcard *.",
+    "isGlobal": "Aplică acest filtru la toate email-urile primite în sistem."
+  }
+}

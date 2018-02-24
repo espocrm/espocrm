@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "name": "Nume",
+    "description": "Descriere",
+    "entryCount": "Numără Intrări",
+    "campaigns": "Campanii",
+    "endDate": "Dată Terminare",
+    "targetLists": "Liste Țintă",
+    "includingActionList": "Include",
+    "excludingActionList": "Exclude"
+  },
+  "links": {
+    "accounts": "Conturi",
+    "contacts": "Contacte",
+    "leads": "Lead-uri",
+    "campaigns": "Campanii",
+    "massEmails": "Email-uri în Masă"
+  },
+  "options": {
+    "type": {
+      "Television": "Televiziune"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Creați Listă Țintă",
+    "Opted Out": "Ales să nu",
+    "Cancel Opt-Out": "Anulează alegerea de ieșire",
+    "Opt-Out": "Aleg să nu"
+  }
+}
