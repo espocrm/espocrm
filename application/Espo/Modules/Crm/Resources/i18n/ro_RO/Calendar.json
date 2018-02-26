@@ -1,13 +1,21 @@
 {
   "modes": {
-    "month": "Luna",
-    "week": "Saptamana",
-    "agendaWeek": "Saptamana",
+    "month": "Lună",
+    "week": "Săptămână",
+    "agendaWeek": "Săptămână",
     "day": "Zi",
-    "agendaDay": "Zi"
+    "agendaDay": "Zi",
+    "timeline": "Cronologie"
   },
   "labels": {
-    "Today": "Astazi",
-    "Create": "Creaza"
+    "Today": "Astăzi",
+    "Create": "Crează",
+    "Shared": "Partajat",
+    "Add User": "Adăugare utilizator",
+    "current": "actual",
+    "time": "timp",
+    "User List": "Listă Utiliziator",
+    "Manage Users": "Gestionare Utilizatori",
+    "View Calendar": "Vizualizare Calendar"
   }
 }

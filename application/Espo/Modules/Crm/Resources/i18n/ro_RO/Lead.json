@@ -2,8 +2,8 @@
   "labels": {
     "Converted To": "Convertit la",
     "Create Lead": "Creare Lead",
-    "Convert": "Converteste",
-    "convert": "converteste"
+    "Convert": "Convertește",
+    "convert": "convertește"
   },
   "fields": {
     "name": "Nume",
@@ -11,34 +11,54 @@
     "website": "Site Web",
     "phoneNumber": "Telefon",
     "accountName": "Nume Cont",
-    "doNotCall": "Nu sunati",
+    "doNotCall": "Nu sunați",
     "address": "Adresa",
     "source": "Sursa",
-    "opportunityAmount": "Suma Oportunitate",
+    "opportunityAmount": "Sumă Oportunitate",
+    "opportunityAmountConverted": "Sumă Oportunitate (convertită)",
     "description": "Descriere",
     "createdAccount": "Cont",
-    "createdOpportunity": "Oportunitate"
+    "createdOpportunity": "Oportunitate",
+    "campaign": "Campanie",
+    "targetLists": "Liste Țintă",
+    "targetList": "Listă Țintă",
+    "industry": "Industrie",
+    "acceptanceStatus": "Status Acceptare",
+    "opportunityAmountCurrency": "Valută Sumă Oportunitate",
+    "acceptanceStatusMeetings": "Status Acceptare (Întâlniri)",
+    "acceptanceStatusCalls": "Status Acceptare (Apeluri)"
+  },
+  "links": {
+    "targetLists": "Liste Țintă",
+    "campaignLogRecords": "Jurnal Campanie",
+    "campaign": "Campanie",
+    "createdAccount": "Cont",
+    "createdOpportunity": "Oportunitate",
+    "cases": "Cazuri",
+    "documents": "Documente"
   },
   "options": {
     "status": {
       "New": "Nou",
-      "Assigned": "Alocat",
-      "In Process": "In Proces",
+      "Assigned": "Atribuit",
+      "In Process": "În Proces",
       "Converted": "Convertit",
       "Recycled": "Reciclat",
       "Dead": "Inactiv"
     },
     "source": {
+      "": "Nici unul",
       "Call": "Apel",
       "Existing Customer": "Client Existent",
       "Partner": "Partener",
-      "Public Relations": "Relatii Publice",
+      "Public Relations": "Relații Publice",
       "Web Site": "Site Web",
       "Campaign": "Campanie",
       "Other": "Altele"
     }
   },
   "presetFilters": {
-    "active": "Activ"
+    "active": "Activ",
+    "converted": "Convertit"
   }
 }
