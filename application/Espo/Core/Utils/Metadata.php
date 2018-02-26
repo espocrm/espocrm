@@ -236,17 +236,39 @@ class Metadata
         }
     }
 
-    public function getAllObjects($isJSON = false, $reload = false)
+    protected function getObjData($reload = false)
     {
         if (!isset($this->objData) || $reload) {
             $this->objInit($reload);
         }
 
+        return $this->objData;
+    }
+
+    /**
+    * Get Object Metadata
+    *
+    * @param mixed string|array $key
+    * @param mixed $default
+    *
+    * @return object
+    */
+    public function getObjects($key = null, $default = null)
+    {
+        $objData = $this->getObjData();
+
+        return Util::getValueByKey($objData, $key, $default);
+    }
+
+    public function getAllObjects($isJSON = false, $reload = false)
+    {
+        $objData = $this->getObjData($reload);
+
         if ($isJSON) {
-            return Json::encode($this->objData);
+            return Json::encode($objData);
         }
 
-        return $this->objData;
+        return $objData;
     }
 
     public function getAllForFrontend()

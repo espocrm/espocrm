@@ -40,15 +40,20 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     protected $reflection;
 
     protected $defaultCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
+    protected $defaultObjCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
 
     protected $cacheFile = 'tests/unit/testData/cache/metadata.php';
-    protected $ormCacheFile = 'tests/unit/testData/Utils/Metadata/ormMetadata.php';
+    protected $objCacheFile = 'tests/unit/testData/cache/objMetadata.php';
 
     protected function setUp()
     {
         /*copy defaultCacheFile file to cache*/
         if (!file_exists($this->cacheFile)) {
             copy($this->defaultCacheFile, $this->cacheFile);
+        }
+
+        if (!file_exists($this->objCacheFile)) {
+            copy($this->defaultObjCacheFile, $this->objCacheFile);
         }
 
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
@@ -60,6 +65,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('cacheFile', $this->cacheFile);
+        $this->reflection->setProperty('objCacheFile', $this->objCacheFile);
     }
 
     protected function tearDown()
@@ -332,5 +338,20 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedData, $savedData);
 
         unlink($savedFile);
+    }
+
+    public function testGetObjects()
+    {
+        $result = 'System';
+        $this->assertEquals($result, $this->object->getObjects('app.adminPanel.system.label'));
+
+        $result = 'fields';
+        $this->assertObjectHasAttribute($result, $this->object->getObjects('entityDefs.User'));
+
+        $result = (object) [
+            'type' => 'bool',
+            'tooltip' => true
+        ];
+        $this->assertEquals($result, $this->object->getObjects('entityDefs.User.fields.isAdmin'));
     }
 }
