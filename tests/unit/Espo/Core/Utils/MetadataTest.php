@@ -238,28 +238,22 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $this->assertNull($this->object->getCustom(['entityDefs', 'Lead']));
-        $this->assertNull($this->object->getCustom('entityDefs.Lead'));
-        $this->assertNull($this->object->getCustom('entityDefs.Lead.fields'));
+        $this->assertNull($this->object->getCustom('entityDefs', 'Lead'));
 
-        $customData = $this->object->getCustom('entityDefs.Lead', []);
-        $this->assertTrue(is_array($customData));
+        $customData = $this->object->getCustom('entityDefs', 'Lead', (object) []);
+        $this->assertTrue(is_object($customData));
 
-        $data = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $data = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
-        $this->assertEquals($data, $this->object->getCustom('entityDefs.Lead'));
-        $this->assertEquals($data['fields'], $this->object->getCustom('entityDefs.Lead.fields'));
-        $this->assertEquals($data['fields'], $this->object->getCustom(['entityDefs', 'Lead', 'fields']));
+        $this->assertEquals($data, $this->object->getCustom('entityDefs', 'Lead'));
 
         unlink($customPath . '/entityDefs/Lead.json');
     }
@@ -274,22 +268,20 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $data = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $data = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
         $fileContent = $this->objects['fileManager']->getContents($savedFile);
-        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+        $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $this->assertEquals($data, $savedData);
 
@@ -308,37 +300,34 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $initData = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $initData = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $initData);
 
-        $customData = $this->object->getCustom(['entityDefs', 'Lead']);
-        unset($customData['fields']['status']['type']);
-        $customData['fields']['status']['options'] = ["__APPEND__", "Test1"];
+        $customData = $this->object->getCustom('entityDefs', 'Lead');
+
+        unset($customData->fields->status->type);
+        $customData->fields->status->options = ["__APPEND__", "Test1"];
         $this->object->saveCustom('entityDefs', 'Lead', $customData);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
         $fileContent = $this->objects['fileManager']->getContents($savedFile);
-        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+        $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
-        $expectedData = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $expectedData = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "options" => ["__APPEND__", "Test1"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->assertEquals($expectedData, $savedData);
 

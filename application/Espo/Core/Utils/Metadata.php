@@ -311,25 +311,15 @@ class Metadata
      * @param  string|array $key
      * @param  mixed $default
      *
-     * @return array|null
+     * @return object|mixed
      */
-    public function getCustom($key = null, $default = null)
+    public function getCustom($key1, $key2, $default = null)
     {
-        $keyList = is_array($key) ? $key : explode('.', $key);
-
-        if (!isset($keyList[0]) || !isset($keyList[1])) {
-            return $default;
-        }
-
-        list($key1, $key2) = $keyList;
-        unset($keyList[0], $keyList[1]);
-
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
         $fileContent = $this->getFileManager()->getContents($filePath);
 
         if ($fileContent) {
-            $data = Json::getArrayData($fileContent);
-            return Util::getValueByKey($data, $keyList, $default);
+            return Json::decode($fileContent);
         }
 
         return $default;
@@ -346,8 +336,8 @@ class Metadata
      */
     public function saveCustom($key1, $key2, $data)
     {
-        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         $result = $this->getFileManager()->putContents($filePath, $changedData);
 
