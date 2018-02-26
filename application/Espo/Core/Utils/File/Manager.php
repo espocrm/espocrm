@@ -28,8 +28,9 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
-use Espo\Core\Utils,
-    Espo\Core\Exceptions\Error;
+
+use Espo\Core\Utils;
+use Espo\Core\Exceptions\Error;
 
 class Manager
 {
@@ -110,7 +111,7 @@ class Manager
         }
 
         if ($isReturnSingleArray) {
-            return $this->getSingeFileList($result, $onlyFileType);
+            return $this->getSingeFileList($result, $onlyFileType, $path);
         }
 
         return $result;
@@ -125,7 +126,7 @@ class Manager
      *
      * @return aray
      */
-    protected function getSingeFileList(array $fileList, $onlyFileType = null, $parentDirName = '')
+    protected function getSingeFileList(array $fileList, $onlyFileType = null, $basePath = null, $parentDirName = '')
     {
         $singleFileList = array();
         foreach($fileList as $dirName => $fileName) {
@@ -133,16 +134,16 @@ class Manager
             if (is_array($fileName)) {
                 $currentDir = Utils\Util::concatPath($parentDirName, $dirName);
 
-                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentDir)) {
+                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentDir, $basePath)) {
                     $singleFileList[] = $currentDir;
                 }
 
-                $singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $onlyFileType, $currentDir));
+                $singleFileList = array_merge($singleFileList, $this->getSingeFileList($fileName, $onlyFileType, $basePath, $currentDir));
 
             } else {
                 $currentFileName = Utils\Util::concatPath($parentDirName, $fileName);
 
-                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentFileName)) {
+                if (!isset($onlyFileType) || $onlyFileType == $this->isFile($currentFileName, $basePath)) {
                     $singleFileList[] = $currentFileName;
                 }
             }
@@ -221,7 +222,6 @@ class Manager
      */
     public function putPhpContents($path, $data, $withObjects = false)
     {
-
         return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX);
     }
 
@@ -425,13 +425,7 @@ class Manager
         $sourcePath = $this->concatPaths($sourcePath);
         $destPath = $this->concatPaths($destPath);
 
-        if (isset($fileList)) {
-            if (!empty($sourcePath)) {
-                foreach ($fileList as &$fileName) {
-                    $fileName = $this->concatPaths(array($sourcePath, $fileName));
-                }
-            }
-        } else {
+        if (!isset($fileList)) {
             $fileList = is_file($sourcePath) ? (array) $sourcePath : $this->getFileList($sourcePath, $recursively, '', true, true);
         }
 
@@ -679,10 +673,16 @@ class Manager
      * Check if $dirname is directory.
      *
      * @param  string  $dirname
+     * @param  string  $basePath
+     *
      * @return boolean
      */
-    public function isDir($dirname)
+    public function isDir($dirname, $basePath = null)
     {
+        if (!empty($basePath)) {
+            $dirname = $this->concatPaths([$basePath, $dirname]);
+        }
+
         return is_dir($dirname);
     }
 
@@ -690,10 +690,16 @@ class Manager
      * Check if $filename is file. If $filename doesn'ot exist, check by pathinfo
      *
      * @param  string  $filename
+     * @param  string  $basePath
+     *
      * @return boolean
      */
-    public function isFile($filename)
+    public function isFile($filename, $basePath = null)
     {
+        if (!empty($basePath)) {
+            $filename = $this->concatPaths([$basePath, $filename]);
+        }
+
         if (file_exists($filename)) {
             return is_file($filename);
         }

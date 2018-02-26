@@ -236,17 +236,39 @@ class Metadata
         }
     }
 
-    public function getAllObjects($isJSON = false, $reload = false)
+    protected function getObjData($reload = false)
     {
         if (!isset($this->objData) || $reload) {
             $this->objInit($reload);
         }
 
+        return $this->objData;
+    }
+
+    /**
+    * Get Object Metadata
+    *
+    * @param mixed string|array $key
+    * @param mixed $default
+    *
+    * @return object
+    */
+    public function getObjects($key = null, $default = null)
+    {
+        $objData = $this->getObjData();
+
+        return Util::getValueByKey($objData, $key, $default);
+    }
+
+    public function getAllObjects($isJSON = false, $reload = false)
+    {
+        $objData = $this->getObjData($reload);
+
         if ($isJSON) {
-            return Json::encode($this->objData);
+            return Json::encode($objData);
         }
 
-        return $this->objData;
+        return $objData;
     }
 
     public function getAllForFrontend()
@@ -311,25 +333,15 @@ class Metadata
      * @param  string|array $key
      * @param  mixed $default
      *
-     * @return array|null
+     * @return object|mixed
      */
-    public function getCustom($key = null, $default = null)
+    public function getCustom($key1, $key2, $default = null)
     {
-        $keyList = is_array($key) ? $key : explode('.', $key);
-
-        if (!isset($keyList[0]) || !isset($keyList[1])) {
-            return $default;
-        }
-
-        list($key1, $key2) = $keyList;
-        unset($keyList[0], $keyList[1]);
-
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
         $fileContent = $this->getFileManager()->getContents($filePath);
 
         if ($fileContent) {
-            $data = Json::getArrayData($fileContent);
-            return Util::getValueByKey($data, $keyList, $default);
+            return Json::decode($fileContent);
         }
 
         return $default;
@@ -346,8 +358,8 @@ class Metadata
      */
     public function saveCustom($key1, $key2, $data)
     {
-        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         $result = $this->getFileManager()->putContents($filePath, $changedData);
 
