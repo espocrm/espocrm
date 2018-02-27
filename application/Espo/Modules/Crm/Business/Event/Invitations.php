@@ -97,6 +97,21 @@ class Invitations
             'inviteeType' => $invitee->getEntityType(),
             'link' => $link
         ));
+
+        if ($entity->get('dateEnd')) {
+            $terminateAt = $entity->get('dateEnd');
+        } else {
+            $dt = new \DateTime();
+            $dt->modify('+1 month');
+            $terminateAt = $dt->format('Y-m-d H:i:s');
+        }
+
+        $uid->set([
+            'targetId' => $entity->id,
+            'targetType' => $entity->getEntityType(),
+            'terminateAt' => $terminateAt
+        ]);
+
         $this->getEntityManager()->saveEntity($uid);
 
         $emailAddress = $invitee->get('emailAddress');

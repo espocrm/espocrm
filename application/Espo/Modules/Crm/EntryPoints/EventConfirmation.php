@@ -56,7 +56,6 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
 
         if (!$uniqueId) {
             throw new NotFound();
-            return;
         }
 
         $data = $uniqueId->get('data');
@@ -70,48 +69,53 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
         if (!empty($eventType) && !empty($eventId) && !empty($inviteeType) && !empty($inviteeId) && !empty($link)) {
             $event = $this->getEntityManager()->getEntity($eventType, $eventId);
             $invitee = $this->getEntityManager()->getEntity($inviteeType, $inviteeId);
-            if ($event && $invitee) {
-                $status = 'None';
-                $hookMethodName = 'afterConfirmation';
-                if ($action == 'accept') {
-                    $status = 'Accepted';
-                } else if ($action == 'decline') {
-                    $status = 'Declined';
-                } else if ($action == 'tentative') {
-                    $status = 'Tentative';
-                }
 
-                $data = (object) [
-                    'status' => $status
-                ];
-                $this->getEntityManager()->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
-
-                $actionData = [
-                    'eventName' => $event->get('name'),
-                    'eventType' => $event->getEntityType(),
-                    'eventId' => $event->id,
-                    'dateStart' => $event->get('dateStart'),
-                    'action' => $action,
-                    'status' => $status,
-                    'link' => $link,
-                    'inviteeType' => $invitee->getEntityType(),
-                    'inviteeId' => $invitee->id
-                ];
-
-                $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
-
-                $this->getEntityManager()->getRepository('UniqueId')->remove($uniqueId);
-
-                $runScript = "
-                    Espo.require('crm:controllers/event-confirmation', function (Controller) {
-                        var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                        controller.masterView = app.masterView;
-                        controller.doAction('confirmEvent', ".json_encode($actionData).");
-                    });
-                ";
-
-                $this->getClientManager()->display($runScript);
+            if (!$event || !$invitee) {
+                throw new NotFound();
             }
+
+            if ($event->get('status') === 'Held' || $event->get('status') === 'Not Held') {
+                throw new NotFound();
+            }
+
+            $status = 'None';
+            $hookMethodName = 'afterConfirmation';
+            if ($action == 'accept') {
+                $status = 'Accepted';
+            } else if ($action == 'decline') {
+                $status = 'Declined';
+            } else if ($action == 'tentative') {
+                $status = 'Tentative';
+            }
+
+            $data = (object) [
+                'status' => $status
+            ];
+            $this->getEntityManager()->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
+
+            $actionData = [
+                'eventName' => $event->get('name'),
+                'eventType' => $event->getEntityType(),
+                'eventId' => $event->id,
+                'dateStart' => $event->get('dateStart'),
+                'action' => $action,
+                'status' => $status,
+                'link' => $link,
+                'inviteeType' => $invitee->getEntityType(),
+                'inviteeId' => $invitee->id
+            ];
+
+            $this->getEntityManager()->getHookManager()->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);
+
+            $runScript = "
+                Espo.require('crm:controllers/event-confirmation', function (Controller) {
+                    var controller = new Controller(app.baseController.params, app.getControllerInjection());
+                    controller.masterView = app.masterView;
+                    controller.doAction('confirmEvent', ".json_encode($actionData).");
+                });
+            ";
+
+            $this->getClientManager()->display($runScript);
         }
 
         throw new Error();
