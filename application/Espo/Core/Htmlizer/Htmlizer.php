@@ -123,14 +123,14 @@ class Htmlizer
                         if ($item instanceof \StdClass) {
                             $v = json_decode(json_encode($v), true);
                         }
-                        if (!is_array($v)) {
-                            $v = [];
+                        if (is_array($v)) {
+                            foreach ($v as $k => $w) {
+                                $keyRaw = $k . '_RAW';
+                                $v[$keyRaw] = $v[$k];
+                                $v[$k] = $this->format($v[$k]);
+                            }
                         }
-                        foreach ($v as $k => $w) {
-                            $keyRaw = $k . '_RAW';
-                            $v[$keyRaw] = $v[$k];
-                            $v[$k] = $this->format($v[$k]);
-                        }
+
                         $newList[] = $v;
                     }
                     $data[$field] = $newList;
