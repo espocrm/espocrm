@@ -94,6 +94,11 @@ class Entity extends \Espo\ORM\Entity
         }
 
         $defs['select'] = ['id', 'name'];
+        if ($foreignEntityType === 'Lead') {
+            $defs['select'][] = 'accountName';
+            $defs['select'][] = 'emailAddress';
+            $defs['select'][] = 'phoneNumber';
+        }
 
         $hasType = false;
         if ($this->hasField($field . 'Types')) {
