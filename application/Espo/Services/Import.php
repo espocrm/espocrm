@@ -241,6 +241,8 @@ class Import extends \Espo\Services\Record
 
         $this->getEntityManager()->removeEntity($import);
 
+        $this->processActionHistoryRecord('delete', $import);
+
         return true;
     }
 
@@ -325,6 +327,8 @@ class Import extends \Espo\Services\Record
         }
 
         $this->getEntityManager()->saveEntity($import);
+
+        $this->processActionHistoryRecord('create', $import);
 
         if (!empty($params['idleMode'])) {
             $params['idleMode'] = false;
