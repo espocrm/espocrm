@@ -2,10 +2,13 @@
   "fields": {
     "name": "Nume",
     "job": "Activitate",
-    "scheduling": "Scheduling (crontab notation)"
+    "scheduling": "Planificare"
+  },
+  "links": {
+    "log": "Jurnal"
   },
   "labels": {
-    "Create ScheduledJob": "Creare activiate programata"
+    "Create ScheduledJob": "Creați activiate planificată"
   },
   "options": {
     "job": {

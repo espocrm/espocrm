@@ -15,12 +15,21 @@
         "createdBy": {
             "type": "link",
             "readOnly": true
+        },
+        "terminateAt": {
+            "type": "datetime"
+        },
+        "target": {
+            "type": "linkParent"
         }
     },
     "links": {
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "target": {
+            "type": "belongsToParent"
         }
     },
     "collection": {

@@ -52,7 +52,13 @@ class Entity extends \Espo\ORM\Entity
             if (!$this->entityManager->hasRepository($parentType)) return;
             $repository = $this->entityManager->getRepository($parentType);
 
-            $foreignEntity = $repository->select(['id', 'name'])->where(['id' => $parentId])->findOne();
+            $select = ['id', 'name'];
+            if ($parentType === 'Lead') {
+                $select[] = 'accountName';
+                $select[] = 'emailAddress';
+                $select[] = 'phoneNumber';
+            }
+            $foreignEntity = $repository->select($select)->where(['id' => $parentId])->findOne();
             if ($foreignEntity) {
                 $this->set($field . 'Name', $foreignEntity->get('name'));
             }
@@ -88,6 +94,11 @@ class Entity extends \Espo\ORM\Entity
         }
 
         $defs['select'] = ['id', 'name'];
+        if ($foreignEntityType === 'Lead') {
+            $defs['select'][] = 'accountName';
+            $defs['select'][] = 'emailAddress';
+            $defs['select'][] = 'phoneNumber';
+        }
 
         $hasType = false;
         if ($this->hasField($field . 'Types')) {

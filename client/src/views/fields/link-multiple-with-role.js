@@ -69,6 +69,9 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
         getDetailLinkHtml: function (id, name) {
             name = name || this.nameHash[id];
+            if (!name && id) {
+                name = this.translate(this.foreignScope, 'scopeNames');
+            }
 
             var role = (this.columns[id] || {})[this.columnName] || '';
             var roleHtml = '';

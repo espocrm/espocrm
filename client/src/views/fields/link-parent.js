@@ -59,12 +59,16 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
 
         data: function () {
+            var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
+            if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
+                nameValue = this.translate(this.model.get(this.typeName), 'scopeNames');
+            }
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 typeName: this.typeName,
                 idValue: this.model.get(this.idName),
-                nameValue: this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName),
+                nameValue: nameValue,
                 typeValue: this.model.get(this.typeName),
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,

@@ -41,7 +41,7 @@ class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
 		$query = $this->getEntityManager()->getQuery();
 
 		$parentId = $entity->get('parentId');
-		$pathsTableName = $query->toDb($entity->getEntityType() . 'Path');
+		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
 
 		if ($entity->isNew()) {
 			if ($parentId) {
@@ -93,7 +93,7 @@ class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
 		$pdo = $this->getEntityManager()->getPDO();
 		$query = $this->getEntityManager()->getQuery();
 
-		$pathsTableName = $query->toDb($entity->getEntityType() . 'Path');
+		$pathsTableName = $query->toDb($query->sanitize($entity->getEntityType()) . 'Path');
 
 		$sql = "DELETE FROM `".$pathsTableName."` WHERE descendor_id = ".$pdo->quote($entity->id)."";
 		$pdo->query($sql);

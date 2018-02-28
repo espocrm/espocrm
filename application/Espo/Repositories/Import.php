@@ -49,7 +49,7 @@ class Import extends \Espo\Core\ORM\Repositories\RDB
     {
         $entityType = $entity->get('entityType');
         $pdo = $this->getEntityManager()->getPDO();
-        $table = $this->getEntityManager()->getQuery()->toDb($entityType);
+        $table = $this->getEntityManager()->getQuery()->toDb($this->getEntityManager()->getQuery()->sanitize($entityType));
 
         $part = "0";
         switch ($link) {

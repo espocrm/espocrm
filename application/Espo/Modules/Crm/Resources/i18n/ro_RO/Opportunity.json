@@ -3,37 +3,48 @@
     "name": "Nume",
     "account": "Cont",
     "stage": "Stadiu",
-    "amount": "Suma",
+    "amount": "Sumă",
     "probability": "Probabilitate, %",
-    "leadSource": "Sursa Lead",
-    "doNotCall": "Nu sunati",
-    "closeDate": "Data Inchiderii",
+    "leadSource": "Sursă Lead",
+    "doNotCall": "Nu sunați",
+    "closeDate": "Data Închiderii",
     "contacts": "Contacte",
-    "description": "Descriere"
+    "description": "Descriere",
+    "amountConverted": "Sumă (convertit)",
+    "amountWeightedConverted": "Suma ponderată",
+    "campaign": "Campanie",
+    "originalLead": "Lead Original",
+    "amountCurrency": "Sumă Valută",
+    "contactRole": "Rol Contact"
   },
   "links": {
-    "contacts": "Contacte"
+    "contacts": "Contacte",
+    "documents": "Documente",
+    "campaign": "Campanie",
+    "originalLead": "Lead Original"
   },
   "options": {
     "stage": {
       "Prospecting": "Prospectare",
-      "Qualification": "Calificari",
+      "Qualification": "Calificări",
       "Proposal": "Propunere",
       "Negotiation": "Negociere",
-      "Needs Analysis": "Necesita Analiza",
-      "Value Proposition": "Valoare Propunere",
+      "Needs Analysis": "Necesită Analiză",
+      "Value Proposition": "Propunere Valoare",
       "Id. Decision Makers": "Id. Factori de Decizie",
-      "Perception Analysis": "Analiza Perceptiei",
-      "Proposal/Price Quote": "Propunere/Oferta Pret",
+      "Perception Analysis": "Analiză Percepției",
+      "Proposal/Price Quote": "Propunere/Preț Ofertă",
       "Negotiation/Review": "Negociere/Revizuire",
-      "Closed Won": "Inchide ca Castigat",
-      "Closed Lost": "Inchide ca Pierdut"
+      "Closed Won": "Închide Câștigat",
+      "Closed Lost": "Închide Pierdut"
     }
   },
   "labels": {
     "Create Opportunity": "Creare Oportunitate"
   },
   "presetFilters": {
-    "open": "Deschide"
+    "open": "Deschide",
+    "won": "Câștigat",
+    "lost": "Pierdut"
   }
 }

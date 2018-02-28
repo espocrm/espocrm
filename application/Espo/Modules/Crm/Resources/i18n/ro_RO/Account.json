@@ -26,10 +26,26 @@
       "Education": "Educatie",
       "Electronics": "Electronice",
       "Finance": "Finante",
-      "Insurance": "Asigurari"
+      "Insurance": "Asigurari",
+      "Technology": "Tehnologie",
+      "Telecommunications": "Telecomunicații",
+      "Television": "Televiziune",
+      "Testing, Inspection & Certification": "Testare, Inspecție & Certificări",
+      "Transportation": "Transport",
+      "Travel": "Călătorit",
+      "Venture Capital": "Capital de risc",
+      "Wholesale": "Angro",
+      "Water": "Apă"
     }
   },
   "labels": {
-    "Create Account": "Creare cont"
+    "Create Account": "Creare cont",
+    "Copy Billing": "Copiați facturarea",
+    "Set Primary": "Setați primar"
+  },
+  "presetFilters": {
+    "customers": "Clienți",
+    "partners": "Parteneri",
+    "recentlyCreated": "Create recent"
   }
 }

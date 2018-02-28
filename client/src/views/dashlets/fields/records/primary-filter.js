@@ -48,7 +48,12 @@ Espo.define('views/dashlets/fields/records/primary-filter', 'views/fields/enum',
             this.params.options = [];
 
             filterList.forEach(function (item) {
-                if (typeof item === 'object' && item.name) {
+                    if (typeof item === 'object' && item.name) {
+                    if (item.accessDataList) {
+                        if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser(), null, true)) {
+                            return false;
+                        }
+                    }
                     this.params.options.push(item.name);
                     return;
                 }

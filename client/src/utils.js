@@ -51,7 +51,7 @@ Espo.define('utils', [], function () {
             return hasAccess;
         },
 
-        checkAccessDataList: function (dataList, acl, user, entity) {
+        checkAccessDataList: function (dataList, acl, user, entity, allowAllForAdmin) {
             if (!dataList || !dataList.length) {
                 return true;
             }
@@ -76,7 +76,7 @@ Espo.define('utils', [], function () {
                     }
                 }
                 if (item.teamIdList) {
-                    if (user) {
+                    if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inTeam = false;
                         user.getLinkMultipleIdList('teams').forEach(function (teamId) {
                             if (~item.teamIdList.indexOf(teamId)) {
@@ -87,7 +87,7 @@ Espo.define('utils', [], function () {
                     }
                 }
                 if (item.portalIdList) {
-                    if (user) {
+                    if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inPortal = false;
                         user.getLinkMultipleIdList('portals').forEach(function (portalId) {
                             if (~item.portalIdList.indexOf(portalId)) {
@@ -98,13 +98,13 @@ Espo.define('utils', [], function () {
                     }
                 }
                 if (item.isPortalOnly) {
-                    if (user) {
+                    if (user && !(allowAllForAdmin && user.isAdmin())) {
                         if (!user.isPortal()) {
                             return false;
                         }
                     }
                 } else if (item.inPortalDisabled) {
-                    if (user) {
+                    if (user && !(allowAllForAdmin && user.isAdmin())) {
                         if (user.isPortal()) {
                             return false;
                         }
@@ -119,7 +119,6 @@ Espo.define('utils', [], function () {
                     }
                 }
             }
-
             return true;
         },
 
