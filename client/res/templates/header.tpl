@@ -5,7 +5,7 @@
     <div class="{{#if isHeaderAdditionalSpace}}col-sm-4{{else}}col-sm-5{{/if}}{{#if isXsSingleRow}} col-xs-6{{/if}}">
         <div class="header-buttons btn-group pull-right">
             {{#each items.buttons}}
-                    <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
+                    <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}{{#if title}} title="{{title}}"{{/if}}>
                     {{#if iconHtml}}{{{iconHtml}}}{{/if}}
                     {{#if html}}{{{html}}}{{else}}{{translate label scope=../../scope}}{{/if}}
                     </a>
