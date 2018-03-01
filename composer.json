@@ -1,4 +1,7 @@
 {
+    "name": "espocrm/espocrm",
+    "description": "Espo CRM",
+    "version": "5.0.6",
 	"require": {
 		"doctrine/dbal": "2.*",
 		"slim/slim": "2.6.2",
