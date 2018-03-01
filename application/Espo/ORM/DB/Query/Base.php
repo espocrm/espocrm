@@ -932,11 +932,11 @@ abstract class Base
         if (is_array($value)) {
             $arr = [];
             foreach ($value as $v) {
-                $arr[] = $this->pdo->quote($v);
+                $arr[] = $this->quote($v);
             }
             $stringValue = '(' . implode(', ', $arr) . ')';
         } else {
-            $stringValue = $this->pdo->quote($value);
+            $stringValue = $this->quote($value);
         }
         return $stringValue;
     }
