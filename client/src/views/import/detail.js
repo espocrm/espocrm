@@ -125,8 +125,7 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
 
         actionRevert: function () {
         	this.confirm(this.translate('confirmRevert', 'messages', 'Import'), function () {
-                $btn = this.$el.find('button[data-action="revert"]');
-                $btn.addClass('disabled');
+                this.disableMenuItem('revert');
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
 	        	$.ajax({
@@ -145,8 +144,8 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
 
         actionRemoveDuplicates: function () {
         	this.confirm(this.translate('confirmRemoveDuplicates', 'messages', 'Import'), function () {
-                $btn = this.$el.find('button[data-action="removeDuplicates"]');
-                $btn.addClass('disabled');
+                this.disableMenuItem('removeDuplicates');
+
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
 	        	$.ajax({
@@ -156,7 +155,8 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
 	        			id: this.model.id
 	        		})
 	        	}).done(function () {
-                    $btn.remove();
+                    this.removeMenuItem('removeDuplicates', true);
+
                     this.model.fetch();
                     this.model.trigger('update-all');
                     Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
