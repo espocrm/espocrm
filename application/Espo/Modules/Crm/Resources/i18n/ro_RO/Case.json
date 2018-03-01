@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nume",
     "number": "Număr",
+    "status": "Stare",
     "account": "Cont",
     "contacts": "Contacte",
     "priority": "Prioritate",

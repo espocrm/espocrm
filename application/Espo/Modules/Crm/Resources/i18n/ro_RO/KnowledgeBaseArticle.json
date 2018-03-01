@@ -10,6 +10,7 @@
   },
   "fields": {
     "name": "Nume",
+    "status": "Stare",
     "type": "Tip",
     "attachments": "Atașamente",
     "publishDate": "Publică Dată",

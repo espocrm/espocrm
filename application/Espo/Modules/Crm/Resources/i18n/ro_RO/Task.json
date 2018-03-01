@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nume",
     "parent": "Părinte",
+    "status": "Stare",
     "dateStart": "Dată Începere",
     "dateEnd": "Dată Scadență",
     "dateStartDate": "Dată Începere (toată ziua)",
