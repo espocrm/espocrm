@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "Nume",
+    "status": "Stare",
+    "storeSentEmails": "Stocați email-urile trimise",
+    "startAt": "Data Începerii",
+    "fromAddress": "Din Adresă",
+    "fromName": "Din Nume",
+    "replyToAddress": "Răspundeți la Adresă",
+    "replyToName": "Răspundeți la Nume",
+    "campaign": "Campanie",
+    "emailTemplate": "Șablon Email",
+    "inboundEmail": "Cont Email",
+    "targetLists": "Liste Țintă",
+    "excludingTargetLists": "Excluderea listelor țintă",
+    "smtpAccount": "Cont SMTP"
+  },
+  "links": {
+    "targetLists": "Liste Țintă",
+    "excludingTargetLists": "Excluderea listelor țintă",
+    "queueItems": "Elemente de Așteptare",
+    "campaign": "Campanie",
+    "emailTemplate": "Șablon Email",
+    "inboundEmail": "Cont Email"
+  },
+  "options": {
+    "status": {
+      "Draft": "Schiță",
+      "Pending": "În așteptare",
+      "In Process": "În proces",
+      "Complete": "Terminat",
+      "Canceled": "Anulat",
+      "Failed": "Eșuat"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Creați Email în Masă",
+    "Send Test": "Trimite Test",
+    "System SMTP": "Sistem SMTP",
+    "system": "sistem",
+    "group": "grup"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Selectați cel puțin o țintă.",
+    "testSent": "Email(uri) test care ar trebui să fie trimise"
+  },
+  "tooltips": {
+    "optOutEntirely": "Adresele de email ale destinatarilor care s-au dezabonat, vor fi marcate ca fiind oprite și nu vor mai primi email-uri în masă ",
+    "targetLists": "Țintele care ar trebui să primească mesaje.",
+    "excludingTargetLists": "Țintele care nu ar trebui să primească mesaje.",
+    "storeSentEmails": "Email-urile o să fie stocate în CRM."
+  },
+  "presetFilters": {
+    "complete": "Terminat"
+  }
+}

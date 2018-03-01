@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "name": "Nume",
+    "title": "Rol",
+    "accountRole": "Rol",
+    "account": "Cont",
+    "accounts": "Conturi",
+    "phoneNumber": "Telefon",
+    "accountType": "Tip cont",
+    "doNotCall": "Nu sunați",
+    "address": "Adresă",
+    "opportunityRole": "Rol Oportunitate",
+    "description": "Descriere",
+    "campaign": "Campanie",
+    "targetLists": "Liste Țintă",
+    "targetList": "Listă țintă",
+    "portalUser": "Utilizator Portal",
+    "originalLead": "Lead Original",
+    "acceptanceStatus": "Stare Acceptare",
+    "accountIsInactive": "Cont Inactiv",
+    "acceptanceStatusMeetings": "Stare Acceptare (Întâlniri)",
+    "acceptanceStatusCalls": "Stare Acceptare (Apeluri)"
+  },
+  "links": {
+    "opportunities": "Oportunități",
+    "cases": "Cazuri",
+    "targetLists": "Liste Țintă",
+    "campaignLogRecords": "Jurnal Campanie",
+    "campaign": "Campanie",
+    "account": "Cont (Principal)",
+    "accounts": "Conturi",
+    "casesPrimary": "Cazuri (Principal)",
+    "tasksPrimary": "Sarcini (extins)",
+    "portalUser": "Utilizator Portal",
+    "originalLead": "Lead Original",
+    "documents": "Documente"
+  },
+  "labels": {
+    "Create Contact": "Creare Contact"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Nici unul--",
+      "Decision Maker": "Factor de decizie"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Utilizatori Portal",
+    "notPortalUsers": "Nu sunt Utilizatori ai Portalului",
+    "accountActive": "Activ"
+  }
+}

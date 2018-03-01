@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Nume",
+    "status": "Stare",
+    "target": "Țintă",
+    "sentAt": "Dată Trimitere",
+    "attemptCount": "Încercări",
+    "emailAddress": "Adresă Email",
+    "massEmail": "Email în Masă",
+    "isTest": "Este test"
+  },
+  "links": {
+    "target": "Țintă",
+    "massEmail": "Email în Masă"
+  },
+  "options": {
+    "status": {
+      "Pending": "În așteptare",
+      "Sent": "Trimis",
+      "Failed": "Eșuat",
+      "Sending": "Se trimite"
+    }
+  },
+  "presetFilters": {
+    "pending": "În așteptare",
+    "sent": "Trimis",
+    "failed": "Eșuat"
+  }
+}

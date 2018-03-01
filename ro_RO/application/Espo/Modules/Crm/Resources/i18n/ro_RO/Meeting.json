@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Nume",
+    "parent": "Părinte",
+    "status": "Stare",
+    "dateStart": "Dată Început",
+    "dateEnd": "Dată Terminare",
+    "duration": "Durată",
+    "description": "Descriere",
+    "users": "Utilizatori",
+    "contacts": "Contacte",
+    "leads": "Lead-uri",
+    "reminders": "Mementouri",
+    "account": "Cont",
+    "acceptanceStatus": "Stare Acceptare"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planificat",
+      "Held": "Reținut",
+      "Not Held": "Nereținut"
+    },
+    "acceptanceStatus": {
+      "None": "Nici unul",
+      "Accepted": "Acceptat",
+      "Declined": "Respins",
+      "Tentative": "Tentativă"
+    }
+  },
+  "massActions": {
+    "setHeld": "Setat ca reținut",
+    "setNotHeld": "Setat ca nereținut"
+  },
+  "labels": {
+    "Create Meeting": "Creare Întâlnire",
+    "Set Held": "Setat ca reținut",
+    "Set Not Held": "Setat ca nereținut",
+    "Send Invitations": "Trimite Invitații",
+    "on time": "la timp",
+    "before": "înainte"
+  },
+  "presetFilters": {
+    "planned": "Planificat",
+    "held": "Reținut",
+    "todays": "Astăzi"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nu a fost trimis nimic"
+  }
+}

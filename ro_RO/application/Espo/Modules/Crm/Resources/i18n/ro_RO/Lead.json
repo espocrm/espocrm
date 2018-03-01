@@ -1,0 +1,65 @@
+{
+  "labels": {
+    "Converted To": "Convertit la",
+    "Create Lead": "Creare Lead",
+    "Convert": "Convertește",
+    "convert": "convertește"
+  },
+  "fields": {
+    "name": "Nume",
+    "title": "Titlu",
+    "website": "Site Web",
+    "phoneNumber": "Telefon",
+    "accountName": "Nume Cont",
+    "doNotCall": "Nu sunați",
+    "address": "Adresa",
+    "status": "Stare",
+    "source": "Sursa",
+    "opportunityAmount": "Sumă Oportunitate",
+    "opportunityAmountConverted": "Sumă Oportunitate (convertită)",
+    "description": "Descriere",
+    "createdAccount": "Cont",
+    "createdOpportunity": "Oportunitate",
+    "campaign": "Campanie",
+    "targetLists": "Liste Țintă",
+    "targetList": "Listă Țintă",
+    "industry": "Industrie",
+    "acceptanceStatus": "Stare Acceptare",
+    "opportunityAmountCurrency": "Valută Sumă Oportunitate",
+    "acceptanceStatusMeetings": "Stare Acceptare (Întâlniri)",
+    "acceptanceStatusCalls": "Stare Acceptare (Apeluri)"
+  },
+  "links": {
+    "targetLists": "Liste Țintă",
+    "campaignLogRecords": "Jurnal Campanie",
+    "campaign": "Campanie",
+    "createdAccount": "Cont",
+    "createdOpportunity": "Oportunitate",
+    "cases": "Cazuri",
+    "documents": "Documente"
+  },
+  "options": {
+    "status": {
+      "New": "Nou",
+      "Assigned": "Atribuit",
+      "In Process": "În Proces",
+      "Converted": "Convertit",
+      "Recycled": "Reciclat",
+      "Dead": "Inactiv"
+    },
+    "source": {
+      "": "Nici unul",
+      "Call": "Apel",
+      "Existing Customer": "Client Existent",
+      "Partner": "Partener",
+      "Public Relations": "Relații Publice",
+      "Web Site": "Site Web",
+      "Campaign": "Campanie",
+      "Other": "Altele"
+    }
+  },
+  "presetFilters": {
+    "active": "Activ",
+    "converted": "Convertit"
+  }
+}

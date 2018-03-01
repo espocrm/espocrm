@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Nume",
+    "account": "Cont",
+    "stage": "Stadiu",
+    "amount": "Sumă",
+    "probability": "Probabilitate, %",
+    "leadSource": "Sursă Lead",
+    "doNotCall": "Nu sunați",
+    "closeDate": "Data Închiderii",
+    "contacts": "Contacte",
+    "description": "Descriere",
+    "amountConverted": "Sumă (convertit)",
+    "amountWeightedConverted": "Suma ponderată",
+    "campaign": "Campanie",
+    "originalLead": "Lead Original",
+    "amountCurrency": "Sumă Valută",
+    "contactRole": "Rol Contact"
+  },
+  "links": {
+    "contacts": "Contacte",
+    "documents": "Documente",
+    "campaign": "Campanie",
+    "originalLead": "Lead Original"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospectare",
+      "Qualification": "Calificări",
+      "Proposal": "Propunere",
+      "Negotiation": "Negociere",
+      "Needs Analysis": "Necesită Analiză",
+      "Value Proposition": "Propunere Valoare",
+      "Id. Decision Makers": "Id. Factori de Decizie",
+      "Perception Analysis": "Analiză Percepției",
+      "Proposal/Price Quote": "Propunere/Preț Ofertă",
+      "Negotiation/Review": "Negociere/Revizuire",
+      "Closed Won": "Închide Câștigat",
+      "Closed Lost": "Închide Pierdut"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Creare Oportunitate"
+  },
+  "presetFilters": {
+    "open": "Deschide",
+    "won": "Câștigat",
+    "lost": "Pierdut"
+  }
+}

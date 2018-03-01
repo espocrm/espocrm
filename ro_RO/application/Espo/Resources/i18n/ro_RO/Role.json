@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "Nume",
+    "roles": "Roluri",
+    "assignmentPermission": "Permisiuni Sarcină",
+    "userPermission": "Permisiuni Utilizator",
+    "portalPermission": "Permisiuni Portal"
+  },
+  "links": {
+    "users": "Utilizatori",
+    "teams": "Echipe"
+  },
+  "labels": {
+    "Access": "Acces",
+    "Create Role": "Creare Rol",
+    "Scope Level": "Nivel Domeniu",
+    "Field Level": "Nivel Câmp"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nu a fost setat",
+      "enabled": "activat",
+      "disabled": "dezactivat"
+    },
+    "levelList": {
+      "all": "toate",
+      "team": "echipa",
+      "account": "cont",
+      "own": "personal",
+      "no": "nu",
+      "yes": "da",
+      "not-set": "nu a fost setat"
+    }
+  },
+  "actions": {
+    "read": "Citește",
+    "edit": "Editare",
+    "delete": "Șterge",
+    "create": "Creați"
+  },
+  "messages": {
+    "changesAfterClearCache": "Toate schimbările din controlul de acces o să fie aplicate după ce memoria chache este ștearsă."
+  }
+}

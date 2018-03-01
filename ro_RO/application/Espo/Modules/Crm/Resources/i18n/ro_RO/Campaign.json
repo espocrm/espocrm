@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "name": "Nume",
+    "description": "Descriere",
+    "status": "Stare",
+    "type": "Tip",
+    "startDate": "Dată începere",
+    "endDate": "Dată terminare",
+    "targetLists": "Liste țintă",
+    "excludingTargetLists": "Excluderea listelor țintă",
+    "sentCount": "Trimis",
+    "openedCount": "Deschis",
+    "clickedCount": "Apăsat",
+    "optedOutCount": "Ales să nu",
+    "revenue": "Venituri",
+    "revenueConverted": "Venituri (convertit)",
+    "budget": "Buget",
+    "budgetConverted": "Buget (convertit)"
+  },
+  "links": {
+    "targetLists": "Liste Țintă",
+    "excludingTargetLists": "Excluderea listelor țintă",
+    "accounts": "Conturi",
+    "contacts": "Contacte",
+    "leads": "Lead-uri",
+    "opportunities": "Oportunități",
+    "campaignLogRecords": "Jurnal",
+    "massEmails": "Email-uri în Masă",
+    "trackingUrls": "Urmărire URL-uri"
+  },
+  "options": {
+    "type": {
+      "Television": "Televiziune"
+    },
+    "status": {
+      "Planning": "Planificare",
+      "Active": "Activ",
+      "Inactive": "Inactiv",
+      "Complete": "Complet"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Crează Campanie",
+    "Target Lists": "Liste Țintă",
+    "Statistics": "Statistici",
+    "hard": "tare",
+    "soft": "ușor",
+    "Unsubscribe": "Dezabonare",
+    "Mass Emails": "Email-uri în Masă",
+    "Email Templates": "Șabloane Email",
+    "Unsubscribe again": "Dezabonare încă o dată",
+    "Subscribe again": "Abonare încă o dată",
+    "Create Target List": "Creați Listă Țintă"
+  },
+  "presetFilters": {
+    "active": "Activ"
+  },
+  "messages": {
+    "unsubscribed": "V-ați dezabonat din lista noastră de mail-uri",
+    "subscribedAgain": "V-ați abonat încă o dată."
+  },
+  "tooltips": {
+    "targetLists": "Țintele care ar trebui să primească mesaje.",
+    "excludingTargetLists": "Țintele care nu ar trebui să primească mesaje."
+  }
+}

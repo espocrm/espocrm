@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Creați Articol",
+    "Any": "Oricare",
+    "Send in Email": "Trimite în Email",
+    "Move Up": "Mută Sus",
+    "Move Down": "Mută Jos",
+    "Move to Top": "Mută la Început",
+    "Move to Bottom": "Mută la Sfârșit"
+  },
+  "fields": {
+    "name": "Nume",
+    "status": "Stare",
+    "type": "Tip",
+    "attachments": "Atașamente",
+    "publishDate": "Publică Dată",
+    "expirationDate": "Data Expirării",
+    "description": "Descriere",
+    "body": "Conținut",
+    "categories": "Categorii",
+    "language": "Limbă",
+    "portals": "Portaluri"
+  },
+  "links": {
+    "cases": "Cazuri",
+    "opportunities": "Oportunități",
+    "categories": "Ctegorii",
+    "portals": "Portaluri"
+  },
+  "options": {
+    "status": {
+      "In Review": "În revizuire",
+      "Draft": "Schiță",
+      "Archived": "Arhivat",
+      "Published": "Publicat"
+    },
+    "type": {
+      "Article": "Articol"
+    }
+  },
+  "tooltips": {
+    "portals": "Articolul o să fie disponibil doar în portalurile specificate."
+  },
+  "presetFilters": {
+    "published": "Publicat"
+  }
+}

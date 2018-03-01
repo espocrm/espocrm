@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "Nume",
+    "emailAddress": "Adresă Email",
+    "team": "Echipa Țintă",
+    "assignToUser": "Atribuie utilizatorului",
+    "host": "Gazdă",
+    "username": "Nume Utilizator",
+    "password": "Parolă",
+    "monitoredFolders": "Directoare Monitorizate",
+    "trashFolder": "Coș de Gunoi",
+    "createCase": "Creare Caz",
+    "reply": "Răspunde",
+    "caseDistribution": "Distribuire Caz",
+    "replyEmailTemplate": "Șablon Răspuns Email ",
+    "replyFromAddress": "Răspunde din Adresa",
+    "replyToAddress": "Răspunde la Adresa",
+    "replyFromName": "Răspunde din Nume",
+    "targetUserPosition": "Poziția Țintă a Utiliztorului",
+    "fetchSince": "Fetch începând cu",
+    "addAllTeamUsers": "Pentru toți utilizatorii echipei",
+    "teams": "Echipe",
+    "sentFolder": "Trimite dosar",
+    "storeSentEmails": "Stochează Email-uri trimisw",
+    "useImap": "Fetch email-uri",
+    "useSmtp": "Folosește SMTP",
+    "smtpHost": "Gazdă SMTP",
+    "smtpPort": "Port SMTP",
+    "smtpAuth": "Autentificare SMTP",
+    "smtpSecurity": "SEcuritate SMTP",
+    "smtpUsername": "Nume utilizator SMTP",
+    "smtpPassword": "Parolă SMTP",
+    "fromName": "De la Nume",
+    "smtpIsShared": "SMTP este partajat",
+    "smtpIsForMassEmail": "SMTP este din Email-uri în Masă"
+  },
+  "tooltips": {
+    "reply": "Notificați expeditorii că email-urile lor au fost primite.\n\n Doar un email va fi trimis unui anumit destinatar într-o anumită perioadă de timp pentru a preveni looping.",
+    "createCase": "Creați cazul automat din email-urile primite",
+    "replyToAddress": "Specificați adresa de email a acestei căsuțe poștale pentru a redirecționa răspunsurile aici.",
+    "caseDistribution": "Cum o să fie atribuite cazurile. Atribuite direct utilizatorului sau în rândul echipei.",
+    "assignToUser": "Cazurile utilizatorului o să fie atribuite.",
+    "team": "Cazurile echipei o să fie atribuite.",
+    "teams": "Email-urile echipei o să fie atribuite.",
+    "targetUserPosition": "Utilizatoriilor cu poziția specificată o să le fie distribuite cazurile.",
+    "addAllTeamUsers": "Email-urile o să apară în căsuța poștală a tuturor utilizatorilor din echipele specificate.",
+    "monitoredFolders": "Dosarele multiple ar trebui separate prin virgulă",
+    "smtpIsShared": "Dacă este bifat, utiliatorii o să poată trimite email-uri folosind SMTP. Disponibilitatea este controlată de Roluri prin intermediul permisiunilor din Grupul Contului Email.",
+    "smtpIsForMassEmail": "Dacă este bifat, SMTP o să fie disponibil pentru Email în Masă.",
+    "storeSentEmails": "Email-urile trimise o să fie stocate pe server-ul IMAP"
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Email-uri",
+    "assignToUser": "Atribuit Utilizatorului"
+  },
+  "options": {
+    "status": {
+      "Active": "Activ",
+      "Inactive": "Inactiv"
+    },
+    "caseDistribution": {
+      "": "Nici unul",
+      "Direct-Assignment": "Atribuire directă"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Creare Cont Email",
+    "Actions": "Acțiuni",
+    "Main": "Principal"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nu s-a putut conecta la server-ul IMAP"
+  }
+}

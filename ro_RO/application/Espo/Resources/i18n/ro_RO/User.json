@@ -1,0 +1,96 @@
+{
+  "fields": {
+    "name": "Nume",
+    "userName": "Nume Utilizator",
+    "title": "Titlu",
+    "isAdmin": "Este Admin",
+    "defaultTeam": "Echipă Inițială",
+    "phoneNumber": "Telefon",
+    "roles": "Roluri",
+    "portals": "Portaluri",
+    "portalRoles": "Roluri Portal",
+    "teamRole": "Poziție",
+    "password": "Parola",
+    "currentPassword": "Parolă Actuală",
+    "passwordConfirm": "Confirmare Parolă",
+    "newPassword": "Parolă Nouă",
+    "newPasswordConfirm": "Confirmare Parolă Nouă",
+    "isActive": "Este Activ",
+    "isPortalUser": "Este Utilizator Portal",
+    "accounts": "Conturi",
+    "account": "Cont (Principal)",
+    "sendAccessInfo": "Trimite Email cu Informații de Acces către Utilizator",
+    "gender": "Sex",
+    "position": "Poziția în Echipă",
+    "ipAddress": "IP Adresă",
+    "passwordPreview": "Previzualizare Parolă",
+    "isSuperAdmin": "Este Super Admin"
+  },
+  "links": {
+    "teams": "Echipe",
+    "roles": "Roluri",
+    "notes": "Note",
+    "portals": "Portaluri",
+    "portalRoles": "Roluri Portaluri",
+    "accounts": "Conturi",
+    "account": "Cont (Principal)",
+    "tasks": "Sarcini"
+  },
+  "labels": {
+    "Create User": "Creare Utilizator",
+    "Generate": "Generare",
+    "Access": "Acces",
+    "Preferences": "Preferințe",
+    "Change Password": "Schimbare Parolă",
+    "Teams and Access Control": "Echipe și Acces Control",
+    "Forgot Password?": "Ai uitat Parola?",
+    "Password Change Request": "Cerere Schimbare Parolă",
+    "Email Address": "Adresă Email",
+    "External Accounts": "Conturi Externe",
+    "Email Accounts": "Conturi Email",
+    "Create Portal User": "Creați Utilizator Portal",
+    "Proceed w/o Contact": "Continuă fără Contact"
+  },
+  "tooltips": {
+    "defaultTeam": "Toate înregistrările create de acest utilizator vor fi legate de această echipă în mod implicit.",
+    "userName": "Scrisorile a-z, numerele 0-9, puncte, cratime, @ și underscores sunt permise.",
+    "isAdmin": "Utilizatorii admin au acces la tot.",
+    "isActive": "Dacă nu este bifat, utilizatorul nu o să se poată autentifica.",
+    "teams": "Echipele din care face parte acest utilizator. Nivelul de control al accesului este moștenit din rolurile echipei.",
+    "roles": "Roluri suplimentare de acces. Utilizați-l dacă utilizatorul nu aparține nici unei echipe sau trebuie să extindeți nivelul de control al accesului exclusiv pentru acest utilizator.",
+    "portalRoles": "Roluri suplimentare de portal. Utilizați-l pentru a extinde nivelul de control al accesului exclusiv pentru acest utilizator.",
+    "portals": "Portalurile la care are acces acest utilizator."
+  },
+  "messages": {
+    "passwordWillBeSent": "Parola va fi trimisă în email-ul utilizatorului.",
+    "accountInfoEmailSubject": "Informații Acces Utilizator EspoCRM",
+    "accountInfoEmailBody": "Informațiile tale de acces :\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Cerere Schimbare Parolă",
+    "passwordChangeLinkEmailBody": "Vă puteți schimba parola urmând acest link {link}. Această adresă URL unică va expira în curând.",
+    "passwordChanged": "Parola a fost schimbată",
+    "userCantBeEmpty": "Numele de utilizator nu poate fi necompletat",
+    "wrongUsernamePasword": "Nume utilizator/parolă greșit(e).",
+    "emailAddressCantBeEmpty": "Adresa de Email nu poate fi necompletată",
+    "userNameEmailAddressNotFound": "Nume utilizator/Adresă de email nu a(u) fost găsi(e)",
+    "forbidden": "Înterzis, încercați mai târziu",
+    "uniqueLinkHasBeenSent": "URL-ul unic a fost trimis la adresa de email specificată.",
+    "passwordChangedByRequest": "Parola a fost schimbată.",
+    "setupSmtpBefore": "Pentru a face sistemul să poată trimite parola în email , trebui să setați <a href=\"{url}\">setările SMTP</a>.",
+    "userNameExists": "Acest nume de utilizator există deja"
+  },
+  "options": {
+    "gender": {
+      "": "Nu este setat",
+      "Male": "Masculin",
+      "Female": "Feminin",
+      "Neutral": "Neutru"
+    }
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Doar în Echipa Mea"
+  },
+  "presetFilters": {
+    "active": "Activ",
+    "activePortal": "Portal Activ"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "labels": {
+    "Create Document": "Creați Document",
+    "Details": "Detalii"
+  },
+  "fields": {
+    "name": "Nume",
+    "status": "Stare",
+    "file": "Fișier",
+    "type": "Tip",
+    "publishDate": "Publică Dată",
+    "expirationDate": "Data expirării",
+    "description": "Descriere",
+    "accounts": "Conturi",
+    "folder": "Dosar"
+  },
+  "links": {
+    "accounts": "Conturi",
+    "opportunities": "Oportunități",
+    "folder": "Dosar",
+    "leads": "Lead-uri",
+    "contacts": "Contacte"
+  },
+  "options": {
+    "status": {
+      "Active": "Activ",
+      "Draft": "Schiță",
+      "Expired": "Expirat",
+      "Canceled": "Anulat"
+    },
+    "type": {
+      "": "Nici unul",
+      "License Agreement": "Acord de licențiere"
+    }
+  },
+  "presetFilters": {
+    "active": "Activ",
+    "draft": "Schiță"
+  }
+}

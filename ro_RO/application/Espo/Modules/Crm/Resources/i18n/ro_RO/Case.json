@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Nume",
+    "number": "Număr",
+    "status": "Stare",
+    "account": "Cont",
+    "contacts": "Contacte",
+    "priority": "Prioritate",
+    "type": "Tip",
+    "description": "Descriere",
+    "inboundEmail": "Grup Cont Email",
+    "attachments": "Atașamente"
+  },
+  "links": {
+    "inboundEmail": "Grup Cont Email",
+    "account": "Cont",
+    "contact": "Contact (Principal)",
+    "Contacts": "Contacte",
+    "meetings": "Întâlniri",
+    "calls": "Apeluri",
+    "tasks": "Sarcini",
+    "emails": "Email-uri",
+    "articles": "Articole Bază de Cunoștință",
+    "attachments": "Atașamente"
+  },
+  "options": {
+    "status": {
+      "New": "Nou",
+      "Assigned": "Alocat",
+      "Pending": "În așteptare",
+      "Closed": "Închis",
+      "Rejected": "Respins",
+      "Duplicate": "Duplicat"
+    },
+    "priority": {
+      "Low": "Scăzut",
+      "High": "Înalt"
+    },
+    "type": {
+      "Question": "Întrebare",
+      "Problem": "Problemă"
+    }
+  },
+  "labels": {
+    "Create Case": "Creare Caz",
+    "Close": "Închis",
+    "Reject": "Respins",
+    "Closed": "Închis",
+    "Rejected": "Respins"
+  },
+  "presetFilters": {
+    "open": "Deschis",
+    "closed": "Închis"
+  }
+}

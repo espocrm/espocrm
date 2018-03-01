@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "user": "Utilizator",
+    "action": "Acțiune",
+    "createdAt": "Dată",
+    "target": "Țintă",
+    "targetType": "Tipul Țintei",
+    "authToken": "Token Autentificare",
+    "ipAddress": "Adresă IP"
+  },
+  "links": {
+    "authToken": "Token Autentificare",
+    "user": "Utilizator",
+    "target": "Țintă"
+  },
+  "presetFilters": {
+    "onlyMy": "Doar Eu"
+  },
+  "options": {
+    "action": {
+      "read": "Citește",
+      "update": "Actualizare",
+      "delete": "Șterge",
+      "create": "Creează"
+    }
+  }
+}

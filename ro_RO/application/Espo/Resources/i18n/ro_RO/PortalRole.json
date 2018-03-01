@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "exportPermission": "Permisiune de exportare"
+  },
+  "links": {
+    "users": "Utilizatori"
+  },
+  "tooltips": {
+    "exportPermission": "Definiți dacă utilizatorii portalului au abilitatea să exporte înregistrările."
+  },
+  "labels": {
+    "Access": "Acces",
+    "Create PortalRole": "Creați Rolul Portalului",
+    "Scope Level": "Nivel Domeniu",
+    "Field Level": "Nivel câmp"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Nume",
+    "status": "Stare",
+    "job": "Activitate",
+    "scheduling": "Planificare"
+  },
+  "links": {
+    "log": "Jurnal"
+  },
+  "labels": {
+    "Create ScheduledJob": "Creați activiate planificată"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Curățare",
+      "CheckInboundEmails": "Verificare Grup Conturi Email",
+      "CheckEmailAccounts": "Verificare Conturi Personale de Email",
+      "SendEmailReminders": "Trimite Mementouri Email",
+      "AuthTokenControl": "Control Autentificare Token",
+      "SendEmailNotifications": "Trimite Notificări Email",
+      "CheckNewVersion": "Verificați dacă există versiuni mai noi"
+    },
+    "cronSetup": {
+      "linux": "Notă: Adaugă acestă linie în fișierul crontab pentru a rula Activitățile Espo planificate:",
+      "mac": "Notă: Adaugă acestă linie în fișierul crontab pentru a rula Activitățile Espo planificate:",
+      "windows": "Notă: Crează un fișier batch care să conțina următoarele comenzi pentru a rula Activitățile Espo planificate, folosind Windows Scheduled Tasks:",
+      "default": "Notă: Adaugă această comandă în Cron Job (Sacini planificate):"
+    },
+    "status": {
+      "Active": "Activ",
+      "Inactive": "Inactiv"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Notificări Crontab. Definește frecvența rulării activității.\n\n*/5 * * * * - la fiecare 5 minute\n\n0 */2 * * * - la fiecare 2 ore\n\n30 1 * * * - la 01:30 o dată pe zi\n\n0 0 1 * * - în prima zi a luni"
+  }
+}

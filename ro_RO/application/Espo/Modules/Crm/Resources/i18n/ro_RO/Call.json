@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Nume",
+    "parent": "Părinte",
+    "status": "Stare",
+    "dateStart": "Dată început",
+    "dateEnd": "Dată terminare",
+    "direction": "Direcție",
+    "duration": "Durată",
+    "description": "Descriere",
+    "users": "Utilizatori",
+    "contacts": "Contacte",
+    "leads": "Lead-uri",
+    "reminders": "Mementouri",
+    "account": "Cont",
+    "acceptanceStatus": "Starea de acceptare"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planificat",
+      "Held": "Reținut",
+      "Not Held": "Nereșinut"
+    },
+    "direction": {
+      "Outbound": "Ieșire",
+      "Inbound": "Intrare"
+    },
+    "acceptanceStatus": {
+      "None": "Nici unul",
+      "Accepted": "Acceptat",
+      "Declined": "Respins",
+      "Tentative": "Tentativă"
+    }
+  },
+  "massActions": {
+    "setHeld": "Setează ca reținut",
+    "setNotHeld": "Setează ca nereținut"
+  },
+  "labels": {
+    "Create Call": "Creare Apelare",
+    "Set Held": "Setează ca reținut",
+    "Set Not Held": "Setează ca nereținut",
+    "Send Invitations": "Trimite invitații"
+  },
+  "presetFilters": {
+    "planned": "Planificat",
+    "held": "Reținut",
+    "todays": "Azi"
+  }
+}

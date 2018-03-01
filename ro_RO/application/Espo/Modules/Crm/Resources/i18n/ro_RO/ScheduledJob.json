@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Trimite Email-uri în Masă",
+      "ControlKnowledgeBaseArticleStatus": "Controlează Starea Articolelor Bază de Cunoștințe"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Nume",
+    "roles": "Roluri",
+    "positionList": "Listă Poziție"
+  },
+  "links": {
+    "users": "Utilizatori",
+    "notes": "Note",
+    "roles": "Roluri",
+    "inboundEmails": "Grup conturi Email"
+  },
+  "tooltips": {
+    "roles": "Roluri Acces. Utilizatorii acestei echipe obțin nivel de control al accesului din rolurile selectate.",
+    "positionList": "Poziții disponibile în această echipă. Ex. Agent de vânzări, Manager."
+  },
+  "labels": {
+    "Create Team": "Creare Echipă"
+  }
+}

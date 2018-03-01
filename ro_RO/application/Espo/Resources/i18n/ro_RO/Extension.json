@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Nume",
+    "version": "Versiune",
+    "description": "Descriere",
+    "isInstalled": "Instalat"
+  },
+  "labels": {
+    "Uninstall": "Dezinstalează",
+    "Install": "Instalează"
+  },
+  "messages": {
+    "uninstalled": "Extenisa {name} a fost dezinstalată"
+  }
+}

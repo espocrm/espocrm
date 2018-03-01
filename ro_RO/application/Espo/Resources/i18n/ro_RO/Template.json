@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nume",
+    "entityType": "Tip Entitate",
+    "footer": "Foorter",
+    "leftMargin": "Marginea Stângă",
+    "topMargin": "Marginea de Sus",
+    "rightMargin": "Marginea Dreaptă",
+    "bottomMargin": "Marginea de Jos",
+    "printFooter": "Imprimare Footer",
+    "footerPosition": "Poziție Footer",
+    "variables": "Substituenți disponibili"
+  },
+  "labels": {
+    "Create Template": "Creați Șablon"
+  },
+  "tooltips": {
+    "footer": "Folosiți {pageNumber} pentru a imprima numărul paginii.",
+    "variables": "Copiere-lipire are nevoie de substituenți pentru Haeder, Body și Footer."
+  }
+}
