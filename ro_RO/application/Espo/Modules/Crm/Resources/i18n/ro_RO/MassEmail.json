@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Nume",
+    "status": "Stare",
     "storeSentEmails": "Stocați email-urile trimise",
     "startAt": "Data Începerii",
     "fromAddress": "Din Adresă",

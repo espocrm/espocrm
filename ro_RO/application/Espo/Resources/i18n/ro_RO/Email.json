@@ -2,6 +2,7 @@
   "fields": {
     "name": " Nume (Subiect)",
     "parent": "Părinte",
+    "status": "Stare",
     "dateSent": "Data trimiterii",
     "from": "De la",
     "to": "Către",
