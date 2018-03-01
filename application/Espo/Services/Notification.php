@@ -230,7 +230,12 @@ class Notification extends \Espo\Services\Record
 
         if (!empty($ids)) {
             $pdo = $this->getEntityManager()->getPDO();
-            $sql = "UPDATE notification SET `read` = 1 WHERE id IN ('" . implode("', '", $ids) ."')";
+            $idQuotedList = [];
+            foreach ($ids as $id) {
+                $idQuotedList[] = $pdo->quote($id);
+            }
+
+            $sql = "UPDATE notification SET `read` = 1 WHERE id IN (" . implode(', ', $idQuotedList) .")";
 
             $s = $pdo->prepare($sql);
             $s->execute();

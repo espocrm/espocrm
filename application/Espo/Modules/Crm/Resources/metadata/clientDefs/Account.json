@@ -58,6 +58,9 @@
         "rowActionsView": "views/record/row-actions/empty",
         "select": false,
         "create": false
+      },
+      "targetLists": {
+         "layout": "listForTarget"
       }
    },
    "filterList": [

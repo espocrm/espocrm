@@ -62,13 +62,25 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupActionHistory();
         $this->cleanupAuthToken();
         $this->cleanupUpgradeBackups();
+        $this->cleanupUniqueIds();
     }
 
     protected function cleanupJobs()
     {
-        $query = "DELETE FROM `job` WHERE DATE(modified_at) < '".$this->getCleanupJobFromDate()."' AND status <> 'Pending'";
-
         $pdo = $this->getEntityManager()->getPDO();
+
+        $query = "DELETE FROM `job` WHERE DATE(modified_at) < ".$pdo->quote($this->getCleanupJobFromDate())." AND status <> 'Pending'";
+
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+    }
+
+    protected function cleanupUniqueIds()
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $query = "DELETE FROM `unique_id` WHERE terminate_at IS NOT NULL AND terminate_at < ".$pdo->quote(date('Y-m-d H:i:s'))."";
+
         $sth = $pdo->prepare($query);
         $sth->execute();
     }
@@ -83,29 +95,35 @@ class Cleanup extends \Espo\Core\Jobs\Base
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $id = $row['id'];
 
-            $lastRowsSql = "SELECT id FROM scheduled_job_log_record WHERE scheduled_job_id = '".$id."' ORDER BY created_at DESC LIMIT 0,10";
+            $lastRowsSql = "SELECT id FROM scheduled_job_log_record WHERE scheduled_job_id = ".$pdo->quote($id)." ORDER BY created_at DESC LIMIT 0,10";
             $lastRowsSth = $pdo->prepare($lastRowsSql);
             $lastRowsSth->execute();
             $lastRowIds = $lastRowsSth->fetchAll(\PDO::FETCH_COLUMN, 0);
 
-            $delSql = "DELETE FROM `scheduled_job_log_record`
-                    WHERE scheduled_job_id = '".$id."'
-                    AND DATE(created_at) < '".$this->getCleanupJobFromDate()."'
-                    AND id NOT IN ('".implode("', '", $lastRowIds)."')
-                ";
-            $pdo->query($delSql);
+            if (count($lastRowIds)) {
+                foreach ($lastRowIds as $i => $v) {
+                    $lastRowIds[$i] = $pdo->quote($v);
+                }
+                $delSql = "DELETE FROM `scheduled_job_log_record`
+                        WHERE scheduled_job_id = ".$pdo->quote($id)."
+                        AND DATE(created_at) < ".$pdo->quote($this->getCleanupJobFromDate())."
+                        AND id NOT IN (".implode(',', $lastRowIds).")
+                    ";
+                $pdo->query($delSql);
+            }
         }
     }
 
     protected function cleanupActionHistory()
     {
+        $pdo = $this->getEntityManager()->getPDO();
+
         $period = '-' . $this->getConfig()->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < '" . $datetime->format('Y-m-d') . "'";
+        $query = "DELETE FROM `action_history_record` WHERE DATE(created_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
 
-        $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
         $sth->execute();
     }
@@ -116,7 +134,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < '" . $datetime->format('Y-m-d') . "'";
+        $query = "DELETE FROM `reminder` WHERE DATE(remind_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
 
         $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
@@ -125,13 +143,14 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected function cleanupAuthToken()
     {
+        $pdo = $this->getEntityManager()->getPDO();
+
         $period = '-' . $this->getConfig()->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
         $datetime = new \DateTime();
         $datetime->modify($period);
 
-        $query = "DELETE FROM `auth_token` WHERE DATE(modified_at) < '" . $datetime->format('Y-m-d') . "' AND is_active = 0";
+        $query = "DELETE FROM `auth_token` WHERE DATE(modified_at) < " . $pdo->quote($datetime->format('Y-m-d')) . " AND is_active = 0";
 
-        $pdo = $this->getEntityManager()->getPDO();
         $sth = $pdo->prepare($query);
         $sth->execute();
     }
@@ -334,4 +353,3 @@ class Cleanup extends \Espo\Core\Jobs\Base
         }
     }
 }
-

@@ -158,8 +158,8 @@ class AdminNotificationManager
 
         $query = "
             SELECT version FROM extension
-            WHERE name='". $extensionName ."'
-            AND deleted=0
+            WHERE name = ". $pdo->quote($extensionName) ."
+            AND deleted = 0
             AND is_installed = 1
             ORDER BY created_at DESC
         ";

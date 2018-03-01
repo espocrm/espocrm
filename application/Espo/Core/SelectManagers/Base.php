@@ -1351,7 +1351,7 @@ class Base
                     $GLOBALS['log']->error("Could not create filter {$filterName} implementation.");
                     return;
                 }
-                $impl->applyFilter($filterName, $result);
+                $impl->applyFilter($this->entityType, $filterName, $result, $this);
             }
         }
     }

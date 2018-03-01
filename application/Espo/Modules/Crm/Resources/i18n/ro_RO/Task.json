@@ -1,29 +1,44 @@
 {
   "fields": {
     "name": "Nume",
-    "parent": "Parinte",
-    "dateStart": "Data inceput",
-    "dateEnd": "Data scadenta",
+    "parent": "Părinte",
+    "dateStart": "Dată Începere",
+    "dateEnd": "Dată Scadență",
+    "dateStartDate": "Dată Începere (toată ziua)",
+    "dateEndDate": "Dată Terminare (toată ziua)",
     "priority": "Prioritate",
     "description": "Descriere",
-    "isOverdue": "Este Restant"
+    "isOverdue": "Este Restant",
+    "account": "Cont",
+    "dateCompleted": "Dată Terminare",
+    "attachments": "Atașamente",
+    "reminders": "Mementouri"
+  },
+  "links": {
+    "attachments": "Atașamente",
+    "account": "Cont"
   },
   "options": {
     "status": {
-      "Not Started": "Ne inceput",
-      "Started": "Inceput",
-      "Completed": "Completat",
-      "Canceled": "Anulat"
+      "Not Started": "Nu a început",
+      "Started": "Început",
+      "Completed": "Terminat",
+      "Canceled": "Anulat",
+      "Deferred": "Amânat"
     },
     "priority": {
-      "Low": "Scazut",
-      "High": "Inalt"
+      "Low": "Scăzut",
+      "High": "Înalt"
     }
   },
   "labels": {
-    "Create Task": "Creaza Activitate"
+    "Create Task": "Crează Sarcine",
+    "Complete": "Terminat"
   },
   "presetFilters": {
-    "completed": "Completat"
+    "completed": "Terminat",
+    "deferred": "Amânat",
+    "todays": "Astăzi",
+    "overdue": "Restant"
   }
 }

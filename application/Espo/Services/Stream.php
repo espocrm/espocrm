@@ -213,8 +213,13 @@ class Stream extends \Espo\Core\Services\Base
 
         $pdo = $this->getEntityManager()->getPDO();
 
+        $userIdQuotedList = [];
+        foreach ($userIdList as $userId) {
+            $userIdQuotedList[] = $pdo->quote($userId);
+        }
+
         $sql = "
-            DELETE FROM subscription WHERE user_id IN ('".implode("', '", $userIdList)."') AND entity_id = ".$pdo->quote($entity->id) . "
+            DELETE FROM subscription WHERE user_id IN (".implode(', ', $userIdQuotedList).") AND entity_id = ".$pdo->quote($entity->id) . "
         ";
         $pdo->query($sql);
 
@@ -225,7 +230,7 @@ class Stream extends \Espo\Core\Services\Base
         ";
         foreach ($userIdList as $userId) {
             $arr[] = "
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
+                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
             ";
         }
 

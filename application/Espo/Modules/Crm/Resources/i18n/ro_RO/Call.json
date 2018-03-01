@@ -1,35 +1,49 @@
 {
   "fields": {
     "name": "Nume",
-    "parent": "Parinte",
-    "dateStart": "Data inceput",
-    "dateEnd": "Data terminare",
-    "direction": "Directie",
-    "duration": "Durata",
+    "parent": "Părinte",
+    "dateStart": "Dată început",
+    "dateEnd": "Dată terminare",
+    "direction": "Direcție",
+    "duration": "Durată",
     "description": "Descriere",
     "users": "Utilizatori",
     "contacts": "Contacte",
-    "leads": "Lead-uri"
+    "leads": "Lead-uri",
+    "reminders": "Mementouri",
+    "account": "Cont",
+    "acceptanceStatus": "Starea de acceptare"
   },
   "options": {
     "status": {
       "Planned": "Planificat",
-      "Held": "Detinut",
-      "Not Held": "Nedetinut"
+      "Held": "Reținut",
+      "Not Held": "Nereșinut"
     },
     "direction": {
-      "Outbound": "Iesire",
+      "Outbound": "Ieșire",
       "Inbound": "Intrare"
+    },
+    "acceptanceStatus": {
+      "None": "Nici unul",
+      "Accepted": "Acceptat",
+      "Declined": "Respins",
+      "Tentative": "Tentativă"
     }
+  },
+  "massActions": {
+    "setHeld": "Setează ca reținut",
+    "setNotHeld": "Setează ca nereținut"
   },
   "labels": {
     "Create Call": "Creare Apelare",
-    "Set Held": "Setare detinere",
-    "Set Not Held": "Setare nedetinere",
-    "Send Invitations": "Trimite invitatii"
+    "Set Held": "Setează ca reținut",
+    "Set Not Held": "Setează ca nereținut",
+    "Send Invitations": "Trimite invitații"
   },
   "presetFilters": {
     "planned": "Planificat",
-    "held": "Detinut"
+    "held": "Reținut",
+    "todays": "Azi"
   }
 }

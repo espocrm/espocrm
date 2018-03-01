@@ -40,15 +40,20 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     protected $reflection;
 
     protected $defaultCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
+    protected $defaultObjCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
 
     protected $cacheFile = 'tests/unit/testData/cache/metadata.php';
-    protected $ormCacheFile = 'tests/unit/testData/Utils/Metadata/ormMetadata.php';
+    protected $objCacheFile = 'tests/unit/testData/cache/objMetadata.php';
 
     protected function setUp()
     {
         /*copy defaultCacheFile file to cache*/
         if (!file_exists($this->cacheFile)) {
             copy($this->defaultCacheFile, $this->cacheFile);
+        }
+
+        if (!file_exists($this->objCacheFile)) {
+            copy($this->defaultObjCacheFile, $this->objCacheFile);
         }
 
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
@@ -60,6 +65,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('cacheFile', $this->cacheFile);
+        $this->reflection->setProperty('objCacheFile', $this->objCacheFile);
     }
 
     protected function tearDown()
@@ -238,28 +244,22 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $this->assertNull($this->object->getCustom(['entityDefs', 'Lead']));
-        $this->assertNull($this->object->getCustom('entityDefs.Lead'));
-        $this->assertNull($this->object->getCustom('entityDefs.Lead.fields'));
+        $this->assertNull($this->object->getCustom('entityDefs', 'Lead'));
 
-        $customData = $this->object->getCustom('entityDefs.Lead', []);
-        $this->assertTrue(is_array($customData));
+        $customData = $this->object->getCustom('entityDefs', 'Lead', (object) []);
+        $this->assertTrue(is_object($customData));
 
-        $data = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $data = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
-        $this->assertEquals($data, $this->object->getCustom('entityDefs.Lead'));
-        $this->assertEquals($data['fields'], $this->object->getCustom('entityDefs.Lead.fields'));
-        $this->assertEquals($data['fields'], $this->object->getCustom(['entityDefs', 'Lead', 'fields']));
+        $this->assertEquals($data, $this->object->getCustom('entityDefs', 'Lead'));
 
         unlink($customPath . '/entityDefs/Lead.json');
     }
@@ -274,22 +274,20 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $data = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $data = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
         $fileContent = $this->objects['fileManager']->getContents($savedFile);
-        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+        $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $this->assertEquals($data, $savedData);
 
@@ -308,40 +306,52 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $paths['customPath'] = $customPath;
         $this->reflection->setProperty('paths', $paths);
 
-        $initData = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $initData = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "type" => "enum",
               "options" => ["__APPEND__", "Test1", "Test2"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $initData);
 
-        $customData = $this->object->getCustom(['entityDefs', 'Lead']);
-        unset($customData['fields']['status']['type']);
-        $customData['fields']['status']['options'] = ["__APPEND__", "Test1"];
+        $customData = $this->object->getCustom('entityDefs', 'Lead');
+
+        unset($customData->fields->status->type);
+        $customData->fields->status->options = ["__APPEND__", "Test1"];
         $this->object->saveCustom('entityDefs', 'Lead', $customData);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
         $fileContent = $this->objects['fileManager']->getContents($savedFile);
-        $savedData = \Espo\Core\Utils\Json::getArrayData($fileContent);
+        $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
-        $expectedData = array (
-          'fields' =>
-          array (
-            'status' =>
-            array (
+        $expectedData = (object) [
+          'fields' => (object) [
+            'status' => (object) [
               "options" => ["__APPEND__", "Test1"],
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
 
         $this->assertEquals($expectedData, $savedData);
 
         unlink($savedFile);
+    }
+
+    public function testGetObjects()
+    {
+        $result = 'System';
+        $this->assertEquals($result, $this->object->getObjects('app.adminPanel.system.label'));
+
+        $result = 'fields';
+        $this->assertObjectHasAttribute($result, $this->object->getObjects('entityDefs.User'));
+
+        $result = (object) [
+            'type' => 'bool',
+            'tooltip' => true
+        ];
+        $this->assertEquals($result, $this->object->getObjects('entityDefs.User.fields.isAdmin'));
     }
 }

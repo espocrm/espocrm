@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nume",
     "isHtml": "În format Html",
-    "body": "Corp",
+    "body": "Conținutul",
     "subject": "Subiect",
     "attachments": "Atașamente",
     "insertField": "Inserează Câmp",

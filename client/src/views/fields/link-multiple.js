@@ -298,6 +298,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getDetailLinkHtml: function (id) {
             var name = this.nameHash[id] || id;
+            if (!name && id) {
+                name = this.translate(this.foreignScope, 'scopeNames');
+            }
             return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a>';
         },
 
