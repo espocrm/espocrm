@@ -38,6 +38,8 @@ use Espo\ORM\Entity;
 
 class Import extends \Espo\Services\Record
 {
+    const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
+
     protected function init()
     {
         parent::init();
@@ -223,6 +225,17 @@ class Import extends \Espo\Services\Record
 
         $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
 
+        $removeFromDb = false;
+        $createdAt = $import->get('createdAt');
+        if ($createdAt) {
+            $dtNow = new \DateTime();
+            $createdAtDt = new \DateTime($createdAt);
+            $dayDiff = ($dtNow->getTimestamp() - $createdAtDt->getTimestamp()) / 60 / 60 / 24;
+            if ($dayDiff < self::REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS) {
+                $removeFromDb = true;
+            }
+        }
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -234,9 +247,15 @@ class Import extends \Espo\Services\Record
 
             $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             if ($entity) {
-                $this->getEntityManager()->removeEntity($entity);
+                $this->getEntityManager()->removeEntity($entity, [
+                    'noStream' => true,
+                    'noNotifications' => true,
+                    'import' => true
+                ]);
             }
-            $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
+            if ($removeFromDb) {
+                $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
+            }
         }
 
         $this->getEntityManager()->removeEntity($import);
