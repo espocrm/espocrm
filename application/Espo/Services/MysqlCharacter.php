@@ -54,6 +54,15 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $maxIndexLength = 1000;
         }
 
+        //Account name
+        $sth = $pdo->prepare("SELECT `name` FROM `account` WHERE LENGTH(name) > 249");
+        $sth->execute();
+        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        if (empty($row)) {
+            $sth = $pdo->prepare("ALTER TABLE `account` MODIFY `name` VARCHAR(249)");
+            $sth->execute();
+        }
+
         $fieldListExceededIndexMaxLength = \Espo\Core\Utils\Database\Schema\Utils::getFieldListExceededIndexMaxLength($ormMeta, $maxIndexLength);
 
         foreach ($ormMeta as $entityName => $entityParams) {

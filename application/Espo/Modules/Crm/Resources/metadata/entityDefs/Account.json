@@ -2,6 +2,7 @@
     "fields": {
         "name": {
             "type": "varchar",
+            "maxLength": 249,
             "required": true,
             "trim": true
         },
