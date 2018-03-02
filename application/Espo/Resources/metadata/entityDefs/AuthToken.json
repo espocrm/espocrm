@@ -27,7 +27,7 @@
         },
         "ipAddress": {
             "type": "varchar",
-            "maxLength": "36",
+            "maxLength": "45",
             "readOnly": true
         },
         "isActive": {
