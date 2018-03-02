@@ -66,7 +66,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileExists('data/.backup/upgrades/' . $upgradeId);
 
         $this->assertFileExists('custom/Espo/Custom/test.php');
-        $this->assertFileNotExists('vendor/phpunit');
+        $this->assertFileNotExists('vendor/zendframework');
         $this->assertFileNotExists('extension.php');
         $this->assertFileNotExists('upgrade.php');
 

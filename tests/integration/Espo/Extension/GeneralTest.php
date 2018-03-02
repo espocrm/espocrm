@@ -70,7 +70,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileExists('client/modules/test'); //directory
         $this->assertFileExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileNotExists('vendor/phpunit'); //directory
+        $this->assertFileNotExists('vendor/zendframework'); //directory
         $this->assertFileNotExists('extension.php');
         $this->assertFileNotExists('upgrade.php');
 
@@ -93,7 +93,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileNotExists('client/modules/test'); //directory
         $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileExists('vendor/composer'); //directory
+        $this->assertFileExists('vendor/zendframework'); //directory
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
 
@@ -116,7 +116,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileNotExists('client/modules/test'); //directory
         $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileExists('vendor/composer'); //directory
+        $this->assertFileExists('vendor/zendframework'); //directory
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
     }
