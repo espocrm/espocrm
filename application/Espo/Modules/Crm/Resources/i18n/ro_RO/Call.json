@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nume",
     "parent": "Părinte",
+    "status": "Stare",
     "dateStart": "Dată început",
     "dateEnd": "Dată terminare",
     "direction": "Direcție",

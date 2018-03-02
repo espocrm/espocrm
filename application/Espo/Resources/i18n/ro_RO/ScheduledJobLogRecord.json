@@ -1,5 +1,7 @@
 {
   "fields": {
-    "executionTime": "Timp Executie"
+    "status": "Stare",
+    "executionTime": "Timp Execuție",
+    "target": "Țintă"
   }
 }

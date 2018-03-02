@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nume",
     "description": "Descriere",
+    "status": "Stare",
     "type": "Tip",
     "startDate": "Dată începere",
     "endDate": "Dată terminare",
