@@ -67,7 +67,8 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
                        "label": "Revert Import",
                        "action": "revert",
                        "style": "danger",
-                       "acl": "edit"
+                       "acl": "edit",
+                        title: this.translate('revert', 'messages', 'Import')
                     });
                 }
             }
@@ -83,17 +84,48 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
                        "label": "Remove Duplicates",
                        "action": "removeDuplicates",
                        "style": "default",
-                       "acl": "edit"
+                       "acl": "edit",
+                        title: this.translate('removeDuplicates', 'messages', 'Import')
                     });
                 }
-
             }
+
+            this.addMenuItem('buttons', {
+                label: "Remove Import Log",
+                action: "removeImportLog",
+                name: 'removeImportLog',
+                style: "default",
+                acl: "delete",
+                title: this.translate('removeImportLog', 'messages', 'Import')
+            }, true);
+        },
+
+        actionRemoveImportLog: function () {
+            this.confirm(this.translate('confirmRemoveImportLog', 'messages', 'Import'), function () {
+                this.disableMenuItem('removeImportLog');
+
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                this.model.destroy({
+                    wait: true
+                }).then(function () {
+                    Espo.Ui.notify(false);
+                    var collection = this.model.collection;
+                    if (collection) {
+                        if (collection.total > 0) {
+                            collection.total--;
+                        }
+                    }
+                    this.getRouter().navigate('#Import/list', {trigger: true});
+
+                    this.removeMenuItem('removeImportLog', true);
+                }.bind(this));
+
+            }, this);
         },
 
         actionRevert: function () {
-        	this.confirm(this.translate('confirmation', 'messages'), function () {
-                $btn = this.$el.find('button[data-action="revert"]');
-                $btn.addClass('disabled');
+        	this.confirm(this.translate('confirmRevert', 'messages', 'Import'), function () {
+                this.disableMenuItem('revert');
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
 	        	$.ajax({
@@ -111,9 +143,9 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
         },
 
         actionRemoveDuplicates: function () {
-        	this.confirm(this.translate('confirmation', 'messages'), function () {
-                $btn = this.$el.find('button[data-action="removeDuplicates"]');
-                $btn.addClass('disabled');
+        	this.confirm(this.translate('confirmRemoveDuplicates', 'messages', 'Import'), function () {
+                this.disableMenuItem('removeDuplicates');
+
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
 	        	$.ajax({
@@ -123,8 +155,10 @@ Espo.define('views/import/detail', 'views/detail', function (Dep) {
 	        			id: this.model.id
 	        		})
 	        	}).done(function () {
-                    $btn.remove();
+                    this.removeMenuItem('removeDuplicates', true);
+
                     this.model.fetch();
+                    this.model.trigger('update-all');
                     Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
 	        	}.bind(this));
         	}, this);

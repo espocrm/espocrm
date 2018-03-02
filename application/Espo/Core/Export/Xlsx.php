@@ -144,7 +144,7 @@ class Xlsx extends \Espo\Core\Injectable
             throw new Error();
         }
 
-        $phpExcel = new \PHPExcel();
+        $phpExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $phpExcel->setActiveSheetIndex(0);
 
         if (isset($params['exportName'])) {
@@ -178,7 +178,7 @@ class Xlsx extends \Espo\Core\Injectable
 
         $sheet->setCellValue('A1', $exportName);
 
-        $sheet->setCellValue('B1', \PHPExcel_Shared_Date::PHPToExcel(strtotime(date('Y-m-d H:i:s'))));
+        $sheet->setCellValue('B1', \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime(date('Y-m-d H:i:s'))));
 
 
         $sheet->getStyle('A1')->applyFromArray($titleStyle);
@@ -330,7 +330,7 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                 } else if ($type == 'date') {
                     if (isset($row[$name])) {
-                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($row[$name])));
+                        $sheet->setCellValue("$col$rowNumber", \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($row[$name])));
                     }
                 } else if ($type == 'datetime' || $type == 'datetimeOptional') {
                     $value = null;
@@ -355,14 +355,14 @@ class Xlsx extends \Espo\Core\Injectable
                         }
                     }
                     if ($value) {
-                        $sheet->setCellValue("$col$rowNumber", \PHPExcel_Shared_Date::PHPToExcel(strtotime($value)));
+                        $sheet->setCellValue("$col$rowNumber", \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($value)));
                     }
                 } else if ($type == 'image') {
                     if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
                         $attachment = $this->getEntityManager()->getEntity('Attachment', $row[$name . 'Id']);
 
                         if ($attachment) {
-                            $objDrawing = new \PHPExcel_Worksheet_Drawing();
+                            $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                             $filePath = $this->getInjection('fileStorageManager')->getLocalFilePath($attachment);
 
                             if ($filePath && file_exists($filePath)) {
@@ -527,7 +527,7 @@ class Xlsx extends \Espo\Core\Injectable
 
         $sheet->getStyle("A2:A$rowNumber")
             ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
 
         $startingRowNumber = 4;
 
@@ -578,7 +578,7 @@ class Xlsx extends \Espo\Core\Injectable
             $sheet->getStyle($linkColumn.$startingRowNumber.':'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
         }
 
-        $objWriter = \PHPExcel_IOFactory::createWriter($phpExcel, 'Excel2007');
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($phpExcel, 'Xlsx');
 
         if (!$this->getInjection('fileManager')->isDir('data/cache/')) {
             $this->getInjection('fileManager')->mkdir('data/cache/');

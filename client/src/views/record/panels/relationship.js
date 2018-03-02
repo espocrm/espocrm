@@ -158,6 +158,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }, this);
                 }
 
+                this.listenTo(this.model, 'update-all', function () {
+                    collection.fetch();
+                }, this);
+
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {

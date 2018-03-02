@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nume",
     "parent": "Părinte",
+    "status": "Stare",
     "dateStart": "Dată Început",
     "dateEnd": "Dată Terminare",
     "duration": "Durată",
@@ -11,7 +12,7 @@
     "leads": "Lead-uri",
     "reminders": "Mementouri",
     "account": "Cont",
-    "acceptanceStatus": "Status Acceptare"
+    "acceptanceStatus": "Stare Acceptare"
   },
   "options": {
     "status": {
