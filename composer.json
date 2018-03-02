@@ -1,4 +1,8 @@
 {
+    "name": "espocrm/espocrm",
+    "description": "Espo CRM",
+    "homepage": "https://www.espocrm.com/",
+    "license": "GPL-3.0-only",
 	"require": {
 		"doctrine/dbal": "2.*",
 		"slim/slim": "2.6.2",
