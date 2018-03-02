@@ -5,6 +5,7 @@
   },
   "fields": {
     "name": "Nume",
+    "status": "Stare",
     "file": "Fișier",
     "type": "Tip",
     "publishDate": "Publică Dată",
