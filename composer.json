@@ -1,27 +1,48 @@
 {
-	"require": {
-		"doctrine/dbal": "2.*",
-		"slim/slim": "2.6.2",
-		"mtdowling/cron-expression": "1.0.*",
-		"zendframework/zend-validator": "2.*",
-		"zendframework/zend-mail": "2.5.2",
-		"zendframework/zend-ldap": "2.*",
-		"monolog/monolog": "1.*",
-		"yzalis/identicon": "*",
-		"zordius/lightncandy": "0.*",
-		"composer/semver": "^1.4",
-		"zendframework/zend-servicemanager": "2.6.0",
-		"tecnickcom/tcpdf": "^6.2",
-		"php-mime-mail-parser/php-mime-mail-parser": "2.9.3",
-		"zbateson/mail-mime-parser": "0.4.6",
-		"phpoffice/phpexcel": "^1.8",
-		"phpoffice/phpspreadsheet": "^1.1"
-	},
-	"autoload": {
-		"psr-0": {
-			"": "application/",
-			"tests": "",
-			"Espo\\Custom": "custom/"
-		}
-	}
+    "name": "espocrm/espocrm",
+    "description": "EspoCRM. Open source CRM application.",
+    "homepage": "https://github.com/espocrm/espocrm.git",
+    "license": "GPL-3.0-only",
+    "require": {
+        "php": ">=5.6.0",
+        "ext-pdo_mysql": "*",
+        "ext-openssl": "*",
+        "ext-json": "*",
+        "ext-zip": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-imap": "*",
+        "ext-xml": "*",
+        "ext-curl": "*",
+        "doctrine/dbal": "2.*",
+        "slim/slim": "2.6.2",
+        "mtdowling/cron-expression": "1.0.*",
+        "zendframework/zend-validator": "2.*",
+        "zendframework/zend-mail": "2.5.2",
+        "zendframework/zend-ldap": "2.*",
+        "zendframework/zend-servicemanager": "2.6.0",
+        "monolog/monolog": "1.*",
+        "yzalis/identicon": "*",
+        "zordius/lightncandy": "0.*",
+        "composer/semver": "^1.4",
+        "tecnickcom/tcpdf": "^6.2",
+        "php-mime-mail-parser/php-mime-mail-parser": "2.9.3",
+        "zbateson/mail-mime-parser": "0.4.6",
+        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpspreadsheet": "^1.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "application/",
+            "tests": "",
+            "Espo\\Custom": "custom/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/espocrm/espocrm"
+        }
+    ],
+    "prefer-stable": true
 }
