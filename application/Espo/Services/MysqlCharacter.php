@@ -128,8 +128,5 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $config->set('database', $database);
             $config->save();
         }
-
-        $fileManager = $container->get('fileManager');
-        $fileManager->unlink('application/Espo/Services/MysqlCharacter.php');
     }
 }
