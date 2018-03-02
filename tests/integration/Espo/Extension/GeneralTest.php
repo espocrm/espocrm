@@ -93,7 +93,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileNotExists('client/modules/test'); //directory
         $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileExists('vendor/phpunit'); //directory
+        $this->assertFileExists('vendor/composer'); //directory
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
 
@@ -116,7 +116,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileNotExists('client/modules/test'); //directory
         $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileExists('vendor/phpunit'); //directory
+        $this->assertFileExists('vendor/composer'); //directory
         $this->assertFileExists('extension.php');
         $this->assertFileExists('upgrade.php');
     }
