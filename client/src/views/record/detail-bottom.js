@@ -178,7 +178,8 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
                     "label":"Stream",
                     "view":"views/stream/panel",
                     "sticked": true,
-                    "hidden": !streamAllowed
+                    "hidden": !streamAllowed,
+                    "order": 2
                 });
             }
         },
@@ -279,17 +280,11 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
                     return item;
                 }, this);
 
-                var list1 = [];
-                var list2 = [];
-                this.panelList.forEach(function (item) {
-                    if (item.isBottom) {
-                        list2.push(item);
-                    } else {
-                        list1.push(item);
-                    }
+                this.panelList.sort(function(item1, item2) {
+                    var order1 = item1.order || 0;
+                    var order2 = item2.order || 0;
+                    return order1 > order2;
                 });
-
-                this.panelList = list1.concat(list2);
 
                 this.setupPanelViews();
                 this.wait(false);
@@ -353,6 +348,8 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
                 if (!p.view) {
                     p.view = 'views/record/panels/relationship';
                 }
+
+                p.order = 5;
 
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
