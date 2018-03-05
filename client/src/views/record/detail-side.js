@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-side', 'view', function (Dep) {
+Espo.define('views/record/detail-side', ['view', 'dynamic-logic'], function (Dep, DynamicLogic) {
 
     return Dep.extend({
 
@@ -106,6 +106,27 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
         setupPanels: function () {
         },
 
+        initDynamicLogic: function () {
+            var dynamicLogicDefs = {
+                panels: {}
+            };
+            var hasDynamicLogic = false;
+            this.panelList.forEach(function (item) {
+                if (item.dynamicLogic && item.name) {
+                    hasDynamicLogic = true;
+                    dynamicLogicDefs.panels[item.name] = item.dynamicLogic;
+                }
+            }, this);
+            if (hasDynamicLogic) {
+                this.dynamicLogic = new DynamicLogic(dynamicLogicDefs, this.recordViewObject);
+
+                this.listenTo(this.model, 'change', function () {
+                    this.dynamicLogic.process();
+                }, this);
+                this.dynamicLogic.process();
+            }
+        },
+
         setup: function () {
             this.type = this.mode;
             if ('type' in this.options) {
@@ -146,6 +167,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                 }
                 return item;
             }, this);
+
+            this.initDynamicLogic();
 
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {

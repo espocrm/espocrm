@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-bottom', 'view', function (Dep) {
+Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (Dep, DynamicLogic) {
 
     return Dep.extend({
 
@@ -136,6 +136,27 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
 
             if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
                 this.setupStreamPanel();
+            }
+        },
+
+        initDynamicLogic: function () {
+            var dynamicLogicDefs = {
+                panels: {}
+            };
+            var hasDynamicLogic = false;
+            this.panelList.forEach(function (item) {
+                if (item.dynamicLogic && item.name) {
+                    hasDynamicLogic = true;
+                    dynamicLogicDefs.panels[item.name] = item.dynamicLogic;
+                }
+            }, this);
+            if (hasDynamicLogic) {
+                this.dynamicLogic = new DynamicLogic(dynamicLogicDefs, this.recordViewObject);
+
+                this.listenTo(this.model, 'change', function () {
+                    this.dynamicLogic.process();
+                }, this);
+                this.dynamicLogic.process();
             }
         },
 
@@ -255,6 +276,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                 if (this.relationshipPanels) {
                     this.setupRelationshipPanels();
                 }
+
+                this.initDynamicLogic();
 
                 var list1 = [];
                 var list2 = [];
