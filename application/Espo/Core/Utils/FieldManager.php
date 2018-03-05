@@ -197,9 +197,7 @@ class FieldManager
         if (array_key_exists('dynamicLogicVisible', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicVisible'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = array(
-                    'conditionGroup' => $fieldDefs['dynamicLogicVisible']
-                );
+                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = $fieldDefs['dynamicLogicVisible'];
                 $metadataToBeSaved = true;
                 $clientDefsToBeSet = true;
             } else {
@@ -216,9 +214,7 @@ class FieldManager
         if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicReadOnly'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = array(
-                    'conditionGroup' => $fieldDefs['dynamicLogicReadOnly']
-                );
+                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = $fieldDefs['dynamicLogicReadOnly'];
                 $metadataToBeSaved = true;
                 $clientDefsToBeSet = true;
             } else {
@@ -234,9 +230,7 @@ class FieldManager
         if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicRequired'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['required'] = array(
-                    'conditionGroup' => $fieldDefs['dynamicLogicRequired']
-                );
+                $clientDefs['dynamicLogic']['fields'][$name]['required'] = $fieldDefs['dynamicLogicRequired'];
                 $metadataToBeSaved = true;
                 $clientDefsToBeSet = true;
             } else {
