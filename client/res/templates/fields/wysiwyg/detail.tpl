@@ -1,6 +1,6 @@
 {{#unless isPlain}}
     {{#if useIframe}}
-    <iframe frameborder="0"  style="width: 100%; overflow-y: hidden; overflow-x: scroll;" class="hidden"></iframe>
+    <iframe frameborder="0"  style="width: 100%;" class="hidden" scrolling="no"></iframe>
     {{else}}
     <div class="html-container">{{{value}}}</div>
     {{/if}}

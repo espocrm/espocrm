@@ -183,7 +183,29 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             console.error(error);
                         }
 
+                        var $document = $(documentElement);
+
+                        var increaseHeightStep = 10;
+                        var processIncreaseHeight = function (iteration) {
+                            iteration = iteration || 0;
+                            if (iframeElement.scrollHeight < $document.height()) {
+                                var height = iframeElement.scrollHeight + increaseHeightStep;
+                                iframeElement.style.height = height + 'px';
+                                processIncreaseHeight(iteration);
+                            }
+
+                            if (iteration > 20) {
+                                return;
+                            }
+                        };
+
                         var processHeight = function () {
+                            $iframe.css({
+                                overflowY: 'hidden',
+                                overflowX: 'hidden'
+                            });
+                            $iframe.attr('scrolling', 'no');
+
                             iframeElement.style.height = '0px';
                             var $body = $iframe.contents().find('html body');
                             var height = $body.height();
@@ -191,16 +213,29 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 height = $body.children(0).height() + 100;
                             }
 
-                            height += 30;
                             iframeElement.style.height = height + 'px';
+
+                            processIncreaseHeight();
+
+                            $iframe.css({
+                                overflowY: 'hidden',
+                                overflowX: 'scroll'
+                            });
+                            $iframe.attr('scrolling', 'yes');
                         };
 
+                        $iframe.css({
+                            visibility: 'hidden'
+                        });
                         setTimeout(function () {
                             processHeight();
+                            $iframe.css({
+                                visibility: 'visible'
+                            });
                             $iframe.load(function () {
                                 processHeight();
                             });
-                        }, 50);
+                        }, 40);
 
                         $(window).off('resize.' + this.cid);
                         $(window).on('resize.' + this.cid, function() {
