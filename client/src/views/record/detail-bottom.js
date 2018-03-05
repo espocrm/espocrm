@@ -236,16 +236,6 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
 
             this.setupPanels();
 
-            this.panelList = this.panelList.map(function (p) {
-                var item = Espo.Utils.clone(p);
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                } else {
-                    this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
-                }
-                return item;
-            }, this);
-
             this.wait(true);
 
             Promise.all([
@@ -278,6 +268,16 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
                 }
 
                 this.initDynamicLogic();
+
+                this.panelList = this.panelList.map(function (p) {
+                    var item = Espo.Utils.clone(p);
+                    if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                        item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                    } else {
+                        this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
+                    }
+                    return item;
+                }, this);
 
                 var list1 = [];
                 var list2 = [];
@@ -402,5 +402,3 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
         }
     });
 });
-
-

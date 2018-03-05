@@ -158,6 +158,8 @@ Espo.define('views/record/detail-side', ['view', 'dynamic-logic'], function (Dep
                 return true;
             }, this);
 
+            this.initDynamicLogic();
+
             this.panelList = this.panelList.map(function (p) {
                 var item = Espo.Utils.clone(p);
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
@@ -167,8 +169,6 @@ Espo.define('views/record/detail-side', ['view', 'dynamic-logic'], function (Dep
                 }
                 return item;
             }, this);
-
-            this.initDynamicLogic();
 
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
