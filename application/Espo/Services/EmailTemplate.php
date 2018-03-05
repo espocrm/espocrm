@@ -177,10 +177,10 @@ class EmailTemplate extends Record
     {
         $fieldList = array_keys($entity->getAttributes());
 
-        $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
 
         foreach ($fieldList as $field) {
-            if (in_array($field, $forbidenAttributeList)) continue;
+            if (in_array($field, $forbiddenAttributeList)) continue;
 
             $value = $entity->get($field);
             if (is_object($value)) {
