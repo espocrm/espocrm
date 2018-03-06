@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (Dep, DynamicLogic) {
+Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -139,27 +139,6 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
             }
         },
 
-        initDynamicLogic: function () {
-            var dynamicLogicDefs = {
-                panels: {}
-            };
-            var hasDynamicLogic = false;
-            this.panelList.forEach(function (item) {
-                if (item.dynamicLogic && item.name) {
-                    hasDynamicLogic = true;
-                    dynamicLogicDefs.panels[item.name] = item.dynamicLogic;
-                }
-            }, this);
-            if (hasDynamicLogic) {
-                this.dynamicLogic = new DynamicLogic(dynamicLogicDefs, this.recordViewObject);
-
-                this.listenTo(this.model, 'change', function () {
-                    this.dynamicLogic.process();
-                }, this);
-                this.dynamicLogic.process();
-            }
-        },
-
         setupStreamPanel: function () {
             var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
             if (streamAllowed === null) {
@@ -267,8 +246,6 @@ Espo.define('views/record/detail-bottom', ['view', 'dynamic-logic'], function (D
                 if (this.relationshipPanels) {
                     this.setupRelationshipPanels();
                 }
-
-                this.initDynamicLogic();
 
                 this.panelList = this.panelList.map(function (p) {
                     var item = Espo.Utils.clone(p);
