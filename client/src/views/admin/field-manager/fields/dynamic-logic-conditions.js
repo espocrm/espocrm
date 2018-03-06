@@ -85,7 +85,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                 conditionGroup: this.conditionGroup
             };
 
-            if (data[this.name].length === 0) {
+            if (this.conditionGroup.length === 0) {
                 data[this.name] = null;
             }
 
