@@ -325,11 +325,14 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true,
+        "sortBy": "createdAt",
+        "asc": false,
         "textFilterFields": ["name", "emailAddress"]
     },
     "indexes": {
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        },
         "name": {
             "columns": ["name", "deleted"]
         },

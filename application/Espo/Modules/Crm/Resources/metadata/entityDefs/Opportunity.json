@@ -38,7 +38,8 @@
             "view": "crm:views/opportunity/fields/contacts",
             "columns": {
                 "role": "opportunityRole"
-            }
+            },
+            "orderBy": "name"
         },
         "stage": {
             "type": "enum",

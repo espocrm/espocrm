@@ -88,7 +88,8 @@
             "layoutListDisabled": true,
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "contacts": {
             "type": "linkMultiple",
@@ -97,7 +98,8 @@
             "view": "crm:views/meeting/fields/contacts",
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "leads": {
             "type": "linkMultiple",
@@ -106,7 +108,8 @@
             "layoutListDisabled": true,
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "createdAt": {
             "type": "datetime",

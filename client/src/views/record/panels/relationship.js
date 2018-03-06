@@ -131,6 +131,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
+            if (this.defs.orderBy) {
+                sortBy = this.defs.orderBy;
+                asc = true;
+                if (this.defs.orderDirection) {
+                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
+                        asc = false;
+                    }
+                }
+            }
+
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;

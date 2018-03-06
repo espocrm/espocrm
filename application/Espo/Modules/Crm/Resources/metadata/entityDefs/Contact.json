@@ -115,7 +115,8 @@
             "columns": {
                 "role": "contactRole",
                 "isInactive": "contactIsInactive"
-            }
+            },
+            "orderBy": "name"
         },
         "accountRole": {
             "type": "varchar",
@@ -404,11 +405,14 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true,
+        "sortBy": "createdAt",
+        "asc": false,
         "textFilterFields": ["name", "emailAddress"]
     },
     "indexes": {
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        },
         "firstName": {
             "columns": ["firstName", "deleted"]
         },

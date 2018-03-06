@@ -44,16 +44,25 @@ class LinkMultiple extends Base
                     ),
                     $fieldName.'Names' => array(
                         'type' => 'varchar',
-                        'notStorable' => true,
-                    ),
-                ),
+                        'notStorable' => true
+                    )
+                )
             ),
             'unset' => array(
                 $entityName => array(
-                    'fields.'.$fieldName,
-                ),
-            ),
+                    'fields.'.$fieldName
+                )
+            )
         );
+
+        $fieldParams = $this->getFieldParams();
+
+        if (array_key_exists('orderBy', $fieldParams)) {
+            $data[$entityName]['fields'][$fieldName . 'Ids']['orderBy'] = $fieldParams['orderBy'];
+            if (array_key_exists('orderDirection', $fieldParams)) {
+                $data[$entityName]['fields'][$fieldName . 'Ids']['orderDirection'] = $fieldParams['orderDirection'];
+            }
+        }
 
         $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
         if (!empty($columns)) {

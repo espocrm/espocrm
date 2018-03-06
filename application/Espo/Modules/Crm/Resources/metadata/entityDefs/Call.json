@@ -93,7 +93,8 @@
             "view": "crm:views/meeting/fields/users",
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "contacts": {
             "type": "linkMultiple",
@@ -102,7 +103,8 @@
             "view": "crm:views/meeting/fields/contacts",
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "leads": {
             "type": "linkMultiple",
@@ -111,7 +113,8 @@
             "view": "crm:views/meeting/fields/attendees",
             "columns": {
                 "status": "acceptanceStatus"
-            }
+            },
+            "orderBy": "name"
         },
         "createdAt": {
             "type": "datetime",
