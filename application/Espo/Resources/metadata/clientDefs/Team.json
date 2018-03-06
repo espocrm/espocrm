@@ -1,16 +1,23 @@
 {
-   "relationshipPanels": {
-      "users":{
-         "create": false,
-         "rowActionsView": "views/record/row-actions/relationship-unlink-only",
-         "layout": "listForTeam",
-         "selectPrimaryFilterName": "active"
-      }
-   },
-   "recordViews": {
-      "detail": "views/team/record/detail",
-      "edit": "views/team/record/edit",
-      "list": "views/team/record/list"
-   },
-   "boolFilterList": ["onlyMy"]
+    "defaultSidePanel": {
+        "edit": false,
+        "editSmall": false
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": ["createdAt"]
+    },
+    "relationshipPanels": {
+        "users": {
+            "create": false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only",
+            "layout": "listForTeam",
+            "selectPrimaryFilterName": "active"
+        }
+    },
+    "recordViews": {
+        "detail": "views/team/record/detail",
+        "edit": "views/team/record/edit",
+        "list": "views/team/record/list"
+    },
+    "boolFilterList": ["onlyMy"]
 }

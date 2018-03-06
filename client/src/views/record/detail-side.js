@@ -195,6 +195,8 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
             if (defaultPanelDefs === false) return;
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return;
+
             defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
 
             if (!defaultPanelDefs) return;
