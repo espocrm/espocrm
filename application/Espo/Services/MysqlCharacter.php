@@ -137,5 +137,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $config->set('database', $database);
             $config->save();
         }
+
+        $this->getContainer()->get('dataManager')->rebuild();
     }
 }
