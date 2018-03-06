@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.email-sent',
+        template: 'stream/notes/email-sent',
 
-        isRemovable: true,
+        isRemovable: false,
 
         data: function () {
             return _.extend({
@@ -80,4 +80,3 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
     });
 });
-

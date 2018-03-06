@@ -70,6 +70,9 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 }
             }
 
+            if (this.getUser().isAdmin()) {
+                this.isRemovable = true;
+            }
 
             if (this.messageName && this.isThis) {
                 this.messageName += 'This';

@@ -36,7 +36,7 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
 
         messageName: 'create',
 
-        isRemovable: true,
+        isRemovable: false,
 
         data: function () {
             return _.extend({
