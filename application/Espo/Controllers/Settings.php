@@ -90,11 +90,9 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new Error('Cannot save settings');
         }
 
-        /** Rebuild for Currency Settings */
-        if (isset($data->baseCurrency) || isset($data->currencyRates)) {
+        if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
             $this->getContainer()->get('dataManager')->rebuildDatabase([]);
         }
-        /** END Rebuild for Currency Settings */
 
         return $this->getConfigData();
     }

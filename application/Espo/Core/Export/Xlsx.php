@@ -303,7 +303,7 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                 } else if ($type == 'currencyConverted') {
                     if (array_key_exists($name, $row)) {
-                        $currency = $this->getConfig()->get('baseCurrency');
+                        $currency = $this->getConfig()->get('defaultCurrency');
                         $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
 
                         $sheet->getStyle("$col$rowNumber")
