@@ -54,7 +54,11 @@
         "emailAccounts": "Personal Accounts",
         "assignedUsers": "Assigned Users",
         "sentBy": "Sent By",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "fromEmailAddress": "From Email Address",
+        "toEmailAddresses": "To EmailAddresses",
+        "ccEmailAddresses": "CC EmailAddresses",
+        "bccEmailAddresses": "BCC EmailAddresses"
     },
     "options": {
         "status": {
