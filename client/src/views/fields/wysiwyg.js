@@ -199,14 +199,21 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             }
                         };
 
-                        var processHeight = function () {
-                            $iframe.css({
-                                overflowY: 'hidden',
-                                overflowX: 'hidden'
-                            });
-                            $iframe.attr('scrolling', 'no');
+                        var processHeight = function (isOnLoad) {
+                            if (!isOnLoad) {
+                                $iframe.css({
+                                    overflowY: 'hidden',
+                                    overflowX: 'hidden'
+                                });
+                                $iframe.attr('scrolling', 'no');
 
-                            iframeElement.style.height = '0px';
+                                iframeElement.style.height = '0px';
+                            } else {
+                                if (iframeElement.scrollHeight >= $document.height()) {
+                                    return;
+                                }
+                            }
+
                             var $body = $iframe.contents().find('html body');
                             var height = $body.height();
                             if (height === 0) {
@@ -217,11 +224,13 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
                             processIncreaseHeight();
 
-                            $iframe.css({
-                                overflowY: 'hidden',
-                                overflowX: 'scroll'
-                            });
-                            $iframe.attr('scrolling', 'yes');
+                            if (!isOnLoad) {
+                                $iframe.css({
+                                    overflowY: 'hidden',
+                                    overflowX: 'scroll'
+                                });
+                                $iframe.attr('scrolling', 'yes');
+                            }
                         };
 
                         $iframe.css({
@@ -233,7 +242,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 visibility: 'visible'
                             });
                             $iframe.load(function () {
-                                processHeight();
+                                processHeight(true);
                             });
                         }, 40);
 
