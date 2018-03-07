@@ -123,17 +123,17 @@ abstract class Base
         $this->pdo = $pdo;
     }
 
-    protected function getSeed($entityName)
+    protected function getSeed($entityType)
     {
-        if (empty($this->seedCache[$entityName])) {
-            $this->seedCache[$entityName] = $this->entityFactory->create($entityName);
+        if (empty($this->seedCache[$entityType])) {
+            $this->seedCache[$entityType] = $this->entityFactory->create($entityType);
         }
-        return $this->seedCache[$entityName];
+        return $this->seedCache[$entityType];
     }
 
-    public function createSelectQuery($entityName, array $params = array(), $deleted = false)
+    public function createSelectQuery($entityType, array $params = array(), $deleted = false)
     {
-        $entity = $this->getSeed($entityName);
+        $entity = $this->getSeed($entityType);
 
         foreach (self::$selectParamList as $k) {
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
@@ -248,12 +248,15 @@ abstract class Base
             $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
         } else {
             $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation'], $groupByPart, $havingPart);
+            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
+                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
+            }
         }
 
         return $sql;
     }
 
-    protected function getFunctionPart($function, $part, $entityName, $distinct = false)
+    protected function getFunctionPart($function, $part, $entityType, $distinct = false)
     {
         if (!in_array($function, $this->functionList)) {
             throw new \Exception("Not allowed function '".$function."'.");
@@ -295,7 +298,7 @@ abstract class Base
                 break;
         }
         if ($distinct) {
-            $idPart = $this->toDb($entityName) . ".id";
+            $idPart = $this->toDb($entityType) . ".id";
             switch ($function) {
                 case 'SUM':
                 case 'COUNT':
