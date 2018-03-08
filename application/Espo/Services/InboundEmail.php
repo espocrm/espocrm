@@ -758,6 +758,8 @@ class InboundEmail extends \Espo\Services\Record
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
         $teamIdList = $user->getLinkMultipleIdList('teams');
 
+        $inboundEmail = null;
+
         $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
