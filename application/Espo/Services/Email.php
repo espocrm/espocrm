@@ -39,6 +39,8 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Email extends Record
 {
+    protected $maxTextColumnLengthForList = 20000;
+
     protected function init()
     {
         parent::init();

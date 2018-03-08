@@ -90,6 +90,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $listCountQueryDisabled = false;
 
+    protected $maxTextColumnLengthForList = null;
+
     const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -804,7 +806,11 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
-        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        if ($this->maxTextColumnLengthForList) {
+            $selectParams['maxTextColumnsLength'] = $this->maxTextColumnLengthForList;
+        } else {
+            $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        }
 
         $collection = $this->getRepository()->find($selectParams);
 
@@ -875,7 +881,11 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        if ($this->maxTextColumnLengthForList) {
+            $selectParams['maxTextColumnsLength'] = $this->maxTextColumnLengthForList;
+        } else {
+            $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 

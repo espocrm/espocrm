@@ -169,19 +169,16 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         var documentElement = iframeElement.contentWindow.document;
 
                         var body = this.sanitizeHtml(this.model.get(this.name) || '');
-                        documentElement.write(body);
-                        documentElement.close();
 
                         var linkElement = iframeElement.contentWindow.document.createElement('link');
                         linkElement.type = 'text/css';
                         linkElement.rel = 'stylesheet';
                         linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
 
-                        try {
-                            iframeElement.contentWindow.document.head.appendChild(linkElement);
-                        } catch (error) {
-                            console.error(error);
-                        }
+                        body = linkElement.outerHTML + body;
+
+                        documentElement.write(body);
+                        documentElement.close();
 
                         var $document = $(documentElement);
 
