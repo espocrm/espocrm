@@ -47,6 +47,8 @@ class AclManager
 
     protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
 
+    protected $userAclClassName = '\\Espo\\Core\\Acl';
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -279,5 +281,11 @@ class AclManager
     {
         return $this->checkUserPermission($user, $target, 'assignmentPermission');
     }
-}
 
+    public function createUserAcl(User $user)
+    {
+        $className = $this->userAclClassName;
+        $acl = new $className($this, $user);
+        return $acl;
+    }
+}
