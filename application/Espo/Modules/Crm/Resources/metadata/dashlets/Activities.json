@@ -22,7 +22,7 @@
             }
         },
         "defaults": {
-            "displayRecords": 5,
+            "displayRecords": 10,
             "autorefreshInterval": 0.5,
             "enabledScopeList": ["Meeting", "Call", "Task"]
         },
