@@ -176,10 +176,11 @@ class Xlsx extends \Espo\Core\Injectable
             )
         );
 
+        $now = new \DateTime();
+        $now->setTimezone(new \DateTimeZone($this->getInjection('config')->get('timeZone', 'UTC')));
+
         $sheet->setCellValue('A1', $exportName);
-
-        $sheet->setCellValue('B1', \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime(date('Y-m-d H:i:s'))));
-
+        $sheet->setCellValue('B1', \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($now->format('Y-m-d H:i:s'))));
 
         $sheet->getStyle('A1')->applyFromArray($titleStyle);
         $sheet->getStyle('B1')->applyFromArray($dateStyle);
