@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e2e15139962efb4c5481beaf8d94d615",
-    "content-hash": "ad775f2239dbccbcbb0dfa748df4e8cd",
+    "hash": "5db717da83f9311ee9e1dca394f565af",
+    "content-hash": "db195203d1f235839b362454341246cb",
     "packages": [
         {
             "name": "composer/semver",
@@ -688,16 +688,16 @@
         },
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "2.9.3",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "c6884c7bc77adbf55979db99841195b232fd30f1"
+                "reference": "ecd4a2ea3f718e620430771a6417405db0b3c93f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/c6884c7bc77adbf55979db99841195b232fd30f1",
-                "reference": "c6884c7bc77adbf55979db99841195b232fd30f1",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/ecd4a2ea3f718e620430771a6417405db0b3c93f",
+                "reference": "ecd4a2ea3f718e620430771a6417405db0b3c93f",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "mailparse",
                 "mime"
             ],
-            "time": "2017-11-02 05:49:00"
+            "time": "2018-02-27 12:37:36"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -1207,16 +1207,16 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "0.4.6",
+            "version": "0.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/MailMimeParser.git",
-                "reference": "0fa39035c121c166f9ad3a47d41ec70423558cf2"
+                "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/0fa39035c121c166f9ad3a47d41ec70423558cf2",
-                "reference": "0fa39035c121c166f9ad3a47d41ec70423558cf2",
+                "url": "https://api.github.com/repos/zbateson/MailMimeParser/zipball/b05f32a1902d4e395384ff64e9f505c23d2714e5",
+                "reference": "b05f32a1902d4e395384ff64e9f505c23d2714e5",
                 "shasum": ""
             },
             "require": {
@@ -1254,7 +1254,7 @@
                 "parser",
                 "php-imap"
             ],
-            "time": "2017-11-16 02:07:34"
+            "time": "2018-02-07 07:42:33"
         },
         {
             "name": "zendframework/zend-crypt",

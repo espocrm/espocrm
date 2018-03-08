@@ -25,8 +25,8 @@
         "zordius/lightncandy": "0.*",
         "composer/semver": "^1.4",
         "tecnickcom/tcpdf": "^6.2",
-        "php-mime-mail-parser/php-mime-mail-parser": "2.9.3",
-        "zbateson/mail-mime-parser": "0.4.6",
+        "php-mime-mail-parser/php-mime-mail-parser": "2.*",
+        "zbateson/mail-mime-parser": "0.4.*",
         "phpoffice/phpexcel": "^1.8",
         "phpoffice/phpspreadsheet": "^1.1"
     },
