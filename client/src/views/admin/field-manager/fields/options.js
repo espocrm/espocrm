@@ -38,6 +38,8 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             list.forEach(function (value) {
                 this.translatedOptions[value] = this.getLanguage().translateOption(value, this.options.field, this.options.scope);
             }, this);
+
+            this.model.fetchedAttributes.translatedOptions = this.translatedOptions;
         },
 
         getItemHtml: function (value) {
