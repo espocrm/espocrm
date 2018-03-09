@@ -81,6 +81,11 @@ class EntityManager
         return $this->language;
     }
 
+    protected function getBaseLanguage()
+    {
+        return $this->container->get('baseLanguage');
+    }
+
     protected function getFileManager()
     {
         return $this->fileManager;
@@ -299,11 +304,11 @@ class EntityManager
         $clientDefsData = Json::decode($clientDefsContents, true);
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
-        $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
-        $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
+        $this->getBaseLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
+        $this->getBaseLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
 
         $this->getMetadata()->save();
-        $this->getLanguage()->save();
+        $this->getBaseLanguage()->save();
 
         $layoutsPath = $templatePath . "/Layouts/{$type}";
         if ($this->getFileManager()->isDir($layoutsPath)) {
@@ -332,6 +337,11 @@ class EntityManager
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
+        $isCustom = false;
+        if (!empty($scopeData['isCustom'])) {
+            $isCustom = true;
+        }
+
         if (array_key_exists('statusField', $data)) {
             $scopeData['statusField'] = $data['statusField'];
             $this->getMetadata()->set('scopes', $name, $scopeData);
@@ -339,14 +349,23 @@ class EntityManager
 
         if (!empty($data['labelSingular'])) {
             $labelSingular = $data['labelSingular'];
-            $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
             $labelCreate = $this->getLanguage()->translate('Create') . ' ' . $labelSingular;
+
+            $this->getLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
             $this->getLanguage()->set($name, 'labels', 'Create ' . $name, $labelCreate);
+
+            if ($isCustom) {
+                $this->getBaseLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
+                $this->getBaseLanguage()->set($name, 'labels', 'Create ' . $name, $labelCreate);
+            }
         }
 
         if (!empty($data['labelPlural'])) {
             $labelPlural = $data['labelPlural'];
             $this->getLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
+            if ($isCustom) {
+                $this->getBaseLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
+            }
         }
 
         if (isset($data['sortBy'])) {
@@ -370,6 +389,11 @@ class EntityManager
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
+        if ($isCustom) {
+            if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+                $this->getBaseLanguage()->save();
+            }
+        }
 
         return true;
     }
@@ -438,10 +462,17 @@ class EntityManager
         try {
             $this->getLanguage()->delete('Global', 'scopeNames', $name);
             $this->getLanguage()->delete('Global', 'scopeNamesPlural', $name);
+
+            $this->baseLanguage()->delete('Global', 'scopeNames', $name);
+            $this->baseLanguage()->delete('Global', 'scopeNamesPlural', $name);
         } catch (\Exception $e) {}
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
+
+        if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+            $this->getBaseLanguage()->save();
+        }
 
         if ($type) {
             $this->processHook('afterRemove', $type, $name);
@@ -692,8 +723,15 @@ class EntityManager
         $this->getLanguage()->set($entity, 'links', $link, $label);
         $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
         $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
-
         $this->getLanguage()->save();
+
+        if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+            $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
+            $this->getBaseLanguage()->set($entity, 'links', $link, $label);
+            $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+            $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+            $this->getBaseLanguage()->save();
+        }
 
         return true;
     }
@@ -714,6 +752,8 @@ class EntityManager
         if (empty($entityForeign) || empty($linkForeign)) {
             throw new Error();
         }
+
+        $isCustom = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom");
 
         if (
             $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
@@ -803,8 +843,19 @@ class EntityManager
         $this->getLanguage()->set($entity, 'links', $link, $label);
         $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
         $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
-
         $this->getLanguage()->save();
+
+        if ($isCustom) {
+            if ($this->getBaseLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+                $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
+                $this->getBaseLanguage()->set($entity, 'links', $link, $label);
+                $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+                $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+                $this->getBaseLanguage()->save();
+            }
+        }
+
+
 
         return true;
     }
