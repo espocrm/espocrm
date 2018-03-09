@@ -743,9 +743,6 @@ class EntityManager
         $entityForeign = $params['entityForeign'];
         $linkForeign = $params['linkForeign'];
 
-        $label = $params['label'];
-        $labelForeign = $params['labelForeign'];
-
         if (empty($entity) || empty($entityForeign)) {
             throw new Error();
         }
@@ -839,23 +836,40 @@ class EntityManager
             }
         }
 
-        $this->getLanguage()->set($entity, 'fields', $link, $label);
-        $this->getLanguage()->set($entity, 'links', $link, $label);
-        $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
-        $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+        $label = null;
+        if (isset($params['label'])) {
+            $label = $params['label'];
+        }
+        $labelForeign = null;
+        if (isset($params['labelForeign'])) {
+            $labelForeign = $params['labelForeign'];
+        }
+
+        if ($label) {
+            $this->getLanguage()->set($entity, 'fields', $link, $label);
+            $this->getLanguage()->set($entity, 'links', $link, $label);
+        }
+
+        if ($labelForeign) {
+            $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+            $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+        }
+
         $this->getLanguage()->save();
 
         if ($isCustom) {
             if ($this->getBaseLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
-                $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
-                $this->getBaseLanguage()->set($entity, 'links', $link, $label);
-                $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
-                $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+                if ($label) {
+                    $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
+                    $this->getBaseLanguage()->set($entity, 'links', $link, $label);
+                }
+                if ($labelForeign) {
+                    $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+                    $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
+                }
                 $this->getBaseLanguage()->save();
             }
         }
-
-
 
         return true;
     }

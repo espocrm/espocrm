@@ -276,6 +276,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     });
                 }
             }
+            this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
 
         hideField: function (name) {
@@ -365,7 +366,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 return;
             }
 
-            this.$el.find('button[data-name="save"]').addClass('disabled');
+            this.$el.find('button[data-name="save"]').addClass('disabled').attr('disabled');
 
             var url = 'EntityManager/action/createEntity';
             if (this.scope) {
@@ -394,14 +395,25 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 data.sortDirection = this.model.get('sortDirection');
             }
 
+            if (!this.isNew) {
+                if (this.model.fetchedAttributes.labelPlural === data.labelPlural) {
+                    delete data.labelPlural;
+                }
+                if (this.model.fetchedAttributes.labelSingular === data.labelSingular) {
+                    delete data.labelSingular;
+                }
+            }
+
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: JSON.stringify(data),
                 error: function () {
-                    this.$el.find('button[data-name="save"]').removeClass('disabled');
+                    this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
                 }.bind(this)
             }).done(function () {
+                this.model.fetchedAttributes = this.model.getClonedAttributes();
+
                 if (this.scope) {
                     Espo.Ui.success(this.translate('Saved'));
                 } else {

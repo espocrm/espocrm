@@ -283,6 +283,9 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 tooltip: true,
                 tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
             });
+
+
+            this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
 
         toPlural: function (string) {
@@ -487,7 +490,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 return;
             }
 
-            this.$el.find('button[data-name="save"]').addClass('disabled');
+            this.$el.find('button[data-name="save"]').addClass('disabled').attr('disabled');
 
             var url = 'EntityManager/action/createLink';
             if (!this.isNew) {
@@ -508,29 +511,40 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             var audited = this.model.get('audited');
             var auditedForeign = this.model.get('auditedForeign');
 
+            var attributes = {
+                entity: entity,
+                entityForeign: entityForeign,
+                link: link,
+                linkForeign: linkForeign,
+                label: label,
+                labelForeign: labelForeign,
+                linkType: this.model.get('linkType'),
+                relationName: relationName,
+                linkMultipleField: linkMultipleField,
+                linkMultipleFieldForeign: linkMultipleFieldForeign,
+                audited: audited,
+                auditedForeign: auditedForeign
+            };
+
+            if (!this.isNew) {
+                if (attributes.label === this.model.fetchedAttributes.label) {
+                    delete attributes.label;
+                }
+                if (attributes.labelForeign === this.model.fetchedAttributes.labelForeign) {
+                    delete attributes.labelForeign;
+                }
+            }
+
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: JSON.stringify({
-                    entity: entity,
-                    entityForeign: entityForeign,
-                    link: link,
-                    linkForeign: linkForeign,
-                    label: label,
-                    labelForeign: labelForeign,
-                    linkType: this.model.get('linkType'),
-                    relationName: relationName,
-                    linkMultipleField: linkMultipleField,
-                    linkMultipleFieldForeign: linkMultipleFieldForeign,
-                    audited: audited,
-                    auditedForeign: auditedForeign
-                }),
+                data: JSON.stringify(attributes),
                 error: function (x) {
                     if (x.status == 409) {
                         Espo.Ui.error(this.translate('linkConflict', 'messages', 'EntityManager'));
                         x.errorIsHandled = true;
                     }
-                    this.$el.find('button[data-name="save"]').removeClass('disabled');
+                    this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
                 }.bind(this)
             }).done(function () {
                 if (!this.isNew) {
@@ -538,6 +552,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 } else {
                     Espo.Ui.success(this.translate('Created'));
                 }
+
+                this.model.fetchedAttributes = this.model.getClonedAttributes();
 
                 var data;
 

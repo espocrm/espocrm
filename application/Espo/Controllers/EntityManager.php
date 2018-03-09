@@ -245,7 +245,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         $params = array();
         foreach ($paramList as $item) {
-        	$params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            if (array_key_exists($item, $data)) {
+                $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            }
         }
 
         foreach ($additionalParamList as $item) {
