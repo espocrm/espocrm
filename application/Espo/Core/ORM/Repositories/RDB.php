@@ -343,7 +343,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function getFieldByTypeList($type)
     {
         if (!array_key_exists($type, $this->fieldByTypeListCache)) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'field'], []);
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
             $list = [];
             foreach ($fieldDefs as $field => $defs) {
                 if (isset($defs['type']) && $defs['type'] === $type) {
