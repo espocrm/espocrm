@@ -33,6 +33,10 @@ use Espo\ORM\Entity;
 
 class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected $processFieldsAfterSaveDisabled = true;
+
+    protected $processFieldsBeforeSaveDisabled = true;
+
     protected function init()
     {
         parent::init();

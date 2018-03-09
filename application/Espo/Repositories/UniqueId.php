@@ -33,6 +33,12 @@ use Espo\ORM\Entity;
 
 class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected $hooksDisabled = true;
+
+    protected $processFieldsAfterSaveDisabled = true;
+
+    protected $processFieldsBeforeSaveDisabled = true;
+
     protected function getNewEntity()
     {
         $entity = parent::getNewEntity();
