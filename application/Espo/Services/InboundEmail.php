@@ -236,10 +236,6 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $parserName = 'MailMimeParser';
-        if (extension_loaded('mailparse')) {
-            $parserName = 'PhpMimeMailParser';
-        }
-
         if ($this->getConfig()->get('emailParser')) {
             $parserName = $this->getConfig()->get('emailParser');
         }
