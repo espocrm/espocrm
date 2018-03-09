@@ -40,7 +40,8 @@ use \Espo\Core\Interfaces\Injectable;
 class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
     protected $dependencies = array(
-        'metadata'
+        'metadata',
+        'config'
     );
 
     protected $injections = array();
@@ -50,6 +51,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected $hooksDisabled = false;
 
     protected $processFieldsAfterSaveDisabled = false;
+
+    protected $processFieldsBeforeSaveDisabled = false;
+
+    protected $fieldByTypeListCache = [];
 
     protected function addDependency($name)
     {
@@ -81,6 +86,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function getMetadata()
     {
         return $this->getInjection('metadata');
+    }
+
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
     }
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
@@ -254,6 +264,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'beforeSave', $entity, $options);
         }
+
+        if (!$this->processFieldsBeforeSaveDisabled) {
+            $this->processCurrencyFieldsBeforeSave($entity);
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -324,6 +338,39 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $result = parent::save($entity, $options);
 
         return $result;
+    }
+
+    protected function getFieldByTypeList($type)
+    {
+        if (!array_key_exists($type, $this->fieldByTypeListCache)) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'field'], []);
+            $list = [];
+            foreach ($fieldDefs as $field => $defs) {
+                if (isset($defs['type']) && $defs['type'] === $type) {
+                    $list[] = $field;
+                }
+            }
+            $this->fieldByTypeListCache[$type] = $list;
+        }
+
+        return $this->fieldByTypeListCache[$type];
+    }
+
+    protected function processCurrencyFieldsBeforeSave(Entity $entity)
+    {
+        foreach ($this->getFieldByTypeList('currency') as $field) {
+            $currencyAttribute = $field . 'Currency';
+            $defaultCurrency = $this->getConfig()->get('defaultCurrency');
+            if ($entity->isNew()) {
+                if ($entity->get($field) && !$entity->get($currencyAttribute)) {
+                    $entity->set($currencyAttribute, $defaultCurrency);
+                }
+            } else {
+                if ($entity->isAttributeChanged($field) && $entity->has($currencyAttribute) && !$entity->get($currencyAttribute)) {
+                    $entity->set($currencyAttribute, $defaultCurrency);
+                }
+            }
+        }
     }
 
     protected function processFileFieldsSave(Entity $entity)
