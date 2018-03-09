@@ -41,7 +41,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
     protected $dependencies = array(
         'metadata',
-        'config'
+        'config',
+        'fieldManagerUtil'
     );
 
     protected $injections = array();
@@ -53,8 +54,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected $processFieldsAfterSaveDisabled = false;
 
     protected $processFieldsBeforeSaveDisabled = false;
-
-    protected $fieldByTypeListCache = [];
 
     protected function addDependency($name)
     {
@@ -91,6 +90,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function getConfig()
     {
         return $this->getInjection('config');
+    }
+
+    protected function getFieldManagerUtil()
+    {
+        return $this->getInjection('fieldManagerUtil');
     }
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
@@ -342,18 +346,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function getFieldByTypeList($type)
     {
-        if (!array_key_exists($type, $this->fieldByTypeListCache)) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
-            $list = [];
-            foreach ($fieldDefs as $field => $defs) {
-                if (isset($defs['type']) && $defs['type'] === $type) {
-                    $list[] = $field;
-                }
-            }
-            $this->fieldByTypeListCache[$type] = $list;
-        }
-
-        return $this->fieldByTypeListCache[$type];
+        return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
     }
 
     protected function processCurrencyFieldsBeforeSave(Entity $entity)

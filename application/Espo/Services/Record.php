@@ -53,7 +53,8 @@ class Record extends \Espo\Core\Services\Base
         'fileManager',
         'selectManagerFactory',
         'fileStorageManager',
-        'injectableFactory'
+        'injectableFactory',
+        'fieldManagerUtil'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -144,12 +145,17 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getFileManager()
     {
-        return $this->injections['fileManager'];
+        return $this->getInjection('fileManager');
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->getInjection('metadata');
+    }
+
+    protected function getFieldManagerUtil()
+    {
+        return $this->getInjection('fieldManagerUtil');
     }
 
     protected function getRepository()
@@ -1876,6 +1882,11 @@ class Record extends \Espo\Core\Services\Base
                 $repository->relate($entity, $link, $linked);
             }
         }
+    }
+
+    protected function getFieldByTypeList($type)
+    {
+        return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
     }
 }
 
