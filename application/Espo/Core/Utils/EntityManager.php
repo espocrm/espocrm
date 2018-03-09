@@ -463,8 +463,8 @@ class EntityManager
             $this->getLanguage()->delete('Global', 'scopeNames', $name);
             $this->getLanguage()->delete('Global', 'scopeNamesPlural', $name);
 
-            $this->baseLanguage()->delete('Global', 'scopeNames', $name);
-            $this->baseLanguage()->delete('Global', 'scopeNamesPlural', $name);
+            $this->getBaseLanguage()->delete('Global', 'scopeNames', $name);
+            $this->getBaseLanguage()->delete('Global', 'scopeNamesPlural', $name);
         } catch (\Exception $e) {}
 
         $this->getMetadata()->save();

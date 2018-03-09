@@ -192,8 +192,8 @@ class FieldManager
         if ($isLabelChanged) {
             $this->getLanguage()->save();
             if ($isNew || $isCustom) {
-                if ($this->baseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
-                    $this->baseLanguage()->save();
+                if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
+                    $this->getBaseLanguage()->save();
                 }
             }
         }
@@ -352,8 +352,8 @@ class FieldManager
         }
 
         $this->getLanguage()->save();
-        if ($this->baseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
-            $this->baseLanguage()->save();
+        if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
+            $this->getBaseLanguage()->save();
         }
 
         $this->processHook('afterRemove', $type, $scope, $name);
