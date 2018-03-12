@@ -275,7 +275,8 @@ class Converter
             )
         );
 
-        foreach($entityMetadata['fields'] as $fieldName => $fieldParams) {
+        foreach ($entityMetadata['fields'] as $fieldName => $fieldParams) {
+            if (empty($fieldParams['type'])) continue;
 
             /** check if "fields" option exists in $fieldMeta */
             $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
