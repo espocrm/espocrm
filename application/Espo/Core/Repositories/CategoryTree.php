@@ -62,7 +62,7 @@ class CategoryTree extends \Espo\Core\ORM\Repositories\RDB
 			}
 			$pdo->query($sql);
 		} else {
-			if ($entity->isFieldChanged('parentId')) {
+			if ($entity->isAttributeChanged('parentId')) {
 				$sql = "
 					DELETE a FROM `".$pathsTableName."` AS a
 					JOIN `".$pathsTableName."` AS d ON a.descendor_id = d.descendor_id

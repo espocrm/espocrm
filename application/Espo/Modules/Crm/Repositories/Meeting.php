@@ -65,7 +65,7 @@ class Meeting extends \Espo\Core\Repositories\Event
         }
 
         if (!$entity->isNew()) {
-            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
+            if ($entity->isAttributeChanged('dateStart') && $entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateEnd')) {
                 $dateEndPrevious = $entity->getFetched('dateEnd');
                 $dateStartPrevious = $entity->getFetched('dateStart');
                 if ($dateStartPrevious && $dateEndPrevious) {

@@ -303,7 +303,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::afterSave($entity, $options);
         if (!$entity->isNew()) {
-            if ($entity->get('parentType') && $entity->get('parentId') && $entity->isFieldChanged('parentId')) {
+            if ($entity->get('parentType') && $entity->get('parentId') && $entity->isAttributeChanged('parentId')) {
                 $replyList = $this->findRelated($entity, 'replies');
                 foreach ($replyList as $reply) {
                     if ($reply->id === $entity->id) continue;

@@ -249,7 +249,7 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
             } else {
                 if (empty($options['noStream']) && empty($options['silent'])) {
-                    if ($entity->isFieldChanged('assignedUserId')) {
+                    if ($entity->isAttributeChanged('assignedUserId')) {
                         $assignedUserId = $entity->get('assignedUserId');
                         if (!empty($assignedUserId)) {
                             $this->getStreamService()->followEntity($entity, $assignedUserId);

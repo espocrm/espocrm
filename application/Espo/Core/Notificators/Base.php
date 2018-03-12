@@ -93,7 +93,7 @@ class Base implements Injectable
     public function process(Entity $entity)
     {
         if (!$entity->get('assignedUserId')) return;
-        if (!$entity->isFieldChanged('assignedUserId')) return;
+        if (!$entity->isAttributeChanged('assignedUserId')) return;
 
         $assignedUserId = $entity->get('assignedUserId');
 

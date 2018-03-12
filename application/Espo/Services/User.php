@@ -334,9 +334,9 @@ class User extends Record
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             if (
-                ($user->get('isActive') && $user->isFieldChanged('isActive') && !$user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->get('isPortalUser'))
                 ||
-                (!$user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+                (!$user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
@@ -346,9 +346,9 @@ class User extends Record
         }
         if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
             if (
-                ($user->get('isActive') && $user->isFieldChanged('isActive') && $user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->get('isPortalUser'))
                 ||
-                ($user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+                ($user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
             ) {
                 $portalUserCount = $this->getPortalUserCount();
                 if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
