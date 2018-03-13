@@ -142,7 +142,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setEditMode();
                 $(window).scrollTop(0);
             } else {
-                this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: true});
+                var options = {
+                    id: this.model.id,
+                    model: this.model
+                };
+                if (this.options.rootUrl) {
+                    options.rootUrl = this.options.rootUrl;
+                }
+                this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
+                this.getRouter().dispatch(this.scope, 'edit', options);
             }
         },
 
@@ -1308,9 +1316,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                     return;
                 }
-                url = this.options.rootUrl || '#' + this.scope;
                 if (this.model.id) {
                     url = '#' + this.scope + '/view/' + this.model.id;
+
+                    if (!this.returnDispatchParams) {
+                        this.getRouter().navigate(url, {trigger: false});
+                        var options = {
+                            id: this.model.id,
+                            model: this.model
+                        };
+                        if (this.options.rootUrl) {
+                            options.rootUrl = this.options.rootUrl;
+                        }
+                        this.getRouter().dispatch(this.scope, 'view', options);
+                    }
+                } else {
+                    url = this.options.rootUrl || '#' + this.scope;
                 }
             }
 

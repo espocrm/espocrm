@@ -93,6 +93,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected $maxTextColumnLengthForList = null;
 
+    protected $maxTextColumnLengthForListDisabled = false;
+
+    protected $skipTextColumnsForList = false;
+
     const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -816,11 +820,8 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
-        if ($this->maxTextColumnLengthForList) {
-            $selectParams['maxTextColumnsLength'] = $this->maxTextColumnLengthForList;
-        } else {
-            $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
-        }
+        $selectParams['maxTextColumnsLength'] = $this->getMaxTextColumnsFotListLength();
+        $selectParams['skipTextColumns'] = $this->isSkipTextColumnsForList();
 
         $collection = $this->getRepository()->find($selectParams);
 
@@ -849,6 +850,23 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
+    public function getMaxTextColumnsFotListLength()
+    {
+        if (!$this->maxTextColumnLengthForListDisabled) {
+            if ($this->maxTextColumnLengthForList) {
+                return $this->maxTextColumnLengthForList;
+            } else {
+                return $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+            }
+        }
+        return null;
+    }
+
+    public function isSkipTextColumnsForList()
+    {
+        return $this->skipTextColumnsForList;
+    }
+
     public function findLinkedEntities($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
@@ -869,6 +887,8 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
             throw new Forbidden();
         }
+
+        $recordService = $this->getRecordService($foreignEntityName);
 
         $disableCount = false;
         if (
@@ -891,15 +911,10 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        if ($this->maxTextColumnLengthForList) {
-            $selectParams['maxTextColumnsLength'] = $this->maxTextColumnLengthForList;
-        } else {
-            $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
-        }
+        $selectParams['maxTextColumnsLength'] = $recordService->getMaxTextColumnsFotListLength();
+        $selectParams['skipTextColumns'] = $recordService->isSkipTextColumnsForList();
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
-
-        $recordService = $this->getRecordService($foreignEntityName);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);

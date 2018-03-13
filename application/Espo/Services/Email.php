@@ -39,8 +39,6 @@ use \Espo\Core\Exceptions\BadRequest;
 
 class Email extends Record
 {
-    protected $maxTextColumnLengthForList = 20000;
-
     protected function init()
     {
         parent::init();
@@ -57,6 +55,8 @@ class Email extends Record
     private $streamService = null;
 
     protected $getEntityBeforeUpdate = true;
+
+    protected $skipTextColumnsForList = true;
 
     protected $allowedForUpdateAttributeList = [
         'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
