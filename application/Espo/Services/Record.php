@@ -97,6 +97,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $skipTextColumnsForList = false;
 
+    protected $selectAttributeList = null;
+
     const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -823,6 +825,11 @@ class Record extends \Espo\Core\Services\Base
         $selectParams['maxTextColumnsLength'] = $this->getMaxTextColumnsFotListLength();
         $selectParams['skipTextColumns'] = $this->isSkipTextColumnsForList();
 
+        $selectAttributeList = $this->getSelectAttributeList();
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        }
+
         $collection = $this->getRepository()->find($selectParams);
 
         foreach ($collection as $e) {
@@ -913,6 +920,11 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxTextColumnsFotListLength();
         $selectParams['skipTextColumns'] = $recordService->isSkipTextColumnsForList();
+
+        $selectAttributeList = $recordService->getSelectAttributeList();
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
@@ -1906,6 +1918,11 @@ class Record extends \Espo\Core\Services\Base
     protected function getFieldByTypeList($type)
     {
         return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
+    }
+
+    public function getSelectAttributeList()
+    {
+        return $this->selectAttributeList;
     }
 }
 

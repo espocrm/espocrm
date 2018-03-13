@@ -118,7 +118,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         return $this->where(array('lower' => strtolower($address)))->findOne();
     }
 
-    public function getEntityByAddressId($emailAddressId, $entityType = null)
+    public function getEntityByAddressId($emailAddressId, $entityType = null, $onlyName = false)
     {
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "
@@ -143,7 +143,14 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
-                $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+                if ($onlyName) {
+                    $entity = $this->getEntityManager()->getRepository($row['entityType'])
+                        ->select(['id', 'name'])
+                        ->where(['id' => $row['entityId']])
+                        ->findOne();
+                } else {
+                    $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+                }
                 if ($entity) {
                     return $entity;
                 }
@@ -212,12 +219,12 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                     $key = $row->emailAddress;
                     if (!empty($key)) {
                         $key = strtolower($key);
-                        $hash[$key] = array(
-                            'primary' => $row->primary ? true : false,
-                            'optOut' => $row->optOut ? true : false,
-                            'invalid' => $row->invalid ? true : false,
+                        $hash[$key] = [
+                            'primary' => !empty($row->primary) ? true : false,
+                            'optOut' => !empty($row->optOut) ? true : false,
+                            'invalid' => !empty($row->invalid) ? true : false,
                             'emailAddress' => $row->emailAddress
-                        );
+                        ];
                     }
                 }
 
@@ -295,7 +302,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                     if ($emailAddress) {
                         $skipSave = false;
                         if (!$this->getInjection('user')->isAdmin()) {
-                            if ($this->getEntityByAddressId($emailAddress->id, 'User')) {
+                            if ($this->getEntityByAddressId($emailAddress->id, 'User', true)) {
                                 $skipSave = true;
                             }
                         }

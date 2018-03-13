@@ -64,7 +64,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
-        $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
+        $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User', true);
         if ($user) {
             $entity->addLinkMultipleId('users', $user->id);
             if ($addAssignedUser) {
@@ -212,7 +212,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {
-                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User');
+                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User', true);
                             if ($user) {
                                 $entity->set('sentById', $user->id);
                             }

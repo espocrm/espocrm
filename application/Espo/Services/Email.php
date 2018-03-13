@@ -62,6 +62,27 @@ class Email extends Record
         'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
     ];
 
+    protected $selectAttributeList = [
+        'id',
+        'name',
+        'createdById',
+        'dateSent',
+        'fromString',
+        'fromEmailAddressId',
+        'fromEmailAddressName',
+        'fromName',
+        'parentId',
+        'parentType',
+        'isHtml',
+        'status',
+        'accountId',
+        'folderId',
+        'messageId',
+        'sentById',
+        'replyToString',
+        'hasAttachment'
+    ];
+
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
@@ -561,7 +582,7 @@ class Email extends Record
             if (!empty($idList)) {
                 $arr = [];
                 foreach ($idList as $emailAddressId) {
-                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId);
+                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, null, true);
                     if ($person) {
                         $arr[] = $person->get('name');
                     } else {
@@ -573,7 +594,7 @@ class Email extends Record
         } else {
             $fromEmailAddressId = $entity->get('fromEmailAddressId');
             if (!empty($fromEmailAddressId)) {
-                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId);
+                $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId, null, true);
                 if ($person) {
                     $entity->set('personStringData', $person->get('name'));
                 } else {
