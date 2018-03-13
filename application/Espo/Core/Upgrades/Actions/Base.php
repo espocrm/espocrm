@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions;
+
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
@@ -82,7 +83,6 @@ abstract class Base
      * Default package type
      */
     protected $defaultPackageType = 'extension';
-
 
     public function __construct(\Espo\Core\Container $container, \Espo\Core\Upgrades\ActionManager $actionManager)
     {
@@ -315,8 +315,32 @@ abstract class Base
     {
         $manifest = $this->getManifest();
 
-        if (isset($manifest[$type])) {
-            return $manifest[$type];
+        switch ($type) {
+            case 'delete':
+            case 'deleteBeforeCopy':
+                if (isset($manifest[$type])) {
+                    return $manifest[$type];
+                }
+                break;
+
+            case 'deleteAndCopy': /*Get directory/file list on a 2nd level. E.g. venor/zendframework*/
+                $packagePath = $this->getPackagePath();
+                $dirNames = $this->getParams('customDirNames');
+                $filesPath = Util::concatPath($packagePath, $dirNames['deleteAndCopy']);
+
+                if (file_exists($filesPath)) {
+                    $list = [];
+                    $dirList = $this->getFileManager()->getFileList($filesPath, false, '', null, true);
+                    foreach ($dirList as $dirName) {
+                        $dirPath = Util::concatPath($filesPath, $dirName);
+                        $subDirList = $this->getFileManager()->getFileList($dirPath, false, '', null, true);
+                        foreach ($subDirList as $subDirItem) {
+                            $list[] = Util::concatPath($dirName, $subDirItem);
+                        }
+                    }
+                    return $list;
+                }
+                break;
         }
 
         return array();
@@ -332,7 +356,7 @@ abstract class Base
         if (!isset($this->data['deleteFileList'])) {
             $deleteFileList = array();
 
-            $deleteList = array_merge($this->getDeleteList('delete'), $this->getDeleteList('deleteBeforeCopy'));
+            $deleteList = array_merge($this->getDeleteList('delete'), $this->getDeleteList('deleteBeforeCopy'), $this->getDeleteList('deleteAndCopy'));
             foreach ($deleteList as $key => $itemPath) {
                 if (is_dir($itemPath)) {
                     $fileList = $this->getFileManager()->getFileList($itemPath, true, '', true, true);
@@ -356,30 +380,12 @@ abstract class Base
      *
      * @return boolen
      */
-    protected function deleteFiles($withEmptyDirs = false)
+    protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
     {
-        $deleteList = $this->getDeleteList('delete');
+        $deleteList = $this->getDeleteList($type);
 
         if (!empty($deleteList)) {
             return $this->getFileManager()->remove($deleteList, null, $withEmptyDirs);
-        }
-
-        return true;
-    }
-
-    /**
-     * Deleted file/forder list before coppy the upgrade files
-     *
-     * @param  boolean $withEmptyDirs
-     *
-     * @return boolean
-     */
-    protected function deleteBeforeCopy($withEmptyDirs = false)
-    {
-        $deleteList = $this->getDeleteList('deleteBeforeCopy');
-
-        if (!empty($deleteList)) {
-            $this->getFileManager()->remove($deleteList, null, $withEmptyDirs);
         }
 
         return true;
@@ -406,7 +412,7 @@ abstract class Base
     }
 
     /**
-     * Get file directories (files, beforeInstallFiles, afterInstallFiles)
+     * Get file directories (files, beforeInstallFiles, afterInstallFiles, deleteAndCopy)
      *
      * @param  sting $parentDirPath
      *
@@ -415,7 +421,7 @@ abstract class Base
     protected function getFileDirs($parentDirPath = null)
     {
         $dirNames = $this->getParams('customDirNames');
-        $paths = array(self::FILES, $dirNames['before'], $dirNames['after']);
+        $paths = array(self::FILES, $dirNames['before'], $dirNames['after'], $dirNames['deleteAndCopy']);
 
         if (isset($parentDirPath)) {
             foreach ($paths as &$path) {
@@ -466,11 +472,12 @@ abstract class Base
      *
      * @return boolean
      */
-    protected function copyFiles($type = null)
+    protected function copyFiles($type = null, $dest = '')
     {
         switch ($type) {
             case 'before':
             case 'after':
+            case 'deleteAndCopy':
                 $dirNames = $this->getParams('customDirNames');
                 $dirPath = $dirNames[$type];
                 break;
@@ -484,7 +491,7 @@ abstract class Base
         $filesPath = Util::concatPath($packagePath, $dirPath);
 
         if (file_exists($filesPath)) {
-            return $this->copy($filesPath, '', true);
+            return $this->copy($filesPath, $dest, true);
         }
 
         return true;
@@ -513,6 +520,11 @@ abstract class Base
         }
 
         return $this->data['manifest'];
+    }
+
+    protected function setManifest()
+    {
+
     }
 
     /**

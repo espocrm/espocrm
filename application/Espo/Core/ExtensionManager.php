@@ -47,6 +47,7 @@ class ExtensionManager extends Upgrades\Base
         'customDirNames' => array(
             'before' => 'beforeInstallFiles',
             'after' => 'afterInstallFiles',
+            'deleteAndCopy' => 'vendorFiles',
         )
     );
 }
