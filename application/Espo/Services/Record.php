@@ -823,11 +823,12 @@ class Record extends \Espo\Core\Services\Base
         $selectParams = $this->getSelectParams($params);
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxTextColumnsFotListLength();
-        $selectParams['skipTextColumns'] = $this->isSkipTextColumnsForList();
 
         $selectAttributeList = $this->getSelectAttributeList();
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $this->isSkipTextColumnsForList();
         }
 
         $collection = $this->getRepository()->find($selectParams);
@@ -919,11 +920,12 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxTextColumnsFotListLength();
-        $selectParams['skipTextColumns'] = $recordService->isSkipTextColumnsForList();
 
         $selectAttributeList = $recordService->getSelectAttributeList();
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $recordService->isSkipTextColumnsForList();
         }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
