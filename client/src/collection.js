@@ -151,6 +151,10 @@ Espo.define('collection', [], function () {
 
         getUser: function () {
             return this._user;
+        },
+
+        getEntityType: function () {
+            return this.name;
         }
 
     });

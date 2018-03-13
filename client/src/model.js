@@ -242,7 +242,12 @@ Espo.define('model', [], function () {
 
         isRemovable: function () {
             return true;
+        },
+
+        getEntityType: function () {
+            return this.name;
         }
+
     });
 
     return Model;
