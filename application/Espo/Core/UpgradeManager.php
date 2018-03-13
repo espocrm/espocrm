@@ -47,7 +47,7 @@ class UpgradeManager extends Upgrades\Base
         'customDirNames' => array(
             'before' => 'beforeUpgradeFiles',
             'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendor',
+            'vendor' => 'vendorFiles',
         )
     );
 }
