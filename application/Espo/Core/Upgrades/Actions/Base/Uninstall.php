@@ -66,7 +66,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             }
 
             /* remove extension files, saved in fileList */
-            if (!$this->deleteFiles(true)) {
+            if (!$this->deleteFiles('delete', true)) {
                 $this->throwErrorAndRemovePackage('Permission denied to delete files.');
             }
         }
@@ -119,10 +119,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    protected function copyFiles($type = null)
+    protected function copyFiles($type = null, $dest = '')
     {
         $backupPath = $this->getPath('backupPath');
-        $res = $this->copy(array($backupPath, self::FILES), '', true);
+        $res = $this->copy(array($backupPath, self::FILES), $dest, true);
 
         return $res;
     }
