@@ -91,15 +91,15 @@ class Record extends \Espo\Core\Services\Base
 
     protected $listCountQueryDisabled = false;
 
-    protected $maxTextColumnLengthForList = null;
+    protected $maxSelectTextAttributeLength = null;
 
-    protected $maxTextColumnLengthForListDisabled = false;
+    protected $maxSelectTextAttributeLengthDisabled = false;
 
-    protected $skipTextColumnsForList = false;
+    protected $skipSelectTextAttributes = false;
 
     protected $selectAttributeList = null;
 
-    const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
+    const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
 
@@ -822,13 +822,13 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
-        $selectParams['maxTextColumnsLength'] = $this->getMaxTextColumnsFotListLength();
+        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
 
         $selectAttributeList = $this->getSelectAttributeList();
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         } else {
-            $selectParams['skipTextColumns'] = $this->isSkipTextColumnsForList();
+            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
         }
 
         $collection = $this->getRepository()->find($selectParams);
@@ -858,21 +858,21 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
-    public function getMaxTextColumnsFotListLength()
+    public function getMaxSelectTextAttributeLength()
     {
-        if (!$this->maxTextColumnLengthForListDisabled) {
-            if ($this->maxTextColumnLengthForList) {
-                return $this->maxTextColumnLengthForList;
+        if (!$this->maxSelectTextAttributeLengthDisabled) {
+            if ($this->maxSelectTextAttributeLength) {
+                return $this->maxSelectTextAttributeLength;
             } else {
-                return $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+                return $this->getConfig()->get('maxSelectTextAttributeLengthForList', self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH);
             }
         }
         return null;
     }
 
-    public function isSkipTextColumnsForList()
+    public function isSkipSelectTextAttributes()
     {
-        return $this->skipTextColumnsForList;
+        return $this->skipSelectTextAttributes;
     }
 
     public function findLinkedEntities($id, $link, $params)
@@ -919,13 +919,13 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $selectParams['maxTextColumnsLength'] = $recordService->getMaxTextColumnsFotListLength();
+        $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
 
         $selectAttributeList = $recordService->getSelectAttributeList();
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         } else {
-            $selectParams['skipTextColumns'] = $recordService->isSkipTextColumnsForList();
+            $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
         }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);

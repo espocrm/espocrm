@@ -56,7 +56,7 @@ class Email extends Record
 
     protected $getEntityBeforeUpdate = true;
 
-    protected $skipTextColumnsForList = true;
+    protected $skipSelectTextAttributes = true;
 
     protected $allowedForUpdateAttributeList = [
         'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
