@@ -84,6 +84,8 @@ abstract class Base
      */
     protected $defaultPackageType = 'extension';
 
+    protected $vendorDirName = 'vendor';
+
     public function __construct(\Espo\Core\Container $container, \Espo\Core\Upgrades\ActionManager $actionManager)
     {
         $this->container = $container;
@@ -323,23 +325,8 @@ abstract class Base
                 }
                 break;
 
-            case 'deleteAndCopy': /*Get directory/file list on a 2nd level. E.g. venor/zendframework*/
-                $packagePath = $this->getPackagePath();
-                $dirNames = $this->getParams('customDirNames');
-                $filesPath = Util::concatPath($packagePath, $dirNames['deleteAndCopy']);
-
-                if (file_exists($filesPath)) {
-                    $list = [];
-                    $dirList = $this->getFileManager()->getFileList($filesPath, false, '', null, true);
-                    foreach ($dirList as $dirName) {
-                        $dirPath = Util::concatPath($filesPath, $dirName);
-                        $subDirList = $this->getFileManager()->getFileList($dirPath, false, '', null, true);
-                        foreach ($subDirList as $subDirItem) {
-                            $list[] = Util::concatPath($dirName, $subDirItem);
-                        }
-                    }
-                    return $list;
-                }
+            case 'vendor':
+                return $this->getVendorFileList('delete');
                 break;
         }
 
@@ -356,7 +343,7 @@ abstract class Base
         if (!isset($this->data['deleteFileList'])) {
             $deleteFileList = array();
 
-            $deleteList = array_merge($this->getDeleteList('delete'), $this->getDeleteList('deleteBeforeCopy'), $this->getDeleteList('deleteAndCopy'));
+            $deleteList = array_merge($this->getDeleteList('delete'), $this->getDeleteList('deleteBeforeCopy'), $this->getDeleteList('vendor'));
             foreach ($deleteList as $key => $itemPath) {
                 if (is_dir($itemPath)) {
                     $fileList = $this->getFileManager()->getFileList($itemPath, true, '', true, true);
@@ -412,7 +399,7 @@ abstract class Base
     }
 
     /**
-     * Get file directories (files, beforeInstallFiles, afterInstallFiles, deleteAndCopy)
+     * Get file directories (files, beforeInstallFiles, afterInstallFiles)
      *
      * @param  sting $parentDirPath
      *
@@ -421,7 +408,7 @@ abstract class Base
     protected function getFileDirs($parentDirPath = null)
     {
         $dirNames = $this->getParams('customDirNames');
-        $paths = array(self::FILES, $dirNames['before'], $dirNames['after'], $dirNames['deleteAndCopy']);
+        $paths = array(self::FILES, $dirNames['before'], $dirNames['after']);
 
         if (isset($parentDirPath)) {
             foreach ($paths as &$path) {
@@ -451,6 +438,12 @@ abstract class Base
             }
         }
 
+        //vendor file list
+        $vendorFileList = $this->getVendorFileList('copy');
+        if (!empty($vendorFileList)) {
+            $fileList = array_merge($fileList, $vendorFileList);
+        }
+
         return $fileList;
     }
 
@@ -477,9 +470,16 @@ abstract class Base
         switch ($type) {
             case 'before':
             case 'after':
-            case 'deleteAndCopy':
                 $dirNames = $this->getParams('customDirNames');
                 $dirPath = $dirNames[$type];
+                break;
+
+            case 'vendor':
+                $dirNames = $this->getParams('customDirNames');
+                if (isset($dirNames['vendor'])) {
+                    $dirPath = $dirNames['vendor'];
+                    $dest = $this->vendorDirName;
+                }
                 break;
 
             default:
@@ -487,14 +487,48 @@ abstract class Base
                 break;
         }
 
-        $packagePath = $this->getPackagePath();
-        $filesPath = Util::concatPath($packagePath, $dirPath);
+        if (isset($dirPath)) {
+            $packagePath = $this->getPackagePath();
+            $filesPath = Util::concatPath($packagePath, $dirPath);
 
-        if (file_exists($filesPath)) {
-            return $this->copy($filesPath, $dest, true);
+            if (file_exists($filesPath)) {
+                return $this->copy($filesPath, $dest, true);
+            }
         }
 
         return true;
+    }
+
+    protected function getVendorFileList($type = 'copy')
+    {
+        $list = [];
+
+        $packagePath = $this->getPackagePath();
+        $dirNames = $this->getParams('customDirNames');
+        if (!isset($dirNames['vendor'])) {
+            return $list;
+        }
+
+        $filesPath = Util::concatPath($packagePath, $dirNames['vendor']);
+        if (!file_exists($filesPath)) {
+            return $list;
+        }
+
+        switch ($type) {
+            case 'copy':
+                $list = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+                break;
+
+            case 'delete':
+                $list = $this->getFileManager()->getFileList($filesPath, false, '', null, true);
+                break;
+        }
+
+        foreach ($list as &$path) {
+            $path = Util::concatPath($this->vendorDirName, $path);
+        }
+
+        return $list;
     }
 
     public function getManifest()

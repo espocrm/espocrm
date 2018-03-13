@@ -86,8 +86,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         /* remove files defined in a manifest */
         $this->deleteFiles('delete', true);
 
-        $this->deleteFiles('deleteAndCopy');
-        $this->copyFiles('deleteAndCopy');
+        $this->deleteFiles('vendor');
+        $this->copyFiles('vendor');
 
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
