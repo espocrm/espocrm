@@ -164,6 +164,7 @@ return array (
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
     'inlineAttachmentUploadMaxSize' => 20,
+    'textFilterUseContainsForVarchar' => false,
     'isInstalled' => false
 );
 
