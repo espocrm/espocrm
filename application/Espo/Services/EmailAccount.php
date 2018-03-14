@@ -385,8 +385,7 @@ class EmailAccount extends Record
         $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
             'emailAddress' => $address,
             'assignedUserId' => $user->id,
-            'active' => true,
-            'useSmtp' => true
+            'active' => true
         ])->findOne();
 
         return $emailAccount;

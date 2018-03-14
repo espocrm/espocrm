@@ -147,7 +147,7 @@ class Email extends Record
             $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $fromAddress);
 
             if (!$smtpParams) {
-                if ($emailAccount) {
+                if ($emailAccount && $emailAccount->get('useSmtp')) {
                     $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
                     if ($smtpParams) {
                         $emailSender->useSmtp($smtpParams);
