@@ -43,4 +43,3 @@ Espo.define('views/fields/currency-converted', 'views/fields/currency', function
 
     });
 });
-
