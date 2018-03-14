@@ -402,7 +402,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.notify('Not valid', 'error');
         },
 
-        save: function (callback) {
+        save: function (callback, skipExit) {
             this.beforeBeforeSave();
 
             var data = this.fetch();
@@ -459,10 +459,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     model.trigger('after:save');
 
                     if (!callback) {
-                        if (isNew) {
-                            this.exit('create');
-                        } else {
-                            this.exit('save');
+                        if (!skipExit) {
+                            if (isNew) {
+                                this.exit('create');
+                            } else {
+                                this.exit('save');
+                            }
                         }
                     } else {
                         callback(this);
