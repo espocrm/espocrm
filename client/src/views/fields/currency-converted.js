@@ -31,12 +31,15 @@ Espo.define('views/fields/currency-converted', 'views/fields/currency', function
     return Dep.extend({
 
         data: function () {
-            var currencyValue = this.getConfig().get('baseCurrency');
-            return _.extend({
-                currencyValue: currencyValue,
-                currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || ''
-            }, Dep.prototype.data.call(this));
-        },
+            var currencyValue = this.getConfig().get('defaultCurrency');
+
+            var data = Dep.prototype.data.call(this);
+
+            data.currencyValue = currencyValue;
+            data.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '';
+
+            return data;
+        }
 
     });
 });
