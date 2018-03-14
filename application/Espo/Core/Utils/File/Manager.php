@@ -483,8 +483,7 @@ class Manager
         $defaultPermissions = $this->getPermissionUtils()->getDefaultPermissions();
 
         if (file_exists($filePath)) {
-
-            if (!in_array($this->getPermissionUtils()->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
+            if (!is_writable($filePath) && !in_array($this->getPermissionUtils()->getCurrentPermission($filePath), array($defaultPermissions['file'], $defaultPermissions['dir']))) {
                 return $this->getPermissionUtils()->setDefaultPermissions($filePath, true);
             }
             return true;
