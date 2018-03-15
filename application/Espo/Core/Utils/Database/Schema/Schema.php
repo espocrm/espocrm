@@ -315,51 +315,42 @@ class Schema
     public function getMaxIndexLength()
     {
         $connection = $this->getConnection();
-        $schema = new \Espo\Core\Utils\Database\DBAL\Schema\Schema();
+        $mysqlEngine = $this->getMysqlEngine();
 
-        $tableName = 'temp_' . uniqid();
-        $table = $schema->createTable($tableName);
+        switch ($mysqlEngine) {
+            case 'InnoDB':
+                $mysqlVersion = $this->getMysqlVersion();
 
-        $table->addColumn('id', 'varchar', array(
-            'length' => 50,
-        ));
+                if (version_compare($mysqlVersion, '10.0.0') >= 0) {
+                    return 767; //InnoDB, MariaDB
+                }
 
-        $table->addColumn('column3072', 'varchar', array(
-            'length' => 1020,
-            'platformOptions' => array(
-                'collation' => 'utf8_unicode_ci',
-            ),
-        ));
+                if (version_compare($mysqlVersion, '5.7.0') >= 0) {
+                    return 3072; //InnoDB, MySQL 5.7+
+                }
 
-        $table->addColumn('column1000', 'varchar', array(
-            'length' => 332,
-            'platformOptions' => array(
-                'collation' => 'utf8_unicode_ci',
-            ),
-        ));
+                return 767; //InnoDB
+                break;
+        }
 
-        $table->setPrimaryKey(array("id"));
+        return 1000; //MyISAM
+    }
 
-        $table->addIndex(['column3072'], 'IDX_COLUMN3072');
-        $queries = $schema->toSql($this->getPlatform());
+    protected function getMysqlVersion()
+    {
+        $connection = $this->getConnection();
+        return $connection->fetchColumn("select version()");
+    }
 
-        try {
-            $connection->executeQuery($queries[0]);
-            $connection->getSchemaManager()->dropTable($tableName);
-            return 3072; //InnoDB, MySQL 5.7+
-        } catch (\Exception $e) {}
+    protected function getMysqlEngine()
+    {
+        $connection = $this->getConnection();
+        $result = $connection->fetchColumn("SHOW TABLE STATUS WHERE Engine = 'MyISAM'");
 
-        $table->dropIndex('IDX_COLUMN3072');
-        $table->addIndex(['column1000'], 'IDX_COLUMN1000');
-        $queries = $schema->toSql($this->getPlatform());
+        if (!empty($result)) {
+            return 'MyISAM';
+        }
 
-        try {
-            $connection->executeQuery($queries[0]);
-            $connection->getSchemaManager()->dropTable($tableName);
-            return 1000; //MyISAM
-        } catch (\Exception $e) {}
-
-        $connection->getSchemaManager()->dropTable($tableName);
-        return 767; //InnoDB
+        return 'InnoDB';
     }
 }
