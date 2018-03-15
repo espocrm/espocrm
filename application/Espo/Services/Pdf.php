@@ -125,7 +125,20 @@ class Pdf extends \Espo\Core\Services\Base
             $pdf->setPrintFooter(false);
         }
 
-        $pdf->addPage();
+        $pageOrientation = 'Portrait';
+        if ($template->get('pageOrientation')) {
+            $pageOrientation = $template->get('pageOrientation');
+        }
+        $pageFormat = 'A4';
+        if ($template->get('pageFormat')) {
+            $pageFormat = $template->get('pageFormat');
+        }
+        $pageOrientationCode = 'P';
+        if ($pageOrientation === 'Landscape') {
+            $pageOrientationCode = 'L';
+        }
+
+        $pdf->addPage($pageOrientationCode, $pageFormat);
 
         $htmlHeader = $htmlizer->render($entity, $template->get('header'));
         $pdf->writeHTML($htmlHeader, true, false, true, false, '');

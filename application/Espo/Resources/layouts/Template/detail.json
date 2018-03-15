@@ -13,6 +13,7 @@
             [{"name":"variables","fullWidth":true, "view": "Template.Fields.Variables"}],
             [{"name":"header","fullWidth":true}],
             [{"name":"body","fullWidth":true}],
+            [{"name":"pageOrientation"}, {"name":"pageFormat"}],
             [{"name":"topMargin"}, false],
             [{"name":"leftMargin"}, {"name":"rightMargin"}],
             [{"name":"bottomMargin"}, false],
