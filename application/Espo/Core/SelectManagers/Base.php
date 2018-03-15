@@ -1506,10 +1506,11 @@ class Base
         $fieldList = $this->getTextFilterFieldList();
         $d = array();
 
+        $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
+
         foreach ($fieldList as $field) {
-            $expression = $textFilter . '%';
             if (
-                strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+                strlen($textFilter) >= $textFilterContainsMinLength
                 &&
                 (
                     !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
