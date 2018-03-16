@@ -173,7 +173,8 @@
         "installExtension": "Extension {name} {version} is ready for an installation.",
         "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a> to setup cron job.",
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
-        "newExtensionVersionIsAvailable": "New release {latestVersion} of {extensionName} is available."
+        "newExtensionVersionIsAvailable": "New release {latestVersion} of {extensionName} is available.",
+        "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
     },
     "descriptions": {
         "settings": "System settings of application.",
