@@ -94,7 +94,7 @@ Espo.define('views/login', 'view', function (Dep) {
                     return;
                 }
 
-                $submit.addClass('disabled');
+                $submit.addClass('disabled').attr('disabled', 'disabled');
 
                 this.notify('Please wait...');
 
@@ -119,7 +119,7 @@ Espo.define('views/login', 'view', function (Dep) {
                         });
                     }.bind(this),
                     error: function (xhr) {
-                        $submit.removeClass('disabled');
+                        $submit.removeClass('disabled').removeAttr('disabled');
                         if (xhr.status == 401) {
                             this.onWrong();
                         }
