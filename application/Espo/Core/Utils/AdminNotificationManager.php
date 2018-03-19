@@ -120,6 +120,7 @@ class AdminNotificationManager
         $latestVersion = $config->get('latestVersion');
         if (isset($latestVersion)) {
             $currentVersion = $config->get('version');
+            if ($currentVersion === 'dev') return;
             if (version_compare($latestVersion, $currentVersion, '>')) {
                 return array(
                     'currentVersion' => $currentVersion,
