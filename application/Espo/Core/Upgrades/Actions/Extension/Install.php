@@ -199,7 +199,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         $this->executeAction(ExtensionManager::UNINSTALL, array(
                 'id' => $extensionEntity->get('id'),
-                'isNotRunScriptAfter' => true,
+                'skipSystemRebuild' => true,
+                'skipAfterScript' => true,
             )
         );
     }
