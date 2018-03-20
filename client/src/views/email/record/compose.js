@@ -138,6 +138,8 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 attachmentsIds: data.attachmentsIds,
                 attachmentsNames: data.attachmentsNames
             });
+
+            this.isBodyChanged = false;
         },
 
         prependSignature: function (body, isHtml) {
