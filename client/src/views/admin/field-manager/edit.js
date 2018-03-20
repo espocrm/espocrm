@@ -362,6 +362,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             if (notValid) {
                 this.notify('Not valid', 'error');
+
+                this.enableButtons();
                 return;
             }
 
