@@ -304,6 +304,7 @@
         "assignedUser": "Assigned User",
         "assignedUsers": "Assigned Users",
         "emailAddress": "Email",
+        "emailAddressData": "Email Address Data",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",
         "createdAt": "Created At",
@@ -318,10 +319,13 @@
         "phoneNumberFax": "Phone (Fax)",
         "phoneNumberOffice": "Phone (Office)",
         "phoneNumberOther": "Phone (Other)",
+        "phoneNumberData": "Phone Number Data",
         "order": "Order",
         "parent": "Parent",
         "children": "Children",
-        "id": "ID"
+        "id": "ID",
+        "ids": "IDs",
+        "names": "Names"
     },
     "links": {
         "assignedUser": "Assigned User",

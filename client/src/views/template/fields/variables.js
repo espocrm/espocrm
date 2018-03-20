@@ -73,6 +73,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(entityType);
             attributeList = attributeList.filter(function (item) {
                 if (~forbiddenList.indexOf(item)) return;
+
+                var fieldType = this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']);
+                if (fieldType === 'map') return;
+
+                if (this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'disabled'])) return;
+
                 return true;
             }, this);
 
@@ -113,6 +119,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 var forbiddenList = this.getAcl().getScopeForbiddenAttributeList(scope);
                 attributeList = attributeList.filter(function (item) {
                     if (~forbiddenList.indexOf(item)) return;
+
+                    var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']);
+                    if (fieldType === 'map') return;
+
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) return;
+
                     return true;
                 }, this);
 
@@ -153,7 +165,35 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                     var link = item.split('.')[0];
                     scope = this.getMetadata().get('entityDefs.' + entityType + '.links.' + link + '.entity');
                 }
+
                 this.translatedOptions[item] = this.translate(field, 'fields', scope);
+
+                if (field.indexOf('Id') === field.length - 2) {
+                    var baseField = field.substr(0, field.length - 2);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('id', 'fields') + ')';
+                    }
+                } else if (field.indexOf('Name') === field.length - 4) {
+                    var baseField = field.substr(0, field.length - 4);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
+                    }
+                }
+
+                if (field.indexOf('Ids') === field.length - 3) {
+                    var baseField = field.substr(0, field.length - 3);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
+                    }
+                } else if (field.indexOf('Names') === field.length - 5) {
+                    var baseField = field.substr(0, field.length - 5);
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                        this.translatedOptions[item] = this.translate(baseField, 'fields', scope) + ' (' + this.translate('names', 'fields') + ')';
+                    }
+                }
+
+
+
                 if (isForeign) {
                     this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' + this.translatedOptions[item];
                 }
