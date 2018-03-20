@@ -1149,7 +1149,7 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null)
+    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null, $futureDays = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
@@ -1157,6 +1157,11 @@ class Activities extends \Espo\Core\Services\Base
         if (!$entityTypeList) {
             $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
         }
+
+        if (is_null($futureDays)) {
+            $futureDays = self::UPCOMING_ACTIVITIES_FUTURE_DAYS;
+        }
+        $beforeString = (new \DateTime())->modify('+' . $futureDays . ' days')->format('Y-m-d H:i:s');
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
@@ -1181,15 +1186,40 @@ class Activities extends \Espo\Core\Services\Base
                 $selectManager->applyTextFilter($params['textFilter'], $selectParams);
             }
 
-
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
 
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
 
-
             if ($entityType === 'Task') {
-                $selectManager->applyPrimaryFilter('actualStartingNotInFuture', $selectParams);
+                $selectManager->applyPrimaryFilter('actual', $selectParams);
+
+                $selectManager->addOrWhere([
+                    [
+                        'dateStart' => null
+                    ],
+                    [
+                        'dateStart!=' => null,
+                        'OR' => array(
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'past',
+                                'attribute' => 'dateStart',
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            )),
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'today',
+                                'attribute' => 'dateStart',
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            )),
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'before',
+                                'attribute' => 'dateStart',
+                                'value' => $beforeString,
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            ))
+                        )
+                    ]
+                ], $selectParams);
             } else {
                 $selectManager->applyPrimaryFilter('planned', $selectParams);
 
@@ -1208,7 +1238,7 @@ class Activities extends \Espo\Core\Services\Base
                         $selectManager->convertDateTimeWhere(array(
                             'type' => 'before',
                             'field' => 'dateStart',
-                            'value' => (new \DateTime())->modify('+' . self::UPCOMING_ACTIVITIES_FUTURE_DAYS . ' days')->format('Y-m-d H:i:s'),
+                            'value' => $beforeString,
                             'timeZone' => $selectManager->getUserTimeZone()
                         ))
                     ]
@@ -1236,7 +1266,7 @@ class Activities extends \Espo\Core\Services\Base
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
         $totalCount = $row['COUNT'];
 
-        $unionSql .= " ORDER BY dateStart, dateEnd ASC";
+        $unionSql .= " ORDER BY dateStart ASC, dateEnd ASC, name ASC";
         $unionSql .= " LIMIT :offset, :maxSize";
 
         $sth = $pdo->prepare($unionSql);

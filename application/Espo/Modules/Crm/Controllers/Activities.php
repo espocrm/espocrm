@@ -101,6 +101,8 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $entityTypeList = $request->get('entityTypeList');
 
+        $futureDays = intval($request->get('futureDays'));
+
         if (empty($maxSize)) {
             $maxSize = $this->maxSizeLimit;
         }
@@ -111,7 +113,7 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getUpcomingActivities($userId, array(
             'offset' => $offset,
             'maxSize' => $maxSize
-        ), $entityTypeList);
+        ), $entityTypeList, $futureDays);
     }
 
     public function actionPopupNotifications()

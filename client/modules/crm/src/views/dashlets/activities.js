@@ -131,6 +131,7 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             this.collection.url = 'Activities/action/listUpcoming';
             this.collection.maxSize = this.getOption('displayRecords') || this.getConfig().get('recordsPerPageSmall') || 5;
             this.collection.data.entityTypeList = this.scopeList;
+            this.collection.data.futureDays = this.getOption('futureDays');
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'crm:views/record/list-activities-dashlet', {
