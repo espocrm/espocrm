@@ -37,16 +37,30 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.initialBody = null;
+            this.initialIsHtml = null;
+
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
             }
 
+            if (this.model.get('body')) {
+                this.initialBody = this.model.get('body');
+                this.initialIsHtml = this.model.get('isHtml');
+            }
+
             if (!this.options.signatureDisabled && this.hasSignature()) {
                 var body = this.prependSignature(this.model.get('body') || '', this.model.get('isHtml'));
                 this.model.set('body', body);
             }
+
+            this.isBodyChanged = false;
+
+            this.listenTo(this.model, 'change:body', function () {
+                this.isBodyChanged = true;
+            }, this);
 
             if (this.options.keepAttachmentsOnSelectTemplate) {
                 this.initialAttachmentsIds = this.model.get('attachmentsIds') || [];
@@ -64,7 +78,10 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 var $div = $('<div>').html(bodyPlain);
                 bodyPlain = $div.text();
 
-                if (bodyPlain !== '' && this.model.get('body') !== this.attributes.body) {
+                if (
+                    bodyPlain !== '' &&
+                    this.isBodyChanged
+                ) {
                     this.confirm({
                         message: this.translate('confirmInsertTemplate', 'messages', 'Email'),
                         confirmText: this.translate('Yes')
@@ -87,6 +104,20 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             if (this.hasSignature()) {
                 body = this.appendSignature(body || '', data.isHtml);
             }
+
+            if (this.initialBody) {
+                var initialBody = this.initialBody;
+                if (data.isHtml !== this.initialIsHtml) {
+                    if (data.isHtml) {
+                        initialBody = this.plainToHtml(initialBody);
+                    } else {
+                        initialBody = this.htmlToPlain(initialBody);
+                    }
+                }
+
+                body += initialBody;
+            }
+
             this.model.set('isHtml', data.isHtml);
             this.model.set('name', data.subject);
             this.model.set('body', '');
@@ -160,6 +191,27 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             model.set('status', 'Draft');
 
             this.save();
+        },
+
+        htmlToPlain: function (text) {
+            text = text || '';
+            var value = text.replace(/<br\s*\/?>/mg, '\n');
+
+            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
+
+            var $div = $('<div>').html(value);
+            $div.find('style').remove();
+            $div.find('link[ref="stylesheet"]').remove();
+
+            value =  $div.text();
+
+            return value;
+        },
+
+        plainToHtml: function (html) {
+            html = html || '';
+            var value = html.replace(/\n/g, '<br>');
+            return value;
         }
 
     });

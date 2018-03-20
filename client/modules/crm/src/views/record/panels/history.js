@@ -172,9 +172,7 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                         this.createView('quickCreate', viewName, {
                             attributes: attributes,
                         }, function (view) {
-                            view.render(function () {
-                                view.getView('edit').hideField('selectTemplate');
-                            });
+                            view.render();
 
                             this.listenToOnce(view, 'after:save', function () {
                                 this.collection.fetch();

@@ -303,9 +303,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
             }, function (view) {
-                view.render(function () {
-                    view.getView('edit').hideField('selectTemplate');
-                });
+                view.render();
 
                 view.notify(false);
 
@@ -340,9 +338,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
                 this.createView('quickCreate', viewName, {
                     attributes: attributes,
                 }, function (view) {
-                    view.render(function () {
-                        view.getView('edit').hideField('selectTemplate');
-                    });
+                    view.render();
 
                     view.notify(false);
                 });
