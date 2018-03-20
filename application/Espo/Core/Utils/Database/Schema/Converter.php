@@ -79,6 +79,8 @@ class Converter
         'foreign'
     );
 
+    protected $maxIndexLength;
+
     public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema)
     {
         $this->metadata = $metadata;
@@ -117,6 +119,15 @@ class Converter
     protected function getDatabaseSchema()
     {
         return $this->databaseSchema;
+    }
+
+    protected function getMaxIndexLength()
+    {
+        if (!isset($this->maxIndexLength)) {
+            $this->maxIndexLength = $this->getDatabaseSchema()->getMaxIndexLength();
+        }
+
+        return $this->maxIndexLength;
     }
 
     /**
@@ -164,7 +175,7 @@ class Converter
         $schema = $this->getSchema(true);
 
         $indexList = SchemaUtils::getIndexList($ormMeta);
-        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getDatabaseSchema()->getMaxIndexLength());
+        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
 
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
@@ -358,7 +369,9 @@ class Converter
             case 'id':
             case 'foreignId':
             case 'foreignType':
-                $fieldParams['utf8mb3'] = true;
+                if ($this->getMaxIndexLength() < 3072) {
+                    $fieldParams['utf8mb3'] = true;
+                }
                 break;
 
             case 'array':
