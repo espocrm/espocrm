@@ -54,35 +54,59 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             }
 
             this.listenTo(this.model, 'insert-template', function (data) {
-                var body = data.body;
-                if (this.hasSignature()) {
-                    body = this.appendSignature(body || '', data.isHtml);
-                }
-                this.model.set('isHtml', data.isHtml);
-                this.model.set('name', data.subject);
-                this.model.set('body', '');
-                this.model.set('body', body);
+                var body = this.model.get('body');
 
-                if (this.options.keepAttachmentsOnSelectTemplate) {
-                    this.initialAttachmentsIds.forEach(function (id) {
-                        if (data.attachmentsIds) {
-                            data.attachmentsIds.push(id);
-                        }
-                        if (data.attachmentsNames) {
-                            data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
-                        }
+                var bodyPlain = body.replace(/<br\s*\/?>/mg, '');
+                bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
+                bodyPlain = bodyPlain.replace(/ /g, '');
+                bodyPlain = bodyPlain.replace(/\n/g, '');
+
+                var $div = $('<div>').html(bodyPlain);
+                bodyPlain = $div.text();
+
+                if (bodyPlain !== '' && this.model.get('body') !== this.attributes.body) {
+                    this.confirm({
+                        message: this.translate('confirmInsertTemplate', 'messages', 'Email'),
+                        confirmText: this.translate('Yes')
+                    }, function () {
+                        this.insertTemplate(data);
                     }, this);
+                } else {
+                    this.insertTemplate(data);
                 }
 
-                this.model.set({
-                    attachmentsIds: data.attachmentsIds,
-                    attachmentsNames: data.attachmentsNames
-                });
             }, this);
 
             if (this.options.selectTemplateDisabled) {
                 this.hideField('selectTemplate');
             }
+        },
+
+        insertTemplate: function (data) {
+            var body = data.body;
+            if (this.hasSignature()) {
+                body = this.appendSignature(body || '', data.isHtml);
+            }
+            this.model.set('isHtml', data.isHtml);
+            this.model.set('name', data.subject);
+            this.model.set('body', '');
+            this.model.set('body', body);
+
+            if (this.options.keepAttachmentsOnSelectTemplate) {
+                this.initialAttachmentsIds.forEach(function (id) {
+                    if (data.attachmentsIds) {
+                        data.attachmentsIds.push(id);
+                    }
+                    if (data.attachmentsNames) {
+                        data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
+                    }
+                }, this);
+            }
+
+            this.model.set({
+                attachmentsIds: data.attachmentsIds,
+                attachmentsNames: data.attachmentsNames
+            });
         },
 
         prependSignature: function (body, isHtml) {
