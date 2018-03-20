@@ -24,6 +24,10 @@
         "pageOrientation": {
             "Portrait": "Portrait",
             "Landscape": "Landscape"
+        },
+        "placeholders": {
+            "today": "Today (date)",
+            "now": "Now (date-time)"
         }
     },
     "tooltips": {

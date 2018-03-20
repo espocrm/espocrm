@@ -260,12 +260,19 @@ class Htmlizer
 
         $data = $this->getDataFromEntity($entity, $skipLinks);
 
+        if (!array_key_exists('today', $data)) {
+            $data['today'] = $this->dateTime->getTodayString();
+        }
+
+        if (!array_key_exists('now', $data)) {
+            $data['now'] = $this->dateTime->getNowString();
+        }
+
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
         }
 
         $html = $renderer($data);
-
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 

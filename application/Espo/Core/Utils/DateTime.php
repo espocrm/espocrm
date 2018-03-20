@@ -189,4 +189,38 @@ class DateTime
     {
         return date($this->getInternalDateFormat());
     }
+
+    public function getTodayString($timezone = null)
+    {
+        if ($timezone) {
+            $timezoneObj = new \DateTimeZone($timezone);
+        } else {
+            $timezoneObj = $this->timezone;
+        }
+
+        $dateTime = new \DateTime();
+        $dateTime->setTimezone($timezoneObj);
+
+        return $dateTime->format($this->getPhpDateFormat());
+    }
+
+    public function getNowString($timezone = null, $format = null)
+    {
+        if ($timezone) {
+            $timezoneObj = new \DateTimeZone($timezone);
+        } else {
+            $timezoneObj = $this->timezone;
+        }
+
+        $dateTime = new \DateTime();
+        $dateTime->setTimezone($timezoneObj);
+
+        if ($format) {
+            $phpFormat = $this->convertFormatToPhp($format);
+        } else {
+            $phpFormat = $this->getPhpDateTimeFormat();
+        }
+
+        return $dateTime->format($phpFormat);
+    }
 }

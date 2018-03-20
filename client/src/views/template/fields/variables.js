@@ -86,12 +86,15 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
 
             this.attributeList = attributeList;
 
-            attributeList.unshift('');
+            if (!~this.attributeList.indexOf('now')) {
+                this.attributeList.unshift('now');
+            }
 
-            this.translatedOptions = {};
-            attributeList.forEach(function (item) {
-                this.translatedOptions[item] = this.translate(item, 'fields', entityType);
-            }, this);
+            if (!~this.attributeList.indexOf('today')) {
+                this.attributeList.unshift('today');
+            }
+
+            attributeList.unshift('');
 
             var links = this.getMetadata().get('entityDefs.' + entityType + '.links') || {};
 
@@ -135,6 +138,12 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
 
             var entityType = this.model.get('entityType');
             this.attributeList.forEach(function (item) {
+                if (~['today', 'now'].indexOf(item)) {
+                    if (!this.getMetadata().get(['entityDefs', entityType, 'fields', item])) {
+                        this.translatedOptions[item] = this.getLanguage().translateOption(item, 'placeholders', 'Template');
+                        return;
+                    }
+                }
                 var field = item;
                 var scope = entityType;
                 var isForeign = false;
