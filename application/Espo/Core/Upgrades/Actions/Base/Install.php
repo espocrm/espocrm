@@ -73,7 +73,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         }
 
         /* run before install script */
-        $this->runScript('before');
+        if (!isset($data['skipBeforeScript']) || !$data['skipBeforeScript']) {
+            $this->runScript('before');
+        }
 
         /* remove files defined in a manifest "deleteBeforeCopy" */
         $this->deleteFiles('deleteBeforeCopy', true);
@@ -89,8 +91,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->deleteFiles('vendor');
         $this->copyFiles('vendor');
 
-        if (!$this->systemRebuild()) {
-            $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+        if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
+            if (!$this->systemRebuild()) {
+                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+            }
         }
 
         //afterInstallFiles
@@ -99,7 +103,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         }
 
         /* run before install script */
-        $this->runScript('after');
+        if (!isset($data['skipAfterScript']) || !$data['skipAfterScript']) {
+            $this->runScript('after');
+        }
 
         $this->afterRunAction();
 

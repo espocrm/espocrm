@@ -53,7 +53,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $this->beforeRunAction();
 
         /* run before install script */
-        if (!isset($data['isNotRunScriptBefore']) || !$data['isNotRunScriptBefore']) {
+        if (!isset($data['skipBeforeScript']) || !$data['skipBeforeScript']) {
             $this->runScript('beforeUninstall');
         }
 
@@ -71,12 +71,14 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             }
         }
 
-        if (!$this->systemRebuild()) {
-            $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+        if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
+            if (!$this->systemRebuild()) {
+                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+            }
         }
 
         /* run after uninstall script */
-        if (!isset($data['isNotRunScriptAfter']) || !$data['isNotRunScriptAfter']) {
+        if (!isset($data['skipAfterScript']) || !$data['skipAfterScript']) {
             $this->runScript('afterUninstall');
         }
 
