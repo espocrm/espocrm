@@ -227,7 +227,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>';
             }
             return preview;
         },
