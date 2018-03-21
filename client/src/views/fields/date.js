@@ -112,6 +112,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         getDateStringValue: function () {
+            if (this.mode === 'detail' && !this.model.has(this.name)) {
+                return '...';
+            }
             var value = this.model.get(this.name);
             return this.stringifyDateValue(value);
         },

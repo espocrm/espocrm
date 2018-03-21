@@ -1,5 +1,5 @@
 {{#if idValue}}
 <a href="#{{foreignScope}}/view/{{idValue}}">{{nameValue}}</a>
 {{else}}
-    {{translate 'None'}}
+    {{#if valueIsSet}}{{translate 'None'}}{{else}}...{{/if}}
 {{/if}}

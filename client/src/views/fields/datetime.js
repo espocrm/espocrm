@@ -57,6 +57,9 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
         },
 
         getDateStringValue: function () {
+            if (this.mode === 'detail' && !this.model.has(this.name)) {
+                return '...';
+            }
             var value = this.model.get(this.name);
             if (!value) {
                 if (this.mode == 'edit' || this.mode == 'search') {
