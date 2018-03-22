@@ -74,7 +74,10 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         if ($isNew) {
             if (!empty($entity->id) && $entity->has('contents')) {
                 $contents = $entity->get('contents');
-                $this->getFileStorageManager()->putContents($entity, $contents);
+                $storeResult = $this->getFileStorageManager()->putContents($entity, $contents);
+                if ($storeResult === false) {
+                    throw new \Espo\Core\Exceptions\Error("Could not store the file");
+                }
             }
         }
 
