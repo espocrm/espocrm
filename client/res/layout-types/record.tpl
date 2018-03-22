@@ -79,7 +79,7 @@
                             if ('customCode' in cell) {
                                 print (cell.customCode);
                             } else {
-                                print ("{{{"+cell.name+"}}}");
+                                print ("{{{this."+cell.name+"}}}");
                             }
                         %></div>
                     </div>

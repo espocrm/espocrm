@@ -26,7 +26,7 @@
                 };
                 print('>');
             }
-        %>{{{<%= defs.name %>}}}<%
+        %>{{{this.<%= defs.name %>}}}<%
             if (tag) {
                 print( '</' + tag + '>');
             }
