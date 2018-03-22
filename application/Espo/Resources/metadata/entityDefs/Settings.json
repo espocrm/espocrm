@@ -300,7 +300,8 @@
         "streamEmailNotificationsEntityList": {
             "type": "multiEnum",
             "translation": "Global.scopeNamesPlural",
-            "view": "views/settings/fields/stream-email-notifications-entity-list"
+            "view": "views/settings/fields/stream-email-notifications-entity-list",
+            "tooltip": true
         },
         "b2cMode": {
             "type": "bool",

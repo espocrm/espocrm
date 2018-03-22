@@ -138,7 +138,8 @@
         "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed.",
         "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
         "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
-        "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'."
+        "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
+        "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records."
     },
     "labels": {
         "System": "System",
