@@ -32,7 +32,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         type: 'file',
 
-        listTemplate: 'fields/file/detail',
+        listTemplate: 'fields/file/list',
 
         detailTemplate: 'fields/file/detail',
 
@@ -107,6 +107,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             if (this.mode == 'edit') {
                 data.sourceList = this.sourceList;
             }
+
+            data.valueIsSet = this.model.has(this.idName);
 
             return data;
         },
