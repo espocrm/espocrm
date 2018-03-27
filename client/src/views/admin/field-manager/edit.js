@@ -159,17 +159,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         rows: 1
                     });
 
-                    this.paramList.forEach(function (o) {
-                        if (o.hidden) {
-                            return;
-                        }
-                        var options = {};
-                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
-                            options.tooltip = true;
-                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
-                        }
-                        this.createFieldView(o.type, o.name, null, o, options);
-                    }, this);
+
 
                     this.hasDynamicLogicPanel = false;
                     if (
@@ -229,6 +219,18 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }
 
                     this.model.fetchedAttributes = this.model.getClonedAttributes();
+
+                    this.paramList.forEach(function (o) {
+                        if (o.hidden) {
+                            return;
+                        }
+                        var options = {};
+                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                            options.tooltip = true;
+                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+                        }
+                        this.createFieldView(o.type, o.name, null, o, options);
+                    }, this);
 
                     callback();
 
