@@ -534,6 +534,9 @@ class Xlsx extends \Espo\Core\Injectable
 
         foreach ($fieldList as $i => $name) {
             $col = $azRange[$i];
+            if (!array_key_exists($name, $typesCache)) {
+                break;
+            }
             $type = $typesCache[$name];
 
             switch ($type) {
