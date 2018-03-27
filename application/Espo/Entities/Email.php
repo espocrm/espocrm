@@ -84,6 +84,8 @@ class Email extends \Espo\Core\ORM\Entity
         $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
+        $body = str_replace('&nbsp;', ' ', $body);
+
         return $body;
     }
 

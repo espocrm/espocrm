@@ -465,6 +465,10 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body, 'test <img src="cid:Id01">');
     }
 
+    function testBodyPlain()
+    {
+        $this->email->set('body', '<br />&nbsp;');
+        $bodyPlain = $this->email->getBodyPlain();
+        $this->assertEquals($bodyPlain, "\r\n ");
+    }
 }
-
-
