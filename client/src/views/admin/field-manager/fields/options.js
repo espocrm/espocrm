@@ -46,16 +46,18 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
             var valueSanitized = this.getHelper().stripTags(value);
             var translatedValue = this.translatedOptions[value] || valueSanitized;
 
-            var valueSanitized = valueSanitized.replace(/"/g, '&quot;');
+            translatedValue = translatedValue.replace(/"/g, '&quot;');
+
+            var valueInternal = valueSanitized.replace(/"/g, '-quote-');
 
             var html = '' +
-            '<div class="list-group-item link-with-role form-inline" data-value="' + valueSanitized + '">' +
+            '<div class="list-group-item link-with-role form-inline" data-value="' + valueInternal + '">' +
                 '<div class="pull-left" style="width: 92%; display: inline-block;">' +
-                    '<input name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
+                    '<input name="translatedValue" data-value="' + valueInternal + '" class="role form-control input-sm pull-right" value="'+translatedValue+'">' +
                     '<div>' + valueSanitized + '</div>' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
-                    '<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
+                    '<a href="javascript:" class="pull-right" data-value="' + valueInternal + '" data-action="removeValue"><span class="glyphicon glyphicon-remove"></a>' +
                 '</div><br style="clear: both;" />' +
             '</div>';
 
@@ -73,10 +75,13 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
 
             data.translatedOptions = {};
             (data[this.name] || []).forEach(function (value) {
-                valueSanitized = this.getHelper().stripTags(value).replace(/"/g, '&quot;');
+                var valueSanitized = this.getHelper().stripTags(value);
+                var valueInternal = valueSanitized.replace(/"/g, '-quote-');
+                var translatedValue = this.$el.find('input[name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
 
-                data.translatedOptions[value] = this.$el.find('input[name="translatedValue"][data-value="'+valueSanitized+'"]').val() || value;
-                data.translatedOptions[value] = data.translatedOptions[value].toString();
+                translatedValue = translatedValue.toString();
+
+                data.translatedOptions[value] = translatedValue;
             }, this);
 
             return data;
