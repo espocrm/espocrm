@@ -98,6 +98,11 @@
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
+            "customizationDefaultDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationIsSortedDisabled": true,
+            "customizationAuditedDisabled": true,
+            "customizationReadOnlyDisabled": true,
             "where": {
                 "=": {
                     "leftJoins": ["contacts"],

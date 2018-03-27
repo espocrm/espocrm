@@ -163,6 +163,10 @@
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationIsSortedDisabled": true,
+            "customizationAuditedDisabled": true,
+            "customizationReadOnlyDisabled": true,
             "where": {
                 "=": {
                     "leftJoins": ["opportunities"],
