@@ -29,6 +29,8 @@
 
 namespace Espo\ORM;
 
+use \Espo\Core\Exceptions\Error;
+
 class EntityManager
 {
 
@@ -158,6 +160,10 @@ class EntityManager
 
     public function getEntity($name, $id = null)
     {
+        if (!$this->hasRepository($name)) {
+            throw new Error("ORM: Repository '{$name}' does not exist.");
+        }
+
         return $this->getRepository($name)->get($id);
     }
 
@@ -175,6 +181,10 @@ class EntityManager
 
     public function getRepository($name)
     {
+        if (!$this->hasRepository($name)) {
+            throw new Error("ORM: Repository '{$name}' does not exist.");
+        }
+
         if (empty($this->repositoryHash[$name])) {
             $this->repositoryHash[$name] = $this->repositoryFactory->create($name);
         }

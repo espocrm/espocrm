@@ -137,6 +137,9 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
+                if (!$this->getEntityManager()->hasRepository($row['entityType'])) {
+                    return;
+                }
                 $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
                 if ($entity) {
                     return $entity;

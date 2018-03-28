@@ -143,6 +143,9 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         $sth->execute();
         while ($row = $sth->fetch()) {
             if (!empty($row['entityType']) && !empty($row['entityId'])) {
+                if (!$this->getEntityManager()->hasRepository($row['entityType'])) {
+                    return;
+                }
                 if ($onlyName) {
                     $entity = $this->getEntityManager()->getRepository($row['entityType'])
                         ->select(['id', 'name'])
