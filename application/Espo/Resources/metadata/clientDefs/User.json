@@ -1,5 +1,6 @@
 {
    "controller": "controllers/user",
+   "model": "models/user",
    "acl": "acl/user",
    "views": {
       "detail": "views/user/detail",
