@@ -7,10 +7,12 @@
         "target": "Target",
         "targetType": "Target Type",
         "authToken": "Auth Token",
-        "ipAddress": "IP Address"
+        "ipAddress": "IP Address",
+        "authLogRecord": "Auth Log Record"
     },
     "links": {
         "authToken": "Auth Token",
+        "authLogRecord": "Auth Log Record",
         "user": "User",
         "target": "Target"
     },

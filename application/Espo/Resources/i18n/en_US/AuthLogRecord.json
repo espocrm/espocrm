@@ -1,0 +1,35 @@
+{
+    "fields": {
+        "username": "Username",
+        "ipAddress": "IP Address",
+        "requestTime": "Request Time",
+        "createdAt": "Requested At",
+        "isDenied": "Is Denied",
+        "denialReason": "Denial Reason",
+        "portal": "Portal",
+        "user": "User",
+        "authToken": "Auth Token Created",
+        "requestUrl": "Request URL",
+        "requestMethod": "Request Method",
+        "authTokenIsActive": "Auth Token is Active"
+    },
+    "links": {
+        "authToken": "Auth Token Created",
+        "user": "User",
+        "portal": "Portal",
+        "actionHistoryRecords": "Action History"
+    },
+    "presetFilters": {
+        "denied": "Denied",
+        "accepted": "Accepted"
+    },
+    "options": {
+        "denialReason": {
+            "CREDENTIALS": "Invalid credentials",
+            "INACTIVE_USER": "Inactive user",
+            "IS_PORTAL_USER": "Portal user",
+            "IS_NOT_PORTAL_USER": "Not a portal user",
+            "USER_IS_NOT_IN_PORTAL": "User is not related to the portal"
+        }
+    }
+}

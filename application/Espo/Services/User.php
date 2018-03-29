@@ -554,5 +554,52 @@ class User extends Record
             }
         }
     }
-}
 
+    public function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+        $this->loadLastAccessField($entity);
+    }
+
+    public function loadLastAccessField(Entity $entity)
+    {
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        if (in_array('lastAccess', $forbiddenFieldList)) return;
+
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'lastAccess'])->where([
+            'userId' => $entity->id
+        ])->order('lastAccess', true)->findOne();
+
+        $lastAccess = null;
+
+        if ($authToken) {
+            $lastAccess = $authToken->get('lastAccess');
+        }
+
+        $dt = null;
+
+        if ($lastAccess) {
+            try {
+                $dt = new \DateTime($lastAccess);
+            } catch (\Exception $e) {}
+        }
+
+        $where = [
+            'userId' => $entity->id,
+            'isDenied' => false
+        ];
+
+        if ($dt) {
+            $where['requestTime>'] = $dt->format('U');
+        }
+
+        $authLogRecord = $this->getEntityManager()->getRepository('AuthLogRecord')
+            ->select(['id', 'createdAt'])->where($where)->order('requestTime', true)->findOne();
+
+        if ($authLogRecord) {
+            $lastAccess = $authLogRecord->get('createdAt');
+        }
+
+        $entity->set('lastAccess', $lastAccess);
+    }
+}

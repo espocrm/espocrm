@@ -74,6 +74,11 @@
             "description":"roles"
          },
          {
+            "url":"#Admin/authLog",
+            "label":"Auth Log",
+            "description":"authLog"
+         },
+         {
             "url":"#Admin/authTokens",
             "label":"Auth Tokens",
             "description":"authTokens"

@@ -117,6 +117,11 @@
             "notStorable": true,
             "disabled": true
         },
+        "authLogRecordId": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
         "ipAddress": {
             "type": "varchar",
             "notStorable": true,
@@ -221,6 +226,16 @@
             "type": "link",
             "readOnly": true,
             "view": "views/fields/user"
+        },
+        "lastAccess": {
+            "type": "datetime",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "directAccessDisabled": true
         }
     },
     "links": {

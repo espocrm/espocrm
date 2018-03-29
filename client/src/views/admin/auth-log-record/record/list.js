@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,27 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+Espo.define('views/admin/auth-log-record/record/list', 'views/record/list', function (Dep) {
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+    return Dep.extend({
 
-class AuthToken extends Record
-{
-    protected $internalAttributeList = ['hash', 'token'];
+        rowActionsView: 'views/record/row-actions/view-and-remove',
 
-    protected $actionHistoryDisabled = true;
+        massActionList: ['remove'],
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
-}
+        checkAllResultMassActionList: ['remove']
 
+    });
+});

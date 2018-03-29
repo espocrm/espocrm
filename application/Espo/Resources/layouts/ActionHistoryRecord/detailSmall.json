@@ -4,11 +4,11 @@
         "rows": [
             [
                 {"name": "user"},
-                {"name": "authToken"}
+                {"name": "ipAddress"}
             ],
             [
                 {"name": "action"},
-                {"name": "ipAddress"}
+                false
             ],
             [
                 {"name": "targetType"},
@@ -16,6 +16,10 @@
             ],
             [
                 {"name": "target", "fullWidth": true}
+            ],
+            [
+                {"name": "authLogRecord"},
+                {"name": "authToken"}
             ]
         ]
     }

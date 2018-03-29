@@ -27,27 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\SelectManagers;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
-
-class AuthToken extends Record
+class AuthLogRecord extends \Espo\Core\SelectManagers\Base
 {
-    protected $internalAttributeList = ['hash', 'token'];
+    protected function filterDenied(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isDenied' => true
+        );
+    }
 
-    protected $actionHistoryDisabled = true;
-
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
+    protected function filterAccepted(&$result)
+    {
+        $result['whereClause'][] = array(
+            'isDenied' => false
+        );
+    }
 }
 

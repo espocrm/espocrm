@@ -1,0 +1,5 @@
+[
+    {"name":"username"},
+    {"name":"isDenied", "widthPx": "100"},
+    {"name":"createdAt", "width": "20"}
+]

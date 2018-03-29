@@ -170,6 +170,21 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             }, this);
         },
 
+        authLog: function () {
+            this.collectionFactory.create('AuthLogRecord', function (collection) {
+                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+                searchManager.loadStored();
+                collection.where = searchManager.getWhere();
+                collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
+                this.main('views/admin/auth-log-record/list', {
+                    scope: 'AuthLogRecord',
+                    collection: collection,
+                    searchManager: searchManager
+                });
+            }, this);
+        },
+
         jobs: function () {
             this.collectionFactory.create('Job', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());

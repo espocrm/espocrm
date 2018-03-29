@@ -39,6 +39,8 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupAuthTokenPeriod = '1 month';
 
+    protected $cleanupAuthLogPeriod = '2 months';
+
     protected $cleanupNotificationsPeriod = '2 months';
 
     protected $cleanupRemovedNotesPeriod = '2 months';
@@ -61,6 +63,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $this->cleanupNotifications();
         $this->cleanupActionHistory();
         $this->cleanupAuthToken();
+        $this->cleanupAuthLog();
         $this->cleanupUpgradeBackups();
         $this->cleanupUniqueIds();
     }
@@ -150,6 +153,20 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $datetime->modify($period);
 
         $query = "DELETE FROM `auth_token` WHERE DATE(modified_at) < " . $pdo->quote($datetime->format('Y-m-d')) . " AND is_active = 0";
+
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+    }
+
+    protected function cleanupAuthLog()
+    {
+        $pdo = $this->getEntityManager()->getPDO();
+
+        $period = '-' . $this->getConfig()->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
+        $datetime = new \DateTime();
+        $datetime->modify($period);
+
+        $query = "DELETE FROM `auth_log_record` WHERE DATE(created_at) < " . $pdo->quote($datetime->format('Y-m-d')) . "";
 
         $sth = $pdo->prepare($query);
         $sth->execute();

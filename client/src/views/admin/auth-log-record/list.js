@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,27 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+Espo.define('views/admin/auth-log-record/list', 'views/list', function (Dep) {
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+    return Dep.extend({
 
-class AuthToken extends Record
-{
-    protected $internalAttributeList = ['hash', 'token'];
+        setup: function () {
+            Dep.prototype.setup.call(this);
+        },
 
-    protected $actionHistoryDisabled = true;
+        getHeader: function () {
+            return '<a href="#Admin">' + this.translate('Administration') + "</a> » " + this.getLanguage().translate('Auth Log', 'labels', 'Admin');
+        },
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
-}
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Auth Log', 'labels', 'Admin'));
+        }
+    });
+});
 

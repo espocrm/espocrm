@@ -366,6 +366,10 @@
             "default": 0,
             "tooltip": true
         },
+        "authTokenPreventConcurrent": {
+            "type": "bool",
+            "tooltip": true
+        },
         "dashboardLayout": {
             "type": "jsonArray",
             "view": "views/settings/fields/dashboard-layout"

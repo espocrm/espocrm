@@ -84,7 +84,12 @@ class Auth extends \Slim\Middleware
                 if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
 
                     if ($authUsername && $authPassword) {
-                        $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+                        try {
+                            $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+                        } catch (\Exception $e) {
+                            $this->processException($e);
+                            return;
+                        }
                         if ($isAuthenticated) {
                             $this->next->call();
                             return;
@@ -105,8 +110,12 @@ class Auth extends \Slim\Middleware
         }
 
         if ($authUsername && $authPassword) {
-
-            $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+            try {
+                $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+            } catch (\Exception $e) {
+                $this->processException($e);
+                return;
+            }
 
             if ($isAuthenticated) {
                 $this->next->call();
@@ -121,23 +130,31 @@ class Auth extends \Slim\Middleware
         }
     }
 
+    protected function processException(\Exception $e)
+    {
+        $response = $this->app->response();
+
+        if ($e->getMessage()) {
+            $response->headers->set('X-Status-Reason', $e->getMessage());
+        }
+        $response->setStatus($e->getCode());
+    }
+
     protected function processUnauthorized()
     {
-        $res = $this->app->response();
+        $response = $this->app->response();
 
         if ($this->showDialog) {
-            $res->header('WWW-Authenticate', 'Basic realm=""');
-        } else {
-            $res->header('WWW-Authenticate');
+            $response->headers->set('WWW-Authenticate', 'Basic realm=""');
         }
-        $res->status(401);
+        $response->setStatus(401);
     }
 
     protected function isXMLHttpRequest()
     {
-        $req = $this->app->request();
+        $request = $this->app->request();
 
-        $httpXRequestedWith = $req->headers('HTTP_X_REQUESTED_WITH');
+        $httpXRequestedWith = $request->headers('HTTP_X_REQUESTED_WITH');
 
         if (isset($httpXRequestedWith) && strtolower($httpXRequestedWith) == 'xmlhttprequest') {
             return true;
@@ -145,6 +162,4 @@ class Auth extends \Slim\Middleware
 
         return false;
     }
-
 }
-

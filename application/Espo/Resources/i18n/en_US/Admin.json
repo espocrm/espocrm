@@ -32,6 +32,7 @@
         "Layout Manager": "Layout Manager",
         "User Interface": "User Interface",
         "Auth Tokens": "Auth Tokens",
+        "Auth Log": "Auth Log",
         "Authentication": "Authentication",
         "Currency": "Currency",
         "Integrations": "Integrations",
@@ -205,7 +206,8 @@
         "inboundEmails": "Settings for incoming emails.",
         "emailFilters": "Email messages that match the specified filter won't be imported.",
         "actionHistory": "Log of user actions.",
-        "labelManager": "Customize application labels."
+        "labelManager": "Customize application labels.",
+        "authLog": "Login history."
     },
     "options": {
         "previewSize": {

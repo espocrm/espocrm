@@ -192,6 +192,7 @@ class Record extends \Espo\Core\Services\Base
         $historyRecord->set('userId', $this->getUser()->id);
         $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
         $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+        $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
 
         if ($entity) {
             $historyRecord->set(array(

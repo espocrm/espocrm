@@ -27,27 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Controllers;
 
 use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
 
-class AuthToken extends Record
+class AuthLogRecord extends \Espo\Core\Controllers\Record
 {
-    protected $internalAttributeList = ['hash', 'token'];
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 
-    protected $actionHistoryDisabled = true;
+    public function actionUpdate($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
+    public function actionMassUpdate($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionCreate($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionCreateLink($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
+
+    public function actionRemoveLink($params, $data, $request)
+    {
+        throw new Forbidden();
+    }
 }
-

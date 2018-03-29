@@ -41,7 +41,9 @@
         "Global": "Global",
         "Preferences": "Preferences",
         "EmailAddress": "Email Address",
-        "PhoneNumber": "Phone Number"
+        "PhoneNumber": "Phone Number",
+        "AuthLogRecord": "Auth Log Record",
+        "AuthFailLogRecord": "Auth Fail Log Record"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -72,7 +74,9 @@
         "ActionHistoryRecord": "Action History",
         "AuthToken": "Auth Tokens",
         "UniqueId": "Unique IDs",
-        "LastViewed": "Last Viewed"
+        "LastViewed": "Last Viewed",
+        "AuthLogRecord": "Auth Log",
+        "AuthFailLogRecord": "Auth Fail Log"
     },
     "labels": {
         "Misc": "Misc",

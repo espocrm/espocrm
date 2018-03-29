@@ -27,27 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Repositories;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\ORM\Entity;
 
-class AuthToken extends Record
+class AuthFailLogRecord extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected $internalAttributeList = ['hash', 'token'];
+    protected $hooksDisabled = true;
 
-    protected $actionHistoryDisabled = true;
+    protected $processFieldsAfterSaveDisabled = true;
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
+    protected $processFieldsBeforeSaveDisabled = true;
 }
-

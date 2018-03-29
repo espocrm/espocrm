@@ -4,20 +4,22 @@
         "rows": [
             [
                 {"name": "user"},
-                {"name": "authToken"}
-            ],
-            [
-                {"name": "ipAddress", "fullWidth": true}
+                {"name": "ipAddress"}
             ],
             [
                 {"name": "action"},
+                false
+            ],
+            [
+                {"name": "targetType"},
                 {"name": "createdAt"}
             ],
             [
-                {"name": "targetType", "fullWidth": true}
+                {"name": "target", "fullWidth": true}
             ],
             [
-                {"name": "target", "fullWidth": true}
+                {"name": "authLogRecord"},
+                {"name": "authToken"}
             ]
         ]
     }

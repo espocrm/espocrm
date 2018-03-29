@@ -1,0 +1,8 @@
+[
+    "username",
+    "ipAddress",
+    "createdAt",
+    "portal",
+    "requestUrl",
+    "denialReason"
+]

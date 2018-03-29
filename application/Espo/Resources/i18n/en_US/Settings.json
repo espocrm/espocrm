@@ -92,7 +92,8 @@
         "aclAllowDeleteCreated": "Allow to remove created records",
         "adminNotifications": "System notifications in administration panel",
         "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available",
-        "textFilterUseContainsForVarchar": "Use 'contains' opertor when filtering varchar fields"
+        "textFilterUseContainsForVarchar": "Use 'contains' opertor when filtering varchar fields",
+        "authTokenPreventConcurrent": "Only one auth token per user"
     },
     "options": {
         "weekStart": {
@@ -139,7 +140,8 @@
         "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
         "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
         "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
-        "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records."
+        "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records.",
+        "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously."
     },
     "labels": {
         "System": "System",

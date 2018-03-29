@@ -33,21 +33,22 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
 
-class AuthToken extends Record
+class AuthLogRecord extends Record
 {
-    protected $internalAttributeList = ['hash', 'token'];
+    protected $internalAttributeList = [];
 
     protected $actionHistoryDisabled = true;
 
     protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
+        "username",
+        "portalId",
+        "userId",
+        "authTokenId",
+        "ipAddress",
+        "isDenied",
+        "denialReason",
+        "microtime",
+        "requestUrl",
+        "requestMethod"
     ];
 }
-

@@ -179,7 +179,7 @@ class LDAP extends Base
         $user = $this->getEntityManager()->getRepository('User')->findOne(array(
             'whereClause' => array(
                 'userName' => $username,
-            ),
+            )
         ));
 
         return $user;
@@ -201,7 +201,7 @@ class LDAP extends Base
                 'userName' => $username,
                 'password' => $hash,
                 'isAdmin' => 1
-            ),
+            )
         ));
 
         return $user;

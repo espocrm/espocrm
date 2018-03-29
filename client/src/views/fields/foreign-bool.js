@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,27 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+Espo.define('views/fields/foreign-bool', 'views/fields/bool', function (Dep) {
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+    return Dep.extend({
 
-class AuthToken extends Record
-{
-    protected $internalAttributeList = ['hash', 'token'];
+        type: 'foreign'
 
-    protected $actionHistoryDisabled = true;
-
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'portalId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
-}
-
+    });
+});
