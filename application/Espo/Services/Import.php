@@ -721,11 +721,12 @@ class Import extends \Espo\Services\Record
                 $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
 
                 if (count($a) > 1) {
-                    return $a[0] . '.' . $a[1];
+                    return floatval($a[0] . '.' . $a[1]);
                 } else {
-                    return $a[0];
+                    return floatval($a[0]);
                 }
-                break;
+            case Entity::INT:
+                return intval($value);
             case Entity::JSON_OBJECT:
                 $value = \Espo\Core\Utils\Json::decode($value);
                 return $value;
