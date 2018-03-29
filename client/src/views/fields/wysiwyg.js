@@ -185,14 +185,17 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         var increaseHeightStep = 10;
                         var processIncreaseHeight = function (iteration) {
                             iteration = iteration || 0;
+
+                            if (iteration > 20) {
+                                return;
+                            }
+
+                            iteration ++;
+
                             if (iframeElement.scrollHeight < $document.height()) {
                                 var height = iframeElement.scrollHeight + increaseHeightStep;
                                 iframeElement.style.height = height + 'px';
                                 processIncreaseHeight(iteration);
-                            }
-
-                            if (iteration > 20) {
-                                return;
                             }
                         };
 
