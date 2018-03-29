@@ -65,6 +65,9 @@
       },
       "listForAccount": {
          "type": "listSmall"
+      },
+      "listForContact": {
+         "type": "listSmall"
       }
    }
 }

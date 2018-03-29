@@ -81,7 +81,7 @@
             "create": false
         },
         "opportunities": {
-            "layout": "listForAccount"
+            "layout": "listForContact"
         },
         "targetLists": {
             "create": false,
