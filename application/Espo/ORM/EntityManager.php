@@ -182,7 +182,7 @@ class EntityManager
     public function getRepository($name)
     {
         if (!$this->hasRepository($name)) {
-            throw new Error("ORM: Repository '{$name}' does not exist.");
+            // TODO Throw error
         }
 
         if (empty($this->repositoryHash[$name])) {
