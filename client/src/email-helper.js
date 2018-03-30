@@ -113,9 +113,9 @@ Espo.define('email-helper', [], function () {
                     item = item.trim();
                     if (item != this.getUser().get('emailAddress')) {
                         if (isReplyOnSent) {
-                            attributes.to += '; ' + item;
+                            attributes.to += ';' + item;
                         } else {
-                            attributes.cc += '; ' + item;
+                            attributes.cc += ';' + item;
                         }
                     }
                 }, this);
@@ -131,6 +131,8 @@ Espo.define('email-helper', [], function () {
             attributes.nameHash = nameHash;
 
             attributes.repliedId = model.id;
+
+            attributes.inReplyTo = model.get('messageId');
 
             this.addReplyBodyAttrbutes(model, attributes);
 
@@ -304,6 +306,66 @@ Espo.define('email-helper', [], function () {
                 attributes['body'] = bodyPlain;
                 attributes['bodyPlain'] = bodyPlain;
             }
+        },
+
+        composeMailToLink: function (attributes) {
+            var link = 'mailto:';
+
+            link += (attributes.to || '').split(';').join(',');
+
+            var o = {};
+
+            if (attributes.cc) {
+                o.cc = attributes.cc.split(';').join(',');
+            }
+
+            if (attributes.bcc) {
+                o.bcc = attributes.bcc.split(';').join(',');
+            }
+
+            if (attributes.name) {
+                o.subject = attributes.name;
+            }
+
+            if (attributes.body) {
+                o.body = attributes.body;
+                if (attributes.isHtml) {
+                    o.body = this.htmlToPlain(o.body);
+                }
+            }
+
+            if (attributes.inReplyTo) {
+                o['In-Reply-To'] = attributes.inReplyTo;
+            }
+
+            var part = '';
+            for (var key in o) {
+                if (part !== '') {
+                    part += '&';
+                } else {
+                    part += '?';
+                }
+                part += key + '=' + encodeURIComponent(o[key]);
+            }
+
+            link += part;
+
+            return link;
+        },
+
+        htmlToPlain: function (text) {
+            text = text || '';
+            var value = text.replace(/<br\s*\/?>/mg, '\n');
+
+            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
+
+            var $div = $('<div>').html(value);
+            $div.find('style').remove();
+            $div.find('link[ref="stylesheet"]').remove();
+
+            value =  $div.text();
+
+            return value;
         }
 
     });

@@ -65,7 +65,8 @@
                 "followEntityOnStreamPost": false,
                 "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
-                "tabList": false
+                "tabList": false,
+                "emailUseExternalClient": false
             },
             "Call": {
                 "reminders": false

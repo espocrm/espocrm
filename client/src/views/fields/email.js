@@ -319,6 +319,11 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 attributes.nameHash[emailAddress] = this.model.get('name');
             }
 
+            if (this.getPreferences().get('emailUseExternalClient')) {
+                document.location.href = 'mailto:' + emailAddress;
+                return;
+            }
+
             this.notify('Loading...');
             this.createView('quickCreate', 'views/modals/compose-email', {
                 attributes: attributes,

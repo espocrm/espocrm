@@ -166,6 +166,9 @@
             "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
             "tooltip": true
+        },
+        "emailUseExternalClient": {
+            "type": "bool"
         }
     }
 }

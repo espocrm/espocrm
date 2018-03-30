@@ -34,7 +34,8 @@
         "doNotFillAssignedUserIfNotRequired": "Do not pre-fill assigned user on record creation",
         "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
         "followCreatedEntities": "Auto-follow created records",
-        "followCreatedEntityTypeList": "Auto-follow created records of specific entity types"
+        "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
+        "emailUseExternalClient": "Use an external email client"
     },
     "links": {
     },
