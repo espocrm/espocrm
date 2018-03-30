@@ -108,7 +108,7 @@ class LDAP extends Base
 
         $ldapClient = $this->getLdapClient();
 
-        //login LDAP system user (ldapUsername, ldapPassword)
+        /* Login LDAP system user (ldapUsername, ldapPassword) */
         try {
             $ldapClient->bind();
         } catch (\Exception $e) {
@@ -119,16 +119,29 @@ class LDAP extends Base
             if (!isset($adminUser)) {
                 return null;
             }
+
             $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
         }
 
         if (!isset($adminUser)) {
-            $userDn = $this->findLdapUserDnByUsername($username);
-            $GLOBALS['log']->debug('Found DN for ['.$username.']: ['.$userDn.'].');
+            try {
+                $userDn = $this->findLdapUserDnByUsername($username);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('Error while finding DN for ['.$username.'], details: ' . $e->getMessage() . '.');
+            }
+
             if (!isset($userDn)) {
                 $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: user is not found.');
-                return;
+
+                $adminUser = $this->adminLogin($username, $password);
+                if (!isset($adminUser)) {
+                    return null;
+                }
+
+                $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
             }
+
+            $GLOBALS['log']->debug('User ['.$username.'] is found with this DN ['.$userDn.'].');
 
             try {
                 $ldapClient->bind($userDn, $password);
