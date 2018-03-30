@@ -308,7 +308,7 @@ Espo.define('email-helper', [], function () {
             }
         },
 
-        composeMailToLink: function (attributes) {
+        composeMailToLink: function (attributes, bcc) {
             var link = 'mailto:';
 
             link += (attributes.to || '').split(';').join(',');
@@ -320,7 +320,16 @@ Espo.define('email-helper', [], function () {
             }
 
             if (attributes.bcc) {
-                o.bcc = attributes.bcc.split(';').join(',');
+                 if (!bcc) {
+                    bcc = '';
+                } else {
+                    bcc += ';'
+                }
+                bcc += attributes.bcc;
+            }
+
+            if (bcc) {
+                o.bcc = bcc.split(';').join(',');
             }
 
             if (attributes.name) {
