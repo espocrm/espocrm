@@ -245,8 +245,11 @@ class Auth
 
             if ($authLogRecord) {
                 $authLogRecord->set('authTokenId', $authToken->id);
-                $this->getEntityManager()->saveEntity($authLogRecord);
             }
+        }
+
+        if ($authLogRecord) {
+            $this->getEntityManager()->saveEntity($authLogRecord);
         }
 
         if ($authToken && !$authLogRecord) {
