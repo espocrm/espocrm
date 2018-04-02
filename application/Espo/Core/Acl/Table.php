@@ -718,6 +718,8 @@ class Table
 
     protected function applyReadOnlyFields(&$fieldTable)
     {
+        // TODO Enable in 5.4.0
+        return;
         $scopeList = $this->getScopeWithAclList();
         foreach ($scopeList as $scope) {
             if (!property_exists($fieldTable, $scope)) continue;
