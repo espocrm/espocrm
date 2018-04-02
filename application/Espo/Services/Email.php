@@ -176,7 +176,7 @@ class Email extends Record
                 throw new Error('Can not use system smtp. System SMTP is not shared.');
             }
             $emailSender->setParams(array(
-                'fromName' => $this->getUser()->get('name')
+                'fromName' => $this->getConfig()->get('outboundEmailFromName')
             ));
         }
 
