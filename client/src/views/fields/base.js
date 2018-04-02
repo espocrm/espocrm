@@ -223,7 +223,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.mode = this.options.mode || this.mode;
 
-            this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly');
+            this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
