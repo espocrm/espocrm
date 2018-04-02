@@ -55,12 +55,22 @@ Espo.define('views/email/record/list', 'views/record/list', function (Dep) {
             this.massActionList.push('retrieveFromTrash');
 
             this.listenTo(this.collection, 'moving-to-trash', function (id) {
-                if (this.collection.data.folderId !== 'trash') {
+                var model = this.collection.get(id);
+                if (model) {
+                    model.set('inTrash', true);
+                }
+
+                if (this.collection.data.folderId !== 'trash' && this.collection.data.folderId !== 'all') {
                     this.removeRecordFromList(id);
                 }
             }, this);
 
             this.listenTo(this.collection, 'retrieving-from-trash', function (id) {
+                var model = this.collection.get(id);
+                if (model) {
+                    model.set('inTrash', false);
+                }
+
                 if (this.collection.data.folderId === 'trash') {
                     this.removeRecordFromList(id);
                 }
