@@ -156,8 +156,8 @@
         },
         "bodyPlain": {
             "type": "text",
-            "readOnly": true,
-            "seeMoreDisabled": true
+            "seeMoreDisabled": true,
+            "clientReadOnly": true
         },
         "body": {
             "type": "wysiwyg",
@@ -171,8 +171,8 @@
         "status": {
             "type": "enum",
             "options": ["Draft", "Sending", "Sent", "Archived", "Failed"],
-            "readOnly": true,
-            "default": "Archived"
+            "default": "Archived",
+            "clientReadOnly": true
         },
         "attachments": {
             "type": "attachmentMultiple",

@@ -750,6 +750,10 @@ class Email extends Record
 
         if ($entity->isManuallyArchived()) {
             $skipFilter = true;
+        } else {
+            if ($entity->isAttributeChanged('dateSent')) {
+                $entity->set('dateSent', $entity->getFetched('dateSent'));
+            }
         }
 
         if ($entity->get('status') === 'Draft') {
@@ -758,6 +762,10 @@ class Email extends Record
 
         if ($entity->get('status') === 'Sending' && $entity->getFetched('status') === 'Draft') {
             $skipFilter = true;
+        }
+
+        if ($entity->isAttributeChanged('status') && $entity->getFetched('status') === 'Archived') {
+            $entity->set('status', 'Archived');
         }
 
         if (!$skipFilter) {
