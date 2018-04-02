@@ -113,6 +113,7 @@ return array (
     'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Task', 'Email'],
     "portalStreamEmailNotifications" => true,
     'streamEmailNotificationsEntityList' => ['Case'],
+    'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
     'disabledCountQueryEntityList' => ['Email'],

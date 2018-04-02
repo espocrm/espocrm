@@ -61,6 +61,7 @@
         "streamEmailNotifications": "Notifications about updates in Stream for internal users",
         "portalStreamEmailNotifications": "Notifications about updates in Stream for portal users",
         "streamEmailNotificationsEntityList": "Stream email notifications scopes",
+        "streamEmailNotificationsTypeList": "What to notify about",
         "b2cMode": "B2C Mode",
         "avatarsDisabled": "Disable Avatars",
         "followCreatedEntities": "Follow created records",
@@ -103,6 +104,11 @@
         "currencyFormat": {
             "1": "10 USD",
             "2": "$10"
+        },
+        "streamEmailNotificationsTypeList": {
+            "Post": "Posts",
+            "Status": "Status updates",
+            "EmailReceived": "Received emails"
         }
     },
     "tooltips": {
@@ -140,7 +146,7 @@
         "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
         "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
         "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
-        "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records.",
+        "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
         "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously."
     },
     "labels": {

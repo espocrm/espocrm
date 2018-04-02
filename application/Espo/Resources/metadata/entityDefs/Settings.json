@@ -303,6 +303,10 @@
             "view": "views/settings/fields/stream-email-notifications-entity-list",
             "tooltip": true
         },
+        "streamEmailNotificationsTypeList": {
+            "type": "multiEnum",
+            "options": ["Post", "Status", "EmailReceived"]
+        },
         "b2cMode": {
             "type": "bool",
             "default": false,

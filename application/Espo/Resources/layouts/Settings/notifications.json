@@ -12,7 +12,7 @@
             [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
             [{"name": "assignmentEmailNotificationsEntityList"}, false],
             [{"name": "streamEmailNotifications"}, {"name": "portalStreamEmailNotifications"}],
-            [{"name": "streamEmailNotificationsEntityList"}, false]
+            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}]
         ]
     },
     {
