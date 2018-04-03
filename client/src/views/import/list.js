@@ -41,23 +41,7 @@ Espo.define('views/import/list', 'views/list', function (Dep) {
                 style: 'danger',
                 acl: 'edit'
             });
-        },
-
-        actionCreateEmailAccount: function () {
-            if (this.options.userId) {
-                this.getRouter().dispatch('EmailAccount', 'create', {
-                    attributes: {
-                        assignedUserId: this.options.userId,
-                        assignedUserName: this.options.userId
-                    }
-                });
-                this.getRouter().navigate('#EmailAccount/create', {trigger: false});
-            } else {
-                this.getRouter().navigate('#EmailAccount/create', {trigger: true});
-            }
-        },
-
+        }
 
     });
 });
-
