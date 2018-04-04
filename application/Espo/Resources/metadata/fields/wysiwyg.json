@@ -10,10 +10,6 @@
          "type": "text"
       },
       {
-         "name": "maxLength",
-         "type": "int"
-      },
-      {
          "name": "height",
          "type": "int"
       },
