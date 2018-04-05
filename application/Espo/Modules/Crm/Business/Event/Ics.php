@@ -179,7 +179,7 @@ class Ics
              "SUMMARY:New ".$this->_escapeString($this->summary)."\n".
              "LOCATION:".$this->_escapeString($this->address)."\n".
              "ORGANIZER;CN=".$this->_escapeString($this->who).":MAILTO:" . $this->_escapeString($this->email)."\n".
-             "DESCRIPTION:".$this->_escapeString($this->description)."\n".
+             "DESCRIPTION:".$this->_escapeString($this->_formatMultiline($this->description))."\n".
              "UID:".$this->uid."\n".
              "SEQUENCE:0\n".
              "DTSTAMP:".$this->_dateToCal(time())."\n".
@@ -195,6 +195,11 @@ class Ics
     private function _escapeString($string)
     {
         return preg_replace('/([\,;])/','\\\$1', ($string) ? $string : '');
+    }
+
+    private function _formatMultiline($description)
+    {
+        return str_replace(["\r\n", "\n"], "\\n", $description);
     }
 }
 
