@@ -31,29 +31,29 @@ namespace Espo\Modules\Crm\Business\Event;
 
 class Ics
 {
-    private $_d_end;
+    private $dEnd;
 
-    private $_d_start;
+    private $dStart;
 
-    private $_s_address;
+    private $sAddress;
 
-    private $_s_description;
+    private $sDescription;
 
-    private $_s_html;
+    private $sHtml;
 
-    private $_s_who;
+    private $sWho;
 
-    private $_s_email;
+    private $sEmail;
 
-    private $_s_uri;
+    private $sUri;
 
-    private $_s_uid;
+    private $sUid;
 
-    private $_s_summary;
+    private $sSummary;
 
-    private $_s_output;
+    private $sOutput;
 
-    private $_s_prodid;
+    private $sProdid;
 
     public function __construct($prodid, array $attributes = array())
     {
@@ -61,7 +61,7 @@ class Ics
             throw new \Exception('PRODID is required');
         }
 
-        $this->_s_prodid = $prodid;
+        $this->sProdid = $prodid;
 
         foreach ($attributes as $key => $value) {
             $this->$key = $value;
@@ -72,43 +72,43 @@ class Ics
     {
         switch ($name) {
             case 'startDate':
-                $this->_d_start = $value;
+                $this->dStart = $value;
                 break;
 
             case 'endDate':
-                $this->_d_end = $value;
+                $this->dEnd = $value;
                 break;
 
             case 'address':
-                $this->_s_address = $value;
+                $this->sAddress = $value;
                 break;
 
             case 'summary':
-                $this->_s_summary = $value;
+                $this->sSummary = $value;
                 break;
 
             case 'who':
-                $this->_s_who = $value;
+                $this->sWho = $value;
                 break;
 
             case 'email':
-                $this->_s_email = $value;
+                $this->sEmail = $value;
                 break;
 
             case 'uri':
-                $this->_s_uri = $value;
+                $this->sUri = $value;
                 break;
 
             case 'uid':
-                $this->_s_uid = $value;
+                $this->sUid = $value;
                 break;
 
             case 'description':
-                $this->_s_description = $value;
+                $this->sDescription = $value;
                 break;
 
             case 'html':
-                $this->_s_html = $value;
+                $this->sHtml = $value;
                 break;
         }
 
@@ -119,87 +119,86 @@ class Ics
         switch ($name)
         {
             case 'startDate':
-                return $this->_d_start;
+                return $this->dStart;
                 break;
 
             case 'endDate':
-                return $this->_d_end;
+                return $this->dEnd;
                 break;
 
             case 'address':
-                return $this->_s_address;
+                return $this->sAddress;
                 break;
 
             case 'summary':
-                return $this->_s_summary;
+                return $this->sSummary;
                 break;
 
             case 'uri':
-                return $this->_s_uri;
+                return $this->sUri;
                 break;
 
             case 'who':
-                return $this->_s_who;
+                return $this->sWho;
                 break;
 
             case 'email':
-                return $this->_s_email;
+                return $this->sEmail;
                 break;
 
             case 'uid':
-                return $this->_s_uid;
+                return $this->sUid;
                 break;
 
             case 'description':
-                return $this->_s_description;
+                return $this->sDescription;
                 break;
 
             case 'html':
-                return $this->_s_html;
+                return $this->sHtml;
                 break;
         }
     }
 
     public function get()
     {
-        ($this->_s_output) ? $this->_s_output : $this->_generate();
+        ($this->sOutput) ? $this->sOutput : $this->generate();
 
-        return $this->_s_output;
+        return $this->sOutput;
     }
 
-    private function _generate()
+    private function generate()
     {
-        $this->_s_output = "BEGIN:VCALENDAR\n".
+        $this->sOutput = "BEGIN:VCALENDAR\n".
              "VERSION:2.0\n".
-             "PRODID:-".$this->_s_prodid."\n".
+             "PRODID:-".$this->sProdid."\n".
              "METHOD:REQUEST\n".
              "BEGIN:VEVENT\n".
-             "DTSTART:".$this->_dateToCal($this->startDate)."\n".
-             "DTEND:".$this->_dateToCal($this->endDate)."\n".
-             "SUMMARY:New ".$this->_escapeString($this->summary)."\n".
-             "LOCATION:".$this->_escapeString($this->address)."\n".
-             "ORGANIZER;CN=".$this->_escapeString($this->who).":MAILTO:" . $this->_escapeString($this->email)."\n".
-             "DESCRIPTION:".$this->_escapeString($this->_formatMultiline($this->description))."\n".
+             "DTSTART:".$this->dateToCal($this->startDate)."\n".
+             "DTEND:".$this->dateToCal($this->endDate)."\n".
+             "SUMMARY:New ".$this->escapeString($this->summary)."\n".
+             "LOCATION:".$this->escapeString($this->address)."\n".
+             "ORGANIZER;CN=".$this->escapeString($this->who).":MAILTO:" . $this->escapeString($this->email)."\n".
+             "DESCRIPTION:".$this->escapeString($this->formatMultiline($this->description))."\n".
              "UID:".$this->uid."\n".
              "SEQUENCE:0\n".
-             "DTSTAMP:".$this->_dateToCal(time())."\n".
+             "DTSTAMP:".$this->dateToCal(time())."\n".
              "END:VEVENT\n".
              "END:VCALENDAR";
     }
 
-    private function _dateToCal($timestamp)
+    private function dateToCal($timestamp)
     {
         return date('Ymd\THis\Z', ($timestamp) ? $timestamp : time());
     }
 
-    private function _escapeString($string)
+    private function escapeString($string)
     {
         return preg_replace('/([\,;])/','\\\$1', ($string) ? $string : '');
     }
 
-    private function _formatMultiline($description)
+    private function formatMultiline($string)
     {
-        return str_replace(["\r\n", "\n"], "\\n", $description);
+        return str_replace(["\r\n", "\n"], "\\n", $string);
     }
 }
-
