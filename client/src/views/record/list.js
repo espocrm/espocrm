@@ -652,8 +652,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
 			}
         },
 
-        addMassAction: function (item) {
+        addMassAction: function (item, allResult) {
             this.massActionList.push(item);
+            if (allResult) {
+                this.checkAllResultMassActionList.push(item);
+            }
         },
 
         setup: function () {
