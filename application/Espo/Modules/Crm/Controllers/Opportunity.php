@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Controllers;
 
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
+use \Espo\Core\Exceptions\BadRequest;
 
 class Opportunity extends \Espo\Core\Controllers\Record
 {
@@ -88,5 +89,27 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateFilter = $request->get('dateFilter');
 
         return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo);
+    }
+
+    public function postActionMassConvertCurrency($params, $data, $request)
+    {
+        if (empty($data->field)) throw new BadRequest();
+        if (!$this->getAcl()->checkScope($this->name, 'edit')) throw new Forbidden();
+
+        $params = array();
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        } else if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
+        }
+
+        if (empty($data->currencyRates)) throw new BadRequest();
+        if (empty($data->targetCurrency)) throw new BadRequest();
+        if (empty($data->baseCurrency)) throw new BadRequest();
+
+        return $this->getRecordService()->massConvertCurrency($data->field, $data->targetCurrency, $params, $data->baseCurrency, $data->currencyRates);
     }
 }

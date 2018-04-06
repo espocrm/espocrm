@@ -226,7 +226,8 @@
         "Collapse": "Collapse",
         "New notifications": "New notifications",
         "Manage Categories": "Manage Categories",
-        "Manage Folders": "Manage Folders"
+        "Manage Folders": "Manage Folders",
+        "Convert to": "Convert to"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -298,7 +299,8 @@
         "massUpdate": "Mass Update",
         "export": "Export",
         "follow": "Follow",
-        "unfollow": "Unfollow"
+        "unfollow": "Unfollow",
+        "convertCurrency": "Convert Currency"
     },
     "fields": {
         "name": "Name",

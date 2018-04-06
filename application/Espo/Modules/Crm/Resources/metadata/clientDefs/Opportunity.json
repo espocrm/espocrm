@@ -5,7 +5,8 @@
    },
    "recordViews":{
       "edit":"crm:views/opportunity/record/edit",
-      "editSmall":"crm:views/opportunity/record/edit-small"
+      "editSmall":"crm:views/opportunity/record/edit-small",
+      "list":"crm:views/opportunity/record/list"
    },
    "sidePanels":{
       "detail":[

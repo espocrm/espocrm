@@ -317,4 +317,80 @@ class Opportunity extends \Espo\Services\Record
         }
         return [0, 0];
     }
+
+    public function massConvertCurrency($field, $targetCurrency, $params, $baseCurrency, $rates)
+    {
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        if (in_array($field, $forbiddenFieldList)) {
+            throw new Forbidden();
+        }
+
+        $count = 0;
+
+        $idUpdatedList = [];
+        $repository = $this->getRepository();
+
+        if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+            $p = [];
+            $p['where'] = $where;
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+        } else if (array_key_exists('ids', $params)) {
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = ['id' => $params['ids']];
+        } else {
+            throw new Error();
+        }
+
+        $collection = $repository->find($selectParams);
+
+        $currencyAttribute = $field . 'Currency';
+
+        foreach ($collection as $entity) {
+            if ($entity->get($field) === null) continue;
+
+            $currentCurrency = $entity->get($currencyAttribute);
+            $value = $entity->get($field);
+
+            if ($currentCurrency === $targetCurrency) continue;
+
+            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
+                continue;
+            }
+
+            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
+            $value = $value * $rate1;
+
+            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
+            $value = $value / $rate2;
+
+            if (!$rate2) continue;
+
+            $value = round($value, 2);
+
+            $data = [];
+            $data[$currencyAttribute] = $targetCurrency;
+
+            $data[$field] = $value;
+
+            if ($this->getAcl()->check($entity, 'edit')) {
+                $entity->set($data);
+                if ($repository->save($entity)) {
+                    $idUpdatedList[] = $entity->id;
+                    $count++;
+
+                    $this->processActionHistoryRecord('update', $entity);
+                }
+            }
+        }
+
+        return array(
+            'count' => $count
+        );
+    }
 }
