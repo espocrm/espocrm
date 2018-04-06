@@ -737,9 +737,25 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (this.calendarType === 'single') {
                 return name;
             }
-            var html = '<span data-id="'+id+'" class="group-title">' + name + '</span>';
+            var avatarHtml = this.getAvatarHtml(id);
+            if (avatarHtml) avatarHtml += ' ';
+            var html = avatarHtml + '<span data-id="'+id+'" class="group-title">' + name + '</span>';
 
             return html;
+        },
+
+        getAvatarHtml: function (id) {
+            if (this.getConfig().get('avatarsDisabled')) {
+                return '';
+            }
+            var t;
+            var cache = this.getCache();
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            } else {
+                t = Date.now();
+            }
+            return '<img class="avatar avatar-link" width="14" src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
         },
 
         initItemsDataSet: function () {
