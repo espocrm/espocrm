@@ -368,7 +368,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
                 if (!value || value.length == 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
                 }

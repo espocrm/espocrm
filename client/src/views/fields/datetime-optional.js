@@ -116,7 +116,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                 var otherValue = this.model.get(field) || this.model.get(fieldDate);
                 if (value && otherValue) {
                     if (moment(value).unix() <= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
                         this.showValidationMessage(msg);
@@ -134,7 +134,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                 var otherValue = this.model.get(field) || this.model.get(fieldDate);
                 if (value && otherValue) {
                     if (moment(value).unix() >= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
                                                                                  .replace('{otherField}', this.translate(field, 'fields', this.model.name));
                         this.showValidationMessage(msg);
                         return true;
@@ -146,7 +146,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
                 }

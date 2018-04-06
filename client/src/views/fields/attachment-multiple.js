@@ -346,7 +346,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
             if (exceedsMaxFileSize) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                          .replace('{field}', this.getLabelText())
                           .replace('{max}', maxFileSize);
 
                 this.showValidationMessage(msg, 'label');
@@ -584,7 +584,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idsName).length == 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, 'label');
                     return true;
                 }
@@ -593,7 +593,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         validateReady: function () {
             if (this.isUploading) {
-                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg, 'label');
                 return true;
             }

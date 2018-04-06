@@ -109,7 +109,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             var validate = function (name) {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === null) {
-                        var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                        var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                         this.showValidationMessage(msg, '[name="'+name+'"]');
                         return true;
                     }
@@ -125,7 +125,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         validateInt: function () {
             var validate = function (name) {
                 if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, '[name="'+name+'"]');
                     return true;
                 }

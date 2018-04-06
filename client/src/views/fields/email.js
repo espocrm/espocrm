@@ -48,7 +48,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                 data.forEach(function (row, i) {
                     var emailAddress = row.emailAddress;
                     if (!re.test(emailAddress)) {
-                        var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                        var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
                         this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1).toString() + ') input');
                         notValid = true;
                     }
@@ -62,7 +62,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name) || !this.model.get(this.name) === '') {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, 'div.email-address-block:nth-child(1) input');
                     return true;
                 }

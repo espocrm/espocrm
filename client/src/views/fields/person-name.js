@@ -96,7 +96,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
             if (isRequired) {
                 if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, '[name="'+this.lastField+'"]');
                     return true;
                 }
