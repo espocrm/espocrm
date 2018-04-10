@@ -1,0 +1,68 @@
+{
+  "fields": {
+    "name": "Ime",
+    "description": "Opis",
+    "type": "Tip",
+    "startDate": "Datum početka",
+    "endDate": "Završni datum",
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "sentCount": "Poslano",
+    "openedCount": "Otvoren",
+    "clickedCount": "Kliknuto",
+    "optedOutCount": "Ne želi",
+    "leadCreatedCount": "Kreiran izvor",
+    "revenue": "Prihod",
+    "revenueConverted": "Prihod (konvertiran)",
+    "budget": "Budžet",
+    "budgetConverted": "Budžet (konvertiran)"
+  },
+  "links": {
+    "targetLists": "Liste meta",
+    "excludingTargetLists": "Isključujući liste meta",
+    "accounts": "Tvrtke",
+    "contacts": "Kontakti",
+    "leads": "Izvori",
+    "opportunities": "Prilike",
+    "campaignLogRecords": "Dnevnik",
+    "massEmails": "Masovna e-pošta",
+    "trackingUrls": "Praćenje URL-ova"
+  },
+  "options": {
+    "type": {
+      "Email": "E-pošta",
+      "Television": "Televizija",
+      "Mail": "Pošta"
+    },
+    "status": {
+      "Planning": "Planiranje",
+      "Active": "Aktivna",
+      "Inactive": "Neaktivna",
+      "Complete": "Gotova"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Napravite kampanju",
+    "Target Lists": "Liste meta",
+    "Statistics": "Statistika",
+    "hard": "tvrd",
+    "soft": "mek",
+    "Unsubscribe": "Odjavi se",
+    "Mass Emails": "Masovna e-pošta",
+    "Email Templates": "Šablone e-pošte",
+    "Unsubscribe again": "Ponovo se odjavite",
+    "Subscribe again": "Ponovo se prijavite",
+    "Create Target List": "Napravite listu meta"
+  },
+  "presetFilters": {
+    "active": "Aktivne"
+  },
+  "messages": {
+    "unsubscribed": "Odjavljeni ste sa naše liste.",
+    "subscribedAgain": "Ponovo ste pretplaćeni."
+  },
+  "tooltips": {
+    "targetLists": "Mete koje trebaju primati poruke.",
+    "excludingTargetLists": "Mete koje ne trebaju primati poruke."
+  }
+}

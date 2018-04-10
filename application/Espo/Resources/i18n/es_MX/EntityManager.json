@@ -33,11 +33,9 @@
   "options": {
     "type": {
       "": "(vacío)",
-      "Base": "Base",
       "Person": "Persona",
       "CategoryTree": "Árbol de Categorías",
       "Event": "Evento",
-      "BasePlus": "Base Plus",
       "Company": "Empresa"
     },
     "linkType": {

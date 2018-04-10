@@ -149,7 +149,7 @@
     "Delete": "Ištrinti",
     "Update": "Atnaujinti",
     "Save": "Išsaugoti",
-    "Edit": "Taidyti",
+    "Edit": "Taisyti",
     "View": "Žiūrėti",
     "Cancel": "Atšaukti",
     "Apply": "Taikyti",
@@ -558,7 +558,7 @@
         "link": "Nuoroda",
         "insert": "įterpti nuorodą",
         "unlink": "Atsieti",
-        "edit": "Taidyti",
+        "edit": "Taisyti",
         "textToDisplay": "Rodyti tekstą",
         "url": "Į kurį URL ši nuoroda turėtų nukreipti?",
         "openInNewWindow": "Atidaryti naujame lange"

@@ -1,0 +1,101 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dinamička Logika",
+    "Name": "Naziv",
+    "Label": "Natpis",
+    "Type": "Vrsta"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Nema",
+      "javascript: return this.dateTime.getNow(1);": "Sada",
+      "javascript: return this.dateTime.getNow(5);": "Sada (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Sada (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Sada (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 sat",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 sata",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 sata",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 sata",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 Sati",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dan",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 Dan(a)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 Dan(a)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dana.",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dana.",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dana.",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 tjedan"
+    },
+    "dateDefault": {
+      "": "Nema",
+      "javascript: return this.dateTime.getToday();": "Danas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 Dan",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 Dan(a)",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 tjedan",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 tjedna",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 tjedna",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mjesec",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mjeseca",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mjeseca",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mjeseca",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mjeseci",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 godina"
+    }
+  },
+  "tooltips": {
+    "audited": "Ispravke će biti vidljive u toku vijesti.",
+    "required": "Polje će biti obavezno. Ne može ostati prazno.",
+    "default": "Vrijednost će biti postavljena na početnu.",
+    "min": "Min prihvatljiva vrijednost.",
+    "max": "Maks prihvatljiva vrijednost.",
+    "seeMoreDisabled": "Ako nije odznačeno onda će dugi tekstovi biti skraćeni.",
+    "lengthOfCut": "Koliko teksta može biti prije skraćivanja.",
+    "maxLength": "Maksimalna prihvatljiva dužina teksta.",
+    "before": "Vrijednost datuma mora biti prije datumske vrijednosti određenog polja.",
+    "after": "Vrijednost datuma mora biti poslije datumske vrijednosti određenog polja.",
+    "readOnly": "Vrijednost polja ne može biti određen od strane korisnika. Ali može se izračunati formulom.",
+    "maxFileSize": "Ako je prazno ili 0, nema ograničenja."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Ulica",
+      "city": "Grad",
+      "state": "Država",
+      "country": "Zemlja",
+      "postalCode": "Poštanski broj",
+      "map": "Mapa"
+    },
+    "personName": {
+      "salutation": "Titula",
+      "first": "Prvi",
+      "last": "Zadnji"
+    },
+    "currency": {
+      "converted": "(Konvertirano)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
+  }
+}

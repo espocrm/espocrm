@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Akcija",
+    "actionDate": "Datum",
+    "data": "Podaci",
+    "campaign": "Kampanja",
+    "parent": "Meta",
+    "object": "Objekt",
+    "application": "Aplikacija",
+    "queueItem": "U redu čekanja",
+    "stringData": "String podatak",
+    "stringAdditionalData": "String dodatni podataci",
+    "isTest": "Je Test"
+  },
+  "links": {
+    "queueItem": "U redu čekanja",
+    "parent": "Nadređeni",
+    "object": "Objekt",
+    "campaign": "Kampanja"
+  },
+  "options": {
+    "action": {
+      "Sent": "Poslano",
+      "Opened": "Otvorena",
+      "Opted Out": "Ne želi",
+      "Clicked": "Kliknuto",
+      "Lead Created": "Izvor kreiran"
+    }
+  },
+  "labels": {
+    "All": "Sve"
+  },
+  "presetFilters": {
+    "sent": "Poslano",
+    "opened": "Otvorena",
+    "optedOut": "Ne želi",
+    "clicked": "Kliknuto",
+    "leadCreated": "Izvor Kreiran"
+  }
+}

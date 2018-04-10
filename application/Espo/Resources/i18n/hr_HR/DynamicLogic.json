@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Jednak",
+      "notEquals": "Nije jednako",
+      "greaterThan": "Veće od",
+      "lessThan": "Manje od",
+      "greaterThanOrEquals": "Više ili jednako",
+      "lessThanOrEquals": "Manje ili jednako",
+      "in": "U",
+      "notIn": "Ne u",
+      "inPast": "U prošlosti",
+      "inFuture": "Da li je budućnost",
+      "isToday": "Je danas",
+      "isTrue": "Točno je",
+      "isFalse": "Je netočno",
+      "isEmpty": "Prazno",
+      "isNotEmpty": "Nije prazno",
+      "contains": "Sadrži",
+      "has": "Sadrži",
+      "notContains": "Ne sadrži",
+      "notHas": "Ne sadrži"
+    }
+  },
+  "labels": {
+    "Field": "Polje"
+  }
+}

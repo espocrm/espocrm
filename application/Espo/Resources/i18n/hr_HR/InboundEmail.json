@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "Adresa e-pošte",
+    "assignToUser": "Zaduži korisnika",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "monitoredFolders": "Nadgledani folderi",
+    "trashFolder": "Folder za otpad",
+    "createCase": "Napravi predmet",
+    "reply": "Automatski odgovor",
+    "caseDistribution": "Distribucija predmeta",
+    "replyEmailTemplate": "Šablona odgovora na e-poštu",
+    "replyFromAddress": "Odgovor sa adrese",
+    "replyToAddress": "Adresa za slanje odgovora",
+    "replyFromName": "Tko šalje odgovor",
+    "targetUserPosition": "Pozicija ciljanog korisnika",
+    "fetchSince": "Preuzmi od",
+    "addAllTeamUsers": "Za sve korisnike tima",
+    "team": "Ciljani tim",
+    "teams": "Timovi",
+    "sentFolder": "Mapa Poslane Pošte",
+    "storeSentEmails": "Spremaj Poslanu Poštu",
+    "useSmtp": "Koristi SMTP",
+    "smtpHost": "SMTP Server",
+    "smtpAuth": "SMTP Aut",
+    "smtpSecurity": "SMTP Sigurnost",
+    "smtpUsername": "SMTP Korisničko ime",
+    "smtpPassword": "SMTP Lozinka",
+    "fromName": "Od Naziv",
+    "smtpIsShared": "SMTP je dijeljen",
+    "smtpIsForMassEmail": "SMTP je za Masovnu E-poštu",
+    "useImap": "Dohvati E-poštu"
+  },
+  "tooltips": {
+    "reply": "Obavijesti e-pošiljaoce da je e-pošta primljena. \n\n Samo jedna poruka će biti poslana određenom primaocu u određenom vremenskom periodu da se spriječi ponavljanje.",
+    "createCase": "Automatski napravi prijavu problema za sve dolazne e-pošte.",
+    "replyToAddress": "Navedite adresu ovog sandučića kako bi odgovori stizali u njega.",
+    "caseDistribution": "Kako će prijave problema biti raspoređivane. Rasporediti direktno na korisnika ili unutar tima.",
+    "assignToUser": "Korisnički predmeti će biti dodijeljeni",
+    "team": "Predmeti tima će biti dodijeljeni.",
+    "teams": "E-pošta timova će biti dodijeljena.",
+    "addAllTeamUsers": "E-pošta će se pojaviti u Primljenim svih korisnika navedenih timova.",
+    "targetUserPosition": "Korisnicima sa određenim položajem će dodijeljene prijave problema.",
+    "monitoredFolders": "Više mapa mora biti odvojeno zarezom.",
+    "smtpIsShared": "Ako je označeno, korisnici će moći slati email poruke koristeći ovaj SMTP. Dostupnost je upravljiva sa Ulogama, preko Dozvola za korištenje Grupnih računa E-pošte.",
+    "smtpIsForMassEmail": "Ako je uključeno, SMTP će biti dostupan za masovne poruke.",
+    "storeSentEmails": "Poslane poruke će biti spremljene na IMAP serveru."
+  },
+  "links": {
+    "filters": "Filteri",
+    "emails": "E-poruke",
+    "assignToUser": "Dodijeli korisniku"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Inactive": "Neaktivan"
+    },
+    "caseDistribution": {
+      "": "Nema",
+      "Direct-Assignment": "Dirktna dodjela",
+      "Round-Robin": "U krug",
+      "Least-Busy": "Najmanje zauzet"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Stvoriti račun e-pošte",
+    "Actions": "Akcije",
+    "Main": "Glavni"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nemoguće povezivanje na IMAP server"
+  }
+}

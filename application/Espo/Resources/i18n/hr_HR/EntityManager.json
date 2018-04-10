@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Fields": "Polja",
+    "Relationships": "Odnosi",
+    "Schedule": "Raspored",
+    "Log": "Dnevnik"
+  },
+  "fields": {
+    "name": "Ime",
+    "type": "Tip",
+    "labelSingular": "Natpis jednina",
+    "labelPlural": "Natpis množina",
+    "stream": "Tok vijesti",
+    "label": "Natpis",
+    "linkType": "Vrsta Poveznice",
+    "entityForeign": "Strani entitet",
+    "linkForeign": "Strana Poveznica",
+    "link": "Poveznica",
+    "labelForeign": "Strani natpis",
+    "sortBy": "Početno sortiranje (polje)",
+    "sortDirection": "Početno sortiranje (smjer)",
+    "relationName": "Naziv srednje tabele",
+    "linkMultipleField": "Povezivanje više polja",
+    "linkMultipleFieldForeign": "Povezivanje više stranih polja",
+    "disabled": "Onemogućeno",
+    "textFilterFields": "Tekst filter polja",
+    "audited": "Revizija",
+    "auditedForeign": "Vanjska Revizija",
+    "statusField": "Status polja",
+    "beforeSaveCustomScript": "Prilagođeni kod prije spremanja"
+  },
+  "options": {
+    "type": {
+      "": "Nema",
+      "Base": "Bazna",
+      "Person": "Osoba",
+      "CategoryTree": "Drvo Kategorija",
+      "Event": "Događaj",
+      "BasePlus": "Bazno plus",
+      "Company": "Kompanija"
+    },
+    "linkType": {
+      "manyToMany": "Više-na-više",
+      "oneToMany": "Jedan-na-Više",
+      "manyToOne": "Više-na-Jedan",
+      "parentToChildren": "Nadređeni-Podređeni",
+      "childrenToParent": "Podređeni-Nadređeni"
+    },
+    "sortDirection": {
+      "asc": "Uzlazno",
+      "desc": "Silazno"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entitet je stvoren",
+    "linkAlreadyExists": "Konflikt u nazivu poveznice.",
+    "linkConflict": "Konflikt u nazivu : poveznica ili polje sa istim nazivom već postoji."
+  },
+  "tooltips": {
+    "statusField": "Ažuriranja ovog polja se prikazuju u toku vijesti.",
+    "textFilterFields": "Polja koja se koriste za pretraživanje teksta.",
+    "stream": "Da li entitet ima tok vijesti.",
+    "disabled": "Provjerite da li vam ne treba ovaj entitet u sustavu.",
+    "linkAudited": "Stvaranje povezanog unosa i povezivanje sa postojećim unosom će biti vidljivo u toku vijesti.",
+    "linkMultipleField": "Višestuka veza polja pruža zgodan način za uređivanje odnosa. Nemojte ga koristiti ako imate veliki broj povezanih zapisa.",
+    "entityType": "Bazni plus - ima aktivnosti, povijesti i panele zadataka.\n\nDogađaj - Dostupan u kalendaru i panelu aktivnosti."
+  }
+}

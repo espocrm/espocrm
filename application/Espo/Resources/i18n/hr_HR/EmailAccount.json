@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Ime",
+    "host": "Server",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "monitoredFolders": "Nadgledani folderi",
+    "fetchSince": "Preuzmi od",
+    "emailAddress": "Adresa e-pošte",
+    "sentFolder": "Mapa poslanih",
+    "storeSentEmails": "Čuvanje poslanih poruka",
+    "keepFetchedEmailsUnread": "Zadrži nepročitani status novih poruka",
+    "emailFolder": "Stavi u mapu",
+    "useSmtp": "Koristi SMTP",
+    "smtpHost": "SMTP host",
+    "smtpPort": "SMTP port",
+    "smtpAuth": "SMTP auth",
+    "smtpSecurity": "SMTP sigurnost",
+    "smtpUsername": "SMTP korisničko ime",
+    "smtpPassword": "SMTP lozinka",
+    "useImap": "Dohvat E-pošte"
+  },
+  "links": {
+    "filters": "Filteri",
+    "emails": "E-poruke"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Inactive": "Neaktivan"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Napravite račun e-pošte",
+    "Main": "Glavni",
+    "Test Connection": "Testiranje veze",
+    "Send Test Email": "Poštalji probnu e-poštu"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Neuspjelo spajanje na IMAP server",
+    "connectionIsOk": "Veza u redu"
+  },
+  "tooltips": {
+    "monitoredFolders": "Više mapa mora biti odvojeno zarezom.\n\nMožete dodati mapu \"poslano\" da biste sinkronizirali e-poštu poslanu sa drugog mail klijenta.",
+    "storeSentEmails": "Poslane poruke će biti spremljene na IMAP serveru. Polje \"Adresa e-pošte\" mora se podudarati sa adresom sa koje će slanje biti izvršeno."
+  }
+}

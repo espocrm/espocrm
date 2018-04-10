@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "E-mail",
+    "title": "Naslov",
+    "accountRole": "Naslov",
+    "account": "Tvrtka",
+    "accounts": "Tvrtke",
+    "phoneNumber": "Telefon",
+    "accountType": "Vrsta Tvrtke",
+    "doNotCall": "Ne zovi",
+    "address": "Adresa",
+    "opportunityRole": "Uloga prilika",
+    "description": "Opis",
+    "campaign": "Kampanja",
+    "targetLists": "Liste meta",
+    "targetList": "Lista meta",
+    "portalUser": "Korisnik portala",
+    "originalLead": "Originalni izvor",
+    "acceptanceStatus": "Status prihvaćanja",
+    "accountIsInactive": "Tvrtka Neaktivna",
+    "acceptanceStatusMeetings": "Status prihvaćanja (Sastanak)",
+    "acceptanceStatusCalls": "Status prihvaćanja (pozivi)"
+  },
+  "links": {
+    "opportunities": "Prilike",
+    "cases": "Predmeti",
+    "targetLists": "Liste meta",
+    "campaignLogRecords": "Dnevnik kampanje",
+    "campaign": "Kampanja",
+    "account": "Tvrtka (osnovno)",
+    "accounts": "Tvrtke",
+    "casesPrimary": "Prijave problema (osnovni)",
+    "portalUser": "Korisnik portala",
+    "originalLead": "Originalni izvor",
+    "documents": "Dokumenti",
+    "tasksPrimary": "Zadaci (prošireno)"
+  },
+  "labels": {
+    "Create Contact": "Napravi kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "Nema",
+      "Decision Maker": "Donositelj odluka",
+      "Influencer": "Utjecajna osoba"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Korisnici portala",
+    "notPortalUsers": "Nisu korisnici portala",
+    "accountActive": "Aktivan"
+  }
+}

@@ -1,13 +1,11 @@
 {
   "fields": {
     "name": "Nombre",
-    "roles": "Roles",
     "positionList": "Lista de Posiciones"
   },
   "links": {
     "users": "Usuarios",
     "notes": "Notas",
-    "roles": "Roles",
     "inboundEmails": "Agrupar Cuentas de Correo"
   },
   "tooltips": {

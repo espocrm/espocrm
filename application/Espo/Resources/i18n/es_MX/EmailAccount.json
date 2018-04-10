@@ -7,20 +7,19 @@
     "password": "Contraseña",
     "port": "Puerto",
     "monitoredFolders": "Carpetas Supervisadas",
-    "ssl": "SSL",
-    "fetchSince": "Traer Desde",
+    "fetchSince": "Obtener Desde",
     "emailAddress": "Dirección de Correo",
     "sentFolder": "Carpeta de Enviados",
     "storeSentEmails": "Almacenar Correos Enviados",
     "keepFetchedEmailsUnread": "Mantener los correos obtenidos sin leer",
     "emailFolder": "Poner en la Carpeta",
-    "useSmtp": "Use SMTP",
     "smtpHost": "Servidor SMTP",
     "smtpPort": "Puerto SMTP",
     "smtpAuth": "Cuenta SMTP",
     "smtpSecurity": "Seguridad SMTP",
     "smtpUsername": "Usuario SMTP",
-    "smtpPassword": "Contraseña SMTP"
+    "smtpPassword": "Contraseña SMTP",
+    "useImap": "Obtener Correos"
   },
   "links": {
     "filters": "Filtros",
@@ -34,11 +33,9 @@
   },
   "labels": {
     "Create EmailAccount": "Crear Cuenta de Correo",
-    "IMAP": "IMAP",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
-    "Send Test Email": "Enviar Correo de Prueba",
-    "SMTP": "SMTP"
+    "Send Test Email": "Enviar Correo de Prueba"
   },
   "messages": {
     "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP",

@@ -7,7 +7,6 @@
     "defaultTeam": "Equipo por Omisión",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
-    "roles": "Roles",
     "portals": "Portales",
     "portalRoles": "Roles del Portal",
     "teamRole": "Posición",
@@ -16,22 +15,20 @@
     "passwordConfirm": "Confirmar Contraseña",
     "newPassword": "Nueva Contraseña",
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
-    "avatar": "Avatar",
     "isActive": "Está Activo",
     "isPortalUser": "Es Usuario del Portal",
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
     "sendAccessInfo": "Enviar al Usuario un correo con su Información de Acceso",
-    "portal": "Portal",
     "gender": "Género",
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
-    "passwordPreview": "Contraseña Generada:"
+    "passwordPreview": "Contraseña Generada:",
+    "isSuperAdmin": "Es Super-Administrador"
   },
   "links": {
     "teams": "Equipos",
-    "roles": "Roles",
     "notes": "Notas",
     "portals": "Portales",
     "portalRoles": "Roles del Portal",
@@ -52,7 +49,6 @@
     "Email Address": "Correo Electrónico",
     "External Accounts": "Cuentas Externas",
     "Email Accounts": "Cuentas de Correo",
-    "Portal": "Portal",
     "Create Portal User": "Crear Usuario del Portal",
     "Proceed w/o Contact": "Proceder sin Contacto"
   },
@@ -80,7 +76,8 @@
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
     "passwordChangedByRequest": "La contraseña ha sido cambiada.",
     "setupSmtpBefore": "Necesita configurar correctamente su <a href=\"{url}\">Servicio SMTP</a> para que el sistema pueda enviarle su contraseña por correo.",
-    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo esta liga {link}.  Esta dirección URL única expirará pronto."
+    "passwordChangeLinkEmailBody": "Puede cambiar su contraseña siguiendo esta liga {link}.  Esta dirección URL única expirará pronto.",
+    "userNameExists": "Ese Usuario ya existe"
   },
   "boolFilters": {
     "onlyMyTeam": "Sólo mi equipo"
@@ -93,8 +90,7 @@
     "gender": {
       "": "No Definido",
       "Male": "Masculino",
-      "Female": "Femenino",
-      "Neutral": "Neutral"
+      "Female": "Femenino"
     }
   }
 }

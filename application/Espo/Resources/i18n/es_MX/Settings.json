@@ -49,10 +49,8 @@
     "theme": "Tema",
     "userThemesDisabled": "Desactivar Temas de Usuarios",
     "emailMessageMaxSize": "Tamaño máximo del Correo (MB)",
-    "massEmailMaxPerHourCount": "Número mäximo de correos enviados por hora",
-    "personalEmailMaxPortionSize": "Máximo tamaño de la porción de correo para recuperar de una cuenta personal",
-    "inboundEmailMaxPortionSize": "Máximo tamaño de la porción de correo para recuperar de una cuenta de grupo",
-    "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario",
+    "personalEmailMaxPortionSize": "Porción máxima recuperable de correo de cuentas personales",
+    "inboundEmailMaxPortionSize": "Porción máxima recuperable de correo de cuentas de grupo",
     "authTokenLifetime": "Vida del Token de Autorización (horas)",
     "authTokenMaxIdleTime": "Máximo tiempo de inactividad del Token de Autorización (horas)",
     "dashboardLayout": "Diseño del Tablero (por omisión)",
@@ -88,7 +86,12 @@
     "currencyDecimalPlaces": "Decimales en Moneda",
     "aclStrictMode": "Modo estricto ACL",
     "followCreatedEntities": "Seguir los registros creados",
-    "aclAllowDeleteCreated": "Permitir la eliminación de registros creados"
+    "aclAllowDeleteCreated": "Permitir la eliminación de registros creados",
+    "adminNotifications": "Notificaciones del sistema en el panel de administración",
+    "adminNotificationsNewVersion": "Notificar cuando haya una nueva versión disponible de EspoCRM",
+    "massEmailMaxPerHourCount": "Número mäximo de correos enviados por hora",
+    "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario",
+    "textFilterUseContainsForVarchar": "Use el operador 'contains' para filtrar campos alfanuméricos"
   },
   "options": {
     "weekStart": {
@@ -96,15 +99,14 @@
       "1": "Lunes"
     },
     "currencyFormat": {
-      "1": "10 MXP",
-      "2": "$10"
+      "1": "10 MXP"
     }
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a desplegar inicialmente en las vistas",
     "recordsPerPageSmall": "Contador de registros en los paneles de información",
     "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos hayan creado.",
-    "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán.",
+    "emailMessageMaxSize": "Los correos de entrada que excedan el máximo sólo tendrán asunto (sin texto ni adjuntos).",
     "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
     "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
     "userThemesDisabled": "Si está marcado, los usuarios no podrán seleccionar otro tema",
@@ -133,12 +135,12 @@
     "currencyDecimalPlaces": "Posiciones decimales. Si está vacío, se mostrarán todos los decimales",
     "aclStrictMode": "Activado: El acceso a los alcances estará prohibido si no se especifica en los roles\nDesactivado: El acceso a los alcances será permitido si no se especifica en los roles",
     "outboundEmailIsShared": "Permitir a los usuarios enviar correos desde esta dirección",
-    "aclAllowDeleteCreated": "Los usuarios podrán eliminar los registros que hayan creado, aunque no tengan permiso de borrado."
+    "aclAllowDeleteCreated": "Los usuarios podrán eliminar los registros que hayan creado, aunque no tengan permiso de borrado.",
+    "textFilterUseContainsForVarchar": "Si no lo marca, se usará el operador 'starts with' (inicia con).  Puede utilizar el comodín '%'."
   },
   "labels": {
     "System": "Sistema",
     "Locale": "Localización",
-    "SMTP": "SMTP",
     "Configuration": "Configuración",
     "In-app Notifications": "Notificaciones del CRM",
     "Email Notifications": "Notificaciones por Correo",
@@ -147,7 +149,8 @@
     "Mass Email": "Correo Masivo",
     "Test Connection": "Probar Conexión",
     "Connecting": "Conectando...",
-    "Activities": "Actividades"
+    "Activities": "Actividades",
+    "Admin Notifications": "Notificaciones al Administrador"
   },
   "messages": {
     "ldapTestConnection": "La conexión se ha establecido satisfactoriamente"

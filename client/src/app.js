@@ -375,6 +375,7 @@ Espo.define(
 
             helper.layoutManager = new LayoutManager({cache: this.cache, applicationId: this.id});
             helper.settings = this.settings;
+            helper.config = this.settings;
             helper.user = this.user;
             helper.preferences = this.preferences;
             helper.acl = this.acl;

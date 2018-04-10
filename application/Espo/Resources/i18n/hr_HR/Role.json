@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Ime",
+    "roles": "Uloge",
+    "assignmentPermission": "Dozvola zaduživanja",
+    "userPermission": "Dozvola korisnika",
+    "portalPermission": "Dozvola za portal",
+    "groupEmailAccountPermission": "Prava pristupa Grupnom računu E-pošte",
+    "exportPermission": "Dozvola Izvoza"
+  },
+  "links": {
+    "users": "Korisnici",
+    "teams": "Timovi"
+  },
+  "tooltips": {
+    "assignmentPermission": "Omogućuje ograničavanje pristupa za dodjeljivanje zapisa i poruka drugim korisnicima.\nsve - Nikakvo ograničenje\ntim- može zadužiti i pisati samo članovima tima\nne- može zadužiti i pisati samo sebi",
+    "userPermission": "Omogućava ograničavanje sposobnosti korisnicima da vide aktivnosti, kalendar i tok drugima \nsve - da vide sve\ntim - mogu vidjeti aktivnosti samo članova tima\nne - ne vide.",
+    "portalPermission": "Definira se pristup informacijama sa portala, mogućnost postavljanja poruka korisnicima portala.",
+    "groupEmailAccountPermission": "Određuje pristup grupnim računima E-pošte, kao i mogućnost slanja grupnih SMTP poruka.",
+    "exportPermission": "Određuje da li korisnik ima pravo izvoza podataka."
+  },
+  "labels": {
+    "Access": "Pristup",
+    "Create Role": "Pravljenje uloge",
+    "Scope Level": "Nivo obuhvata",
+    "Field Level": "Nivo polja"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nije podešeno",
+      "enabled": "omogućeno",
+      "disabled": "onemogućeno"
+    },
+    "levelList": {
+      "all": "sve",
+      "team": "tim",
+      "account": "tvrtka",
+      "contact": "kontakt",
+      "own": "vlastiti",
+      "no": "ne",
+      "yes": "da",
+      "not-set": "nije podešeno"
+    }
+  },
+  "actions": {
+    "read": "Čitanje",
+    "edit": "Izmjena",
+    "delete": "Brisanje",
+    "stream": "Tok vijesti",
+    "create": "Kreiranje"
+  },
+  "messages": {
+    "changesAfterClearCache": "Sve promjene u vidu kontrole pristupa će se primjenjivati nakon što se cache očisti."
+  }
+}

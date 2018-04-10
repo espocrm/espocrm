@@ -200,9 +200,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 return;
             }
             var view = this.$calendar.fullCalendar('getView');
-            var today = new Date();
+            var today = moment();
 
-            if (view.start <= today && today < view.end) {
+            if (view.intervalStart.unix() <= today.unix() && today.unix() < view.intervalEnd.unix()) {
                 this.$el.find('button[data-action="today"]').addClass('active');
             } else {
                 this.$el.find('button[data-action="today"]').removeClass('active');
@@ -591,6 +591,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
             if (this.date) {
                 options.defaultDate = moment.utc(this.date);
+            } else {
+                this.$el.find('button[data-action="today"]').addClass('active');
             }
 
             setTimeout(function () {

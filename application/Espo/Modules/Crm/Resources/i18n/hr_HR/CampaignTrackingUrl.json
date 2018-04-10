@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "url": "URL adresa",
+    "urlToUse": "Kod za ubacivanje umjesto URL",
+    "campaign": "Kampanja"
+  },
+  "links": {
+    "campaign": "Kampanja"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Kreirati URL za praćenje"
+  }
+}

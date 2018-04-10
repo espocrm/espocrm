@@ -79,26 +79,12 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
         },
 
         getAvatarHtml: function () {
-            if (this.getConfig().get('avatarsDisabled')) {
-                return '';
-            }
-            var t;
-            var cache = this.getCache();
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            } else {
-                t = Date.now();
-            }
             var id = this.userId;
             if (this.isSystemAvatar) {
                 id = 'system';
             }
-            if (!id) {
-                return '';
-            }
-            return '<img class="avatar" width="20" src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
+            return this.getHelper().getAvatarHtml(id, 'small', 20);
         }
 
     });
 });
-

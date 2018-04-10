@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "Ime",
+    "description": "Opis",
+    "entryCount": "Točka unosa",
+    "campaigns": "Kampanje",
+    "endDate": "Krajnji datum",
+    "targetLists": "Liste meta",
+    "includingActionList": "Uključujući",
+    "excludingActionList": "Isključujući"
+  },
+  "links": {
+    "accounts": "Tvrtke",
+    "contacts": "Kontakti",
+    "leads": "Izvori",
+    "campaigns": "Kampanje",
+    "massEmails": "Masovne e-pošta"
+  },
+  "options": {
+    "type": {
+      "Email": "E-mail",
+      "Television": "Televizija"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Napravi listu meta",
+    "Opted Out": "Ne želi",
+    "Cancel Opt-Out": "Odbaci \"ne želi\"",
+    "Opt-Out": "Mogućnost odbijanja"
+  }
+}

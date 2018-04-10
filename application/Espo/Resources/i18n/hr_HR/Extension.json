@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Ime",
+    "version": "Verzija",
+    "description": "Opis",
+    "isInstalled": "Instalirano"
+  },
+  "labels": {
+    "Uninstall": "Deinstaliraj",
+    "Install": "Instaliraj"
+  },
+  "messages": {
+    "uninstalled": "Ekstenzija {name} je deinstalirana"
+  }
+}

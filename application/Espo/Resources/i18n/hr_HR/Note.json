@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "post": "Objavi",
+    "attachments": "Prilozi",
+    "targetType": "Meta",
+    "teams": "Timovi",
+    "users": "Korisnici",
+    "portals": "Portali",
+    "type": "Vrsta",
+    "isGlobal": "Je globalno",
+    "isInternal": "Je interno",
+    "related": "Povezano",
+    "createdByGender": "Napravio spol",
+    "data": "Podaci",
+    "number": "Broj"
+  },
+  "filters": {
+    "all": "Sve",
+    "posts": "Objave",
+    "updates": "Izmjene"
+  },
+  "messages": {
+    "writeMessage": "Napišite svoju poruku ovdje"
+  },
+  "options": {
+    "targetType": {
+      "self": "sebi",
+      "users": "određenom korisniku",
+      "teams": "određenom timu",
+      "all": "svim internim korisnicima",
+      "portals": "korisnicima portala"
+    }
+  },
+  "links": {
+    "superParent": "Super Nadležni",
+    "related": "Povezano"
+  }
+}
