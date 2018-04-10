@@ -390,7 +390,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         attachment.set('file', e.target.result);
                         attachment.set('field', this.name);
 
-                        attachment.save().then(function () {
+                        attachment.save({}, {timeout: 0}).then(function () {
                             if (canceledList.indexOf(attachment.cid) === -1) {
                                 $attachmentBox.trigger('ready');
                                 this.pushAttachment(attachment);

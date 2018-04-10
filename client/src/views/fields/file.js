@@ -363,7 +363,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('file', result);
                         attachment.set('field', this.name);
 
-                        attachment.save().then(function () {
+                        attachment.save({}, {timeout: 0}).then(function () {
                             this.isUploading = false;
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');
