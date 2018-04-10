@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Converted To": "Pretvoriti u",
+    "Create Lead": "Napravi izvor",
+    "Convert": "Pretvoriti",
+    "convert": "pretvori"
+  },
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "E-mail",
+    "title": "Naslov",
+    "website": "Sajt",
+    "phoneNumber": "Telefon",
+    "accountName": "Ime stranke",
+    "doNotCall": "Ne zovi",
+    "address": "Adresa",
+    "source": "Potiče od",
+    "opportunityAmount": "Vrijednost prilike",
+    "opportunityAmountConverted": "Vrijednost prilike (konvertirano)",
+    "description": "Opis",
+    "createdAccount": "Tvrtka",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Prilika",
+    "campaign": "Kampanja",
+    "targetLists": "Liste meta",
+    "targetList": "Lista meta",
+    "industry": "Industrija",
+    "acceptanceStatus": "Status prihvaćanja",
+    "opportunityAmountCurrency": "Iznos prilike u valuti",
+    "acceptanceStatusMeetings": "Status prihvaćanja (Sastanak)",
+    "acceptanceStatusCalls": "Status prihvaćanja (pozivi)"
+  },
+  "links": {
+    "targetLists": "Liste meta",
+    "campaignLogRecords": "Dnevnik kampanje",
+    "campaign": "Kampanja",
+    "createdAccount": "Tvrtka",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Prilika",
+    "cases": "Prijave problema",
+    "documents": "Dokumenti"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Dodijeljen",
+      "In Process": "U procesu",
+      "Converted": "Konvertiran",
+      "Recycled": "Recikliran",
+      "Dead": "Mrtav"
+    },
+    "source": {
+      "": "Nema",
+      "Call": "Poziv",
+      "Email": "E-mail",
+      "Existing Customer": "Postojeći Klijent",
+      "Public Relations": "Odnosi sa javnošću",
+      "Web Site": "Sajt",
+      "Campaign": "Kampanja",
+      "Other": "Drugo"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktivan",
+    "actual": "Aktualan",
+    "converted": "Konvertiran"
+  }
+}

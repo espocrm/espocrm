@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "title": "Naslov",
+    "dateFrom": "Datum od",
+    "dateTo": "Datum do",
+    "autorefreshInterval": "Interval automatskog osvježavanja",
+    "displayRecords": "Prikaz zapisa",
+    "isDoubleHeight": "Visina 2x",
+    "mode": "Način",
+    "enabledScopeList": "Što prikazati",
+    "users": "Korisnici",
+    "entityType": "Vsta entiteta",
+    "primaryFilter": "Primarni filter",
+    "boolFilterList": "Dodatni Filteri",
+    "sortBy": "Redoslijed (polja)",
+    "sortDirection": "Redoslijed (smjer)",
+    "expandedLayout": "Raspored",
+    "dateFilter": "Filter Datuma"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Tjedan (raspored)",
+      "basicWeek": "Tjedan",
+      "month": "Mjesec",
+      "basicDay": "Dan",
+      "agendaDay": "Dan (raspored)",
+      "timeline": "Vremenska linija"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Izaberi tip entiteta u opcijama za  dashlet."
+  }
+}

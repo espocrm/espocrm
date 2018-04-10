@@ -1,0 +1,40 @@
+{
+  "labels": {
+    "Create Document": "Napravi dokument",
+    "Details": "Detaljnije"
+  },
+  "fields": {
+    "name": "Ime",
+    "file": "Datoteka",
+    "type": "Vrsta",
+    "publishDate": "Datum objave",
+    "expirationDate": "Rok upotrebe",
+    "description": "Opis",
+    "accounts": "Tvrtke",
+    "folder": "Mapa"
+  },
+  "links": {
+    "accounts": "Tvrtke",
+    "opportunities": "Prilike",
+    "folder": "Mape",
+    "leads": "Izvori",
+    "contacts": "Kontakti"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktivan",
+      "Draft": "Nacrt",
+      "Expired": "Istekao",
+      "Canceled": "Otkazan"
+    },
+    "type": {
+      "": "Nema",
+      "Contract": "Ugovor",
+      "License Agreement": "Ugovor o licenci"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktivan",
+    "draft": "Nacrt"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "Adresa"
+  },
+  "links": {
+    "meetings": "Sastanci",
+    "calls": "Pozivi",
+    "tasks": "Zadaci"
+  },
+  "labels": {
+    "Create {entityType}": "Kreiraj {entityTypeTranslated}"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Liste meta"
+  },
+  "fields": {
+    "acceptanceStatus": "Status prihvaćanja",
+    "acceptanceStatusMeetings": "Status prihvaćanja (Sastanci)",
+    "acceptanceStatusCalls": "Status prihvaćanja (pozivi)"
+  }
+}
