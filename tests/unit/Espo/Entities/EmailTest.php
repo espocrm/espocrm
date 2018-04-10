@@ -467,8 +467,8 @@ class EmailTest extends \PHPUnit\Framework\TestCase
 
     function testBodyPlain()
     {
-        $this->email->set('body', '<br />&nbsp;');
+        $this->email->set('body', '<br />&nbsp;&amp;');
         $bodyPlain = $this->email->getBodyPlain();
-        $this->assertEquals($bodyPlain, "\r\n ");
+        $this->assertEquals($bodyPlain, "\r\n &");
     }
 }

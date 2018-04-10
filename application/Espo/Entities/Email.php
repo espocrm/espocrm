@@ -84,7 +84,33 @@ class Email extends \Espo\Core\ORM\Entity
         $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
-        $body = str_ireplace('&nbsp;', ' ', $body);
+
+        $reList = [
+            '/&(quot|#34);/i',
+            '/&(amp|#38);/i',
+            '/&(lt|#60);/i',
+            '/&(gt|#62);/i',
+            '/&(nbsp|#160);/i',
+            '/&(iexcl|#161);/i',
+            '/&(cent|#162);/i',
+            '/&(pound|#163);/i',
+            '/&(copy|#169);/i',
+            '/&(reg|#174);/i'
+        ];
+        $replaceList = [
+            '',
+            '&',
+            '<',
+            '>',
+            ' ',
+            chr(161),
+            chr(162),
+            chr(163),
+            chr(169),
+            chr(174)
+        ];
+
+        $body = preg_replace($reList, $replaceList, $body);
 
         return $body;
     }
