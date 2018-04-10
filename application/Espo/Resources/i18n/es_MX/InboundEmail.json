@@ -10,7 +10,6 @@
     "port": "Puerto",
     "monitoredFolders": "Carpetas supervisadas",
     "trashFolder": "Carpeta del Basurero",
-    "ssl": "SSL",
     "createCase": "Crear Caso",
     "reply": "Respuesta Automática",
     "caseDistribution": "Distribución de Caso",
@@ -19,10 +18,23 @@
     "replyToAddress": "Responder a la Dirección",
     "replyFromName": "Respuesta de Nombre",
     "targetUserPosition": "Objetivo Posición Usuario",
-    "fetchSince": "Traer Desde",
+    "fetchSince": "Obtener Desde",
     "addAllTeamUsers": "Para todos los usuarios del equipo",
     "team": "Equipo objetivo",
-    "teams": "Equipos"
+    "teams": "Equipos",
+    "sentFolder": "Carpeta Enviada",
+    "storeSentEmails": "Guardar correos enviados",
+    "useSmtp": "Usar SMTP",
+    "smtpHost": "Servidor SMTP",
+    "smtpPort": "Puerto SMTP",
+    "smtpAuth": "Configuración SMTP",
+    "smtpSecurity": "Seguridad SMTP",
+    "smtpUsername": "Nombre SMTP",
+    "smtpPassword": "Contraseña SMTP",
+    "fromName": "Remitente",
+    "smtpIsShared": "SMTP es compartido",
+    "smtpIsForMassEmail": "SMTP es para correo masivo",
+    "useImap": "Obtener Correos"
   },
   "tooltips": {
     "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\n Sólo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
@@ -34,11 +46,15 @@
     "teams": "Los correos del equipo serán reasignados.",
     "addAllTeamUsers": "Los correos aparecerán en el buzón de entrada de todos los usuarios de los equipos especificados.",
     "targetUserPosition": "Los Usuarios con una posición específica serán distribuidos en los casos.",
-    "monitoredFolders": "Si usa varias carpetas, sepárelas con coma"
+    "monitoredFolders": "Si usa varias carpetas, sepárelas con coma",
+    "smtpIsShared": "Si está marcado, los usuarios podrán enviar correos usando este servicio de SMTP.  La disponibilidad se controla con los Roles, a través de los permisos de Grupos de Cuentas de Correo.",
+    "smtpIsForMassEmail": "Si lo marca, el SMTP estará disponible para envíos masivos de correo.",
+    "storeSentEmails": "Los correos enviados serán guardados en el servidor IMAP."
   },
   "links": {
     "filters": "Filtros",
-    "emails": "Correos"
+    "emails": "Correos",
+    "assignToUser": "Asignar a Usuario"
   },
   "options": {
     "status": {
@@ -48,13 +64,11 @@
     "caseDistribution": {
       "": "Ninguno",
       "Direct-Assignment": "Asignación directa",
-      "Round-Robin": "Round-Robin",
       "Least-Busy": "Menos Ocupado"
     }
   },
   "labels": {
     "Create InboundEmail": "Crear Cuenta de Correo",
-    "IMAP": "IMAP",
     "Actions": "Acciones",
     "Main": "Principal"
   },

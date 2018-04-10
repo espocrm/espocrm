@@ -33,7 +33,8 @@
     "casesPrimary": "Casos (Primario)",
     "portalUser": "Usuario del Portal",
     "originalLead": "Referencia Original",
-    "documents": "Documentos"
+    "documents": "Documentos",
+    "tasksPrimary": "Tareas (extendidas)"
   },
   "labels": {
     "Create Contact": "Crear Contacto"

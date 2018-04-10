@@ -11,7 +11,9 @@
     "bottomMargin": "Margen Inferior",
     "printFooter": "Imprimir Pié",
     "footerPosition": "Posición del Pié",
-    "variables": "Marcadores Disponibles"
+    "variables": "Marcadores Disponibles",
+    "pageOrientation": "Orientación de la Página",
+    "pageFormat": "Formato de Papel"
   },
   "labels": {
     "Create Template": "Crear Plantilla"
@@ -19,5 +21,11 @@
   "tooltips": {
     "footer": "Use {pageNumber} para imprimir el número de página.",
     "variables": "Copiar/Pegar necesita un marcador para el Encabezado, Cuerpo o Pie."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Vertical",
+      "Landscape": "Horizontal"
+    }
   }
 }

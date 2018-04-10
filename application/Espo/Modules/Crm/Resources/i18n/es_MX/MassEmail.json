@@ -13,7 +13,8 @@
     "inboundEmail": "Cuenta de correo",
     "targetLists": "Lista de Objetivos",
     "excludingTargetLists": "Listas de Objetivos Excluídas",
-    "optOutEntirely": "Confirmación Completada"
+    "optOutEntirely": "Confirmación Completada",
+    "smtpAccount": "Cuenta SMTP"
   },
   "links": {
     "targetLists": "Listas de Objetivos",
@@ -35,7 +36,10 @@
   },
   "labels": {
     "Create MassEmail": "Crear correo masivo",
-    "Send Test": "Enviar prueba"
+    "Send Test": "Enviar prueba",
+    "System SMTP": "Sistema SMTP",
+    "system": "sistema",
+    "group": "grupo"
   },
   "messages": {
     "selectAtLeastOneTarget": "Seleccione al menos un objetivo.",
@@ -44,10 +48,10 @@
   "tooltips": {
     "optOutEntirely": "Los correos de destinatarios que cancelaron su suscripción serán marcados como rechazados y ya no recibirán correos masivos.",
     "targetLists": "Los objetivos que deben recibir los mensajes.",
-    "excludingTargetLists": "Los objetivos que no deben recibir mensajes."
+    "excludingTargetLists": "Los objetivos que no deben recibir mensajes.",
+    "storeSentEmails": "Los correos se guardarán en el CRM."
   },
   "presetFilters": {
-    "actual": "Actual",
     "complete": "Completo"
   }
 }

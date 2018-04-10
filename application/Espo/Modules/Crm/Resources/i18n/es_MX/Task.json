@@ -13,10 +13,13 @@
     "account": "Cuenta",
     "dateCompleted": "Fecha de completado",
     "attachments": "Adjuntos",
-    "reminders": "Recordatorios"
+    "reminders": "Recordatorios",
+    "contact": "Contacto"
   },
   "links": {
-    "attachments": "Adjuntos"
+    "attachments": "Adjuntos",
+    "account": "Cuenta",
+    "contact": "Contacto"
   },
   "options": {
     "status": {
@@ -28,7 +31,6 @@
     },
     "priority": {
       "Low": "Baja",
-      "Normal": "Normal",
       "High": "Alta",
       "Urgent": "Urgente"
     }

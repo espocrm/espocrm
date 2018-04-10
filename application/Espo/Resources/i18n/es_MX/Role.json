@@ -1,10 +1,11 @@
 {
   "fields": {
     "name": "Nombre",
-    "roles": "Roles",
     "assignmentPermission": "Asignación de permisos",
     "userPermission": "Permisos de Usuario",
-    "portalPermission": "Permisos del Portal"
+    "portalPermission": "Permisos del Portal",
+    "groupEmailAccountPermission": "Permisos de Grupos de Cuentas de Correo",
+    "exportPermission": "Permisos de exportación"
   },
   "links": {
     "users": "Usuarios",
@@ -13,7 +14,9 @@
   "tooltips": {
     "assignmentPermission": "Permite restringir la habilidad para asignar registros y enviar mensajes a otros usuarios.\n\ntodos - sin restricción\n\nequipo - sólo a sus compañeros\n\nno - sólo a sí mismo",
     "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y actividades de otros usuarios.\n\ntodos  - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - sólo las propias",
-    "portalPermission": "Define un acceso a la información del portal, permitiendo enviar mensajes a los usuarios del portal"
+    "portalPermission": "Define un acceso a la información del portal, permitiendo enviar mensajes a los usuarios del portal",
+    "groupEmailAccountPermission": "Define el acceso a los grupos de cuentas de corros, la capacida de enviar correos desde grupos SMTP.",
+    "exportPermission": "Define si los usuarios pueden exportar registros."
   },
   "labels": {
     "Access": "Acceso",
@@ -33,7 +36,6 @@
       "account": "cuenta",
       "contact": "contacto",
       "own": "propio",
-      "no": "no",
       "yes": "si",
       "not-set": "sin definir"
     }

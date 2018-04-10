@@ -17,9 +17,12 @@
       "default": "Por Omisión",
       "success": "Correcto",
       "danger": "Peligro",
-      "info": "Info",
       "warning": "Precaución",
       "primary": "Primario"
     }
+  },
+  "labels": {
+    "New panel": "Nuevo panel",
+    "Layout": "Formato"
   }
 }
