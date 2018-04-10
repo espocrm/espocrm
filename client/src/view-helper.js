@@ -81,6 +81,32 @@ Espo.define('view-helper', [], function () {
             return text;
         },
 
+        getAvatarHtml: function (id, size, width, additionalClassName) {
+            if (this.config.get('avatarsDisabled')) {
+                return '';
+            }
+
+            var t;
+            var cache = this.cache;
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            } else {
+                t = Date.now();
+            }
+
+            var basePath = this.basePath || '';
+            var size = size || 'small';
+
+            var width = (width || 16).toString();
+
+            var className = 'avatar';
+            if (additionalClassName) {
+                className += ' ' + additionalClassName;
+            }
+
+            return '<img class="'+className+'" width="'+width+'" src="'+basePath+'?entryPoint=avatar&size='+size+'&id=' + id + '&t='+t+'">';
+        },
+
         _registerHandlebarsHelpers: function () {
             var self = this;
 

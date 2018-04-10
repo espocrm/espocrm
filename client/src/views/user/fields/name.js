@@ -41,18 +41,8 @@ Espo.define('views/user/fields/name', 'views/fields/person-name', function (Dep)
         },
 
         getAvatarHtml: function () {
-            if (this.getConfig().get('avatarsDisabled')) {
-                return '';
-            }
-            var t;
-            var cache = this.getCache();
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            } else {
-                t = Date.now();
-            }
-            return '<img class="avatar avatar-link" width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + this.model.id + '&t='+t+'">';
-        },
+            return this.getHelper().getAvatarHtml(this.model.id, 'small', 16, 'avatar-link');
+        }
 
     });
 
