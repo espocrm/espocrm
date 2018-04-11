@@ -319,7 +319,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (this.model.get(this.idsName).length == 0) {
+                var idList = this.model.get(this.idsName) || [];
+                if (idList.length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
