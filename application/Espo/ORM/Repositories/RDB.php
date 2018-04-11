@@ -579,19 +579,39 @@ class RDB extends \Espo\ORM\Repository
     protected function getSelectParams(array $params = array())
     {
         if (isset($params['whereClause'])) {
-            $params['whereClause'] = $params['whereClause'] + $this->whereClause;
+            $params['whereClause'] = $params['whereClause'];
+            if (!empty($this->whereClause)) {
+                $params['whereClause'][] = $this->whereClause;
+            }
         } else {
             $params['whereClause'] = $this->whereClause;
         }
         if (!empty($params['havingClause'])) {
-            $params['havingClause'] = $params['havingClause'] + $this->havingClause;
+            $params['havingClause'] = $params['havingClause'];
+            if (!empty($this->havingClause)) {
+                $params['havingClause'][] = $this->havingClause;
+            }
         } else {
             $params['havingClause'] = $this->havingClause;
         }
-        $params = $params + $this->listParams;
+
+        if (!empty($params['leftJoins']) && !empty($this->listParams['leftJoins'])) {
+            foreach ($this->listParams['leftJoins'] as $j) {
+                $params['leftJoins'][] = $j;
+            }
+        }
+
+        if (!empty($params['joins']) && !empty($this->listParams['joins'])) {
+            foreach ($this->listParams['joins'] as $j) {
+                $params['joins'][] = $j;
+            }
+        }
+
+        $params = array_replace_recursive($this->listParams, $params);
 
         return $params;
     }
+
 
     protected function getPDO()
     {
