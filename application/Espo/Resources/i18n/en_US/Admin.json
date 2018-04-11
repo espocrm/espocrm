@@ -114,7 +114,9 @@
         "wysiwyg": "Wysiwyg",
         "map": "Map",
         "number": "Number (auto-increment)",
-        "colorpicker": "Color Picker"
+        "colorpicker": "Color Picker",
+        "jsonArray": "Json Array",
+        "jsonObject": "Json Object"
     },
     "fields": {
         "type": "Type",

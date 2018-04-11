@@ -48,16 +48,16 @@ Espo.define('crm:views/call/record/row-actions/dashlet', ['views/record/row-acti
                         id: this.model.id
                     }
                 });
-                if (this.options.acl.delete) {
-                    actionList.push({
-                        action: 'quickRemove',
-                        label: 'Remove',
-                        data: {
-                            id: this.model.id,
-                            scope: this.model.name
-                        }
-                    });
-                }
+            }
+            if (this.options.acl.delete) {
+                actionList.push({
+                    action: 'quickRemove',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id,
+                        scope: this.model.name
+                    }
+                });
             }
 
             return actionList;
