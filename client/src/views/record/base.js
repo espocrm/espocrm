@@ -692,7 +692,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
         },
 
-        createField: function (name, view, params, mode, readOnly) {
+        createField: function (name, view, params, mode, readOnly, options) {
             var o = {
                 model: this.model,
                 mode: mode || 'edit',
@@ -704,6 +704,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             };
             if (readOnly) {
                 o.readOnly = true;
+            }
+
+            if (options) {
+                for (var param in options) {
+                    o[param] = options[param];
+                }
             }
 
             if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
