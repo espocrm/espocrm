@@ -165,8 +165,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         addRemoveButton: function () {
             this.addButton({
                 name: 'remove',
-                label: 'Remove',
-                style: 'danger'
+                label: 'Remove'
             }, true);
         },
 

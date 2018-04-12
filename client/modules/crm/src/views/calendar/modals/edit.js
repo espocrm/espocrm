@@ -130,8 +130,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
             if (this.id) {
                 this.buttonList.splice(1, 0, {
                     name: 'remove',
-                    text: this.translate('Remove'),
-                    style: 'danger'
+                    text: this.translate('Remove')
                 });
             }
         },
