@@ -669,10 +669,10 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     if (event.userIdList) {
                         event.userIdList.forEach(function (userId) {
                             var userName = event.userNameMap[userId] || '';
-                            var avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 14);
+                            var avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
                             if (avatarHtml) avatarHtml += ' ';
 
-                            var $div = $('<div>').html(avatarHtml + userName);
+                            var $div = $('<div class="user">').html(avatarHtml + userName);
                             $content.append($div);
                         }, this);
                     }
