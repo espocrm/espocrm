@@ -89,6 +89,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('textFilterFields', this.getMetadata().get('entityDefs.' + scope + '.collection.textFilterFields') || ['name']);
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
+
+                this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
             }
 
             this.createView('type', 'views/fields/enum', {
@@ -166,6 +168,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         required: true,
                         trim: true
                     }
+                }
+            });
+
+            this.createView('color', 'views/fields/colorpicker', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="color"]',
+                defs: {
+                    name: 'color'
                 }
             });
 
@@ -383,7 +394,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 stream: this.model.get('stream'),
                 disabled: this.model.get('disabled'),
                 textFilterFields: this.model.get('textFilterFields'),
-                statusField: this.model.get('statusField')
+                statusField: this.model.get('statusField'),
+                color: this.model.get('color') || null
             };
 
             if (data.statusField === '') {

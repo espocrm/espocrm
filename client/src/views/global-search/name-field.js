@@ -37,10 +37,28 @@ Espo.define('views/global-search/name-field', 'views/fields/base', function (Dep
                 scope: this.model.get('_scope'),
                 name: this.model.get('name'),
                 id: this.model.id,
+                iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope'))
             };
         },
 
+        getIconHtml: function () {
+            if (this.getConfig().get('scopeColorsDisabled')) {
+                return '';
+            }
+            var scope = this.model.get('_scope');
+            var color = this.getMetadata().get(['clientDefs', scope, 'color']);
+            var html = '';
+
+            if (color) {
+                var $span = $('<span class="icon glyphicon glyphicon-unchecked">');
+                $span.css('color', color);
+                html = $span.get(0).outerHTML;
+            }
+
+            if (html) html += ' ';
+
+            return html;
+        }
+
     });
-
 });
-

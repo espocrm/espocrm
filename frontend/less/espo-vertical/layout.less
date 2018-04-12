@@ -48,6 +48,12 @@ body > #header .navbar-brand span.home-icon {
   }
 }
 
+#header .navbar li.tab > a {
+    border-left-width: @navbar-color-border-width;
+    border-left-style: solid;
+    border-color: transparent;
+}
+
 @media screen and (min-width: @screen-sm-min) {
 
   #header .nav > li.more > .dropdown-menu {
@@ -101,7 +107,6 @@ body > #header .navbar-brand span.home-icon {
       height: 35px;
       width: @navbar-minimized-width;
       padding-top: 8px;
-      paddin-left: 12px;
     }
 
     #header a.navbar-brand span.home-icon {
@@ -149,7 +154,11 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header ul.tabs > li > a {
-      padding-left: 10px;
+        padding-left: 11px;
+    }
+
+    #header ul.tabs > li.tab > a {
+        padding-left: 11px - @navbar-color-border-width;
     }
 
     #header ul.tabs > li > a > span.short-label {
@@ -158,6 +167,11 @@ body > #header .navbar-brand span.home-icon {
 
     #header ul.tabs > li > a > span.full-label {
       display: none;
+    }
+
+    span.short-label > .short-label-text {
+        position: relative;
+        left: -1px;
     }
 
   }
@@ -286,11 +300,15 @@ body > #header .navbar-brand span.home-icon {
     width: 35px;
   }
 
-  #header ul.tabs li > a {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-left: 12px;
-  }
+    #header ul.tabs li > a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 12px;
+    }
+
+    #header ul.tabs li.tab > a {
+        padding-left: 12px - @navbar-color-border-width;
+    }
 
   #header .navbar-form {
     margin-top: 0px;
@@ -321,5 +339,3 @@ body .stick-sub.button-container {
 body.minimized .stick-sub.button-container {
   width: calc(~"100% - "@navbar-minimized-width);
 }
-
-

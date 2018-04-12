@@ -83,6 +83,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (isset($data['textFilterFields']) && is_array($data['textFilterFields'])) {
             $params['textFilterFields'] = $data['textFilterFields'];
         }
+        if (!empty($data['color'])) {
+            $params['color'] = $data['color'];
+        }
 
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 

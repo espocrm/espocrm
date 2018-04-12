@@ -189,6 +189,9 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     } else {
                         p.title = view.title;
                     }
+                    if (view.titleHtml) {
+                        p.titleHtml = view.titleHtml;
+                    }
                 }, this);
             }, this);
         },

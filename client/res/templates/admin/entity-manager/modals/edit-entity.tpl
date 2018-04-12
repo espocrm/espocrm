@@ -79,3 +79,12 @@
 	{{/if}}
 </div>
 {{/unless}}
+
+<div class="row">
+	<div class="cell form-group col-md-6" data-name="color">
+		<label class="control-label" data-name="color">{{translate 'color' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="color">
+			{{{color}}}
+		</div>
+	</div>
+</div>

@@ -74,5 +74,6 @@
       "detailConvert": {
          "type": "detail"
       }
-   }
+   },
+   "color": "#edc755"
 }

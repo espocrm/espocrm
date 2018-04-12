@@ -28,7 +28,8 @@
         "audited": "Audited",
         "auditedForeign": "Foreign Audited",
         "statusField": "Status Field",
-        "beforeSaveCustomScript": "Before Save Custom Script"
+        "beforeSaveCustomScript": "Before Save Custom Script",
+        "color": "Color"
     },
     "options": {
         "type": {

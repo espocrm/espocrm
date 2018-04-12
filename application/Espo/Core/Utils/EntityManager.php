@@ -302,6 +302,10 @@ class EntityManager
             $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
         }
         $clientDefsData = Json::decode($clientDefsContents, true);
+
+        if (array_key_exists('color', $params)) {
+            $clientDefsData['color'] = $params['color'];
+        };
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
         $this->getBaseLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
@@ -385,6 +389,13 @@ class EntityManager
                 )
             );
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
+        if (array_key_exists('color', $data)) {
+            $clientDefsData = [
+                'color' => $data['color']
+            ];
+            $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
 
         $this->getMetadata()->save();

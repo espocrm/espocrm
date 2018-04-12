@@ -70,5 +70,6 @@
       "listForContact": {
          "type": "listSmall"
       }
-   }
+   },
+   "color": "#91c36a"
 }

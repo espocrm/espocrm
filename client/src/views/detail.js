@@ -165,8 +165,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
+            var headerIconHtml = this.getHeaderIconHtml();
+
             return this.buildHeaderHtml([
-                '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
+                headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },

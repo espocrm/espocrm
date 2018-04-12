@@ -63,6 +63,10 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
                 nameValue = this.translate(this.model.get(this.typeName), 'scopeNames');
             }
+            var iconHtml = null;
+            if (this.mode === 'detail' && this.foreignScope) {
+                iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+            }
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
@@ -72,7 +76,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 typeValue: this.model.get(this.typeName),
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,
-                valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName)
+                valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName),
+                iconHtml: iconHtml
             }, Dep.prototype.data.call(this));
         },
 

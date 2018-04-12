@@ -84,7 +84,11 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 this.getHelper().stripTags(this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)) +
                 '</span>';
             }
-            var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
+            var iconHtml = '';
+            if (this.mode == 'detail') {
+                iconHtml = this.iconHtml;
+            }
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
             return lineHtml;
         },
 

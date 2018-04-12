@@ -9,5 +9,6 @@
     "modeList": ["month", "agendaWeek", "agendaDay", "timeline"],
     "canceledStatusList": ["Not Held", "Canceled"],
     "completedStatusList": ["Held", "Completed"],
-    "additionalColorList": ["#AB78AD", "#CC9B45"]
+    "additionalColorList": ["#AB78AD", "#CC9B45"],
+    "iconClass": "glyphicon glyphicon-calendar"
 }

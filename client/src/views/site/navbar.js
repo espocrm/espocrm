@@ -80,10 +80,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var $body = $('body');
             if ($body.hasClass('minimized')) {
                 $body.removeClass('minimized');
-                this.getStorage().clear('state', 'layoutMinimized');
+                this.getStorage().set('state', 'siteLayoutState', 'expanded');
             } else {
                 $body.addClass('minimized');
-                this.getStorage().set('state', 'layoutMinimized', true);
+                this.getStorage().set('state', 'siteLayoutState', 'collapsed');
             }
             if (window.Event) {
                 try {
@@ -313,7 +313,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         afterRender: function () {
             this.selectTab(this.getRouter().getLast().controller);
 
-            if (this.getStorage().get('state', 'layoutMinimized')) {
+            var layoutState = this.getStorage().get('state', 'siteLayoutState');
+            var layoutMinimized = false;
+            if (layoutState === 'collapsed' || !layoutState) {
+                layoutMinimized = true;
+            }
+
+            if (layoutMinimized) {
                 var $body = $('body');
                 $body.addClass('minimized');
             }
@@ -368,19 +374,36 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         setupTabDefsList: function () {
             var tabDefsList = [];
-            var moreIsMet = false;;
+            var moreIsMet = false;
+            var colorsDisabled = this.getConfig().get('scopeColorsDisabled') || this.getConfig().get('tabColorsDisabled');
+            var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+
             this.tabList.forEach(function (tab, i) {
                 if (tab === '_delimiter_') {
                     moreIsMet = true;
                     return;
                 }
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+                var color = null;
+                if (!colorsDisabled) {
+                    var color = this.getMetadata().get(['clientDefs', tab, 'color']);
+                }
+
+                var shortLabel = label.substr(0, 2);
+
+                var iconClass = null;
+                if (!tabIconsDisabled) {
+                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
+                }
+
                 var o = {
                     link: '#' + tab,
                     label: label,
-                    shortLabel: label.substr(0, 2),
+                    shortLabel: shortLabel,
                     name: tab,
-                    isInMore: moreIsMet
+                    isInMore: moreIsMet,
+                    color: color,
+                    iconClass: iconClass
                 };
                 tabDefsList.push(o);
             }, this);

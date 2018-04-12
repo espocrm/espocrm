@@ -12,7 +12,7 @@
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList}}
             {{#unless isInMore}}
-            <li data-name="{{name}}" class="not-in-more"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{shortLabel}}</span></a></li>
+            <li data-name="{{name}}" class="not-in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{#if iconClass}}<span class="{{iconClass}}"></span>{{else}}<span class="short-label-text">{{shortLabel}}</span>{{/if}}</span></a></li>
             {{/unless}}
             {{/each}}
             <li class="dropdown more">
@@ -20,7 +20,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList}}
                 {{#if isInMore}}
-                    <li data-name="{{name}}" class="in-more"><a href="{{link}}" class="nav-link"><span class="full-label">{{label}}</span></a></li>
+                    <li data-name="{{name}}" class="in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span></a></li>
                 {{/if}}
                 {{/each}}
                 </ul>

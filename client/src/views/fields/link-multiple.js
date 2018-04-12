@@ -111,6 +111,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             this.sortable = this.sortable || this.params.sortable;
 
+            this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
@@ -301,7 +303,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
-            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a>';
+            var iconHtml = '';
+            if (this.mode == 'detail') {
+                iconHtml = this.iconHtml;
+            }
+            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + iconHtml + this.getHelper().stripTags(name) + '</a>';
         },
 
         getValueForDisplay: function () {

@@ -289,6 +289,30 @@ Espo.define('view-helper', [], function () {
             Handlebars.registerHelper('basePath', function () {
                 return self.basePath || '';
             });
+        },
+
+        getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
+            if (this.settings.get('scopeColorsDisabled')) {
+                return '';
+            }
+
+            var color = this.metadata.get(['clientDefs', scope, 'color']);
+            var html = '';
+
+            if (color) {
+                var $span = $('<span class="color-icon glyphicon glyphicon-unchecked">');
+                $span.css('color', color);
+                if (additionalClassName) {
+                    $span.addClass(additionalClassName);
+                }
+                html = $span.get(0).outerHTML;
+            }
+
+            if (!noWhiteSpace) {
+                if (html) html += ' ';
+            }
+
+            return html;
         }
     });
 

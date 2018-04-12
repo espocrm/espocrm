@@ -64,13 +64,19 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             if (this.mode === 'detail' && !nameValue && this.model.get(this.idName)) {
                 nameValue = this.translate(this.foreignScope, 'scopeNames');
             }
+
+            var iconHtml = null;
+            if (this.mode === 'detail') {
+                iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+            }
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: this.model.get(this.idName),
                 nameValue: nameValue,
                 foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idName)
+                valueIsSet: this.model.has(this.idName),
+                iconHtml: iconHtml
             }, Dep.prototype.data.call(this));
         },
 

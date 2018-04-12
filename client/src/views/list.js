@@ -238,8 +238,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         getHeader: function () {
+            var headerIconHtml = this.getHeaderIconHtml();
+
             return this.buildHeaderHtml([
-                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                headerIconHtml + this.getLanguage().translate(this.scope, 'scopeNamesPlural')
             ]);
         },
 

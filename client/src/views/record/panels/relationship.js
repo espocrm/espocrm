@@ -57,6 +57,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.title = this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
+            if (!this.getConfig().get('scopeColorsDisabled')) {
+                var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+                if (iconHtml) {
+                    this.titleHtml = iconHtml + this.title;
+                }
+            }
+
             var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!this.readOlny && !this.defs.readOnly) {

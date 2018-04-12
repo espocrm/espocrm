@@ -128,8 +128,12 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                 }
             }, this);
 
+            var iconHtml = '';
+            if (this.mode == 'detail') {
+                iconHtml = this.iconHtml;
+            }
 
-            var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
             return lineHtml;
         },
 

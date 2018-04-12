@@ -7,6 +7,8 @@
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
             [{"name": "tabList"},{"name": "quickCreateList"}],
+            [{"name": "scopeColorsDisabled"}, {"name": "tabIconsDisabled"}],
+            [{"name": "tabColorsDisabled"}, false],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]
     }

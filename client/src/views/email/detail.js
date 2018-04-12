@@ -356,8 +356,10 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
+            var headerIconHtml = this.getHeaderIconHtml();
+
             return this.buildHeaderHtml([
-                '<a href="#' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                headerIconHtml+ '<a href="#' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 nameHtml
             ]);
         },

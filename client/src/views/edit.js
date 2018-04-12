@@ -82,13 +82,15 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         getHeader: function () {
             var html = '';
 
+            var headerIconHtml = this.getHeaderIconHtml();
+
             var arr = [];
 
             if (this.options.noHeaderLinks) {
                 arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
             } else {
                 var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-                arr.push('<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+                arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
             }
 
             if (this.model.isNew()) {
