@@ -84,6 +84,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 calendarTypeDataList: calendarTypeDataList,
                 calendarTypeSelectEnabled: calendarTypeDataList.length > 1,
                 calendarTypeLabel: this.getCalendarTypeLabel(this.calendarType),
+                isCustomViewAvailable: this.isCustomViewAvailable,
+                viewDataList: this.getViewDataList()
             };
         },
 
@@ -92,7 +94,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 this.timeline.moveTo(moment());
                 this.triggerView();
             },
-            'click button[data-action="mode"]': function (e) {
+            'click [data-action="mode"]': function (e) {
                 var mode = $(e.currentTarget).data('mode');
                 this.trigger('change:mode', mode);
             },
@@ -141,7 +143,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             },
             'click button[data-action="showSharedCalendarOptions"]': function () {
                 this.actionShowSharedCalendarOptions();
-            },
+            }
         },
 
         setup: function () {
@@ -159,6 +161,11 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
 
             this.scopeFilter = false;
+
+            this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
+            if (this.options.userId) {
+                this.isCustomViewAvailable = false;
+            }
 
             var scopeList = [];
             this.scopeList.forEach(function (scope) {
@@ -873,8 +880,16 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.colors[scope] = additionalColorList[index];
 
             return this.colors[scope];
+        },
+
+        getViewDataList: function () {
+            var dataList = this.getPreferences().get('calendarViewDataList') || [];
+            dataList = Espo.Utils.cloneDeep(dataList);
+            dataList.forEach(function (item) {
+                item.mode = 'view-' + item.id;
+            }, this);
+            return dataList;
         }
 
     });
 });
-

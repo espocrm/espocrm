@@ -36,15 +36,43 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
         fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
 
+        events: {
+            'click [data-action="createCustomView"]': function () {
+                this.createCustomView();
+            },
+            'click [data-action="editCustomView"]': function () {
+                this.editCustomView();
+            }
+        },
+
         setup: function () {
             this.mode = this.mode || this.options.mode || null;
             this.date = this.date || this.options.date || null;
 
-            if (!this.mode) {
+              if (!this.mode) {
                 this.mode = this.getStorage().get('state', 'calendarMode') || null;
+
+                if (this.mode.indexOf('view-') === 0) {
+                    var viewId = this.mode.substr(5);
+                    var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+                    var isFound = false;
+                    calendarViewDataList.forEach(function (item) {
+                        if (item.id === viewId) {
+                            isFound = true;
+                        }
+                    });
+
+                    if (!isFound) {
+                        this.mode = null;
+                    }
+
+                    if (this.options.userId) {
+                        this.mode = null;
+                    }
+                }
             }
 
-            if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode)) {
+            if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
                 this.setupCalendar();
             } else {
                 if (this.mode === 'timeline') {
@@ -54,7 +82,14 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         updateUrl: function (trigger) {
-            var url = '#Calendar/show/mode=' + this.mode;
+            var url = '#Calendar/show';
+
+            if (this.mode || this.date) {
+                url += '/';
+            }
+            if (this.mode) {
+                url += 'mode=' + this.mode;
+            }
             if (this.date) {
                 url += '&date=' + this.date;
             }
@@ -84,9 +119,15 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                     }
                     initial = false;
                 }, this);
-                this.listenTo(view, 'change:mode', function (mode) {
+                this.listenTo(view, 'change:mode', function (mode, refresh) {
                     this.mode = mode;
-                    this.getStorage().set('state', 'calendarMode', mode);
+                    if (!this.options.userId) {
+                        this.getStorage().set('state', 'calendarMode', mode);
+                    }
+                    if (refresh) {
+                        this.updateUrl(true);
+                        return;
+                    }
                     if (!~this.fullCalendarModeList.indexOf(mode)) {
                         this.updateUrl(true);
                     }
@@ -109,7 +150,9 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 }, this);
                 this.listenTo(view, 'change:mode', function (mode) {
                     this.mode = mode;
-                    this.getStorage().set('state', 'calendarMode', mode);
+                    if (!this.options.userId) {
+                        this.getStorage().set('state', 'calendarMode', mode);
+                    }
                     this.updateUrl(true);
                 }, this);
             }, this);
@@ -118,7 +161,44 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         updatePageTitle: function () {
             this.setPageTitle(this.translate('Calendar', 'scopeNames'));
         },
+
+        createCustomView: function () {
+            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', function (data) {
+                    view.close();
+                    this.mode = 'view-' + data.id;
+                    this.date = null;
+                    this.updateUrl(true);
+                }, this);
+            });
+        },
+
+        editCustomView: function () {
+            var viewId = this.getView('calendar').viewId;
+            if (!viewId) return;
+
+            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {
+                id: viewId
+            }, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', function (data) {
+                    view.close();
+                    var calendarView = this.getView('calendar');
+                    calendarView.setupMode();
+
+                    calendarView.reRender();
+                }, this);
+
+                this.listenToOnce(view, 'after:remove', function (data) {
+                    view.close();
+                    this.mode = null;
+                    this.date = null;
+                    this.updateUrl(true);
+                }, this);
+            });
+        }
     });
 });
-
-

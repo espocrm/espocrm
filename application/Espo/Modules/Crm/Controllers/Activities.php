@@ -65,6 +65,12 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $userId = $request->get('userId');
         $userIdList = $request->get('userIdList');
+        $teamIdList = $request->get('teamIdList');
+
+        if ($teamIdList) {
+            $teamIdList = explode(',', $teamIdList);
+            return $userResultList = $service->getEventsForTeams($teamIdList, $from, $to, $scopeList);
+        }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);

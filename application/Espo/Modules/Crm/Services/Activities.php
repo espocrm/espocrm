@@ -1022,6 +1022,63 @@ class Activities extends \Espo\Core\Services\Base
         return $selectParams;
     }
 
+    public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
+    {
+        if ($this->getAcl()->get('userPermission') === 'no') {
+            throw new Forbidden("User Permission not allowing to view calendars of other users.");
+        }
+        if ($this->getAcl()->get('userPermission') === 'team') {
+            $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+            foreach ($teamIdList as $teamId) {
+                if (!in_array($teamId, $userTeamIdList)) {
+                    throw new Forbidden("User Permission not allowing to view calendars of other teams.");
+                }
+            }
+        }
+
+        $userIdList = [];
+
+        $userList = $this->getEntityManager()->getRepository('User')->select(['id', 'name'])->leftJoin([['teams', 'teams']])->where([
+            'isActive' => true,
+            'teamsMiddle.teamId' => $teamIdList
+        ])->distinct()->find([], true);
+
+        $userNames = (object) [];
+
+        foreach ($userList as $user) {
+            $userIdList[] = $user->id;
+            $userNames->{$user->id} = $user->get('name');
+        }
+
+
+        $eventList = [];
+        foreach ($userIdList as $userId) {
+            $userEventList = $this->getEvents($userId, $from, $to, $scopeList);
+            foreach ($userEventList as $event) {
+                foreach ($eventList as &$e) {
+                    if ($e['scope'] == $event['scope'] && $e['id'] == $event['id']) {
+                        $e['userIdList'][] = $userId;
+                        continue 2;
+                    }
+                }
+
+                $event['userIdList'] = [$userId];
+                $eventList[] = $event;
+            }
+        }
+
+        foreach ($eventList as &$event) {
+            $eventUserNames = (object) [];
+            foreach ($event['userIdList'] as $userId) {
+                $eventUserNames->$userId = $userNames->$userId;
+            }
+            $event['userNameMap'] = $eventUserNames;
+        }
+
+
+        return $eventList;
+    }
+
     public function getEvents($userId, $from, $to, $scopeList = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);

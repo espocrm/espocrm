@@ -50,6 +50,9 @@
         "sharedCalendarUserList": {
             "type": "jsonArray"
         },
+        "calendarViewDataList": {
+            "type": "jsonArray"
+        },
         "presetFilters": {
             "type": "jsonObject"
         },
