@@ -710,7 +710,7 @@ class Stream extends \Espo\Core\Services\Base
         $withContent = in_array($entityType, $this->emailsWithContentEntityList);
 
         if ($withContent) {
-            $note->set('post', $email->getBodyPlain());
+            $note->set('post', $this->parseEmailToMarkdown($email));
         }
 
         $data = array();
@@ -759,7 +759,7 @@ class Stream extends \Espo\Core\Services\Base
         $withContent = in_array($entityType, $this->emailsWithContentEntityList);
 
         if ($withContent) {
-            $note->set('post', $email->getBodyPlain());
+            $note->set('post', $this->parseEmailToMarkdown($email));
         }
 
         $data = array();
@@ -790,6 +790,69 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('data', $data);
 
         $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function parseEmailToMarkdown(Entity $email)
+    {
+        $parseRules = [
+            '/\s+/' => ' ', //Remove HTML's whitespaces
+            '/<(img)\b[^>]*alt=\"([^>"]+)\"[^>]*>/Uis' => '($2)', //Parse image tags with alt
+            '/<(img)\b[^>][^>]*>/Uis' => '', // Remove image tags without alt
+            '/<a(.*)href=[\'"](.*)[\'"]>(.*)<\/a>/Uis' => '$3 ($2)', //Parse links
+            '/<hr(.*)>/Uis' => "\n==================================\n", //Parse lines
+            '/<br(.*)>/Uis' => "\n", //Parse breaklines
+            '/<(.*)br>/Uis' => "\n", //Parse broken breaklines
+            '/<p(.*)>(.*)<\/p>/Uis' => "\n$2\n", //Parse alineas
+            //Lists
+            '/(<ul\b[^>]*>|<\/ul>)/i' => "\n\n",
+            '/(<ol\b[^>]*>|<\/ol>)/i' => "\n\n",
+            '/(<dl\b[^>]*>|<\/dl>)/i' => "\n\n",
+            '/<li\b[^>]*>(.*?)<\/li>/i' => "\t* $1\n",
+            '/<dd\b[^>]*>(.*?)<\/dd>/i' => "$1\n",
+            '/<dt\b[^>]*>(.*?)<\/dt>/i' => "\t* $1",
+            '/<li\b[^>]*>/i' => "\n\t* ",
+            //Parse table columns
+            '/<tr>(.*)<\/tr>/Uis' => "\n$1",
+            '/<td>(.*)<\/td>/Uis' => "$1\t",
+            '/<th>(.*)<\/th>/Uis' => "$1\t",
+            //Parse markedup text
+            '/<em\b[^>]*>(.*?)<\/em>/i' => "$2",
+            '/<b>(.*)<\/b>/Uis' => '**$1**',
+            '/<strong(.*)>(.*)<\/strong>/Uis' => '**$2**',
+            '/<i>(.*)<\/i>/Uis' => '*$1*',
+            '/<u>(.*)<\/u>/Uis' => '_$1_',
+            //Headers
+            '/<h1(.*)>(.*)<\/h1>/Uis' => "\n### $2 ###\n",
+            '/<h2(.*)>(.*)<\/h2>/Uis' => "\n## $2 ##\n",
+            '/<h3(.*)>(.*)<\/h3>/Uis' => "\n## $2 ##\n",
+            '/<h4(.*)>(.*)<\/h4>/Uis' => "\n## $2 ##\n",
+            '/<h5(.*)>(.*)<\/h5>/Uis' => "\n# $2 #\n",
+            '/<h6(.*)>(.*)<\/h6>/Uis' => "\n# $2 #\n",
+            //Surround tables with newlines
+            '/<table(.*)>(.*)<\/table>/Uis' => "\n$2\n",
+        ];
+
+        $emailBody = $email->get('body');
+
+        foreach ($parseRules as $rule => $output) {
+            $emailBody = preg_replace($rule, $output, $emailBody);
+        }
+
+        $emailBody = html_entity_decode($emailBody);
+        $emailBody = strip_tags($emailBody);
+
+        //Fix double whitespaces
+        $emailBody = preg_replace('/(  *)/', ' ', $emailBody);
+
+        //Remove tabs before newlines
+        $emailBody = preg_replace('/\t /', "\t", $emailBody);
+        $emailBody = preg_replace('/\t \n/', "\n", $emailBody);
+        $emailBody = preg_replace('/\t\n/', "\n", $emailBody);
+
+        //Replace all \n with \r\n
+        $emailBody = preg_replace('/\n/', "\r\n", $emailBody);
+
+        return $emailBody;
     }
 
     public function noteCreate(Entity $entity)
