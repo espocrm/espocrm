@@ -44,8 +44,8 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             Dep.prototype.setup.call(this);
 
             if (!this.complexCreatedDisabled) {
-                this.createField('createdBy', true);
-                this.createField('createdAt', true);
+                this.createField('createdBy', null, null, null, true);
+                this.createField('createdAt', null, null, null, true);
                 if (!this.model.get('createdById')) {
                     this.recordViewObject.hideField('complexCreated');
                 }
@@ -54,8 +54,8 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             }
 
             if (!this.complexModifiedDisabled) {
-                this.createField('modifiedBy', true);
-                this.createField('modifiedAt', true);
+                this.createField('modifiedBy', null, null, null, true);
+                this.createField('modifiedAt', null, null, null, true);
                 if (!this.model.get('modifiedById')) {
                     this.recordViewObject.hideField('complexModified');
                 }
@@ -77,7 +77,7 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             }
 
             if (this.getMetadata().get('scopes.' + this.model.name + '.stream')) {
-                this.createField('followers', true, 'views/fields/followers');
+                this.createField('followers', 'views/fields/followers', null, null, true);
             }
         }
     });

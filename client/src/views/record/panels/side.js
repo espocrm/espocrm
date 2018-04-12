@@ -122,7 +122,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         setupFields: function () {
         },
 
-        createField: function (field, readOnly, viewName) {
+        createField: function (field, viewName, params, mode, readOnly, options) {
             var type = this.model.getFieldType(field) || 'base';
             viewName = viewName || this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
 
@@ -131,10 +131,16 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 el: this.options.el + ' .field[data-name="' + field + '"]',
                 defs: {
                     name: field,
-                    params: {},
+                    params: params || {},
                 },
-                mode: this.mode
+                mode: mode || this.mode
             };
+
+            if (options) {
+                for (var param in options) {
+                    o[param] = options[param];
+                }
+            }
 
             var readOnlyLocked = this.readOnlyLocked;
 
@@ -196,7 +202,7 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
                 if (!(field in this.model.defs.fields)) {
                     return;
                 }
-                this.createField(field, readOnly, view);
+                this.createField(field, view, null, null, readOnly);
 
             }, this);
         },

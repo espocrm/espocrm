@@ -706,6 +706,13 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 o.readOnly = true;
             }
 
+            view = view || this.model.getFieldParam(name, 'view');
+
+            if (!view) {
+                var type = this.model.getFieldType(name) || 'base';
+                view = this.getFieldManager().getViewName(type);
+            }
+
             if (options) {
                 for (var param in options) {
                     o[param] = options[param];
