@@ -44,6 +44,12 @@ Espo.define('crm:views/meeting/fields/users', 'crm:views/meeting/fields/attendee
             if (this.assignmentPermission == 'team') {
                 return ['onlyMyTeam'];
             }
+        },
+
+        getIconHtml: function (id) {
+            var iconHtml = this.getHelper().getAvatarHtml(id, 'small', 14);
+            if (iconHtml) iconHtml += ' ';
+            return iconHtml;
         }
 
     });

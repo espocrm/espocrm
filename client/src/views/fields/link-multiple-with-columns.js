@@ -130,7 +130,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
 
             var iconHtml = '';
             if (this.mode == 'detail') {
-                iconHtml = this.iconHtml;
+                iconHtml = this.getIconHtml();
             }
 
             var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';

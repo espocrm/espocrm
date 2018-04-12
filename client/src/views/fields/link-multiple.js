@@ -298,6 +298,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return $el;
         },
 
+        getIconHtml: function (id) {
+            return this.iconHtml;
+        },
+
         getDetailLinkHtml: function (id) {
             var name = this.nameHash[id] || id;
             if (!name && id) {
@@ -305,7 +309,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
             var iconHtml = '';
             if (this.mode == 'detail') {
-                iconHtml = this.iconHtml;
+                iconHtml = this.getIconHtml(id);
             }
             return '<a href="#' + this.foreignScope + '/view/' + id + '">' + iconHtml + this.getHelper().stripTags(name) + '</a>';
         },

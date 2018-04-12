@@ -86,7 +86,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
             }
             var iconHtml = '';
             if (this.mode == 'detail') {
-                iconHtml = this.iconHtml;
+                iconHtml = this.getIconHtml(id);
             }
             var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().stripTags(name) + '</a> ' + roleHtml + '</div>';
             return lineHtml;
