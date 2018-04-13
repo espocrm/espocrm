@@ -947,13 +947,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 sideView.setReadOnly();
             }
 
-            var fieldViews = this.getFieldViews();
-            for (var i in fieldViews) {
-                fieldViews[i].setReadOnly();
-            }
+            this.getFieldList().forEach(function (field) {
+                this.setFieldReadOnly(field);
+            }, this);
         },
 
-        setNotReadOnly: function () {
+        setNotReadOnly: function (onlyNotSetAsReadOnly) {
             if (!this.readOnlyLocked) {
                 this.readOnly = false;
             }
@@ -968,12 +967,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 sideView.setNotReadOnly();
             }
 
-            var fieldViews = this.getFieldViews();
-
-            for (var i in fieldViews) {
-                var fieldView = fieldViews[i];
-                fieldView.setNotReadOnly();
-            }
+            this.getFieldList().forEach(function (field) {
+                if (onlyNotSetAsReadOnly) {
+                    if (this.recordHelper.getFieldStateParam(field, 'readOnly')) return;
+                }
+                this.setFieldNotReadOnly(field);
+            }, this);
         },
 
         manageAccessEdit: function (second) {
@@ -1005,7 +1004,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 if (!this.readOnlyLocked) {
                     if (this.readOnly && second) {
-                        this.setNotReadOnly();
+                        this.setNotReadOnly(true);
                     }
                     this.readOnly = false;
                 }
