@@ -172,6 +172,12 @@
         },
         "emailUseExternalClient": {
             "type": "bool"
+        },
+        "scopeColorsDisabled": {
+            "type": "bool"
+        },
+        "tabColorsDisabled": {
+            "type": "bool"
         }
     }
 }

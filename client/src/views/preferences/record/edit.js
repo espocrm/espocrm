@@ -107,6 +107,9 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             this.controlFollowCreatedEntityListVisibility();
             this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
 
+            this.controlColorsField();
+            this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
+
             var hideNotificationPanel = true;
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
                 this.hideField('receiveAssignmentEmailNotifications');
@@ -126,6 +129,15 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.hideField('receiveStreamEmailNotifications');
             } else {
                 hideNotificationPanel = false;
+            }
+
+            if (this.getConfig().get('scopeColorsDisabled')) {
+                this.hideField('scopeColorsDisabled');
+                this.hideField('tabColorsDisabled');
+            }
+
+            if (this.getConfig().get('tabColorsDisabled')) {
+                this.hideField('tabColorsDisabled');
             }
 
             if (hideNotificationPanel) {
@@ -164,6 +176,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.showField('followCreatedEntityTypeList');
             } else {
                 this.hideField('followCreatedEntityTypeList');
+            }
+        },
+
+        controlColorsField: function () {
+            if (this.model.get('scopeColorsDisabled')) {
+                this.hideField('tabColorsDisabled');
+            } else {
+                this.showField('tabColorsDisabled');
             }
         },
 

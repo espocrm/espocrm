@@ -167,6 +167,7 @@ return array (
     'aclAllowDeleteCreated' => false,
     'inlineAttachmentUploadMaxSize' => 20,
     'textFilterUseContainsForVarchar' => false,
+    'tabColorsDisabled' => true,
     'isInstalled' => false
 );
 

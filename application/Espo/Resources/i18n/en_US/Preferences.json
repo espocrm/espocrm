@@ -35,7 +35,9 @@
         "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
         "followCreatedEntities": "Auto-follow created records",
         "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
-        "emailUseExternalClient": "Use an external email client"
+        "emailUseExternalClient": "Use an external email client",
+        "scopeColorsDisabled": "Disable scope colors",
+        "tabColorsDisabled": "Disable tab colors"
     },
     "links": {
     },

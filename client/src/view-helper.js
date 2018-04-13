@@ -292,7 +292,7 @@ Espo.define('view-helper', [], function () {
         },
 
         getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
-            if (this.settings.get('scopeColorsDisabled')) {
+            if (this.config.get('scopeColorsDisabled') || this.preferences.get('scopeColorsDisabled')) {
                 return '';
             }
 

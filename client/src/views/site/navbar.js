@@ -375,7 +375,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         setupTabDefsList: function () {
             var tabDefsList = [];
             var moreIsMet = false;
-            var colorsDisabled = this.getConfig().get('scopeColorsDisabled') || this.getConfig().get('tabColorsDisabled');
+            var colorsDisabled =
+                this.getPreferences().get('scopeColorsDisabled') ||
+                this.getPreferences().get('tabColorsDisabled') ||
+                this.getConfig().get('scopeColorsDisabled') ||
+                this.getConfig().get('tabColorsDisabled');
             var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
 
             this.tabList.forEach(function (tab, i) {
