@@ -169,7 +169,11 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             this.viewMode = this.mode;
 
             this.isCustomView = false;
-            this.teamIdList = null;
+            this.teamIdList = this.options.teamIdList || null;
+
+            if (this.teamIdList && !this.teamIdList.length) {
+                this.teamIdList = null;
+            }
 
             if (~this.mode.indexOf('view-')) {
                 this.viewId = this.mode.substr(5);

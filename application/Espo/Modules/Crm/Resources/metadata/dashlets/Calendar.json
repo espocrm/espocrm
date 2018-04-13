@@ -26,6 +26,11 @@
                 "entity": "User",
                 "view": "views/fields/assigned-users",
                 "sortable": true
+            },
+            "teams": {
+                "type": "linkMultiple",
+                "entity": "Team",
+                "view": "crm:views/calendar/fields/teams"
             }
         },
         "defaults": {
@@ -46,6 +51,10 @@
                     ],
                     [
                         {"name": "users"},
+                        false
+                    ],
+                    [
+                        {"name": "teams"},
                         false
                     ]
                 ]

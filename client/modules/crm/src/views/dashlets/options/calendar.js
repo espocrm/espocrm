@@ -33,8 +33,8 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.manageUsersField();
-            this.listenTo(this.model, 'change:mode', this.manageUsersField, this);
+            this.manageFields();
+            this.listenTo(this.model, 'change:mode', this.manageFields, this);
         },
 
 
@@ -43,15 +43,26 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
             this.fields.enabledScopeList.options = this.getConfig().get('calendarEntityList') || [];
         },
 
-        manageUsersField: function () {
+        manageFields: function (model, value, o) {
             if (this.model.get('mode') === 'timeline') {
                 this.showField('users');
             } else {
                 this.hideField('users');
             }
+
+            if (
+                this.getAcl().get('userPermission') !== 'no'
+                &&
+                ~['basicWeek', 'month', 'basicDay'].indexOf(this.model.get('mode'))
+            ) {
+                this.showField('teams');
+            } else {
+                if (o.ui) {
+                    this.model.set('teamsIds', []);
+                }
+                this.hideField('teams');
+            }
         }
 
     });
 });
-
-
