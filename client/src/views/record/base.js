@@ -237,6 +237,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             return this.getFieldView(name);
         },
 
+        getFieldList: function () {
+            var fieldViews = this.getFieldViews();
+            return Object.keys(fieldViews);
+        },
+
         data: function () {
             return {
                 scope: this.scope,
