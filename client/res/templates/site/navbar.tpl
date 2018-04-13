@@ -47,11 +47,9 @@
             <li class="dropdown menu-container">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
-                    <li><a href="#User/view/{{userId}}" class="nav-link">{{userName}}</a></li>
-                    <li class="divider"></li>
-                    {{#each menu}}
+                    {{#each menuDataList}}
                         {{#unless divider}}
-                            <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{label}}</a></li>
+                            <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}

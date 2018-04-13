@@ -38,7 +38,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             return {
                 tabDefsList: this.tabDefsList,
                 title: this.options.title,
-                menu: this.getMenuDefs(),
+                menuDataList: this.getMenuDataList(),
                 quickCreateList: this.quickCreateList,
                 enableQuickCreate: this.quickCreateList.length > 0,
                 userName: this.getUser().get('name'),
@@ -414,26 +414,42 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             this.tabDefsList = tabDefsList;
         },
 
-        getMenuDefs: function () {
-            var menuDefs = [
+        getMenuDataList: function () {
+            var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
+            if (avatarHtml) avatarHtml += ' ';
+
+            var list = [
                 {
-                    link: '#Preferences',
-                    label: this.getLanguage().translate('Preferences')
-                }
+                    link: '#User/view/' + this.getUser().id,
+                    html: avatarHtml + this.getUser().get('name')
+                },
+                {divider: true}
             ];
 
+            if (this.getUser().isAdmin()) {
+                list.push({
+                    link: '#Admin',
+                    label: this.getLanguage().translate('Administration')
+                });
+            }
+
+            list.push({
+                link: '#Preferences',
+                label: this.getLanguage().translate('Preferences')
+            });
+
             if (!this.getConfig().get('actionHistoryDisabled')) {
-                menuDefs.push({
+                list.push({
                     divider: true
                 });
-                menuDefs.push({
+                list.push({
                     action: 'showLastViewed',
                     link: '#LastViewed',
                     label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
                 });
             }
 
-            menuDefs = menuDefs.concat([
+            list = list.concat([
                 {
                     divider: true
                 },
@@ -454,13 +470,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             ]);
 
-            if (this.getUser().isAdmin()) {
-                menuDefs.unshift({
-                    link: '#Admin',
-                    label: this.getLanguage().translate('Administration')
-                });
-            }
-            return menuDefs;
+
+
+            return list;
         },
 
         quickCreate: function (scope) {
