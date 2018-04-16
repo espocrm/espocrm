@@ -168,7 +168,7 @@ class PhpMimeMailParser
             $email->set('bodyPlain', $bodyPlain);
         }
 
-        if (!$email->get('body') && $email->get('bodyPlain')) {
+        if (!$email->get('body') && $email->hasBodyPlain()) {
             $email->set('body', $email->get('bodyPlain'));
         }
 
