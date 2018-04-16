@@ -57,7 +57,7 @@ Espo.define('crm:views/dashlets/options/calendar', 'views/dashlets/options/base'
             ) {
                 this.showField('teams');
             } else {
-                if (o.ui) {
+                if (o && o.ui) {
                     this.model.set('teamsIds', []);
                 }
                 this.hideField('teams');
