@@ -130,11 +130,15 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 scope: this.scope
             }, function (view) {
                 this.listenTo(view, 'reset', function () {
-                    this.collection.sortBy = this.defaultSortBy;
-                    this.collection.asc = this.defaultAsc;
-                    this.getStorage().clear('listSorting', this.collection.name);
+                    this.resetSearch();
                 }, this);
             }.bind(this));
+        },
+
+        resetSearch: function () {
+            this.collection.sortBy = this.defaultSortBy;
+            this.collection.asc = this.defaultAsc;
+            this.getStorage().clear('listSorting', this.collection.name);
         },
 
         getSearchDefaultData: function () {
