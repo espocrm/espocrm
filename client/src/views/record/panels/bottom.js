@@ -96,10 +96,12 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 var item = d;
                 if (typeof item !== 'object') {
                     item = {
-                        name: item
+                        name: item,
+                        viewKey: item + 'Field'
                     }
                 }
                 item = Espo.Utils.clone(item);
+                item.viewKey = item.name + 'Field';
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
@@ -133,8 +135,8 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             var fields = {};
 
             this.getFieldList().forEach(function (item) {
-                if (this.hasView(item.name)) {
-                    fields[item.name] = this.getView(item.name);
+                if (this.hasView(item.viewKey)) {
+                    fields[item.name] = this.getView(item.viewKey);
                 }
             }, this);
             return fields;
@@ -231,9 +233,9 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 o.customOptionList = this.recordHelper.getFieldOptionList(field);
             }
 
-            this.createView(field, viewName, o);
+            var viewKey = field + 'Field';
+            this.createView(viewKey, viewName, o);
         }
 
     });
 });
-

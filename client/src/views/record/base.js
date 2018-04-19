@@ -230,7 +230,13 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         },
 
         getFieldView: function (name) {
-            return this.getView(name) || null;
+            var view =  this.getView(name + 'Field') || null;
+
+            // TODO remove
+            if (!view) {
+                view = this.getView(name) || null;
+            }
+            return view;
         },
 
         getField: function (name) {
@@ -249,6 +255,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 hiddenPanels: this.recordHelper.getHiddenPanels(),
                 hiddenFields: this.recordHelper.getHiddenFields()
             };
+        },
+
+        // TODO remove
+        handleDataBeforeRender: function (data) {
+            this.getFieldList().forEach(function (field) {
+                var viewKey = field + 'Field';
+                data[field] = data[viewKey];
+            }, this);
         },
 
         setup: function () {
@@ -724,7 +738,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 o.customOptionList = this.recordHelper.getFieldOptionList(name);
             }
 
-            this.createView(name, view, o);
+            var viewKey = name + 'Field';
+
+            this.createView(viewKey, view, o);
 
             if (!~this.fieldList.indexOf(name)) {
                 this.fieldList.push(name);
@@ -736,4 +752,3 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
     });
 
 });
-

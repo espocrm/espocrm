@@ -4,7 +4,7 @@
             {{translate 'beforeSaveCustomScript' category='fields' scope='EntityManager'}}
         </label>
         <div class="field" data-name="beforeSaveCustomScript">
-            {{{beforeSaveCustomScript}}}
+            {{{beforeSaveCustomScriptField}}}
         </div>
     </div>
 </div>

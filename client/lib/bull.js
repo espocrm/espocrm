@@ -611,6 +611,8 @@ var Bull = Bull || {};
 			}, this);
 		},
 
+		handleDataBeforeRender: function (data) {},
+
 		_getHtml: function (callback) {
 			this._isBeingRendered = true;
 			this.trigger("render", this);
@@ -622,6 +624,7 @@ var Bull = Bull || {};
 				if (this.model || null) {
 					data.model = this.model;
 				}
+				this.handleDataBeforeRender(data);
 				this._getTemplate(function (template) {
 					var html = this._renderer.render(template, data);
 					callback(html);

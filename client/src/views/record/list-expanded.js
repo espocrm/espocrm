@@ -86,7 +86,8 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
                     var type = e.type || model.getFieldType(e.name) || 'base';
 
                     var item = {
-                        name: e.name,
+                        name: e.name + 'Field',
+                        field: e.name,
                         view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
                         options: {
                             defs: {
@@ -106,8 +107,10 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
             if ('right' in listLayout) {
                 if (listLayout.right != false) {
+                    var name = listLayout.right.name || 'right';
                     layout.right = {
-                        name: listLayout.right.name || 'right',
+                        field: name,
+                        name: name,
                         view: listLayout.right.view,
                         options: {
                             defs: {

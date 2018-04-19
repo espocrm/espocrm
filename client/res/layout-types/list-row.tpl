@@ -13,7 +13,7 @@
             align = defs.options.defs.align || false;
         }
     %>
-    <td class="cell" data-name="<%= defs.name %>" <% if (width) print(' width="'+width+'"'); if (align) print(' align="'+align+'"'); %>>
+    <td class="cell" data-name="<%= defs.columnName %>" <% if (width) print(' width="'+width+'"'); if (align) print(' align="'+align+'"'); %>>
     <%
             var tag = 'tag' in defs ? defs.tag : false;
             if (tag) {
