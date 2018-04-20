@@ -62,7 +62,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             }
             var value = this.model.get(this.name);
             if (!value) {
-                if (this.mode == 'edit' || this.mode == 'search') {
+                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list') {
                     return '';
                 }
                 return this.translate('None');

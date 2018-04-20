@@ -69,7 +69,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         stringifyDateValue: function (value) {
             if (!value) {
-                if (this.mode == 'edit' || this.mode == 'search') {
+                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list') {
                     return '';
                 }
                 return this.translate('None');
