@@ -913,7 +913,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (this.checkboxes) {
                 layout.push({
-                    name: 'r-checkbox',
+                    name: 'r-checkboxField',
+                    columnName: 'r-checkbox',
                     template: 'record.list-checkbox'
                 });
             }
@@ -926,7 +927,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
 
                 var item = {
-                    name: col.name,
+                    columnName: col.name,
+                    name: col.name + 'Field',
                     view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),
                     options: {
                         defs: {
@@ -1004,14 +1006,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         getRowActionsDefs: function () {
             return {
-                name: 'buttons',
+                columnName: 'buttons',
+                name: 'buttonsField',
                 view: this.rowActionsView,
                 options: {
                     defs: {
                         params: {
                         }
-                    },
-                },
+                    }
+                }
             };
         },
 
@@ -1068,7 +1071,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.name + '"]';
+            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.columnName + '"]';
         },
 
         prepareInternalLayout: function (internalLayout, model) {

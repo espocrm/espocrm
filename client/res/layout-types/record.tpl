@@ -67,15 +67,15 @@
                             spanClass = 'col-sm-12';
                         }
                     %>
-                    <div class="cell <%= spanClass %> form-group<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.name %>">
-                        <% if (!cell.noLabel) { %><label class="control-label<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>"><span class="label-text"><%
+                    <div class="cell <%= spanClass %> form-group<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden-cell{{/if}}<% } %>" data-name="<%= cell.field %>">
+                        <% if (!cell.noLabel) { %><label class="control-label<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><span class="label-text"><%
                             if ('customLabel' in cell) {
                                 print (cell.customLabel);
                             } else {
-                                print ("{{translate \""+cell.name+"\" scope=\""+model.name+"\" category='fields'}}");
+                                print ("{{translate \""+cell.field+"\" scope=\""+model.name+"\" category='fields'}}");
                             }
                         %></span></label><% } %>
-                        <div class="field<% if (cell.name) { %>{{#if hiddenFields.<%= cell.name %>}} hidden{{/if}}<% } %>" data-name="<%= cell.name %>"><%
+                        <div class="field<% if (cell.field) { %>{{#if hiddenFields.<%= cell.field %>}} hidden{{/if}}<% } %>" data-name="<%= cell.field %>"><%
                             if ('customCode' in cell) {
                                 print (cell.customCode);
                             } else {

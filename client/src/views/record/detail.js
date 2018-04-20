@@ -560,6 +560,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return view || null;
         },
 
+        // TODO remove
+        handleDataBeforeRender: function (data) {},
+
         data: function () {
             var navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
 
@@ -1154,8 +1157,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
 
                         var cell = {
-                            name: name,
+                            name: name + 'Field',
                             view: viewName,
+                            field: name,
                             el: el + ' .middle .field[data-name="' + name + '"]',
                             fullWidth: fullWidth,
                             options: o

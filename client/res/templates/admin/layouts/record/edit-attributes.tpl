@@ -1,6 +1,6 @@
-{{#each attributeList}}
-<div class="cell form-group" data-name="{{./this}}">
-    <label class="control-label" data-name="{{./this}}">{{translate this category='fields' scope='LayoutManager'}}</label>
-    <div class="field" data-name="{{./this}}">{{{var this ../this}}}</div>
+{{#each attributeDataList}}
+<div class="cell form-group" data-name="{{name}}">
+    <label class="control-label" data-name="{{name}}">{{translate name category='fields' scope='LayoutManager'}}</label>
+    <div class="field" data-name="{{name}}">{{{var viewKey ../this}}}</div>
 </div>
 {{/each}}

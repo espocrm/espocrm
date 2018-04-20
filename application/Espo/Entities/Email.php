@@ -72,11 +72,20 @@ class Email extends \Espo\Core\ORM\Entity
         }
     }
 
+    protected function _getBodyPlain()
+    {
+        return $this->getBodyPlain();
+    }
+
+    public function hasBodyPlain()
+    {
+        return !empty($this->valuesContainer['bodyPlain']);
+    }
+
     public function getBodyPlain()
     {
-        $bodyPlain = $this->get('bodyPlain');
-        if (!empty($bodyPlain)) {
-            return $bodyPlain;
+        if (!empty($this->valuesContainer['bodyPlain'])) {
+            return $this->valuesContainer['bodyPlain'];
         }
 
         $body = $this->get('body');

@@ -82,4 +82,3 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
         }
     });
 });
-
