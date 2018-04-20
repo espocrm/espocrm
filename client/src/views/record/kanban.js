@@ -272,6 +272,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                             $list.sortable('cancel');
                             model.set();
                         }.bind(this));
+                    } else {
+                        $list.sortable('cancel');
                     }
 
                 }.bind(this)
