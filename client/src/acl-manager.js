@@ -156,7 +156,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         },
 
         checkInTeam: function (model) {
-            return this.getImplementation(model.name).checkIsOwner(model);
+            return this.getImplementation(model.name).checkInTeam(model);
         },
 
         checkAssignmentPermission: function (user) {
