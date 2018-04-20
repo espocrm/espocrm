@@ -181,7 +181,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var model = this.model;
             var scope = this.getScope();
 
-            this.header = this.getLanguage().translate(scope, 'scopeNames');
+            this.header = '';
+            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+
+            this.header += this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
                 this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
@@ -189,6 +192,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if (!this.fullFormDisabled) {
                 this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
             }
+
+            this.header = iconHtml + this.header;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);
