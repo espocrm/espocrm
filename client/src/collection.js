@@ -111,6 +111,13 @@ Espo.define('collection', [], function () {
 
         parse: function (response) {
             this.total = response.total;
+
+            if ('additionalData' in response) {
+                this.dataAdditional = response.additionalData;
+            } else {
+                this.dataAdditional = null;
+            }
+
             return response.list;
         },
 

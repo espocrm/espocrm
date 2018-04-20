@@ -1152,14 +1152,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        showMoreRecords: function () {
-            var collection = this.collection;
+        showMoreRecords: function (collection, $list, $showMore, callback) {
+            collection = collection || this.collection;
 
-            var $showMore = this.$el.find('.show-more');
-            var $list = this.$el.find(this.listContainerEl);
+            $showMore =  $showMore || this.$el.find('.show-more');
+            $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');
-            this.notify('Loading...');
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
 
             var final = function () {
                 $showMore.parent().append($showMore);
@@ -1175,13 +1176,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('input.record-checkbox').attr('disabled', 'disabled').prop('checked', true);
                 }
 
-                this.notify(false);
+                Espo.Ui.notify(false);
+
+                if (callback) {
+                    callback.call(this);
+                }
             }.bind(this);
 
             var initialCount = collection.length;
 
             var success = function () {
-                this.notify(false);
+                Espo.Ui.notify(false);
                 $showMore.addClass('hidden');
 
                 var rowCount = collection.length - initialCount;
@@ -1395,6 +1400,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.collection.total > 0) {
                 this.collection.total--;
             }
+            this.$el.find('.total-count-span').text(this.collection.total.toString());
 
             var index = this.checkedList.indexOf(id);
             if (index != -1) {

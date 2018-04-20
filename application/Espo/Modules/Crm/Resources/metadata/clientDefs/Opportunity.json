@@ -71,5 +71,6 @@
          "type": "listSmall"
       }
    },
+   "kanbanViewMode": true,
    "color": "#91c36a"
 }

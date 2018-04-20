@@ -1,6 +1,6 @@
 
 <div class="row search-row">
-    <div class="form-group col-md-6 col-sm-8">
+    <div class="form-group col-md-6 col-sm-7">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group col-md-6 col-sm-4">
+    <div class="form-group col-md-6 col-sm-5">
         <div class="btn-group search-right-buttons-group">
             <button type="button" class="btn btn-default" data-action="reset">
                 <span class="glyphicon glyphicon-repeat"></span>&nbsp;{{translate 'Reset'}}
@@ -49,6 +49,13 @@
                 {{/each}}
             </ul>
         </div>
+        {{#if hasViewModeSwitcher}}
+        <div class="btn-group view-mode-switcher-buttons-group">
+            {{#each viewModeDataList}}
+            <button type="button" data-name="{{name}}" data-action="switchViewMode" class="btn btn-sm btn-default{{#ifEqual name ../viewMode}} active{{/ifEqual}}" title="{{title}}"><span class="{{iconClass}}"></span></button>
+            {{/each}}
+        </div>
+        {{/if}}
     </div>
 </div>
 

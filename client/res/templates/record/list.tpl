@@ -26,7 +26,7 @@
 
     {{#if displayTotalCount}}
         <div class="text-muted total-count">
-        {{translate 'Total'}}: {{collection.total}}
+        {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span>
         </div>
     {{/if}}
 

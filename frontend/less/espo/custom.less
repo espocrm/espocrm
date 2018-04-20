@@ -142,6 +142,123 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     margin-left: 5px;
 }
 
+div.list-kanban > table {
+    width: 100%;
+    table-layout: fixed;
+
+    th {
+        font-weight: normal;
+
+        color: @white-color;
+        background-color: @gray-light;
+
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+
+        overflow: hidden;
+
+        > div {
+            padding-left: @table-cell-padding;
+            position:relative;
+            line-height: 30px;
+            height: 100%;
+            width: 100%;
+        }
+
+        > div:before,
+        > div:after {
+            content:" ";
+            display: inline-block;
+            border-width: 18px;
+            border-style: solid;
+            width: 0px;
+            height: 0px;
+            position: absolute;
+            margin-top: -3px;
+        }
+
+        > div:after {
+            left: ~"calc(100% - 20px)";
+            z-index: 1;
+            border-color: transparent transparent transparent @white-color;
+        }
+
+        > div:before {
+            left: ~"calc(100% - 22px)";
+            z-index: 2;
+            border-color: transparent transparent transparent @gray-light;
+        }
+    }
+
+    th:last-child {
+        > div:before,
+        > div:after {
+            border-color: transparent transparent transparent transparent !important;
+        }
+    }
+
+    td.group-column {
+        vertical-align: top;
+
+        padding-top: @padding-base-horizontal;
+        padding-right: @padding-base-horizontal;
+
+        .show-more a {
+            margin: 0 auto;
+            display: block;
+            height: 20px;
+
+            > span {
+                top: -2px;
+                color: @text-muted;
+            }
+        }
+
+        .group-column-list {
+            min-height: 200px;
+        }
+    }
+
+    .item {
+        .panel {
+            .form-group {
+                margin-bottom: 3px;
+                .field-right-align {
+                    text-align: right;
+                }
+
+                .field {
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                    font-size: @font-size-base;
+                }
+                .field.field-large {
+                    font-size: @font-size-large;
+                    color: @gray;
+                }
+            }
+            div:last-child > .form-group {
+                margin-bottom: 0;
+            }
+
+            margin-bottom: @padding-base-horizontal;
+            .panel-body {
+                padding: @table-cell-padding;
+            }
+
+            .item-menu-container {
+                margin-top: -10px;
+                margin-right: -10px;
+            }
+        }
+    }
+
+    .item.ui-sortable-helper {
+        cursor: move;
+    }
+}
+
 table.table > thead th > a {
     color: @gray-light;
 }
@@ -149,7 +266,6 @@ table.table > thead th > a {
 table.table > thead th {
     color: @gray-light;
 }
-
 
 .cell label,
 .filter label {
@@ -1133,6 +1249,22 @@ label.attach-file-label {
     color: @brand-warning;
 }
 
+.icon-rotate-180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.icon-rotate-90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 .post-container > textarea.note,
 textarea.auto-height {
     overflow-x: hidden;
@@ -1843,6 +1975,13 @@ pre > code {
 
     .col-md-12.hidden-cell {
         min-height: 0;
+    }
+
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .search-container .view-mode-switcher-buttons-group {
+        float: right;
     }
 }
 

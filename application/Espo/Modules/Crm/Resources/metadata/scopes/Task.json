@@ -14,5 +14,6 @@
     "calendar": true,
     "object": true,
     "statusField": "status",
-    "stream": true
+    "stream": true,
+    "kanbanStatusIgnoreList": ["Canceled", "Deferred"]
 }

@@ -711,6 +711,10 @@
             }
         }
     },
+    "listViewModes": {
+        "list": "List",
+        "kanban": "Kanban"
+    },
     "themes": {
         "Espo": "Espo",
         "EspoRtl": "RTL Espo",

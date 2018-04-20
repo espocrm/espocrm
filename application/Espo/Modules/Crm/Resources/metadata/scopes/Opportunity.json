@@ -10,5 +10,6 @@
     "importable": true,
     "notifications": true,
     "object": true,
-    "statusField": "stage"
+    "statusField": "stage",
+    "kanbanStatusIgnoreList": ["Closed Lost"]
 }

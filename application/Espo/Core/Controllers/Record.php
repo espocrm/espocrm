@@ -160,6 +160,48 @@ class Record extends Base
         );
     }
 
+    public function getActionListKanban($params, $data, $request)
+    {
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        $where = $request->get('where');
+        $offset = $request->get('offset');
+        $maxSize = $request->get('maxSize');
+        $asc = $request->get('asc', 'true') === 'true';
+        $sortBy = $request->get('sortBy');
+        $q = $request->get('q');
+        $textFilter = $request->get('textFilter');
+
+        if (empty($maxSize)) {
+            $maxSize = self::MAX_SIZE_LIMIT;
+        }
+        if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
+            throw new Forbidden("Max should should not exceed " . self::MAX_SIZE_LIMIT . ". Use pagination (offset, limit).");
+        }
+
+        $params = array(
+            'where' => $where,
+            'offset' => $offset,
+            'maxSize' => $maxSize,
+            'asc' => $asc,
+            'sortBy' => $sortBy,
+            'q' => $q,
+            'textFilter' => $textFilter
+        );
+
+        $this->fetchListParamsFromRequest($params, $request, $data);
+
+        $result = $this->getRecordService()->getListKanban($params);
+
+        return (object) [
+            'total' => $result->total,
+            'list' => $result->collection->getValueMapList(),
+            'additionalData' => $result->additionalData
+        ];
+    }
+
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
         if ($request->get('primaryFilter')) {

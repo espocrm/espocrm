@@ -72,5 +72,6 @@
     "boolFilterList": [
         "onlyMy"
     ],
-    "iconClass": "glyphicon glyphicon-list-alt"
+    "iconClass": "glyphicon glyphicon-list-alt",
+    "kanbanViewMode": true
 }

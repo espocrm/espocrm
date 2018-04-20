@@ -859,6 +859,114 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
+    public function getListKanban($params)
+    {
+        $disableCount = false;
+        if (
+            $this->listCountQueryDisabled
+            ||
+            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+        ) {
+            $disableCount = true;
+        }
+
+        $maxSize = 0;
+        if ($disableCount) {
+           if (!empty($params['maxSize'])) {
+               $maxSize = $params['maxSize'];
+               $params['maxSize'] = $params['maxSize'] + 1;
+           }
+        }
+
+        $selectParams = $this->getSelectParams($params);
+
+        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
+
+        $selectAttributeList = $this->getSelectAttributeList();
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
+        }
+
+        $collection = new \Espo\ORM\EntityCollection([], $this->entityType);
+
+        $statusField = $this->getMetadata()->get(['scopes', $this->entityType, 'statusField']);
+        if (!$statusField) {
+            throw new Error("No status field for entity type '{$this->entityType}'.");
+        }
+
+        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
+        if (empty($statusList)) {
+            throw new Error("No options for status field for entity type '{$this->entityType}'.");
+        }
+
+        $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
+
+        $additionalData = (object) [
+            'groupList' => []
+        ];
+
+        foreach ($statusList as $status) {
+            if (in_array($status, $statusIgnoreList)) continue;
+            if (!$status) continue;
+
+            $selectParamsSub = $selectParams;
+            $selectParamsSub['whereClause'][] = [
+                $statusField => $status
+            ];
+
+            $o = (object) [
+                'name' => $status
+            ];
+
+            $collectionSub = $this->getRepository()->find($selectParamsSub);
+
+            if (!$disableCount) {
+                $totalSub = $this->getRepository()->count($selectParamsSub);
+            } else {
+                if ($maxSize && count($collectionSub) > $maxSize) {
+                    $totalSub = -1;
+                    unset($collectionSub[count($collectionSub) - 1]);
+                } else {
+                    $totalSub = -2;
+                }
+            }
+
+            foreach ($collectionSub as $e) {
+                $this->loadAdditionalFieldsForList($e);
+                if (!empty($params['loadAdditionalFields'])) {
+                    $this->loadAdditionalFields($e);
+                }
+                $this->prepareEntityForOutput($e);
+
+                $collection[] = $e;
+            }
+
+            $o->total = $totalSub;
+            $o->list = $collectionSub->getValueMapList();
+
+            $additionalData->groupList[] = $o;
+        }
+
+        if (!$disableCount) {
+            $total = $this->getRepository()->count($selectParams);
+        } else {
+            if ($maxSize && count($collection) > $maxSize) {
+                $total = -1;
+                unset($collection[count($collection) - 1]);
+            } else {
+                $total = -2;
+            }
+        }
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection,
+            'additionalData' => $additionalData
+        ];
+    }
+
     public function getMaxSelectTextAttributeLength()
     {
         if (!$this->maxSelectTextAttributeLengthDisabled) {

@@ -1,0 +1,6 @@
+[
+    {"name":"name", "link": true},
+    {"name":"amount", "align": "right", "isLarge": true},
+    {"name":"account"},
+    {"name":"closeDate"}
+]
