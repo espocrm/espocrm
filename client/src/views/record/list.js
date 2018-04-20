@@ -598,7 +598,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return false;
             }
 
-            this.notify('Loading...');
+            Espo.Ui.notify(this.translate('loading', 'messages'));
             var ids = false;
             var allResultIsChecked = this.allResultIsChecked;
             if (!allResultIsChecked) {
@@ -1251,7 +1251,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
             if (!this.quickDetailDisabled) {
-                this.notify('Loading...');
+                Espo.Ui.notify(this.translate('loading', 'messages'));
 
                 var options = {
                     scope: scope,
@@ -1302,7 +1302,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             if (!this.quickEditDisabled) {
-                this.notify('Loading...');
+                Espo.Ui.notify(this.translate('loading', 'messages'));
                 var options = {
                     scope: scope,
                     id: id,
