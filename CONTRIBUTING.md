@@ -6,4 +6,4 @@ Before we can merge your pull request you need to accept our CLA [here](https://
 
 ## Issues
 
-We don't provide developer help or any kind of support on github. Please use our [forum](http://forum.espocrm.com/) for this.
+We don't provide developer help or any kind of support on github. Please use our [forum](https://forum.espocrm.com) for this.
