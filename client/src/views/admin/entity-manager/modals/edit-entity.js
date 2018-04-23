@@ -91,6 +91,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
 
                 this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
+
+                this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
+                this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
             }
 
             this.createView('type', 'views/fields/enum', {
@@ -222,6 +225,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
 
+                this.createView('kanbanViewMode', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="kanbanViewMode"]',
+                    defs: {
+                        name: 'kanbanViewMode'
+                    }
+                });
+
                 var optionList = Object.keys(fieldDefs).filter(function (item) {
                     if (!~['varchar', 'text', 'phone', 'email', 'personName', 'number'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
                         return false;
@@ -253,39 +265,53 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 });
 
 
-                if (this.hasStreamField) {
-                    var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
-                        if (fieldDefs[item].disabled) return;
-                        if (fieldDefs[item].type == 'enum') {
-                            return true;
+                var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
+                    if (fieldDefs[item].disabled) return;
+                    if (fieldDefs[item].type == 'enum') {
+                        return true;
+                    }
+                    return;
+                }, this).sort(function (v1, v2) {
+                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                }.bind(this));
+
+                var translatedStatusFields = {};
+                enumFieldList.forEach(function (item) {
+                    translatedStatusFields[item] = this.translate(item, 'fields', scope);
+                }, this);
+                enumFieldList.unshift('');
+                translatedStatusFields[''] = '-' + this.translate('None') + '-';
+
+                this.createView('statusField', 'views/fields/enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="statusField"]',
+                    defs: {
+                        name: 'statusField',
+                        params: {
+                            options: enumFieldList
                         }
-                        return;
-                    }, this).sort(function (v1, v2) {
-                        return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                    }.bind(this));
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
+                    translatedOptions: translatedStatusFields
+                });
 
-                    var translatedStatusFields = {};
-                    enumFieldList.forEach(function (item) {
-                        translatedStatusFields[item] = this.translate(item, 'fields', scope);
-                    }, this);
-                    enumFieldList.unshift('');
-                    translatedStatusFields[''] = '-' + this.translate('None') + '-';
+                var statusOptionList = [];
+                var translatedStatusOptions = {};
 
-                    this.createView('statusField', 'views/fields/enum', {
-                        model: model,
-                        mode: 'edit',
-                        el: this.options.el + ' .field[data-name="statusField"]',
-                        defs: {
-                            name: 'statusField',
-                            params: {
-                                options: enumFieldList
-                            }
-                        },
-                        tooltip: true,
-                        tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
-                        translatedOptions: translatedStatusFields
-                    });
-                }
+                this.createView('kanbanStatusIgnoreList', 'views/fields/multi-enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="kanbanStatusIgnoreList"]',
+                    defs: {
+                        name: 'kanbanStatusIgnoreList',
+                        params: {
+                            options: statusOptionList
+                        }
+                    },
+                    translatedOptions: translatedStatusOptions
+                });
             }
             this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
@@ -325,22 +351,62 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('name', name);
             }, this);
 
-            this.manageStreamField();
-            this.listenTo(this.model, 'change:stream', function () {
-                this.manageStreamField();
-            }, this);
+            if (!this.isNew) {
+                this.manageKanbanFields({});
+                this.listenTo(this.model, 'change:statusField', function (m, value, o) {
+                    this.manageKanbanFields(o);
+                }, this);
+
+                this.manageKanbanViewModeField();
+                this.listenTo(this.model, 'change:kanbanViewMode', function () {
+                    this.manageKanbanViewModeField();
+                }, this);
+            }
 
             if (this.isNew) {
                 this.hideField('disabled');
             }
         },
 
-        manageStreamField: function () {
-            if (this.model.get('stream')) {
-                this.showField('statusField');
-            } else {
-                this.hideField('statusField');
+        manageKanbanFields: function (o) {
+            if (o.ui) {
+                this.model.set('kanbanStatusIgnoreList', []);
             }
+            if (this.model.get('statusField')) {
+                this.setKanbanStatusIgnoreListOptions();
+                this.showField('kanbanViewMode');
+                if (this.model.get('kanbanViewMode')) {
+                    this.showField('kanbanStatusIgnoreList');
+                } else {
+                    this.hideField('kanbanStatusIgnoreList');
+                }
+            } else {
+                this.hideField('kanbanViewMode');
+                this.hideField('kanbanStatusIgnoreList');
+            }
+        },
+
+        manageKanbanViewModeField: function () {
+            if (this.model.get('kanbanViewMode')) {
+                this.showField('kanbanStatusIgnoreList');
+            } else {
+                this.hideField('kanbanStatusIgnoreList');
+            }
+        },
+
+        setKanbanStatusIgnoreListOptions: function () {
+            var statusField = this.model.get('statusField');
+            var fieldView = this.getView('kanbanStatusIgnoreList');
+
+            var optionList = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'options']) || [];
+            var translation = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'translation']) || this.scope + '.options.' + statusField;
+
+            fieldView.params.options = optionList;
+            fieldView.params.translation = translation;
+
+            fieldView.setupTranslation();
+
+            fieldView.setOptionList(optionList);
         },
 
         actionSave: function () {
@@ -357,6 +423,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (this.scope) {
                 arr.push('sortBy');
                 arr.push('sortDirection');
+                arr.push('kanbanViewMode');
+                arr.push('kanbanStatusIgnoreList');
             }
 
             var notValid = false;
@@ -405,6 +473,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (this.scope) {
                 data.sortBy = this.model.get('sortBy');
                 data.sortDirection = this.model.get('sortDirection');
+                data.kanbanViewMode = this.model.get('kanbanViewMode');
+                data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
             }
 
             if (!this.isNew) {

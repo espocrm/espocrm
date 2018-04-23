@@ -69,14 +69,27 @@
 			{{{textFilterFields}}}
 		</div>
 	</div>
-	{{#if stream}}
 	<div class="cell form-group col-md-6" data-name="statusField">
 		<label class="control-label" data-name="statusField">{{translate 'statusField' category='fields' scope='EntityManager'}}</label>
 		<div class="field" data-name="statusField">
 			{{{statusField}}}
 		</div>
 	</div>
-	{{/if}}
+</div>
+
+<div class="row">
+	<div class="cell form-group col-md-6" data-name="kanbanViewMode">
+		<label class="control-label" data-name="kanbanViewMode">{{translate 'kanbanViewMode' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="kanbanViewMode">
+			{{{kanbanViewMode}}}
+		</div>
+	</div>
+	<div class="cell form-group col-md-6" data-name="kanbanStatusIgnoreList">
+		<label class="control-label" data-name="kanbanStatusIgnoreList">{{translate 'kanbanStatusIgnoreList' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="kanbanStatusIgnoreList">
+			{{{kanbanStatusIgnoreList}}}
+		</div>
+	</div>
 </div>
 {{/unless}}
 

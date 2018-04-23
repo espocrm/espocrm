@@ -105,36 +105,40 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
 
             if (!this.translatedOptions) {
-                var t = {};
-                if (this.params.translation) {
-                    var data = this.getLanguage().data;
-                    var arr = this.params.translation.split('.');
-                    var pointer = this.getLanguage().data;
-                    arr.forEach(function (key) {
-                        if (key in pointer) {
-                            pointer = pointer[key];
-                            t = pointer;
-                        }
-                    }, this);
-                } else {
-                    t = this.translate(this.name, 'options', this.model.name);
-                }
-                this.translatedOptions = null;
-                var translatedOptions = {};
-                if (this.params.options) {
-                    this.params.options.forEach(function (o) {
-                        if (typeof t === 'object' && o in t) {
-                            translatedOptions[o] = t[o];
-                        } else {
-                            translatedOptions[o] = o;
-                        }
-                    }.bind(this));
-                    this.translatedOptions = translatedOptions;
-                }
+                this.setupTranslation();
             }
 
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
+            }
+        },
+
+        setupTranslation: function () {
+            var t = {};
+            if (this.params.translation) {
+                var data = this.getLanguage().data;
+                var arr = this.params.translation.split('.');
+                var pointer = this.getLanguage().data;
+                arr.forEach(function (key) {
+                    if (key in pointer) {
+                        pointer = pointer[key];
+                        t = pointer;
+                    }
+                }, this);
+            } else {
+                t = this.translate(this.name, 'options', this.model.name);
+            }
+            this.translatedOptions = null;
+            var translatedOptions = {};
+            if (this.params.options) {
+                this.params.options.forEach(function (o) {
+                    if (typeof t === 'object' && o in t) {
+                        translatedOptions[o] = t[o];
+                    } else {
+                        translatedOptions[o] = o;
+                    }
+                }.bind(this));
+                this.translatedOptions = translatedOptions;
             }
         },
 

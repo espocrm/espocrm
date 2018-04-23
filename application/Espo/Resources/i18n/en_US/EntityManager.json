@@ -29,7 +29,9 @@
         "auditedForeign": "Foreign Audited",
         "statusField": "Status Field",
         "beforeSaveCustomScript": "Before Save Custom Script",
-        "color": "Color"
+        "color": "Color",
+        "kanbanViewMode": "Kanban View",
+        "kanbanStatusIgnoreList": "Ignored groups in Kanban view"
     },
     "options": {
         "type": {

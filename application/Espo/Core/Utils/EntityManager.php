@@ -283,6 +283,10 @@ class EntityManager
             $scopesData['isNotRemovable'] = true;
         }
 
+        if (!empty($params['kanbanStatusIgnoreList'])) {
+            $scopesData['kanbanStatusIgnoreList'] = $params['kanbanStatusIgnoreList'];
+        }
+
         $this->getMetadata()->set('scopes', $name, $scopesData);
 
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
@@ -306,6 +310,10 @@ class EntityManager
         if (array_key_exists('color', $params)) {
             $clientDefsData['color'] = $params['color'];
         };
+
+        if (!empty($params['kanbanViewMode'])) {
+            $clientDefsData['kanbanViewMode'] = true;
+        }
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
         $this->getBaseLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
@@ -389,6 +397,18 @@ class EntityManager
                 )
             );
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
+        if (array_key_exists('kanbanStatusIgnoreList', $data)) {
+            $scopeData['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
+            $this->getMetadata()->set('scopes', $name, $scopeData);
+        }
+
+        if (array_key_exists('kanbanViewMode', $data)) {
+            $clientDefsData = [
+                'kanbanViewMode' => $data['kanbanViewMode']
+            ];
+            $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
 
         if (array_key_exists('color', $data)) {

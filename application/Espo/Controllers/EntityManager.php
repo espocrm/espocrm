@@ -87,6 +87,11 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['color'] = $data['color'];
         }
 
+        $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
+        if (!empty($data['kanbanStatusIgnoreList'])) {
+            $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 
         if ($result) {
