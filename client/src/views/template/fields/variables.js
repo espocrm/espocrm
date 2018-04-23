@@ -46,10 +46,16 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
         events: {
             'change [name="variables"]': function () {
                 var attribute = this.$el.find('[name="variables"]').val();
-                if (attribute != '') {
-                    this.$el.find('[name="copy"]').val('{{' + attribute + '}}');
+
+                var $copy = this.$el.find('[name="copy"]');
+                if (attribute !== '') {
+                    if (this.textVariables[attribute]) {
+                        $copy.val('{{{' + attribute + '}}}');
+                    } else {
+                        $copy.val('{{' + attribute + '}}');
+                    }
                 } else {
-                    this.$el.find('[name="copy"]').val('');
+                    $copy.val('');
                 }
             }
         },
@@ -91,6 +97,14 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
             }.bind(this));
 
             this.attributeList = attributeList;
+
+            this.textVariables = {};
+
+            this.attributeList.forEach(function (item) {
+                if (~['text', 'wysiwyg'].indexOf(this.getMetadata().get(['entityDefs', entityType, 'fields', item, 'type']))) {
+                    this.textVariables[item] = true;
+                }
+            }, this);
 
             if (!~this.attributeList.indexOf('now')) {
                 this.attributeList.unshift('now');
@@ -140,6 +154,14 @@ Espo.define('views/template/fields/variables', 'views/fields/base', function (De
                 attributeList.forEach(function (item) {
                     this.attributeList.push(link + '.' + item);
                 }, this);
+
+                attributeList.forEach(function (item) {
+                    var variable = link + '.' + item;
+                    if (~['text', 'wysiwyg'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
+                        this.textVariables[variable] = true;
+                    }
+                }, this);
+
             }, this);
 
             return this.attributeList;

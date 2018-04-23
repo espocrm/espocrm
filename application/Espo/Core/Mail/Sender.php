@@ -260,7 +260,7 @@ class Sender
                 $attachment = new MimePart(file_get_contents($fileName));
                 $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
                 $attachment->encoding = Mime::ENCODING_BASE64;
-                $attachment->filename = $a->get('name');
+                $attachment->filename ='=?utf-8?B?' . base64_encode($a->get('name')) . '?=';
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
