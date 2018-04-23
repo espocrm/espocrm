@@ -247,8 +247,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             $list.sortable({
                 connectWith: '.group-column-list',
-
                 start: function (e, ui) {
+                    if (this.isItemBeingMoved) {
+
+                    }
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                 }.bind(this),
                 stop: function (e, ui) {
@@ -269,17 +271,19 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                         attributes[this.statusField] = group;
                         this.handleAttributesOnGroupChange(model, attributes, group);
 
-                        $list.sortable('destroy');
-                        this.initSortable();
+                        $list.sortable('disable');
 
                         model.save(attributes, {patch: true, isDrop: true}).then(function () {
                             Espo.Ui.success(this.translate('Saved'));
-
+                            $list.sortable('destroy');
+                            this.initSortable();
                         }.bind(this)).fail(function () {
                             $list.sortable('cancel');
+                            $list.sortable('enable');
                         }.bind(this));
                     } else {
                         $list.sortable('cancel');
+                        $list.sortable('enable');
                     }
                 }.bind(this)
             });
