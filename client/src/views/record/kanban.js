@@ -266,6 +266,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                         }
                         var attributes = {};
                         attributes[this.statusField] = group;
+                        this.handleAttributesOnGroupChange(model, attributes, group);
+
                         model.save(attributes, {patch: true, isDrop: true}).then(function () {
                             Espo.Ui.success(this.translate('Saved'));
                         }.bind(this)).fail(function () {
@@ -278,6 +280,9 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 }.bind(this)
             });
+        },
+
+        handleAttributesOnGroupChange: function (model, attributes, group) {
         },
 
         adjustMinHeight: function () {

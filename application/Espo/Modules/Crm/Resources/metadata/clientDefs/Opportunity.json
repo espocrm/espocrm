@@ -6,7 +6,8 @@
    "recordViews":{
       "edit":"crm:views/opportunity/record/edit",
       "editSmall":"crm:views/opportunity/record/edit-small",
-      "list":"crm:views/opportunity/record/list"
+      "list":"crm:views/opportunity/record/list",
+      "kanban": "crm:views/opportunity/record/kanban"
    },
    "sidePanels":{
       "detail":[
