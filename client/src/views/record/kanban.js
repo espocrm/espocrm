@@ -495,6 +495,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             if ($column.size()) {
                 $column.prepend($item);
+            } else {
+                $item.remove();
             }
         },
 
