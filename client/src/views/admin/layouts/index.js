@@ -69,6 +69,10 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                             d.typeList.push(item);
                         }
 
+                        if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
+                            d.typeList.push('kanban');
+                        }
+
                         dataList.push(d);
                     }, this);
                     return dataList;

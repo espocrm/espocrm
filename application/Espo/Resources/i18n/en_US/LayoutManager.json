@@ -6,7 +6,8 @@
         "align": "Align",
         "panelName": "Panel Name",
         "style": "Style",
-        "sticked": "Sticked"
+        "sticked": "Sticked",
+        "isLarge": "Large font size"
     },
     "options": {
         "align": {

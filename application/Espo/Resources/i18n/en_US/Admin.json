@@ -75,7 +75,8 @@
         "sidePanelsDetail": "Side Panels (Detail)",
         "sidePanelsEdit": "Side Panels (Edit)",
         "sidePanelsDetailSmall": "Side Panels (Detail Small)",
-        "sidePanelsEditSmall": "Side Panels (Edit Small)"
+        "sidePanelsEditSmall": "Side Panels (Edit Small)",
+        "kanban": "Kanban"
     },
     "fieldTypes": {
         "address": "Address",
