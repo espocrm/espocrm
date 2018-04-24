@@ -92,7 +92,7 @@ class Notifications extends \Espo\Core\Hooks\Base
 
         $entityType = $entity->getEntityType();
 
-        if (!$this->checkHasStream($entityType)) {
+        if (!$this->checkHasStream($entityType) || $entity->hasLinkMultipleField('assignedUsers')) {
             if (in_array($entityType, $this->getConfig()->get('assignmentNotificationsEntityList', []))) {
                 $notificator = $this->getNotificator($entityType);
                 $notificator->process($entity);

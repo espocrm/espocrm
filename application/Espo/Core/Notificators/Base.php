@@ -92,11 +92,27 @@ class Base implements Injectable
 
     public function process(Entity $entity)
     {
-        if (!$entity->get('assignedUserId')) return;
-        if (!$entity->isAttributeChanged('assignedUserId')) return;
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
+            $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+            if (!is_array($fetchedAssignedUserIdList)) {
+                $fetchedAssignedUserIdList = [];
+            }
 
-        $assignedUserId = $entity->get('assignedUserId');
+            foreach ($userIdList as $userId) {
+                if (in_array($userId, $fetchedAssignedUserIdList)) continue;
+                $this->processForUser($entity, $userId);
+            }
+        } else {
+            if (!$entity->get('assignedUserId')) return;
+            if (!$entity->isAttributeChanged('assignedUserId')) return;
+            $assignedUserId = $entity->get('assignedUserId');
+            $this->processForUser($entity, $assignedUserId);
+        }
+    }
 
+    protected function processForUser(Entity $entity, $assignedUserId)
+    {
         if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
             if ($entity->isNew()) {
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');

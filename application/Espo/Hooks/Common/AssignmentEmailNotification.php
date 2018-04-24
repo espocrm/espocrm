@@ -41,27 +41,49 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
         if (
             $this->getConfig()->get('assignmentEmailNotifications')
             &&
-            $entity->has('assignedUserId')
+            (
+                $entity->has('assignedUserId')
+                ||
+                $entity->hasLinkMultipleField('assignedUsers') && $entity->has('assignedUsersIds')
+            )
             &&
             in_array($entity->getEntityType(), $this->getConfig()->get('assignmentEmailNotificationsEntityList', []))
         ) {
+            if ($entity->has('assignedUsersIds')) {
+                $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+                $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+                if (!is_array($fetchedAssignedUserIdList)) {
+                    $fetchedAssignedUserIdList = [];
+                }
 
-            $userId = $entity->get('assignedUserId');
-            if (!empty($userId) && $userId != $this->getUser()->id && $entity->isAttributeChanged('assignedUserId')) {
-                $job = $this->getEntityManager()->getEntity('Job');
-                $job->set(array(
-                    'serviceName' => 'EmailNotification',
-                    'methodName' => 'notifyAboutAssignmentJob',
-                    'data' => json_encode(array(
-                        'userId' => $userId,
-                        'assignerUserId' => $this->getUser()->id,
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType()
-                    )),
-                    'executeTime' => date('Y-m-d H:i:s'),
-                ));
-                $this->getEntityManager()->saveEntity($job);
+                foreach ($userIdList as $userId) {
+                    if (in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if ($this->getUser()->id === $userId) continue;
+                    $this->createJob($entity, $userId);
+                }
+            } else {
+                $userId = $entity->get('assignedUserId');
+                if (!empty($userId) && $userId != $this->getUser()->id && $entity->isAttributeChanged('assignedUserId')) {
+                    $this->createJob($entity, $userId);
+                }
             }
         }
+    }
+
+    protected function createJob(Entity $entity, $userId)
+    {
+        $job = $this->getEntityManager()->getEntity('Job');
+        $job->set(array(
+            'serviceName' => 'EmailNotification',
+            'methodName' => 'notifyAboutAssignmentJob',
+            'data' => json_encode(array(
+                'userId' => $userId,
+                'assignerUserId' => $this->getUser()->id,
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType()
+            )),
+            'executeTime' => date('Y-m-d H:i:s'),
+        ));
+        $this->getEntityManager()->saveEntity($job);
     }
 }
