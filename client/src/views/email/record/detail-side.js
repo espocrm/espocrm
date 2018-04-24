@@ -48,6 +48,4 @@ Espo.define('views/email/record/detail-side', 'views/record/detail-side', functi
         }
 
     });
-
 });
-

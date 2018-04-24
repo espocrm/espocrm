@@ -49,7 +49,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.link = this.defs.link || this.panelName;
+            this.link = this.link || this.defs.link || this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');

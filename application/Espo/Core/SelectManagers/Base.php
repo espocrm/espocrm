@@ -484,9 +484,9 @@ class Base
     {
         if ($this->hasAssignedUsersField()) {
             $this->setDistinct(true, $result);
-            $this->addLeftJoin('assignedUsers', $result);
+            $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
             $result['whereClause'][] = array(
-                'assignedUsers.id' => $this->getUser()->id
+                'assignedUsersAccess.id' => $this->getUser()->id
             );
             return;
         }
@@ -1558,19 +1558,25 @@ class Base
     protected function boolFilterOnlyMy(&$result)
     {
         if (!$this->checkIsPortal()) {
-            if ($this->hasAssignedUserField()) {
-                $result['whereClause'][] = array(
+            if ($this->hasAssignedUsersField()) {
+                $this->setDistinct(true, $result);
+                $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
+                $result['whereClause'][] = [
+                    'assignedUsersAccess.id' => $this->getUser()->id
+                ];
+            } else if ($this->hasAssignedUserField()) {
+                $result['whereClause'][] = [
                     'assignedUserId' => $this->getUser()->id
-                );
+                ];
             } else {
-                $result['whereClause'][] = array(
+                $result['whereClause'][] = [
                     'createdById' => $this->getUser()->id
-                );
+                ];
             }
         } else {
-            $result['whereClause'][] = array(
+            $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id
-            );
+            ];
         }
     }
 

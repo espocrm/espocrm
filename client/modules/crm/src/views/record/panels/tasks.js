@@ -111,6 +111,12 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         setup: function () {
             this.scope = this.model.name;
 
+            this.link = 'tasks';
+
+            if (this.scope == 'Account') {
+                this.link = 'tasksPrimary';
+            }
+
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
 
             this.where = [
@@ -122,12 +128,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         },
 
         afterRender: function () {
-            var link = 'tasks';
 
-            if (this.scope == 'Account') {
-                link = 'tasksPrimary';
-            }
-            var url = this.model.name + '/' + this.model.id + '/' + link;
+            var url = this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!this.getAcl().check('Task', 'read')) {
                 this.$el.find('.list-container').html(this.translate('No Access'));
@@ -165,7 +167,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
         actionCreateTask: function (data) {
             var self = this;
-            var link = 'tasks';
+            var link = this.link;
             var scope = 'Task';
             var foreignLink = this.model.defs['links'][link].foreign;
 

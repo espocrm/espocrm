@@ -403,6 +403,66 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->isPermittedTeams($entity)) {
             return false;
         }
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
+            if (!$this->isPermittedAssignedUsers($entity)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isPermittedAssignedUsers(Entity $entity)
+    {
+        if (!$entity->hasLinkMultipleField('assignedUsers')) {
+            return true;
+        }
+
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
+        if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
+            return true;
+        }
+
+        $toProcess = false;
+
+        if (!$entity->isNew()) {
+            $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            if ($entity->isAttributeChanged('assignedUsersIds')) {
+                $toProcess = true;
+            }
+        } else {
+            $toProcess = true;
+        }
+
+        $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+
+        if ($toProcess) {
+            if (empty($userIdList)) {
+                if ($assignmentPermission == 'no') {
+                    return false;
+                }
+                return true;
+            }
+            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+
+            if ($assignmentPermission == 'no') {
+                foreach ($userIdList as $userId) {
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if ($this->getUser()->id != $userId) {
+                        return false;
+                    }
+                }
+            } else if ($assignmentPermission == 'team') {
+                $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+                foreach ($userIdList as $userId) {
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
@@ -466,8 +526,15 @@ class Record extends \Espo\Core\Services\Base
         $teamIdList = $entity->getLinkMultipleIdList('teams');
         if (empty($teamIdList)) {
             if ($assignmentPermission === 'team') {
-                if (!$entity->get('assignedUserId')) {
-                    return false;
+                if ($entity->hasLinkMultipleField('assignedUsers')) {
+                    $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+                    if (empty($assignedUserIdList)) {
+                        return false;
+                    }
+                } else if ($entity->hasAttribute('assignedUserId')) {
+                    if (!$entity->get('assignedUserId')) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -992,6 +1059,9 @@ class Record extends \Espo\Core\Services\Base
         }
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
+        }
+        if (empty($link)) {
+            throw new Error();
         }
 
         $methodName = 'findLinkedEntities' . ucfirst($link);

@@ -143,6 +143,8 @@ class Entity extends \Espo\ORM\Entity
         }
 
         $this->set($idsAttribute, $ids);
+        $this->setFetched($idsAttribute, $ids);
+
         $this->set($field . 'Names', $names);
         if ($hasType) {
             $this->set($field . 'Types', $types);

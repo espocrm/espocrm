@@ -548,23 +548,33 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             var defaultHash = {};
 
             if (!this.getUser().get('portalId')) {
-                if (this.model.hasField('assignedUser')) {
+                if (this.model.hasField('assignedUser') || this.model.hasField('assignedUsers')) {
+                    var assignedUserField = 'assignedUser';
+                    if (this.model.hasField('assignedUsers')) {
+                        assignedUserField = 'assignedUsers';
+                    }
                     var fillAssignedUser = true;
                     if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
                         fillAssignedUser = false;
-                        if (this.model.getFieldParam('assignedUser', 'required')) {
+                        if (this.model.getFieldParam(assignedUserField, 'required')) {
                             fillAssignedUser = true;
                         } else if (this.getAcl().get('assignmentPermission') === 'no') {
                             fillAssignedUser = true;
                         } else if (this.getAcl().get('assignmentPermission') === 'team' && !this.getUser().get('defaultTeamId')) {
                             fillAssignedUser = true;
-                        } else if (~this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit').indexOf('assignedUser')) {
+                        } else if (~this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit').indexOf(assignedUserField)) {
                             fillAssignedUser = true;
                         }
                     }
                     if (fillAssignedUser) {
-                        defaultHash['assignedUserId'] = this.getUser().id;
-                        defaultHash['assignedUserName'] = this.getUser().get('name');
+                        if (assignedUserField === 'assignedUsers') {
+                            defaultHash['assignedUsersIds'] = [this.getUser().id];
+                            defaultHash['assignedUsersNames'] = {};
+                            defaultHash['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
+                        } else {
+                            defaultHash['assignedUserId'] = this.getUser().id;
+                            defaultHash['assignedUserName'] = this.getUser().get('name');
+                        }
                     }
                 }
                 var defaultTeamId = this.getUser().get('defaultTeamId');
@@ -572,7 +582,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
                         defaultHash['teamsIds'] = [defaultTeamId];
                         defaultHash['teamsNames'] = {};
-                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName')
+                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');
                     }
                 }
             }

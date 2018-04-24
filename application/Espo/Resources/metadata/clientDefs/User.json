@@ -76,7 +76,7 @@
          {
             "name":"tasks",
             "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
+            "view":"crm:views/user/record/panels/tasks",
             "aclScope": "Task"
          }
       ],
@@ -96,7 +96,7 @@
          {
             "name":"tasks",
             "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
+            "view":"crm:views/user/record/panels/tasks",
             "aclScope": "Task"
          }
       ]

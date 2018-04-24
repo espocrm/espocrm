@@ -539,10 +539,15 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 url: url,
                 type: 'POST',
                 data: JSON.stringify(attributes),
-                error: function (x) {
-                    if (x.status == 409) {
-                        Espo.Ui.error(this.translate('linkConflict', 'messages', 'EntityManager'));
-                        x.errorIsHandled = true;
+                error: function (xhr) {
+                    if (xhr.status == 409) {
+                        var msg = this.translate('linkConflict', 'messages', 'EntityManager');
+                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        if (statusReasonHeader) {
+                            console.error(statusReasonHeader);
+                        }
+                        Espo.Ui.error(msg);
+                        xhr.errorIsHandled = true;
                     }
                     this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
                 }.bind(this)

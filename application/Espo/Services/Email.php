@@ -813,4 +813,9 @@ class Email extends Record
 
         return $data;
     }
+
+    public function isPermittedAssignedUsers(Entity $entity)
+    {
+        return true;
+    }
 }

@@ -836,7 +836,6 @@ class Activities extends \Espo\Core\Services\Base
                 'createdAt'
             ],
             'whereClause' => array(
-                'assignedUserId' => $userId,
                 array(
                     'OR' => array(
                         array(
@@ -857,6 +856,14 @@ class Activities extends \Espo\Core\Services\Base
                 )
             )
         );
+
+        if ($this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple') {
+            $selectManager->setDistinct(true, $selectParams);
+            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
+            $selectParams['whereClause'][] = ['assignedUsers.id' => $userId];
+        } else {
+            $selectParams['whereClause'][] = ['assignedUserId' => $userId];
+        }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
     }
@@ -890,6 +897,8 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if ($seed->hasRelation('assignedUsers')) {
+            $selectManager->setDistinct(true, $selectParams);
+            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
             $wherePart['assignedUsersMiddle.userId'] = $userId;
         }
 
