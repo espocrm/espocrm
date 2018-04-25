@@ -248,6 +248,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             $list.sortable({
                 connectWith: '.group-column-list',
+                cancel: '.dropdown-menu *',
                 start: function (e, ui) {
                     if (this.isItemBeingMoved) {
 
