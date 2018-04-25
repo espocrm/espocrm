@@ -117,7 +117,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 this.createButton = false;
             }
 
-            this.header = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.header = '';
+            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            this.header += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.header = iconHtml + this.header;
 
             this.waitForView('list');
 
