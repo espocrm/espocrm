@@ -98,7 +98,6 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                 data[this.name] = value;
                 data[this.nameDate] = null;
             } else {
-                data[this.name] = null;
                 if (date != '') {
                     data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
                 } else {
