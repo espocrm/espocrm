@@ -299,9 +299,7 @@ class Record extends \Espo\Core\Services\Base
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $parentId = $entity->get($field . 'Id');
                 $parentType = $entity->get($field . 'Type');
-                if ($parentId && $parentType) {
-                    $entity->loadParentNameField($field);
-                }
+                $entity->loadParentNameField($field);
             }
         }
     }

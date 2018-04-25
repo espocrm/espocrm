@@ -61,7 +61,11 @@ class Entity extends \Espo\ORM\Entity
             $foreignEntity = $repository->select($select)->where(['id' => $parentId])->findOne();
             if ($foreignEntity) {
                 $this->set($field . 'Name', $foreignEntity->get('name'));
+            } else {
+                $this->set($field . 'Name', null);
             }
+        } else {
+            $this->set($field . 'Name', null);
         }
     }
 
