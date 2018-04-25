@@ -115,7 +115,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 totalCount: this.collection.total,
                 statusList: this.statusList,
                 groupDataList: this.groupDataList,
-                minTableWidthPx: this.minColumnWidthPx * this.statusList.length
+                minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
+                isEmptyList: this.collection.models.length === 0
             };
         },
 
@@ -289,10 +290,11 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             });
         },
 
-        handleAttributesOnGroupChange: function (model, attributes, group) {
-        },
+        handleAttributesOnGroupChange: function (model, attributes, group) {},
 
         adjustMinHeight: function () {
+            if (this.collection.models.length === 0) return;
+
             var top = this.$listKanban.find('table > tbody').position().top;
             var bottom = this.$content.position().top + this.$content.outerHeight(true);
 

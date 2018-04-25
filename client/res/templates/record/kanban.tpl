@@ -1,3 +1,4 @@
+
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#if displayTotalCount}}
@@ -23,6 +24,7 @@
                 {{/each}}
             </tr>
         </thead>
+        {{#unless isEmptyList}}
         <tbody>
             <tr>
                 {{#each groupDataList}}
@@ -41,5 +43,13 @@
                 {{/each}}
             </tr>
         </tbody>
+        {{/unless}}
     </table>
 </div>
+
+
+{{#if isEmptyList}}
+<div class="margin-top">
+{{translate 'No Data'}}
+</div>
+{{/if}}
