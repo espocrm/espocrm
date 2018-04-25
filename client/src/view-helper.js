@@ -300,7 +300,7 @@ Espo.define('view-helper', [], function () {
             var html = '';
 
             if (color) {
-                var $span = $('<span class="color-icon glyphicon glyphicon-unchecked">');
+                var $span = $('<span class="color-icon glyphicon glyphicon-stop">');
                 $span.css('color', color);
                 if (additionalClassName) {
                     $span.addClass(additionalClassName);
