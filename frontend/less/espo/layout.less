@@ -29,7 +29,6 @@
   border-width: 0 0 1px;
 }
 
-
 body {
     padding-top: 55px;
 }
@@ -77,6 +76,12 @@ body > footer {
     body > footer {
         margin-top: 23px;
     }
+
+    #header .navbar li.tab > a {
+        border-left-width: @navbar-color-border-width;
+        border-left-style: solid;
+        border-color: transparent;
+    }
 }
 
 #header a.minimizer {
@@ -90,6 +95,20 @@ body > footer {
 @media screen and (min-width: @screen-sm-min) {
     .more-icon {
         top: 3px;
+    }
+
+    #header .navbar ul.nav > li.tab > a {
+        border-bottom-width: @navbar-color-border-width;
+        border-bottom-style: solid;
+        border-color: transparent;
+        padding-bottom: floor(@navbar-padding-vertical - @navbar-color-border-width);
+    }
+
+    #header .navbar ul.dropdown-menu > li.tab > a {
+        border-left-width: @navbar-color-border-width;
+        border-left-style: solid;
+        border-color: transparent;
+        padding-left: 20px - @navbar-color-border-width;
     }
 }
 
