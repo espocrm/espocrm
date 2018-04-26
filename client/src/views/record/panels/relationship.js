@@ -54,7 +54,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.title = this.translate(this.link, 'links', this.model.name);
+            this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
             if (!this.getConfig().get('scopeColorsDisabled')) {
@@ -66,7 +66,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
-            if (!this.readOlny && !this.defs.readOnly) {
+            if (!this.readOnly && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {
                     this.defs.create = true;
                 }

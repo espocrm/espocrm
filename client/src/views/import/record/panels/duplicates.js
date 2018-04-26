@@ -32,6 +32,11 @@ Espo.define('views/import/record/panels/duplicates', 'views/import/record/panels
 
         link: 'duplicates',
 
+        setup: function () {
+            this.title = this.title || this.translate('Duplicates', 'labels', 'Import');
+            Dep.prototype.setup.call(this);
+        },
+
         actionUnmarkAsDuplicate: function (data) {
             var id = data.id;
             var type = data.type;
@@ -49,4 +54,3 @@ Espo.define('views/import/record/panels/duplicates', 'views/import/record/panels
 
     });
 });
-
