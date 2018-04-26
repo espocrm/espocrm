@@ -536,6 +536,7 @@ class Import extends \Espo\Services\Record
                             }
                             continue;
                         }
+
                         $entity->set($field, $this->parseValue($entity, $field, $value, $params));
                     }
                 } else {
@@ -558,6 +559,21 @@ class Import extends \Espo\Services\Record
 
                         $entity->set('phoneNumberData', $phoneNumberData);
                     }
+                }
+            }
+        }
+
+        $defaultCurrency = $this->getConfig('defaultCurrency');
+        if (!empty($params['currency'])) {
+            $defaultCurrency = $params['currency'];
+        }
+
+        $mFieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
+        foreach ($mFieldsDefs as $field => $defs) {
+            if (!empty($defs['type']) && $defs['type'] === 'currency') {
+                if ($entity->has($field) && !$entity->get($field . 'Currency')) {
+                    $entity->set($field . 'Currency', $defaultCurrency);
                 }
             }
         }
@@ -673,11 +689,6 @@ class Import extends \Espo\Services\Record
             $decimalMark = $params['decimalMark'];
         }
 
-        $defaultCurrency = 'USD';
-        if (!empty($params['defaultCurrency'])) {
-            $defaultCurrency = $params['defaultCurrency'];
-        }
-
         $dateFormat = 'Y-m-d';
         if (!empty($params['dateFormat'])) {
             if (!empty($this->dateFormatsMap[$params['dateFormat']])) {
@@ -710,13 +721,6 @@ class Import extends \Espo\Services\Record
                 }
                 break;
             case Entity::FLOAT:
-                $currencyAttribute = $attribute . 'Currency';
-                if ($entity->hasAttribute($currencyAttribute)) {
-                    if (!$entity->has($currencyAttribute)) {
-                        $entity->set($currencyAttribute, $defaultCurrency);
-                    }
-                }
-
                 $a = explode($decimalMark, $value);
                 $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
 
@@ -777,4 +781,3 @@ class Import extends \Espo\Services\Record
         }
     }
 }
-

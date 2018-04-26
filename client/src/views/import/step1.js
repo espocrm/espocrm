@@ -161,6 +161,8 @@ Espo.define('views/import/step1', 'view', function (Dep) {
 
             if (this.formData.currency) {
                 $('#import-currency').val(this.formData.currency);
+            } else {
+                $('#import-currency').val(this.getConfig().get('defaultCurrency'));
             }
         },
 
