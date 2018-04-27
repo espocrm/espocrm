@@ -52,7 +52,7 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
               if (!this.mode) {
                 this.mode = this.getStorage().get('state', 'calendarMode') || null;
 
-                if (this.mode.indexOf('view-') === 0) {
+                if (this.mode && this.mode.indexOf('view-') === 0) {
                     var viewId = this.mode.substr(5);
                     var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
                     var isFound = false;
