@@ -41,7 +41,8 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
                 emailId: this.emailId,
                 emailName: this.emailName,
                 hasPost: this.hasPost,
-                hasAttachments: this.hasAttachments
+                hasAttachments: this.hasAttachments,
+                emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || ''
             }, Dep.prototype.data.call(this));
         },
 
@@ -57,11 +58,11 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
                 (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
             ) {
                 if (this.model.get('post')) {
-                    this.createField('post', null, null, 'Stream.Fields.Post');
+                    this.createField('post', null, null, 'views/stream/fields/post');
                     this.hasPost = true;
                 }
                 if ((this.model.get('attachmentsIds') || []).length) {
-                    this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+                    this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
                     this.hasAttachments = true;
                 }
             }
