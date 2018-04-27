@@ -119,7 +119,11 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             }
 
             this.model.set('isHtml', data.isHtml);
-            this.model.set('name', data.subject);
+
+            if (data.subject) {
+                this.model.set('name', data.subject);
+            }
+
             this.model.set('body', '');
             this.model.set('body', body);
 
@@ -217,5 +221,4 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         }
 
     });
-
 });
