@@ -31,46 +31,52 @@ Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/pan
 
     return Dep.extend({
 
-
-    	setupFieldList: function () {
+    	controlStatsFields: function () {
     		var type = this.model.get('type');
+            var fieldList = [];
     		switch (type) {
     			case 'Email':
     			case 'Newsletter':
-    				this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
+    				fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
     				break;
     			case 'Web':
     			case 'Television':
     			case 'Radio':
-    				this.fieldList = ['leadCreatedCount', 'revenue'];
+    				fieldList = ['leadCreatedCount', 'revenue'];
     				break;
     			case 'Mail':
-    				this.fieldList = ['sentCount', 'leadCreatedCount', 'revenue'];
+    				fieldList = ['sentCount', 'leadCreatedCount', 'revenue'];
     				break;
     			default:
-    				this.fieldList = ['leadCreatedCount', 'revenue'];
+    				fieldList = ['leadCreatedCount', 'revenue'];
     		}
-    	},
 
-    	setup: function () {
-    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
-            Dep.prototype.setup.call(this);
-            this.setupFieldList();
+            this.statsFieldList.forEach(function (item) {
+                this.options.recordViewObject.hideField(item);
+            }, this);
 
-            this.listenTo(this.model, 'change:type', function () {
-            	this.setupFieldList();
-            	if (this.isRendered()) {
-            		this.reRender();
-            	}
+            fieldList.forEach(function (item) {
+                this.options.recordViewObject.showField(item);
             }, this);
     	},
 
-        actionRefresh: function () {
-            this.model.fetch();
+    	setupFields: function () {
+    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
+            this.statsFieldList = this.fieldList;
+    	},
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.controlStatsFields();
+            this.listenTo(this.model, 'change:type', function () {
+                this.controlStatsFields();
+            }, this);
         },
 
+        actionRefresh: function () {
+            this.model.fetch();
+        }
 
     });
 });
-
-
