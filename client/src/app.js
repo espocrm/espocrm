@@ -289,6 +289,7 @@ Espo.define(
 
             this.getController(params.controller, function (controller) {
                 try {
+                    this.baseController.trigger('action');
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
                 } catch (e) {
@@ -341,7 +342,9 @@ Espo.define(
                         className = Espo.Utils.composeClassName(module, name, 'controllers');
                     }
                     Espo.require(className, function (controllerClass) {
-                        this.controllers[name] = new controllerClass(this.baseController.params, this.getControllerInjection());
+                        var injections = this.getControllerInjection();
+                        injections.baseController = this.baseController;
+                        this.controllers[name] = new controllerClass(this.baseController.params, injections);
                         this.controllers[name].name = name;
                         this.controllers[name].masterView = this.masterView;
                         callback(this.controllers[name]);

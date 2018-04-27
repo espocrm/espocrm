@@ -37,6 +37,7 @@ Espo.define('controller', [], function () {
         this.viewFactory = injections.viewFactory;
         this.modelFactory = injections.modelFactory;
         this.collectionFactory = injections.collectionFactory;
+        this.baseController = injections.baseController;
 
         this._settings = injections.settings || null;
         this._user = injections.user || null;
