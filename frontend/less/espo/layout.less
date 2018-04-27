@@ -53,7 +53,7 @@ body > footer {
     height: 26px;
 }
 
-@media screen and (max-width: @screen-sm-min) {
+@media screen and (max-width: (@screen-sm-min - 1px)) {
   #header .navbar {
       position: static;
   }
@@ -65,7 +65,7 @@ body > footer {
   }
 }
 
-@media screen and (max-width: @screen-sm-min) {
+@media screen and (max-width: (@screen-sm-min - 1px)) {
     body > .content {
         margin-top: -95px;
         padding-top: 95px;

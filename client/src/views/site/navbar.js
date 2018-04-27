@@ -202,7 +202,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 44) + 1;
+                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
                 $moreLi = $moreDd.closest('li');
