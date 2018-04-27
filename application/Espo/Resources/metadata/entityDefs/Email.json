@@ -227,7 +227,8 @@
         },
         "replies": {
             "type": "linkMultiple",
-            "readOnly": true
+            "readOnly": true,
+            "orderBy": "dateSent"
         },
         "isSystem": {
             "type": "bool",
