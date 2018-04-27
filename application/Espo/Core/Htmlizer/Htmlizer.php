@@ -121,7 +121,7 @@ class Htmlizer
                     foreach ($list as $item) {
                         $v = $item;
                         if ($item instanceof \StdClass) {
-                            $v = json_decode(json_encode($v), true);
+                            $v = json_decode(json_encode($v, \JSON_PRESERVE_ZERO_FRACTION), true);
                         }
                         if (is_array($v)) {
                             foreach ($v as $k => $w) {
@@ -139,7 +139,7 @@ class Htmlizer
                 if (!empty($data[$field])) {
                     $value = $data[$field];
                     if ($value instanceof \StdClass) {
-                        $data[$field] = json_decode(json_encode($value), true);
+                        $data[$field] = json_decode(json_encode($value, \JSON_PRESERVE_ZERO_FRACTION), true);
                     }
                     foreach ($data[$field] as $k => $w) {
                         $keyRaw = $k . '_RAW';
