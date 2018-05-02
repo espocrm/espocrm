@@ -25,8 +25,21 @@
   }
 }
 
-body > #header ul.tabs > li > a > span.short-label {
-  display: none;
+body > #header ul.tabs > li > a > span.full-label,
+body > #header ul.tabs > li.more > ul > li > a > span.full-label, {
+    position: absolute;
+    margin-left: 24px;
+}
+
+body > #header ul.tabs > li > a > span.short-label > .short-label-text {
+    font-weight: bold;
+    visibility: hidden;
+}
+
+body > #header ul.tabs > li span.short-label > span {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
 }
 
 body > #header ul.tabs > li > a > span.full-label {
@@ -167,18 +180,18 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header ul.tabs > li > a > span.short-label {
-      display: inline;
+        display: inline;
     }
 
     #header ul.tabs > li > a > span.full-label {
-      display: none;
+        display: none;
     }
 
-    span.short-label > .short-label-text {
+    > #header ul.tabs > li > a > span.short-label > .short-label-text {
         position: relative;
         left: -1px;
+        visibility: visible;
     }
-
   }
 
   #header .navbar {
@@ -308,11 +321,11 @@ body > #header .navbar-brand span.home-icon {
     #header ul.tabs li > a {
         padding-top: 8px;
         padding-bottom: 8px;
-        padding-left: 12px;
+        padding-left: 11px;
     }
 
     #header ul.tabs li.tab > a {
-        padding-left: 12px - @navbar-color-border-width;
+        padding-left: 11px - @navbar-color-border-width;
     }
 
   #header .navbar-form {

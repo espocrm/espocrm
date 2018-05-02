@@ -156,5 +156,6 @@
             }
         }
     },
-    "color": "#d69cc7"
+    "color": "#d69cc7",
+    "iconClass": "fas fa-address-card"
 }

@@ -76,5 +76,6 @@
         "listPortal": {
             "type": "list"
         }
-    }
+    },
+    "iconClass": "fas fa-wrench"
 }

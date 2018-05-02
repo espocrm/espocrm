@@ -107,5 +107,6 @@
    "boolFilterList": ["onlyMyTeam"],
     "selectDefaultFilters": {
         "filter": "active"
-    }
+    },
+    "iconClass": "far fa-user-circle"
 }

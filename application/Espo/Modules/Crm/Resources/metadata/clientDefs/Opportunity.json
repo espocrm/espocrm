@@ -73,5 +73,6 @@
       }
    },
    "kanbanViewMode": true,
-   "color": "#91c36a"
+   "color": "#91c36a",
+   "iconClass": "fas fa-dollar-sign"
 }

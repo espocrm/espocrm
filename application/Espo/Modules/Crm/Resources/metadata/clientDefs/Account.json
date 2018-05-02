@@ -75,5 +75,6 @@
          "type": "detail"
       }
    },
-   "color": "#edc755"
+   "color": "#edc755",
+   "iconClass": "fas fa-building"
 }

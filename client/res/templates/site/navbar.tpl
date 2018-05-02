@@ -20,7 +20,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList}}
                 {{#if isInMore}}
-                    <li data-name="{{name}}" class="in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span></a></li>
+                    <li data-name="{{name}}" class="in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span><span class="short-label">{{#if iconClass}}<span class="{{iconClass}}"></span>{{else}}<span class="short-label-text">&nbsp;</span>{{/if}}</span></a></li>
                 {{/if}}
                 {{/each}}
                 </ul>

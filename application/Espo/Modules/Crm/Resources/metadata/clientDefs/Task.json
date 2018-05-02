@@ -72,6 +72,6 @@
     "boolFilterList": [
         "onlyMy"
     ],
-    "iconClass": "glyphicon glyphicon-list-alt",
+    "iconClass": "fas fa-tasks",
     "kanbanViewMode": true
 }

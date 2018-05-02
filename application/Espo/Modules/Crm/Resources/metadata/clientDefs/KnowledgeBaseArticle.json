@@ -55,5 +55,6 @@
         "relationshipsPortal": {
             "type": "relationships"
         }
-    }
+    },
+    "iconClass": "fas fa-book"
 }
