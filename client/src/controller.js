@@ -32,12 +32,14 @@
 Espo.define('controller', [], function () {
 
     var Controller = function (params, injections) {
-        this.initialize();
         this.params = params || {};
+
+        this.baseController = injections.baseController;
         this.viewFactory = injections.viewFactory;
         this.modelFactory = injections.modelFactory;
         this.collectionFactory = injections.collectionFactory;
-        this.baseController = injections.baseController;
+
+        this.initialize();
 
         this._settings = injections.settings || null;
         this._user = injections.user || null;
@@ -257,6 +259,10 @@ Espo.define('controller', [], function () {
                         main.updatePageTitle();
                         master.hideLoadingNotification();
                     });
+
+                    this.listenToOnce(this.baseController, 'action', function () {
+                        main.cancelRender();
+                    }, this);
 
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
