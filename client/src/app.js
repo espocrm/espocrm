@@ -286,10 +286,10 @@ Espo.define(
 
         doAction: function (params) {
             this.trigger('action', params);
+            this.baseController.trigger('action');
 
             this.getController(params.controller, function (controller) {
                 try {
-                    this.baseController.trigger('action');
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
                 } catch (e) {
