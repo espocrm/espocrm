@@ -716,14 +716,14 @@
         "kanban": "Kanban"
     },
     "themes": {
-        "Espo": "Espo",
+        "Espo": "Classic Espo",
         "EspoRtl": "RTL Espo",
-        "Sakura": "Sakura",
-        "EspoVertical": "Espo w/ sidebar",
-        "SakuraVertical": "Sakura w/ sidebar",
-        "Violet": "Violet",
-        "VioletVertical": "Violet w/ sidebar",
-        "Hazyblue": "Hazyblue",
-        "HazyblueVertical": "Hazyblue w/ sidebar"
+        "Sakura": "Classic Sakura",
+        "EspoVertical": "Vertical Espo",
+        "SakuraVertical": "Vertical Sakura",
+        "Violet": "Classic Violet",
+        "VioletVertical": "Vertical Violet",
+        "Hazyblue": "Classic Hazyblue",
+        "HazyblueVertical": "Vertical Hazyblue"
     }
 }
