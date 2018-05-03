@@ -315,7 +315,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             var layoutState = this.getStorage().get('state', 'siteLayoutState');
             var layoutMinimized = false;
-            if (layoutState === 'collapsed' || !layoutState) {
+            if (layoutState === 'collapsed') {
                 layoutMinimized = true;
             }
 
