@@ -1,7 +1,7 @@
 {
     "entity": true,
     "layouts": false,
-    "tab": false,
+    "tab": true,
     "acl": true,
     "aclActionList": ["read"],
     "aclLevelList": ["all", "team", "no"],
