@@ -12,7 +12,21 @@
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList}}
             {{#unless isInMore}}
-            <li data-name="{{name}}" class="not-in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span><span class="short-label" title="{{label}}">{{#if iconClass}}<span class="{{iconClass}}"></span>{{else}}<span class="short-label-text">{{shortLabel}}</span>{{/if}}</span></a></li>
+            <li data-name="{{name}}" class="not-in-more tab">
+                <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                    <span class="full-label">{{label}}</span>
+                    <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
+                        {{#if iconClass}}
+                        <span class="{{iconClass}}"></span>
+                        {{else}}
+                        {{#if colorIconClass}}
+                        <span class="{{colorIconClass}}" style="color: {{color}}"></span>
+                        {{/if}}
+                        <span class="short-label-text">{{shortLabel}}</span>
+                        {{/if}}
+                    </span>
+                </a>
+            </li>
             {{/unless}}
             {{/each}}
             <li class="dropdown more">
@@ -20,7 +34,21 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList}}
                 {{#if isInMore}}
-                    <li data-name="{{name}}" class="in-more tab"><a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}><span class="full-label">{{label}}</span><span class="short-label">{{#if iconClass}}<span class="{{iconClass}}"></span>{{else}}<span class="short-label-text">&nbsp;</span>{{/if}}</span></a></li>
+                    <li data-name="{{name}}" class="in-more tab">
+                        <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                            <span class="full-label">{{label}}</span>
+                            <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
+                                {{#if iconClass}}
+                                <span class="{{iconClass}}"></span>
+                                {{else}}
+                                {{#if colorIconClass}}
+                                <span class="{{colorIconClass}}" style="color: {{color}}"></span>
+                                {{/if}}
+                                <span class="short-label-text">&nbsp;</span>
+                                {{/if}}
+                            </span>
+                        </a>
+                    </li>
                 {{/if}}
                 {{/each}}
                 </ul>

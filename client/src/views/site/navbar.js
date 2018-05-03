@@ -409,6 +409,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     color: color,
                     iconClass: iconClass
                 };
+                if (color && !iconClass) {
+                    o.colorIconClass = 'color-icon glyphicon glyphicon-stop';
+                }
                 tabDefsList.push(o);
             }, this);
             this.tabDefsList = tabDefsList;
