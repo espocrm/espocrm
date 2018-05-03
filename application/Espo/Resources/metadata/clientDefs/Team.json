@@ -19,5 +19,6 @@
         "edit": "views/team/record/edit",
         "list": "views/team/record/list"
     },
-    "boolFilterList": ["onlyMy"]
+    "boolFilterList": ["onlyMy"],
+    "iconClass": "fas fa-users"
 }

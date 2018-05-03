@@ -71,5 +71,6 @@
          "rowActionsView": "crm:views/target-list/record/row-actions/default",
          "view": "crm:views/target-list/record/panels/relationship"
       }
-   }
+   },
+   "iconClass": "fas fa-crosshairs"
 }
