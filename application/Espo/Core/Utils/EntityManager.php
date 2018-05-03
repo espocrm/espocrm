@@ -309,7 +309,11 @@ class EntityManager
 
         if (array_key_exists('color', $params)) {
             $clientDefsData['color'] = $params['color'];
-        };
+        }
+
+        if (array_key_exists('iconClass', $params)) {
+            $clientDefsData['iconClass'] = $params['iconClass'];
+        }
 
         if (!empty($params['kanbanViewMode'])) {
             $clientDefsData['kanbanViewMode'] = true;
@@ -414,6 +418,13 @@ class EntityManager
         if (array_key_exists('color', $data)) {
             $clientDefsData = [
                 'color' => $data['color']
+            ];
+            $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
+        }
+
+        if (array_key_exists('iconClass', $data)) {
+            $clientDefsData = [
+                'iconClass' => $data['iconClass']
             ];
             $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
