@@ -108,5 +108,5 @@
     "selectDefaultFilters": {
         "filter": "active"
     },
-    "iconClass": "far fa-user-circle"
+    "iconClass": "fas fa-user-circle"
 }
