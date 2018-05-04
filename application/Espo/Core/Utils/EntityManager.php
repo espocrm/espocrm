@@ -990,4 +990,33 @@ class EntityManager
         }
         return;
     }
+
+    public function resetToDefaults($scope)
+    {
+        if ($this->isCustom($scope)) {
+            throw new Error("Can't reset to defaults custom entity type '{$scope}.'");
+        }
+
+        $this->getMetadata()->delete('scopes', $scope, [
+            'disabled',
+            'stream',
+            'statusField',
+            'kanbanStatusIgnoreList'
+        ]);
+        $this->getMetadata()->delete('clientDefs', $scope, [
+            'iconClass',
+            'statusField',
+            'kanbanViewMode'
+        ]);
+        $this->getMetadata()->delete('entityDefs', $scope, [
+            'collection.sortBy',
+            'collection.asc',
+            'collection.textFilterFields'
+        ]);
+        $this->getMetadata()->save();
+
+        $this->getLanguage()->delete('Global', 'scopeNames', $scope);
+        $this->getLanguage()->delete('Global', 'scopeNamesPlural', $scope);
+        $this->getLanguage()->save();
+    }
 }

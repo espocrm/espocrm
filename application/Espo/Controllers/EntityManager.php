@@ -335,4 +335,16 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         return true;
     }
+
+    public function postActionResetToDefault($params, $data, $request)
+    {
+        if (empty($data->scope)) {
+            throw new BadRequest();
+        }
+
+        $this->getContainer()->get('entityManagerUtil')->resetToDefaults($data->scope);
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        return true;
+    }
 }

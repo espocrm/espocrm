@@ -40,32 +40,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             };
         },
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: 'Save',
-                    style: 'danger'
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-
-            var scope = this.scope = this.options.scope || false;
-
-            var header = 'Create Entity';
-            this.isNew = true;
-            if (scope) {
-                header = 'Edit Entity';
-                this.isNew = false;
-            }
-
-            this.header = this.translate(header, 'labels', 'Admin');
-
-            var model = this.model = new Model();
-            model.name = 'EntityManager';
+        setupData: function () {
+            var scope = this.scope;
 
             this.hasStreamField = true;
             if (scope) {
@@ -101,6 +77,47 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
                 this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
             }
+        },
+
+        setup: function () {
+            this.buttonList = [
+                {
+                    name: 'save',
+                    label: 'Save',
+                    style: 'danger'
+                },
+                {
+                    name: 'cancel',
+                    label: 'Cancel'
+                }
+            ];
+
+            var scope = this.scope = this.options.scope || false;
+
+            var header = 'Create Entity';
+            this.isNew = true;
+            if (scope) {
+                header = 'Edit Entity';
+                this.isNew = false;
+            }
+
+            this.header = this.translate(header, 'labels', 'Admin');
+
+            var model = this.model = new Model();
+            model.name = 'EntityManager';
+
+            if (!this.isNew) {
+                this.isCustom = this.getMetadata().get(['scopes', scope, 'isCustom'])
+            }
+
+            if (!this.isNew && !this.isCustom) {
+                this.buttonList.push({
+                    name: 'resetToDefault',
+                    text: this.translate('Reset to Default', 'labels', 'Admin')
+                });
+            }
+
+            this.setupData();
 
             this.createView('type', 'views/fields/enum', {
                 model: model,
@@ -467,7 +484,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 return;
             }
 
-            this.$el.find('button[data-name="save"]').addClass('disabled').attr('disabled');
+            this.disableButton('save');
+            this.disableButton('resetToDefault');
 
             var url = 'EntityManager/action/createEntity';
             if (this.scope) {
@@ -517,7 +535,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 type: 'POST',
                 data: JSON.stringify(data),
                 error: function () {
-                    this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
+                    this.enableButton('save');
+                    this.enableButton('resetToDefault');
                 }.bind(this)
             }).done(function () {
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
@@ -554,6 +573,32 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             }.bind(this));
         },
 
+        actionResetToDefault: function () {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest('EntityManager/action/resetToDefault', {
+                    scope: this.scope
+                }).then(function () {
+                    Promise.all([
+                        new Promise(function (resolve) {
+                            this.getMetadata().load(function () {
+                                this.getMetadata().storeToCache();
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this)),
+                        new Promise(function (resolve) {
+                            this.getLanguage().load(function () {
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this))
+                    ]).then(function () {
+                        this.setupData();
+                        this.model.fetchedAttributes = this.model.getClonedAttributes();
+                        this.notify('Done', 'success');
+                    }.bind(this));
+                }.bind(this));
+            }, this);
+        }
+
     });
 });
-
