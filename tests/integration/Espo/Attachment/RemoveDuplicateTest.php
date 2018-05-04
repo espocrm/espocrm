@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Account;
+namespace tests\integration\Espo\Attachment;
 
 class RemoveDuplicateTest extends \tests\integration\Core\BaseTestCase
 {
