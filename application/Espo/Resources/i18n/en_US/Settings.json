@@ -93,7 +93,7 @@
         "aclAllowDeleteCreated": "Allow to remove created records",
         "adminNotifications": "System notifications in administration panel",
         "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available",
-        "textFilterUseContainsForVarchar": "Use 'contains' opertor when filtering varchar fields",
+        "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",
