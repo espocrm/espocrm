@@ -31,7 +31,8 @@
         "beforeSaveCustomScript": "Before Save Custom Script",
         "color": "Color",
         "kanbanViewMode": "Kanban View",
-        "kanbanStatusIgnoreList": "Ignored groups in Kanban view"
+        "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
+        "iconClass": "Icon"
     },
     "options": {
         "type": {

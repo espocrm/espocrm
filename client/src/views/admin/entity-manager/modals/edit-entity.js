@@ -96,6 +96,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
                 }
 
+                this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
+
                 this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
                 this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
             }
@@ -188,6 +190,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
             }
+
+            this.createView('iconClass', 'views/admin/entity-manager/fields/icon-class', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="iconClass"]',
+                defs: {
+                    name: 'iconClass'
+                }
+            });
 
             if (scope) {
                 var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
@@ -423,7 +434,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'labelPlural',
                 'stream',
                 'disabled',
-                'statusField'
+                'statusField',
+                'iconClass'
             ];
 
             if (this.scope) {
@@ -472,7 +484,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 stream: this.model.get('stream'),
                 disabled: this.model.get('disabled'),
                 textFilterFields: this.model.get('textFilterFields'),
-                statusField: this.model.get('statusField')
+                statusField: this.model.get('statusField'),
+                iconClass: this.model.get('iconClass')
             };
 
             if (this.hasColorField) {
