@@ -184,13 +184,15 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     if ('getButtonList' in view) {
                         p.buttonList = this.filterActions(view.getButtonList());
                     }
-                    if (p.label) {
-                        p.title = this.translate(p.label, 'labels', this.scope);
-                    } else {
-                        p.title = view.title;
-                    }
+
                     if (view.titleHtml) {
                         p.titleHtml = view.titleHtml;
+                    } else {
+                        if (p.label) {
+                            p.title = this.translate(p.label, 'labels', this.scope);
+                        } else {
+                            p.title = view.title;
+                        }
                     }
                 }, this);
             }, this);

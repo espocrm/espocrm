@@ -60,7 +60,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (!this.getConfig().get('scopeColorsDisabled')) {
                 var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
                 if (iconHtml) {
-                    this.titleHtml = iconHtml + this.title;
+                    if (this.defs.label) {
+                        this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+                    } else {
+                        this.titleHtml = iconHtml + this.title;
+                    }
                 }
             }
 
