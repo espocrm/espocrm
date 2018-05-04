@@ -92,7 +92,21 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
-        $this->getFileStorageManager()->unlink($entity);
+
+        $duplicateCount = $this->where([
+            'OR' => [
+                [
+                    'sourceId' => $entity->getSourceId()
+                ],
+                [
+                    'id' => $entity->getSourceId()
+                ]
+            ],
+        ])->count();
+
+        if ($duplicateCount === 0) {
+            $this->getFileStorageManager()->unlink($entity);
+        }
     }
 
     public function getCopiedAttachment(Entity $entity, $role = null)
