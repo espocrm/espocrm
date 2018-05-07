@@ -1758,10 +1758,16 @@ class Record extends \Espo\Core\Services\Base
             $type = $defs[$attribute]['type'];
             switch ($type) {
                 case 'jsonObject':
+                    if (!empty($defs[$attribute]['isLinkMultipleNameMap'])) {
+                        break;
+                    }
                     $value = $entity->get($attribute);
                     return \Espo\Core\Utils\Json::encode($value);
                     break;
                 case 'jsonArray':
+                    if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
+                        break;
+                    }
                     $value = $entity->get($attribute);
                     if (is_array($value)) {
                         return \Espo\Core\Utils\Json::encode($value);

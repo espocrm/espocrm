@@ -37,14 +37,15 @@ class LinkMultiple extends Base
             $entityName => array (
                 'fields' => array(
                     $fieldName.'Ids' => array(
-                        'type' => 'varchar',
+                        'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkMultipleIdList' => true,
                         'relation' => $fieldName
                     ),
                     $fieldName.'Names' => array(
-                        'type' => 'varchar',
-                        'notStorable' => true
+                        'type' => 'jsonObject',
+                        'notStorable' => true,
+                        'isLinkMultipleNameMap' => true
                     )
                 )
             ),
@@ -67,7 +68,7 @@ class LinkMultiple extends Base
         $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
         if (!empty($columns)) {
             $data[$entityName]['fields'][$fieldName . 'Columns'] = array(
-                'type' => 'varchar',
+                'type' => 'jsonObject',
                 'notStorable' => true,
             );
         }
