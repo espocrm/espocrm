@@ -236,6 +236,18 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                 this.listenToOnce(view, 'after:save', function (model) {
                     view.close();
                     model.set('childCollection', this.collection.createSeed());
+                    if (model.get('parentId') !== attributes.parentId) {
+                        var v = this;
+                        while (1) {
+                            if (v.level) {
+                                v = v.getParentView().getParentView();
+                            } else {
+                                break;
+                            }
+                        }
+                        v.collection.fetch();
+                        return;
+                    }
                     this.collection.push(model);
                     this.buildRows(function () {
                         this.render();
