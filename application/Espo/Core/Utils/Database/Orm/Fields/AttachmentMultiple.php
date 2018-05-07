@@ -38,19 +38,20 @@ class AttachmentMultiple extends Base
                 'fields' => array(
                     $fieldName.'Ids' => array(
                         'type' => 'varchar',
-                        'notStorable' => true
+                        'notStorable' => true,
+                        'orderBy' => [['createdAt', 'ASC'], ['name', 'ASC']]
                     ),
                     $fieldName.'Names' => array(
                         'type' => 'varchar',
                         'notStorable' => true
-                    ),
+                    )
                 )
             ),
             'unset' => array(
                 $entityType => array(
                     'fields.'.$fieldName,
-                ),
-            ),
+                )
+            )
         );
 
         return $data;
