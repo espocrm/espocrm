@@ -292,6 +292,8 @@ class Xlsx extends \Espo\Core\Injectable
                     }
                 } else if ($type == 'int') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
+                } else if ($type == 'float') {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
                 } else if ($type == 'currency') {
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
@@ -548,6 +550,11 @@ class Xlsx extends \Espo\Core\Injectable
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('0');
+                } break;
+                case 'float': {
+                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                        ->getNumberFormat()
+                        ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                 } break;
                 case 'date': {
                     $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
