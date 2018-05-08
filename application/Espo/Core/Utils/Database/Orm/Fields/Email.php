@@ -85,6 +85,11 @@ class Email extends Base
                         'type' => 'text',
                         'notStorable' => true
                     ),
+                    $fieldName .'IsOptedOut' => array(
+                        'type' => 'bool',
+                        'notStorable' => true,
+                        'select' => 'emailAddresses.opt_out'
+                    )
                 ),
                 'relations' => array(
                     'emailAddresses' => array(
