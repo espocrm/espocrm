@@ -299,6 +299,11 @@ class Email extends Record
         $this->getEntityManager()->getRepository('Email')->loadBccField($entity);
     }
 
+    public function loadReplyToField(Entity $entity)
+    {
+        $this->getEntityManager()->getRepository('Email')->loadReplyToField($entity);
+    }
+
     public function getEntity($id = null)
     {
         $entity = $this->getRepository()->get($id);
@@ -327,6 +332,7 @@ class Email extends Record
         $this->loadToField($entity);
         $this->loadCcField($entity);
         $this->loadBccField($entity);
+        $this->loadReplyToField($entity);
 
         $this->loadNameHash($entity);
 
@@ -638,7 +644,7 @@ class Email extends Record
         }
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc'])
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
     {
         $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
     }

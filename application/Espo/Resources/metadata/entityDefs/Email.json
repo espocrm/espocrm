@@ -154,6 +154,9 @@
         "ccEmailAddresses": {
             "type": "linkMultiple"
         },
+        "replyToEmailAddresses": {
+            "type": "linkMultiple"
+        },
         "bodyPlain": {
             "type": "text",
             "seeMoreDisabled": true,
@@ -393,6 +396,20 @@
             "relationName": "emailEmailAddress",
             "conditions": {
                 "addressType": "bcc"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        },
+        "replyToEmailAddresses": {
+            "type": "hasMany",
+            "entity": "EmailAddress",
+            "relationName": "emailEmailAddress",
+            "conditions": {
+                "addressType": "rto"
             },
             "additionalColumns": {
                 "addressType": {

@@ -67,25 +67,32 @@ Espo.define('email-helper', [], function () {
 
             var isReplyOnSent = false;
 
-            if (model.get('replyToString')) {
-                var str = model.get('replyToString');
+            var replyToAddressString = model.get('replyTo') || null;
 
-                var a = [];
-                str.split(';').forEach(function (item) {
-                    var part = item.trim();
-                    var address = this.parseAddressFromStringAddress(item);
+            if (replyToAddressString) {
+                var replyToAddressList = replyToAddressString.split(';');
+                to = replyToAddressList.join(';');
+            } else {
+                if (model.get('replyToString')) {
+                    var str = model.get('replyToString');
 
-                    if (address) {
-                        a.push(address);
-                        var name = this.parseNameFromStringAddress(part);
-                        if (name && name !== address) {
-                            nameHash[address] = name;
+                    var a = [];
+                    str.split(';').forEach(function (item) {
+                        var part = item.trim();
+                        var address = this.parseAddressFromStringAddress(item);
+
+                        if (address) {
+                            a.push(address);
+                            var name = this.parseNameFromStringAddress(part);
+                            if (name && name !== address) {
+                                nameHash[address] = name;
+                            }
                         }
-
-                    }
-                }, this);
-                to = a.join('; ');
+                    }, this);
+                    to = a.join(';');
+                }
             }
+
             if (!to || !~to.indexOf('@')) {
                 if (model.get('from')) {
                     if (model.get('from') != this.getUser().get('emailAddress')) {
@@ -219,7 +226,7 @@ Espo.define('email-helper', [], function () {
                     partList.push(line);
 
                 }, this);
-                line += partList.join('; ');
+                line += partList.join(';');
                 list.push(line);
             }
 

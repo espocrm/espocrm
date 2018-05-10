@@ -38,7 +38,10 @@
         "hasAttachment": "Has Attachment",
         "assignedUsers": "Assigned Users",
         "sentBy": "Sent By",
+        "toEmailAddresses": "To EmailAddresses",
         "ccEmailAddresses": "CC Email Addresses",
+        "bccEmailAddresses": "BCC EmailAddresses",
+        "replyToEmailAddresses": "Reply-To EmailAddresses",
         "messageId": "Message Id",
         "messageIdInternal": "Message Id (Internal)",
         "folderId": "Folder Id",
@@ -58,7 +61,8 @@
         "fromEmailAddress": "From Email Address",
         "toEmailAddresses": "To EmailAddresses",
         "ccEmailAddresses": "CC EmailAddresses",
-        "bccEmailAddresses": "BCC EmailAddresses"
+        "bccEmailAddresses": "BCC EmailAddresses",
+        "replyToEmailAddresses": "Reply-To EmailAddresses"
     },
     "options": {
         "status": {

@@ -121,7 +121,20 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc'])
+    public function loadReplyToField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('replyToEmailAddresses');
+        $names = $entity->get('replyToEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('replyTo', implode(';', $arr));
+        }
+    }
+
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
     {
         $addressList = array();
         if (in_array('from', $fieldList) && $entity->get('from')) {
@@ -147,6 +160,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
         if (in_array('bcc', $fieldList)) {
             $arr = explode(';', $entity->get('bcc'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
+            }
+        }
+        if (in_array('replyTo', $fieldList)) {
+            $arr = explode(';', $entity->get('replyTo'));
             foreach ($arr as $address) {
                 if (!in_array($address, $addressList)) {
                     $addressList[] = $address;
