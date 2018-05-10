@@ -176,6 +176,8 @@ class Opportunity extends \Espo\Services\Record
             ];
         }
 
+        $stageIgnoreList = ['Closed Lost', 'Closed Won'];
+
         $selectManager->applyAccess($selectParams);
 
         $this->getEntityManager()->getRepository('Opportunity')->handleSelectParams($selectParams);
@@ -189,6 +191,7 @@ class Opportunity extends \Espo\Services\Record
 
         $result = array();
         foreach ($rows as $row) {
+            if (in_array($row['stage'], $stageIgnoreList)) continue;
             $result[$row['stage']] = floatval($row['amount']);
         }
 
