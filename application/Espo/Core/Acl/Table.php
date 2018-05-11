@@ -169,7 +169,7 @@ class Table
         if (isset($this->data->$permission)) {
             return $this->data->$permission;
         }
-        return null;
+        return 'no';
     }
 
     public function getLevel($scope, $action)
