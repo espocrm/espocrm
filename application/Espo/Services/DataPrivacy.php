@@ -126,8 +126,6 @@ class DataPrivacy extends \Espo\Core\Services\Base
                         ->getImplementation('EmailAddress')
                         ->checkEditInEntity($this->getInjection('user'), $emailAddress, $entity)
                     ) {
-                        $hash = $this->getEntityManager()->getRepository('EmailAddress')->hashAddress($emailAddress->get('name'));
-                        $emailAddress->set('hash', $hash);
                         $emailAddress->set('name', 'ERASED:' . $emailAddress->id);
                         $emailAddress->set('optOut', true);
                         $this->getEntityManager()->saveEntity($emailAddress);
@@ -148,8 +146,6 @@ class DataPrivacy extends \Espo\Core\Services\Base
                         ->getImplementation('PhoneNumber')
                         ->checkEditInEntity($this->getInjection('user'), $phoneNumber, $entity)
                     ) {
-                        $hash = $this->getEntityManager()->getRepository('PhoneNumber')->hashNumber($phoneNumber->get('name'));
-                        $phoneNumber->set('hash', $hash);
                         $phoneNumber->set('name', 'ERASED:' . $phoneNumber->id);
                         $this->getEntityManager()->saveEntity($phoneNumber);
                     }
