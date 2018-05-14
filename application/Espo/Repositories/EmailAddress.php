@@ -471,6 +471,9 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         if (!$emailAddressNew) {
                             $emailAddressNew = $this->get();
                             $emailAddressNew->set('name', $emailAddressValue);
+                            if ($entity->has('emailAddressIsOptedOut')) {
+                                $emailAddressNew->set('optOut', !!$entity->get('emailAddressIsOptedOut'));
+                            }
                             $this->save($emailAddressNew);
                             $isNewEmailAddress = true;
                         }
@@ -484,6 +487,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         }
                         $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew);
 
+                        if ($entity->has('emailAddressIsOptedOut')) {
+                            $this->markAddressOptedOut($emailAddressValue, !!$entity->get('emailAddressIsOptedOut'));
+                        }
+
                         $query = "
                             UPDATE entity_email_address
                             SET `primary` = 1
@@ -494,6 +501,14 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         ";
                         $sth = $pdo->prepare($query);
                         $sth->execute();
+                    } else {
+                        if (
+                            $entity->has('emailAddressIsOptedOut') && $entity->hasFetched('emailAddressIsOptedOut')
+                            &&
+                            $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
+                        ) {
+                            $this->markAddressOptedOut($emailAddressValue, !!$entity->get('emailAddressIsOptedOut'));
+                        }
                     }
                 } else {
                     $emailAddressValueOld = $entity->getFetched('emailAddress');
@@ -510,5 +525,14 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
     protected function checkChangeIsForbidden($entity, $excudeEntity)
     {
         return !$this->getInjection('aclManager')->getImplementation('EmailAddress')->checkEditInEntity($this->getInjection('user'), $entity, $excudeEntity);
+    }
+
+    public function markAddressOptedOut($address, $isOptedOut = true)
+    {
+        $emailAddress = $this->getByAddress($address);
+        if ($emailAddress) {
+            $emailAddress->set('optOut', !!$isOptedOut);
+            $this->save($emailAddress);
+        }
     }
 }

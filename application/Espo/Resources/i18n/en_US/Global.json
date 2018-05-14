@@ -315,6 +315,7 @@
         "assignedUsers": "Assigned Users",
         "emailAddress": "Email",
         "emailAddressData": "Email Address Data",
+        "emailAddressIsOptedOut": "Email Address is Opted-Out",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",
         "createdAt": "Created At",
