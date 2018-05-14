@@ -13,15 +13,20 @@
     },
     "labels": {
         "Create EmailTemplate": "Create Email Template",
-        "Info": "Info"
+        "Info": "Info",
+        "Available placeholders": "Available placeholders"
     },
     "messages": {
-        "infoText": "Available variables:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
+        "infoText": "Available placeholders:\n\n{optOutUrl} &#8211; URL for an unsubsbribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
     },
     "tooltips": {
         "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
     },
     "presetFilters": {
         "actual": "Actual"
+    },
+    "placeholderTexts": {
+        "optOutUrl": "URL for an unsubsbribe link",
+        "optOutLink": "an unsubscribe link"
     }
 }

@@ -24,5 +24,6 @@
   "boolFilterList": ["onlyMy"],
   "filterList": [
     "actual"
-  ]
+  ],
+  "placeholderList": ["optOutUrl", "optOutLink"]
 }
