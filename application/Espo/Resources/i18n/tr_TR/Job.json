@@ -5,9 +5,10 @@
     "attempts": "Kalan hak",
     "failedAttempts": "Başarısız denemeler",
     "serviceName": "Servis",
-    "method": "Metod",
+    "methodName": "Metod",
     "scheduledJob": "İş planla",
-    "data": "Veri"
+    "data": "Veri",
+    "method": "Metod"
   },
   "options": {
     "status": {

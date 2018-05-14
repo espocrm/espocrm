@@ -1,6 +1,6 @@
 {
   "fields": {
-    "useCustomFieldList": "Özel Alan Listesi",
-    "fieldList": "Alan Listesi"
+    "fieldList": "Alan Listesi",
+    "exportAllFields": "Tüm alanları dışa aktar"
   }
 }

@@ -9,7 +9,6 @@
     "name": "İsim",
     "emailAddress": "Eposta",
     "title": "Başlık",
-    "website": "Website",
     "phoneNumber": "Telefon ",
     "accountName": "Hesap Adı",
     "doNotCall": "Arama Yapma",
@@ -55,7 +54,6 @@
       "Existing Customer": "Varolan Müşteri",
       "Partner": "Ortak",
       "Public Relations": "Halkla İlişkiler",
-      "Web Site": "Web Site",
       "Campaign": "Kampanya",
       "Other": "Diğer"
     }

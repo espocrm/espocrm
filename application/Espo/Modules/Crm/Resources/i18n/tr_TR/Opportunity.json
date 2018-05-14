@@ -26,16 +26,14 @@
     "stage": {
       "Prospecting": "Araştırma",
       "Qualification": "Yeterlilik",
-      "Proposal": "Proposal",
-      "Negotiation": "Görüşme",
       "Needs Analysis": "Analiz Yapılmalı",
       "Value Proposition": "Değer Önerisi",
       "Id. Decision Makers": "Id. Karar Vericiler",
       "Perception Analysis": "Algı Analizi",
-      "Proposal/Price Quote": "Proposal/Price Quote",
       "Negotiation/Review": "Görüşme/İnceleme",
       "Closed Won": "Kapalı Kazanç",
-      "Closed Lost": "Kapalı Kayıp"
+      "Closed Lost": "Kapalı Kayıp",
+      "Negotiation": "Görüşme"
     }
   },
   "labels": {

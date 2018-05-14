@@ -14,7 +14,8 @@
   "links": {
     "queueItem": "Sıra Öğesi",
     "parent": "Üst",
-    "object": "Nesne"
+    "object": "Nesne",
+    "campaign": "Kampanya"
   },
   "options": {
     "action": {

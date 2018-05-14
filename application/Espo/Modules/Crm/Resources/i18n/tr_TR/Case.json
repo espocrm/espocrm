@@ -9,11 +9,10 @@
     "priority": "Öncelik",
     "type": "Tür",
     "description": "Açıklama",
-    "inboundEmail": "Gelen E-posta",
-    "lead": "Müşteri Potansiyeli"
+    "lead": "Müşteri Potansiyeli",
+    "attachments": "Ekler"
   },
   "links": {
-    "inboundEmail": "Gelen E-posta",
     "account": "Hesap",
     "contact": "İletişim (Birincil)",
     "Contacts": "İletişim kişileri",
@@ -22,7 +21,8 @@
     "tasks": "Görevler",
     "emails": "E-postalar ",
     "articles": "Bilgi Bankası Makaleleri",
-    "lead": "Müşteri Potansiyeli"
+    "lead": "Müşteri Potansiyeli",
+    "attachments": "Ekler"
   },
   "options": {
     "status": {
@@ -35,7 +35,6 @@
     },
     "priority": {
       "Low": "Düşük",
-      "Normal": "Normal",
       "High": "Yüksek",
       "Urgent": "Acil"
     },

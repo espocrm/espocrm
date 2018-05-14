@@ -19,7 +19,6 @@
   "options": {
     "type": {
       "Email": "E-posta   ",
-      "Web": "Web",
       "Television": "Televizyon!",
       "Radio": "radyo",
       "Newsletter": "Newsletter (Bülten)"

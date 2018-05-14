@@ -4,8 +4,7 @@
     "ipAddress": "IP Adresi",
     "lastAccess": "Son Erişim Tarihi",
     "createdAt": "Giriş Tarihi",
-    "isActive": "Aktif",
-    "portal": "Portal"
+    "isActive": "Aktif"
   },
   "links": {
     "actionHistoryRecords": "Eylem Tarihçesi"

@@ -6,7 +6,9 @@
     "teams": "Takımlar",
     "users": "Kullanıcılar",
     "portals": "Portallar",
-    "type": "Tip"
+    "type": "Tip",
+    "data": "Veri",
+    "number": "Numara"
   },
   "filters": {
     "all": "Hepsi",
