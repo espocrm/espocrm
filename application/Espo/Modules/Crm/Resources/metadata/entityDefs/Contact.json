@@ -1,7 +1,8 @@
 {
     "fields": {
         "name": {
-            "type": "personName"
+            "type": "personName",
+            "isPersonalData": true
         },
         "salutationName": {
             "type": "enum",
@@ -71,18 +72,21 @@
             "type": "text"
         },
         "emailAddress": {
-            "type": "email"
+            "type": "email",
+            "isPersonalData": true
         },
         "phoneNumber": {
             "type": "phone",
             "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
+            "defaultType": "Mobile",
+            "isPersonalData": true
         },
         "doNotCall": {
             "type": "bool"
         },
         "address": {
-            "type": "address"
+            "type": "address",
+            "isPersonalData": true
         },
         "addressStreet": {
             "type": "text",

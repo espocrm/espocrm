@@ -102,6 +102,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.type = model.getFieldType(this.field);
                 }
 
+                if (
+                    this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
+                    &&
+                    this.getMetadata().get(['fields', this.type, 'personalData'])
+                ) {
+                    this.hasPersonalData = true;
+                }
+
                 Promise.race([
                     new Promise(function (resolve) {
                         if (this.isNew) {
@@ -137,6 +145,13 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         this.paramList.push(o);
                     }, this);
 
+                    if (this.hasPersonalData) {
+                        this.paramList.push({
+                            name: 'isPersonalData',
+                            type: 'bool'
+                        });
+                    }
+
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
@@ -159,7 +174,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         rows: 1
                     });
 
+                    if (this.hasPersonalData) {
+                        this.createFieldView('bool', 'isPersonalData', null, {});
+                    }
 
+                    this.createFieldView('text', 'tooltipText', null, {
+                        trim: true,
+                        rows: 1
+                    });
 
                     this.hasDynamicLogicPanel = false;
                     if (

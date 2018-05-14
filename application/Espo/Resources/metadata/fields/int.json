@@ -30,5 +30,6 @@
          "type":"bool"
       }
    ],
-   "filter": true
+   "filter": true,
+   "personalData": true
 }

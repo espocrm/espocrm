@@ -68,6 +68,13 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 phoneNumberData = this.model.get(this.dataFieldName) || false;
             }
 
+            if (phoneNumberData) {
+                phoneNumberData = Espo.Utils.clone(phoneNumberData);
+                phoneNumberData.forEach(function (item) {
+                    item.erased = item.phoneNumber.indexOf(this.erasedPlaceholder) === 0
+                }, this);
+            }
+
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
                  phoneNumberData = [{
                     phoneNumber: this.model.get(this.name),
@@ -77,10 +84,18 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 }];
             }
 
-            return _.extend({
+            var data = _.extend({
                 phoneNumberData: phoneNumberData,
                 doNotCall: this.model.get('doNotCall')
             }, Dep.prototype.data.call(this));
+
+            if (this.mode === 'detail' || this.mode === 'list') {
+                if (this.model.get(this.name)) {
+                    data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
+                }
+            }
+
+            return data;
         },
 
         events: {
@@ -220,6 +235,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                     this.reRender();
                 }, this);
             }
+
+            this.erasedPlaceholder = 'ERASED:';
         },
 
         fetchPhoneNumberData: function () {

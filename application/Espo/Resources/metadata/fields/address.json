@@ -40,5 +40,6 @@
    "notMergeable":true,
    "notCreatable": false,
    "filter": true,
-   "skipOrmDefs": true
+   "skipOrmDefs": true,
+   "personalData": true
 }

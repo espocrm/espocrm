@@ -245,6 +245,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
             }
+
+            if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
+                if (this.getAcl().get('dataPrivacyPermission') !== 'no') {
+                    this.dropdownItemList.push({
+                        'label': 'View Personal Data',
+                        'name': 'viewPersonalData'
+                    });
+                }
+            }
         },
 
         hideActionItem: function (name) {
@@ -872,6 +881,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     remove: false,
                 });
             }
+        },
+
+        actionViewPersonalData: function () {
+            this.createView('viewPersonalData', 'views/personal-data/modals/personal-data', {
+                model: this.model
+            }, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'erase', function () {
+                    this.clearView('viewPersonalData');
+                    this.model.fetch();
+                }, this);
+            });
         },
 
         actionPrintPdf: function () {

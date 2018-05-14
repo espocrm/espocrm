@@ -32,5 +32,6 @@
       "type": "belongsTo",
       "entity": "Attachment",
       "skipOrmDefs": true
-   }
+   },
+   "personalData": true
 }

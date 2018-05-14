@@ -222,6 +222,7 @@ class MassEmail extends \Espo\Services\Record
         foreach ($entityList as $target) {
             $emailAddress = $target->get('emailAddress');
             if (!$target->get('emailAddress')) continue;
+            if (strpos($emailAddress, 'ERASED:') === 0) continue;
             $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
             if ($emailAddressRecord) {
                 if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {

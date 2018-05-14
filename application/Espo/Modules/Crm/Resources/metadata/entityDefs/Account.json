@@ -10,7 +10,8 @@
             "type": "url"
         },
         "emailAddress": {
-            "type": "email"
+            "type": "email",
+            "isPersonalData": true
         },
         "phoneNumber": {
             "type": "phone",

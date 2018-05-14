@@ -227,7 +227,10 @@
         "New notifications": "New notifications",
         "Manage Categories": "Manage Categories",
         "Manage Folders": "Manage Folders",
-        "Convert to": "Convert to"
+        "Convert to": "Convert to",
+        "View Personal Data": "View Personal Data",
+        "Personal Data": "Personal Data",
+        "Erase": "Erase"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -283,7 +286,8 @@
         "massFollowResultSingle": "{count} record now is followed",
         "massUnfollowResultSingle": "{count} record now is not followed",
         "massFollowZeroResult": "Nothing got followed",
-        "massUnfollowZeroResult": "Nothing got unfollowed"
+        "massUnfollowZeroResult": "Nothing got unfollowed",
+        "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?"
     },
     "boolFilters": {
         "onlyMy": "Only My",

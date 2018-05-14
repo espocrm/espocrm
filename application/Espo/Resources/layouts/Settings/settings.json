@@ -6,7 +6,7 @@
             [{"name": "exportDisabled"}, {"name": "globalSearchEntityList"}],
             [{"name": "followCreatedEntities"}, {"name": "b2cMode"}],
             [{"name": "aclStrictMode"}, {"name": "aclAllowDeleteCreated"}],
-            [{"name": "textFilterUseContainsForVarchar"}, false]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "emailAddressIsOptedOutByDefault"}]
         ]
     },
     {

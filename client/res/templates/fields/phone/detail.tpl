@@ -1,7 +1,15 @@
 {{#if phoneNumberData}}
     {{#each phoneNumberData}}
         <div>
-            {{#if ../doNotCall}}<s>{{/if}}<a href="tel:{{phoneNumber}}" data-phone-number="{{phoneNumber}}" data-action="dial">{{phoneNumber}}</a>{{#if ../doNotCall}}</s>{{/if}}
+            {{#if ../doNotCall}}<s>{{/if}}
+            {{#unless erased}}
+            <a href="tel:{{phoneNumber}}" data-phone-number="{{phoneNumber}}" data-action="dial">
+            {{/unless}}
+            {{phoneNumber}}
+            {{#unless erased}}
+            </a>
+            {{/unless}}
+            {{#if ../doNotCall}}</s>{{/if}}
             <span class="text-muted small">({{translateOption type scope=../../scope field=../../name}})</span>
         </div>
     {{/each}}

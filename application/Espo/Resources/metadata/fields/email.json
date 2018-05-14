@@ -13,5 +13,6 @@
    "filter": true,
    "fieldDefs":{
       "notStorable":true
-   }
+   },
+   "personalData": true
 }

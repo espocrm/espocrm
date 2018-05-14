@@ -36,5 +36,6 @@
          "readOnly": true
       }
    },
-   "filter": true
+   "filter": true,
+   "personalData": true
 }

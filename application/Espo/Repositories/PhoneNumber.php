@@ -41,33 +41,40 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::init();
         $this->addDependency('user');
+        $this->addDependency('acl');
+        $this->addDependency('aclManager');
     }
 
-    public function getIds($arr = array())
+    protected function getAcl()
+    {
+        return $this->getInjection('acl');
+    }
+
+    public function getIds($numberList = [])
     {
         $ids = array();
-        if (!empty($arr)) {
-            $a = array_map(function ($item) {
-                    return $item;
-                }, $arr);
-            $phoneNumbers = $this->where(array(
-                'name' => array_map(function ($item) {
-                    return $item;
-                }, $arr)
-            ))->find();
+        if (!empty($numberList)) {
+            $phoneNumbers = $this->where([
+                [
+                    'name' => $numberList,
+                    'hash' => null
+                ]
+            ])->find();
+
             $ids = array();
             $exist = array();
             foreach ($phoneNumbers as $phoneNumber) {
                 $ids[] = $phoneNumber->id;
                 $exist[] = $phoneNumber->get('name');
             }
-            foreach ($arr as $phone) {
-                if (empty($phone)) {
+            foreach ($numberList as $number) {
+                $number = trim($number);
+                if (empty($number)) {
                     continue;
                 }
-                if (!in_array($phone, $exist)) {
+                if (!in_array($number, $exist)) {
                     $phoneNumber = $this->get();
-                    $phoneNumber->set('name', $phone);
+                    $phoneNumber->set('name', $number);
                     $this->save($phoneNumber);
                     $ids[] = $phoneNumber->id;
                 }
@@ -110,6 +117,42 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
     public function getByNumber($number)
     {
         return $this->where(array('name' => $number))->findOne();
+    }
+
+    public function getEntityListByPhoneNumberId($phoneNumberId, $exceptionEntity = null)
+    {
+        $entityList = [];
+
+        $pdo = $this->getEntityManager()->getPDO();
+        $sql = "
+            SELECT entity_phone_number.entity_type AS 'entityType', entity_phone_number.entity_id AS 'entityId'
+            FROM entity_phone_number
+            WHERE
+                entity_phone_number.phone_number_id = ".$pdo->quote($phoneNumberId)." AND
+                entity_phone_number.deleted = 0
+        ";
+        if ($exceptionEntity) {
+            $sql .= "
+                AND (
+                    entity_phone_number.entity_type <> " .$pdo->quote($exceptionEntity->getEntityType()) . "
+                    OR
+                    entity_phone_number.entity_id <> " .$pdo->quote($exceptionEntity->id) . "
+                )
+            ";
+        }
+
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        while ($row = $sth->fetch()) {
+            if (empty($row['entityType']) || empty($row['entityId'])) continue;
+            if (!$this->getEntityManager()->hasRepository($row['entityType'])) continue;
+            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['entityId']);
+            if ($entity) {
+                $entityList[] = $entity;
+            }
+        }
+
+        return $entityList;
     }
 
     public function getEntityByPhoneNumberId($phoneNumberId, $entityType = null)
@@ -167,7 +210,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
 
                 $hash = array();
                 foreach ($phoneNumberData as $row) {
-                    $key = $row->phoneNumber;
+                    $key = trim($row->phoneNumber);
                     if (!empty($key)) {
                         $hash[$key] = array(
                             'primary' => $row->primary ? true : false,
@@ -182,7 +225,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                     if (!empty($key)) {
                         $hashPrev[$key] = array(
                             'primary' => $row->primary ? true : false,
-                            'type' => $row->type,
+                            'type' => $row->type
                         );
                     }
                 }
@@ -192,6 +235,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 $toUpdate = array();
                 $toRemove = array();
 
+                $revertData = [];
 
                 foreach ($hash as $key => $data) {
                     $new = true;
@@ -243,17 +287,16 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 foreach ($toUpdate as $number) {
                     $phoneNumber = $this->getByNumber($number);
                     if ($phoneNumber) {
-                        $skipSave = false;
-                        if (!$this->getInjection('user')->isAdmin()) {
-                            if ($this->getEntityByPhoneNumberId($phoneNumber->id, 'User')) {
-                                $skipSave = true;
-                            }
-                        }
+                        $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
                         if (!$skipSave) {
                             $phoneNumber->set(array(
                                 'type' => $hash[$number]['type'],
                             ));
                             $this->save($phoneNumber);
+                        } else {
+                            $revertData[$number] = [
+                                'type' => $phoneNumber->get('type')
+                            ];
                         }
                     }
                 }
@@ -269,11 +312,18 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                         ));
                         $this->save($phoneNumber);
                     } else {
-                        if ($phoneNumber->get('type') != $hash[$number]['type']) {
-                            $phoneNumber->set(array(
-                                'type' => $hash[$number]['type'],
-                            ));
-                            $this->save($phoneNumber);
+                        $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
+                        if (!$skipSave) {
+                            if ($phoneNumber->get('type') != $hash[$number]['type']) {
+                                $phoneNumber->set(array(
+                                    'type' => $hash[$number]['type'],
+                                ));
+                                $this->save($phoneNumber);
+                            }
+                        } else {
+                            $revertData[$number] = [
+                                'type' => $phoneNumber->get('type')
+                            ];
                         }
                     }
 
@@ -321,7 +371,20 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                         $sth->execute();
                     }
                 }
+
+                if (!empty($revertData)) {
+                    foreach ($phoneNumberData as $row) {
+                        if (!empty($revertData[$row->phoneNumber])) {
+                            $row->type = $revertData[$row->phoneNumber]['type'];
+                        }
+                    }
+                    $entity->set('phoneNumberData', $phoneNumberData);
+                }
+
             } else {
+                if (!$entity->has('phoneNumber')) {
+                    return;
+                }
                 $entityRepository = $this->getEntityManager()->getRepository($entity->getEntityName());
                 if (!empty($phoneNumberValue)) {
                     if ($phoneNumberValue !== $entity->getFetched('phoneNumber')) {
@@ -370,5 +433,9 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
     }
-}
 
+    protected function checkChangeIsForbidden($entity, $excudeEntity)
+    {
+        return !$this->getInjection('aclManager')->getImplementation('PhoneNumber')->checkEditInEntity($this->getInjection('user'), $entity, $excudeEntity);
+    }
+}

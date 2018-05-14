@@ -97,7 +97,8 @@
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",
-        "tabIconsDisabled": "Disable tab icons"
+        "tabIconsDisabled": "Disable tab icons",
+        "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out"
     },
     "options": {
         "weekStart": {
@@ -150,7 +151,8 @@
         "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
         "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
         "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
-        "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously."
+        "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
+        "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out."
     },
     "labels": {
         "System": "System",
