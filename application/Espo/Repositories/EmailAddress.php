@@ -249,7 +249,10 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
 
     public function storeEntityEmailAddress(Entity $entity)
     {
-            $emailAddressValue = trim($entity->get('emailAddress'));
+            $emailAddressValue = $entity->get('emailAddress');
+            if (is_string($emailAddressValue)) {
+                $emailAddressValue = trim($emailAddressValue);
+            }
             $emailAddressData = null;
 
             if ($entity->has('emailAddressData')) {
@@ -275,6 +278,27 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                             'invalid' => !empty($row->invalid) ? true : false,
                             'emailAddress' => trim($row->emailAddress)
                         ];
+                    }
+                }
+
+                if (
+                    $entity->has('emailAddressIsOptedOut')
+                    &&
+                    (
+                        $entity->isNew()
+                        ||
+                        (
+                            $entity->hasFetched('emailAddressIsOptedOut')
+                            &&
+                            $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
+                        )
+                    )
+                ) {
+                    if ($emailAddressValue) {
+                        $key = strtolower($emailAddressValue);
+                        if ($key && isset($hash[$key])) {
+                            $hash[$key]['optOut'] = $entity->get('emailAddressIsOptedOut');
+                        }
                     }
                 }
 
@@ -503,9 +527,17 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
                         $sth->execute();
                     } else {
                         if (
-                            $entity->has('emailAddressIsOptedOut') && $entity->hasFetched('emailAddressIsOptedOut')
+                            $entity->has('emailAddressIsOptedOut')
                             &&
-                            $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
+                            (
+                                $entity->isNew()
+                                ||
+                                (
+                                    $entity->hasFetched('emailAddressIsOptedOut')
+                                    &&
+                                    $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
+                                )
+                            )
                         ) {
                             $this->markAddressOptedOut($emailAddressValue, !!$entity->get('emailAddressIsOptedOut'));
                         }
