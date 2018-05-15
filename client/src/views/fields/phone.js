@@ -69,7 +69,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             if (phoneNumberData) {
-                phoneNumberData = Espo.Utils.clone(phoneNumberData);
+                phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
                 phoneNumberData.forEach(function (item) {
                     item.erased = item.phoneNumber.indexOf(this.erasedPlaceholder) === 0
                 }, this);
