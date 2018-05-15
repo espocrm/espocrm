@@ -34,7 +34,8 @@
          "readOnly": true,
          "layoutListDisabled": true,
          "provider": "Google",
-         "height": 300
+         "height": 300,
+         "exportDisabled": true
       }
    },
    "notMergeable":true,

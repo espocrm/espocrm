@@ -1543,16 +1543,14 @@ class Record extends \Espo\Core\Services\Base
         if (!$isExportAllFields) {
             return true;
         }
-        $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
-        if (!$isNotStorable) {
+
+        if (!$entity->getAttributeParam($attribute, 'notStorable')) {
             return true;
         } else {
-            if (in_array($attribute, $this->exportAllowedAttributeList)) {
-                return true;
+            if ($entity->getAttributeParam($attribute, 'notExportable')) {
+                return false;
             }
-            if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
-               return true;
-            }
+            return true;
         }
     }
 
@@ -1705,7 +1703,6 @@ class Record extends \Espo\Core\Services\Base
         if (is_null($attributeList)) {
             $attributeList = [];
         }
-
 
         $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
