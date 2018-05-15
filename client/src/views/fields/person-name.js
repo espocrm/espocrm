@@ -54,12 +54,12 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             return data;
         },
 
-        init: function () {
+        setup: function () {
+            Dep.prototype.setup.call(this);
             var ucName = Espo.Utils.upperCaseFirst(this.name)
             this.salutationField = 'salutation' + ucName;
             this.firstField = 'first' + ucName;
             this.lastField = 'last' + ucName;
-            Dep.prototype.init.call(this);
         },
 
         afterRender: function () {
@@ -122,7 +122,6 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data[this.firstField] = this.$first.val().trim();
             data[this.lastField] = this.$last.val().trim();
             return data;
-        },
+        }
     });
 });
-
