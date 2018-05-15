@@ -253,7 +253,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         pushAttachment: function (attachment, link) {
-            var arr = _.clone(this.model.get(this.idsName));
+            var arr = _.clone(this.model.get(this.idsName) || []);
 
             arr.push(attachment.id);
             this.model.set(this.idsName, arr);
