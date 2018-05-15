@@ -77,7 +77,11 @@ class Activities extends \Espo\Core\Controllers\Base
 
             $resultList = [];
             foreach ($userIdList as $userId) {
-                $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
+                try {
+                    $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
+                } catch (\Exception $e) {
+                    continue;
+                }
                 foreach ($userResultList as $item) {
                     $item['userId'] = $userId;
                     $resultList[] = $item;
