@@ -16,6 +16,7 @@
       "isOptedOut":{
          "type": "bool",
          "notStorable": true,
+         "layoutDetailDisabled": true,
          "customizationDefaultDisabled": true,
          "customizationReadOnlyDisabled": true
       }
