@@ -242,9 +242,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         initSortable: function () {
             var $item = this.$listKanban.find('.item');
-
             var $list = this.$listKanban.find('.group-column-list');
-
 
             $list.sortable({
                 connectWith: '.group-column-list',
@@ -486,7 +484,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             if (!group) return;
-
             if (o.isDrop) return;
 
             for (var i in this.groupDataList) {
@@ -501,7 +498,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             var $item = this.$el.find('.item[data-id="'+id+'"]');
-            var $column = this.$el.find('.group-column[data-name="'+group+'"]');
+            var $column = this.$el.find('.group-column[data-name="'+group+'"] .group-column-list');
 
             if ($column.size()) {
                 $column.prepend($item);
