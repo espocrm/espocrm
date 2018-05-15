@@ -105,7 +105,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             }
 
             if (emailAddressData) {
-                emailAddressData = Espo.Utils.clone(emailAddressData);
+                emailAddressData = Espo.Utils.cloneDeep(emailAddressData);
                 emailAddressData.forEach(function (item) {
                     item.erased = item.emailAddress.indexOf(this.erasedPlaceholder) === 0
                 }, this);

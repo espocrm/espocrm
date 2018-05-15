@@ -191,9 +191,14 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;
-            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
+            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || '';
 
             data.accountIsInactive = (this.columns[this.primaryId] || {}).isInactive || false;
+
+            if (!this.primaryId) {
+                data[this.primaryRoleFieldName] = null;
+                data.accountIsInactive = null;
+            }
 
             return data;
         }
