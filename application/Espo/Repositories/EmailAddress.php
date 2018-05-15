@@ -554,9 +554,9 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
             }
     }
 
-    protected function checkChangeIsForbidden($entity, $excudeEntity)
+    protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
-        return !$this->getInjection('aclManager')->getImplementation('EmailAddress')->checkEditInEntity($this->getInjection('user'), $entity, $excudeEntity);
+        return !$this->getInjection('aclManager')->getImplementation('EmailAddress')->checkEditInEntity($this->getInjection('user'), $entity, $excludeEntity);
     }
 
     public function markAddressOptedOut($address, $isOptedOut = true)

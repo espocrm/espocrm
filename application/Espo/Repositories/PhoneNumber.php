@@ -434,8 +434,8 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
             }
     }
 
-    protected function checkChangeIsForbidden($entity, $excudeEntity)
+    protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
-        return !$this->getInjection('aclManager')->getImplementation('PhoneNumber')->checkEditInEntity($this->getInjection('user'), $entity, $excudeEntity);
+        return !$this->getInjection('aclManager')->getImplementation('PhoneNumber')->checkEditInEntity($this->getInjection('user'), $entity, $excludeEntity);
     }
 }
