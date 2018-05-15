@@ -55,7 +55,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         },
 
         init: function () {
-            var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name)
+            var ucName = Espo.Utils.upperCaseFirst(this.name)
             this.salutationField = 'salutation' + ucName;
             this.firstField = 'first' + ucName;
             this.lastField = 'last' + ucName;
