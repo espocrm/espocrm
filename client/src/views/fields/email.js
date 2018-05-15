@@ -420,6 +420,8 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
 
             if (adderssData.length) {
                 data[this.name] = adderssData[0].emailAddress;
+            } else {
+                data[this.isOptedOutFieldName] = null;
             }
 
             return data;
