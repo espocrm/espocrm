@@ -25,10 +25,18 @@
   }
 }
 
-body > #header ul.tabs > li > a > span.full-label,
-body > #header ul.tabs > li.more > ul > li > a > span.full-label, {
+body > #header ul.tabs > li > a > span.full-label {
     position: absolute;
     margin-left: 28px;
+}
+
+body > #header ul.tabs > li.more > ul > li > a > span.full-label {
+    padding-left: 28px;
+    position: static;
+}
+
+body > #header ul.tabs > li.more > ul > li > a > span.short-label, {
+    position: absolute;
 }
 
 body > #header ul.tabs > li > a > span.short-label > .short-label-text {

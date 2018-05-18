@@ -36,7 +36,6 @@
                 {{#if isInMore}}
                     <li data-name="{{name}}" class="in-more tab">
                         <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
-                            <span class="full-label">{{label}}</span>
                             <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconClass}}
                                 <span class="{{iconClass}}"></span>
@@ -47,6 +46,7 @@
                                 <span class="short-label-text">&nbsp;</span>
                                 {{/if}}
                             </span>
+                            <span class="full-label">{{label}}</span>
                         </a>
                     </li>
                 {{/if}}
