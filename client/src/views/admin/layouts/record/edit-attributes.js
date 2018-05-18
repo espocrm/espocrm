@@ -33,7 +33,6 @@ Espo.define('views/admin/layouts/record/edit-attributes', 'views/record/base', f
         template: 'admin/layouts/record/edit-attributes',
 
         data: function () {
-            console.log(this.getAttributeDataList());
             return {
                 attributeDataList: this.getAttributeDataList()
             };
