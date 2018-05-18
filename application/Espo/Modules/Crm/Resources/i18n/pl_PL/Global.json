@@ -102,9 +102,8 @@
     "addressMap": "Mapa",
     "shippingAddressCity": "Miasto (dostawy)",
     "shippingAddressStreet": "Ulica (dostawy)",
-    "shippingAddressCountry": "Country (Shipping)",
-    "shippingAddressState": "State (Shipping)",
-    "shippingAddressPostalCode": "Kod pocztowy (dostawy)"
+    "shippingAddressPostalCode": "Kod pocztowy (dostawy)",
+    "shippingAddressMap": "Mapa (Dostawa)"
   },
   "options": {
     "reminderTypes": {

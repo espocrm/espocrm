@@ -3,8 +3,7 @@
     "name": "Nazwa",
     "roles": "Rola",
     "assignmentPermission": "Uprawnienia przypisania",
-    "userPermission": "Uprawnienia użytkownika",
-    "portalPermission": "Portal Permission"
+    "userPermission": "Uprawnienia użytkownika"
   },
   "links": {
     "users": "Użytkownik",
@@ -17,9 +16,7 @@
   },
   "labels": {
     "Access": "Dostęp",
-    "Create Role": "Utwórz Role ",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
+    "Create Role": "Utwórz Role "
   },
   "options": {
     "accessList": {
@@ -31,7 +28,6 @@
       "all": "wszystko",
       "team": "zespół",
       "account": "Klient",
-      "contact": "contact",
       "own": "własny",
       "no": "nie",
       "yes": "tak",
@@ -42,7 +38,6 @@
     "read": "Przeczytany",
     "edit": "Edytuj",
     "delete": "Usuń",
-    "stream": "Stream",
     "create": "Utwórz"
   },
   "messages": {

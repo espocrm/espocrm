@@ -1,5 +1,15 @@
 {
-    "labels": {
-        "Create {entityType}": "Utwórz {entityTypeTranslated}"
-    }
+  "fields": {
+    "billingAddress": "Adres rozliczeniowy",
+    "shippingAddress": "Adres dostawy",
+    "website": "Strona internetowa"
+  },
+  "links": {
+    "meetings": "Spotkania",
+    "calls": "Połączenia",
+    "tasks": "Zadania"
+  },
+  "labels": {
+    "Create {entityType}": "Utwórz {entityTypeTranslated}"
+  }
 }

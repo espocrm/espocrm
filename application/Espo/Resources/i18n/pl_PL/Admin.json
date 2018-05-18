@@ -2,10 +2,8 @@
   "labels": {
     "Enabled": "Włączony",
     "Disabled": "Wyłączony",
-    "System": "System",
     "Users": "Użytkownicy",
     "Email": "E-mail",
-    "Data": "Data",
     "Customization": "Dostosowywanie",
     "Available Fields": "Dostępne Pola",
     "Layout": "Układ",
@@ -19,7 +17,6 @@
     "Rebuild": "Przebuduj",
     "Teams": "Zespoły",
     "Roles": "Role",
-    "Portal": "Portal",
     "Portals": "Portale",
     "Portal Roles": "Role w Portalu",
     "Outbound Emails": "Poczta Wychodząca",
@@ -27,7 +24,6 @@
     "Personal Email Accounts": "Osobiste konta pocztowe",
     "Inbound Emails": "Wiadomości przychodzące",
     "Email Templates": "Szablony wiadomości",
-    "Import": "Import",
     "Layout Manager": "Menadżer Widoku",
     "User Interface": "Interfejs Użytkonika",
     "Auth Tokens": "Tokeny autoryzacji",
@@ -53,7 +49,8 @@
     "Notifications": "Powiadomienia",
     "Jobs": "Zadania",
     "Reset to Default": "Przywróć domyślne",
-    "Email Filters": "Filtry wiadomości"
+    "Email Filters": "Filtry wiadomości",
+    "Portal Users": "Użytkownicy portali"
   },
   "layouts": {
     "list": "Lista",
@@ -62,7 +59,11 @@
     "detailSmall": "Detale (Mała)",
     "filters": "Filtry Wyszukiwania",
     "massUpdate": "Masowa aktualizacja",
-    "relationships": "Relacje"
+    "relationships": "Relacje",
+    "sidePanelsDetail": "Panel boczny (Detale)",
+    "sidePanelsEdit": "Panel boczny (Edycja)",
+    "sidePanelsDetailSmall": "Panel boczny (Detale Mała)",
+    "sidePanelsEditSmall": "Panel poczby (Edycja Mała)"
   },
   "fieldTypes": {
     "address": "Adres",
@@ -70,7 +71,7 @@
     "foreign": "Pole obce",
     "duration": "Czas",
     "password": "Hasło",
-    "parsonName": "Imię",
+    "personName": "Imię",
     "autoincrement": "Automatyczne uzupełnianie",
     "bool": "Wartość logiczna (Prawda / Fałsz)",
     "currency": "Waluta",
@@ -82,11 +83,9 @@
     "enumInt": "Wyliczenie - Liczby całkowite (Enum Integer)",
     "enumFloat": "Wyliczenie zmiennoprzecinkowe (Enum Float)",
     "float": "Liczba zmiennoprzecinkowa (Float)",
-    "int": "Liczba całkowita (Int)",
     "link": "Łącze",
     "linkMultiple": "Wielokrotne dowiązanie",
     "linkParent": "Dowiązanie rodzica",
-    "multienim": "Wielokrotne wyliczenie (Multienum)",
     "phone": "Telefon",
     "text": "Tekst",
     "url": "Strona Internetowa",
@@ -99,7 +98,9 @@
     "rangeFloat": "Zakres liczb rzeczywistych",
     "rangeCurrency": "Zakres waluty",
     "wysiwyg": "edytor wysiwyg",
-    "map": "Mapa"
+    "map": "Mapa",
+    "currencyConverted": "Obecny (Konwertowany)",
+    "int": "Liczba całkowita (Int)"
   },
   "fields": {
     "type": "Rodzaj",
@@ -117,7 +118,6 @@
     "max": "Maksymalnie",
     "translation": "Tłumaczenie",
     "previewSize": "Rozmiar podglądu",
-    "noEmptyString": "Bez pustych znaków",
     "defaultType": "Typ domyślny",
     "seeMoreDisabled": "Wyłącz przycinanie tekstu",
     "entityList": "Lista jednostek",
@@ -130,14 +130,16 @@
     "typeList": "Lista typów",
     "rows": "Ilość wierwszy w polu tekstowym",
     "lengthOfCut": "Długość cięcia",
-    "sourceList": "Lista źródłowa"
+    "sourceList": "Lista źródłowa",
+    "tooltipText": "Tekst w dymku podpowiedzi",
+    "prefix": "Prefiks",
+    "nextNumber": "Następny numer",
+    "disableFormatting": "Wyłącz formatowanie",
+    "dynamicLogicOptions": "Opcje warunku",
+    "readOnly": "Tylko do odczytu",
+    "noEmptyString": "Bez pustych znaków"
   },
   "messages": {
-    "upgradeVersion": "Twój EspoCRM jest aktualizowany do wersji <strong>{version}</strong>. To może chwilę czasu.",
-    "upgradeDone": "Twój CRM został zaaktualizowany do najnowszej wersji <strong>{version}</strong>. Odśwież swoją przeglądarke aby zobaczyć zmiany.",
-    "upgradeBackup": "Zalecamy abyś wykonał archiwizacje swoich danych, przed aktualizacją.",
-    "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia",
-    "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail.",
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
     "selectUpgradePackage": "Wypierz paczkę do aktualizacji",
     "downloadUpgradePackage": "Pobierz paczkę z aktualizacją <a href=\"{url}\">stąd</a>.",
@@ -145,7 +147,11 @@
     "selectExtensionPackage": "Wybierz paczkę rozszerzeń",
     "extensionInstalled": "Rozszerzenie {name} {version} zostało zainstalowane.",
     "installExtension": "Rozszerzenie {name} {version} jest gotowe do instalacji.",
-    "uninstallConfirmation": "Czy na pewno chcesz odinstalować to rozszerzenie?"
+    "upgradeVersion": "Twój EspoCRM jest aktualizowany do wersji <strong>{version}</strong>. To może chwilę czasu.",
+    "upgradeDone": "Twój CRM został zaaktualizowany do najnowszej wersji <strong>{version}</strong>. Odśwież swoją przeglądarke aby zobaczyć zmiany.",
+    "upgradeBackup": "Zalecamy abyś wykonał archiwizacje swoich danych, przed aktualizacją.",
+    "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia",
+    "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail."
   },
   "descriptions": {
     "settings": "Ustawienia systemu dla aplikacji.",
@@ -164,7 +170,6 @@
     "emailTemplates": "Szkice wiadomości dla poczty wychodzącej.",
     "import": "Importuj dane z pliku CSV.",
     "layoutManager": "Dostosuj interfejs (lista, detale, edycja, wyszukiwanie, masowa aktualizacja).",
-    "entityManager": "Utwórz własne jednostki, edytuj istniejące. Zarzącaj polami i relacjami.",
     "userInterface": "Konfiguruj UI (interfejs użytkownika).",
     "authTokens": "Aktywuj autoryzacje sesji. Adres IP oraz data ostaniego wejścia.",
     "authentication": "Ustawienia Autoryzacji.",
@@ -173,6 +178,7 @@
     "integrations": "Integracja z usługami dodatkowymi.",
     "notifications": "Ustawienia powiadomień wewnętrznych i email.",
     "inboundEmails": "Globalne ustawienia wiadomości przychodzących.",
+    "entityManager": "Utwórz własne jednostki, edytuj istniejące. Zarzącaj polami i relacjami.",
     "emailFilters": "Wiadomości które pasują do określonych kryteriów nie będą importowane."
   },
   "options": {
@@ -182,5 +188,10 @@
       "medium": "Średnie",
       "large": "Duże"
     }
+  },
+  "logicalOperators": {
+    "and": "ORAZ",
+    "or": "LUB",
+    "not": "NIE"
   }
 }

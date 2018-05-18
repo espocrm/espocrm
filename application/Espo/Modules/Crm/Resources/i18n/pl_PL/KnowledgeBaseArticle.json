@@ -1,11 +1,15 @@
 {
   "labels": {
     "Create KnowledgeBaseArticle": "Utwórz artykuł",
-    "Any": "Dowolny"
+    "Any": "Dowolny",
+    "Send in Email": "Wyślij w wiadomości",
+    "Move Up": "Przesuń w górę",
+    "Move Down": "Przesuń w dół",
+    "Move to Top": "Przesuń na wierzch",
+    "Move to Bottom": "Przesuń pod spód"
   },
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "type": "Typ",
     "attachments": "Załączniki",
     "publishDate": "Data publikacji",
@@ -32,10 +36,5 @@
     "type": {
       "Article": "Artykuł"
     }
-  },
-  "tooltips": {
-  },
-  "presetFilters": {
-    "published": "Published"
   }
 }

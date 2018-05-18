@@ -1,8 +1,6 @@
 {
   "fields": {
-    "name": "Temat",
     "parent": "Powiązanie",
-    "status": "Status",
     "dateSent": "Data wysłania",
     "from": "Od",
     "to": "Do",
@@ -16,7 +14,6 @@
     "attachments": "Załączniki",
     "selectTemplate": "Wybierz szkic wiadomości",
     "fromEmailAddress": "Z adresu",
-    "toEmailAddresses": "Do adresu",
     "emailAddress": "Adres e-mail",
     "deliveryDate": "Data dostarczenia",
     "account": "Klient",
@@ -27,11 +24,17 @@
     "isNotRead": "Nieprzeczytany",
     "isImportant": "Ważne",
     "isUsers": "Należy do użytkownika",
-    "inTrash": "W koszu"
+    "inTrash": "W koszu",
+    "name": "Temat",
+    "inboundEmails": "Konto grupowe",
+    "emailAccounts": "Konto osobiste",
+    "hasAttachment": "Załącznik"
   },
   "links": {
     "replied": "Odpowiedziano",
-    "replies": "Odpowiedzi"
+    "replies": "Odpowiedzi",
+    "inboundEmails": "Konto grupowe",
+    "emailAccounts": "Konto osobiste"
   },
   "options": {
     "status": {
@@ -66,7 +69,10 @@
     "Mark as Important": "Oznacz jako ważne",
     "Unmark Importance": "Oznacz jako normalne",
     "Move to Trash": "Przenieś do kosza",
-    "Retrieve from Trash": "Przywróć z kosza"
+    "Retrieve from Trash": "Przywróć z kosza",
+    "Move to Folder": "Przenieś do folderu",
+    "Filters": "Filtry",
+    "Folders": "Foldery"
   },
   "messages": {
     "noSmtpSetup": "Brak konfiguracji SMTP {link}.",
@@ -86,6 +92,7 @@
     "markAsNotRead": "Oznacz jako nieprzeczytane",
     "markAsImportant": "Oznacz jako ważne",
     "markAsNotImportant": "Oznacz jako normalne",
-    "moveToTrash": "Przenieś do kosza"
+    "moveToTrash": "Przenieś do kosza",
+    "moveToFolder": "Przenieś do folderu"
   }
 }

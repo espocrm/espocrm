@@ -12,6 +12,9 @@
     "posts": "Posty",
     "updates": "Aktualizacje"
   },
+  "messages": {
+    "writeMessage": "Tutaj wpisz swoją wiadomość"
+  },
   "options": {
     "targetType": {
       "self": "Do siebie",
@@ -20,8 +23,5 @@
       "all": "Do wszystkich użytkowników wewnętrznych",
       "portals": "Do wszystkich użytkowników portalu"
     }
-  },
-  "messages": {
-    "writeMessage": "Tutaj wpisz swoją wiadomość"
   }
 }

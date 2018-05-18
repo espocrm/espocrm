@@ -26,18 +26,15 @@
     "emailsPrimary": "Wiadomości (rozwinięte)",
     "targetLists": "Listy docelowe",
     "campaignLogRecords": "Log kampanii",
-    "campaign": "Kampania",
-    "portalUsers": "Portal Users"
+    "campaign": "Kampania"
   },
   "options": {
     "type": {
       "Customer": "Klient",
       "Investor": "Inwestor",
-      "Partner": "Partner",
       "Reseller": "Sprzedawca"
     },
     "industry": {
-      "Agriculture": "Agriculture",
       "Advertising": "Reklamy",
       "Apparel & Accessories": "Wystrój i akcesoria",
       "Automotive": "Motoryzacja",
@@ -55,23 +52,26 @@
       "Grocery": "Sklep spożywczy",
       "Healthcare": "Opieka zdrowotna",
       "Insurance": "Ubezpieczenia",
-      "Legal": "Legal",
-      "Manufacturing": "Manufacturing",
-      "Publishing": "Publishing",
-      "Real Estate": "Real Estate",
-      "Service": "Service",
       "Sports": "Sport",
-      "Software": "Software",
       "Technology": "Technologia",
       "Telecommunications": "Telekomunikacja",
       "Television": "Telewizja",
       "Transportation": "Transport",
-      "Venture Capital": "Venture Capital"
+      "Architecture": "Architektura",
+      "Defense": "Obrona",
+      "Creative": "Kreatywność",
+      "Culture": "Kultura",
+      "Consulting": "Konsulting",
+      "Hospitality": "Szpital",
+      "Mass Media": "Media",
+      "Mining": "Kopalnie",
+      "Music": "Muzyka",
+      "Support": "Wsparcie",
+      "Water": "Woda"
     }
   },
   "labels": {
-    "Create Account": "Utwórz Konto",
-    "Copy Billing": "Copy Billing"
+    "Create Account": "Utwórz Konto"
   },
   "presetFilters": {
     "customers": "Klienci",

@@ -14,8 +14,7 @@
     "description": "Opis ",
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
-    "targetList": "Lista docelowa",
-    "portalUser": "Portal User"
+    "targetList": "Lista docelowa"
   },
   "links": {
     "opportunities": "Szanse sprzedaży",
@@ -25,8 +24,7 @@
     "campaign": "Kampania",
     "account": "Konto (podstawowe)",
     "accounts": "Klienci",
-    "casesPrimary": "Cases (Primary)",
-    "portalUser": "Portal User"
+    "documents": "Dokumenty"
   },
   "labels": {
     "Create Contact": "Utwórz Kontakt"
@@ -38,9 +36,5 @@
       "Evaluator": "Oceniający",
       "Influencer": "Wpływający"
     }
-  },
-  "presetFilters": {
-    "portalUsers": "Portal Users",
-    "notPortalUsers": "Not Portal Users"
   }
 }

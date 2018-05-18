@@ -2,12 +2,10 @@
   "fields": {
     "name": "Nazwa",
     "description": "Opis",
-    "status": "Status",
     "type": "Typ",
     "startDate": "Data rozpoczęcia",
     "endDate": "Data zakończenia",
     "targetLists": "Listy docelowe",
-    "excludingTargetLists": "Excluding Target Lists",
     "sentCount": "Wysłano",
     "openedCount": "Otwarty",
     "clickedCount": "Kliknięte",
@@ -15,7 +13,6 @@
     "bouncedCount": "Odrzucone",
     "hardBouncedCount": "Twarde odrzucenie",
     "softBouncedCount": "Miękkie odrzucenie",
-    "leadCreatedCount": "Leads Created",
     "revenue": "Zwrot",
     "revenueConverted": "Zwrot (skonwertowany)",
     "budget": "Budżet",
@@ -23,12 +20,10 @@
   },
   "links": {
     "targetLists": "Listy docelowe",
-    "excludingTargetLists": "Excluding Target Lists",
     "accounts": "Klienci",
     "contacts": "Kontakty",
     "leads": "Potencjalne kontakty",
     "opportunities": "Szanse sprzedaży",
-    "campaignLogRecords": "Log",
     "massEmails": "Poczta masowa",
     "trackingUrls": "Adresy śledzenia"
   },
@@ -37,8 +32,6 @@
       "Email": "E-mail",
       "Web": "Strona internetowa",
       "Television": "Telewizja",
-      "Radio": "Radio",
-      "Newsletter": "Newsletter",
       "Mail": "Wiadomość"
     },
     "status": {

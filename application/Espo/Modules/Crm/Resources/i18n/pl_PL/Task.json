@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nazwa",
     "parent": "Rodzic",
-    "status": "Status",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zwrotu",
     "dateStartDate": "Data rozpoczęcia",
@@ -12,7 +11,8 @@
     "isOverdue": "Przegrzany",
     "account": "Klient",
     "dateCompleted": "Data ukończenia",
-    "attachments": "Załączniki"
+    "attachments": "Załączniki",
+    "reminders": "Przypomnienia"
   },
   "links": {
     "attachments": "Załączniki"
@@ -39,8 +39,8 @@
   "presetFilters": {
     "actual": "Bieżący",
     "completed": "Ukończone",
-    "deferred": "Opóźniony",
     "todays": "Dzisiaj",
-    "overdue": "Przegrzane"
+    "overdue": "Przegrzane",
+    "deferred": "Opóźniony"
   }
 }

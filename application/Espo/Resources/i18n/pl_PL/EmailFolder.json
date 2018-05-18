@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Pomiń powiadomienia"
+  },
+  "labels": {
+    "Create EmailFolder": "Utwórz folder",
+    "Manage Folders": "Zarządzaj folderami",
+    "Emails": "Wiadomości"
+  }
+}

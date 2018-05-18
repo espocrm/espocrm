@@ -1,12 +1,8 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "job": "Zadanie",
     "scheduling": "Scheduling (crontab notation)"
-  },
-  "links": {
-    "log": "Log"
   },
   "labels": {
     "Create ScheduledJob": "Utwórz zaplanowane działania"
@@ -22,15 +18,11 @@
     "cronSetup": {
       "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
       "mac": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
-      "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:",
-      "default": "Note: Add this command to Cron Job (Scheduled Task):"
+      "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:"
     },
     "status": {
       "Active": "Aktywny",
       "Inactive": "Nie Aktywny"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
   }
 }

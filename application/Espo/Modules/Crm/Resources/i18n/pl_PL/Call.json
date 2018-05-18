@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nazwa",
     "parent": "Rodzic",
-    "status": "Status",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zakończenia",
     "direction": "Kierunek",

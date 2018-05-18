@@ -1,20 +1,14 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "isHtml": "Format HTML",
     "body": "Treść",
     "subject": "Temat",
     "attachments": "Załączniki",
-    "insertField": "Wstaw pole",
-    "oneOff": "One-off"
+    "insertField": "Wstaw pole"
   },
   "labels": {
-    "Create EmailTemplate": "Utwórz Szkic wiadomości",
-    "Info": "Info"
-  },
-  "messages": {
-    "infoText": "Dostępne zmienne:\n\n{optOutUrl} &#8211; Adres URL wypisania;\n\n{optOutLink} &#8211; link wypisania."
+    "Create EmailTemplate": "Utwórz Szkic wiadomości"
   },
   "tooltips": {
     "oneOff": "Sprawdź, czy będziesz używać tego szablonu tylko raz (np w poczcie masowej)."

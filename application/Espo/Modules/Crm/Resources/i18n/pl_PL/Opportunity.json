@@ -23,16 +23,15 @@
     "stage": {
       "Prospecting": "I Spotkanie",
       "Qualification": "Kwalifikacja",
-      "Proposal": "Oferta Cenowa",
-      "Negotiation": "Negocjacje",
       "Needs Analysis": "Dodatkowa Analiza",
       "Value Proposition": "Oferta Produktowa",
       "Id. Decision Makers": "Oferta przekazna do osoby decyzyjnej",
-      "Perception Analysis": "Perception Analysis",
       "Proposal/Price Quote": "Oferta Cenowa",
-      "Negotiation/Review": "Negocjacje",
+      "Negotiation/Review": "Negocjacje ",
       "Closed Won": "Zakończone Wygrane",
-      "Closed Lost": "Zakończone Przegrane"
+      "Closed Lost": "Zakończone Przegrane",
+      "Proposal": "Oferta Cenowa",
+      "Negotiation": "Negocjacje"
     }
   },
   "labels": {

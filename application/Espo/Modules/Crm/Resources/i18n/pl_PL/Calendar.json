@@ -4,10 +4,17 @@
     "week": "Tydzień",
     "agendaWeek": "Tydzień",
     "day": "Dzień",
-    "agendaDay": "Dzień"
+    "agendaDay": "Dzień",
+    "timeline": "Oś czasu"
   },
   "labels": {
     "Today": "Dziś",
-    "Create": "Utwórz"
+    "Create": "Utwórz",
+    "Shared": "Udostępnij",
+    "Add User": "Dodaj użytkownika",
+    "current": "obecne",
+    "time": "czas",
+    "User List": "Lista użytkowników",
+    "Manage Users": "Zarządzaj użytkownikami"
   }
 }
