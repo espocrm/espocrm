@@ -81,8 +81,9 @@ class NextNumber extends \Espo\Core\Hooks\Base
                     'entityType' => $entity->getEntityType()
                 ))->findOne();
                 if (!$nextNumber) {
-                    $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
-                    continue;
+                    $nextNumber = $this->getEntityManager()->getEntity('NextNumber');
+                    $nextNumber->set('entityType', $entity->getEntityType());
+                    $nextNumber->set('fieldName', $fieldName);
                 }
                 $entity->set($fieldName, $this->composeNumberAttribute($nextNumber));
 
