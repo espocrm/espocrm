@@ -421,7 +421,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         removeRecordFromList: function (id) {
-            console.log(id);
             this.collection.remove(id);
             if (this.collection.total > 0) {
                 this.collection.total--;
