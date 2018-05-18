@@ -415,6 +415,12 @@ class Record extends \Espo\Core\Services\Base
             return true;
         }
 
+        if ($this->getUser()->isPortal()) {
+            if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
+                return true;
+            }
+        }
+
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
@@ -471,6 +477,12 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $assignedUserId = $entity->get('assignedUserId');
+
+        if ($this->getUser()->isPortal()) {
+            if (!$entity->isAttributeChanged('assignedUserId') && empty($assignedUserId)) {
+                return true;
+            }
+        }
 
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
