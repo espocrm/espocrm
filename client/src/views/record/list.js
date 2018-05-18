@@ -364,7 +364,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         data.fieldList = dialogData.fieldList;
                     }
                     data.format = dialogData.format;
-                    this.ajaxPostRequest(url, data).then(function (data) {
+                    this.ajaxPostRequest(url, data, {timeout: 0}).then(function (data) {
                         if ('id' in data) {
                             window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                         }
