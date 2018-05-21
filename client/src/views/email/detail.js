@@ -156,10 +156,20 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         actionCreateCase: function () {
             var attributes = {};
 
-            if (this.model.get('parentType') == 'Account' && this.model.get('parentId')) {
-                attributes.accountId = this.model.get('parentId');
-                attributes.accountName = this.model.get('parentName');
+            var parentId = this.model.get('parentId');
+            var parentType = this.model.get('parentType');
+            var parentName = this.model.get('parentName');
+
+            if (parentId) {
+                if (parentType == 'Account') {
+                    attributes.accountId = parentId;
+                    attributes.accountName = parentName;
+                } else if (parentType == 'Contact') {
+                    attributes.contactId = parentId;
+                    attributes.contactName = parentName;
+                }
             }
+
             attributes.emailsIds = [this.model.id];
             attributes.emailId = this.model.id;
             attributes.name = this.model.get('name');
