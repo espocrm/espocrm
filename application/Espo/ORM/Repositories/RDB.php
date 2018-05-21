@@ -255,6 +255,12 @@ class RDB extends \Espo\ORM\Repository
             $collection = $result;
             $collection->setAsFetched();
             return $collection;
+        } else if ($result instanceof Entity) {
+            $entity = $result;
+            $entity->setAsFetched();
+            return $entity;
+        } else {
+            return $result;
         }
     }
 
