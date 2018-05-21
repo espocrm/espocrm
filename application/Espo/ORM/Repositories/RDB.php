@@ -201,6 +201,8 @@ class RDB extends \Espo\ORM\Repository
         $dataArr = $this->getMapper()->select($this->seed, $params);
 
         $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
+        $collection->setAsFetched();
+
         $this->reset();
 
         return $collection;
@@ -244,13 +246,15 @@ class RDB extends \Espo\ORM\Repository
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
+
         if (is_array($result)) {
-
             $collection = new EntityCollection($result, $entityType, $this->entityFactory);
-
+            $collection->setAsFetched();
             return $collection;
-        } else {
-            return $result;
+        } else if ($result instanceof EntityCollection) {
+            $collection = $result;
+            $collection->setAsFetched();
+            return $collection;
         }
     }
 
