@@ -117,7 +117,6 @@ class RDB extends \Espo\ORM\Repository
         $params = array();
         $this->handleSelectParams($params);
         if ($this->getMapper()->selectById($entity, $id, $params)) {
-            $entity->setAsFetched();
             return $entity;
         }
 
@@ -253,11 +252,9 @@ class RDB extends \Espo\ORM\Repository
             return $collection;
         } else if ($result instanceof EntityCollection) {
             $collection = $result;
-            $collection->setAsFetched();
             return $collection;
         } else if ($result instanceof Entity) {
             $entity = $result;
-            $entity->setAsFetched();
             return $entity;
         } else {
             return $result;

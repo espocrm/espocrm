@@ -150,9 +150,6 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         $value = $this->container[$offset];
 
         if ($value instanceof Entity) {
-            if ($this->isFetched) {
-                $value->setAsFetched();
-            }
             return $value;
         } else if (is_array($value)) {
             $this->container[$offset] = $this->buildEntityFromArray($value);
