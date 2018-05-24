@@ -99,6 +99,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             this.once('remove', function () {
                 $(window).off('resize.' + this.cid);
+                if (this.$scrollable) {
+                    this.$scrollable.off('scroll.' + this.cid + '-edit');
+                }
             }.bind(this));
         },
 
@@ -310,6 +313,16 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             if (this.height) {
                 options.height = this.height;
+            } else {
+                var $scrollable = this.$el.closest('.modal-body');
+                if (!$scrollable.size()) {
+                    $scrollable = $(window);
+                }
+                this.$scrollable = $scrollable;
+                $scrollable.off('scroll.' + this.cid + '-edit');
+                $scrollable.on('scroll.' + this.cid + '-edit', function (e) {
+                    this.onScrollEdit(e);
+                }.bind(this));
             }
 
             if (this.minHeight) {
@@ -317,6 +330,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             }
 
             this.$summernote.summernote(options);
+
+            this.$toolbar = this.$el.find('.note-toolbar');
+            this.$area = this.$el.find('.note-editing-area');
         },
 
         plainToHtml: function (html) {
@@ -346,6 +362,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 this.$summernote.addClass('hidden');
             }
             this.$element.removeClass('hidden');
+
+            if (this.$scrollable) {
+                this.$scrollable.off('scroll.' + this.cid + '-edit');
+            }
         },
 
         fetch: function () {
@@ -364,7 +384,53 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             	}
             }
             return data;
+        },
+
+        onScrollEdit: function (e) {
+            var $target = $(e.target);
+            var toolbarHeight = this.$toolbar.height();
+            var top;
+            if ($target.get(0) === window.document) {
+                var $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
+                var offset = $buttonContainer.offset();
+                if (offset) {
+                    var edgeTop = offset.top + $buttonContainer.height();
+                    var edgeTopAbsolute = edgeTop - $(window).scrollTop();
+                }
+            } else {
+                var offset = $target.offset();
+                if (offset) {
+                    var edgeTop = offset.top;
+                    var edgeTopAbsolute = edgeTop;
+                }
+            }
+
+            var top = this.$el.offset().top;
+            var bottom = top + this.$el.height() - toolbarHeight;
+
+            var toStick = false;
+            if (edgeTop > top && bottom > edgeTop) {
+                toStick = true;
+            }
+
+            if (toStick) {
+                this.$toolbar.css({
+                    top: edgeTopAbsolute + 'px'
+                });
+                this.$toolbar.addClass('sticked');
+                this.$area.css({
+                    marginTop: toolbarHeight + 'px',
+                    backgroundColor: ''
+                });
+            } else {
+                this.$toolbar.css({
+                    top: ''
+                });
+                this.$toolbar.removeClass('sticked');
+                this.$area.css({
+                    marginTop: ''
+                });
+            }
         }
     });
 });
-
