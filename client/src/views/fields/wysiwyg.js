@@ -64,6 +64,29 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 ['misc',['codeview', 'fullscreen']]
             ];
 
+            this.buttons = {};
+
+            if (!this.params.toolbar) {
+                if (this.params.attachmentField) {
+                    this.toolbar.push([
+                        'attachment',
+                        ['attachment']
+                    ]);
+                    var AttachmentButton = function (context) {
+                        var ui = $.summernote.ui;
+                        var button = ui.button({
+                            contents: '<i class="glyphicon glyphicon-paperclip"></i>',
+                            tooltip: this.translate('Attach File'),
+                            click: function () {
+                                this.attachFile();
+                            }.bind(this)
+                        });
+                        return button.render();
+                    }.bind(this);
+                    this.buttons['attachment'] = AttachmentButton;
+                }
+            }
+
             this.listenTo(this.model, 'change:isHtml', function (model) {
                 if (this.mode == 'edit') {
                     if (this.isRendered()) {
@@ -308,7 +331,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         this.trigger('change')
                     }.bind(this),
                 },
-                toolbar: this.toolbar
+                toolbar: this.toolbar,
+                buttons: this.buttons
             };
 
             if (this.height) {
@@ -431,6 +455,11 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     marginTop: ''
                 });
             }
+        },
+
+        attachFile: function () {
+            var $form = this.$el.closest('.record');
+            $form.find('.field[data-name="'+this.params.attachmentField+'"] input.file').click();
         }
     });
 });

@@ -164,8 +164,8 @@
         },
         "body": {
             "type": "wysiwyg",
-            "seeMoreDisabled": true,
-            "view": "views/email/fields/body"
+            "view": "views/email/fields/body",
+            "attachmentField": "attachments"
         },
         "isHtml": {
             "type": "bool",

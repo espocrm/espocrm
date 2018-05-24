@@ -20,6 +20,11 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name": "attachmentField",
+         "type": "varchar",
+         "hidden": true
       }
    ],
    "filter": true,
