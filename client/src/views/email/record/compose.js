@@ -68,7 +68,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             }
 
             this.listenTo(this.model, 'insert-template', function (data) {
-                var body = this.model.get('body');
+                var body = this.model.get('body') || '';
 
                 var bodyPlain = body.replace(/<br\s*\/?>/mg, '');
                 bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
