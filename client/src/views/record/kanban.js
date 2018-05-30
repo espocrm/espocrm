@@ -191,8 +191,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.seedCollection.url = this.scope;
             this.seedCollection.maxSize = this.collection.maxSize;
             this.seedCollection.name = this.collection.name;
-            this.seedCollection.sortBy = this.collection.sortBy;
-            this.seedCollection.asc = this.collection.asc;
+            this.seedCollection.sortBy = this.collection.defaultSortBy;
+            this.seedCollection.asc = this.collection.defaultAsc;
 
             this.listenTo(this.collection, 'sync', function (c, r, options) {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) return;
@@ -346,8 +346,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     collection.where = this.collection.where;
                     collection.name = this.seedCollection.name;
                     collection.maxSize = this.seedCollection.maxSize;
-                    collection.sortBy = this.collection.sortBy;
-                    collection.asc = this.collection.asc;
+                    collection.sortBy = this.seedCollection.sortBy;
+                    collection.asc = this.seedCollection.asc;
                     collection.whereAdditional = [
                         {
                             field: this.statusField,
