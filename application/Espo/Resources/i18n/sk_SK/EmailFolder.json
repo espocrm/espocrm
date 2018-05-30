@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Preskočiť upozornenia"
+  },
+  "labels": {
+    "Create EmailFolder": "Vytvoriť priečinok",
+    "Manage Folders": "Spravovať priečinky",
+    "Emails": "Emaily"
+  }
+}

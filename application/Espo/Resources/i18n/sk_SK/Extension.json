@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Názov",
+    "version": "Verzia",
+    "description": "Popis",
+    "isInstalled": "Nainštalovaný"
+  },
+  "labels": {
+    "Uninstall": "Odinštalovaný",
+    "Install": "Inštalovať"
+  },
+  "messages": {
+    "uninstalled": "Rozšírenie {name} bolo odinštalované"
+  }
+}

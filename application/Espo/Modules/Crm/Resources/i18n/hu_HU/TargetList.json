@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": "Név",
+    "description": "Leírás",
+    "entryCount": "Belépési szám",
+    "campaigns": "kampányok",
+    "endDate": "Befejezés dátuma",
+    "targetLists": "Céllista",
+    "includingActionList": "Beleértve",
+    "excludingActionList": "Kizárás"
+  },
+  "links": {
+    "accounts": "Fiókok",
+    "contacts": "Kapcsolatok",
+    "leads": "vezet",
+    "campaigns": "kampányok",
+    "massEmails": "Tömeges e-mailek"
+  },
+  "options": {
+    "type": {
+      "Web": "háló",
+      "Television": "Televízió",
+      "Radio": "Rádió",
+      "Newsletter": "Hírlevél"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Céllista létrehozása",
+    "Opted Out": "Elutasított",
+    "Cancel Opt-Out": "Visszavonás törlése",
+    "Opt-Out": "Kiszáll"
+  }
+}

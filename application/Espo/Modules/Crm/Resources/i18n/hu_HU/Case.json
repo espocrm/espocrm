@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "Név",
+    "number": "Szám",
+    "status": "Állapot",
+    "account": "számla",
+    "contact": "Kapcsolatba lépni",
+    "contacts": "Kapcsolatok",
+    "priority": "Kiemelten fontos",
+    "type": "típus",
+    "description": "Leírás",
+    "lead": "Vezet",
+    "attachments": "Mellékletek",
+    "inboundEmail": "Csoportos e-mail fiók"
+  },
+  "links": {
+    "account": "számla",
+    "contact": "Kapcsolat (elsődleges)",
+    "Contacts": "Kapcsolatok",
+    "meetings": "találkozók",
+    "calls": "felhívja",
+    "tasks": "feladatok",
+    "emails": "e-mailek",
+    "articles": "Tudásbázis-cikkek",
+    "lead": "Vezet",
+    "attachments": "Mellékletek",
+    "inboundEmail": "Csoportos e-mail fiók"
+  },
+  "options": {
+    "status": {
+      "New": "Új",
+      "Assigned": "Kijelölt",
+      "Pending": "Függőben levő",
+      "Closed": "Zárva",
+      "Rejected": "Elutasítva",
+      "Duplicate": "Másolat"
+    },
+    "priority": {
+      "Low": "Alacsony",
+      "Normal": "Normál",
+      "High": "Magas",
+      "Urgent": "Sürgős"
+    },
+    "type": {
+      "Question": "Kérdés",
+      "Incident": "Incidens",
+      "Problem": "Probléma"
+    }
+  },
+  "labels": {
+    "Create Case": "Létrehozás",
+    "Close": "Bezárás",
+    "Reject": "Elutasít",
+    "Closed": "Zárva",
+    "Rejected": "Elutasítva"
+  },
+  "presetFilters": {
+    "open": "Nyisd ki",
+    "closed": "Zárva"
+  }
+}

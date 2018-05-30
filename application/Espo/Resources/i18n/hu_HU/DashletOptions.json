@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "title": "Cím",
+    "dateFrom": "Dátum óta",
+    "dateTo": "Dátum",
+    "autorefreshInterval": "Automatikus frissítési időköz",
+    "displayRecords": "Megjeleníti a rekordokat",
+    "isDoubleHeight": "Magasság 2x",
+    "mode": "Mód",
+    "enabledScopeList": "Mit jelenjen meg",
+    "users": "felhasználók",
+    "primaryFilter": "Elsődleges szűrő",
+    "boolFilterList": "További szűrők",
+    "sortBy": "Rendelés (mező)",
+    "sortDirection": "Rendelés (irány)",
+    "expandedLayout": "Elrendezés",
+    "dateFilter": "Dátum szűrő"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Hét (napirend)",
+      "basicWeek": "Hét",
+      "month": "Hónap",
+      "basicDay": "Nap",
+      "agendaDay": "Nap (napirend)",
+      "timeline": "Idővonal"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Válassza ki az Entity Type elemet a vázlatos beállításokban."
+  }
+}

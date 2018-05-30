@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "username": "Používateľské meno",
+    "ipAddress": "IP adresa",
+    "requestTime": "Čas požiadavky",
+    "createdAt": "Požadované o",
+    "isDenied": "Je zakázaný",
+    "denialReason": "Dôvod zákazu",
+    "portal": "Portál",
+    "user": "Používateľ",
+    "authToken": "Auth token vytvorený",
+    "requestUrl": "URL požiadavky",
+    "requestMethod": "Metóda požiadavky",
+    "authTokenIsActive": "Auth token je aktívny"
+  },
+  "links": {
+    "authToken": "Auth token vytvorený",
+    "user": "Používateľ",
+    "portal": "Portál",
+    "actionHistoryRecords": "História akcií"
+  },
+  "presetFilters": {
+    "denied": "Zakázaný",
+    "accepted": "Akceptovaný"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Chybné prihlasovacie údaje",
+      "INACTIVE_USER": "Neaktívny používateľ",
+      "IS_PORTAL_USER": "Portálový používateľ",
+      "IS_NOT_PORTAL_USER": "Nie je portálový používateľ",
+      "USER_IS_NOT_IN_PORTAL": "Používateľ nie je priradný k portálu"
+    }
+  }
+}

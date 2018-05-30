@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "storeSentEmails": "Elküldött e-mailek tárolása",
+    "startAt": "Dátum kezdete",
+    "fromAddress": "Címtől",
+    "fromName": "Névből",
+    "replyToAddress": "Válaszcím",
+    "replyToName": "Válasznév",
+    "campaign": "Kampány",
+    "emailTemplate": "E-mail sablon",
+    "inboundEmail": "Email fiók",
+    "targetLists": "Céllista",
+    "excludingTargetLists": "Céllista kivételével",
+    "optOutEntirely": "Teljesen kizárni",
+    "smtpAccount": "SMTP-fiók"
+  },
+  "links": {
+    "targetLists": "Céllista",
+    "excludingTargetLists": "Céllista kivételével",
+    "queueItems": "Soros tételek",
+    "campaign": "Kampány",
+    "emailTemplate": "E-mail sablon",
+    "inboundEmail": "Email fiók"
+  },
+  "options": {
+    "status": {
+      "Draft": "vázlat",
+      "Pending": "Függőben levő",
+      "In Process": "Folyamatban",
+      "Complete": "teljes",
+      "Canceled": "Törölve",
+      "Failed": "nem sikerült"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Tömeges e-mail létrehozása",
+    "Send Test": "Teszt küldése",
+    "System SMTP": "Rendszer SMTP",
+    "system": "rendszer",
+    "group": "csoport"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Válasszon legalább egy célt.",
+    "testSent": "Tesztelendő e-mail (ek) elküldése"
+  },
+  "tooltips": {
+    "optOutEntirely": "A leiratkozott címzettek e-mail címei ki lesz jelölve, és többé nem kapnak tömeges e-maileket.",
+    "targetLists": "Olyan célok, amelyeknek üzeneteket kell kapniuk.",
+    "excludingTargetLists": "Olyan célzások, amelyeknek nem kell üzeneteket kapnia.",
+    "storeSentEmails": "Az e-maileket a CRM tárolja."
+  },
+  "presetFilters": {
+    "actual": "Tényleges",
+    "complete": "teljes"
+  }
+}

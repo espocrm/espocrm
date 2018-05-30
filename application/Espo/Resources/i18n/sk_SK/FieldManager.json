@@ -1,0 +1,100 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dynamická logika",
+    "Name": "Názov",
+    "Label": "Popisok",
+    "Type": "Typ"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Žiadny",
+      "javascript: return this.dateTime.getNow(1);": "Teraz",
+      "javascript: return this.dateTime.getNow(5);": "Teraz (5 min)",
+      "javascript: return this.dateTime.getNow(15);": "Teraz (10 min)",
+      "javascript: return this.dateTime.getNow(30);": "Teraz (30 min)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 hodina",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 hodín",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dní",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dní",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 týždeň"
+    },
+    "dateDefault": {
+      "": "Žiadny",
+      "javascript: return this.dateTime.getToday();": "Dnes",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 deň",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 týždeň",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 týždne",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 týždne",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mesiac",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mesiace",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mesiace",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mesiace",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10  mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mesiacov",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok"
+    }
+  },
+  "tooltips": {
+    "audited": "Zmeny budú zapisované do streamu.",
+    "required": "Pole bude povinné. Nemôže byť prázdne.",
+    "default": "Hodnota bude pri vytváraní predvolene nastavená.",
+    "min": "Min. akceptovateľná hodnota.",
+    "max": "Max. akceptovateľná hodnota.",
+    "seeMoreDisabled": "Ak nie je označené, tak dlhý text bude skrátený.",
+    "lengthOfCut": "Aký dlhý môže byť text pretým ako bude orezaný.",
+    "maxLength": "Max. akceptovateľná dĺžka textu.",
+    "before": "Hodnota dátumu by nemala byť pred dátumom v špecifikovanom poli",
+    "after": "Hodnota dátumu by nemala byť po dátume v špecifikovanom poli",
+    "readOnly": "Hodnota poľa nemôže byť špecifikovaná používateľom. Ale môže byť vypočítaná vzorcom.",
+    "maxFileSize": "Ak prázdne alebo 0, tak bez limitu"
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Ulica",
+      "city": "Obec",
+      "state": "Štát",
+      "country": "Krajina",
+      "postalCode": "PSČ",
+      "map": "Mapa"
+    },
+    "personName": {
+      "salutation": "Oslovenie",
+      "first": "Prvý",
+      "last": "Posledný"
+    },
+    "currency": {
+      "converted": "(Konvertovaný)",
+      "currency": "(Mena)"
+    },
+    "datetimeOptional": {
+      "date": "Dátum"
+    }
+  }
+}

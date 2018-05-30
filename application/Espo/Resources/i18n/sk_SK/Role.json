@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "Názov",
+    "roles": "Role",
+    "assignmentPermission": "Práva na priradenie",
+    "userPermission": "Používateľské práva",
+    "portalPermission": "Portálové práva",
+    "groupEmailAccountPermission": "Práva ku skupinovým emailovým účtom",
+    "exportPermission": "Exportovať oprávnenie",
+    "dataPrivacyPermission": "Práva pre súkromie dát"
+  },
+  "links": {
+    "users": "Používatelia",
+    "teams": "Tímy"
+  },
+  "tooltips": {
+    "assignmentPermission": "Umožňuje obmedziť možnosť priradiť záznam a posielanie správ iným používateľom\n\nall - bez obmedzení\n\nteam - môže priradiť a posielať iba členom tímu\n\nno - môže priradiť a posielať len sebe",
+    "userPermission": "Umožňuje obmedziť možnosť používateľovi vidieť ativity, kalendár a stream iných používateľov.\n\nall - môže vidieť všetko\n\nteam - môže vidieť aktivity iba vrámci tímu\n\nno - nemôže vidieť",
+    "portalPermission": "Definuje prístup k portálovej informácii, možnosť posielať správy portálovým používateľom.",
+    "groupEmailAccountPermission": "Definuje prístup k skupinovým emailovým účtom, možnosť posielať emaily zo skupinového SMTP.",
+    "exportPermission": "Definuje či používatelia majú možnosť exportovať záznamy.",
+    "dataPrivacyPermission": "Povoľuje prezerať a mazať osobné údaje."
+  },
+  "labels": {
+    "Access": "Prístup",
+    "Create Role": "Vytvoriť rolu",
+    "Scope Level": "Úroveň rozsahu",
+    "Field Level": "Úroveň poľa"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nenastavený",
+      "enabled": "povolený",
+      "disabled": "zablokovaný"
+    },
+    "levelList": {
+      "all": "všetko",
+      "team": "tím",
+      "account": "účet",
+      "contact": "kontakt",
+      "own": "vlastný",
+      "no": "nie",
+      "yes": "áno",
+      "not-set": "nenastavený"
+    }
+  },
+  "actions": {
+    "read": "Čítať",
+    "edit": "Zmeniť",
+    "delete": "Vymazať",
+    "create": "Vytvoriť"
+  },
+  "messages": {
+    "changesAfterClearCache": "Všetky zmeny v riadení prístupu budú aplikované po vymazaní vyrovnávacej pamäte."
+  }
+}

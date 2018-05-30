@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "name": "Názov",
+    "number": "Číslo",
+    "status": "Stav",
+    "account": "Účet",
+    "contact": "Kontakt",
+    "contacts": "Kontakty",
+    "priority": "Priorita",
+    "type": "Typ",
+    "description": "Popis",
+    "lead": "Stopa",
+    "attachments": "Prílohy",
+    "inboundEmail": "Skupinový emailový účet"
+  },
+  "links": {
+    "account": "Účet",
+    "contact": "Kontakt (Primárny)",
+    "Contacts": "Kontakty",
+    "meetings": "Stretnutia",
+    "calls": "Hovory",
+    "tasks": "Úlohy",
+    "emails": "Emaily",
+    "articles": "Článok znalostnej základne",
+    "lead": "Stopa",
+    "attachments": "Prílohy",
+    "inboundEmail": "Skupinový emailový účet"
+  },
+  "options": {
+    "status": {
+      "New": "Nový",
+      "Assigned": "Priradený",
+      "Pending": "Nevybavený",
+      "Closed": "Uzavretý",
+      "Rejected": "Odmietnutý",
+      "Duplicate": "Duplikát"
+    },
+    "priority": {
+      "Low": "Nízka",
+      "Normal": "Normálna",
+      "High": "Vysoká",
+      "Urgent": "Urgentná"
+    },
+    "type": {
+      "Question": "Otázka",
+      "Problem": "Problém"
+    }
+  },
+  "labels": {
+    "Create Case": "Vytvoriť prípad",
+    "Close": "Zavrieť",
+    "Reject": "Odmietnuť",
+    "Closed": "Uzavretý",
+    "Rejected": "Odmietnutý"
+  },
+  "presetFilters": {
+    "open": "Otvoriť",
+    "closed": "Uzavretý"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "egyenlő",
+      "notEquals": "Nem egyenlő",
+      "greaterThan": "Nagyobb, mint",
+      "lessThan": "Kevesebb, mint",
+      "greaterThanOrEquals": "Nagyobb vagy egyenlő",
+      "lessThanOrEquals": "Kevesebb mint vagy egyenlő",
+      "in": "Ban ben",
+      "notIn": "Nem bent",
+      "inPast": "A múltban",
+      "inFuture": "Jövő",
+      "isToday": "Ma van",
+      "isTrue": "Igaz",
+      "isFalse": "Hamis",
+      "isEmpty": "Üres",
+      "isNotEmpty": "Nem üres",
+      "contains": "tartalmazza",
+      "has": "tartalmazza",
+      "notContains": "Nem tartalmaz",
+      "notHas": "Nem tartalmaz"
+    }
+  },
+  "labels": {
+    "Field": "Mező"
+  }
+}

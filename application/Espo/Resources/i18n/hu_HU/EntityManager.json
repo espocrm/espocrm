@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Relationships": "Kapcsolatok",
+    "Schedule": "Menetrend",
+    "Log": "Bejelentkezés",
+    "Formula": "Képlet"
+  },
+  "fields": {
+    "name": "Név",
+    "type": "típus",
+    "labelSingular": "Egyetlen címke",
+    "labelPlural": "Plurális címke",
+    "stream": "Folyam",
+    "label": "Címke",
+    "linkType": "Link típusa",
+    "entityForeign": "Külföldi szervezet",
+    "linkForeign": "Külföldi link",
+    "labelForeign": "Külföldi címke",
+    "sortBy": "Alapértelmezett megrendelés (mező)",
+    "sortDirection": "Alapértelmezett megrendelés (irány)",
+    "relationName": "A középső tábla neve",
+    "linkMultipleField": "Link Több mező",
+    "linkMultipleFieldForeign": "Külföldi link több területen",
+    "disabled": "Tiltva",
+    "textFilterFields": "Szövegszűrős mezők",
+    "audited": "ellenőrzött",
+    "auditedForeign": "Külföldi ellenőrzés",
+    "statusField": "Állapotmező",
+    "beforeSaveCustomScript": "Mielőtt elment volna az egyéni scriptet",
+    "color": "Szín",
+    "kanbanStatusIgnoreList": "A Kanban nézetben figyelmen kívül hagyott csoportok",
+    "iconClass": "Ikon"
+  },
+  "options": {
+    "type": {
+      "": "Egyik sem",
+      "Base": "Bázis",
+      "Person": "Személy",
+      "CategoryTree": "Kategóriafa",
+      "Event": "Esemény",
+      "Company": "Vállalat"
+    },
+    "linkType": {
+      "manyToMany": "Sok-sok",
+      "oneToMany": "Egy a sokhoz",
+      "manyToOne": "Sok-to-One",
+      "parentToChildren": "Szülő-to-Children",
+      "childrenToParent": "Gyermek-to-Parent"
+    },
+    "sortDirection": {
+      "asc": "növekvő",
+      "desc": "csökkenő"
+    }
+  },
+  "messages": {
+    "entityCreated": "Az entitást létrehozták",
+    "linkAlreadyExists": "Link név konfliktus.",
+    "linkConflict": "Névkonfliktus: már létezik egy azonos nevű link vagy mező."
+  },
+  "tooltips": {
+    "statusField": "A mező frissítései be vannak jelentkezve az adatfolyamba.",
+    "textFilterFields": "A szöveges keresés által használt mezők.",
+    "stream": "Függetlenül attól, hogy az entitás Stream-lel rendelkezik",
+    "disabled": "Ellenőrizze, hogy nincs-e szüksége erre a rendszerre.",
+    "linkAudited": "A kapcsolódó rekordok létrehozása és a meglévő rekordok összekapcsolása folyamatban lesz.",
+    "linkMultipleField": "Link Több mező hasznos módja a kapcsolatok szerkesztéséhez. Ne használja, ha nagyszámú kapcsolódó nyilvántartással rendelkezik.",
+    "entityType": "Base Plus - Tevékenységek, előzmények és feladatok panelek.\n\nEsemény - elérhető a Naptár és tevékenységek panelben."
+  }
+}

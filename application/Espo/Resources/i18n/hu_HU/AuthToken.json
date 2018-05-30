@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "használó",
+    "ipAddress": "IP-cím",
+    "lastAccess": "Utolsó hozzáférési dátum",
+    "createdAt": "Bejelentkezési dátum",
+    "isActive": "Aktív",
+    "portal": "Portál"
+  },
+  "links": {
+    "actionHistoryRecords": "Akció története"
+  },
+  "presetFilters": {
+    "active": "Aktív",
+    "inactive": "tétlen"
+  },
+  "labels": {
+    "Set Inactive": "Inaktív beállítás"
+  },
+  "massActions": {
+    "setInactive": "Inaktív beállítás"
+  }
+}

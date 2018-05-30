@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "Név",
+    "roles": "szerepek",
+    "assignmentPermission": "Hozzárendelési engedély",
+    "userPermission": "Felhasználói engedély",
+    "portalPermission": "Portál engedély",
+    "groupEmailAccountPermission": "Csoportos e-mail fiók engedély",
+    "exportPermission": "Exportengedély",
+    "dataPrivacyPermission": "Adatvédelmi engedély"
+  },
+  "links": {
+    "users": "felhasználók",
+    "teams": "csapatok"
+  },
+  "tooltips": {
+    "assignmentPermission": "Lehetővé teszi a rekordok hozzárendelésének és üzenetek üzeneteinek más felhasználók általi korlátozását.\n\nminden - nincs korlátozás\n\ncsapat - csak csapattársakhoz rendelhet és küldhet\n\nnem - csak az énhez rendelhet és küldhet",
+    "userPermission": "Lehetővé teszi a felhasználók azon képességének korlátozását, hogy megtekinthessék a többi felhasználó tevékenységét, naptárát és streamjét.\n\nmindenki - mindent megnéz\n\ncsapat - csak a csapattársak tevékenységét tekintheti meg\n\nnem - nem lehet megtekinteni",
+    "portalPermission": "Meghatározza a portálinformációkhoz való hozzáférést, és képes üzenetet küldeni a portál felhasználóknak.",
+    "groupEmailAccountPermission": "Meghatározza a csoportos e-mail fiókokhoz való hozzáférést, és képes e-maileket küldeni az SMTP csoportból.",
+    "exportPermission": "Meghatározza, hogy a felhasználók a rekordok exportálhatók-e.",
+    "dataPrivacyPermission": "Lehetővé teszi a személyes adatok megtekintését és törlését."
+  },
+  "labels": {
+    "Access": "Hozzáférés",
+    "Create Role": "Szerezzen szerepet",
+    "Scope Level": "Teljesítményszint",
+    "Field Level": "Térségi szint"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nincs beállítva",
+      "enabled": "engedélyezve",
+      "disabled": "Tiltva"
+    },
+    "levelList": {
+      "all": "minden",
+      "team": "csapat",
+      "account": "számla",
+      "contact": "kapcsolatba lépni",
+      "own": "saját",
+      "no": "nem",
+      "yes": "Igen",
+      "not-set": "nincs beállítva"
+    }
+  },
+  "actions": {
+    "read": "Olvas",
+    "edit": "szerkesztése",
+    "delete": "Töröl",
+    "stream": "Folyam",
+    "create": "Teremt"
+  },
+  "messages": {
+    "changesAfterClearCache": "A hozzáférés-vezérlés minden módosítását a gyorsítótár letiltása után alkalmazzák."
+  }
+}

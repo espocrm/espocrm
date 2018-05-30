@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Név",
+    "parent": "Szülő",
+    "status": "Állapot",
+    "dateStart": "Dátum kezdete",
+    "dateEnd": "Határidő",
+    "dateStartDate": "Dátum kezdete (egész nap)",
+    "dateEndDate": "Dátum vége (egész nap)",
+    "priority": "Kiemelten fontos",
+    "description": "Leírás",
+    "isOverdue": "Elkésett",
+    "account": "számla",
+    "dateCompleted": "Teljesítés dátuma",
+    "attachments": "Mellékletek",
+    "reminders": "Emlékeztetők",
+    "contact": "Kapcsolatba lépni"
+  },
+  "links": {
+    "attachments": "Mellékletek",
+    "account": "számla",
+    "contact": "Kapcsolatba lépni"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Nem kezdődött",
+      "Started": "lépések",
+      "Completed": "befejezték",
+      "Canceled": "Törölve",
+      "Deferred": "halasztott"
+    },
+    "priority": {
+      "Low": "Alacsony",
+      "Normal": "Normál",
+      "High": "Magas",
+      "Urgent": "Sürgős"
+    }
+  },
+  "labels": {
+    "Create Task": "Feladat létrehozása",
+    "Complete": "teljes"
+  },
+  "presetFilters": {
+    "actual": "Tényleges",
+    "completed": "befejezték",
+    "todays": "A mai",
+    "overdue": "Lejárt",
+    "deferred": "halasztott"
+  }
+}

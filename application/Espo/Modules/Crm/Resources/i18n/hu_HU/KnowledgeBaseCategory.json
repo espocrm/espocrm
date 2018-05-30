@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Kategória létrehozása",
+    "Manage Categories": "Kategóriák kezelése",
+    "Articles": "Cikkek"
+  },
+  "links": {
+    "articles": "Cikkek"
+  }
+}

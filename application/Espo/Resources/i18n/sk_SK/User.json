@@ -1,0 +1,101 @@
+{
+  "fields": {
+    "name": "Meno",
+    "userName": "Používateľské meno",
+    "title": "Titul",
+    "isAdmin": "Je admin",
+    "defaultTeam": "Predvolený tím",
+    "phoneNumber": "Telefón",
+    "roles": "Role",
+    "portals": "Portály",
+    "portalRoles": "Portálové role",
+    "teamRole": "Pozícia",
+    "password": "Heslo",
+    "currentPassword": "Súčasné heslo",
+    "passwordConfirm": "Potvrdiť heslo",
+    "newPassword": "Nové heslo",
+    "newPasswordConfirm": "Potvrdiť nové heslo",
+    "isActive": "Je aktívny",
+    "isPortalUser": "Je portálový používateľ",
+    "contact": "Konktakt",
+    "accounts": "Účty",
+    "account": "Účet (primárny)",
+    "sendAccessInfo": "Poslať používateľovi email s informáciou o prístupe",
+    "portal": "Portál",
+    "gender": "Pohlavie",
+    "position": "Pozícia v tíme",
+    "ipAddress": "IP Adresa",
+    "passwordPreview": "Ukážka hesla",
+    "isSuperAdmin": "Je super admin",
+    "lastAccess": "Posledný prístup"
+  },
+  "links": {
+    "teams": "Tímy",
+    "roles": "Role",
+    "notes": "Poznámky",
+    "portals": "Portály",
+    "portalRoles": "Portálové role",
+    "contact": "Kontakt",
+    "accounts": "Účty",
+    "account": "Účet (Primárny)",
+    "tasks": "Úlohy"
+  },
+  "labels": {
+    "Create User": "Vytvoriť používateľa",
+    "Generate": "Generovať",
+    "Access": "Prístup",
+    "Preferences": "Možnosti",
+    "Change Password": "Zmeniť heslo",
+    "Teams and Access Control": "Tímy a riadenie prístupu",
+    "Forgot Password?": "Zabudli ste heslo?",
+    "Password Change Request": "Požiadavka na zmenu hesla",
+    "Email Address": "Emailová adresa",
+    "External Accounts": "Externé účty",
+    "Email Accounts": "Emailové účty",
+    "Portal": "Portál",
+    "Create Portal User": "Vytvoriť používateľa portálu",
+    "Proceed w/o Contact": "Pokračovať bez kontaktu"
+  },
+  "tooltips": {
+    "defaultTeam": "Všetky záznamy vytvorené týmto používateľom budú štandartne súvisieť s týmto tímom.",
+    "userName": "Písmená a-z, čísla 0-9, bodky, pomlčky, znak @ a podtrhovník sú povolené.",
+    "isAdmin": "Administrátor má prístup ku všetkému.",
+    "isActive": "Ak je toto neoznačené, tak používateľ sa nebude môcť prihlásiť.",
+    "teams": "Tímy, ku ktorým tento používateľ patrí. Systém riadenia prístupu je zdedený z tímových rolí.",
+    "roles": "Role na dodatočný prístup. Použite ich ak používateľ nepatrí k žiadnemu tímu alebo potrebujete rozšíriť systém riadenia prístupu výnimočne len pre tohoto používateľa.",
+    "portalRoles": "Dodatočné portálové role. Použite ich ak potrebujete rozšíriť systém riadenia prístupu výnimočne len pre tohoto používateľa.",
+    "portals": "Portály, do ktorých má tento používateľ prístup."
+  },
+  "messages": {
+    "passwordWillBeSent": "Heslo bude poslané na používateľov email.",
+    "accountInfoEmailSubject": "Info o používateľskom prístupe EspoCRM",
+    "accountInfoEmailBody": "Vaš prístupové informácie:",
+    "passwordChangeLinkEmailSubject": "Požiadavka na zmenu hesla",
+    "passwordChanged": "Heslo bolo zmenené",
+    "userCantBeEmpty": "Používateľské meno nesmie byť prázdne",
+    "wrongUsernamePasword": "Nesprávne meno/heslo",
+    "emailAddressCantBeEmpty": "Emailová adresa nesmie byť prázdna",
+    "userNameEmailAddressNotFound": "Používateľské meno/Emailová adresa sa nenašla",
+    "forbidden": "Odmietnutý prístup, skúste neskôr",
+    "uniqueLinkHasBeenSent": "Jedinečná URL bola odoslaná na uvedenú emailovú adresu.",
+    "passwordChangedByRequest": "Heslo bolo zmenené.",
+    "setupSmtpBefore": "Potrebujete nastaviť <a href=\"{url}\">SMTP nastavenia</a> aby Váš systém bol schopný odoslať heslo v emaile.",
+    "passwordChangeLinkEmailBody": "Svoje heslo môžete zmeniť použitím tohoto odkazu {link}. Táto jedinečná URL čoskoro expiruje.",
+    "userNameExists": "Používateľské meno už existuje"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Len môj tím"
+  },
+  "presetFilters": {
+    "active": "Aktívny",
+    "activePortal": "Portál aktívny"
+  },
+  "options": {
+    "gender": {
+      "": "Nenastavené",
+      "Male": "Muž",
+      "Female": "Žena",
+      "Neutral": "Neutrálny"
+    }
+  }
+}

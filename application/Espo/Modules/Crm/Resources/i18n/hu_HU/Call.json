@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "name": "Név",
+    "parent": "Szülő",
+    "status": "Állapot",
+    "dateStart": "Dátum kezdete",
+    "dateEnd": "Dátum vége",
+    "direction": "Irány",
+    "duration": "tartam",
+    "description": "Leírás",
+    "users": "felhasználók",
+    "contacts": "Kapcsolatok",
+    "leads": "vezet",
+    "reminders": "Emlékeztetők",
+    "account": "számla",
+    "acceptanceStatus": "Átvételi állapot"
+  },
+  "options": {
+    "status": {
+      "Planned": "Tervezett",
+      "Not Held": "Nem tartott"
+    },
+    "direction": {
+      "Outbound": "induló",
+      "Inbound": "Bejövő"
+    },
+    "acceptanceStatus": {
+      "None": "Egyik sem",
+      "Accepted": "Elfogadott",
+      "Declined": "Elutasította",
+      "Tentative": "Kísérleti"
+    }
+  },
+  "labels": {
+    "Create Call": "Hívás létrehozása",
+    "Send Invitations": "Küldjön meghívókat"
+  },
+  "presetFilters": {
+    "planned": "Tervezett",
+    "todays": "A mai"
+  }
+}

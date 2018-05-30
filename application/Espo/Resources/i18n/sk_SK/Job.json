@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "status": "Stav",
+    "executeTime": "Vykonať v",
+    "attempts": "Zostávajúce pokusy",
+    "failedAttempts": "Zlyhané pokusy",
+    "serviceName": "Služba",
+    "methodName": "Metóda",
+    "scheduledJob": "Naplánovaný beh",
+    "data": "Dáta",
+    "method": "Metóda (",
+    "scheduledJobJob": "Názov naplánovaného behu"
+  },
+  "options": {
+    "status": {
+      "Pending": "Nerozhodnutý",
+      "Success": "Úspešný",
+      "Running": "Prebiehajúci",
+      "Failed": "Chybný"
+    }
+  }
+}

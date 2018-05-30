@@ -1,0 +1,17 @@
+{
+  "links": {
+    "users": "Používatelia"
+  },
+  "labels": {
+    "Access": "Prístup",
+    "Create PortalRole": "Vytvoriť portálovú rolu",
+    "Scope Level": "Úroveň rozsahu",
+    "Field Level": "Úroveň poľa"
+  },
+  "fields": {
+    "exportPermission": "Exportovať oprávnenie"
+  },
+  "tooltips": {
+    "exportPermission": "Definuje či portáloví používatelia majú možnosť exportovať záznamy."
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Állapot",
+    "executionTime": "Végrehajtási idő",
+    "target": "Cél"
+  }
+}

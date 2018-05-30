@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "Príspevok",
+    "attachments": "Prílohy",
+    "targetType": "Cieľ",
+    "teams": "Tímy",
+    "users": "Používatelia",
+    "portals": "Portály",
+    "type": "Typ",
+    "isGlobal": "Je globálny",
+    "isInternal": "Je interný (pre interných používateľov)",
+    "related": "Súvisiaci",
+    "createdByGender": "Pohlavie autora",
+    "data": "Dáta",
+    "number": "Číslo"
+  },
+  "filters": {
+    "all": "Všetko",
+    "posts": "Príspevky",
+    "updates": "Zmeny"
+  },
+  "messages": {
+    "writeMessage": "Sem napíšte svoju správu"
+  },
+  "options": {
+    "targetType": {
+      "self": "mne",
+      "users": "určitému používatelovi",
+      "teams": "určitému tímu",
+      "all": "všetkým interným používateľom",
+      "portals": "portálovým používateľom"
+    },
+    "type": {
+      "Post": "Príspevok"
+    }
+  },
+  "links": {
+    "superParent": "Super rodič",
+    "related": "Súvisiaci"
+  }
+}

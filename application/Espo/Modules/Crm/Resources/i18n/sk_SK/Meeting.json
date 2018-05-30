@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Názov",
+    "parent": "Rodič",
+    "status": "Stav",
+    "dateStart": "Počiatočný dátum",
+    "dateEnd": "Koncový dátum",
+    "duration": "Trvanie",
+    "description": "Popis",
+    "users": "Používatelia",
+    "contacts": "Kontakty",
+    "leads": "Stopy",
+    "reminders": "Pripomienky",
+    "account": "Účet",
+    "acceptanceStatus": "Akceptačný stav"
+  },
+  "options": {
+    "status": {
+      "Planned": "Plánovaný",
+      "Held": "Pozdržaný",
+      "Not Held": "Nepozdržaný"
+    },
+    "acceptanceStatus": {
+      "None": "Žiadny",
+      "Accepted": "Akceptovaný",
+      "Declined": "Odmietnutý",
+      "Tentative": "Predbežný"
+    }
+  },
+  "massActions": {
+    "setHeld": "Nastaviť pozdržaný",
+    "setNotHeld": "Nastaviť nepozdržaný"
+  },
+  "labels": {
+    "Create Meeting": "Vytvoriť stretnutie",
+    "Set Held": "Nastaviť pozdržaný",
+    "Set Not Held": "Nastaviť nepozdržaný",
+    "Send Invitations": "Poslať pozvánky",
+    "on time": "na čas",
+    "before": "pred"
+  },
+  "presetFilters": {
+    "planned": "Plánovaný",
+    "held": "Pozdržaný",
+    "todays": "Dnešné"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nič nebolo odoslané"
+  }
+}

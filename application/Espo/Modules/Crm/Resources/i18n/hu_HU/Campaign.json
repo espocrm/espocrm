@@ -1,0 +1,73 @@
+{
+  "fields": {
+    "name": "Név",
+    "description": "Leírás",
+    "status": "Állapot",
+    "type": "típus",
+    "startDate": "Kezdő dátum",
+    "endDate": "Befejezés dátuma",
+    "targetLists": "Céllista",
+    "excludingTargetLists": "Céllista kivételével",
+    "sentCount": "Küldött",
+    "openedCount": "Nyitott",
+    "clickedCount": "Kattintott",
+    "optedOutCount": "Elutasított",
+    "bouncedCount": "Visszafordulást",
+    "softBouncedCount": "Lágy visszahúzódott",
+    "leadCreatedCount": "Leads létrehozva",
+    "revenue": "jövedelem",
+    "revenueConverted": "Bevétel (átváltva)",
+    "budget": "Költségvetés",
+    "budgetConverted": "Költségkeret (átváltva)"
+  },
+  "links": {
+    "targetLists": "Céllista",
+    "excludingTargetLists": "Céllista kivételével",
+    "accounts": "Fiókok",
+    "contacts": "Kapcsolatok",
+    "leads": "vezet",
+    "opportunities": "lehetőségek",
+    "campaignLogRecords": "Bejelentkezés",
+    "massEmails": "Tömeges e-mailek",
+    "trackingUrls": "Nyomon követési URL-ek"
+  },
+  "options": {
+    "type": {
+      "Web": "háló",
+      "Television": "Televízió",
+      "Radio": "Rádió",
+      "Newsletter": "Hírlevél",
+      "Mail": "Levél"
+    },
+    "status": {
+      "Planning": "Tervezés",
+      "Active": "Aktív",
+      "Inactive": "tétlen",
+      "Complete": "teljes"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Kampány létrehozása",
+    "Target Lists": "Céllista",
+    "Statistics": "Statisztika",
+    "hard": "kemény",
+    "soft": "puha",
+    "Unsubscribe": "Leiratkozás",
+    "Mass Emails": "Tömeges e-mailek",
+    "Email Templates": "E-mail sablonok",
+    "Unsubscribe again": "Újrairatkozás újra",
+    "Subscribe again": "Feliratkozás újra",
+    "Create Target List": "Céllista létrehozása"
+  },
+  "presetFilters": {
+    "active": "Aktív"
+  },
+  "messages": {
+    "unsubscribed": "Leiratkozott a levelezési listáról.",
+    "subscribedAgain": "Újra feliratkozol."
+  },
+  "tooltips": {
+    "targetLists": "Olyan célok, amelyeknek üzeneteket kell kapniuk.",
+    "excludingTargetLists": "Olyan célzások, amelyeknek nem kell üzeneteket kapnia."
+  }
+}

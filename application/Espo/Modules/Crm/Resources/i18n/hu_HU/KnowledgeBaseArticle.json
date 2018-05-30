@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Cikk létrehozása",
+    "Any": "Bármilyen",
+    "Send in Email": "Küldjön e-mailt",
+    "Move Up": "Feljebb",
+    "Move Down": "Lépjen le",
+    "Move to Top": "Ugrás a tetejére",
+    "Move to Bottom": "Ugrás az aljára"
+  },
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "type": "típus",
+    "attachments": "Mellékletek",
+    "publishDate": "Megjelenési dátum",
+    "expirationDate": "Lejárati dátum",
+    "description": "Leírás",
+    "body": "Test",
+    "categories": "Kategóriák",
+    "language": "Nyelv",
+    "portals": "portálok"
+  },
+  "links": {
+    "cases": "Olyan esetek,",
+    "opportunities": "lehetőségek",
+    "categories": "Kategóriák",
+    "portals": "portálok"
+  },
+  "options": {
+    "status": {
+      "In Review": "A felülvizsgálat során",
+      "Draft": "vázlat",
+      "Archived": "Archivált",
+      "Published": "Közzétett"
+    },
+    "type": {
+      "Article": "Cikk"
+    }
+  },
+  "presetFilters": {
+    "published": "Közzétett"
+  },
+  "tooltips": {
+    "portals": "A cikk csak meghatározott portálokon érhető el."
+  }
+}

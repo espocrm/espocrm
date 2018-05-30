@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "dateFormat": "Formát dátumu",
+    "timeFormat": "Formát času",
+    "timeZone": "Časová zóna",
+    "weekStart": "Prvý deň týždňa",
+    "thousandSeparator": "Oddeľovač tisícov",
+    "decimalMark": "Oddeľovač desatinných miest",
+    "defaultCurrency": "Predvolená mena",
+    "currencyList": "Zoznam mien",
+    "language": "Jazyk",
+    "smtpSecurity": "Bezpečnosť",
+    "smtpUsername": "Používateľské meno",
+    "smtpPassword": "Heslo",
+    "smtpEmailAddress": "Emailová adresa",
+    "exportDelimiter": "Oddeľovač exportu",
+    "signature": "Emailový podpis",
+    "dashboardTabList": "Zoznam záložiek",
+    "tabList": "Zoznam záložiek",
+    "defaultReminders": "Predvolené pripomienky",
+    "theme": "Téma",
+    "useCustomTabList": "Prispôsobný zoznam záložiek",
+    "receiveAssignmentEmailNotifications": "Emailové notifikácie v okamihu priradenia",
+    "receiveMentionEmailNotifications": "Emailové notifikácie o zmienkach v príspevkoch",
+    "receiveStreamEmailNotifications": "Emailové notifikácie o zmenách v príspevkoch a stavoch",
+    "dashboardLayout": "Rozmiestnenie plochy",
+    "emailReplyForceHtml": "Na email odpovedať v HTML",
+    "autoFollowEntityTypeList": "Globálne auto-sledovanie",
+    "emailReplyToAllByDefault": "Standardne odpovedať všetkým",
+    "doNotFillAssignedUserIfNotRequired": "Nevypĺňajte priradeného používateľa pri vytváraní záznamu",
+    "followEntityOnStreamPost": "Automaticky sledovať záznam po zápise do streamu",
+    "followCreatedEntities": "Automaticky sledovať vytvorené záznamy",
+    "followCreatedEntityTypeList": "Automaticky sledovať vytvorené záznamy špecifických typov entít",
+    "emailUseExternalClient": "Použite externého emailového klienta",
+    "scopeColorsDisabled": "Zakázať farby rozsahu",
+    "tabColorsDisabled": "Zakázať farby záložky"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Nedeľa",
+      "1": "Pondelok"
+    }
+  },
+  "labels": {
+    "Notifications": "Upozornenia",
+    "User Interface": "Používateľské rozhranie",
+    "Misc": "Rôzne",
+    "Locale": "Národné nastavenia"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automaticky sledovať všetky nové záznamy (vytvorené ľubovoľným používateľom) vybraných typov entít. Aby bolo možné vidieť informáciu v streame a prijímať notifikácie o všetkých záznamoch v systéme.",
+    "doNotFillAssignedUserIfNotRequired": "Keď vytvoríte záznam, priradený používateľ nebude vyplnený s vlastným používateľom aj keď je pole povinné.",
+    "followCreatedEntities": "Keď vytvoríte nové záznamy, tieto budú automaticky sledované dokonca aj keď sú priradené inému používateľovi.",
+    "followCreatedEntityTypeList": "Keď vytvoríte nové záznamy vybraného typu entity, tieto budú automaticky sledované dokonca aj keď sú priradené inému používateľovi."
+  }
+}

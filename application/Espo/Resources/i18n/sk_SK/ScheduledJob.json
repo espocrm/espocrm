@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Názov",
+    "status": "Stav",
+    "job": "Beh",
+    "scheduling": "Plánovanie"
+  },
+  "links": {
+    "log": "Protokol"
+  },
+  "labels": {
+    "Create ScheduledJob": "Vytvoriť plánovaný beh"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Vyčistiť",
+      "CheckInboundEmails": "Skontrolovať skupinové emailové účty",
+      "CheckEmailAccounts": "Skontrolovať osobné emailové účty",
+      "SendEmailReminders": "Poslať emailovú pripomienku",
+      "AuthTokenControl": "Ovládanie Auth Tokenu",
+      "SendEmailNotifications": "Poslať emailové upozornenia",
+      "CheckNewVersion": "Skontroluj novú verziu"
+    },
+    "cronSetup": {
+      "linux": "Poznámka: Pridajte tento riadok do súbru crontab-u, aby fungovali plánované behy Espo",
+      "mac": "Poznámka: Pridajte tento riadok do súbru crontab-u, aby fungovali plánované behy Espo",
+      "windows": "Poznámka: Vytvorte dávkový súbor s nasledujúcimi príkazmi, aby fungovali plánované behy Espo v Plánovaných úlohách Windows",
+      "default": "Poznámka: Pridajte tento príkaz do Cron Job (Scheduled Task)"
+    },
+    "status": {
+      "Active": "Aktívny",
+      "Inactive": "Neaktívny"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Zápis Crontab. Definuje frekvenciu spúšťania behov.\n\n*/5 * * * * - každých 5 minút\n\n0 */2 * * * - každé 2 hodiny\n\n30 1 * * * - o 01:30 raz za deň\n\n0 0 1 * * - v prvý deň mesiaca"
+  }
+}

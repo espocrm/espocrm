@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "urlToUse": "Kód helyett URL helyett",
+    "campaign": "Kampány"
+  },
+  "links": {
+    "campaign": "Kampány"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Követési URL létrehozása"
+  }
+}

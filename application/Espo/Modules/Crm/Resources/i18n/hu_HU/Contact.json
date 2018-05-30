@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "Név",
+    "title": "Cím",
+    "accountRole": "Cím",
+    "account": "számla",
+    "accounts": "Fiókok",
+    "phoneNumber": "Telefon",
+    "accountType": "Fiók Típus",
+    "doNotCall": "Ne hívj",
+    "address": "Cím",
+    "opportunityRole": "Lehetőség szerep",
+    "description": "Leírás",
+    "campaign": "Kampány",
+    "targetLists": "Céllista",
+    "targetList": "Tűztábla",
+    "portalUser": "Portál felhasználó",
+    "originalLead": "Eredeti vezető",
+    "acceptanceStatus": "Átvételi állapot",
+    "accountIsInactive": "inaktív fiók",
+    "acceptanceStatusMeetings": "Átvételi állapot (ülések)",
+    "acceptanceStatusCalls": "Átvételi állapot (hívások)"
+  },
+  "links": {
+    "opportunities": "lehetőségek",
+    "cases": "Olyan esetek,",
+    "targetLists": "Céllista",
+    "campaignLogRecords": "Kampánynapló",
+    "campaign": "Kampány",
+    "account": "Fiók (elsődleges)",
+    "accounts": "Fiókok",
+    "casesPrimary": "Ügyek (elsődleges)",
+    "portalUser": "Portál felhasználó",
+    "originalLead": "Eredeti vezető",
+    "documents": "Dokumentumok",
+    "tasksPrimary": "Feladatok (bővítve)"
+  },
+  "labels": {
+    "Create Contact": "Kapcsolat létrehozása"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Egyik sem--",
+      "Decision Maker": "Döntéshozó",
+      "Evaluator": "Kiértékelő",
+      "Influencer": "Befolyásoló"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Portál felhasználók",
+    "notPortalUsers": "Nem Portal felhasználók",
+    "accountActive": "Aktív"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Értesítések kihagyása"
+  },
+  "labels": {
+    "Create EmailFolder": "Mappa létrehozás",
+    "Manage Folders": "Mappák kezelése",
+    "Emails": "e-mailek"
+  }
+}

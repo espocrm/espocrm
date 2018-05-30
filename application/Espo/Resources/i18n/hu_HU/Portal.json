@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "name": "Név",
+    "logo": "logo",
+    "companyLogo": "logo",
+    "portalRoles": "szerepek",
+    "isActive": "Aktív",
+    "isDefault": "Alapértelmezett",
+    "tabList": "Tab listát",
+    "quickCreateList": "Gyors létrehozási lista",
+    "theme": "Téma",
+    "language": "Nyelv",
+    "dashboardLayout": "Irányítópult elrendezés",
+    "dateFormat": "Dátum formátum",
+    "timeFormat": "Idő formátum",
+    "timeZone": "Időzóna",
+    "weekStart": "A hét első napja",
+    "defaultCurrency": "Alapértelmezett pénznem",
+    "customUrl": "Egyéni URL",
+    "customId": "Egyéni azonosító"
+  },
+  "links": {
+    "users": "felhasználók",
+    "portalRoles": "szerepek",
+    "notes": "Megjegyzések"
+  },
+  "tooltips": {
+    "portalRoles": "Meghatározott portál szerepköröket fognak alkalmazni a portál összes felhasználójára."
+  },
+  "labels": {
+    "Create Portal": "Portál létrehozása",
+    "User Interface": "Felhasználói felület",
+    "General": "Tábornok",
+    "Settings": "Beállítások"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "host": "Házigazda",
+    "username": "Felhasználónév",
+    "password": "Jelszó",
+    "port": "Kikötő",
+    "monitoredFolders": "Figyelt mappák",
+    "fetchSince": "Fetch As",
+    "emailAddress": "Email cím",
+    "sentFolder": "Elküldött mappa",
+    "storeSentEmails": "Elküldött e-mailek tárolása",
+    "keepFetchedEmailsUnread": "A letöltött e-mailek olvasatlanok maradjanak",
+    "emailFolder": "Tegye be a mappába",
+    "useSmtp": "SMTP használata",
+    "smtpHost": "SMTP fogadó",
+    "smtpPort": "SMTP port",
+    "smtpAuth": "SMTP hitelesítés",
+    "smtpSecurity": "SMTP biztonság",
+    "smtpUsername": "SMTP felhasználónév",
+    "smtpPassword": "SMTP jelszó",
+    "useImap": "E-mailek lekérése"
+  },
+  "links": {
+    "filters": "Szűrők",
+    "emails": "e-mailek"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktív",
+      "Inactive": "tétlen"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "E-mail fiók létrehozása",
+    "Main": "Fő",
+    "Test Connection": "Vizsgálati kapcsolat",
+    "Send Test Email": "Küldjön e-mailt"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nem sikerült csatlakozni az IMAP kiszolgálóhoz",
+    "connectionIsOk": "A kapcsolat rendben van"
+  },
+  "tooltips": {
+    "monitoredFolders": "A több mappát vesszővel kell elválasztani.\n\nHozzáadhat egy \"Elküldött\" mappát a külső e-mail kliensnek küldött e-mailek szinkronizálásához.",
+    "storeSentEmails": "Az elküldött e-maileket az IMAP szerveren tárolja. Az e-mail cím mezőjének meg kell egyeznie a cím e-mailjeivel."
+  }
+}

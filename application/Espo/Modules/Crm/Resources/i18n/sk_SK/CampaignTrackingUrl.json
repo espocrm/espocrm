@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "urlToUse": "Kód na vloženie namiesto URL",
+    "campaign": "Kampaň"
+  },
+  "links": {
+    "campaign": "Kampaň"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Vytvoriť sledovaciu URL"
+  }
+}

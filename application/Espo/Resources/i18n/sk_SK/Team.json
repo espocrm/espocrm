@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Názov",
+    "roles": "Role",
+    "positionList": "Zoznam pozícií"
+  },
+  "links": {
+    "users": "Používatelia",
+    "notes": "Poznámky",
+    "roles": "Role",
+    "inboundEmails": "Skupinové emailové účty"
+  },
+  "tooltips": {
+    "roles": "Prístupové role. Používatelia z tohoto tímu získajú úroveň prístupu z vybraných rolí.",
+    "positionList": "Dostupné pozície v tomto tíme, napr. Obchodník, Manager."
+  },
+  "labels": {
+    "Create Team": "Vytvoriť tím"
+  }
+}

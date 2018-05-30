@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "Mesiac",
+    "week": "Týždeň",
+    "agendaWeek": "Týždeň",
+    "day": "Deň",
+    "agendaDay": "Deň",
+    "timeline": "Časová os"
+  },
+  "labels": {
+    "Today": "Dnes",
+    "Create": "Vytvoriť",
+    "Shared": "Zdieľať",
+    "Add User": "Pridať používateľa",
+    "current": "súčasný",
+    "time": "čas",
+    "User List": "Užívateľský zoznam",
+    "Manage Users": "Spravovať používateľov",
+    "View Calendar": "Zobraziť kalendár",
+    "Create Shared View": "Vytvoriť zdieľaný pohľad"
+  }
+}

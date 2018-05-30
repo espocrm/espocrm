@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Od",
+    "to": "Komu",
+    "subject": "Predmet",
+    "bodyContains": "Telo obsahuje",
+    "action": "Akcia",
+    "isGlobal": "Je globálny",
+    "emailFolder": "Priečinok"
+  },
+  "labels": {
+    "Create EmailFilter": "Vytvoriť emailový filter",
+    "Emails": "Emaily"
+  },
+  "tooltips": {
+    "from": "Emaily odoslané zo špecifikovanej adresy. Ponechaj prázdne nie je potrebné. Môžeš použiť zástupný znak *.",
+    "to": "Emaily odoslané na špecifikovanú adresu. Ponechaj prázdne nie je potrebné. Môžeš použiť zástupný znak *.",
+    "name": "Zadajte filtru popisný názov.",
+    "subject": "Použite zástupný znak *:\n\ntext* - začína s text,\n*text* - obsahuje text,\n*text - končí na text.",
+    "bodyContains": "Telo emailu obsahuje akékoľvek zadané slová alebo frázy.",
+    "isGlobal": "Aplikuje tento filter na všetky emaily prichádzajúce do systému."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorovať",
+      "Move to Folder": "Vložiť do priečinka"
+    }
+  }
+}

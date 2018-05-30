@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Zoznamy cieľov"
+  },
+  "fields": {
+    "acceptanceStatus": "Akceptačný stav",
+    "acceptanceStatusMeetings": "Akceptačný stav (Stretnutia)",
+    "acceptanceStatusCalls": "Akceptačný stav (Hovory)"
+  }
+}
