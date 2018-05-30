@@ -1,0 +1,45 @@
+{
+    "controller": "controllers/record-tree",
+    "collection": "collections/tree",
+    "menu": {
+        "listTree": {
+            "buttons": [
+                {
+                    "label": "List View",
+                    "link": "#EmailTemplateCategory\/list",
+                    "acl": "read",
+                    "style": "default"
+                },
+                {
+                    "label": "Email Templates",
+                    "link": "#EmailTemplate",
+                    "acl": "read",
+                    "aclScope": "EmailTemplate",
+                    "style": "default"
+                }
+            ]
+        },
+        "list": {
+            "buttons": [
+                {
+                    "label": "Tree View",
+                    "link": "#EmailTemplateCategory",
+                    "acl": "read",
+                    "style": "default"
+                },
+                {
+                    "label": "Email Templates",
+                    "link": "#EmailTemplate",
+                    "acl": "read",
+                    "aclScope": "EmailTemplate",
+                    "style": "default"
+                }
+            ]
+        }
+    },
+    "relationshipPanels": {
+        "emailTemplates": {
+            "create": false
+        }
+    }
+}

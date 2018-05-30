@@ -1,0 +1,10 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": false,
+    "acl": "recordAllTeamNo",
+    "customizable": true,
+    "importable": false,
+    "type": "CategoryTree",
+    "notifications": false
+}

@@ -1,29 +1,47 @@
 {
-  "controller": "controllers/record",
-  "recordViews":{
-    "edit": "views/email-template/record/edit",
-    "detail": "views/email-template/record/detail",
-    "editQuick": "views/email-template/record/edit-quick"
-  },
-  "sidePanels":{
-    "detail":[
-      {
-        "name": "information",
-        "label":"Info",
-          "view":"views/email-template/record/panels/information"
-       }
+    "controller": "controllers/record",
+    "views": {
+        "list": "views/list-with-categories"
+    },
+    "recordViews": {
+        "edit": "views/email-template/record/edit",
+        "detail": "views/email-template/record/detail",
+        "editQuick": "views/email-template/record/edit-quick"
+    },
+    "modalViews": {
+        "select": "views/modals/select-records-with-categories"
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "information",
+                "label":"Info",
+                "view":"views/email-template/record/panels/information"
+            }
+        ],
+        "edit": [
+            {
+                "name": "information",
+                "label":"Info",
+                "view":"views/email-template/record/panels/information"
+            }
+        ]
+    },
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "label": "Manage Categories",
+                    "link": "#EmailTemplateCategory",
+                    "acl": "edit",
+                    "aclScope": "EmailTemplateCategory"
+                }
+            ]
+        }
+    },
+    "boolFilterList": ["onlyMy"],
+    "filterList": [
+        "actual"
     ],
-    "edit":[
-      {
-        "name": "information",
-        "label":"Info",
-          "view":"views/email-template/record/panels/information"
-       }
-    ]
-  },
-  "boolFilterList": ["onlyMy"],
-  "filterList": [
-    "actual"
-  ],
-  "placeholderList": ["optOutUrl", "optOutLink"]
+    "placeholderList": ["optOutUrl", "optOutLink"]
 }

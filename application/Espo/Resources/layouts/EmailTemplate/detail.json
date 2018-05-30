@@ -10,6 +10,12 @@
                     "name":"oneOff"
                 }
             ],
+            [
+                {
+                    "name": "category"
+                },
+                false
+            ],
             [{"name":"subject","fullWidth":true}],
             [
                 {

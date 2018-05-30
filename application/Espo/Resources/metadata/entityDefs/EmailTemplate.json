@@ -25,6 +25,10 @@
         "attachments": {
             "type": "attachmentMultiple"
         },
+        "category": {
+            "type": "link",
+            "view": "views/fields/link-category-tree"
+        },
         "assignedUser": {
             "type": "link"
         },
@@ -55,6 +59,11 @@
             "type": "hasChildren",
             "entity": "Attachment",
             "foreign": "parent"
+        },
+        "category": {
+            "type": "belongsTo",
+            "foreign": "emailTemplates",
+            "entity": "EmailTemplateCategory"
         },
         "teams": {
             "type": "hasMany",

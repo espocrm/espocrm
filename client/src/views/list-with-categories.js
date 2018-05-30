@@ -44,7 +44,7 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
 
         categoryScope: null,
 
-        categoryField: 'cagegory',
+        categoryField: 'category',
 
         categoryFilterType: 'inCategory',
 
