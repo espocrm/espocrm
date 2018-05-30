@@ -147,7 +147,9 @@ class Entity extends \Espo\ORM\Entity
         }
 
         $this->set($idsAttribute, $ids);
-        $this->setFetched($idsAttribute, $ids);
+        if (!$this->hasFetched($idsAttribute)) {
+            $this->setFetched($idsAttribute, $ids);
+        }
 
         $this->set($field . 'Names', $names);
         if ($hasType) {
