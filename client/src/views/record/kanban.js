@@ -343,11 +343,11 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     var collection = this.seedCollection.clone();
                     collection.total = item.total;
                     collection.url = this.scope;
-                    collection.where = this.seedCollection.where;
+                    collection.where = this.collection.where;
                     collection.name = this.seedCollection.name;
                     collection.maxSize = this.seedCollection.maxSize;
-                    collection.sortBy = this.seedCollection.sortBy;
-                    collection.asc = this.seedCollection.asc;
+                    collection.sortBy = this.collection.sortBy;
+                    collection.asc = this.collection.asc;
                     collection.whereAdditional = [
                         {
                             field: this.statusField,
