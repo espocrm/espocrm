@@ -53,6 +53,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 this.minHeight = this.params.minHeight;
             }
 
+            this.useIframe = this.params.useIframe || this.useIframe;
+
             this.toolbar = this.params.toolbar || [
                 ['style', ['style']],
                 ['style', ['bold', 'italic', 'underline', 'clear']],

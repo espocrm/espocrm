@@ -10,7 +10,8 @@
         },
         "body": {
             "type": "text",
-            "view": "views/fields/wysiwyg"
+            "view": "views/fields/wysiwyg",
+            "useIframe": true
         },
         "isHtml": {
             "type": "bool",

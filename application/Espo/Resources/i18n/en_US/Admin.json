@@ -161,7 +161,8 @@
         "probabilityMap": "Stage Probabilities (%)",
         "readOnly": "Read-only",
         "maxFileSize": "Max File Size (Mb)",
-        "isPersonalData": "Is Personal Data"
+        "isPersonalData": "Is Personal Data",
+        "useIframe": "Use Iframe"
     },
     "messages": {
         "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",

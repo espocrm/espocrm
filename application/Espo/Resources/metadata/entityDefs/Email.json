@@ -165,7 +165,8 @@
         "body": {
             "type": "wysiwyg",
             "view": "views/email/fields/body",
-            "attachmentField": "attachments"
+            "attachmentField": "attachments",
+            "useIframe": true
         },
         "isHtml": {
             "type": "bool",
