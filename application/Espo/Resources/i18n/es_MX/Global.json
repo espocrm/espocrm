@@ -24,7 +24,7 @@
     "ScheduledJobLogRecord": "Historial de Tareas Programadas",
     "PasswordChangeRequest": "Solicitar Cambio de Contraseña",
     "ActionHistoryRecord": "Historial de Acciones",
-    "AuthToken": "Token de Autorización",
+    "AuthToken": "Clave de Autorización",
     "UniqueId": "ID Único",
     "LastViewed": "Ultimo Visto",
     "Settings": "Configuración",
@@ -37,7 +37,9 @@
     "DashletOptions": "Opciones del Panel",
     "Preferences": "Preferencias",
     "EmailAddress": "Dirección de Correo",
-    "PhoneNumber": "Teléfono"
+    "PhoneNumber": "Teléfono",
+    "AuthLogRecord": "Registro en Hist. de Aut.",
+    "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut."
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -65,9 +67,11 @@
     "ScheduledJobLogRecord": "Historial de Tareas Programadas",
     "PasswordChangeRequest": "Solicitudes de Cambio de contraseña",
     "ActionHistoryRecord": "Historial de Acciones",
-    "AuthToken": "Tokens de Autorización",
+    "AuthToken": "Clave de Autorización",
     "UniqueId": "IDs Unicos",
-    "LastViewed": "Ultimos Revisados"
+    "LastViewed": "Ultimos Revisados",
+    "AuthLogRecord": "Historial de Autorizaciones",
+    "AuthFailLogRecord": "Hist. de Fallos de Aut.\n"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -212,7 +216,11 @@
     "Collapse": "Cerrar",
     "New notifications": "Nuevas notificaciones",
     "Manage Categories": "Administrar Categorías",
-    "Manage Folders": "Administrar Carpetas"
+    "Manage Folders": "Administrar Carpetas",
+    "Convert to": "Convertir a",
+    "View Personal Data": "Ver Datos Personales",
+    "Personal Data": "Datos Personales",
+    "Erase": "Borrar"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -268,7 +276,8 @@
     "fieldShouldBeLess": "{field} no debe ser mayor a {value}",
     "fieldShouldBeGreater": "{field} no debe ser menor que {value}",
     "fieldIsUploading": "Carga en prograso",
-    "streamPostInfo": "Escriba <strong>@username</strong> para indicar los usuarios de esta publicación.\n\nSintaxis disponible para los marcadores:\n`<code>código</code>`\n**<strong>texto en negrita</strong>**\n*<em>texto en itálica</em>*\n~<del>texto eliminado</del>~\n> marcador de bloque\n[texto de la liga](url) "
+    "streamPostInfo": "Escriba <strong>@username</strong> para indicar los usuarios de esta publicación.\n\nSintaxis disponible para los marcadores:\n`<code>código</code>`\n**<strong>texto en negrita</strong>**\n*<em>texto en itálica</em>*\n~<del>texto eliminado</del>~\n> marcador de bloque\n[texto de la liga](url) ",
+    "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?"
   },
   "boolFilters": {
     "onlyMy": "Sólo míos",
@@ -284,7 +293,8 @@
     "massUpdate": "Actualización Masiva",
     "export": "Exportar",
     "follow": "Dar seguimiento",
-    "unfollow": "Quitar seguimiento"
+    "unfollow": "Quitar seguimiento",
+    "convertCurrency": "Convertir Moneda"
   },
   "fields": {
     "name": "Nombre",
@@ -310,7 +320,12 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos"
+    "children": "Hijos",
+    "emailAddressData": "Datos de la Dirección de Correo",
+    "phoneNumberData": "Datos del Número de Teléfono",
+    "ids": "ID's",
+    "names": "Nombres",
+    "emailAddressIsOptedOut": "La dirección de correo está Confirmada"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -694,17 +709,24 @@
       }
     }
   },
-  "themes": {
-    "Violet": "Violeta",
-    "EspoVertical": "Espo c/panel axiliar",
-    "SakuraVertical": "Sakura c/panel auxiliar",
-    "VioletVertical": "Violeta c/panel auxiliar",
-    "HazyblueVertical": "Hazyblue c/panel auxiliar"
-  },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} publicó a {target} con copia para sí mismo"
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} publicó a {target} y a sí mismo"
+  },
+  "listViewModes": {
+    "list": "Lista",
+    "kanban": "Tarjetas"
+  },
+  "themes": {
+    "Espo": "Espo Clásico",
+    "Sakura": "Sakura Clásico",
+    "EspoVertical": "Espo Vertical",
+    "SakuraVertical": "Sakura Vertical",
+    "Violet": "Violeta Clásico",
+    "VioletVertical": "Violeta Vertical",
+    "Hazyblue": "Azul Clásico",
+    "HazyblueVertical": "Azul Vertical"
   }
 }

@@ -25,7 +25,8 @@
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
     "passwordPreview": "Contraseña Generada:",
-    "isSuperAdmin": "Es Super-Administrador"
+    "isSuperAdmin": "Es Super-Administrador",
+    "lastAccess": "Último Acceso"
   },
   "links": {
     "teams": "Equipos",

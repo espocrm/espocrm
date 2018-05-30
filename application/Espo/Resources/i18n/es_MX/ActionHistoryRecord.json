@@ -5,13 +5,15 @@
     "createdAt": "Fecha",
     "target": "Objetivo",
     "targetType": "Tipo de Objetivo",
-    "authToken": "Token Autorización",
-    "ipAddress": "Dirección IP"
+    "authToken": "Clave de Autorización",
+    "ipAddress": "Dirección IP",
+    "authLogRecord": "Registro en Hist. de Aut."
   },
   "links": {
-    "authToken": "Token Autorización",
+    "authToken": "Clave de Autorización",
     "user": "Usuario",
-    "target": "Objetivo"
+    "target": "Objetivo",
+    "authLogRecord": "Registro en Hist. de Aut."
   },
   "presetFilters": {
     "onlyMy": "Sólo para Mi"

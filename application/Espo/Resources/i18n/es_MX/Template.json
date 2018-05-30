@@ -26,6 +26,10 @@
     "pageOrientation": {
       "Portrait": "Vertical",
       "Landscape": "Horizontal"
+    },
+    "placeholders": {
+      "today": "Hoy (fecha)",
+      "now": "Ahora (fecha-hr)"
     }
   }
 }

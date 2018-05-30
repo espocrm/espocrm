@@ -34,7 +34,10 @@
     "doNotFillAssignedUserIfNotRequired": "No pre-llenar el campo de usuario al crear un registro",
     "followEntityOnStreamPost": "Seguimiento-automático del registro al publicarlo en Seguimiento",
     "followCreatedEntities": "Seguimiento-automático de los registros creados",
-    "followCreatedEntityTypeList": "Seguimiento-automático de los registros de tipos de entidad específicos"
+    "followCreatedEntityTypeList": "Seguimiento-automático de los registros de tipos de entidad específicos",
+    "emailUseExternalClient": "Use un cliente externo de correo",
+    "scopeColorsDisabled": "Desactivar colores en alcance",
+    "tabColorsDisabled": "Desactivar colores en pestañas"
   },
   "options": {
     "weekStart": {

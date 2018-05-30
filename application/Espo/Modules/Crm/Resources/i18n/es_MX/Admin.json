@@ -1,6 +1,7 @@
 {
   "layouts": {
     "detailConvert": "Convertir Referencia",
-    "listForAccount": "Listado (por Cuentas)"
+    "listForAccount": "Listado (por Cuentas)",
+    "listForContact": "Lista (para Contactos)"
   }
 }

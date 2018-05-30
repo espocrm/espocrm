@@ -28,7 +28,10 @@
     "audited": "Auditado",
     "auditedForeign": "Auditado Externamente",
     "statusField": "Campo de Estátus",
-    "beforeSaveCustomScript": "Antes de Guardar el Código Personalizado"
+    "beforeSaveCustomScript": "Antes de Guardar el Código Personalizado",
+    "kanbanViewMode": "Vista por Tarjetas",
+    "kanbanStatusIgnoreList": "Grupos ignorados en la vista por Tarjetas",
+    "iconClass": "Icono"
   },
   "options": {
     "type": {

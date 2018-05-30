@@ -13,7 +13,6 @@
     "attachments": "Adjuntos",
     "selectTemplate": "Seleccione una Plantilla",
     "fromEmailAddress": "De la dirección",
-    "toEmailAddresses": "a la Dirección",
     "emailAddress": "Dirección de Correo",
     "deliveryDate": "Fecha Entrega",
     "account": "Cuenta",
@@ -41,7 +40,10 @@
     "folderId": "Id de la Carpeta",
     "fromName": "Nombre (De)",
     "fromString": "String (De)",
-    "isSystem": "Es del Sistema"
+    "isSystem": "Es del Sistema",
+    "toEmailAddresses": "Direcciones (Para)",
+    "bccEmailAddresses": "Direcciones (CCO)",
+    "replyToEmailAddresses": "Direcciones (Responder)"
   },
   "links": {
     "replied": "Respondió",
@@ -54,7 +56,8 @@
     "fromEmailAddress": "Cuentas de Correo (De)",
     "toEmailAddresses": "Cuentas de Correo (Para)",
     "ccEmailAddresses": "Cuentas de Correo (CC)",
-    "bccEmailAddresses": "Cuentas de Correo (CCO)"
+    "bccEmailAddresses": "Cuentas de Correo (CCO)",
+    "replyToEmailAddresses": "Direcciones (Responder)"
   },
   "options": {
     "status": {
@@ -98,7 +101,8 @@
     "noSmtpSetup": "No está configurado el SMTP. {link}.",
     "testEmailSent": "Correo de prueba enviado",
     "emailSent": "Correo enviado",
-    "savedAsDraft": "Guardado como borrador"
+    "savedAsDraft": "Guardado como borrador",
+    "confirmInsertTemplate": "El cuerpo del correo se perderá. ¿Realmente desea insertar la plantilla?"
   },
   "presetFilters": {
     "sent": "Enviado",

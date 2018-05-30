@@ -6,7 +6,8 @@
     "align": "Alinear",
     "panelName": "Nombre del Panel",
     "style": "Estilo",
-    "sticked": "Pegado"
+    "sticked": "Pegado",
+    "isLarge": "Tamaño de fuente grande"
   },
   "options": {
     "align": {

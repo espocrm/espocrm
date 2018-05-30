@@ -28,7 +28,7 @@
     "Import": "Importación",
     "Layout Manager": "Formatos",
     "User Interface": "Interfaz de Usuario",
-    "Auth Tokens": "Tokens",
+    "Auth Tokens": "Clave de Aut.",
     "Authentication": "Autorización",
     "Currency": "Moneda",
     "Integrations": "Integracion",
@@ -54,7 +54,8 @@
     "Email Filters": "Filtros de Correo",
     "Portal Users": "Usuarios",
     "Action History": "Historial",
-    "Label Manager": "Etiquetas"
+    "Label Manager": "Etiquetas",
+    "Auth Log": "Historial de Autorizaciones"
   },
   "layouts": {
     "list": "Lista",
@@ -72,7 +73,8 @@
     "detailSmallPortal": "Detalle (Pequeño, Portal)",
     "listSmallPortal": "Lista (Pequeño, Portal)",
     "listPortal": "Lista (Portal)",
-    "relationshipsPortal": "Paneles de Relaciones (Portal)"
+    "relationshipsPortal": "Paneles de Relaciones (Portal)",
+    "kanban": "Tarjetas"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -85,8 +87,6 @@
     "bool": "Sí/No",
     "currency": "Moneda",
     "date": "Fecha",
-    "datetime": "Fecha/Hora",
-    "datetimeOptional": "Fecha/FechaHora",
     "email": "Correo",
     "enum": "Lista",
     "enumInt": "Lista Enteros",
@@ -109,7 +109,9 @@
     "currencyConverted": "Moneda (Convertida)",
     "colorpicker": "Selector de Colores",
     "int": "Entero",
-    "number": "Número (auto-incremeto)"
+    "number": "Número (auto-incremeto)",
+    "jsonArray": "Arreglo Json",
+    "jsonObject": "Objeto Json"
   },
   "fields": {
     "type": "Tipo",
@@ -152,7 +154,8 @@
     "probabilityMap": "Probabilidades de la Etapa (%)",
     "readOnly": "Solo-lectura",
     "noEmptyString": "No se permite el campo vacío",
-    "maxFileSize": "Tamaño máximo (Mb)"
+    "maxFileSize": "Tamaño máximo (Mb)",
+    "isPersonalData": "Son Datos Personales"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -201,7 +204,8 @@
     "entityManager": "Crear y editar entidades personalizadas.  Administrar campos y relaciones.",
     "emailFilters": "Los mensajes de correo que cumplan con el filtro indicado, no se importarán.",
     "actionHistory": "Historial de acciones del usuario.",
-    "labelManager": "Personalizar etiquetas de aplicación"
+    "labelManager": "Personalizar etiquetas de aplicación",
+    "authLog": "Historial de Ingresos"
   },
   "options": {
     "previewSize": {
