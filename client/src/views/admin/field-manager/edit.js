@@ -285,7 +285,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }
                 this.model.set('label', label);
                 if (name) {
-                    name = name.replace(/-/i, '').replace(/_/i, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
+                    name = name.replace(/-/g, '').replace(/_/g, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
                         return g.toUpperCase();
                     }).replace(' ', '');
                     if (name.length) {
