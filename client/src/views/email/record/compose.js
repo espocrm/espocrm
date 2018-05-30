@@ -62,7 +62,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 this.isBodyChanged = true;
             }, this);
 
-            if (this.options.keepAttachmentsOnSelectTemplate) {
+            if (!this.options.removeAttachmentsOnSelectTemplate) {
                 this.initialAttachmentsIds = this.model.get('attachmentsIds') || [];
                 this.initialAttachmentsNames = this.model.get('attachmentsNames') || {};
             }
@@ -127,7 +127,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             this.model.set('body', '');
             this.model.set('body', body);
 
-            if (this.options.keepAttachmentsOnSelectTemplate) {
+            if (!this.options.removeAttachmentsOnSelectTemplate) {
                 this.initialAttachmentsIds.forEach(function (id) {
                     if (data.attachmentsIds) {
                         data.attachmentsIds.push(id);
