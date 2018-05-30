@@ -211,19 +211,27 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                         var $document = $(documentElement);
 
                         var increaseHeightStep = 10;
-                        var processIncreaseHeight = function (iteration) {
+                        var processIncreaseHeight = function (iteration, previousDiff) {
                             iteration = iteration || 0;
 
-                            if (iteration > 20) {
+                            if (iteration > 200) {
                                 return;
                             }
 
                             iteration ++;
 
-                            if (iframeElement.scrollHeight < $document.height()) {
+                            var diff = $document.height() - iframeElement.scrollHeight;
+
+                            if (typeof previousDiff !== 'undefined') {
+                                if (diff === previousDiff) {
+                                    return;
+                                }
+                            }
+
+                            if (diff) {
                                 var height = iframeElement.scrollHeight + increaseHeightStep;
                                 iframeElement.style.height = height + 'px';
-                                processIncreaseHeight(iteration);
+                                processIncreaseHeight(iteration, diff);
                             }
                         };
 
