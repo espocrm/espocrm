@@ -233,8 +233,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.collection.url = this.scope + '/action/listKanban';
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
 
-            this.collection.sortBy = this.defaultSortBy;
-            this.collection.asc = this.defaultAsc;
+            this.collection.sortBy = this.collection.defaultSortBy;
+            this.collection.asc = this.collection.defaultAsc;
         },
 
         resetSorting: function () {
