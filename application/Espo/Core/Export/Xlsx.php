@@ -469,7 +469,7 @@ class Xlsx extends \Espo\Core\Injectable
 
                 } else {
                     if (array_key_exists($name, $row)) {
-                        $sheet->setCellValue("$col$rowNumber", $row[$name]);
+                        $sheet->setCellValueExplicit("$col$rowNumber", $row[$name], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                     }
                 }
 
