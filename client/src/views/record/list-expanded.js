@@ -134,7 +134,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' li[data-id="' + model.id + '"] .cell[data-name="' + item.name + '"]';
+            return this.options.el + ' li[data-id="' + model.id + '"] .cell[data-name="' + item.field + '"]';
         },
 
         getRowContainerHtml: function (id) {
