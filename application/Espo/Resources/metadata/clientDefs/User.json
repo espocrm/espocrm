@@ -104,8 +104,9 @@
     "relationshipPanels":{
         "targetLists":{
             "create": false,
-            "rowActionsView":"views/record/row-actions/relationship-unlink-only",
-            "layout": "listForTarget"
+            "rowActionsView": "crm:views/record/row-actions/relationship-target",
+            "layout": "listForTarget",
+            "view": "crm:views/record/panels/target-lists"
         }
     },
    "filterList": [

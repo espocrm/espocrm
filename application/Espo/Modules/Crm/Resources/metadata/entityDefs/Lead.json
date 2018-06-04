@@ -194,6 +194,12 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "entity": "TargetList"
+        },
+        "targetListIsOptedOut": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
         }
     },
     "links": {

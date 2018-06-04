@@ -26,34 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/target-list/record/row-actions/default', 'views/record/row-actions/relationship-no-remove', function (Dep) {
+Espo.define('crm:views/record/row-actions/relationship-target', 'views/record/row-actions/relationship-unlink-only', function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
             var list = Dep.prototype.getActionList.call(this);
+
             if (this.options.acl.edit) {
-                if (this.model.get('targetListIsOptedOut')) {
+                if (this.model.get('isOptedOut')) {
                     list.push({
                         action: 'cancelOptOut',
-                        label: 'Cancel Opt-Out',
+                        html: this.translate('Cancel Opt-Out', 'labels', 'TargetList'),
                         data: {
-                            id: this.model.id,
-                            type: this.model.name
+                            id: this.model.id
                         }
                     });
                 } else {
                     list.push({
                         action: 'optOut',
-                        label: 'Opt-Out',
+                        html: this.translate('Opt-Out', 'labels', 'TargetList'),
                         data: {
-                            id: this.model.id,
-                            type: this.model.name
+                            id: this.model.id
                         }
                     });
                 }
             }
             return list;
         }
+
     });
+
 });

@@ -338,7 +338,8 @@
         "children": "Children",
         "id": "ID",
         "ids": "IDs",
-        "names": "Names"
+        "names": "Names",
+        "targetListIsOptedOut": "Is Opted Out (Target List)"
     },
     "links": {
         "assignedUser": "Assigned User",

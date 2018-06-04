@@ -26,11 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/panels/relationship', function (Dep) {
+Espo.define('crm:views/record/panels/target-lists', 'views/record/panels/relationship', function (Dep) {
 
     return Dep.extend({
-
-        fetchOnModelAfterRelate: true,
 
         actionOptOut: function (data) {
             this.confirm(this.translate('confirmation', 'messages'), function () {
@@ -38,9 +36,9 @@ Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/pa
                     url: 'TargetList/action/optOut',
                     type: 'POST',
                     data: JSON.stringify({
-                        id: this.model.id,
-                        targetId: data.id,
-                        targetType: data.type
+                        id: data.id,
+                        targetId: this.model.id,
+                        targetType: this.model.name
                     })
                 }).done(function () {
                     this.collection.fetch();
@@ -56,9 +54,9 @@ Espo.define('crm:views/target-list/record/panels/relationship', 'views/record/pa
                     url: 'TargetList/action/cancelOptOut',
                     type: 'POST',
                     data: JSON.stringify({
-                        id: this.model.id,
-                        targetId: data.id,
-                        targetType: data.type
+                        id: data.id,
+                        targetId: this.model.id,
+                        targetType: this.model.name
                     })
                 }).done(function () {
                     this.collection.fetch();

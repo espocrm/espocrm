@@ -4,6 +4,12 @@
             "type": "hasMany",
             "entity": "TargetList",
             "foreign": "users"
+        },
+        "targetListIsOptedOut": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
         }
     }
 }
