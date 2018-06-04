@@ -625,6 +625,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     this.getModelFactory().create(event.scope, function (model) {
                         model.once('sync', function () {
                             this.notify(false);
+                            this.$calendar.fullCalendar('updateEvent', event);
                         }, this);
                         model.id = event.recordId;
                         model.save(attributes, {patch: true}).fail(function () {
