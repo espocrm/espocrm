@@ -3,11 +3,14 @@
         "name": "Name",
         "description": "Description",
         "entryCount": "Entry Count",
+        "optedOutCount": "Opted Out Count",
         "campaigns": "Campaigns",
         "endDate": "End Date",
         "targetLists": "Target Lists",
         "includingActionList": "Including",
-        "excludingActionList": "Excluding"
+        "excludingActionList": "Excluding",
+        "targetStatus": "Target Status",
+        "isOptedOut": "Is Opted Out"
     },
     "links": {
         "accounts": "Accounts",
@@ -23,6 +26,9 @@
             "Television": "Television",
             "Radio": "Radio",
             "Newsletter": "Newsletter"
+        },
+        "targetStatus": {
+            "Opted Out": "Opted Out"
         }
     },
     "labels": {

@@ -60,6 +60,7 @@ class TargetList extends \Espo\Services\Record
     {
         parent::loadAdditionalFields($entity);
         $this->loadEntryCountField($entity);
+        $this->loadOptedOutCountField($entity);
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
@@ -76,6 +77,34 @@ class TargetList extends \Espo\Services\Record
         $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'users');
         $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, 'accounts');
         $entity->set('entryCount', $count);
+    }
+
+    protected function loadOptedOutCountField(Entity $entity)
+    {
+        $count = 0;
+
+
+        $count += $this->getEntityManager()->getRepository('Contact')->join(['targetLists'])->where([
+            'targetListsMiddle.targetListId' => $entity->id,
+            'targetListsMiddle.optedOut' => 1
+        ])->count();
+
+        $count += $this->getEntityManager()->getRepository('Lead')->join(['targetLists'])->where([
+            'targetListsMiddle.targetListId' => $entity->id,
+            'targetListsMiddle.optedOut' => 1
+        ])->count();
+
+        $count += $this->getEntityManager()->getRepository('Account')->join(['targetLists'])->where([
+            'targetListsMiddle.targetListId' => $entity->id,
+            'targetListsMiddle.optedOut' => 1
+        ])->count();
+
+        $count += $this->getEntityManager()->getRepository('User')->join(['targetLists'])->where([
+            'targetListsMiddle.targetListId' => $entity->id,
+            'targetListsMiddle.optedOut' => 1
+        ])->count();
+
+        $entity->set('optedOutCount', $count);
     }
 
     protected function afterCreate(Entity $entity, array $data = array())

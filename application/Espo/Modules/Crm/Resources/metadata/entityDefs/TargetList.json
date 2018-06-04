@@ -8,7 +8,17 @@
         "entryCount": {
             "type": "int",
             "readOnly": true,
-            "notStorable": true
+            "notStorable": true,
+            "layoutFiltersDisabled": true,
+            "layoutMassUpdateDisabled": true
+        },
+        "optedOutCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutMassUpdateDisabled": true
         },
         "description": {
             "type": "text"
@@ -60,6 +70,28 @@
             "layoutLinkDisabled": true,
             "notStorable": true,
             "disabled": true
+        },
+        "targetStatus": {
+            "type": "enum",
+            "options": ["", "Opted Out"],
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "exportDisabled": true,
+            "importDisabled": true,
+            "view": "crm:views/target-list/fields/target-status"
+        },
+        "isOptedOut": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "exportDisabled": true,
+            "importDisabled": true
         }
     },
     "links": {

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,46 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+Espo.define('crm:views/target-list/fields/target-status', 'views/fields/base', function (Dep) {
 
-use \Espo\ORM\Entity;
+    return Dep.extend({
 
-class Account extends \Espo\Services\Record
-{
-    protected $linkSelectParams = array(
-        'contacts' => array(
-            'additionalColumns' => array(
-                'role' => 'accountRole',
-                'isInactive' => 'accountIsInactive'
-            )
-        ),
-        'targetLists' => array(
-            'additionalColumns' => array(
-                'optedOut' => 'isOptedOut'
-            )
-        )
-    );
-
-    protected function getDuplicateWhereClause(Entity $entity, $data)
-    {
-        if (!$entity->get('name')) {
-            return false;
-        }
-        return array(
-            'name' => $entity->get('name')
-        );
-    }
-
-    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
-    {
-        foreach ($sourceList as $source) {
-            $contactList = $this->getEntityManager()->getRepository('Contact')->where([
-                'accountId' => $source->id
-            ])->find();
-            foreach ($contactList as $contact) {
-                $contact->set('accountId', $entity->id);
-                $this->getEntityManager()->saveEntity($contact);
+        getValueForDisplay: function () {
+            if (this.model.get('isOptedOut')) {
+                return this.getLanguage().translateOption('Opted Out', 'targetStatus', 'TargetList');
             }
+
+            return '';
         }
-    }
-}
+    });
+});

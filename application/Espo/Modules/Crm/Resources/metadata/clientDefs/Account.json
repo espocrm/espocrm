@@ -61,6 +61,7 @@
         "create": false
       },
       "targetLists": {
+         "rowActionsView": "views/record/row-actions/relationship-unlink-only",
          "layout": "listForTarget"
       }
    },

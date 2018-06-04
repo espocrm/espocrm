@@ -43,6 +43,14 @@ class Lead extends \Espo\Core\Templates\Services\Person
         $this->addDependency('container');
     }
 
+    protected $linkSelectParams = array(
+        'targetLists' => array(
+            'additionalColumns' => array(
+                'optedOut' => 'isOptedOut'
+            )
+        )
+    );
+
     protected function getFieldManager()
     {
         return $this->getInjection('container')->get('fieldManager');
