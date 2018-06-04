@@ -114,7 +114,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -165,7 +166,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -223,7 +225,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                'hasAttachment'
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -269,7 +272,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'whereClause' => array(),
             'customJoin' => ''
@@ -375,7 +379,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'whereClause' => array()
         );
@@ -480,7 +485,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                'hasAttachment'
             ],
             'whereClause' => array(),
             'customJoin' => ''
@@ -627,15 +633,21 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth->execute();
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        $list = array();
-        foreach ($rows as $row) {
+        $boolAttributeList = ['hasAttachment'];
+
+        $list = [];
+        foreach ($rowList as $row) {
+            foreach ($boolAttributeList as $attribute) {
+                if (!array_key_exists($attribute, $row)) continue;
+                $row[$attribute] = $row[$attribute] == '1' ? true : false;
+            }
             $list[] = $row;
         }
 
         return array(
-            'list' => $rows,
+            'list' => $list,
             'total' => $totalCount
         );
     }
@@ -1004,7 +1016,8 @@ class Activities extends \Espo\Core\Services\Base
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
             ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
             'status',
-            'createdAt'
+            'createdAt',
+            ['VALUE:', 'hasAttachment']
         ];
 
         $selectParams = $selectManager->getEmptySelectParams();

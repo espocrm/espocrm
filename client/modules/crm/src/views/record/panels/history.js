@@ -52,7 +52,8 @@ Espo.define('crm:views/record/panels/history', 'crm:views/record/panels/activiti
                     ],
                     [
                         {name: 'status'},
-                        {name: 'dateSent'}
+                        {name: 'dateSent'},
+                        {name: 'hasAttachment', view: 'views/email/fields/has-attachment'}
                     ]
                 ]
             },
