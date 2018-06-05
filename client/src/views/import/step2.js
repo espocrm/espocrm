@@ -106,14 +106,14 @@ Espo.define('views/import/step2', 'view', function (Dep) {
         afterRender: function () {
             $container = $('#mapping-container');
 
-            $table = $('<table>').addClass('table').addClass('table-bordered');
+            $table = $('<table>').addClass('table').addClass('table-bordered').css('table-layout', 'fixed');
 
             $row = $('<tr>');
             if (this.formData.headerRow) {
-                $cell = $('<th>').attr('width', '27%').html(this.translate('Header Row Value', 'labels', 'Import'));
+                $cell = $('<th>').attr('width', '25%').html(this.translate('Header Row Value', 'labels', 'Import'));
                 $row.append($cell);
             }
-            $cell = $('<th>').attr('width', '33%').html(this.translate('Field', 'labels', 'Import'));
+            $cell = $('<th>').attr('width', '25%').html(this.translate('Field', 'labels', 'Import'));
             $row.append($cell);
             $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
             $row.append($cell);
@@ -139,7 +139,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     value = value.substr(0, 200) + '...';
                 }
 
-                $cell = $('<td>').html(value);
+                $cell = $('<td>').css('overflow', 'hidden').html(value);
                 $row.append($cell);
 
                 if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
