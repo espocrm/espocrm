@@ -726,6 +726,7 @@ class Import extends \Espo\Services\Record
                 if ($dt) {
                     return $dt->format('Y-m-d');
                 }
+                return null;
                 break;
             case Entity::DATETIME:
                 $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
@@ -734,6 +735,7 @@ class Import extends \Espo\Services\Record
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     return $dt->format('Y-m-d H:i:s');
                 }
+                return null;
                 break;
             case Entity::FLOAT:
                 $a = explode($decimalMark, $value);
