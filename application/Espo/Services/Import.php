@@ -523,16 +523,18 @@ class Import extends \Espo\Services\Record
                     if ($value !== '') {
                         $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
                         if ($type == 'personName') {
-                            $lastNameField = 'last' . ucfirst($field);
-                            $firstNameField = 'first' . ucfirst($field);
+                            $firstNameAttribute = 'first' . ucfirst($field);
+                            $lastNameAttribute = 'last' . ucfirst($field);
 
                             $personName = $this->parsePersonName($value, $params['personNameFormat']);
 
-                            if (!$entity->get($firstNameField)) {
-                                $entity->set($firstNameField, $personName['firstName']);
+                            if (!$entity->get($firstNameAttribute)) {
+                                $personName['firstName'] = $this->prepareAttributeValue($entity, $firstNameAttribute, $personName['firstName']);
+                                $entity->set($firstNameAttribute, $personName['firstName']);
                             }
-                            if (!$entity->get($lastNameField)) {
-                                $entity->set($lastNameField, $personName['lastName']);
+                            if (!$entity->get($lastNameAttribute)) {
+                                $personName['lastName'] = $this->prepareAttributeValue($entity, $lastNameAttribute, $personName['lastName']);
+                                $entity->set($lastNameAttribute, $personName['lastName']);
                             }
                             continue;
                         }
@@ -652,6 +654,19 @@ class Import extends \Espo\Services\Record
         return $result;
     }
 
+    protected function prepareAttributeValue($entity, $attribute, $value)
+    {
+        if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
+            $maxLength = $entity->getAttributeParam($attribute, 'len');
+            if ($maxLength) {
+                if (mb_strlen($value) > $maxLength) {
+                    $value = substr($value, 0, $maxLength);
+                }
+            }
+        }
+        return $value;
+    }
+
     protected function parsePersonName($value, $format)
     {
         $firstName = '';
@@ -745,6 +760,8 @@ class Import extends \Espo\Services\Record
                     return $value;
                 }
         }
+
+        $value = $this->prepareAttributeValue($entity, $attribute, $value);
 
         return $value;
     }
