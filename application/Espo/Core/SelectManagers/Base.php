@@ -1007,7 +1007,7 @@ class Base
                         foreach ($item['value'] as $i) {
                             $a = $this->getWherePart($i, $result);
                             foreach ($a as $left => $right) {
-                                if (!empty($right) || is_null($right) || $right === '') {
+                                if (!empty($right) || is_null($right) || $right === '' || $right === 0 || $right === false) {
                                     $arr[] = array($left => $right);
                                 }
                             }
