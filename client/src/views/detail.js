@@ -92,6 +92,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 el: '#main > .header',
                 scope: this.scope
             });
+
+            this.listenTo(this.model, 'sync', function (model) {
+                if (model.hasChanged('name')) {
+                    if (this.getView('header')) {
+                        this.getView('header').reRender();
+                    }
+                }
+            }, this);
         },
 
         setupRecord: function () {
