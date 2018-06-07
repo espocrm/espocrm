@@ -1,17 +1,23 @@
 
-<div class="group-head">
+<div class="group-head" data-level="{{level}}">
     <a class="pull-right" href="javascript:" data-action="remove"><span class="glyphicon glyphicon-remove"></span></a>
-    <span>{{translate 'not' category='logicalOperators' scope='Admin'}}</span>
+    <div>{{translate 'not' category='logicalOperators' scope='Admin'}} (</div>
+</div>
+
+<div class="item-list" data-level="{{level}}">
+    <div data-view-key="{{viewKey}}">{{#if hasItem}}{{{var viewKey this}}}{{/if}}</div>
+</div>
+
+<div class="group-bottom" data-level="{{level}}">
     <div class="btn-group">
-        <button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span></button>
+        <a class="dropdown-toggle small" href="javascript:" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span></a>
         <ul class="dropdown-menu">
             <li><a href="javascript:" data-action="addField">{{translate 'Field' scope='DynamicLogic'}}</a></li>
-            <li><a href="javascript:" data-action="addAnd">{{translate 'and' category='logicalOperators' scope='Admin'}}</a></li>
-            <li><a href="javascript:" data-action="addOr">{{translate 'or' category='logicalOperators' scope='Admin'}}</a></li>
-            <li><a href="javascript:" data-action="addNot">{{translate 'not' category='logicalOperators' scope='Admin'}}</a></li>
+            <li><a href="javascript:" data-action="addAnd">(... {{translate 'and' category='logicalOperators' scope='Admin'}} ...)</a></li>
+            <li><a href="javascript:" data-action="addOr">(... {{translate 'or' category='logicalOperators' scope='Admin'}} ...)</a></li>
+            <li><a href="javascript:" data-action="addNot">{{translate 'not' category='logicalOperators' scope='Admin'}} (...)</a></li>
         </ul>
     </div>
 </div>
-<div class="item-list">
-    <div data-view-key="{{viewKey}}">{{#if hasItem}}{{{var viewKey this}}}{{/if}}</div>
-</div>
+
+<div>)</div>

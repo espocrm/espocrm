@@ -1840,6 +1840,9 @@ h5 {
 }
 
 .dynamic-logic-expression-container {
+    div.item-list[data-level="0"] {
+        margin-left: 0;
+    }
     div.item-list {
         margin-left: 30px;
     }
@@ -1853,6 +1856,15 @@ h5 {
         > div {
             line-height: 33px;
         }
+    }
+    .group-operator:last-child {
+        display: none;
+    }
+    .group-bottom[data-level="0"] {
+        margin-left: 0;
+    }
+    .group-bottom {
+        margin-left: 30px;
     }
 }
 
