@@ -393,7 +393,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         handleAllDay: function (event, notInitial) {
             if (~this.allDayScopeList.indexOf(event.scope)) {
-                event.allDay = true;
+                event.allDay = event.allDayCopy = true;
                 if (!notInitial) {
                     if (event.end) {
                         event.start = event.end;
@@ -423,6 +423,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     event.allDay = false;
                 }
             }
+
+            event.allDayCopy = event.allDay;
         },
 
         convertToFcEvents: function (list) {
@@ -579,6 +581,17 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     this.fetchEvents(fromStr, toStr, callback);
                 }.bind(this),
                 eventDrop: function (event, delta, revertFunc) {
+                    if (event.start.hasTime()) {
+                        if (event.allDayCopy) {
+                            revertFunc();
+                            return;
+                        }
+                    } else {
+                        if (!event.allDayCopy) {
+                            revertFunc();
+                            return;
+                        }
+                    }
                     var eventCloned = Espo.Utils.clone(event);
 
                     var dateStart = this.convertTime(event.start) || null;
