@@ -98,7 +98,8 @@
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",
         "tabIconsDisabled": "Disable tab icons",
-        "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out"
+        "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
+        "outboundEmailBccAddress": "BCC address for external clients"
     },
     "options": {
         "weekStart": {

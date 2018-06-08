@@ -12,7 +12,7 @@
         "label": "Configuration",
         "rows": [
             [{"name": "outboundEmailFromAddress"}, {"name": "outboundEmailIsShared"}],
-            [{"name": "outboundEmailFromName"}, false]
+            [{"name": "outboundEmailFromName"}, {"name": "outboundEmailBccAddress"}]
         ]
     },
     {

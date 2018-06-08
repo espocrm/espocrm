@@ -469,6 +469,10 @@
         "emailAddressIsOptedOutByDefault": {
             "type": "bool",
             "tooltip": true
+        },
+        "outboundEmailBccAddress": {
+            "type": "varchar",
+            "trim": true
         }
     }
 }
