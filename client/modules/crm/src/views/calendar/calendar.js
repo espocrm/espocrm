@@ -397,6 +397,9 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 if (!notInitial) {
                     if (event.end) {
                         event.start = event.end;
+                        if (event.end.hours() === 0 && event.end.minutes() === 0) {
+                            event.start.add(-1, 'days');
+                        }
                     }
                 }
                 return;
