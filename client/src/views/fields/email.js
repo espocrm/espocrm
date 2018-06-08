@@ -342,7 +342,12 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             }
 
             if (this.getPreferences().get('emailUseExternalClient')) {
-                document.location.href = 'mailto:' + emailAddress;
+                require('email-helper', function (EmailHelper) {
+                    var emailHelper = new EmailHelper();
+                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    document.location.href = link;
+                }.bind(this));
+
                 return;
             }
 
