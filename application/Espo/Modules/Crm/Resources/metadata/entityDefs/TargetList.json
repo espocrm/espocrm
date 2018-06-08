@@ -73,7 +73,7 @@
         },
         "targetStatus": {
             "type": "enum",
-            "options": ["", "Opted Out"],
+            "options": ["Listed", "Opted Out"],
             "notStorable": true,
             "readOnly": true,
             "layoutListDisabled": true,
