@@ -35,7 +35,7 @@ Espo.define('crm:views/target-list/fields/target-status', 'views/fields/base', f
                 return this.getLanguage().translateOption('Opted Out', 'targetStatus', 'TargetList');
             }
 
-            return '';
+            return this.getLanguage().translateOption('Listed', 'targetStatus', 'TargetList');
         }
     });
 });

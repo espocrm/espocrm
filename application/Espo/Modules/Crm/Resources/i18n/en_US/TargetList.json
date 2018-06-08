@@ -28,7 +28,8 @@
             "Newsletter": "Newsletter"
         },
         "targetStatus": {
-            "Opted Out": "Opted Out"
+            "Opted Out": "Opted Out",
+            "Listed": "Listed"
         }
     },
     "labels": {
