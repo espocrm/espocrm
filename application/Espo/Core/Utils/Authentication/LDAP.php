@@ -251,6 +251,8 @@ class LDAP extends Base
             $data[$fieldName] = $fieldValue;
         }
 
+        $this->getAuth()->useNoAuth();
+
         $user = $this->getEntityManager()->getEntity('User');
         $user->set($data);
 
