@@ -46,14 +46,7 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $lostStageList = [];
-        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
-        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
-        foreach ($stageList as $stage) {
-            if (empty($probabilityMap[$stage])) {
-                $lostStageList[] = $stage;
-            }
-        }
+        $lostStageList = $this->getLostStageList();
 
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -124,7 +117,7 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => ['leadSource', ['SUM:amountWeightedConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost',
+                'stage!=' => $this->getLostStageList(),
                 ['leadSource!=' => ''],
                 ['leadSource!=' => null]
             ],
@@ -177,8 +170,12 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => ['stage', ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost',
-                'stage!=' => 'Closed Won'
+                [
+                    'stage!=' => $this->getLostStageList()
+                ],
+                [
+                    'stage!=' => $this->getWonStageList()
+                ]
             ],
             'orderBy' => 'LIST:stage:' . implode(',', $options),
             'groupBy' => ['stage']
@@ -191,7 +188,7 @@ class Opportunity extends \Espo\Services\Record
             ];
         }
 
-        $stageIgnoreList = ['Closed Lost', 'Closed Won'];
+        $stageIgnoreList = array_merge($this->getLostStageList(), $this->getWonStageList());
 
         $selectManager->applyAccess($selectParams);
 
@@ -230,7 +227,7 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => [['MONTH:closeDate', 'month'], ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage' => 'Closed Won'
+                'stage' => $this->getWonStageList()
             ],
             'orderBy' => 1,
             'groupBy' => ['MONTH:closeDate']
@@ -410,5 +407,31 @@ class Opportunity extends \Espo\Services\Record
         return array(
             'count' => $count
         );
+    }
+
+    protected function getLostStageList()
+    {
+        $lostStageList = [];
+        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (empty($probabilityMap[$stage])) {
+                $lostStageList[] = $stage;
+            }
+        }
+        return $lostStageList;
+    }
+
+    protected function getWonStageList()
+    {
+        $wonStageList = [];
+        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] == 100) {
+                $wonStageList[] = $stage;
+            }
+        }
+        return $wonStageList;
     }
 }
