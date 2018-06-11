@@ -26,25 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('dynamic-handler', [], function () {
+Espo.define('crm:views/opportunity/fields/last-stage', 'views/fields/enum', function (Dep) {
 
-    var DynamicHandler = function (recordView) {
-        this.recordView = recordView;
-        this.model = recordView.model;
-    }
+    return Dep.extend({
 
-    _.extend(DynamicHandler.prototype, {
+        setup: function () {
+            var optionList = this.getMetadata().get('entityDefs.Opportunity.fields.stage.options', []);
+            var probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap', {});
 
-        init: function () {},
+            this.params.options = [];
 
-        onChange: function (model, o) {},
+            optionList.forEach(function (item) {
+                if (!probabilityMap[item]) return;
+                if (probabilityMap[item] === 100) return;
+                this.params.options.push(item);
+            }, this);
 
-        getMetadata: function () {
-            return this.recordView.getMetadata()
+            this.params.translation = 'Opportunity.options.stage';
+
+            Dep.prototype.setup.call(this);
         }
+
     });
 
-    DynamicHandler.extend = Backbone.Router.extend;
-
-    return DynamicHandler;
 });

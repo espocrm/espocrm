@@ -87,8 +87,9 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateFrom = $request->get('dateFrom');
         $dateTo = $request->get('dateTo');
         $dateFilter = $request->get('dateFilter');
+        $useLastStage = $request->get('useLastStage') === 'true';
 
-        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo);
+        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage);
     }
 
     public function postActionMassConvertCurrency($params, $data, $request)

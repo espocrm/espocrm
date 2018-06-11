@@ -15,7 +15,8 @@
         "campaign": "Campaign",
         "originalLead": "Original Lead",
         "amountCurrency": "Amount Currency",
-        "contactRole": "Contact Role"
+        "contactRole": "Contact Role",
+        "lastStage": "Last Stage"
     },
     "links": {
         "contacts": "Contacts",

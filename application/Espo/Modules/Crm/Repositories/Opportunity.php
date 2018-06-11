@@ -42,6 +42,53 @@ class Opportunity extends \Espo\Core\ORM\Repositories\RDB
             }
         }
 
+        if (!$entity->isAttributeChanged('lastStage') && $entity->isAttributeChanged('stage')) {
+            $probability = $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('stage')], 0);
+            $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+
+            if (!$probability) {
+                $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+                if ($entity->isNew()) {
+                    if (count($stageList)) {
+                        $min = 100;
+                        $minStage = null;
+                        foreach ($stageList as $stage) {
+                            if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] !== 100) {
+                                if ($probabilityMap[$stage] < $min) {
+                                    $min = $probabilityMap[$stage];
+                                    $minStage = $stage;
+                                }
+                            }
+                        }
+                        if ($minStage) {
+                            $entity->set('lastStage', $minStage);
+                        }
+                    }
+                } else {
+                    $lastStageProbability = $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('lastStage')], 0);
+                    if ($lastStageProbability === 100) {
+                        if (count($stageList)) {
+                            $max = 0;
+                            $maxStage = null;
+                            foreach ($stageList as $stage) {
+                                if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] !== 100) {
+                                    if ($probabilityMap[$stage] > $max) {
+                                        $max = $probabilityMap[$stage];
+                                        $maxStage = $stage;
+                                    }
+                                }
+                            }
+                            if ($maxStage) {
+                                $entity->set('lastStage', $maxStage);
+                            }
+                        }
+                    }
+                }
+            } else {
+                $entity->set('lastStage', $entity->get('stage'));
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 

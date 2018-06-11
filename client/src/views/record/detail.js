@@ -789,14 +789,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     this.listenTo(this.model, 'change', function (model, o) {
                         if ('onChange' in this.dynamicHandler) {
-                            this.dynamicHandler.onChange(model, o);
+                            this.dynamicHandler.onChange.call(this.dynamicHandler, model, o);
                         }
 
                         var changedAttributes = model.changedAttributes();
                         for (var attribute in changedAttributes) {
                             var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
                             if (methodName in this.dynamicHandler) {
-                                this.dynamicHandler[methodName](model, changedAttributes[attribute], o);
+                                this.dynamicHandler[methodName].call(this.dynamicHandler, model, changedAttributes[attribute], o);
                             }
                         }
                     }, this);

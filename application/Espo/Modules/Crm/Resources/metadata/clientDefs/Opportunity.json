@@ -73,6 +73,21 @@
       }
    },
    "kanbanViewMode": true,
+   "dynamicLogic": {
+      "fields": {
+         "lastStage": {
+             "visible": {
+                 "conditionGroup": [
+                     {
+                         "type": "equals",
+                         "attribute": "stage",
+                         "value": "Closed Lost"
+                     }
+                 ]
+             }
+         }
+      }
+   },
    "color": "#9fc77e",
    "iconClass": "fas fa-dollar-sign"
 }

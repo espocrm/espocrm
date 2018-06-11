@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Opportunity extends \Espo\Services\Record
 {
-    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null)
+    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false)
     {
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
@@ -46,19 +46,34 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
+        $lostStageList = [];
+        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (empty($probabilityMap[$stage])) {
+                $lostStageList[] = $stage;
+            }
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
         $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
 
+        $stageField = 'stage';
+        if ($useLastStage) {
+            $stageField = 'lastStage';
+        }
+
         $selectParams = [
-            'select' => ['stage', ['SUM:amountConverted', 'amount']],
+            'select' => [$stageField, ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost'
+                [$stageField . '!=' => $lostStageList],
+                [$stageField . '!=' => null]
             ],
-            'orderBy' => 'LIST:stage:' . implode(',', $options),
-            'groupBy' => ['stage']
+            'orderBy' => 'LIST:'.$stageField.':' . implode(',', $options),
+            'groupBy' => [$stageField]
         ];
 
         if ($dateFilter !== 'ever') {
@@ -81,7 +96,7 @@ class Opportunity extends \Espo\Services\Record
 
         $result = array();
         foreach ($rows as $row) {
-            $result[$row['stage']] = floatval($row['amount']);
+            $result[$row[$stageField]] = floatval($row['amount']);
         }
 
         return $result;
