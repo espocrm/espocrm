@@ -333,8 +333,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         },
 
         initDynamicLogic: function () {
-            //if (!Object.keys(this.dynamicLogicDefs || {}).length) return;
-
             this.dynamicLogicDefs = Espo.Utils.clone(this.dynamicLogicDefs || {});
             this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
             this.dynamicLogicDefs.panels = Espo.Utils.clone(this.dynamicLogicDefs.panels);
