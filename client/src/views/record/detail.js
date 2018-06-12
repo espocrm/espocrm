@@ -1105,6 +1105,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.name = simplifiedLayout[p].name || null;
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
+
+                if (simplifiedLayout[p].dynamicLogicVisible) {
+                    if (!panel.name) {
+                        panel.name = 'panel-' + p.toString();
+                    }
+                    if (this.dynamicLogic) {
+                        this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
+                        this.dynamicLogic.defs.panels[panel.name] = {
+                            visible: simplifiedLayout[p].dynamicLogicVisible
+                        };
+                        this.dynamicLogic.processPanel(panel.name, 'visible');
+                    }
+                }
+
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];
 

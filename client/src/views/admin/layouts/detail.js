@@ -32,6 +32,8 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
 
+        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
+
         dataAttributesDefs: {
             fullWidth: {
                 type: 'bool'
@@ -49,10 +51,28 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
+        panelDataAttributesDefs: {
+            panelName: {
+                type: 'varchar',
+            },
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            },
+            dynamicLogicVisible: {
+                type: 'base',
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+            }
+        },
+
         ignoreList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
+            this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
 
             this.wait(true);
             this.loadLayout(function () {
