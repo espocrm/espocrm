@@ -1357,12 +1357,14 @@ h4.panel-title span.color-icon {
 }
 
 .record .middle > .panel:first-child {
-    margin-top: 0;
     border-top-width: @panel-border-width;
 }
 
+.record .middle {
+    margin-bottom: @line-height-computed;
+}
+
 .record .middle > .panel {
-    margin-top: -1 * @line-height-computed;
     border-top-width: 0;
     > .panel-heading {
         .btn-group {
@@ -1372,6 +1374,7 @@ h4.panel-title span.color-icon {
             }
         }
     }
+    margin-bottom: 0;
 }
 
 .panel.sticked,
