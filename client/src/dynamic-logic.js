@@ -91,7 +91,6 @@ Espo.define('dynamic-logic', [], function () {
         processPanel: function (panel, type) {
             var panels = this.defs.panels || {};
             var item = (panels[panel] || {});
-            console.log(item);
 
             if (!(type in item)) return;
             var typeItem = (item[type] || {});
