@@ -6,28 +6,6 @@
     "recordViews":{
         "detail":"crm:views/lead/record/detail"
     },
-    "formDependency":{
-        "status":{
-            "map":{
-                "Converted":[
-                    {
-                        "action":"show",
-                        "panels":[
-                            "convertedTo"
-                        ]
-                    }
-                ]
-            },
-            "default":[
-                {
-                    "action":"hide",
-                    "panels":[
-                        "convertedTo"
-                    ]
-                }
-            ]
-        }
-    },
     "sidePanels":{
         "detail":[
             {
@@ -151,6 +129,19 @@
                         {
                             "type":"isEmpty",
                             "attribute":"phoneNumber"
+                        }
+                    ]
+                }
+            }
+        },
+        "panels": {
+            "convertedTo": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Converted"
                         }
                     ]
                 }
