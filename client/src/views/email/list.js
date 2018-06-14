@@ -105,8 +105,9 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
         getFolderCollection: function (callback) {
             this.getCollectionFactory().create(this.folderScope, function (collection) {
                 collection.url = 'EmailFolder/action/listAll';
+                collection.maxSize = 200;
 
-                this.collection.folderCollection = collection;
+                collection.folderCollection = collection;
 
                 this.listenToOnce(collection, 'sync', function () {
                     callback.call(this, collection);
