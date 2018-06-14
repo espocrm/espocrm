@@ -56,6 +56,7 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     var attributes = this.getView('edit').fetch();
                     attributes = _.extend(attributes, this.getView('edit').model.toJSON());
                     model.set(attributes);
+                    this.model = model;
                     this.createRecordView(model, function (view) {
                         view.render();
                         view.notify(false);
@@ -63,6 +64,41 @@ Espo.define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep
                     this.handleAccess(model);
                 }.bind(this));
             },
+        },
+
+        createRecordView: function (model, callback) {
+            if (!this.id && !this.dateIsChanged) {
+                this.model.set('dateStart', this.options.dateStart);
+                this.model.set('dateEnd', this.options.dateEnd);
+
+                if (this.options.allDay) {
+                    if (this.options.allDay) {
+                        var allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || [];
+                        if (~allDayScopeList.indexOf(this.scope)) {
+                            this.model.set('dateStart', null);
+                            this.model.set('dateEnd', null);
+                            this.model.set('dateStartDate', null);
+                            this.model.set('dateEndDate', this.options.dateEndDate);
+                            if (this.options.dateEndDate !== this.options.dateStartDate) {
+                                this.model.set('dateStartDate', this.options.dateStartDate)
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.listenTo(this.model, 'change:dateStart', function (m, value, o) {
+                if (o.ui) {
+                    this.dateIsChanged = true;
+                }
+            }, this);
+            this.listenTo(this.model, 'change:dateEnd', function (m, value, o) {
+                if (o.ui || o.updatedByDuration) {
+                    this.dateIsChanged = true;
+                }
+            }, this);
+
+            Dep.prototype.createRecordView.call(this, model, callback);
         },
 
         handleAccess: function (model) {

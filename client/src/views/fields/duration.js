@@ -198,7 +198,7 @@ Espo.define('views/fields/duration', 'views/fields/enum', function (Dep) {
             var end = this._getDateEnd();
 
             setTimeout(function () {
-                this.model.set(this.endField, end);
+                this.model.set(this.endField, end, {updatedByDuration: true});
             }.bind(this), 1);
         },
 

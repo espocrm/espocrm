@@ -515,14 +515,20 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 windowResize: function () {
                     this.adjustSize();
                 }.bind(this),
-                select: function (start, end, allDay) {
+                select: function (start, end) {
                     var dateStart = this.convertTime(start);
                     var dateEnd = this.convertTime(end);
 
-                    var attributes = {
-                        dateStart: dateStart,
-                        dateEnd: dateEnd
-                    };
+                    var allDay = !start.hasTime();
+
+                    var dateEndDate = null;
+                    var dateStartDate = null;
+                    if (allDay) {
+                        dateStartDate = start.format('YYYY-MM-DD');
+                        dateEndDate = end.clone().add(-1, 'days').format('YYYY-MM-DD');
+                    }
+
+                    var attributes = {};
                     if (this.options.userId) {
                         attributes.assignedUserId = this.options.userId;
                         attributes.assignedUserName = this.options.userName || this.options.userId;
@@ -532,7 +538,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                     this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
                         attributes: attributes,
                         enabledScopeList: this.enabledScopeList,
-                        scopeList: this.scopeList
+                        scopeList: this.scopeList,
+                        allDay: allDay,
+                        dateStartDate: dateStartDate,
+                        dateEndDate: dateEndDate,
+                        dateStart: dateStart,
+                        dateEnd: dateEnd
                     }, function (view) {
                         view.render();
                         view.notify(false);
