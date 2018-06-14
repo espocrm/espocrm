@@ -5,7 +5,8 @@
         "EmailTemplates": "Email Templates"
     },
     "fields": {
-        "order": "Order"
+        "order": "Order",
+        "childList": "Child List"
     },
     "links": {
         "emailTemplates": "Email Templates"
