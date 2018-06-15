@@ -19,7 +19,11 @@
         "revenue": "Revenue",
         "revenueConverted": "Revenue (converted)",
         "budget": "Budget",
-        "budgetConverted": "Budget (converted)"
+        "budgetConverted": "Budget (converted)",
+        "contactsTemplate": "Contacts Template",
+        "leadsTemplate": "Leads Template",
+        "accountsTemplate": "Accounts Template",
+        "usersTemplate": "Users Template"
     },
     "links": {
         "targetLists": "Target Lists",
@@ -30,7 +34,11 @@
         "opportunities": "Opportunities",
         "campaignLogRecords": "Log",
         "massEmails": "Mass Emails",
-        "trackingUrls": "Tracking URLs"
+        "trackingUrls": "Tracking URLs",
+        "contactsTemplate": "Contacts Template",
+        "leadsTemplate": "Leads Template",
+        "accountsTemplate": "Accounts Template",
+        "usersTemplate": "Users Template"
     },
     "options": {
         "type": {
@@ -59,7 +67,9 @@
         "Email Templates": "Email Templates",
         "Unsubscribe again": "Unsubscribe again",
         "Subscribe again": "Subscribe again",
-        "Create Target List": "Create Target List"
+        "Create Target List": "Create Target List",
+        "Mail Merge": "Mail Merge",
+        "Generate Mail Merge PDF": "Generate Mail Merge PDF"
     },
     "presetFilters": {
         "active": "Active"

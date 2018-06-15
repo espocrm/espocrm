@@ -40,6 +40,13 @@ class Tcpdf extends \TCPDF
 
     protected $footerPosition = 15;
 
+    protected $useGroupNumbers = false;
+
+    public function setUseGroupNumbers($value)
+    {
+        $this->useGroupNumbers = $value;
+    }
+
     public function setFooterHtml($html)
     {
         $this->footerHtml = $html;
@@ -58,7 +65,16 @@ class Tcpdf extends \TCPDF
 
         $this->SetY((-1) * $this->footerPosition);
 
-        $html = str_replace('{pageNumber}', '{:pnp:}', $this->footerHtml);
+        $html = $this->footerHtml;
+
+        if ($this->useGroupNumbers) {
+            $html = str_replace('{pageNumber}', '{:png:}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+        } else {
+            $html = str_replace('{pageNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+        }
+
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false, 'T');
 
         $this->SetAutoPageBreak($autoPageBreak, $breakMargin);
@@ -98,6 +114,9 @@ class Tcpdf extends \TCPDF
                 ++$pagegroupnum;
                 $pnga = TCPDF_STATIC::formatPageNumber($pagegroupnum);
                 $pngu = TCPDF_FONTS::UTF8ToUTF16BE($pnga, false, $this->isunicode, $this->CurrentFont);
+
+                $pnga = $pngu;
+
                 $png_num_chars = $this->GetNumChars($pnga);
                 // replace page numbers
                 $replace = array();

@@ -142,6 +142,26 @@
         },
         "budget": {
             "type": "currency"
+        },
+        "contactsTemplate": {
+            "type": "link",
+            "view": "crm:views/campaign/fields/template",
+            "targetEntityType": "Contact"
+        },
+        "leadsTemplate": {
+            "type": "link",
+            "view": "crm:views/campaign/fields/template",
+            "targetEntityType": "Lead"
+        },
+        "accountsTemplate": {
+            "type": "link",
+            "view": "crm:views/campaign/fields/template",
+            "targetEntityType": "Account"
+        },
+        "usersTemplate": {
+            "type": "link",
+            "view": "crm:views/campaign/fields/template",
+            "targetEntityType": "User"
         }
     },
     "links": {
@@ -209,6 +229,26 @@
             "entity": "MassEmail",
             "foreign": "campaign",
             "layoutRelationshipsDisabled": true
+        },
+        "contactsTemplate": {
+            "type": "belongsTo",
+            "entity": "Template",
+            "noJoin": true
+        },
+        "leadsTemplate": {
+            "type": "belongsTo",
+            "entity": "Template",
+            "noJoin": true
+        },
+        "accountsTemplate": {
+            "type": "belongsTo",
+            "entity": "Template",
+            "noJoin": true
+        },
+        "usersTemplate": {
+            "type": "belongsTo",
+            "entity": "Template",
+            "noJoin": true
         }
     },
     "collection": {

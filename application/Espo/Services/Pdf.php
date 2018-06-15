@@ -76,38 +76,8 @@ class Pdf extends \Espo\Core\Services\Base
         return $this->getInjection('fileManager');
     }
 
-    public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false)
+    protected function printEntity(Entity $entity, Entity $template, Htmlizer $htmlizer, \Espo\Core\Pdf\Tcpdf $pdf)
     {
-        $entityType = $entity->getEntityType();
-
-        $service = $this->getServiceFactory()->create($entityType);
-
-        $service->loadAdditionalFields($entity);
-
-        if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
-            $service->loadAdditionalFieldsForPdf($entity);
-        }
-
-        if ($template->get('entityType') !== $entityType) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->check($entity, 'read') || !$this->getAcl()->check($template, 'read')) {
-            throw new Forbidden();
-        }
-
-        $htmlizer = new Htmlizer(
-            $this->getFileManager(),
-            $this->getInjection('dateTime'),
-            $this->getInjection('number'),
-            $this->getAcl(),
-            $this->getInjection('entityManager'),
-            $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage')
-        );
-
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
-
         $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
 
         $pdf->setFont($fontFace, '', $this->fontSize, '', true);
@@ -145,6 +115,67 @@ class Pdf extends \Espo\Core\Services\Base
 
         $htmlBody = $htmlizer->render($entity, $template->get('body'));
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
+    }
+
+    public function generateMailMerge($entityType, $entityList, Entity $template, $name, $campaignId = null)
+    {
+        $htmlizer = $this->createHtmlizer();
+        $pdf = new \Espo\Core\Pdf\Tcpdf();
+        $pdf->setUseGroupNumbers(true);
+
+        $service = $this->getServiceFactory()->create($entityType);
+
+        foreach ($entityList as $entity) {
+            $service->loadAdditionalFields($entity);
+            if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
+                $service->loadAdditionalFieldsForPdf($entity);
+            }
+            $pdf->startPageGroup();
+            $this->printEntity($entity, $template, $htmlizer, $pdf);
+        }
+
+        $filename = \Espo\Core\Utils\Util::sanitizeFileName($name) . '.pdf';
+
+        $attachment = $this->getEntityManager()->getEntity('Attachment');
+
+        $content = $pdf->output('', 'S');
+
+        $attachment->set([
+            'name' => $filename,
+            'relatedType' => 'Campaign',
+            'type' => 'application/pdf',
+            'relatedId' => $campaignId,
+            'role' => 'Mail Merge',
+            'contents' => $content
+        ]);
+
+        $this->getEntityManager()->saveEntity($attachment);
+
+        return $attachment->id;
+    }
+
+    public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false)
+    {
+        $entityType = $entity->getEntityType();
+        $service = $this->getServiceFactory()->create($entityType);
+        $service->loadAdditionalFields($entity);
+
+        if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
+            $service->loadAdditionalFieldsForPdf($entity);
+        }
+
+        if ($template->get('entityType') !== $entityType) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getAcl()->check($entity, 'read') || !$this->getAcl()->check($template, 'read')) {
+            throw new Forbidden();
+        }
+
+        $htmlizer = $this->createHtmlizer();
+        $pdf = new \Espo\Core\Pdf\Tcpdf();
+
+        $this->printEntity($entity, $template, $htmlizer, $pdf);
 
         if ($displayInline) {
             $name = $entity->get('name');
@@ -157,5 +188,17 @@ class Pdf extends \Espo\Core\Services\Base
 
         return $pdf->output('', 'S');
     }
-}
 
+    protected function createHtmlizer()
+    {
+        return new Htmlizer(
+            $this->getFileManager(),
+            $this->getInjection('dateTime'),
+            $this->getInjection('number'),
+            $this->getAcl(),
+            $this->getInjection('entityManager'),
+            $this->getInjection('metadata'),
+            $this->getInjection('defaultLanguage')
+        );
+    }
+}

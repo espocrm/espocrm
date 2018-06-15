@@ -31,8 +31,18 @@ namespace Espo\Modules\Crm\Services;
 
 use \Espo\ORM\Entity;
 
+use \Espo\Core\Exceptions\Error,
+    \Espo\Core\Exceptions\Forbidden,
+    \Espo\Core\Exceptions\BadRequest;
+
 class Campaign extends \Espo\Services\Record
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('container');
+    }
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -283,5 +293,90 @@ class Campaign extends \Espo\Services\Record
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-}
+    public function generateMailMergePdf($campaignId, $link, $checkAcl = false)
+    {
+        $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
 
+        if ($checkAcl && !$this->getAcl()->check($campaign, 'read')) {
+            throw new Forbidden();
+        }
+
+        if ($checkAcl) {
+            $targetEntityType = $campaign->getRelationParam($link, 'entity');
+            if (!$this->getAcl()->check($targetEntityType, 'read')) {
+                throw new Forbidden("Could not mail merge campaign because access to target enity type is forbidden.");
+            }
+        }
+
+        if (!in_array($link, ['accounts', 'contacts', 'leads', 'users'])) {
+            throw new BadRequest();
+        }
+
+        if ($campaign->get('type') !== 'Mail') {
+            throw new Error("Could not mail merge campaign not of Mail type.");
+        }
+
+        if (
+            !$campaign->get($link . 'TemplateId')
+        ) {
+            throw new Error("Could not mail merge campaign w/o specified template.");
+        }
+
+        $template = $this->getEntityManager()->getEntity('Template', $campaign->get($link . 'TemplateId'));
+        if (!$template) {
+            throw new Error("Template not found");
+        }
+        if ($template->get('entityType') !== $targetEntityType) {
+            throw new Error("Template is not of proper entity type.");
+        }
+
+        $campaign->loadLinkMultipleField('targetLists');
+        $campaign->loadLinkMultipleField('excludingTargetLists');
+
+        if (count($campaign->getLinkMultipleIdList('targetLists')) === 0) {
+            throw new Error("Could not mail merge campaign w/o any specified target list.");
+        }
+
+        $metTargetHash = [];
+        $targetEntityList = [];
+
+        $excludingTargetListList = $campaign->get('excludingTargetLists');
+        foreach ($excludingTargetListList as $excludingTargetList) {
+            foreach ($excludingTargetList->get($link) as $excludingTarget) {
+                $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
+                $metTargetHash[$hashId] = true;
+            }
+        }
+
+        $targetListCollection = $campaign->get('targetLists');
+        foreach ($targetListCollection as $targetList) {
+            if (!$campaign->get($link . 'TemplateId')) continue;
+            $entityList = $targetList->get($link, [
+                'additionalColumnsConditions' => [
+                    'optedOut' => false
+                ]
+            ]);
+            foreach ($entityList as $e) {
+                $hashId = $e->getEntityType() . '-'. $e->id;
+                if (!empty($metTargetHash[$hashId])) {
+                    continue;
+                }
+                $targetEntityList[] = $e;
+                $metTargetHash[$hashId] = true;
+            }
+        }
+
+        if (empty($targetEntityList)) {
+            throw new Error("No targets available for mail merge.");
+        }
+
+        $filename = $campaign->get('name') . ' - ' . $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
+
+        return $this->getServiceFactory()->create('Pdf')->generateMailMerge($targetEntityType, $targetEntityList, $template, $filename, $campaign->id);
+    }
+
+    protected function getDefaultLanguage()
+    {
+        return $this->getInjection('container')->get('defaultLanguage');
+    }
+}

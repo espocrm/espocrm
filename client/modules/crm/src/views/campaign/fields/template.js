@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,29 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Controllers;
+Espo.define('crm:views/campaign/fields/template', 'views/fields/link', function (Dep) {
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden,
-    \Espo\Core\Exceptions\BadRequest;
+    return Dep.extend({
 
-class Campaign extends \Espo\Core\Controllers\Record
-{
-    public function postActionGenerateMailMergePdf($params, $data, $request)
-    {
-        if (empty($data->campaignId)) {
-            throw new BadRequest();
+        createDisabled: true,
+
+        getSelectFilters: function () {
+            return {
+                entityType: {
+                    type: 'in',
+                    value: [this.getMetadata().get(['entityDefs', 'Campaign', 'fields', this.name, 'targetEntityType'])]
+                }
+            };
         }
-        if (empty($data->link)) {
-            throw new BadRequest();
-        }
+    });
 
-        if (!$this->getAcl()->checkScope('Campaign', 'read')) {
-            throw new Forbidden();
-        }
-
-        return [
-            'id' => $this->getRecordService()->generateMailMergePdf($data->campaignId, $data->link, true)
-        ];
-    }
-}
+});

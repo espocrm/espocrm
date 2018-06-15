@@ -1,12 +1,20 @@
 [
     {
-        "label":"Overview",
+        "label": "Overview",
         "rows":[
             [{"name":"name"}, {"name":"status"}],
             [{"name":"type"}, {"name":"startDate"}],
             [{"name":"budget"}, {"name":"endDate"}],
             [{"name":"targetLists"}, {"name":"excludingTargetLists"}],
             [{"name":"description", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "Mail Merge",
+        "name": "mailMerge",
+        "rows":[
+            [{"name":"contactsTemplate"}, {"name":"leadsTemplate"}],
+            [{"name":"accountsTemplate"}, {"name":"usersTemplate"}]
         ]
     }
 ]

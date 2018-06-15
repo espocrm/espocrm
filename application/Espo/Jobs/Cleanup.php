@@ -191,7 +191,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
         $collection = $this->getEntityManager()->getRepository('Attachment')->where(array(
             'OR' => array(
                 array(
-                    'role' => ['Export File']
+                    'role' => ['Export File', 'Mail Merge']
                 )
             ),
             'createdAt<' => $datetime->format('Y-m-d H:i:s')

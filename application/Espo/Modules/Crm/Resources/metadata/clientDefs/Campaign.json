@@ -56,36 +56,119 @@
     "filterList": [
       "active"
    ],
-   "formDependency": {
-      "type": {
-         "map": {
-            "Email": [
-               {
-                  "action": "show",
-                  "fields": ["targetLists", "excludingTargetLists"]
-               }
-            ],
-            "Newsletter": [
-               {
-                  "action": "show",
-                  "fields": ["targetLists", "excludingTargetLists"]
-               }
-            ],
-            "Mail": [
-               {
-                  "action": "show",
-                  "fields": ["targetLists", "excludingTargetLists"]
-               }
-            ]
-         },
-         "default": [
-            {
-               "action": "hide",
-               "fields": ["targetLists", "excludingTargetLists"]
+    "dynamicLogic": {
+        "fields": {
+            "targetLists": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Email"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Newsletter"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Mail"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "excludingTargetLists": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Email"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Newsletter"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Mail"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "contactsTemplate": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
+            },
+            "leadsTemplate": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
+            },
+            "accountsTemplate": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
+            },
+            "usersTemplate": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
             }
-         ]
-      }
-   },
+        },
+        "panels": {
+            "mailMerge": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
+            }
+        }
+    },
    "boolFilterList": ["onlyMy"],
    "iconClass": "fas fa-chart-line"
 }
