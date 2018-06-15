@@ -26,25 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('dynamic-handler', [], function () {
+Espo.define('acl-portal/notification', 'acl-portal', function (Dep) {
 
-    var DynamicHandler = function (recordView) {
-        this.recordView = recordView;
-        this.model = recordView.model;
-    }
+    return Dep.extend({
 
-    _.extend(DynamicHandler.prototype, {
-
-        init: function () {},
-
-        onChange: function (model, o) {},
-
-        getMetadata: function () {
-            return this.recordView.getMetadata()
+        checkIsOwner: function (model) {
+            if (this.getUser().id === model.get('userId')) {
+                return true;
+            }
+            return false;
         }
+
     });
-
-    DynamicHandler.extend = Backbone.Router.extend;
-
-    return DynamicHandler;
 });

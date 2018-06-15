@@ -1,4 +1,4 @@
-<header data-style="{{style}}" data-name="{{name}}">
+<header data-name="{{name}}">
     <label data-is-custom="{{#if isCustomLabel}}true{{/if}}">{{label}}</label>&nbsp;
     <a href="javascript:" data-action="edit-panel-label" class="edit-panel-label"><i class="glyphicon glyphicon-pencil"></i></a>
     <a href="javascript:" style="float: right;" data-action="removePanel" class="remove-panel" data-number="{{number}}"><i class="glyphicon glyphicon-remove"></i></a>

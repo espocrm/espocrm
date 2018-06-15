@@ -78,7 +78,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     if (!emailAddressData || !emailAddressData.length) {
                         var optOut = false;
                         if (this.model.isNew()) {
-                            optOut = this.emailAddressOptedOutByDefault;
+                            optOut = this.emailAddressOptedOutByDefault && this.model.name !== 'User';
                         } else {
                             optOut = this.model.get(this.isOptedOutFieldName)
                         }

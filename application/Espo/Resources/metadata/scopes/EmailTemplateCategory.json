@@ -1,6 +1,6 @@
 {
     "entity": true,
-    "layouts": true,
+    "layouts": false,
     "tab": false,
     "acl": "recordAllTeamNo",
     "customizable": true,

@@ -32,6 +32,8 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
 
+        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
+
         dataAttributesDefs: {
             fullWidth: {
                 type: 'bool'
@@ -49,10 +51,28 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
-        ignoreList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
+        panelDataAttributesDefs: {
+            panelName: {
+                type: 'varchar',
+            },
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            },
+            dynamicLogicVisible: {
+                type: 'base',
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+            }
+        },
+
+        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
+            this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
 
             this.wait(true);
             this.loadLayout(function () {
@@ -63,14 +83,41 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
         },
 
         loadLayout: function (callback) {
-            this.getModelFactory().create(this.scope, function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
-                    this.readDataFromLayout(model, layout);
-                    if (callback) {
-                        callback();
-                    }
-                }.bind(this), false);
+            var layout;
+            var model;
+
+            var promiseList = [];
+
+            promiseList.push(
+                new Promise(function (resolve) {
+                    this.getModelFactory().create(this.scope, function (m) {
+                        this.getHelper().layoutManager.get(this.scope, this.type, function (layoutLoaded) {
+                            layout = layoutLoaded;
+                            model = m;
+                            resolve();
+                        });
+                    }.bind(this));
+                }.bind(this))
+            );
+
+            if (~['detail', 'detailSmall'].indexOf(this.type)) {
+                promiseList.push(
+                    new Promise(function (resolve) {
+                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutLoaded) {
+                            this.sidePanelsLayout = layoutLoaded;
+                            resolve();
+                        }.bind(this));
+                    }.bind(this))
+                );
+            }
+
+            Promise.all(promiseList).then(function () {
+                this.readDataFromLayout(model, layout);
+                if (callback) {
+                    callback();
+                }
             }.bind(this));
+
         },
 
         readDataFromLayout: function (model, layout) {
@@ -110,11 +157,27 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
         },
 
         isFieldEnabled: function (model, name) {
-            if (this.ignoreList.indexOf(name) != -1) {
-                return false;
+            if (this.hasDefaultPanel()) {
+                if (this.defaultPanelFieldList.indexOf(name) !== -1) {
+                    return false;
+                }
             }
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
+        },
+
+        hasDefaultPanel: function () {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) === false) return false;
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return false;
+
+            if (this.sidePanelsLayout) {
+                for (var name in this.sidePanelsLayout) {
+                    if (name === 'default' && this.sidePanelsLayout[name].disabled) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     });
 });
-

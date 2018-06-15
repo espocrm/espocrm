@@ -7,7 +7,8 @@
         "panelName": "Panel Name",
         "style": "Style",
         "sticked": "Sticked",
-        "isLarge": "Large font size"
+        "isLarge": "Large font size",
+        "dynamicLogicVisible": "Conditions making panel visible"
     },
     "options": {
         "align": {

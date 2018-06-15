@@ -43,6 +43,10 @@ Espo.define('crm:views/dashlets/sales-pipeline', 'crm:views/dashlets/abstract/ch
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
             }
+
+            if (this.getOption('useLastStage')) {
+                url += '&useLastStage=true';
+            }
             return url;
         },
 

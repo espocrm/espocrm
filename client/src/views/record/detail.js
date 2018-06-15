@@ -789,14 +789,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     this.listenTo(this.model, 'change', function (model, o) {
                         if ('onChange' in this.dynamicHandler) {
-                            this.dynamicHandler.onChange(model, o);
+                            this.dynamicHandler.onChange.call(this.dynamicHandler, model, o);
                         }
 
                         var changedAttributes = model.changedAttributes();
                         for (var attribute in changedAttributes) {
                             var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
                             if (methodName in this.dynamicHandler) {
-                                this.dynamicHandler[methodName](model, changedAttributes[attribute], o);
+                                this.dynamicHandler[methodName].call(this.dynamicHandler, model, changedAttributes[attribute], o);
                             }
                         }
                     }, this);
@@ -1105,6 +1105,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.name = simplifiedLayout[p].name || null;
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
+
+                if (simplifiedLayout[p].dynamicLogicVisible) {
+                    if (!panel.name) {
+                        panel.name = 'panel-' + p.toString();
+                    }
+                    if (this.dynamicLogic) {
+                        this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
+                        this.dynamicLogic.defs.panels[panel.name] = {
+                            visible: simplifiedLayout[p].dynamicLogicVisible
+                        };
+                        this.dynamicLogic.processPanel(panel.name, 'visible');
+                    }
+                }
+
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];
 

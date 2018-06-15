@@ -9,7 +9,7 @@
 <div class="row middle">
     <div class="col-sm-6">
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 <div class="cell form-group" data-name="type">
                     <label class="control-label" data-name="type">{{translate 'type' scope='Admin' category='fields'}}</label>
                     <div class="field" data-name="type">{{translate type scope='Admin' category='fieldTypes'}}</div>
@@ -40,7 +40,7 @@
     {{#if hasDynamicLogicPanel}}
     <div class="panel panel-default">
         <div class="panel-heading"><h4 class="panel-title">{{translate 'Dynamic Logic' scope='FieldManager'}}</h4></div>
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 {{#if dynamicLogicVisible}}
                 <div class="cell form-group" data-name="dynamicLogicVisible">
                     <label class="control-label" data-name="dynamicLogicVisible">{{translate 'dynamicLogicVisible' scope='Admin' category='fields'}}</label>

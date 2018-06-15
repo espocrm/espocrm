@@ -21,6 +21,9 @@
                 "options": ["currentYear", "currentQuarter", "currentMonth", "ever", "between"],
                 "default": "currentYear",
                 "translation": "Global.options.dateSearchRanges"
+            },
+            "useLastStage": {
+                "type": "bool"
             }
         },
         "layout": [
@@ -31,7 +34,7 @@
                     ],
                     [
                         {"name": "dateFilter"},
-                        false
+                        {"name": "useLastStage"}
                     ],
                     [
                         {"name": "dateFrom"},

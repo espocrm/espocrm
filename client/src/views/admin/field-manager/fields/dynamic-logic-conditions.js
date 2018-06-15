@@ -45,7 +45,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
         setup: function () {
             this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
-            this.scope = this.options.scope;
+            this.scope = this.params.scope || this.options.scope;
             this.createStringView();
         },
 
@@ -67,7 +67,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
         edit: function () {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.conditionGroup,
-                scope: this.options.scope
+                scope: this.scope
             }, function (view) {
                 view.render();
 

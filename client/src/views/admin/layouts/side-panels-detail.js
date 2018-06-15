@@ -76,6 +76,15 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
             var panelListAll = [];
             var labels = {};
             var params = {};
+
+            if (
+                this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false
+                &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
+            ) {
+                panelListAll.push('default');
+                labels['default'] = 'Default';
+            }
             (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || []).forEach(function (item) {
                 if (!item.name) return;
                 panelListAll.push(item.name);

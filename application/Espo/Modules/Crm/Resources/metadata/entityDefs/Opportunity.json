@@ -62,6 +62,12 @@
                 }
             ]
         },
+        "lastStage": {
+            "type": "enum",
+            "view": "crm:views/opportunity/fields/last-stage",
+            "customizationOptionsDisabled": true,
+            "customizationDefaultDisabled": true
+        },
         "probability": {
             "type": "int",
             "required": true,
@@ -246,6 +252,9 @@
     "indexes": {
         "stage": {
             "columns": ["stage", "deleted"]
+        },
+        "lastStage": {
+            "columns": ["lastStage"]
         },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
