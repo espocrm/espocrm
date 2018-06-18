@@ -180,7 +180,8 @@ Espo.define('views/record/list-tree', 'views/record/list', function (Dep) {
                         level: this.level,
                         isSelected: model.id == this.selectedData.id,
                         selectedData: this.selectedData,
-                        selectable: this.selectable
+                        selectable: this.selectable,
+                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
                     }, function () {
                         built++;
                         if (built == count) {

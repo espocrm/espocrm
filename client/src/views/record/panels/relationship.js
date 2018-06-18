@@ -186,20 +186,23 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {
-                    collection.once('sync', function () {
-                        this.createView('list', viewName, {
-                            collection: collection,
-                            layoutName: layoutName,
-                            listLayout: listLayout,
-                            checkboxes: false,
-                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
-                            buttonsDisabled: true,
-                            el: this.options.el + ' .list-container',
-                        }, function (view) {
-                            view.render();
-                        });
-                    }, this);
-                    collection.fetch();
+                    this.createView('list', viewName, {
+                        collection: collection,
+                        layoutName: layoutName,
+                        listLayout: listLayout,
+                        checkboxes: false,
+                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                        buttonsDisabled: true,
+                        el: this.options.el + ' .list-container',
+                        skipBuildRows: true
+                    }, function (view) {
+                        view.getSelectAttributeList(function (selectAttributeList) {
+                            if (selectAttributeList) {
+                                collection.data.select = selectAttributeList.join(',');
+                            }
+                            collection.fetch();
+                        }.bind(this));
+                    });
                 }, this);
 
                 this.wait(false);

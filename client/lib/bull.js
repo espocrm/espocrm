@@ -784,13 +784,13 @@ var Bull = Bull || {};
                 options.el = this.getSelector() + ' [data-view="'+key+'"]';
             }
             this._factory.create(viewName, options, function (view) {
-                if (this._isRendered) {
+                if (this._isRendered || options.setViewBeforeCallback) {
                     this.setView(key, view);
                 }
                 if (typeof callback === 'function') {
                     callback.call(context, view);
                 }
-                if (!this._isRendered) {
+                if (!this._isRendered && !options.setViewBeforeCallback) {
                     this.setView(key, view);
                 }
             }.bind(this));

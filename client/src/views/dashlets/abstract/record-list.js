@@ -99,22 +99,24 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
 
                 var viewName = this.listView || ((this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn);
 
-                this.listenToOnce(collection, 'sync', function () {
-                    this.createView('list', viewName, {
-                        collection: collection,
-                        el: this.getSelector() + ' .list-container',
-                        pagination: this.getOption('pagination') ? 'bottom' : false,
-                        type: 'listDashlet',
-                        rowActionsView: this.rowActionsView,
-                        checkboxes: false,
-                        showMore: true,
-                        listLayout: this.getOption(this.layoutType + 'Layout')
-                    }, function (view) {
-                        view.render();
-                    });
-                }, this);
-
-                collection.fetch();
+                this.createView('list', viewName, {
+                    collection: collection,
+                    el: this.getSelector() + ' .list-container',
+                    pagination: this.getOption('pagination') ? 'bottom' : false,
+                    type: 'listDashlet',
+                    rowActionsView: this.rowActionsView,
+                    checkboxes: false,
+                    showMore: true,
+                    listLayout: this.getOption(this.layoutType + 'Layout'),
+                    skipBuildRows: true
+                }, function (view) {
+                    view.getSelectAttributeList(function (selectAttributeList) {
+                        if (selectAttributeList) {
+                            collection.data.select = selectAttributeList.join(',');
+                        }
+                        collection.fetch();
+                    }.bind(this));
+                });
 
             }, this);
         },

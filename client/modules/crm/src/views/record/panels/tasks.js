@@ -148,20 +148,23 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
                 var rowActionsView = 'crm:views/record/row-actions/tasks';
 
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.createView('list', 'views/record/list-expanded', {
-                        el: this.getSelector() + ' > .list-container',
-                        pagination: false,
-                        type: 'listRelationship',
-                        rowActionsView: rowActionsView,
-                        checkboxes: false,
-                        collection: collection,
-                        listLayout: this.listLayout,
-                    }, function (view) {
-                        view.render();
-                    });
-                }.bind(this));
-                this.collection.fetch();
+                this.createView('list', 'views/record/list-expanded', {
+                    el: this.getSelector() + ' > .list-container',
+                    pagination: false,
+                    type: 'listRelationship',
+                    rowActionsView: rowActionsView,
+                    checkboxes: false,
+                    collection: collection,
+                    listLayout: this.listLayout,
+                    skipBuildRows: true
+                }, function (view) {
+                    view.getSelectAttributeList(function (selectAttributeList) {
+                        if (selectAttributeList) {
+                            this.collection.data.select = selectAttributeList.join(',');
+                        }
+                        this.collection.fetch();
+                    }.bind(this));
+                });
             }, this);
         },
 

@@ -213,6 +213,10 @@ class Record extends Base
         if ($request->get('filterList')) {
             $params['filterList'] = $request->get('filterList');
         }
+
+        if ($request->get('select')) {
+            $params['select'] = explode(',', $request->get('select'));
+        }
     }
 
     public function actionListLinked($params, $data, $request)

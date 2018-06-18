@@ -180,26 +180,31 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
                            'views/record/list';
 
-            this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', viewName, {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .list-container',
-                    selectable: true,
-                    checkboxes: this.multiple,
-                    massActionsDisabled: true,
-                    rowActionsView: false,
-                    layoutName: 'listSmall',
-                    searchManager: this.searchManager,
-                    checkAllResultDisabled: !this.massRelateEnabled,
-                    buttonsDisabled: true
-                }, function (view) {
-                    view.once('select', function (model) {
-                        this.trigger('select', model);
-                        this.close();
-                    }.bind(this));
+            this.createView('list', viewName, {
+                collection: this.collection,
+                el: this.containerSelector + ' .list-container',
+                selectable: true,
+                checkboxes: this.multiple,
+                massActionsDisabled: true,
+                rowActionsView: false,
+                layoutName: 'listSmall',
+                searchManager: this.searchManager,
+                checkAllResultDisabled: !this.massRelateEnabled,
+                buttonsDisabled: true,
+                skipBuildRows: true
+            }, function (view) {
+                view.once('select', function (model) {
+                    this.trigger('select', model);
+                    this.close();
                 }.bind(this));
 
-            }.bind(this));
+                view.getSelectAttributeList(function (selectAttributeList) {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
+                    this.collection.fetch();
+                }.bind(this));
+            });
         },
 
         create: function () {

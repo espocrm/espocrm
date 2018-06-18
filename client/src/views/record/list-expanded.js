@@ -153,7 +153,23 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
             }
         },
 
+        fetchAttributeListFromLayout: function () {
+            var list = [];
+            if (this.listLayout.rows) {
+                this.listLayout.rows.forEach(function (row) {
+                    row.forEach(function (item) {
+                        if (!item.name) return;
+                        var field = item.name;
+                        var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                        if (!fieldType) return;
+                        this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                            list.push(attribute);
+                        }, this);
+                    }, this);
+                }, this);
+            }
+            return list;
+        }
+
     });
 });
-
-

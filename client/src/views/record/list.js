@@ -805,7 +805,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
 
             this.checkedList = [];
-            this.buildRows();
+            if (!this.options.skipBuildRows) {
+                this.buildRows();
+            }
         },
 
         afterRender: function () {
@@ -866,6 +868,40 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.layoutIsBeingLoaded = false;
                 }, this);
             }.bind(this));
+        },
+
+        getSelectAttributeList: function (callback) {
+            if (this.scope == null || this.rowHasOwnLayout) {
+                callback(null);
+                return;
+            }
+
+            if (this.listLayout) {
+                var attributeList = this.fetchAttributeListFromLayout();
+                callback(attributeList);
+                return;
+            } else {
+                this._loadListLayout(function (listLayout) {
+                    this.listLayout = listLayout;
+                    var attributeList = this.fetchAttributeListFromLayout();
+                    callback(attributeList);
+                }.bind(this));
+                return;
+            }
+        },
+
+        fetchAttributeListFromLayout: function () {
+            var list = [];
+            this.listLayout.forEach(function (item) {
+                if (!item.name) return;
+                var field = item.name;
+                var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                if (!fieldType) return;
+                this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                    list.push(attribute);
+                }, this);
+            }, this);
+            return list;
         },
 
         _getHeaderDefs: function () {
@@ -1103,7 +1139,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         type: this._internalLayoutType,
                         layout: internalLayout
                     },
-                    name: this.type + '-' + model.name
+                    name: this.type + '-' + model.name,
+                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
                 }, callback);
             }.bind(this), model);
         },
@@ -1424,4 +1461,3 @@ Espo.define('views/record/list', 'view', function (Dep) {
         }
     });
 });
-

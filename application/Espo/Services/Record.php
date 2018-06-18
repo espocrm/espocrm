@@ -99,6 +99,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $selectAttributeList = null;
 
+    protected $mandatorySelectAttributeList = [];
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -902,7 +904,7 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
 
-        $selectAttributeList = $this->getSelectAttributeList();
+        $selectAttributeList = $this->getSelectAttributeList($params);
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         } else {
@@ -959,7 +961,7 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
 
-        $selectAttributeList = $this->getSelectAttributeList();
+        $selectAttributeList = $this->getSelectAttributeList($params);
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         } else {
@@ -1110,7 +1112,7 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
 
-        $selectAttributeList = $recordService->getSelectAttributeList();
+        $selectAttributeList = $recordService->getSelectAttributeList($params);
         if ($selectAttributeList) {
             $selectParams['select'] = $selectAttributeList;
         } else {
@@ -2114,9 +2116,57 @@ class Record extends \Espo\Core\Services\Base
         return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
     }
 
-    public function getSelectAttributeList()
+    public function getSelectAttributeList($params)
     {
-        return $this->selectAttributeList;
+        if ($this->selectAttributeList) {
+            return $this->selectAttributeList;
+        }
+
+        $seed = $this->getEntityManager()->getEntity($this->getEntityType());
+
+        if (array_key_exists('select', $params)) {
+            $passedAttributeList = $params['select'];
+        } else {
+            $passedAttributeList = null;
+        }
+
+        if ($passedAttributeList) {
+            $attributeList = [];
+            if (!in_array('id', $passedAttributeList)) {
+                $attributeList[] = 'id';
+            }
+            $aclAttributeList = ['assignedUserId', 'createdById'];
+
+            foreach ($aclAttributeList as $attribute) {
+                if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            foreach ($passedAttributeList as $attribute) {
+                if ($seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            if (!empty($params['sortBy'])) {
+                $sortByField = $params['sortBy'];
+                $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
+                if ($sortByFieldType === 'currency') {
+                    $attributeList[] = $sortByField . 'Converted';
+                }
+
+            }
+
+            foreach ($this->mandatorySelectAttributeList as $attribute) {
+                if ($seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            return $attributeList;
+        }
+
+        return null;
     }
 }
-

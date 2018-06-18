@@ -416,7 +416,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 el: this.getSelector() + ' .item[data-id="'+model.id+'"]',
                 itemLayout: this.listLayout,
                 rowActionsDisabled: this.rowActionsDisabled,
-                rowActionsView: this.rowActionsView
+                rowActionsView: this.rowActionsView,
+                setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
             }, callback);
         },
 
