@@ -62,8 +62,7 @@ class Email extends Record
         'parentType', 'parentId', 'parentName', 'teamsIds', 'teamsNames', 'assignedUserId', 'assignedUserName'
     ];
 
-    protected $selectAttributeList = [
-        'id',
+    protected $mandatorySelectAttributeList = [
         'name',
         'createdById',
         'dateSent',
@@ -74,6 +73,7 @@ class Email extends Record
         'parentId',
         'parentType',
         'isHtml',
+        'isReplied',
         'status',
         'accountId',
         'folderId',
