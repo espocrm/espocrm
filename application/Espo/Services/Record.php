@@ -101,6 +101,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $mandatorySelectAttributeList = [];
 
+    protected $forceSelectAllAttributes = false;
+
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
@@ -2118,8 +2120,17 @@ class Record extends \Espo\Core\Services\Base
 
     public function getSelectAttributeList($params)
     {
+        if ($this->forceSelectAllAttributes) {
+            return null;
+        }
+
         if ($this->selectAttributeList) {
             return $this->selectAttributeList;
+        }
+
+        // TODO remove in 5.5.0
+        if (in_array($this->getEntityType(), ['Report'])) {
+            return null;
         }
 
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());
