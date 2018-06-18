@@ -39,6 +39,8 @@ class AuthLogRecord extends Record
 
     protected $actionHistoryDisabled = true;
 
+    protected $forceSelectAllAttributes = true;
+
     protected $readOnlyAttributeList = [
         "username",
         "portalId",
