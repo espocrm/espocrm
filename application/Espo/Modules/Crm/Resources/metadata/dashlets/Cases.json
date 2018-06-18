@@ -25,6 +25,7 @@
             "sortBy": "createdAt",
             "asc": false,
             "displayRecords": 5,
+            "populateAssignedUser": true,
             "expandedLayout": {
                 "rows": [
                     [
