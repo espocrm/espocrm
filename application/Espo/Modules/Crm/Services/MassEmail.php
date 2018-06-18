@@ -45,6 +45,8 @@ class MassEmail extends \Espo\Services\Record
 
     private $emailTemplateService = null;
 
+    protected $mandatorySelectAttributeList = ['campaignId'];
+
     protected function init()
     {
         parent::init();

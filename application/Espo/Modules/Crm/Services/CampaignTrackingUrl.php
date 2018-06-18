@@ -34,6 +34,8 @@ use \Espo\ORM\Entity;
 
 class CampaignTrackingUrl extends \Espo\Services\Record
 {
+    protected $mandatorySelectAttributeList = ['campaignId'];
+
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);

@@ -2137,6 +2137,11 @@ class Record extends \Espo\Core\Services\Base
             }
             $aclAttributeList = ['assignedUserId', 'createdById'];
 
+            if ($this->getUser()->isPortal()) {
+                $aclAttributeList[] = 'accountId';
+                $aclAttributeList[] = 'contactId';
+            }
+
             foreach ($aclAttributeList as $attribute) {
                 if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
@@ -2144,7 +2149,7 @@ class Record extends \Espo\Core\Services\Base
             }
 
             foreach ($passedAttributeList as $attribute) {
-                if ($seed->hasAttribute($attribute)) {
+                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
@@ -2153,13 +2158,15 @@ class Record extends \Espo\Core\Services\Base
                 $sortByField = $params['sortBy'];
                 $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
                 if ($sortByFieldType === 'currency') {
-                    $attributeList[] = $sortByField . 'Converted';
+                    if (!in_array($sortByField . 'Converted', $attributeList)) {
+                        $attributeList[] = $sortByField . 'Converted';
+                    }
                 }
 
             }
 
             foreach ($this->mandatorySelectAttributeList as $attribute) {
-                if ($seed->hasAttribute($attribute)) {
+                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
                 }
             }
