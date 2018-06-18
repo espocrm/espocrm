@@ -91,6 +91,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     name: 'select',
                     style: 'primary',
                     label: 'Select',
+                    disabled: true,
                     onClick: function (dialog) {
                         var listView = this.getView('list');
 
@@ -193,10 +194,20 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     checkAllResultDisabled: !this.massRelateEnabled,
                     buttonsDisabled: true
                 }, function (view) {
-                    view.once('select', function (model) {
+                    this.listenToOnce(view, 'select', function (model) {
                         this.trigger('select', model);
                         this.close();
                     }.bind(this));
+
+                    if (this.multiple) {
+                        this.listenTo(view, 'check', function () {
+                            if (view.checkedList.length) {
+                                this.enableButton('select');
+                            } else {
+                                this.disableButton('select');
+                            }
+                        }, this);
+                    }
                 }.bind(this));
 
             }.bind(this));
