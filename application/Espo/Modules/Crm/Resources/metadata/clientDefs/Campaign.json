@@ -153,6 +153,17 @@
                         }
                     ]
                 }
+            },
+            "mailMergeOnlyWithAddress": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "Mail"
+                        }
+                    ]
+                }
             }
         },
         "panels": {

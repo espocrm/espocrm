@@ -162,6 +162,10 @@
             "type": "link",
             "view": "crm:views/campaign/fields/template",
             "targetEntityType": "User"
+        },
+        "mailMergeOnlyWithAddress": {
+            "type": "bool",
+            "default": true
         }
     },
     "links": {

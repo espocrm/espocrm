@@ -43,6 +43,13 @@ class Campaign extends \Espo\Services\Record
         $this->addDependency('container');
     }
 
+    protected $entityTypeAddressFieldListMap = [
+        'Account' => ['billingAddress', 'shippingAddress'],
+        'Contact' => ['address'],
+        'Lead' => ['address'],
+        'User' => []
+    ];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
@@ -348,6 +355,8 @@ class Campaign extends \Espo\Services\Record
             }
         }
 
+        $addressFieldList = $this->entityTypeAddressFieldListMap[$targetEntityType];
+
         $targetListCollection = $campaign->get('targetLists');
         foreach ($targetListCollection as $targetList) {
             if (!$campaign->get($link . 'TemplateId')) continue;
@@ -361,8 +370,21 @@ class Campaign extends \Espo\Services\Record
                 if (!empty($metTargetHash[$hashId])) {
                     continue;
                 }
-                $targetEntityList[] = $e;
                 $metTargetHash[$hashId] = true;
+
+                if ($campaign->get('mailMergeOnlyWithAddress')) {
+                    if (empty($addressFieldList)) continue;
+                    $hasAddress = false;
+                    foreach ($addressFieldList as $addressField) {
+                        if ($e->get($addressField . 'Street') || $e->get($addressField . 'PostalCode')) {
+                            $hasAddress = true;
+                            break;
+                        }
+                    }
+                    if (!$hasAddress) continue;
+                }
+
+                $targetEntityList[] = $e;
             }
         }
 

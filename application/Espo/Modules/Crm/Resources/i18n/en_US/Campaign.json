@@ -23,7 +23,8 @@
         "contactsTemplate": "Contacts Template",
         "leadsTemplate": "Leads Template",
         "accountsTemplate": "Accounts Template",
-        "usersTemplate": "Users Template"
+        "usersTemplate": "Users Template",
+        "mailMergeOnlyWithAddress": "Skip records w/o filled address"
     },
     "links": {
         "targetLists": "Target Lists",

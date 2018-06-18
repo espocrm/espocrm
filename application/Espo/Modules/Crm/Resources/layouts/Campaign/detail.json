@@ -14,7 +14,7 @@
         "name": "mailMerge",
         "rows":[
             [{"name":"contactsTemplate"}, {"name":"leadsTemplate"}],
-            [{"name":"accountsTemplate"}, {"name":"usersTemplate"}]
+            [{"name":"accountsTemplate"}, {"name":"mailMergeOnlyWithAddress"}]
         ]
     }
 ]
