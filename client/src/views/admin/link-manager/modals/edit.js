@@ -349,6 +349,18 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     break;
             }
 
+            var number = 1;
+            while (this.getMetadata().get(['entityDefs', this.scope, 'links', link])) {
+                link += number.toString();
+                number++;
+            }
+
+            var number = 1;
+            while (this.getMetadata().get(['entityDefs', entityForeign, 'links', linkForeign])) {
+                linkForeign += number.toString();
+                number++;
+            }
+
             this.model.set('link', link);
             this.model.set('linkForeign', linkForeign);
 

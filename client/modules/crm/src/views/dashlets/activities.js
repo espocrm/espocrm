@@ -158,6 +158,8 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
             var scope = data.scope;
             var attributes = {};
 
+            this.populateAttributesAssignedUser(scope, attributes);
+
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.'+scope+'.modalViews.edit') || 'views/modals/edit';
             this.createView('quickCreate', viewName, {
@@ -174,6 +176,8 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
 
         actionCreateMeeting: function () {
             var attributes = {};
+
+            this.populateAttributesAssignedUser('Meeting', attributes);
 
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.Meeting.modalViews.edit') || 'views/modals/edit';
@@ -192,6 +196,8 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
         actionCreateCall: function () {
             var attributes = {};
 
+            this.populateAttributesAssignedUser('Call', attributes);
+
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.Call.modalViews.edit') || 'views/modals/edit';
             this.createView('quickCreate', viewName, {
@@ -204,7 +210,17 @@ Espo.define('crm:views/dashlets/activities', ['views/dashlets/abstract/base', 'm
                     this.actionRefresh();
                 }, this);
             }.bind(this));
+        },
+
+        populateAttributesAssignedUser: function (scope, attributes) {
+            if (this.getMetadata().get(['entityDefs', scope, 'fields', 'assignedUsers'])) {
+                attributes['assignedUsersIds'] = [this.getUser().id];
+                attributes['assignedUsersNames'] = {};
+                attributes['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
+            } else {
+                attributes['assignedUserId'] = this.getUser().id;
+                attributes['assignedUserName'] = this.getUser().get('name');
+            }
         }
     });
 });
-

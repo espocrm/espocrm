@@ -161,6 +161,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.actions-button').attr('disabled', true);
                     this.$el.find('.list > table tbody tr').removeClass('active');
                 }
+
+                this.trigger('check');
             },
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
@@ -1038,6 +1040,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 this.$el.find('.select-all').prop('checked', false);
             }
+
+            this.trigger('check');
         },
 
         getRowActionsDefs: function () {

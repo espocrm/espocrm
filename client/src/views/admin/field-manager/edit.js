@@ -401,12 +401,23 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 Espo.Ui.notify(false);
                 this.enableButtons();
 
-                this.getMetadata().load(function () {
-                    this.getMetadata().storeToCache();
-                    this.trigger('after:save');
-                }.bind(this), true);
-
                 this.updateLanguage();
+
+                Promise.all([
+                    new Promise(function (resolve) {
+                        this.getMetadata().load(function () {
+                            this.getMetadata().storeToCache();
+                            resolve();
+                        }.bind(this), true);
+                    }.bind(this)),
+                    new Promise(function (resolve) {
+                        this.getLanguage().load(function () {
+                            resolve();
+                        }, true);
+                    }.bind(this))
+                ]).then(function () {
+                    this.trigger('after:save');
+                }.bind(this));
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
             }, this);

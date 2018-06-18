@@ -142,6 +142,17 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         actionCreate: function () {
             var attributes = this.getCreateAttributes() || {};
 
+            if (this.getOption('populateAssignedUser')) {
+                if (this.getMetadata().get(['entityDefs', this.scope, 'fields', 'assignedUsers'])) {
+                    attributes['assignedUsersIds'] = [this.getUser().id];
+                    attributes['assignedUsersNames'] = {};
+                    attributes['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
+                } else {
+                    attributes['assignedUserId'] = this.getUser().id;
+                    attributes['assignedUserName'] = this.getUser().get('name');
+                }
+            }
+
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
             this.createView('modal', viewName, {
