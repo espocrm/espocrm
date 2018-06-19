@@ -442,4 +442,57 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             "HAVING COUNT(comment.id) > '1'";
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testMatch1()
+    {
+        $sql = $this->query->createSelectQuery('Article', array(
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'MATCH_BOOLEAN:name,description:test +hello',
+                'id!=' => null
+            ]
+        ));
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
+            "WHERE MATCH (name,description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testMatch2()
+    {
+        $sql = $this->query->createSelectQuery('Article', array(
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'MATCH_NATURAL_LANGUAGE:description:"test hello"'
+            ]
+        ));
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
+            "WHERE MATCH (description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testMatch3()
+    {
+        $sql = $this->query->createSelectQuery('Article', array(
+            'select' => ['id', 'MATCH_BOOLEAN:description:test'],
+            'whereClause' => [
+                'MATCH_BOOLEAN:description:test'
+            ],
+            'orderBy' => [
+                [2, 'DESC']
+            ]
+        ));
+
+        $expectedSql =
+            "SELECT article.id AS `id`, MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
+            "WHERE MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "ORDER BY 2 DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }
