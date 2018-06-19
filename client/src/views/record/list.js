@@ -509,6 +509,41 @@ Espo.define('views/record/list', 'view', function (Dep) {
 			}, this);
         },
 
+        massActionPrintPdf: function () {
+            var maxCount = this.getConfig().get('massPrintPdfMaxCount');
+            if (maxCount) {
+                if (this.checkedList.length > maxCount) {
+                    var msg = this.translate('massPrintPdfMaxCountError', 'messages').replace('{maxCount}', maxCount.toString());
+                    Espo.Ui.error(msg);
+                    return;
+                }
+            }
+
+            var idList = [];
+            for (var i in this.checkedList) {
+                idList.push(this.checkedList[i]);
+            }
+
+            this.createView('pdfTemplate', 'views/modals/select-template', {
+                entityType: this.entityType
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'select', function (templateModel) {
+                    this.clearView('pdfTemplate');
+
+                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                    this.ajaxPostRequest('Pdf/action/massPrint', {
+                        idList: idList,
+                        entityType: this.entityType,
+                        templateId: templateModel.id
+                    }, {timeout: 0}).then(function (result) {
+                        Espo.Ui.notify(false);
+                        window.open('?entryPoint=download&id=' + result.id, '_blank');
+                    }.bind(this));
+                }, this);
+            });
+        },
+
         massActionFollow: function () {
             var count = this.checkedList.length;
 
@@ -748,6 +783,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             ) {
                 this.addMassAction('follow');
                 this.addMassAction('unfollow');
+            }
+
+            if (
+                !this.massPrintPdfDisabled
+                &&
+                ~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)
+            ) {
+                this.addMassAction('printPdf');
             }
 
             this.setupMassActionItems();

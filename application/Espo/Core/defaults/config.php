@@ -170,6 +170,7 @@ return array (
     'inlineAttachmentUploadMaxSize' => 20,
     'textFilterUseContainsForVarchar' => false,
     'tabColorsDisabled' => false,
+    'massPrintPdfMaxCount' => 100,
     'isInstalled' => false
 );
 
