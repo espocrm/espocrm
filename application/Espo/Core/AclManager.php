@@ -182,9 +182,15 @@ class AclManager
 
         $impl = $this->getImplementation($scope);
 
-        $methodName = 'checkEntity' . ucfirst($action);
-        if (method_exists($impl, $methodName)) {
-            return $impl->$methodName($user, $entity, $data);
+        if (!$action) {
+            $action = 'read';
+        }
+
+        if ($action) {
+            $methodName = 'checkEntity' . ucfirst($action);
+            if (method_exists($impl, $methodName)) {
+                return $impl->$methodName($user, $entity, $data);
+            }
         }
 
         return $impl->checkEntity($user, $entity, $data, $action);
