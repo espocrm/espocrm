@@ -35,5 +35,6 @@
    "fieldDefs":{
       "type":"text"
    },
-   "personalData": true
+   "personalData": true,
+   "fullTextSearch": true
 }

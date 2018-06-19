@@ -64,6 +64,8 @@ class Base
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
+    const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
+
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
@@ -1500,36 +1502,112 @@ class Base
         );
     }
 
+    public function getFullTextSearchDataForTextFilter($textFilter)
+    {
+        $fieldList = $this->getTextFilterFieldList();
+
+        $useFullTextSearch = false;
+        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'fullTextSearch'])) {
+            if (mb_strlen($textFilter) >= $this->getConfig()->get('fullTextSearchMinLength', self::MIN_LENGTH_FOR_FULL_TEXT_SEARCH)) {
+                $useFullTextSearch = true;
+
+                if (mb_strpos($textFilter, '%')) {
+                    $useFullTextSearch = false;
+                }
+            }
+        }
+
+        $fullTextSearchFieldList = [];
+
+        if ($useFullTextSearch) {
+            foreach ($fieldList as $field) {
+                $defs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field], []);
+                if (empty($defs['type'])) continue;
+                $fieldType = $defs['type'];
+                if (!empty($defs['notStorable'])) continue;
+                if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) continue;
+                $fullTextSearchFieldList[] = $field;
+            }
+            if (!count($fullTextSearchFieldList)) {
+                $useFullTextSearch = false;
+            }
+        }
+
+        if ($useFullTextSearch) {
+            if (
+                mb_strpos($textFilter, ' ') === false
+                &&
+                mb_strpos($textFilter, '+') === false
+                &&
+                mb_strpos($textFilter, '-') === false
+                &&
+                mb_strpos($textFilter, '*') === false
+            ) {
+                $function = 'MATCH_NATURAL_LANGUAGE';
+            } else {
+                $function = 'MATCH_BOOLEAN';
+            }
+
+            $fullTextSearchFieldSanitizedList = [];
+            foreach ($fullTextSearchFieldList as $i => $field) {
+                $fullTextSearchFieldSanitizedList[$i] = $this->getEntityManager()->getQuery()->sanitize($field);
+            }
+
+            $where = $function . ':' . implode(',', $fullTextSearchFieldSanitizedList) . ':' . $this->getEntityManager()->getQuery()->quote($textFilter);
+            return [
+                'where' => $where,
+                'fieldList' => $fullTextSearchFieldList
+            ];
+        }
+
+        return null;
+    }
+
     protected function textFilter($textFilter, &$result)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
-        $d = array();
+        $group = [];
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
+        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilter);
+
+        $fullTextSearchFieldList = [];
+        if ($fullTextSearchData) {
+            $group[] = $fullTextSearchData['where'];
+            $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
+        }
+
         foreach ($fieldList as $field) {
+            if (in_array($field, $fullTextSearchFieldList)) continue;
+
+            $attributeType = null;
+            if (!empty($fieldDefs[$field]['type'])) {
+                $attributeType = $fieldDefs[$field]['type'];
+            }
+
             if (
                 strlen($textFilter) >= $textFilterContainsMinLength
                 &&
                 (
-                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'text'
+                    $attributeType == 'text'
                     ||
                     !empty($this->textFilterUseContainsAttributeList[$field])
                     ||
-                    !empty($fieldDefs[$field]['type']) && $fieldDefs[$field]['type'] == 'varchar' &&
-                    $this->getConfig()->get('textFilterUseContainsForVarchar')
+                    $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
                 )
             ) {
                 $expression = '%' . $textFilter . '%';
             } else {
                 $expression = $textFilter . '%';
             }
-            $d[$field . '*'] = $expression;
+            $group[$field . '*'] = $expression;
         }
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
+
+        $result['whereClause'][] = [
+            'OR' => $group
+        ];
     }
 
     public function applyAccess(&$result)

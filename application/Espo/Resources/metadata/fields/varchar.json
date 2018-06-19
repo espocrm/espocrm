@@ -28,5 +28,6 @@
       }
    ],
    "filter": true,
-   "personalData": true
+   "personalData": true,
+   "fullTextSearch": true
 }
