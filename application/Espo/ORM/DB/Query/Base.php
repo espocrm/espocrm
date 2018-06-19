@@ -908,7 +908,7 @@ abstract class Base
                 }
             } else {
                 $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
-                if ($internalPart) {
+                if ($internalPart || $internalPart === '0') {
                     $whereParts[] = "(" . $internalPart . ")";
                 }
             }
