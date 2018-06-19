@@ -422,7 +422,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testHaving()
     {
-        $sql = $this->query->createSelectQuery('Comment', array(
+        $sql = $this->query->createSelectQuery('Comment', [
             'select' => ['COUNT:comment.id', 'postId', 'postName'],
             'leftJoins' => ['post'],
             'groupBy' => ['postId'],
@@ -432,7 +432,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             'havingClause' => [
                 'COUNT:comment.id>' => 1
             ]
-        ));
+        ]);
 
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
@@ -445,13 +445,13 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testMatch1()
     {
-        $sql = $this->query->createSelectQuery('Article', array(
+        $sql = $this->query->createSelectQuery('Article', [
             'select' => ['id', 'name'],
             'whereClause' => [
                 'MATCH_BOOLEAN:name,description:test +hello',
                 'id!=' => null
             ]
-        ));
+        ]);
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
@@ -462,12 +462,12 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testMatch2()
     {
-        $sql = $this->query->createSelectQuery('Article', array(
+        $sql = $this->query->createSelectQuery('Article', [
             'select' => ['id', 'name'],
             'whereClause' => [
                 'MATCH_NATURAL_LANGUAGE:description:"test hello"'
             ]
-        ));
+        ]);
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
@@ -478,7 +478,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     public function testMatch3()
     {
-        $sql = $this->query->createSelectQuery('Article', array(
+        $sql = $this->query->createSelectQuery('Article', [
             'select' => ['id', 'MATCH_BOOLEAN:description:test'],
             'whereClause' => [
                 'MATCH_BOOLEAN:description:test'
@@ -486,10 +486,30 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             'orderBy' => [
                 [2, 'DESC']
             ]
-        ));
+        ]);
 
         $expectedSql =
             "SELECT article.id AS `id`, MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
+            "WHERE MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "ORDER BY 2 DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testMatch4()
+    {
+        $sql = $this->query->createSelectQuery('Article', [
+            'select' => ['id', ['MATCH_BOOLEAN:description:test', 'relevance']],
+            'whereClause' => [
+                'MATCH_BOOLEAN:description:test'
+            ],
+            'orderBy' => [
+                [2, 'DESC']
+            ]
+        ]);
+
+        $expectedSql =
+            "SELECT article.id AS `id`, MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
             "WHERE MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
             "ORDER BY 2 DESC";
 
