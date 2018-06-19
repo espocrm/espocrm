@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,20 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/job/fields/name', 'views/fields/varchar', function (Dep) {
+namespace Espo\Services;
 
-    return Dep.extend({
 
-        getValueForDisplay: function () {
-            if (this.mode == 'list' || this.mode == 'detail') {
-                if (!this.model.get('name')) {
-                    return this.model.get('serviceName') + ': ' + this.model.get('methodName');
-                } else {
-                    return this.model.get('name');
-                }
-            }
-        }
-
-    });
-});
-
+class Job extends Record
+{
+    protected $forceSelectAllAttributes = true;
+}
