@@ -46,40 +46,40 @@ class Email extends Base
                                 JOIN email_address ON email_address.id = entity_email_address.email_address_id
                                 WHERE
                                     entity_email_address.deleted = 0 AND entity_email_address.entity_type = '{$entityName}' AND
-                                    email_address.deleted = 0 AND email_address.name LIKE {value}
+                                    email_address.deleted = 0 AND email_address.lower LIKE {value}
                             )",
                             '=' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name = {value}',
+                                'sql' => 'emailAddressesMultiple.lower = {value}',
                                 'distinct' => true
                             ),
                             '<>' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name <> {value}',
+                                'sql' => 'emailAddressesMultiple.lower <> {value}',
                                 'distinct' => true
                             ),
                             'IN' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name IN {value}',
+                                'sql' => 'emailAddressesMultiple.lower IN {value}',
                                 'distinct' => true
                             ),
                             'NOT IN' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name NOT IN {value}',
+                                'sql' => 'emailAddressesMultiple.lower NOT IN {value}',
                                 'distinct' => true
                             ),
                             'IS NULL' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name IS NULL',
+                                'sql' => 'emailAddressesMultiple.lower IS NULL',
                                 'distinct' => true
                             ),
                             'IS NOT NULL' => array(
                                 'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
-                                'sql' => 'emailAddressesMultiple.name IS NOT NULL',
+                                'sql' => 'emailAddressesMultiple.lower IS NOT NULL',
                                 'distinct' => true
                             )
                         ),
-                        'orderBy' => 'emailAddresses.name {direction}',
+                        'orderBy' => 'emailAddresses.lower {direction}',
                     ),
                     $fieldName .'Data' => array(
                         'type' => 'text',
