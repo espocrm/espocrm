@@ -455,7 +455,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (name,description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = '0'";
+            "WHERE MATCH (article.name,article.description) AGAINST ('test +hello' IN BOOLEAN MODE) AND article.id IS NOT NULL AND article.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -471,7 +471,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
-            "WHERE MATCH (description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
+            "WHERE MATCH (article.description) AGAINST ('\"test hello\"' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -489,8 +489,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $expectedSql =
-            "SELECT article.id AS `id`, MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
-            "WHERE MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:description:test` FROM `article` " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
             "ORDER BY 2 DESC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -509,9 +509,25 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $expectedSql =
-            "SELECT article.id AS `id`, MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
-            "WHERE MATCH (description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
+            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = '0' " .
             "ORDER BY 2 DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testMatch5()
+    {
+        $sql = $this->query->createSelectQuery('Article', [
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'MATCH_NATURAL_LANGUAGE:description:test>' => 1
+            ]
+        ]);
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > '1' AND article.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
     }

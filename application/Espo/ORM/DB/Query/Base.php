@@ -340,8 +340,10 @@ abstract class Base
 
         $columnList = explode(',', $columns);
 
+        $tableName = $this->toDb($entity->getEntityType());
+
         foreach ($columnList as $i => $column) {
-            $columnList[$i] = $this->sanitize($column);
+            $columnList[$i] = $tableName . '.' . $this->sanitize($column);
         }
 
         $query = $this->quote($query);

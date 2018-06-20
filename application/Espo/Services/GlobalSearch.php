@@ -82,7 +82,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             if (!$this->getAcl()->checkScope($entityType, 'read')) {
                 continue;
             }
-            if (!$this->getMetadata()->get('scopes.' . $entityType)) {
+            if (!$this->getMetadata()->get(['scopes', $entityType])) {
                 continue;
             }
 
@@ -98,12 +98,13 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 $hasFullTextSearch = true;
                 $params['select'][] = [$fullTextSearchData['where'], '_relevance'];
             } else {
-                $params['select'][] = ['VALUE:0.9', '_relevance'];
+                $params['select'][] = ['VALUE:1.1', '_relevance'];
                 $relevanceSelectPosition = count($params['select']);
             }
 
             $selectManager->manageAccess($params);
-            $selectManager->manageTextFilter($query, $params);
+            $params['forceFullTextSearch'] = true;
+            $selectManager->applyTextFilter($query, $params);
 
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
 

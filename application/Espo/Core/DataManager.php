@@ -53,6 +53,8 @@ class DataManager
      */
     public function rebuild($entityList = null)
     {
+        $this->populateConfigParameters();
+
         $result = $this->clearCache();
 
         $result &= $this->rebuildMetadata();
@@ -172,5 +174,29 @@ class DataManager
         $this->getContainer()->get('config')->save();
         return true;
     }
-}
 
+    protected function populateConfigParameters()
+    {
+        $config = $this->getContainer()->get('config');
+
+        $pdo = $this->getContainer()->get('entityManager')->getPDO();
+        $query = "SHOW VARIABLES LIKE 'ft_min_word_len'";
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+
+        $fullTextSearchMinLength = null;
+        if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            if (isset($row['Value'])) {
+                $fullTextSearchIsNotAvailable = false;
+                $fullTextSearchMinLength = intval($row['Value']);
+            }
+        } else {
+            $fullTextSearchIsNotAvailable = true;
+        }
+
+        $config->set('fullTextSearchIsNotAvailable', $fullTextSearchIsNotAvailable);
+        $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+
+        $config->save();
+    }
+}

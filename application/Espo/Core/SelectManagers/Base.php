@@ -66,6 +66,8 @@ class Base
 
     const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
 
+    protected $fullTextSearchDataCacheHash = [];
+
     public function __construct($entityManager, \Espo\Entities\User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
@@ -205,8 +207,8 @@ class Base
                     }
                     $this->applyBoolFilter($filter, $result);
                 }
-            } else if ($item['type'] == 'textFilter' && !empty($item['value'])) {
-                if (!empty($item['value'])) {
+            } else if ($item['type'] == 'textFilter') {
+                if (isset($item['value']) || $item['value'] !== '') {
                     $this->textFilter($item['value'], $result);
                 }
             } else if ($item['type'] == 'primary' && !empty($item['value'])) {
@@ -389,7 +391,7 @@ class Base
 
     protected function q($params, &$result)
     {
-        if (!empty($params['q'])) {
+        if (isset($params['q']) && $params['q'] !== '') {
             $this->textFilter($params['q'], $result);
         }
     }
@@ -403,7 +405,7 @@ class Base
     public function manageTextFilter($textFilter, &$result)
     {
         $this->prepareResult($result);
-        $this->q(array('q' => $textFilter), $result);
+        $this->q(['q' => $textFilter], $result);
     }
 
     public function getEmptySelectParams()
@@ -734,7 +736,7 @@ class Base
             $this->where($params['where'], $result);
         }
 
-        if (!empty($params['textFilter'])) {
+        if (isset($params['textFilter']) && $params['textFilter'] !== '') {
             $this->textFilter($params['textFilter'], $result);
         }
 
@@ -1502,18 +1504,32 @@ class Base
         );
     }
 
-    public function getFullTextSearchDataForTextFilter($textFilter)
+    public function getFullTextSearchDataForTextFilter($textFilter, $stripWildcard = false)
     {
+        if (array_key_exists($textFilter, $this->fullTextSearchDataCacheHash)) {
+            return $this->fullTextSearchDataCacheHash[$textFilter];
+        }
+
+        if ($this->getConfig()->get('fullTextSearchIsNotAvailable')) {
+            return null;
+        }
+
+        $result = null;
+
         $fieldList = $this->getTextFilterFieldList();
 
-        $useFullTextSearch = false;
-        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'fullTextSearch'])) {
-            if (mb_strlen($textFilter) >= $this->getConfig()->get('fullTextSearchMinLength', self::MIN_LENGTH_FOR_FULL_TEXT_SEARCH)) {
-                $useFullTextSearch = true;
+        if ($stripWildcard) {
+            $textFilter = str_replace('%', '', $textFilter);
+        }
 
-                if (mb_strpos($textFilter, '%')) {
-                    $useFullTextSearch = false;
-                }
+        $useFullTextSearch = false;
+        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'fullTextSearch'])) {
+            $fullTextSearchMinLength = $this->getConfig()->get('fullTextSearchMinLength', self::MIN_LENGTH_FOR_FULL_TEXT_SEARCH);
+            if (!$fullTextSearchMinLength) {
+                $fullTextSearchMinLength = 0;
+            }
+            if (mb_strlen($textFilter) >= $fullTextSearchMinLength) {
+                $useFullTextSearch = true;
             }
         }
 
@@ -1553,14 +1569,16 @@ class Base
                 $fullTextSearchFieldSanitizedList[$i] = $this->getEntityManager()->getQuery()->sanitize($field);
             }
 
-            $where = $function . ':' . implode(',', $fullTextSearchFieldSanitizedList) . ':' . $this->getEntityManager()->getQuery()->quote($textFilter);
-            return [
+            $where = $function . ':' . implode(',', $fullTextSearchFieldSanitizedList) . ':' . $textFilter;
+            $result = [
                 'where' => $where,
                 'fieldList' => $fullTextSearchFieldList
             ];
         }
 
-        return null;
+        $this->fullTextSearchDataCacheHash[$textFilter] = $result;
+
+        return $result;
     }
 
     protected function textFilter($textFilter, &$result)
@@ -1571,38 +1589,89 @@ class Base
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
-        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilter);
+        $fullTextSearchData = null;
+
+        $forceFullTextSearch = false;
+
+        $useFullTextSearch = !empty($result['forceFullTextSearch']);
+
+        if (mb_strpos($textFilter, 'ft:') === 0) {
+            $textFilter = mb_substr($textFilter, 3);
+            $useFullTextSearch = true;
+        }
+
+        $skipWidlcards = false;
+        if (!$useFullTextSearch) {
+            if (mb_strpos($textFilter, '*') !== false) {
+                $skipWidlcards = true;
+                $textFilter = str_replace('*', '%', $textFilter);
+            }
+        }
+
+        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilter, !$useFullTextSearch);
+
+        $fullTextGroup = [];
 
         $fullTextSearchFieldList = [];
         if ($fullTextSearchData) {
-            $group[] = $fullTextSearchData['where'];
+            $fullTextGroup[] = $fullTextSearchData['where'];
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
         }
 
         foreach ($fieldList as $field) {
-            if (in_array($field, $fullTextSearchFieldList)) continue;
+            if ($useFullTextSearch) {
+                if (in_array($field, $fullTextSearchFieldList)) continue;
+            }
+            if ($forceFullTextSearch) continue;
 
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
                 $attributeType = $fieldDefs[$field]['type'];
             }
 
-            if (
-                strlen($textFilter) >= $textFilterContainsMinLength
-                &&
-                (
-                    $attributeType == 'text'
-                    ||
-                    !empty($this->textFilterUseContainsAttributeList[$field])
-                    ||
-                    $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
-                )
-            ) {
-                $expression = '%' . $textFilter . '%';
+            if (!$skipWidlcards) {
+                if (
+                    strlen($textFilter) >= $textFilterContainsMinLength
+                    &&
+                    (
+                        $attributeType == 'text'
+                        ||
+                        !empty($this->textFilterUseContainsAttributeList[$field])
+                        ||
+                        $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
+                    )
+                ) {
+                    $expression = '%' . $textFilter . '%';
+                } else {
+                    $expression = $textFilter . '%';
+                }
             } else {
-                $expression = $textFilter . '%';
+                $expression = $textFilter;
             }
+
+            if ($fullTextSearchData) {
+                if (!$useFullTextSearch) {
+                    if (in_array($field, $fullTextSearchFieldList)) {
+                        if (!array_key_exists('OR', $fullTextGroup)) {
+                            $fullTextGroup['OR'] = [];
+                        }
+                        $fullTextGroup['OR'][$field . '*'] = $expression;
+                        continue;
+                    }
+                }
+            }
+
             $group[$field . '*'] = $expression;
+        }
+
+        if (!empty($fullTextGroup)) {
+            $group['AND'] = $fullTextGroup;
+        }
+
+        if (count($group) === 0) {
+            $result['whereClause'][] = [
+                'id' => null
+            ];
         }
 
         $result['whereClause'][] = [
