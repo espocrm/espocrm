@@ -32,7 +32,8 @@
         "color": "Color",
         "kanbanViewMode": "Kanban View",
         "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
-        "iconClass": "Icon"
+        "iconClass": "Icon",
+        "fullTextSearch": "Full-Text Search"
     },
     "options": {
         "type": {
@@ -68,6 +69,7 @@
         "disabled": "Check if you don't need this entity in your system.",
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-        "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel."
+        "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
+        "fullTextSearch": "Running rebuild required."
     }
 }

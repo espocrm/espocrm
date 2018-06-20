@@ -403,6 +403,16 @@ class EntityManager
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
+
+        if (isset($data['fullTextSearch'])) {
+            $entityDefsData = [
+                'collection' => [
+                    'fullTextSearch' => !!$data['fullTextSearch']
+                ]
+            ];
+            $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
         if (array_key_exists('kanbanStatusIgnoreList', $data)) {
             $scopeData['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
             $this->getMetadata()->set('scopes', $name, $scopeData);

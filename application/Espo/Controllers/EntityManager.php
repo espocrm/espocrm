@@ -89,6 +89,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['iconClass'])) {
             $params['iconClass'] = $data['iconClass'];
         }
+        if (isset($data['fullTextSearch'])) {
+            $params['fullTestSearch'] = $data['fullTextSearch'];
+        }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
         if (!empty($data['kanbanStatusIgnoreList'])) {

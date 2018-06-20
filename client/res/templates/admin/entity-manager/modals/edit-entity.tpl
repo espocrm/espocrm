@@ -78,6 +78,15 @@
 </div>
 
 <div class="row">
+	<div class="cell form-group col-md-6" data-name="fullTextSearch">
+		<label class="control-label" data-name="fullTextSearch">{{translate 'fullTextSearch' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="fullTextSearch">
+			{{{fullTextSearch}}}
+		</div>
+	</div>
+</div>
+
+<div class="row">
 	<div class="cell form-group col-md-6" data-name="kanbanViewMode">
 		<label class="control-label" data-name="kanbanViewMode">{{translate 'kanbanViewMode' category='fields' scope='EntityManager'}}</label>
 		<div class="field" data-name="kanbanViewMode">
