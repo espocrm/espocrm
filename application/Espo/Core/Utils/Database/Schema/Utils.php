@@ -53,19 +53,23 @@ class Utils
 
                     if ($keyValue === true) {
                         $tableIndexName = static::generateIndexName($columnName);
-                        $indexList[$entityName][$tableIndexName] = array($columnName);
+                        $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
                     } else if (is_string($keyValue)) {
                         $tableIndexName = static::generateIndexName($keyValue);
-                        $indexList[$entityName][$tableIndexName][] = $columnName;
+                        $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
                     }
                 }
             }
 
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
+                    $tableIndexName = static::generateIndexName($indexName);
+
                     if (is_array($indexParams['columns'])) {
-                        $tableIndexName = static::generateIndexName($indexName);
-                        $indexList[$entityName][$tableIndexName] = Util::toUnderScore($indexParams['columns']);
+                        $indexList[$entityName][$tableIndexName]['columns'] = Util::toUnderScore($indexParams['columns']);
+                    }
+                    if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
+                        $indexList[$entityName][$tableIndexName]['flags'] = $indexParams['flags'];
                     }
                 }
             }
@@ -94,7 +98,9 @@ class Utils
         $indexList = static::getIndexList($ormMeta);
 
         foreach ($indexList as $entityName => $indexes) {
-            foreach ($indexes as $indexName => $columnList) {
+            foreach ($indexes as $indexName => $indexParams) {
+                $columnList = $indexParams['columns'];
+
                 $indexLength = 0;
                 foreach ($columnList as $columnName) {
                     $fieldName = Util::toCamelCase($columnName);

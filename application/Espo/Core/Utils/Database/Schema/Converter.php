@@ -238,8 +238,10 @@ class Converter
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
             if (!empty($indexList[$entityName])) {
-                foreach($indexList[$entityName] as $indexName => $indexColumnList) {
-                    $tables[$entityName]->addIndex($indexColumnList, $indexName);
+                foreach($indexList[$entityName] as $indexName => $indexParams) {
+                    $indexColumnList = $indexParams['columns'];
+                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+                    $tables[$entityName]->addIndex($indexColumnList, $indexName, $indexFlagList);
                 }
             }
 
