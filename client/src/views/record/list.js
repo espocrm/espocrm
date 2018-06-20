@@ -464,7 +464,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
 
                 $.ajax({
-                    url: this.collection.url + '/action/massDelete',
+                    url: this.entityType + '/action/massDelete',
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
