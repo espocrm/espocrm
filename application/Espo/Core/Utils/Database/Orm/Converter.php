@@ -186,6 +186,8 @@ class Converter
 
         $ormMetadata = Util::merge($ormMetadata, $convertedLinks);
 
+        $this->applyFullTextSearch($ormMetadata, $entityName);
+
         if (!empty($entityMetadata['collection']) && is_array($entityMetadata['collection'])) {
             $collectionDefs = $entityMetadata['collection'];
             $ormMetadata[$entityName]['collection'] = array();
@@ -467,4 +469,46 @@ class Converter
         return $values;
     }
 
+    protected function applyFullTextSearch(&$ormMetadata, $entityType)
+    {
+        if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) return;
+
+        $fieldList = $this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
+
+        $fullTextSearchColumnList = [];
+
+        foreach ($fieldList as $field) {
+            $defs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
+            if (empty($defs['type'])) continue;
+            $fieldType = $defs['type'];
+            if (!empty($defs['notStorable'])) continue;
+            if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) continue;
+
+            $partList = $this->getMetadata()->get(['fields', $fieldType, 'fullTextSearchColumnList']);
+            if ($partList) {
+                if ($this->getMetadata()->get(['fields', $fieldType, 'naming']) === 'prefix') {
+                    foreach ($partList as $part) {
+                        $fullTextSearchColumnList[] = $part . ucfirst($field);
+                    }
+                } else {
+                    foreach ($partList as $part) {
+                        $fullTextSearchColumnList[] = $field . ucfirst($part);
+                    }
+                }
+            } else {
+                $fullTextSearchColumnList[] = $field;
+            }
+        }
+
+        if (!empty($fullTextSearchColumnList)) {
+            $ormMetadata[$entityType]['fullTextSearchColumnList'] = $fullTextSearchColumnList;
+            if (!array_key_exists('indexes', $ormMetadata[$entityType])) {
+                $ormMetadata[$entityType]['indexes'] = [];
+            }
+            $ormMetadata[$entityType]['indexes']['system_fullTextSearch'] = [
+                'columns' => $fullTextSearchColumnList,
+                'flags' => ['fulltext']
+            ];
+        }
+    }
 }

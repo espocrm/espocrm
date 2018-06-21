@@ -29,5 +29,10 @@
     "notCreatable":true,
     "filter":true,
     "skipOrmDefs": true,
-    "personalData": true
+    "personalData": true,
+    "fullTextSearch": true,
+    "fullTextSearchColumnList": [
+        "first",
+        "last"
+    ]
 }

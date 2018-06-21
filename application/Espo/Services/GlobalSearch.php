@@ -103,7 +103,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             }
 
             $selectManager->manageAccess($params);
-            $params['forceFullTextSearch'] = true;
+            $params['useFullTextSearch'] = true;
             $selectManager->applyTextFilter($query, $params);
 
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);

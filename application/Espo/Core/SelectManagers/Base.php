@@ -150,7 +150,7 @@ class Base
                 } else {
                     $orderPart = 'DESC';
                 }
-                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
+                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . '_eet', $orderPart]];
                 return;
             } else if ($type === 'enum') {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
@@ -1514,6 +1514,10 @@ class Base
             return null;
         }
 
+        if ($this->getConfig()->get('fullTextSearchDisabled')) {
+            return null;
+        }
+
         $result = null;
 
         $fieldList = $this->getTextFilterFieldList();
@@ -1522,8 +1526,15 @@ class Base
             $textFilter = str_replace('%', '', $textFilter);
         }
 
+        $fullTextSearchColumnList = $this->getEntityManager()->getOrmMetadata()->get($this->getEntityType(), ['fullTextSearchColumnList']);
+
         $useFullTextSearch = false;
-        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'fullTextSearch'])) {
+
+        if (
+            $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'fullTextSearch'])
+            &&
+            !empty($fullTextSearchColumnList)
+        ) {
             $fullTextSearchMinLength = $this->getConfig()->get('fullTextSearchMinLength', self::MIN_LENGTH_FOR_FULL_TEXT_SEARCH);
             if (!$fullTextSearchMinLength) {
                 $fullTextSearchMinLength = 0;
@@ -1549,6 +1560,10 @@ class Base
             }
         }
 
+        if (empty($fullTextSearchColumnList)) {
+            $useFullTextSearch = false;
+        }
+
         if ($useFullTextSearch) {
             if (
                 mb_strpos($textFilter, ' ') === false
@@ -1564,15 +1579,18 @@ class Base
                 $function = 'MATCH_BOOLEAN';
             }
 
-            $fullTextSearchFieldSanitizedList = [];
-            foreach ($fullTextSearchFieldList as $i => $field) {
-                $fullTextSearchFieldSanitizedList[$i] = $this->getEntityManager()->getQuery()->sanitize($field);
+            $fullTextSearchColumnSanitizedList = [];
+            $query = $this->getEntityManager()->getQuery();
+            foreach ($fullTextSearchColumnList as $i => $field) {
+                $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
 
-            $where = $function . ':' . implode(',', $fullTextSearchFieldSanitizedList) . ':' . $textFilter;
+            $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
+
             $result = [
                 'where' => $where,
-                'fieldList' => $fullTextSearchFieldList
+                'fieldList' => $fullTextSearchFieldList,
+                'columnList' => $fullTextSearchColumnList
             ];
         }
 
@@ -1593,11 +1611,12 @@ class Base
 
         $forceFullTextSearch = false;
 
-        $useFullTextSearch = !empty($result['forceFullTextSearch']);
+        $useFullTextSearch = !empty($result['useFullTextSearch']);
 
         if (mb_strpos($textFilter, 'ft:') === 0) {
             $textFilter = mb_substr($textFilter, 3);
             $useFullTextSearch = true;
+            $forceFullTextSearch = true;
         }
 
         $skipWidlcards = false;
