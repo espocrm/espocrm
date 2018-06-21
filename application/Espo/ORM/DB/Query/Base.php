@@ -336,7 +336,7 @@ abstract class Base
         }
 
         $columns = substr($rest, 0, $delimiterPosition);
-        $query = substr($rest, $delimiterPosition + 1);
+        $query = mb_substr($rest, $delimiterPosition + 1);
 
         $columnList = explode(',', $columns);
 

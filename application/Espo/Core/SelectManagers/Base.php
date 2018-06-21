@@ -1646,7 +1646,7 @@ class Base
 
             if (!$skipWidlcards) {
                 if (
-                    strlen($textFilter) >= $textFilterContainsMinLength
+                    mb_strlen($textFilter) >= $textFilterContainsMinLength
                     &&
                     (
                         $attributeType == 'text'
