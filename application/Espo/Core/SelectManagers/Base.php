@@ -1510,10 +1510,6 @@ class Base
             return $this->fullTextSearchDataCacheHash[$textFilter];
         }
 
-        if ($this->getConfig()->get('fullTextSearchIsNotAvailable')) {
-            return null;
-        }
-
         if ($this->getConfig()->get('fullTextSearchDisabled')) {
             return null;
         }

@@ -187,14 +187,10 @@ class DataManager
         $fullTextSearchMinLength = null;
         if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             if (isset($row['Value'])) {
-                $fullTextSearchIsNotAvailable = false;
                 $fullTextSearchMinLength = intval($row['Value']);
             }
-        } else {
-            $fullTextSearchIsNotAvailable = true;
         }
 
-        $config->set('fullTextSearchIsNotAvailable', $fullTextSearchIsNotAvailable);
         $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
 
         $config->save();
