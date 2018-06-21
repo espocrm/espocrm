@@ -81,11 +81,12 @@ class Converter
 
     protected $maxIndexLength;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->databaseSchema = $databaseSchema;
+        $this->config = $config;
 
         $this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
     }
@@ -98,6 +99,11 @@ class Converter
     protected function getFileManager()
     {
         return $this->fileManager;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     /**
@@ -174,8 +180,9 @@ class Converter
 
         $schema = $this->getSchema(true);
 
-        $indexList = SchemaUtils::getIndexList($ormMeta);
-        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
+        $ignoreFlags = $this->getConfig()->get('fullTextSearchDisabled') ? array('fulltext') : array();
+        $indexList = SchemaUtils::getIndexList($ormMeta, $ignoreFlags);
+        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength(), $indexList);
 
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
