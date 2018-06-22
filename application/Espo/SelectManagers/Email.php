@@ -270,28 +270,16 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function textFilter($textFilter, &$result)
+    protected function applyAdditionalToTextFilterGroup($textFilter, &$group)
     {
-        $d = array();
-
-        $d['name*'] = '%' . $textFilter . '%';
-
         if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
-            $d['bodyPlain*'] = '%' . $textFilter . '%';
-            $d['body*'] = '%' . $textFilter . '%';
-
             $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
             if ($emailAddressId) {
                 $this->leftJoinEmailAddress($result);
-                $d['fromEmailAddressId'] = $emailAddressId;
-                $d['emailEmailAddress.emailAddressId'] = $emailAddressId;
+                $group['fromEmailAddressId'] = $emailAddressId;
+                $group['emailEmailAddress.emailAddressId'] = $emailAddressId;
             }
         }
-
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
-
     }
 
     protected function getEmailAddressIdByValue($value)

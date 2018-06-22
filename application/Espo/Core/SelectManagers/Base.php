@@ -1651,7 +1651,7 @@ class Base
                     (
                         $attributeType == 'text'
                         ||
-                        !empty($this->textFilterUseContainsAttributeList[$field])
+                        in_array($field, $this->textFilterUseContainsAttributeList)
                         ||
                         $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
                     )
@@ -1679,6 +1679,10 @@ class Base
             $group[$field . '*'] = $expression;
         }
 
+        if (!$forceFullTextSearch) {
+            $this->applyAdditionalToTextFilterGroup($textFilter, $group);
+        }
+
         if (!empty($fullTextGroup)) {
             $group['AND'] = $fullTextGroup;
         }
@@ -1692,6 +1696,10 @@ class Base
         $result['whereClause'][] = [
             'OR' => $group
         ];
+    }
+
+    protected function applyAdditionalToTextFilterGroup($textFilter, &$group)
+    {
     }
 
     public function applyAccess(&$result)
