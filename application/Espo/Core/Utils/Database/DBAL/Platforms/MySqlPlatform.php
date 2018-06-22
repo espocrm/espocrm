@@ -431,5 +431,26 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
             ? ' ' . $options['partition_options']
             : '';
     }
+
+    public function getClobTypeDeclarationSQL(array $field)
+    {
+        if ( ! empty($field['length']) && is_numeric($field['length'])) {
+            $length = $field['length'];
+
+            if ($length <= static::LENGTH_LIMIT_TINYTEXT) {
+                return 'TINYTEXT';
+            }
+
+            if ($length <= static::LENGTH_LIMIT_TEXT) {
+                return 'TEXT';
+            }
+
+            if ($length > static::LENGTH_LIMIT_MEDIUMTEXT) {
+                return 'LONGTEXT';
+            }
+        }
+
+        return 'MEDIUMTEXT';
+    }
     //end: ESPO
 }

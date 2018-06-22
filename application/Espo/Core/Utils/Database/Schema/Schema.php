@@ -94,7 +94,7 @@ class Schema
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
 
-        $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this);
+        $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this, $this->config);
 
         $this->ormMetadata = $ormMetadata;
     }
@@ -352,5 +352,25 @@ class Schema
         }
 
         return 'InnoDB';
+    }
+
+    public function isFulltextSupports()
+    {
+        $connection = $this->getConnection();
+        $mysqlEngine = $this->getMysqlEngine();
+
+        switch ($mysqlEngine) {
+            case 'InnoDB':
+                $mysqlVersion = $this->getMysqlVersion();
+
+                if (version_compare($mysqlVersion, '5.6.0') >= 0) {
+                    return true; //InnoDB, MySQL 5.6+
+                }
+
+                return false; //InnoDB
+                break;
+        }
+
+        return true; //MyISAM
     }
 }
