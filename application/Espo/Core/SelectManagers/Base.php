@@ -1646,6 +1646,13 @@ class Base
                 $attributeType = $fieldDefs[$field]['type'];
             }
 
+            if ($attributeType === 'int') {
+                if (is_numeric($textFilter)) {
+                    $group[$field] = intval($textFilter);
+                }
+                continue;
+            }
+
             if (!$skipWidlcards) {
                 if (
                     mb_strlen($textFilter) >= $textFilterContainsMinLength

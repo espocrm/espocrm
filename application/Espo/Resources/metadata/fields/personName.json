@@ -30,6 +30,7 @@
     "filter":true,
     "skipOrmDefs": true,
     "personalData": true,
+    "textFilter": true,
     "fullTextSearch": true,
     "fullTextSearchColumnList": [
         "first",

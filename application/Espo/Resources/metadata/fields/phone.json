@@ -26,5 +26,6 @@
       "notStorable":true
    },
    "translatedOptions": true,
+   "textFilter": true,
    "personalData": true
 }

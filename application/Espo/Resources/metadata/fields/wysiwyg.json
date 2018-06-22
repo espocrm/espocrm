@@ -36,5 +36,6 @@
       "type":"text"
    },
    "personalData": true,
+   "textFilter": true,
    "fullTextSearch": true
 }

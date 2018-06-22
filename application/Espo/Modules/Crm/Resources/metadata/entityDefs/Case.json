@@ -166,7 +166,8 @@
     },
     "collection": {
         "sortBy": "number",
-        "asc": false
+        "asc": false,
+        "textFilterFields": ["name", "number"]
     },
     "indexes": {
         "status": {
