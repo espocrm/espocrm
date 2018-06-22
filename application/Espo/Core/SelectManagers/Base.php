@@ -1504,7 +1504,7 @@ class Base
         );
     }
 
-    public function getFullTextSearchDataForTextFilter($textFilter, $stripWildcard = false)
+    public function getFullTextSearchDataForTextFilter($textFilter, $isAuxiliaryUse = false)
     {
         if (array_key_exists($textFilter, $this->fullTextSearchDataCacheHash)) {
             return $this->fullTextSearchDataCacheHash[$textFilter];
@@ -1518,7 +1518,7 @@ class Base
 
         $fieldList = $this->getTextFilterFieldList();
 
-        if ($stripWildcard) {
+        if ($isAuxiliaryUse) {
             $textFilter = str_replace('%', '', $textFilter);
         }
 
@@ -1562,6 +1562,8 @@ class Base
 
         if ($useFullTextSearch) {
             if (
+                $isAuxiliaryUse
+                ||
                 mb_strpos($textFilter, ' ') === false
                 &&
                 mb_strpos($textFilter, '+') === false
