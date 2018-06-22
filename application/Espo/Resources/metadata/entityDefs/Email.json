@@ -433,8 +433,7 @@
     "collection": {
         "sortBy": "dateSent",
         "asc": false,
-        "textFilterFields": ["name", "bodyPlain", "body"],
-        "fullTextSearch": true
+        "textFilterFields": ["name", "bodyPlain", "body"]
     },
     "indexes": {
         "dateSent": {
