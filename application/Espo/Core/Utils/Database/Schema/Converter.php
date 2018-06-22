@@ -81,7 +81,7 @@ class Converter
 
     protected $maxIndexLength;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
@@ -180,8 +180,7 @@ class Converter
 
         $schema = $this->getSchema(true);
 
-        $ignoreFlags = $this->getConfig()->get('fullTextSearchDisabled') ? array('fulltext') : array();
-        $indexList = SchemaUtils::getIndexList($ormMeta, $ignoreFlags);
+        $indexList = SchemaUtils::getIndexList($ormMeta);
         $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength(), $indexList);
 
         $tables = array();
