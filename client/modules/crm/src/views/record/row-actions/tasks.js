@@ -36,7 +36,8 @@ Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/rela
                 label: 'View',
                 data: {
                     id: this.model.id
-                }
+                },
+                link: '#' + this.model.name + '/view/' + this.model.id
             }];
             if (this.options.acl.edit) {
                 list.push({
@@ -44,7 +45,8 @@ Espo.define('crm:views/record/row-actions/tasks', 'views/record/row-actions/rela
                     label: 'Edit',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    link: '#' + this.model.name + '/edit/' + this.model.id
                 });
 
                 if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
