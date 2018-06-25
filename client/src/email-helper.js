@@ -161,6 +161,16 @@ Espo.define('email-helper', [], function () {
                 attributes['parentType'] = model.get('parentType');
             }
 
+            if (model.get('teamsIds') && model.get('teamsIds').length) {
+                attributes.teamsIds = Espo.Utils.clone(model.get('teamsIds'));
+                attributes.teamsNames = Espo.Utils.clone(model.get('teamsNames') || {});
+
+                if (this.user.get('defaultTeamId')) {
+                    attributes.teamsIds.push(this.user.get('defaultTeamId'));
+                    attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
+                }
+            }
+
             attributes.nameHash = nameHash;
 
             attributes.repliedId = model.id;

@@ -205,6 +205,10 @@ class Importer
             ))->findOne();
             if ($replied) {
                 $email->set('repliedId', $replied->id);
+                $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
+                foreach ($repliedTeamIdList as $repliedTeamId) {
+                    $email->addLinkMultipleId('teams', $repliedTeamId);
+                }
             }
         }
 
