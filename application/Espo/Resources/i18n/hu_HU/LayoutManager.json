@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "width": "Szélesség (%)",
+    "notSortable": "Nem sortható",
+    "align": "Igazítsa",
+    "panelName": "Panel neve",
+    "style": "Stílus",
+    "sticked": "ragasztott",
+    "isLarge": "Nagy betűméret"
+  },
+  "options": {
+    "align": {
+      "left": "Balra",
+      "right": "Jobb"
+    },
+    "style": {
+      "default": "Alapértelmezett",
+      "success": "Siker",
+      "danger": "Veszély",
+      "warning": "Figyelem",
+      "primary": "Elsődleges"
+    }
+  },
+  "labels": {
+    "New panel": "Új panel",
+    "Layout": "Elrendezés"
+  }
+}

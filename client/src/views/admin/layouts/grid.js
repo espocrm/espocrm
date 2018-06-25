@@ -38,6 +38,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
         columnCount: 2,
 
+        panelDataAttributeList: ['panelName', 'style'],
+
+        panelDataAttributesDefs: {},
+
         data: function () {
             var data = {
                 scope: this.scope,
@@ -154,24 +158,20 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var $label = $header.children('label');
                 var panelName = $label.text();
 
-                var style = $header.data('style');
+                var id = $header.closest('li').data('number').toString();
 
                 var attributes = {
-                    panelName: panelName,
-                    style: style
+                    panelName: panelName
                 };
 
-                var attributeList = ['panelName', 'style'];
-                var attributeDefs = {
-                    panelName: {
-                        type: 'varchar',
-                    },
-                    style: {
-                        type: 'enum',
-                        options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-                        translation: 'LayoutManager.options.style'
-                    }
-                };
+                this.panelDataAttributeList.forEach(function (item) {
+                    if (item === 'panelName') return;
+                    attributes[item] = this.panelsData[id][item];
+
+                }, this);
+
+                var attributeList = this.panelDataAttributeList;
+                var attributeDefs = this.panelDataAttributesDefs;
 
                 this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
                     attributeList: attributeList,
@@ -182,7 +182,10 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                     this.listenTo(view, 'after:save', function (attributes) {
                         $label.text(attributes.panelName);
                         $label.attr('data-is-custom', 'true');
-                        $header.data('style', attributes.style);
+                        this.panelDataAttributeList.forEach(function (item) {
+                            if (item === 'panelName') return;
+                            this.panelsData[id][item] = attributes[item];
+                        }, this);
                         view.close();
                     }, this);
                 }, this);
@@ -195,8 +198,15 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }.bind(this));
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.panelsData = {};
+        },
+
         addPanel: function () {
             this.lastPanelNumber ++;
+
             var number = this.lastPanelNumber;
             var data = {
                 customLabel: this.translate('New panel', 'labels', 'LayoutManager'),
@@ -204,6 +214,8 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 number: number
             };
             this.panels.push(data);
+
+            this.panelsData[number.toString()] = {};
 
             var $li = $('<li class="panel-layout"></li>');
             $li.attr('data-number', number);
@@ -248,6 +260,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 panel.number = i;
                 this.lastPanelNumber ++;
                 this.createPanelView(panel, false, callback);
+                this.panelsData[i.toString()] = panel;
             }, this);
         },
 
@@ -287,8 +300,14 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
                 template: 'admin/layouts/grid-panel',
                 data: function () {
-                    return data;
-                }
+                    var o = Espo.Utils.clone(data);
+                    o.dataAttributeList = [];
+                    this.panelDataAttributeList.forEach(function (item) {
+                        if (item === 'panelName') return;
+                        o.dataAttributeList.push(item);
+                    }, this);
+                    return o;
+                }.bind(this)
             }, callback);
         },
 
@@ -365,13 +384,23 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         fetch: function () {
             var layout = [];
             var self = this;
-            $("#layout ul.panels > li").each(function () {
-                var $label = $(this).find('header label');
+            $("#layout ul.panels > li").each(function (i, el) {
+                var $label = $(el).find('header label');
+
+                var id = $(el).data('number').toString();
+
                 var o = {
-                    style: $(this).find('header').data('style') || 'default',
                     rows: []
                 };
-                var name = $(this).find('header').data('name');
+
+                this.panelDataAttributeList.forEach(function (item) {
+                    if (item === 'panelName') return;
+                    o[item] = this.panelsData[id][item];
+                }, this);
+
+                o.style = o.style || 'default';
+
+                var name = $(el).find('header').data('name');
                 if (name) {
                     o.name = name;
                 }
@@ -380,7 +409,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 } else {
                     o.label = $label.text();
                 }
-                $(this).find('ul.rows > li').each(function (i, li) {
+                $(el).find('ul.rows > li').each(function (i, li) {
                     var row = [];
                     $(li).find('ul.cells > li').each(function (i, li) {
                         var cell = false;
@@ -405,7 +434,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 });
 
                 layout.push(o);
-            });
+            }.bind(this));
 
             return layout;
         },

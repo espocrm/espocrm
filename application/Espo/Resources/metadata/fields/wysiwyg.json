@@ -10,10 +10,6 @@
          "type": "text"
       },
       {
-         "name": "maxLength",
-         "type": "int"
-      },
-      {
          "name": "height",
          "type": "int"
       },
@@ -24,10 +20,22 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name": "attachmentField",
+         "type": "varchar",
+         "hidden": true
+      },
+      {
+         "name": "useIframe",
+         "type": "bool"
       }
    ],
    "filter": true,
    "fieldDefs":{
       "type":"text"
-   }
+   },
+   "personalData": true,
+   "textFilter": true,
+   "fullTextSearch": true
 }

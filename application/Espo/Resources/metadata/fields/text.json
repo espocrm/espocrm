@@ -36,5 +36,8 @@
          "type":"bool"
       }
    ],
-   "filter": true
+   "filter": true,
+   "personalData": true,
+   "textFilter": true,
+   "fullTextSearch": true
 }

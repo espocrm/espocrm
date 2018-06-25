@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-side', 'view', function (Dep) {
+Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -50,12 +50,10 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             options: {
                 fieldList: [
                     {
-                        name: 'assignedUser',
-                        view: 'views/fields/assigned-user'
+                        name: ':assignedUser'
                     },
                     {
-                        name: 'teams',
-                        view: 'views/fields/teams'
+                        name: 'teams'
                     }
                 ]
             }
@@ -195,6 +193,8 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
 
             if (defaultPanelDefs === false) return;
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return;
+
             defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
 
             if (!defaultPanelDefs) return;
@@ -206,6 +206,29 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
             if (fieldList) {
                 defaultPanelDefs.options = defaultPanelDefs.options || {};
                 defaultPanelDefs.options.fieldList = fieldList;
+            }
+
+            if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
+                defaultPanelDefs.options.fieldList.forEach(function (item, i) {
+                    if (typeof item !== 'object') {
+                        item = {
+                            name: item
+                        }
+                        defaultPanelDefs.options.fieldList[i] = item;
+                    }
+                    if (item.name === ':assignedUser') {
+                        if (this.model.hasField('assignedUsers')) {
+                            item.name = 'assignedUsers';
+                            if (!this.model.getFieldParam('assignedUsers', 'view')) {
+                                item.view = 'views/fields/assigned-users';
+                            }
+                        } else if (this.model.hasField('assignedUser')) {
+                            item.name = 'assignedUser';
+                        } else {
+                            defaultPanelDefs.options.fieldList[i] = {};
+                        }
+                    }
+                }, this);
             }
 
             this.panelList.unshift(defaultPanelDefs);
@@ -236,6 +259,9 @@ Espo.define('views/record/detail-side', 'view', function (Dep) {
                         p.title = this.translate(p.label, 'labels', this.scope);
                     } else {
                         p.title = view.title;
+                    }
+                    if (view.titleHtml) {
+                        p.titleHtml = view.titleHtml;
                     }
                 }, this);
             }, this);

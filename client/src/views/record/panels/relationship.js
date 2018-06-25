@@ -49,17 +49,28 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.link = this.defs.link || this.panelName;
+            this.link = this.link || this.defs.link || this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.title = this.translate(this.link, 'links', this.model.name);
+            this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
+
+            if (!this.getConfig().get('scopeColorsDisabled')) {
+                var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+                if (iconHtml) {
+                    if (this.defs.label) {
+                        this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+                    } else {
+                        this.titleHtml = iconHtml + this.title;
+                    }
+                }
+            }
 
             var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
-            if (!this.readOlny && !this.defs.readOnly) {
+            if (!this.readOnly && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {
                     this.defs.create = true;
                 }
@@ -131,6 +142,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
+            if (this.defs.orderBy) {
+                sortBy = this.defs.orderBy;
+                asc = true;
+                if (this.defs.orderDirection) {
+                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
+                        asc = false;
+                    }
+                }
+            }
+
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
@@ -165,20 +186,23 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {
-                    collection.once('sync', function () {
-                        this.createView('list', viewName, {
-                            collection: collection,
-                            layoutName: layoutName,
-                            listLayout: listLayout,
-                            checkboxes: false,
-                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
-                            buttonsDisabled: true,
-                            el: this.options.el + ' .list-container',
-                        }, function (view) {
-                            view.render();
-                        });
-                    }, this);
-                    collection.fetch();
+                    this.createView('list', viewName, {
+                        collection: collection,
+                        layoutName: layoutName,
+                        listLayout: listLayout,
+                        checkboxes: false,
+                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                        buttonsDisabled: true,
+                        el: this.options.el + ' .list-container',
+                        skipBuildRows: true
+                    }, function (view) {
+                        view.getSelectAttributeList(function (selectAttributeList) {
+                            if (selectAttributeList) {
+                                collection.data.select = selectAttributeList.join(',');
+                            }
+                            collection.fetch();
+                        }.bind(this));
+                    });
                 }, this);
 
                 this.wait(false);

@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Názov",
+    "account": "Účet",
+    "stage": "Fáza",
+    "amount": "Množstvo",
+    "probability": "Uskutočniteľnosť, %",
+    "leadSource": "Zdroj stopy",
+    "doNotCall": "Nevolať",
+    "closeDate": "Dátum uzatvorenia",
+    "contacts": "Kontakty",
+    "description": "Popis",
+    "amountConverted": "Množstvo (konvertované)",
+    "amountWeightedConverted": "Množstvo vážené",
+    "campaign": "Kampaň",
+    "originalLead": "Pôvodná stopa",
+    "amountCurrency": "Mena obnosu",
+    "contactRole": "Rola kontaktu"
+  },
+  "links": {
+    "contacts": "Kontakty",
+    "documents": "Dokumenty",
+    "campaign": "Kampaň",
+    "originalLead": "Pôvodná stopa"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prieskum",
+      "Qualification": "Kvalifikácia",
+      "Needs Analysis": "Potrebuje analýzu",
+      "Value Proposition": "Navrhovaná hodnota",
+      "Id. Decision Makers": "Kto rozhoduje",
+      "Perception Analysis": "Analýza vnímania",
+      "Proposal/Price Quote": "Návrh/Uvedenie ceny",
+      "Negotiation/Review": "Vyjednávanie/Revízia",
+      "Closed Won": "Uzavreté \"Zisk\"",
+      "Closed Lost": "Uzavreté \"Strata\"",
+      "Proposal": "Návrh",
+      "Negotiation": "Vyjednávanie"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Vytvoriť príležitosť"
+  },
+  "presetFilters": {
+    "open": "Otvoriť",
+    "won": "Zisk",
+    "lost": "Strata"
+  }
+}

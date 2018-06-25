@@ -1,0 +1,6 @@
+[
+    {"name":"name", "link":true},
+    {"name":"priority"},
+    {"name":"parent"},
+    {"name":"dateEnd", "align": "right"}
+]

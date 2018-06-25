@@ -53,7 +53,8 @@ class Record extends \Espo\Core\Services\Base
         'fileManager',
         'selectManagerFactory',
         'fileStorageManager',
-        'injectableFactory'
+        'injectableFactory',
+        'fieldManagerUtil'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -90,7 +91,19 @@ class Record extends \Espo\Core\Services\Base
 
     protected $listCountQueryDisabled = false;
 
-    const MAX_TEXT_COLUMN_LENGTH_FOR_LIST = 5000;
+    protected $maxSelectTextAttributeLength = null;
+
+    protected $maxSelectTextAttributeLengthDisabled = false;
+
+    protected $skipSelectTextAttributes = false;
+
+    protected $selectAttributeList = null;
+
+    protected $mandatorySelectAttributeList = [];
+
+    protected $forceSelectAllAttributes = false;
+
+    const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     const FOLLOWERS_LIMIT = 4;
 
@@ -142,12 +155,17 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getFileManager()
     {
-        return $this->injections['fileManager'];
+        return $this->getInjection('fileManager');
     }
 
     protected function getMetadata()
     {
-        return $this->injections['metadata'];
+        return $this->getInjection('metadata');
+    }
+
+    protected function getFieldManagerUtil()
+    {
+        return $this->getInjection('fieldManagerUtil');
     }
 
     protected function getRepository()
@@ -178,6 +196,7 @@ class Record extends \Espo\Core\Services\Base
         $historyRecord->set('userId', $this->getUser()->id);
         $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
         $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+        $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
 
         if ($entity) {
             $historyRecord->set(array(
@@ -284,9 +303,7 @@ class Record extends \Espo\Core\Services\Base
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $parentId = $entity->get($field . 'Id');
                 $parentType = $entity->get($field . 'Type');
-                if ($parentId && $parentType) {
-                    $entity->loadParentNameField($field);
-                }
+                $entity->loadParentNameField($field);
             }
         }
     }
@@ -337,8 +354,10 @@ class Record extends \Espo\Core\Services\Base
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
-            $dataFieldName = 'emailAddressData';
-            $entity->set($dataFieldName, $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity));
+            $dataAttributeName = 'emailAddressData';
+            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
+            $entity->set($dataAttributeName, $emailAddressData);
+            $entity->setFetched($dataAttributeName, $emailAddressData);
         }
     }
 
@@ -346,8 +365,10 @@ class Record extends \Espo\Core\Services\Base
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $dataFieldName = 'phoneNumberData';
-            $entity->set($dataFieldName, $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity));
+            $dataAttributeName = 'phoneNumberData';
+            $phoneNumberData = $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity);
+            $entity->set($dataAttributeName, $phoneNumberData);
+            $entity->setFetched($dataAttributeName, $phoneNumberData);
         }
     }
 
@@ -384,6 +405,72 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->isPermittedTeams($entity)) {
             return false;
         }
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
+            if (!$this->isPermittedAssignedUsers($entity)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isPermittedAssignedUsers(Entity $entity)
+    {
+        if (!$entity->hasLinkMultipleField('assignedUsers')) {
+            return true;
+        }
+
+        if ($this->getUser()->isPortal()) {
+            if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
+                return true;
+            }
+        }
+
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
+        if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
+            return true;
+        }
+
+        $toProcess = false;
+
+        if (!$entity->isNew()) {
+            $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            if ($entity->isAttributeChanged('assignedUsersIds')) {
+                $toProcess = true;
+            }
+        } else {
+            $toProcess = true;
+        }
+
+        $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+
+        if ($toProcess) {
+            if (empty($userIdList)) {
+                if ($assignmentPermission == 'no') {
+                    return false;
+                }
+                return true;
+            }
+            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+
+            if ($assignmentPermission == 'no') {
+                foreach ($userIdList as $userId) {
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if ($this->getUser()->id != $userId) {
+                        return false;
+                    }
+                }
+            } else if ($assignmentPermission == 'team') {
+                $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+                foreach ($userIdList as $userId) {
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
@@ -395,6 +482,12 @@ class Record extends \Espo\Core\Services\Base
 
         $assignedUserId = $entity->get('assignedUserId');
 
+        if ($this->getUser()->isPortal()) {
+            if (!$entity->isAttributeChanged('assignedUserId') && empty($assignedUserId)) {
+                return true;
+            }
+        }
+
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
@@ -404,7 +497,7 @@ class Record extends \Espo\Core\Services\Base
         $toProcess = false;
 
         if (!$entity->isNew()) {
-            if ($entity->isFieldChanged('assignedUserId')) {
+            if ($entity->isAttributeChanged('assignedUserId')) {
                 $toProcess = true;
             }
         } else {
@@ -447,8 +540,15 @@ class Record extends \Espo\Core\Services\Base
         $teamIdList = $entity->getLinkMultipleIdList('teams');
         if (empty($teamIdList)) {
             if ($assignmentPermission === 'team') {
-                if (!$entity->get('assignedUserId')) {
-                    return false;
+                if ($entity->hasLinkMultipleField('assignedUsers')) {
+                    $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+                    if (empty($assignedUserIdList)) {
+                        return false;
+                    }
+                } else if ($entity->hasAttribute('assignedUserId')) {
+                    if (!$entity->get('assignedUserId')) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -804,7 +904,14 @@ class Record extends \Espo\Core\Services\Base
 
         $selectParams = $this->getSelectParams($params);
 
-        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
+
+        $selectAttributeList = $this->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
+        }
 
         $collection = $this->getRepository()->find($selectParams);
 
@@ -833,6 +940,131 @@ class Record extends \Espo\Core\Services\Base
         );
     }
 
+    public function getListKanban($params)
+    {
+        $disableCount = false;
+        if (
+            $this->listCountQueryDisabled
+            ||
+            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+        ) {
+            $disableCount = true;
+        }
+
+        $maxSize = 0;
+        if ($disableCount) {
+           if (!empty($params['maxSize'])) {
+               $maxSize = $params['maxSize'];
+               $params['maxSize'] = $params['maxSize'] + 1;
+           }
+        }
+
+        $selectParams = $this->getSelectParams($params);
+
+        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
+
+        $selectAttributeList = $this->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
+        }
+
+        $collection = new \Espo\ORM\EntityCollection([], $this->entityType);
+
+        $statusField = $this->getMetadata()->get(['scopes', $this->entityType, 'statusField']);
+        if (!$statusField) {
+            throw new Error("No status field for entity type '{$this->entityType}'.");
+        }
+
+        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
+        if (empty($statusList)) {
+            throw new Error("No options for status field for entity type '{$this->entityType}'.");
+        }
+
+        $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
+
+        $additionalData = (object) [
+            'groupList' => []
+        ];
+
+        foreach ($statusList as $status) {
+            if (in_array($status, $statusIgnoreList)) continue;
+            if (!$status) continue;
+
+            $selectParamsSub = $selectParams;
+            $selectParamsSub['whereClause'][] = [
+                $statusField => $status
+            ];
+
+            $o = (object) [
+                'name' => $status
+            ];
+
+            $collectionSub = $this->getRepository()->find($selectParamsSub);
+
+            if (!$disableCount) {
+                $totalSub = $this->getRepository()->count($selectParamsSub);
+            } else {
+                if ($maxSize && count($collectionSub) > $maxSize) {
+                    $totalSub = -1;
+                    unset($collectionSub[count($collectionSub) - 1]);
+                } else {
+                    $totalSub = -2;
+                }
+            }
+
+            foreach ($collectionSub as $e) {
+                $this->loadAdditionalFieldsForList($e);
+                if (!empty($params['loadAdditionalFields'])) {
+                    $this->loadAdditionalFields($e);
+                }
+                $this->prepareEntityForOutput($e);
+
+                $collection[] = $e;
+            }
+
+            $o->total = $totalSub;
+            $o->list = $collectionSub->getValueMapList();
+
+            $additionalData->groupList[] = $o;
+        }
+
+        if (!$disableCount) {
+            $total = $this->getRepository()->count($selectParams);
+        } else {
+            if ($maxSize && count($collection) > $maxSize) {
+                $total = -1;
+                unset($collection[count($collection) - 1]);
+            } else {
+                $total = -2;
+            }
+        }
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection,
+            'additionalData' => $additionalData
+        ];
+    }
+
+    public function getMaxSelectTextAttributeLength()
+    {
+        if (!$this->maxSelectTextAttributeLengthDisabled) {
+            if ($this->maxSelectTextAttributeLength) {
+                return $this->maxSelectTextAttributeLength;
+            } else {
+                return $this->getConfig()->get('maxSelectTextAttributeLengthForList', self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH);
+            }
+        }
+        return null;
+    }
+
+    public function isSkipSelectTextAttributes()
+    {
+        return $this->skipSelectTextAttributes;
+    }
+
     public function findLinkedEntities($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
@@ -841,6 +1073,9 @@ class Record extends \Espo\Core\Services\Base
         }
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
+        }
+        if (empty($link)) {
+            throw new Error();
         }
 
         $methodName = 'findLinkedEntities' . ucfirst($link);
@@ -853,6 +1088,8 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
             throw new Forbidden();
         }
+
+        $recordService = $this->getRecordService($foreignEntityName);
 
         $disableCount = false;
         if (
@@ -875,11 +1112,16 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $selectParams['maxTextColumnsLength'] = $this->getConfig()->get('maxTextColumnLengthForList', self::MAX_TEXT_COLUMN_LENGTH_FOR_LIST);
+        $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
+
+        $selectAttributeList = $recordService->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
+        }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
-
-        $recordService = $this->getRecordService($foreignEntityName);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -1317,16 +1559,14 @@ class Record extends \Espo\Core\Services\Base
         if (!$isExportAllFields) {
             return true;
         }
-        $isNotStorable = $entity->getAttributeParam($attribute, 'notStorable');
-        if (!$isNotStorable) {
+
+        if (!$entity->getAttributeParam($attribute, 'notStorable')) {
             return true;
         } else {
-            if (in_array($attribute, $this->exportAllowedAttributeList)) {
-                return true;
+            if ($entity->getAttributeParam($attribute, 'notExportable')) {
+                return false;
             }
-            if (in_array($entity->getAttributeParam($attribute, 'type'), ['email', 'phone'])) {
-               return true;
-            }
+            return true;
         }
     }
 
@@ -1480,7 +1720,6 @@ class Record extends \Espo\Core\Services\Base
             $attributeList = [];
         }
 
-
         $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
 
@@ -1532,10 +1771,16 @@ class Record extends \Espo\Core\Services\Base
             $type = $defs[$attribute]['type'];
             switch ($type) {
                 case 'jsonObject':
+                    if (!empty($defs[$attribute]['isLinkMultipleNameMap'])) {
+                        break;
+                    }
                     $value = $entity->get($attribute);
                     return \Espo\Core\Utils\Json::encode($value);
                     break;
                 case 'jsonArray':
+                    if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
+                        break;
+                    }
                     $value = $entity->get($attribute);
                     if (is_array($value)) {
                         return \Espo\Core\Utils\Json::encode($value);
@@ -1867,5 +2112,86 @@ class Record extends \Espo\Core\Services\Base
             }
         }
     }
-}
 
+    protected function getFieldByTypeList($type)
+    {
+        return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
+    }
+
+    public function getSelectAttributeList($params)
+    {
+        if ($this->forceSelectAllAttributes) {
+            return null;
+        }
+
+        if ($this->selectAttributeList) {
+            return $this->selectAttributeList;
+        }
+
+        // TODO remove in 5.5.0
+        if (in_array($this->getEntityType(), ['Report', 'Workflow'])) {
+            return null;
+        }
+
+        $seed = $this->getEntityManager()->getEntity($this->getEntityType());
+
+        if (array_key_exists('select', $params)) {
+            $passedAttributeList = $params['select'];
+        } else {
+            $passedAttributeList = null;
+        }
+
+        if ($passedAttributeList) {
+            $attributeList = [];
+            if (!in_array('id', $passedAttributeList)) {
+                $attributeList[] = 'id';
+            }
+            $aclAttributeList = ['assignedUserId', 'createdById'];
+
+            if ($this->getUser()->isPortal()) {
+                $aclAttributeList[] = 'accountId';
+                $aclAttributeList[] = 'contactId';
+            }
+
+            foreach ($aclAttributeList as $attribute) {
+                if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            foreach ($passedAttributeList as $attribute) {
+                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            if (!empty($params['sortBy'])) {
+                $sortByField = $params['sortBy'];
+                $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
+
+                if ($sortByFieldType === 'currency') {
+                    if (!in_array($sortByField . 'Converted', $attributeList)) {
+                        $attributeList[] = $sortByField . 'Converted';
+                    }
+                }
+
+                $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
+                foreach ($sortByAttributeList as $attribute) {
+                    if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
+                        $attributeList[] = $attribute;
+                    }
+                }
+            }
+
+            foreach ($this->mandatorySelectAttributeList as $attribute) {
+                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
+                    $attributeList[] = $attribute;
+                }
+            }
+
+            return $attributeList;
+        }
+
+        return null;
+    }
+}

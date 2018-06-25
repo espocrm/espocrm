@@ -217,7 +217,7 @@ class Base implements Injectable
             }
         }
 
-        if ($entity->hasAttribute('assignedUsersIds') && $entity->hasRelation('assignedUsers')) {
+        if ($entity->hasLinkMultipleField('assignedUsers')) {
             if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
                 return true;
             }

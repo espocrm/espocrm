@@ -139,7 +139,7 @@ class ZendMail
             $this->importPartDataToEmail($email, $zendMessage, $inlineIds, 'text/plain', $inlineAttachmentList);
         }
 
-        if (!$email->get('body') && $email->get('bodyPlain')) {
+        if (!$email->get('body') && $email->hasBodyPlain()) {
             $email->set('body', $email->get('bodyPlain'));
         }
 
@@ -192,7 +192,7 @@ class ZendMail
                     $content = $this->getContentFromPart($part);
                     if ($type == 'text/plain') {
                         $bodyPlain = '';
-                        if ($email->get('bodyPlain')) {
+                        if ($email->hasBodyPlain()) {
                             $bodyPlain .= $email->get('bodyPlain') . "\n";
                         }
                         $bodyPlain .= $content;

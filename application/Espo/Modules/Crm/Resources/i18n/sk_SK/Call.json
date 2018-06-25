@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Meno",
+    "parent": "Rodič",
+    "status": "Stav",
+    "dateStart": "Počiatočný dátum",
+    "dateEnd": "Konečný dátum",
+    "direction": "Smer",
+    "duration": "Trvanie",
+    "description": "Popis",
+    "users": "Používatelia",
+    "contacts": "Kontakty",
+    "leads": "Stopy",
+    "reminders": "Pripomienky",
+    "account": "Účet",
+    "acceptanceStatus": "Akceptačný stav"
+  },
+  "options": {
+    "status": {
+      "Planned": "Plánovaný",
+      "Held": "Zadržaný",
+      "Not Held": "Nezadržaný"
+    },
+    "direction": {
+      "Outbound": "Odchádzajúci",
+      "Inbound": "Prichádzajúci"
+    },
+    "acceptanceStatus": {
+      "None": "Žiadny",
+      "Accepted": "Akceptovaný",
+      "Declined": "Odmietnutý",
+      "Tentative": "Predbežne"
+    }
+  },
+  "massActions": {
+    "setHeld": "Nastaviť pozdržaný",
+    "setNotHeld": "Nastaviť nepozdržaný"
+  },
+  "labels": {
+    "Create Call": "Vytvoriť hovor",
+    "Set Held": "Nastaviť pozdržaný",
+    "Set Not Held": "Nastaviť nepozdržaný",
+    "Send Invitations": "Poslať pozvánky"
+  },
+  "presetFilters": {
+    "planned": "Plánovaný",
+    "held": "Pozdržaný",
+    "todays": "Dnešné"
+  }
+}

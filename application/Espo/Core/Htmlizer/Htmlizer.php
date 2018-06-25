@@ -100,9 +100,9 @@ class Htmlizer
             $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
         }
 
+
         foreach ($fieldList as $field) {
             if (in_array($field, $forbidenAttributeList)) continue;
-
 
             $type = $entity->getAttributeType($field);
 
@@ -121,7 +121,7 @@ class Htmlizer
                     foreach ($list as $item) {
                         $v = $item;
                         if ($item instanceof \StdClass) {
-                            $v = json_decode(json_encode($v), true);
+                            $v = json_decode(json_encode($v, \JSON_PRESERVE_ZERO_FRACTION), true);
                         }
                         if (is_array($v)) {
                             foreach ($v as $k => $w) {
@@ -139,7 +139,7 @@ class Htmlizer
                 if (!empty($data[$field])) {
                     $value = $data[$field];
                     if ($value instanceof \StdClass) {
-                        $data[$field] = json_decode(json_encode($value), true);
+                        $data[$field] = json_decode(json_encode($value, \JSON_PRESERVE_ZERO_FRACTION), true);
                     }
                     foreach ($data[$field] as $k => $w) {
                         $keyRaw = $k . '_RAW';
@@ -219,6 +219,14 @@ class Htmlizer
                         return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
                     }
                     return '';
+                },
+                'var' => function ($context, $options) {
+                    if ($context && isset($context[0]) && isset($context[1])) {
+                        if (isset($context[1][$context[0]])) {
+                            return $context[1][$context[0]];
+                        }
+                    }
+                    return;
                 }
             ],
             'hbhelpers' => [
@@ -260,12 +268,19 @@ class Htmlizer
 
         $data = $this->getDataFromEntity($entity, $skipLinks);
 
+        if (!array_key_exists('today', $data)) {
+            $data['today'] = $this->dateTime->getTodayString();
+        }
+
+        if (!array_key_exists('now', $data)) {
+            $data['now'] = $this->dateTime->getNowString();
+        }
+
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
         }
 
         $html = $renderer($data);
-
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 

@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Bekapcsolt",
+    "clientId": "Ügyfélazonosító",
+    "clientSecret": "Ügyfél titka",
+    "redirectUri": "Átirányítási URI",
+    "apiKey": "API kulcs"
+  },
+  "messages": {
+    "selectIntegration": "Válasszon ki egy integrációt a menüből.",
+    "noIntegrations": "Nincs integráció."
+  },
+  "help": {
+    "Google": "<p> <b> A Google Developers Console-ban szerezze be az OAuth 2.0-hitelesítő adatokat. </ b> </ p> <p> Látogassa meg a <a href=\"https://console.developers.google.com/project\"> Google fejlesztőket Konzolt </a>, hogy megkaphassa az OAuth 2.0 hitelesítő adatait, például egy ügyfélazonosítót és ügyféltitkot, amelyek mind a Google, mind az EspoCRM alkalmazásban ismertek. </ P>",
+    "GoogleMaps": "<p> Az API-kulcs beszerzése <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\"> itt </a>. </ p>"
+  },
+  "titles": {
+    "GoogleMaps": "Google térkép"
+  }
+}

@@ -91,6 +91,7 @@ class Application
     public function runClient()
     {
         $this->getContainer()->get('clientManager')->display();
+        exit;
     }
 
     public function runEntryPoint($entryPoint, $data = array(), $final = false)

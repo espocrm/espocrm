@@ -37,5 +37,6 @@
    "fieldDefs":{
       "type":"varchar"
    },
-   "translatedOptions": true
+   "translatedOptions": true,
+   "personalData": true
 }

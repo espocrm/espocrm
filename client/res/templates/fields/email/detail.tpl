@@ -1,17 +1,17 @@
 {{#if emailAddressData}}
     {{#each emailAddressData}}
         <div>
-        {{#unless invalid}}{{#unless optOut}}
+        {{#unless invalid}}
+        {{#unless erased}}
         <a href="javascript:" data-email-address="{{emailAddress}}" data-action="mailTo">
-        {{/unless}}{{/unless}}
-
-        <span {{#if invalid}}style="text-decoration: line-through;"{{/if}}>
-        {{emailAddress}}
-        </span>
-
-        {{#unless invalid}}{{#unless optOut}}
+        {{/unless}}
+        {{/unless}}
+        <span {{#if invalid}}style="text-decoration: line-through;"{{/if}}{{#if optOut}}style="text-decoration: line-through;"{{/if}}>{{emailAddress}}</span>
+        {{#unless invalid}}
+        {{#unless erased}}
+        {{/unless}}
         </a>
-        {{/unless}}{{/unless}}
+        {{/unless}}
         </div>
     {{/each}}
 {{else}}

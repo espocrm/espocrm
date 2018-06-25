@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/detail-bottom', 'view', function (Dep) {
+Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -157,7 +157,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     "label":"Stream",
                     "view":"views/stream/panel",
                     "sticked": true,
-                    "hidden": !streamAllowed
+                    "hidden": !streamAllowed,
+                    "order": 2
                 });
             }
         },
@@ -183,10 +184,15 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     if ('getButtonList' in view) {
                         p.buttonList = this.filterActions(view.getButtonList());
                     }
-                    if (p.label) {
-                        p.title = this.translate(p.label, 'labels', this.scope);
+
+                    if (view.titleHtml) {
+                        p.titleHtml = view.titleHtml;
                     } else {
-                        p.title = view.title;
+                        if (p.label) {
+                            p.title = this.translate(p.label, 'labels', this.scope);
+                        } else {
+                            p.title = view.title;
+                        }
                     }
                 }, this);
             }, this);
@@ -214,16 +220,6 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
             this.panelList = [];
 
             this.setupPanels();
-
-            this.panelList = this.panelList.map(function (p) {
-                var item = Espo.Utils.clone(p);
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                } else {
-                    this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
-                }
-                return item;
-            }, this);
 
             this.wait(true);
 
@@ -256,17 +252,21 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     this.setupRelationshipPanels();
                 }
 
-                var list1 = [];
-                var list2 = [];
-                this.panelList.forEach(function (item) {
-                    if (item.isBottom) {
-                        list2.push(item);
+                this.panelList = this.panelList.map(function (p) {
+                    var item = Espo.Utils.clone(p);
+                    if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                        item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                     } else {
-                        list1.push(item);
+                        this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
                     }
-                });
+                    return item;
+                }, this);
 
-                this.panelList = list1.concat(list2);
+                this.panelList.sort(function(item1, item2) {
+                    var order1 = item1.order || 0;
+                    var order2 = item2.order || 0;
+                    return order1 > order2;
+                });
 
                 this.setupPanelViews();
                 this.wait(false);
@@ -331,6 +331,8 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
                     p.view = 'views/record/panels/relationship';
                 }
 
+                p.order = 5;
+
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                 } else {
@@ -379,5 +381,3 @@ Espo.define('views/record/detail-bottom', 'view', function (Dep) {
         }
     });
 });
-
-

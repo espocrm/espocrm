@@ -45,6 +45,8 @@ class MassEmail extends \Espo\Services\Record
 
     private $emailTemplateService = null;
 
+    protected $mandatorySelectAttributeList = ['campaignId'];
+
     protected function init()
     {
         parent::init();
@@ -222,6 +224,7 @@ class MassEmail extends \Espo\Services\Record
         foreach ($entityList as $target) {
             $emailAddress = $target->get('emailAddress');
             if (!$target->get('emailAddress')) continue;
+            if (strpos($emailAddress, 'ERASED:') === 0) continue;
             $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
             if ($emailAddressRecord) {
                 if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
@@ -382,7 +385,7 @@ class MassEmail extends \Espo\Services\Record
         }
 
         $trackOpenedUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
-        $trackOpenedHtml = '<img width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
+        $trackOpenedHtml = '<img alt="Email Campaign" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
 
         if ($massEmail->get('campaignId')) {
             if ($emailData['isHtml']) {

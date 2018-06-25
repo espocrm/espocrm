@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "action": "Akció",
+    "actionDate": "Dátum",
+    "data": "Adat",
+    "campaign": "Kampány",
+    "parent": "Cél",
+    "object": "Tárgy",
+    "application": "Alkalmazás",
+    "queueItem": "Sor tétel",
+    "stringData": "String adatok",
+    "stringAdditionalData": "String kiegészítő adatok",
+    "isTest": "A teszt"
+  },
+  "links": {
+    "queueItem": "Sor tétel",
+    "parent": "Szülő",
+    "object": "Tárgy",
+    "campaign": "Kampány"
+  },
+  "options": {
+    "action": {
+      "Sent": "Küldött",
+      "Opened": "Nyitott",
+      "Opted Out": "Elutasított",
+      "Bounced": "Visszafordulást",
+      "Clicked": "Kattintott"
+    }
+  },
+  "labels": {
+    "All": "Minden"
+  },
+  "presetFilters": {
+    "sent": "Küldött",
+    "opened": "Nyitott",
+    "optedOut": "Elutasított",
+    "bounced": "Visszafordulást",
+    "clicked": "Kattintott"
+  }
+}

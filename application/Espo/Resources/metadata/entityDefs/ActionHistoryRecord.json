@@ -31,6 +31,9 @@
         },
         "authToken": {
             "type": "link"
+        },
+        "authLogRecord": {
+            "type": "link"
         }
     },
     "links": {
@@ -44,6 +47,12 @@
         "authToken": {
             "type": "belongsTo",
             "entity": "AuthToken",
+            "foreignName": "id",
+            "foreign": "actionHistoryRecords"
+        },
+        "authLogRecord": {
+            "type": "belongsTo",
+            "entity": "AuthLogRecord",
             "foreignName": "id",
             "foreign": "actionHistoryRecords"
         }

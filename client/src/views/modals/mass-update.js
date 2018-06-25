@@ -132,6 +132,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         actionUpdate: function () {
+            this.disableButton('update');
+
             var self = this;
 
             var attributes = {};
@@ -168,10 +170,12 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     },
                     error: function () {
                         self.notify('Error occurred', 'error');
+                        self.enableButton('update');
                     }
                 });
             } else {
                 this.notify('Not valid', 'error');
+                this.enableButton('update');
             }
         },
 

@@ -1,6 +1,6 @@
 [
     {"name":"name", "link": true},
-    {"name":"account", "width": 22},
+    {"name":"account", "width": 25},
     {"name":"stage", "width": 20},
-    {"name":"createdAt", "width": 20}
+    {"name":"amount", "width": 20, "align": "right"}
 ]

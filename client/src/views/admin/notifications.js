@@ -81,8 +81,10 @@ Espo.define('views/admin/notifications', 'views/settings/record/edit', function 
         controlStreamEmailNotificationsEntityList: function () {
             if (this.model.get('streamEmailNotifications') || this.model.get('portalStreamEmailNotifications')) {
                 this.showField('streamEmailNotificationsEntityList');
+                this.showField('streamEmailNotificationsTypeList');
             } else {
                 this.hideField('streamEmailNotificationsEntityList');
+                this.hideField('streamEmailNotificationsTypeList');
             }
         }
 

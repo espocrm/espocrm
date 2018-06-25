@@ -57,7 +57,9 @@ Espo.define('collection', [], function () {
             this.url = this.url || this.urlRoot;
 
             this.sortBy = options.sortBy || this.sortBy;
+            this.defaultSortBy = this.sortBy;
             this.asc = ('asc' in options) ? options.asc : this.asc;
+            this.defaultAsc = this.asc;
             this.data = {};
 
             Backbone.Collection.prototype.initialize.call(this);
@@ -111,6 +113,13 @@ Espo.define('collection', [], function () {
 
         parse: function (response) {
             this.total = response.total;
+
+            if ('additionalData' in response) {
+                this.dataAdditional = response.additionalData;
+            } else {
+                this.dataAdditional = null;
+            }
+
             return response.list;
         },
 
@@ -151,6 +160,10 @@ Espo.define('collection', [], function () {
 
         getUser: function () {
             return this._user;
+        },
+
+        getEntityType: function () {
+            return this.name;
         }
 
     });

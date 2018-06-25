@@ -29,5 +29,6 @@
       "unique": false
    },
    "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\NumberType",
+   "textFilter": true,
    "readOnly": true
 }

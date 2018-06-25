@@ -63,6 +63,9 @@ class TargetList extends \Espo\Core\Controllers\Record
 		if (empty($data->targetId)) {
 			throw new BadRequest();
 		}
+		$data->id = strval($data->id);
+		$data->targetId = strval($data->targetId);
+
 		return $this->getRecordService()->optOut($data->id, $data->targetType, $data->targetId);
 	}
 
@@ -77,6 +80,9 @@ class TargetList extends \Espo\Core\Controllers\Record
 		if (empty($data->targetId)) {
 			throw new BadRequest();
 		}
+		$data->id = strval($data->id);
+		$data->targetId = strval($data->targetId);
+
 		return $this->getRecordService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
 	}
 }

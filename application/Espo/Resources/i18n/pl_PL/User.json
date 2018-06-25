@@ -18,21 +18,21 @@
     "newPasswordConfirm": "Potwierdź nowe hasło",
     "avatar": "Awatar",
     "isActive": "Jest aktywny",
-    "isPortalUser": "Is Portal User",
     "contact": "Kontakt",
     "accounts": "Klienci",
     "account": "Klient",
     "sendAccessInfo": "Wyślij użytkownikowi wiadomość z danymi dostępu",
-    "portal": "Portal"
+    "gender": "Płeć",
+    "position": "Pozycja w drużynie"
   },
   "links": {
     "teams": "Zespoły",
     "roles": "Rola",
     "notes": "Notatki",
-    "portals": "Portals",
-    "portalRoles": "Portal Roles",
     "contact": "Kontakt",
-    "accounts": "Klienci"
+    "accounts": "Klienci",
+    "account": "Konto (podstawowe)",
+    "tasks": "Zadania"
   },
   "labels": {
     "Create User": "Utwórz Użytkonika",
@@ -46,25 +46,19 @@
     "Email Address": "Adres e-mail",
     "External Accounts": "Konta zewnętrzne",
     "Email Accounts": "Konta pocztowe",
-    "Portal": "Portal",
     "Create Portal User": "Utwórz użytkownika portalu"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie dane utworzone przez tego użytkonika zostaną przypisane do domyślnego zespołu.",
-    "userName": "Letters a-z, numbers 0-9, dots, hyphens, @-signs and underscores are allowed.",
     "isAdmin": "Administrator ma dostęp do wszystkiego.",
     "isActive": "Jeśli odznaczone, użytkownik nie będzie mógł się zalogować",
-    "teams": "Zespoły, do których ten użytkownik należy. Poziom dostępu jest dziedziczony z rol zespołów.",
-    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
-    "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
-    "portals": "Portals which this user has access to."
+    "teams": "Zespoły, do których ten użytkownik należy. Poziom dostępu jest dziedziczony z rol zespołów."
   },
   "messages": {
     "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkonika.",
     "accountInfoEmailSubject": "Informacje o koncie",
     "accountInfoEmailBody": "Informacje o twoim koncie:\n\nUżytkonik: {userName}\nHasło: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Żądanie zmiany hasła",
-    "passwordChangeLinkEmailBody": "Możesz zmienić hasło klikając w link {link}. Ten URL jest unikalny i wkrótce będzie nieważny.",
     "passwordChanged": "Hasło zostało zmienione",
     "userCantBeEmpty": "Nazwa użytkownika nie może być pusta",
     "wrongUsernamePasword": "Nieprawidłowa nazwa użytkownika/hasło",
@@ -73,13 +67,21 @@
     "forbidden": "Zabronione, proszę spróbować później",
     "uniqueLinkHasBeenSent": "Unikalny adres URL został wysłany na podany adres email.",
     "passwordChangedByRequest": "Hasło zostało zmienione",
-    "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">pocztę wychodzącą</a> aby móc wysyłać hasła na e-mail."
+    "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">pocztę wychodzącą</a> aby móc wysyłać hasła na e-mail.",
+    "passwordChangeLinkEmailBody": "Możesz zmienić hasło klikając w link {link}. Ten URL jest unikalny i wkrótce będzie nieważny."
   },
   "boolFilters": {
     "onlyMyTeam": "Tylko mój zespół"
   },
   "presetFilters": {
-    "active": "Aktywny",
-    "activePortal": "Portal Active"
+    "active": "Aktywny"
+  },
+  "options": {
+    "gender": {
+      "": "Nie ustawiono",
+      "Male": "Mężczyzna",
+      "Female": "Kobieta",
+      "Neutral": "Nautralne"
+    }
   }
 }

@@ -253,7 +253,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         pushAttachment: function (attachment, link) {
-            var arr = _.clone(this.model.get(this.idsName));
+            var arr = _.clone(this.model.get(this.idsName) || []);
 
             arr.push(attachment.id);
             this.model.set(this.idsName, arr);
@@ -346,7 +346,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
             if (exceedsMaxFileSize) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                          .replace('{field}', this.getLabelText())
                           .replace('{max}', maxFileSize);
 
                 this.showValidationMessage(msg, 'label');
@@ -390,7 +390,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         attachment.set('file', e.target.result);
                         attachment.set('field', this.name);
 
-                        attachment.save().then(function () {
+                        attachment.save({}, {timeout: 0}).then(function () {
                             if (canceledList.indexOf(attachment.cid) === -1) {
                                 $attachmentBox.trigger('ready');
                                 this.pushAttachment(attachment);
@@ -584,7 +584,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idsName).length == 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, 'label');
                     return true;
                 }
@@ -593,7 +593,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         validateReady: function () {
             if (this.isUploading) {
-                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg, 'label');
                 return true;
             }

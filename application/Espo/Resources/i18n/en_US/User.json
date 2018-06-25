@@ -28,7 +28,8 @@
         "position": "Position in Team",
         "ipAddress": "IP Address",
         "passwordPreview": "Password Preview",
-        "isSuperAdmin": "Is Super Admin"
+        "isSuperAdmin": "Is Super Admin",
+        "lastAccess": "Last Access"
     },
     "links": {
         "teams": "Teams",

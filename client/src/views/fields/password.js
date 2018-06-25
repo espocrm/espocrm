@@ -59,7 +59,7 @@ Espo.define('views/fields/password', 'views/fields/base', function (Dep) {
         validateConfirm: function () {
             if (this.model.has(this.name + 'Confirm')) {
                 if (this.model.get(this.name) != this.model.get(this.name + 'Confirm')) {
-                    var msg = this.translate('fieldBadPasswordConfirm', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldBadPasswordConfirm', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
                 }

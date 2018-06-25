@@ -38,7 +38,8 @@
             "view": "crm:views/opportunity/fields/contacts",
             "columns": {
                 "role": "opportunityRole"
-            }
+            },
+            "orderBy": "name"
         },
         "stage": {
             "type": "enum",
@@ -60,6 +61,12 @@
                     "view": "crm:views/opportunity/admin/field-manager/fields/probability-map"
                 }
             ]
+        },
+        "lastStage": {
+            "type": "enum",
+            "view": "crm:views/opportunity/fields/last-stage",
+            "customizationOptionsDisabled": true,
+            "customizationDefaultDisabled": true
         },
         "probability": {
             "type": "int",
@@ -97,6 +104,11 @@
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
+            "customizationDefaultDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationIsSortedDisabled": true,
+            "customizationAuditedDisabled": true,
+            "customizationReadOnlyDisabled": true,
             "where": {
                 "=": {
                     "leftJoins": ["contacts"],
@@ -240,6 +252,9 @@
     "indexes": {
         "stage": {
             "columns": ["stage", "deleted"]
+        },
+        "lastStage": {
+            "columns": ["lastStage"]
         },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]

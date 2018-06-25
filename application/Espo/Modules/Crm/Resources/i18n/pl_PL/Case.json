@@ -2,19 +2,15 @@
   "fields": {
     "name": "Nazwa",
     "number": "Numer",
-    "status": "Status",
     "account": "Klient",
     "contact": "Kontakty",
     "contacts": "Kontakty",
     "priority": "Priorytet",
     "type": "Rodzaj",
-    "description": "Opis ",
-    "inboundEmail": "Wiadomość przychodząca"
+    "description": "Opis "
   },
   "links": {
-    "inboundEmail": "Wiadomość przychodząca",
     "account": "Klient",
-    "contact": "Contact (Primary)",
     "Contacts": "Kontakty",
     "meetings": "Spotkania",
     "calls": "Rozmowy",
@@ -39,8 +35,7 @@
     },
     "type": {
       "Question": "Pytanie",
-      "Incident": "Zdarzenie",
-      "Problem": "Problem"
+      "Incident": "Zdarzenie"
     }
   },
   "labels": {

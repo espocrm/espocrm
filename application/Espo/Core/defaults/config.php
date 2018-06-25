@@ -70,6 +70,8 @@ return array (
         'da_DK',
         'de_DE',
         'es_ES',
+        'hr_HR',
+        'hu_HU',
         'fr_FR',
         'id_ID',
         'it_IT',
@@ -77,6 +79,7 @@ return array (
         'nb_NO',
         'nl_NL',
         'tr_TR',
+        'sk_SK',
         'sr_RS',
         'ro_RO',
         'ru_RU',
@@ -113,6 +116,7 @@ return array (
     'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Task', 'Email'],
     "portalStreamEmailNotifications" => true,
     'streamEmailNotificationsEntityList' => ['Case'],
+    'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
     'emailMessageMaxSize' => 10,
     'notificationsCheckInterval' => 10,
     'disabledCountQueryEntityList' => ['Email'],
@@ -164,6 +168,9 @@ return array (
     'aclStrictMode' => false,
     'aclAllowDeleteCreated' => false,
     'inlineAttachmentUploadMaxSize' => 20,
+    'textFilterUseContainsForVarchar' => false,
+    'tabColorsDisabled' => false,
+    'massPrintPdfMaxCount' => 50,
     'isInstalled' => false
 );
 

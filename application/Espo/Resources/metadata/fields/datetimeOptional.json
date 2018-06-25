@@ -70,5 +70,6 @@
       "type":"datetime",
       "notNull":false
    },
-   "view": "views/fields/datetime-optional"
+   "view": "views/fields/datetime-optional",
+   "personalData": true
 }

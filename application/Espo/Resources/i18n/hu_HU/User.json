@@ -1,0 +1,101 @@
+{
+  "fields": {
+    "name": "Név",
+    "userName": "Felhasználónév",
+    "title": "Cím",
+    "isAdmin": "Admin",
+    "defaultTeam": "Alapértelmezett csapat",
+    "phoneNumber": "Telefon",
+    "roles": "szerepek",
+    "portals": "portálok",
+    "portalRoles": "Portál szerepek",
+    "teamRole": "Pozíció",
+    "password": "Jelszó",
+    "currentPassword": "jelenlegi jelszó",
+    "passwordConfirm": "Jelszó megerősítése",
+    "newPassword": "új jelszó",
+    "newPasswordConfirm": "Erősítse meg az új jelszót",
+    "isActive": "Aktív",
+    "isPortalUser": "Portal felhasználó",
+    "contact": "Kapcsolatba lépni",
+    "accounts": "Fiókok",
+    "account": "Fiók (elsődleges)",
+    "sendAccessInfo": "Küldjön e-mailt az Access Info a felhasználóhoz",
+    "portal": "Portál",
+    "gender": "nem",
+    "position": "Pozíció a csapatban",
+    "ipAddress": "IP-cím",
+    "passwordPreview": "Jelszó előnézet",
+    "isSuperAdmin": "A Super Admin",
+    "lastAccess": "Utolsó hozzáférés"
+  },
+  "links": {
+    "teams": "csapatok",
+    "roles": "szerepek",
+    "notes": "Megjegyzések",
+    "portals": "portálok",
+    "portalRoles": "Portál szerepek",
+    "contact": "Kapcsolatba lépni",
+    "accounts": "Fiókok",
+    "account": "Fiók (elsődleges)",
+    "tasks": "feladatok"
+  },
+  "labels": {
+    "Create User": "Felhasználó létrehozása",
+    "Generate": "generál",
+    "Access": "Hozzáférés",
+    "Preferences": "preferenciák",
+    "Change Password": "Jelszó módosítása",
+    "Teams and Access Control": "Csapatok és beléptetés",
+    "Forgot Password?": "Elfelejtett jelszó?",
+    "Password Change Request": "Jelszóváltási kérelem",
+    "Email Address": "Email cím",
+    "External Accounts": "Külső számlák",
+    "Email Accounts": "E-mail fiókok",
+    "Portal": "Portál",
+    "Create Portal User": "Portal felhasználó létrehozása",
+    "Proceed w/o Contact": "Folytassa a Kapcsolat nélkül"
+  },
+  "tooltips": {
+    "defaultTeam": "A felhasználó által létrehozott összes rekord alapértelmezés szerint ehhez a csapathoz tartozik.",
+    "userName": "Az a-z betűk, 0-9 számok, pontok, kötőjelek, @ jelek és aláhúzás megengedettek.",
+    "isAdmin": "Adminisztrátori felhasználó hozzáférhet mindent.",
+    "isActive": "Ha nincs bejelölve, akkor a felhasználó nem tud bejelentkezni.",
+    "teams": "Azok a csapatok, amelyekhez ez a felhasználó tartozik. A beléptetési szint a csapat szerepét örökli.",
+    "roles": "Kiegészítő hozzáférési szerepek. Használja, ha a felhasználó nem tartozik semmilyen csoporthoz, vagy csak a felhasználó számára kell hozzáférési szintet megnövelnie.",
+    "portalRoles": "További portál szerepek. Használja ezt a hozzáférési szintet kizárólag a felhasználó számára.",
+    "portals": "Azok a portálok, amelyekhez a felhasználó hozzáfér."
+  },
+  "messages": {
+    "passwordWillBeSent": "A jelszó a felhasználó e-mail címére lesz elküldve.",
+    "accountInfoEmailSubject": "EspoCRM felhasználói hozzáférési információ",
+    "accountInfoEmailBody": "A hozzáférési adatai:\n\nFelhasználónév: {userName}\nJelszó: {jelszó}\n\n{SITEURL}",
+    "passwordChangeLinkEmailSubject": "Jelszó megváltoztatása",
+    "passwordChanged": "A jelszó megváltozott",
+    "userCantBeEmpty": "A felhasználónév nem lehet üres",
+    "wrongUsernamePasword": "Helytelen felhasználónév / jelszó",
+    "emailAddressCantBeEmpty": "Az e-mail cím nem lehet üres",
+    "userNameEmailAddressNotFound": "A felhasználónév / e-mail cím nem található",
+    "forbidden": "Tilos, próbálkozzon később",
+    "uniqueLinkHasBeenSent": "Az egyedi URL-t elküldtük a megadott e-mail címre.",
+    "passwordChangedByRequest": "A jelszó megváltozott.",
+    "setupSmtpBefore": "Be kell állítania az <a href=\"{url}\"> SMTP-beállításokat </a>, hogy a rendszer képes legyen jelszót küldeni e-mailben.",
+    "passwordChangeLinkEmailBody": "A {link} következő linket megváltoztathatja. Ez az egyedi URL hamarosan lejár.",
+    "userNameExists": "Felhasználónév már létezik"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Csak a csapatom"
+  },
+  "presetFilters": {
+    "active": "Aktív",
+    "activePortal": "Portál aktív"
+  },
+  "options": {
+    "gender": {
+      "": "Nincs beállítva",
+      "Male": "Férfi",
+      "Female": "Női",
+      "Neutral": "Semleges"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "Názov",
+    "title": "Titul",
+    "accountRole": "Titul",
+    "account": "Účet",
+    "accounts": "Účty",
+    "phoneNumber": "Telefón",
+    "accountType": "Typ účtu",
+    "doNotCall": "Nevolať",
+    "address": "Adresa",
+    "opportunityRole": "Rola príležitosti",
+    "description": "Popis",
+    "campaign": "Kampaň",
+    "targetLists": "Zoznamy cieľov",
+    "targetList": "Zoznam cieľov",
+    "portalUser": "Portálový používateľ",
+    "originalLead": "Pôvodná stopa",
+    "acceptanceStatus": "Akceptačný status",
+    "accountIsInactive": "Účet neaktívny",
+    "acceptanceStatusMeetings": "Akceptačný stav (stretnutia)",
+    "acceptanceStatusCalls": "Akceptačný stav (Hovory)"
+  },
+  "links": {
+    "opportunities": "Príležitosti",
+    "cases": "Prípady",
+    "targetLists": "Zoznamy cieľov",
+    "campaignLogRecords": "Protokol kampane",
+    "campaign": "Kampaň",
+    "account": "Účet (Primárny)",
+    "accounts": "Účty",
+    "casesPrimary": "Prípady (Primárne)",
+    "portalUser": "Portálový používateľ",
+    "originalLead": "Pôvodná stopa",
+    "documents": "Dokumenty",
+    "tasksPrimary": "Úlohy (rozbalené)"
+  },
+  "labels": {
+    "Create Contact": "Vytvoriť kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "": "--Žiadne--",
+      "Decision Maker": "Kto rozhoduje",
+      "Evaluator": "Kto ohodnocuje",
+      "Influencer": "Kto ovplyvňuje"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Portáloví používatelia",
+    "notPortalUsers": "Nie portáloví používatelia",
+    "accountActive": "Aktívny"
+  }
+}

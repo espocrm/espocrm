@@ -19,7 +19,6 @@
     "Rebuild": "Onar",
     "Teams": "Takımlar",
     "Roles": "Görevler",
-    "Portal": "Portal",
     "Portals": "Portallar",
     "Portal Roles": "Portal Rolleri",
     "Outbound Emails": "Giden Epostalar",
@@ -55,13 +54,12 @@
     "Reset to Default": "Öndeğerlere Dön",
     "Email Filters": "E-mail Filtreleri",
     "Portal Users": "Portal Kullanıcıları",
-    "Action History": "Eylem Tarihçesi"
+    "Action History": "Eylem Tarihçesi",
+    "Label Manager": "Etiket Yönetimi"
   },
   "layouts": {
     "list": "Liste",
     "detail": "Detay",
-    "listSmall": "List (Small)",
-    "detailSmall": "Detail (Small)",
     "filters": "Arama Filtreleri",
     "massUpdate": "Çoklu Güncelleme",
     "relationships": "İlişki Panelleri",
@@ -88,14 +86,11 @@
     "enumInt": "Tamsayı Sıralama",
     "enumFloat": "XXXX Sıralama",
     "float": "Hizalama",
-    "int": "Int",
     "link": "Bağlantı",
     "linkMultiple": "Çoklu Bağlantı",
     "linkParent": "Üst Bağlantı",
-    "multienim": "Çoklu Sıralama",
     "phone": "Telefon",
     "text": "Metin",
-    "url": "Url",
     "varchar": "Değişken Karakter",
     "file": "Dosya",
     "image": "Resim",
@@ -104,9 +99,10 @@
     "rangeInt": "Tam Sayı Aralığı",
     "rangeFloat": "Aralık Sayı",
     "rangeCurrency": "Döviz Aralığı",
-    "wysiwyg": "Wysiwyg",
     "map": "Harita",
     "currencyConverted": "Para Birimi (Dönüştürülmüş)",
+    "colorpicker": "Renk Seçici",
+    "int": "Int",
     "number": "Sayı"
   },
   "fields": {
@@ -117,15 +113,11 @@
     "default": "Varsayılan",
     "maxLength": "Maks Uzunluk",
     "options": "Options (raw values, not translated)",
-    "after": "After (field)",
-    "before": "Before (field)",
     "link": "Bağlantı",
     "field": "Alan",
-    "min": "Min",
     "max": "Maks",
     "translation": "Çeviri",
     "previewSize": "Önizlme Boyutu",
-    "noEmptyString": "Boş dize yok ",
     "defaultType": "Ön Tanımlı Tip",
     "seeMoreDisabled": "Yazı Kesmeyi Devre Dışı Bırak",
     "entityList": "Varlık Listesi",
@@ -140,7 +132,6 @@
     "lengthOfCut": "Kesme Uzunluğu",
     "sourceList": "Kaynak Listesi",
     "tooltipText": "İpucu metni",
-    "prefix": "Prefix",
     "nextNumber": "Sonraki Sayı",
     "padLength": "Tampon Uzunluğu",
     "disableFormatting": "Formatlamayı Devre Dışı Bırak",
@@ -149,7 +140,9 @@
     "dynamicLogicRequired": "Alanı zorunlu yapan şartlar",
     "dynamicLogicOptions": "Koşullu seçenekler",
     "probabilityMap": "Sahne Olasılığı (%)",
-    "readOnly": "Salt okunur"
+    "readOnly": "Salt okunur",
+    "noEmptyString": "Boş dize yok ",
+    "maxFileSize": "Maksimum Dosya Boyutu (Mb)"
   },
   "messages": {
     "selectEntityType": "Soldaki menüden birim türünü seçin.",
@@ -158,7 +151,10 @@
     "selectLayout": "Gerekli yerleşim düzenini sol menüden seçin ve düzenleyin.",
     "selectExtensionPackage": "Eklenti paketi seçiniz ",
     "extensionInstalled": "{name} {version} eklentisi başarıyla kuruldu",
-    "installExtension": "{name} {version} eklentisi kurulum için hazır"
+    "installExtension": "{name} {version} eklentisi kurulum için hazır",
+    "upgradeVersion": "EspoCRM <strong>{version}</strong> sürümüne güncellenecektir. Bu işlem biraz zaman alabileceği için lütfen sabırlı olunuz.",
+    "upgradeDone": "EspoCRN <strong>{version}</strong> sürümüne yükseltilmiştir.",
+    "userHasNoEmailAddress": "Kullanıcının email adresi yok"
   },
   "descriptions": {
     "settings": "Uygulamanın sistem ayarları.",
@@ -176,7 +172,6 @@
     "personalEmailAccounts": "Kullanıcıların e-mail hesapları",
     "emailTemplates": "Giden eposta şablonları.",
     "import": "CSV dosyasından veri aktar.",
-    "layoutManager": "Customize layouts (list, detail, edit, search, mass update).",
     "userInterface": "Kullanıcı Arayğzünü ayarla.",
     "authTokens": "Aktif kimlik doğrulama oturumları. IP adresi ve son erişim tarihi",
     "authentication": "Giriş doğrulama ayarları.",
@@ -185,7 +180,9 @@
     "integrations": "Üçüncü parti entegrasyon servisleri.",
     "notifications": "Uygulama içi ve e-mail bildirimi ayarları.",
     "inboundEmails": "IMAP eposta hesaplarını grupla. Eposta içe aktarımı ve dizinleme",
-    "portalUsers": "Portal kullanıcısı."
+    "portalUsers": "Portal kullanıcısı.",
+    "actionHistory": "Kullanıcı eylemleri kütüğü",
+    "labelManager": "Uygulama etiketlerini düzenle"
   },
   "options": {
     "previewSize": {

@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "isHtml": "Html",
+    "body": "Test",
+    "subject": "Tantárgy",
+    "attachments": "Mellékletek",
+    "insertField": "Terület beillesztése",
+    "oneOff": "Egyszeri"
+  },
+  "labels": {
+    "Create EmailTemplate": "E-mail sablon létrehozása",
+    "Available placeholders": "Rendelkezésre álló helyőrzők"
+  },
+  "tooltips": {
+    "oneOff": "Ellenőrizze, hogy ezt a sablont csak egyszer használja. Például. Mass Email számára."
+  },
+  "presetFilters": {
+    "actual": "Tényleges"
+  },
+  "messages": {
+    "infoText": "Rendelkezésre álló helyőrzők:\n\n{optOutUrl} & # 8211; A megtagadási link URL-je;\n\n{optOutLink} & # 8211; leiratkozási link."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "A le nem adható link URL-je",
+    "optOutLink": "leiratkozási link"
+  }
+}

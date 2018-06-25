@@ -7,5 +7,11 @@
     "Create PortalRole": "Crear Rol del Portal",
     "Scope Level": "Alcance",
     "Field Level": "Nivel del Campo"
+  },
+  "fields": {
+    "exportPermission": "Permisos de Exportación"
+  },
+  "tooltips": {
+    "exportPermission": "Define si los usuarios del portal pueden exportar registros."
   }
 }

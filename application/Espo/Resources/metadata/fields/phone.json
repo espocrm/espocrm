@@ -25,5 +25,7 @@
    "fieldDefs":{
       "notStorable":true
    },
-   "translatedOptions": true
+   "translatedOptions": true,
+   "textFilter": true,
+   "personalData": true
 }

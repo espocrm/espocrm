@@ -181,25 +181,6 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($selectManager->hasLeftJoin('teamsAccess', $selectParams));
     }
 
-    function testTextFilter()
-    {
-        $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
-        $selectManager->setEntityType('Test2');
-
-        $this->metadata
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('entityDefs.Test2.collection.textFilterFields'))
-            ->will($this->returnValue(['name', 'text']));
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        $selectManager->applyTextFilter('test', $selectParams);
-
-        $this->assertEquals('test%', $selectParams['whereClause'][0]['OR']['name*']);
-        $this->assertEquals('%test%', $selectParams['whereClause'][0]['OR']['text*']);
-    }
-
     function testBuildSelectParams()
     {
         $selectManager = new \Espo\Core\SelectManagers\Base($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);

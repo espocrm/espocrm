@@ -29,7 +29,27 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use \Espo\Core\Exceptions\Error,
+    \Espo\Core\Exceptions\Forbidden,
+    \Espo\Core\Exceptions\BadRequest;
+
 class Campaign extends \Espo\Core\Controllers\Record
 {
+    public function postActionGenerateMailMergePdf($params, $data, $request)
+    {
+        if (empty($data->campaignId)) {
+            throw new BadRequest();
+        }
+        if (empty($data->link)) {
+            throw new BadRequest();
+        }
 
+        if (!$this->getAcl()->checkScope('Campaign', 'read')) {
+            throw new Forbidden();
+        }
+
+        return [
+            'id' => $this->getRecordService()->generateMailMergePdf($data->campaignId, $data->link, true)
+        ];
+    }
 }

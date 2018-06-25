@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "dateFormat": "Dátum formátum",
+    "timeFormat": "Idő formátum",
+    "timeZone": "Időzóna",
+    "weekStart": "A hét első napja",
+    "thousandSeparator": "Ezer elválasztó",
+    "decimalMark": "Tizedesjel",
+    "defaultCurrency": "Alapértelmezett pénznem",
+    "currencyList": "Pénznem listája",
+    "language": "Nyelv",
+    "smtpServer": "szerver",
+    "smtpPort": "Kikötő",
+    "smtpSecurity": "Biztonság",
+    "smtpUsername": "Felhasználónév",
+    "smtpPassword": "Jelszó",
+    "smtpEmailAddress": "Email cím",
+    "exportDelimiter": "Export-határoló",
+    "signature": "Email aláírás",
+    "dashboardTabList": "Tab listát",
+    "tabList": "Tab listát",
+    "defaultReminders": "Alapértelmezett emlékeztetők",
+    "theme": "Téma",
+    "useCustomTabList": "Egyéni füllista",
+    "receiveAssignmentEmailNotifications": "E-mail értesítések hozzárendeléskor",
+    "receiveMentionEmailNotifications": "E-mail értesítések a bejegyzésben szereplő megjegyzésekről",
+    "receiveStreamEmailNotifications": "E-mail értesítések a bejegyzésekről és az állapotfrissítésekről",
+    "dashboardLayout": "Irányítópult elrendezés",
+    "emailReplyForceHtml": "Email Válasz HTML-ben",
+    "autoFollowEntityTypeList": "Globális automatikus követés",
+    "emailReplyToAllByDefault": "Alapértelmezés szerint az E-mail Válasz mindenkinek",
+    "doNotFillAssignedUserIfNotRequired": "Ne töltse fel előzetesen a kijelölt felhasználót a rekord létrehozásakor",
+    "followEntityOnStreamPost": "Az adatrögzítés után automatikusan követheti a felvételt",
+    "followCreatedEntities": "A létrehozott rekordok automatikus követése",
+    "followCreatedEntityTypeList": "Automatikusan követheti az egyes entitástípusok létrehozott rekordjait",
+    "emailUseExternalClient": "Külső e-mail klienst használjon",
+    "scopeColorsDisabled": "Távolítsa el a színeket",
+    "tabColorsDisabled": "Letiltja a lapok színeit"
+  },
+  "options": {
+    "weekStart": {
+      "0": "vasárnap",
+      "1": "hétfő"
+    }
+  },
+  "labels": {
+    "Notifications": "értesítések",
+    "User Interface": "Felhasználói felület",
+    "Misc": "Egyéb",
+    "Locale": "helyszín"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatikusan kövesse az összes új rekordot (amelyet bármely felhasználó hoz létre) a kiválasztott entitás típusokból. Annak érdekében, hogy információkat láthasson az adatfolyamban, és értesítéseket kaphasson a rendszer minden rekordjáról.",
+    "doNotFillAssignedUserIfNotRequired": "A létrehozott hozzárendelt felhasználó létrehozásakor nem töltődik be saját felhasználó, hacsak a mező nem kötelező.",
+    "followCreatedEntities": "Új rekordok létrehozásakor automatikusan követik őket, még akkor is, ha másik felhasználónak van megadva.",
+    "followCreatedEntityTypeList": "Amikor új rekordokat hoz létre a kiválasztott entitás típusokról, automatikusan követni fog őket, még akkor is, ha másik felhasználónak van megadva."
+  }
+}

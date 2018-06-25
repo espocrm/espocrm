@@ -9,11 +9,11 @@
     "priority": "Prioridad",
     "type": "Tipo",
     "description": "Descripción",
-    "inboundEmail": "Cuenta de Correo",
-    "lead": "Referencia"
+    "lead": "Referencia",
+    "attachments": "Adjuntos",
+    "inboundEmail": "Cuenta de Correo de Grupo"
   },
   "links": {
-    "inboundEmail": "Cuenta de Correo",
     "account": "Cuenta",
     "contact": "Contacto (Primario)",
     "Contacts": "Contactos",
@@ -22,7 +22,9 @@
     "tasks": "Tareas",
     "emails": "Correos",
     "articles": "Artículos de la Base de Conocimientos",
-    "lead": "Referencia"
+    "lead": "Referencia",
+    "attachments": "Adjuntos",
+    "inboundEmail": "Cuenta de Correo de Grupo"
   },
   "options": {
     "status": {
@@ -35,7 +37,6 @@
     },
     "priority": {
       "Low": "Baja",
-      "Normal": "Normal",
       "High": "Alta",
       "Urgent": "Urgente"
     },

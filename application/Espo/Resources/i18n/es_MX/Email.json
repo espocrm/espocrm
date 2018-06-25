@@ -5,8 +5,6 @@
     "dateSent": "Enviado",
     "from": "De",
     "to": "Para",
-    "cc": "CC",
-    "bcc": "BCC",
     "replyTo": "Responder a",
     "replyToString": "Responder a (String)",
     "isHtml": "Es Html",
@@ -15,7 +13,6 @@
     "attachments": "Adjuntos",
     "selectTemplate": "Seleccione una Plantilla",
     "fromEmailAddress": "De la dirección",
-    "toEmailAddresses": "a la Dirección",
     "emailAddress": "Dirección de Correo",
     "deliveryDate": "Fecha Entrega",
     "account": "Cuenta",
@@ -35,7 +32,18 @@
     "emailAccounts": "Cuentas Personales",
     "hasAttachment": "Tiene Adjuntos",
     "sentBy": "Enviado por",
-    "assignedUsers": "Usuarios Asignados"
+    "assignedUsers": "Usuarios Asignados",
+    "bodyPlain": "Cuerpo (plano)",
+    "ccEmailAddresses": "Direcciones CC",
+    "messageId": "Id del Mensaje",
+    "messageIdInternal": "Id del Mensaje (Interna)",
+    "folderId": "Id de la Carpeta",
+    "fromName": "Nombre (De)",
+    "fromString": "String (De)",
+    "isSystem": "Es del Sistema",
+    "toEmailAddresses": "Direcciones (Para)",
+    "bccEmailAddresses": "Direcciones (CCO)",
+    "replyToEmailAddresses": "Direcciones (Responder)"
   },
   "links": {
     "replied": "Respondió",
@@ -43,7 +51,13 @@
     "inboundEmails": "Cuentas de Grupo",
     "emailAccounts": "Cuentas Personales",
     "assignedUsers": "Usuarios Asignados",
-    "sentBy": "Enviado por"
+    "sentBy": "Enviado por",
+    "attachments": "Adjuntos",
+    "fromEmailAddress": "Cuentas de Correo (De)",
+    "toEmailAddresses": "Cuentas de Correo (Para)",
+    "ccEmailAddresses": "Cuentas de Correo (CC)",
+    "bccEmailAddresses": "Cuentas de Correo (CCO)",
+    "replyToEmailAddresses": "Direcciones (Responder)"
   },
   "options": {
     "status": {
@@ -87,7 +101,8 @@
     "noSmtpSetup": "No está configurado el SMTP. {link}.",
     "testEmailSent": "Correo de prueba enviado",
     "emailSent": "Correo enviado",
-    "savedAsDraft": "Guardado como borrador"
+    "savedAsDraft": "Guardado como borrador",
+    "confirmInsertTemplate": "El cuerpo del correo se perderá. ¿Realmente desea insertar la plantilla?"
   },
   "presetFilters": {
     "sent": "Enviado",
@@ -98,7 +113,6 @@
     "important": "Importante"
   },
   "massActions": {
-    "markAsRead": "Mark as Read",
     "markAsNotRead": "Marcar como No Leído",
     "markAsImportant": "Marcar como Importante",
     "markAsNotImportant": "Marcar como No Importante",

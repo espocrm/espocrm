@@ -15,7 +15,7 @@
             print('"');
             print('>');
         %>
-            {{{<%= defs.name %>}}}
+            {{{this.<%= defs.name %>}}}
             <%= '</' + tag + '>' %>
     <% }); %>
     </div>

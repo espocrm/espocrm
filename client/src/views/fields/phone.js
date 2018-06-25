@@ -43,7 +43,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name) || !this.model.get(this.name) === '') {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input');
                     return true;
                 }
@@ -68,6 +68,13 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 phoneNumberData = this.model.get(this.dataFieldName) || false;
             }
 
+            if (phoneNumberData) {
+                phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
+                phoneNumberData.forEach(function (item) {
+                    item.erased = item.phoneNumber.indexOf(this.erasedPlaceholder) === 0
+                }, this);
+            }
+
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
                  phoneNumberData = [{
                     phoneNumber: this.model.get(this.name),
@@ -77,10 +84,18 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 }];
             }
 
-            return _.extend({
+            var data = _.extend({
                 phoneNumberData: phoneNumberData,
                 doNotCall: this.model.get('doNotCall')
             }, Dep.prototype.data.call(this));
+
+            if (this.mode === 'detail' || this.mode === 'list') {
+                if (this.model.get(this.name)) {
+                    data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
+                }
+            }
+
+            return data;
         },
 
         events: {
@@ -220,6 +235,8 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                     this.reRender();
                 }, this);
             }
+
+            this.erasedPlaceholder = 'ERASED:';
         },
 
         fetchPhoneNumberData: function () {

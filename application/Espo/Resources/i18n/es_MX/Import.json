@@ -49,12 +49,19 @@
     "Imported": "Importado",
     "Duplicates": "Duplicados",
     "Skip searching for duplicates": "No buscar duplicados",
-    "Timezone": "Zona horaria"
+    "Timezone": "Zona horaria",
+    "Remove Import Log": "Eliminar Historial de Importaciones"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
     "duplicatesRemoved": "Duplicados removidos",
-    "inIdle": "Ejecutar fuera de la sesión (para grandes volúmenes de datos, vía cron-job)"
+    "inIdle": "Ejecutar fuera de la sesión (para grandes volúmenes de datos, vía cron-job)",
+    "revert": "Esta acción eliminará permanentemente todos los registros importados.",
+    "removeDuplicates": "Esta acción eliminará permanentemente todos los registros importados que sean duplicados.",
+    "confirmRevert": "¿Realmente desea eliminar permanentemente todos los registros importados?",
+    "confirmRemoveDuplicates": "¿Realmente desea eliminar permanentemente todos los registros importados que sean duplicados?",
+    "confirmRemoveImportLog": "Esta acción eliminará el historial de importación. Todos los registros importados se conservarán, pero ya no podrá deshacer la importación. ¿Realmente desea hacerlo?",
+    "removeImportLog": "Esta acción eliminará el historial de importación. Todos los registros importados se conservarán.  Hágalo sólo si la importación fue correcta."
   },
   "fields": {
     "file": "Archivo",

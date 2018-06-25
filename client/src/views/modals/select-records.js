@@ -91,6 +91,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     name: 'select',
                     style: 'primary',
                     label: 'Select',
+                    disabled: true,
                     onClick: function (dialog) {
                         var listView = this.getView('list');
 
@@ -117,13 +118,19 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 this.createButton = false;
             }
 
-            this.header = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.header = '';
+            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            this.header += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.header = iconHtml + this.header;
 
             this.waitForView('list');
 
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
+
+                this.defaultSortBy = collection.sortBy;
+                this.defaultAsc = collection.asc;
 
                 this.loadSearch();
                 this.loadList();
@@ -160,6 +167,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
                     disableSavePreset: true,
+                }, function (view) {
+                    this.listenTo(view, 'reset', function () {
+                        this.collection.sortBy = this.defaultSortBy;
+                        this.collection.asc = this.defaultAsc;
+                    }, this);
                 });
             }
         },
@@ -169,26 +181,41 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
                            'views/record/list';
 
-            this.listenToOnce(this.collection, 'sync', function () {
-                this.createView('list', viewName, {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .list-container',
-                    selectable: true,
-                    checkboxes: this.multiple,
-                    massActionsDisabled: true,
-                    rowActionsView: false,
-                    layoutName: 'listSmall',
-                    searchManager: this.searchManager,
-                    checkAllResultDisabled: !this.massRelateEnabled,
-                    buttonsDisabled: true
-                }, function (list) {
-                    list.once('select', function (model) {
-                        this.trigger('select', model);
-                        this.close();
-                    }.bind(this));
+            this.createView('list', viewName, {
+                collection: this.collection,
+                el: this.containerSelector + ' .list-container',
+                selectable: true,
+                checkboxes: this.multiple,
+                massActionsDisabled: true,
+                rowActionsView: false,
+                layoutName: 'listSmall',
+                searchManager: this.searchManager,
+                checkAllResultDisabled: !this.massRelateEnabled,
+                buttonsDisabled: true,
+                skipBuildRows: true
+            }, function (view) {
+                this.listenToOnce(view, 'select', function (model) {
+                    this.trigger('select', model);
+                    this.close();
                 }.bind(this));
 
-            }.bind(this));
+                if (this.multiple) {
+                    this.listenTo(view, 'check', function () {
+                        if (view.checkedList.length) {
+                            this.enableButton('select');
+                        } else {
+                            this.disableButton('select');
+                        }
+                    }, this);
+                }
+
+                view.getSelectAttributeList(function (selectAttributeList) {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
+                    }
+                    this.collection.fetch();
+                }.bind(this));
+            });
         },
 
         create: function () {

@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "Vytvoriť dokument",
+    "Details": "Detaily"
+  },
+  "fields": {
+    "name": "Názov",
+    "status": "Stav",
+    "file": "Súbor",
+    "type": "Typ",
+    "publishDate": "Dátum publikovania",
+    "expirationDate": "Dátum expirácie",
+    "description": "Popis",
+    "accounts": "Účty",
+    "folder": "Priečinok"
+  },
+  "links": {
+    "accounts": "Účty",
+    "opportunities": "Príležitosti",
+    "folder": "Priečinok",
+    "leads": "Stopy",
+    "contacts": "Kontakty"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktívny",
+      "Draft": "Koncept",
+      "Expired": "Vypršaný",
+      "Canceled": "Zrušený"
+    },
+    "type": {
+      "": "Žiadny",
+      "Contract": "Zmluva",
+      "License Agreement": "Licenčná zmluva"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktívny",
+    "draft": "Koncept"
+  }
+}

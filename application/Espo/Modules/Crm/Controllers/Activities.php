@@ -65,13 +65,23 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $userId = $request->get('userId');
         $userIdList = $request->get('userIdList');
+        $teamIdList = $request->get('teamIdList');
+
+        if ($teamIdList) {
+            $teamIdList = explode(',', $teamIdList);
+            return $userResultList = $service->getEventsForTeams($teamIdList, $from, $to, $scopeList);
+        }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
 
             $resultList = [];
             foreach ($userIdList as $userId) {
-                $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
+                try {
+                    $userResultList = $service->getEvents($userId, $from, $to, $scopeList);
+                } catch (\Exception $e) {
+                    continue;
+                }
                 foreach ($userResultList as $item) {
                     $item['userId'] = $userId;
                     $resultList[] = $item;
@@ -101,6 +111,8 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $entityTypeList = $request->get('entityTypeList');
 
+        $futureDays = intval($request->get('futureDays'));
+
         if (empty($maxSize)) {
             $maxSize = $this->maxSizeLimit;
         }
@@ -111,7 +123,7 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getUpcomingActivities($userId, array(
             'offset' => $offset,
             'maxSize' => $maxSize
-        ), $entityTypeList);
+        ), $entityTypeList, $futureDays);
     }
 
     public function actionPopupNotifications()

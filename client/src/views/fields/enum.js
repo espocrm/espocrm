@@ -80,6 +80,28 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.translatedOptions = this.params.translatedOptions;
             }
 
+            this.setupTranslation();
+
+            if (this.translatedOptions === null) {
+                this.translatedOptions = this.getLanguage().translate(this.name, 'options', this.model.name) || {};
+                if (this.translatedOptions === this.name) {
+                    this.translatedOptions = null;
+                }
+            }
+
+            if (this.params.isSorted && this.translatedOptions) {
+                this.params.options = Espo.Utils.clone(this.params.options);
+                this.params.options = this.params.options.sort(function (v1, v2) {
+                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                }.bind(this));
+            }
+
+            if (this.options.customOptionList) {
+                this.setOptionList(this.options.customOptionList);
+            }
+        },
+
+        setupTranslation: function () {
             if (this.params.translation) {
                 var translationObj;
                 var data = this.getLanguage().data;
@@ -110,24 +132,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     }
                     this.translatedOptions = translatedOptions;
                 }
-            }
-
-            if (this.translatedOptions === null) {
-                this.translatedOptions = this.getLanguage().translate(this.name, 'options', this.model.name) || {};
-                if (this.translatedOptions === this.name) {
-                    this.translatedOptions = null;
-                }
-            }
-
-            if (this.params.isSorted && this.translatedOptions) {
-                this.params.options = Espo.Utils.clone(this.params.options);
-                this.params.options = this.params.options.sort(function (v1, v2) {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                }.bind(this));
-            }
-
-            if (this.options.customOptionList) {
-                this.setOptionList(this.options.customOptionList);
             }
         },
 
@@ -240,7 +244,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
                 }

@@ -34,5 +34,6 @@
    "fieldDefs": {
       "layoutListDisabled": true
    },
-   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\AttachmentMultipleType"
+   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\AttachmentMultipleType",
+   "personalData": true
 }

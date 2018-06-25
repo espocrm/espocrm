@@ -37,5 +37,8 @@
     "edit": "Editare",
     "delete": "Șterge",
     "create": "Creați"
+  },
+  "messages": {
+    "changesAfterClearCache": "Toate schimbările din controlul de acces o să fie aplicate după ce memoria chache este ștearsă."
   }
 }

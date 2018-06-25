@@ -25,5 +25,6 @@
                 }
             ]
         }
-    }
+    },
+    "iconClass": "far fa-file-alt"
 }

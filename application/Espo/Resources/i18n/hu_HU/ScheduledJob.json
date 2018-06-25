@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "job": "Munka",
+    "scheduling": "ütemezése"
+  },
+  "links": {
+    "log": "Bejelentkezés"
+  },
+  "labels": {
+    "Create ScheduledJob": "Ütemezett feladat létrehozása"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Nagytakarítás",
+      "CheckInboundEmails": "Ellenőrizze a csoportos e-mail fiókokat",
+      "CheckEmailAccounts": "Ellenőrizze a személyes e-mail fiókokat",
+      "SendEmailReminders": "Küldjön e-mailes emlékeztetőket",
+      "SendEmailNotifications": "Küldjön e-mail értesítéseket",
+      "CheckNewVersion": "Ellenőrizze az új verziót"
+    },
+    "cronSetup": {
+      "linux": "Megjegyzés: Adja hozzá ezt a sort a crontab fájlhoz az Espo Scheduled Jobs futtatásához:",
+      "mac": "Megjegyzés: Adja hozzá ezt a sort a crontab fájlhoz az Espo Scheduled Jobs futtatásához:",
+      "windows": "Megjegyzés: Hozzon létre egy kötegelt fájlt a következő parancsokkal, hogy futtassa az Espo Scheduled Jobs programot az ütemezett feladatokkal:",
+      "default": "Megjegyzés: Adja hozzá ezt a parancsot a Cron feladathoz (Ütemezett feladat):"
+    },
+    "status": {
+      "Active": "Aktív",
+      "Inactive": "tétlen"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Crontab jelölés. Meghatározza a munkák gyakoriságát.\n\n* / 5 * * * * - 5 percenként\n\n0 * / 2 * * * - 2 óránként\n\n30 1 * * * - 01: 30-ban naponta egyszer\n\n0 0 1 * * - a hónap első napján"
+  }
+}

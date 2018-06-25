@@ -188,6 +188,16 @@
     },
     {
         "route":"/Admin/fieldManager/:scope/:name",
+        "method":"patch",
+        "params":{
+            "controller":"FieldManager",
+            "action":"update",
+            "scope":":scope",
+            "name":":name"
+        }
+    },
+    {
+        "route":"/Admin/fieldManager/:scope/:name",
         "method":"delete",
         "params":{
             "controller":"FieldManager",

@@ -54,12 +54,12 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             return data;
         },
 
-        init: function () {
-            var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name)
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            var ucName = Espo.Utils.upperCaseFirst(this.name)
             this.salutationField = 'salutation' + ucName;
             this.firstField = 'first' + ucName;
             this.lastField = 'last' + ucName;
-            Dep.prototype.init.call(this);
         },
 
         afterRender: function () {
@@ -96,7 +96,7 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
             if (isRequired) {
                 if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, '[name="'+this.lastField+'"]');
                     return true;
                 }
@@ -122,7 +122,6 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data[this.firstField] = this.$first.val().trim();
             data[this.lastField] = this.$last.val().trim();
             return data;
-        },
+        }
     });
 });
-

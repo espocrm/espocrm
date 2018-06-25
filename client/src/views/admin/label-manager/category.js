@@ -64,7 +64,9 @@ Espo.define('views/admin/label-manager/category', 'view', function (Dep) {
                     value = '';
                 }
 
-                value = value.replace(/\n/i, '\\n');
+                if (value.replace) {
+                    value = value.replace(/\n/i, '\\n');
+                }
                 var o = {
                     name: name,
                     value: value

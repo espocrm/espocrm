@@ -26,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) {
+Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream.notes.email-sent',
+        template: 'stream/notes/email-sent',
 
-        isRemovable: true,
+        isRemovable: false,
 
         data: function () {
             return _.extend({
                 emailId: this.emailId,
                 emailName: this.emailName,
                 hasPost: this.hasPost,
-                hasAttachments: this.hasAttachments
+                hasAttachments: this.hasAttachments,
+                emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || ''
             }, Dep.prototype.data.call(this));
         },
 
@@ -55,11 +56,11 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
                 (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
             ) {
                 if (this.model.get('post')) {
-                    this.createField('post', null, null, 'Stream.Fields.Post');
+                    this.createField('post', null, null, 'views/stream/fields/post');
                     this.hasPost = true;
                 }
                 if ((this.model.get('attachmentsIds') || []).length) {
-                    this.createField('attachments', 'attachmentMultiple', {}, 'Stream.Fields.AttachmentMultiple');
+                    this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
                     this.hasAttachments = true;
                 }
             }
@@ -80,4 +81,3 @@ Espo.define('Views.Stream.Notes.EmailSent', 'Views.Stream.Note', function (Dep) 
 
     });
 });
-

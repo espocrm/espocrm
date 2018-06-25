@@ -1,0 +1,23 @@
+{
+    "controller": "controllers/record",
+    "recordViews": {
+        "list": "views/admin/auth-log-record/record/list",
+        "detail": "views/admin/auth-log-record/record/detail",
+        "detailSmall": "views/admin/auth-log-record/record/detail-small"
+    },
+    "modalViews": {
+        "detail": "views/admin/auth-log-record/modals/detail"
+    },
+    "filterList": [
+        "accepted",
+        "denied"
+    ],
+    "createDisabled": true,
+    "relationshipPanels": {
+        "actionHistoryRecords": {
+            "create": false,
+            "select": false,
+            "rowActionsView": "views/record/row-actions/relationship-view-only"
+        }
+    }
+}

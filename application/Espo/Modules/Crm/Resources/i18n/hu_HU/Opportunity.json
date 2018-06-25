@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Név",
+    "account": "számla",
+    "stage": "Színpad",
+    "amount": "Összeg",
+    "probability": "Valószínűség,%",
+    "leadSource": "Ólomforrás",
+    "doNotCall": "Ne hívj",
+    "closeDate": "Bezárás dátuma",
+    "contacts": "Kapcsolatok",
+    "description": "Leírás",
+    "amountConverted": "Összeg (konvertált)",
+    "amountWeightedConverted": "Súlyozott összeg",
+    "campaign": "Kampány",
+    "originalLead": "Eredeti vezető",
+    "amountCurrency": "Valamennyi pénznem",
+    "contactRole": "Kapcsolatfelvétel"
+  },
+  "links": {
+    "contacts": "Kapcsolatok",
+    "documents": "Dokumentumok",
+    "campaign": "Kampány",
+    "originalLead": "Eredeti vezető"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Geológiai",
+      "Qualification": "Képesítés",
+      "Needs Analysis": "Szükséges elemzés",
+      "Value Proposition": "Értékajánlat",
+      "Id. Decision Makers": "Id. Döntés hozó",
+      "Perception Analysis": "Percepcióelemzés",
+      "Proposal/Price Quote": "Javaslat / Ár ajánlat",
+      "Negotiation/Review": "Tárgyalás / felülvizsgálata",
+      "Closed Won": "Zárva nyert",
+      "Closed Lost": "Zárva elveszett",
+      "Proposal": "Javaslat",
+      "Negotiation": "Tárgyalás"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Lehetőség létrehozása"
+  },
+  "presetFilters": {
+    "open": "Nyisd ki",
+    "won": "Nyerte",
+    "lost": "Elveszett"
+  }
+}

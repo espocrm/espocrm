@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Nume",
+    "status": "Stare",
     "target": "Țintă",
     "sentAt": "Dată Trimitere",
     "attemptCount": "Încercări",

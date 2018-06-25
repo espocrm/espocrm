@@ -177,7 +177,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.setConfirmLeaveOut(false);
             $('body').off('click.stream-create-post');
 
-            this.getView('post').$element.prop('rows', 1);
+            this.getFieldView('post').$element.prop('rows', 1);
         },
 
         enablePostingMode: function () {
@@ -186,7 +186,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 $('body').off('click.stream-create-post');
                 $('body').on('click.stream-create-post', function (e) {
                     if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').size()) {
-                        if (this.hasView('post') && this.getView('post').$element.val() == '') {
+                        if (this.getFieldView('post') && this.getFieldView('post').$element.val() == '') {
                             if (!(this.model.get('attachmentsIds') || []).length) {
                                 this.disablePostingMode();
                             }
@@ -239,7 +239,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
                 this.disablePostingMode();
                 this.$post.removeClass('disabled');
-                this.getView('post').$element.prop('rows', 1);
+                this.getFieldView('post').$element.prop('rows', 1);
             }
         },
 

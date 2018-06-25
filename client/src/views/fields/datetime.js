@@ -57,9 +57,12 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
         },
 
         getDateStringValue: function () {
+            if (this.mode === 'detail' && !this.model.has(this.name)) {
+                return '...';
+            }
             var value = this.model.get(this.name);
             if (!value) {
-                if (this.mode == 'edit' || this.mode == 'search') {
+                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list') {
                     return '';
                 }
                 return this.translate('None');
@@ -181,7 +184,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         validateDatetime: function () {
             if (this.model.get(this.name) === -1) {
-                var msg = this.translate('fieldShouldBeDatetime', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                var msg = this.translate('fieldShouldBeDatetime', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
                 return true;
             }

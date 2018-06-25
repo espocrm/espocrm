@@ -1,0 +1,97 @@
+{
+    "fields": {
+        "username": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 100
+        },
+        "portal": {
+            "type": "link",
+            "readOnly": true
+        },
+        "user": {
+            "type": "link",
+            "readOnly": true
+        },
+        "authToken": {
+            "type": "link",
+            "readOnly": true
+        },
+        "ipAddress": {
+            "type": "varchar",
+            "maxLength": "45",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "isDenied": {
+            "type": "bool",
+            "readOnly": true
+        },
+        "denialReason": {
+            "type": "enum",
+            "options": ["", "CREDENTIALS", "INACTIVE_USER", "IS_PORTAL_USER", "IS_NOT_PORTAL_USER", "USER_IS_NOT_IN_PORTAL"],
+            "readOnly": true
+        },
+        "requestTime": {
+            "type": "float",
+            "readOnly": true
+        },
+        "requestUrl": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "requestMethod": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": "15"
+        },
+        "authTokenIsActive": {
+            "type": "foreign",
+            "link": "authToken",
+            "field": "isActive",
+            "readOnly": true,
+            "view": "views/fields/foreign-bool"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User",
+            "noJoin": true
+        },
+        "portal": {
+            "type": "belongsTo",
+            "entity": "Portal"
+        },
+        "authToken": {
+            "type": "belongsTo",
+            "entity": "AuthToken",
+            "foreign": "authLog",
+            "foreignName": "id"
+        },
+        "actionHistoryRecords": {
+            "type": "hasMany",
+            "entity": "ActionHistoryRecord",
+            "foreign": "authLogRecord"
+        }
+    },
+    "collection": {
+        "sortBy": "requestTime",
+        "asc": false,
+        "textFilterFields": ["ipAddress", "username"]
+    },
+    "indexes": {
+        "ipAddress": {
+            "columns": ["ipAddress"]
+        },
+        "ipAddressRequestTime": {
+            "columns": ["ipAddress", "requestTime"]
+        },
+        "requestTime": {
+            "columns": ["requestTime"]
+        }
+    }
+}

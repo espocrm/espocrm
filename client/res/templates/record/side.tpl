@@ -27,7 +27,11 @@
             {{#unless notRefreshable}}
             <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
             {{/unless}}
-            {{title}}
+            {{#if titleHtml}}
+                {{{titleHtml}}}
+            {{else}}
+                {{title}}
+            {{/if}}
             {{#unless notRefreshable}}
             </span>
             {{/unless}}

@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Ime",
+    "account": "Tvrtka",
+    "stage": "Faza",
+    "amount": "Iznos",
+    "probability": "Vjerojatnost,%",
+    "leadSource": "Izvor potiče od",
+    "doNotCall": "Ne zovi",
+    "closeDate": "Datum zatvaranja",
+    "contacts": "Kontakti",
+    "description": "Opis",
+    "amountConverted": "Iznos (konvertirano)",
+    "amountWeightedConverted": "Iznos (ponderirano)",
+    "campaign": "Kampanja",
+    "originalLead": "Originalni izvor",
+    "amountCurrency": "Iznos u valuti",
+    "contactRole": "Uloga kontakta"
+  },
+  "links": {
+    "contacts": "Kontakti",
+    "documents": "Dokumenti",
+    "campaign": "Kampanja",
+    "originalLead": "Originalni izvor"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Izviđanje",
+      "Qualification": "Kvalifikacija",
+      "Needs Analysis": "Analiza potrebna",
+      "Value Proposition": "Dobitak",
+      "Id. Decision Makers": "Id. Donosioci odluka",
+      "Perception Analysis": "Analiza percepcije",
+      "Proposal/Price Quote": "Prijedlog/Cijena ponuda",
+      "Negotiation/Review": "Pregovori/pregled",
+      "Closed Won": "Zatvoreno Dobiveno",
+      "Closed Lost": "Zatvoreno Izgubljeno",
+      "Proposal": "Prijedlog",
+      "Negotiation": "Pregovori"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Napravi Priliku"
+  },
+  "presetFilters": {
+    "open": "Otvorene",
+    "won": "Dobivene",
+    "lost": "Izgubljene"
+  }
+}

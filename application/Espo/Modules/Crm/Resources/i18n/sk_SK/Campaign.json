@@ -1,0 +1,73 @@
+{
+  "fields": {
+    "name": "Názov",
+    "description": "Popis",
+    "status": "Stav",
+    "type": "Typ",
+    "startDate": "Začiatočný dátum",
+    "endDate": "Konečný dátum",
+    "targetLists": "Cieľový zoznam",
+    "excludingTargetLists": "Vylúčiť cieľové zoznamy",
+    "sentCount": "Poslaný",
+    "openedCount": "Otvorený",
+    "clickedCount": "Kliknutý",
+    "optedOutCount": "Odregistrovaný",
+    "bouncedCount": "Odrazený",
+    "hardBouncedCount": "Tvrdo odrazený",
+    "softBouncedCount": "Ľahko odrazený",
+    "leadCreatedCount": "Stopy vytvorené",
+    "revenue": "Príjem",
+    "revenueConverted": "Príjem (konvertovaný)",
+    "budget": "Rozpočet",
+    "budgetConverted": "Rozpočet (konvertovaný)"
+  },
+  "links": {
+    "targetLists": "Cieľové zoznamy",
+    "excludingTargetLists": "Vylúčiť cieľové zoznamy",
+    "accounts": "Účty",
+    "contacts": "Kontakty",
+    "leads": "Stopy",
+    "opportunities": "Príležitosti",
+    "campaignLogRecords": "Protokol",
+    "massEmails": "Hromadné emaily",
+    "trackingUrls": "Sledovacie URLs"
+  },
+  "options": {
+    "type": {
+      "Television": "Televíza",
+      "Radio": "Rozhlas",
+      "Newsletter": "Novinky",
+      "Mail": "Pošta"
+    },
+    "status": {
+      "Planning": "Plánovanie",
+      "Active": "Aktívny",
+      "Inactive": "Neaktívny",
+      "Complete": "Dokončený"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Vytvoriť kampaň",
+    "Target Lists": "Cieľové zoznamy",
+    "Statistics": "Štatistiky",
+    "hard": "tvrdý",
+    "soft": "jemný",
+    "Unsubscribe": "Odregistrovať",
+    "Mass Emails": "Hromadné emaily",
+    "Email Templates": "Emailové šablóny",
+    "Unsubscribe again": "Odhlásiť odber znova",
+    "Subscribe again": "Prihlásiť odber znova",
+    "Create Target List": "Vytvoriť cieľový list"
+  },
+  "presetFilters": {
+    "active": "Aktívny"
+  },
+  "messages": {
+    "unsubscribed": "Boli ste odstránený z nášho emailového zoznamu.",
+    "subscribedAgain": "Ste znova prihlásený na odber."
+  },
+  "tooltips": {
+    "targetLists": "Ciele, ktoré by mali obdržať správy.",
+    "excludingTargetLists": "Ciele, ktoré by nemali obdržať správy."
+  }
+}

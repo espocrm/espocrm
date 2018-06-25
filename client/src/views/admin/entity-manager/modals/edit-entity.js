@@ -40,6 +40,46 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             };
         },
 
+        setupData: function () {
+            var scope = this.scope;
+
+            this.hasStreamField = true;
+            if (scope) {
+                this.hasStreamField = (this.getMetadata().get('scopes.' + scope + '.customizable') && this.getMetadata().get('scopes.' + scope + '.object')) || false;
+            }
+            if (scope === 'User') {
+                this.hasStreamField = false;
+            }
+
+            this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
+
+            if (scope) {
+                this.model.set('name', scope);
+                this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
+                this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
+                this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
+                this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
+                this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
+
+                this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
+                this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
+
+                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
+                this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
+
+                this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
+
+                if (this.hasColorField) {
+                    this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
+                }
+
+                this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
+
+                this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
+                this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
+            }
+        },
+
         setup: function () {
             this.buttonList = [
                 {
@@ -67,29 +107,18 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             var model = this.model = new Model();
             model.name = 'EntityManager';
 
-            this.hasStreamField = true;
-            if (scope) {
-                this.hasStreamField = (this.getMetadata().get('scopes.' + scope + '.customizable') && this.getMetadata().get('scopes.' + scope + '.object')) || false;
-            }
-            if (scope === 'User') {
-                this.hasStreamField = false;
+            if (!this.isNew) {
+                this.isCustom = this.getMetadata().get(['scopes', scope, 'isCustom'])
             }
 
-            if (scope) {
-                this.model.set('name', scope);
-                this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
-                this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
-                this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
-                this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
-                this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
-
-                this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
-                this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
-
-                this.model.set('textFilterFields', this.getMetadata().get('entityDefs.' + scope + '.collection.textFilterFields') || ['name']);
-
-                this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
+            if (!this.isNew && !this.isCustom) {
+                this.buttonList.push({
+                    name: 'resetToDefault',
+                    text: this.translate('Reset to Default', 'labels', 'Admin')
+                });
             }
+
+            this.setupData();
 
             this.createView('type', 'views/fields/enum', {
                 model: model,
@@ -169,6 +198,26 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 }
             });
 
+            if (this.hasColorField) {
+                this.createView('color', 'views/fields/colorpicker', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="color"]',
+                    defs: {
+                        name: 'color'
+                    }
+                });
+            }
+
+            this.createView('iconClass', 'views/admin/entity-manager/fields/icon-class', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="iconClass"]',
+                defs: {
+                    name: 'iconClass'
+                }
+            });
+
             if (scope) {
                 var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
@@ -211,10 +260,28 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     }
                 });
 
-                var optionList = Object.keys(fieldDefs).filter(function (item) {
-                    if (!~['varchar', 'text', 'phone', 'email', 'personName', 'number'].indexOf(this.getMetadata().get(['entityDefs', scope, 'fields', item, 'type']))) {
-                        return false;
+                this.createView('fullTextSearch', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="fullTextSearch"]',
+                    defs: {
+                        name: 'fullTextSearch'
+                    },
+                    tooltip: true
+                });
+
+                this.createView('kanbanViewMode', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="kanbanViewMode"]',
+                    defs: {
+                        name: 'kanbanViewMode'
                     }
+                });
+
+                var optionList = Object.keys(fieldDefs).filter(function (item) {
+                    var fieldType = fieldDefs[item].type;
+                    if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) {
                         return false;
                     }
@@ -242,40 +309,55 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 });
 
 
-                if (this.hasStreamField) {
-                    var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
-                        if (fieldDefs[item].disabled) return;
-                        if (fieldDefs[item].type == 'enum') {
-                            return true;
+                var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
+                    if (fieldDefs[item].disabled) return;
+                    if (fieldDefs[item].type == 'enum') {
+                        return true;
+                    }
+                    return;
+                }, this).sort(function (v1, v2) {
+                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                }.bind(this));
+
+                var translatedStatusFields = {};
+                enumFieldList.forEach(function (item) {
+                    translatedStatusFields[item] = this.translate(item, 'fields', scope);
+                }, this);
+                enumFieldList.unshift('');
+                translatedStatusFields[''] = '-' + this.translate('None') + '-';
+
+                this.createView('statusField', 'views/fields/enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="statusField"]',
+                    defs: {
+                        name: 'statusField',
+                        params: {
+                            options: enumFieldList
                         }
-                        return;
-                    }, this).sort(function (v1, v2) {
-                        return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                    }.bind(this));
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
+                    translatedOptions: translatedStatusFields
+                });
 
-                    var translatedStatusFields = {};
-                    enumFieldList.forEach(function (item) {
-                        translatedStatusFields[item] = this.translate(item, 'fields', scope);
-                    }, this);
-                    enumFieldList.unshift('');
-                    translatedStatusFields[''] = '-' + this.translate('None') + '-';
+                var statusOptionList = [];
+                var translatedStatusOptions = {};
 
-                    this.createView('statusField', 'views/fields/enum', {
-                        model: model,
-                        mode: 'edit',
-                        el: this.options.el + ' .field[data-name="statusField"]',
-                        defs: {
-                            name: 'statusField',
-                            params: {
-                                options: enumFieldList
-                            }
-                        },
-                        tooltip: true,
-                        tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
-                        translatedOptions: translatedStatusFields
-                    });
-                }
+                this.createView('kanbanStatusIgnoreList', 'views/fields/multi-enum', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="kanbanStatusIgnoreList"]',
+                    defs: {
+                        name: 'kanbanStatusIgnoreList',
+                        params: {
+                            options: statusOptionList
+                        }
+                    },
+                    translatedOptions: translatedStatusOptions
+                });
             }
+            this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
 
         hideField: function (name) {
@@ -313,22 +395,62 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('name', name);
             }, this);
 
-            this.manageStreamField();
-            this.listenTo(this.model, 'change:stream', function () {
-                this.manageStreamField();
-            }, this);
+            if (!this.isNew) {
+                this.manageKanbanFields({});
+                this.listenTo(this.model, 'change:statusField', function (m, value, o) {
+                    this.manageKanbanFields(o);
+                }, this);
+
+                this.manageKanbanViewModeField();
+                this.listenTo(this.model, 'change:kanbanViewMode', function () {
+                    this.manageKanbanViewModeField();
+                }, this);
+            }
 
             if (this.isNew) {
                 this.hideField('disabled');
             }
         },
 
-        manageStreamField: function () {
-            if (this.model.get('stream')) {
-                this.showField('statusField');
-            } else {
-                this.hideField('statusField');
+        manageKanbanFields: function (o) {
+            if (o.ui) {
+                this.model.set('kanbanStatusIgnoreList', []);
             }
+            if (this.model.get('statusField')) {
+                this.setKanbanStatusIgnoreListOptions();
+                this.showField('kanbanViewMode');
+                if (this.model.get('kanbanViewMode')) {
+                    this.showField('kanbanStatusIgnoreList');
+                } else {
+                    this.hideField('kanbanStatusIgnoreList');
+                }
+            } else {
+                this.hideField('kanbanViewMode');
+                this.hideField('kanbanStatusIgnoreList');
+            }
+        },
+
+        manageKanbanViewModeField: function () {
+            if (this.model.get('kanbanViewMode')) {
+                this.showField('kanbanStatusIgnoreList');
+            } else {
+                this.hideField('kanbanStatusIgnoreList');
+            }
+        },
+
+        setKanbanStatusIgnoreListOptions: function () {
+            var statusField = this.model.get('statusField');
+            var fieldView = this.getView('kanbanStatusIgnoreList');
+
+            var optionList = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'options']) || [];
+            var translation = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'translation']) || this.scope + '.options.' + statusField;
+
+            fieldView.params.options = optionList;
+            fieldView.params.translation = translation;
+
+            fieldView.setupTranslation();
+
+            fieldView.setOptionList(optionList);
         },
 
         actionSave: function () {
@@ -339,12 +461,19 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'labelPlural',
                 'stream',
                 'disabled',
-                'statusField'
+                'statusField',
+                'iconClass'
             ];
 
             if (this.scope) {
                 arr.push('sortBy');
                 arr.push('sortDirection');
+                arr.push('kanbanViewMode');
+                arr.push('kanbanStatusIgnoreList');
+            }
+
+            if (this.hasColorField) {
+                arr.push('color');
             }
 
             var notValid = false;
@@ -365,7 +494,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 return;
             }
 
-            this.$el.find('button[data-name="save"]').addClass('disabled');
+            this.disableButton('save');
+            this.disableButton('resetToDefault');
 
             var url = 'EntityManager/action/createEntity';
             if (this.scope) {
@@ -382,8 +512,14 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 stream: this.model.get('stream'),
                 disabled: this.model.get('disabled'),
                 textFilterFields: this.model.get('textFilterFields'),
-                statusField: this.model.get('statusField')
+                fullTextSearch: this.model.get('fullTextSearch'),
+                statusField: this.model.get('statusField'),
+                iconClass: this.model.get('iconClass')
             };
+
+            if (this.hasColorField) {
+                data.color = this.model.get('color') || null
+            }
 
             if (data.statusField === '') {
                 data.statusField = null;
@@ -392,6 +528,17 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (this.scope) {
                 data.sortBy = this.model.get('sortBy');
                 data.sortDirection = this.model.get('sortDirection');
+                data.kanbanViewMode = this.model.get('kanbanViewMode');
+                data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
+            }
+
+            if (!this.isNew) {
+                if (this.model.fetchedAttributes.labelPlural === data.labelPlural) {
+                    delete data.labelPlural;
+                }
+                if (this.model.fetchedAttributes.labelSingular === data.labelSingular) {
+                    delete data.labelSingular;
+                }
             }
 
             $.ajax({
@@ -399,9 +546,12 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 type: 'POST',
                 data: JSON.stringify(data),
                 error: function () {
-                    this.$el.find('button[data-name="save"]').removeClass('disabled');
+                    this.enableButton('save');
+                    this.enableButton('resetToDefault');
                 }.bind(this)
             }).done(function () {
+                this.model.fetchedAttributes = this.model.getClonedAttributes();
+
                 if (this.scope) {
                     Espo.Ui.success(this.translate('Saved'));
                 } else {
@@ -434,6 +584,32 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             }.bind(this));
         },
 
+        actionResetToDefault: function () {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest('EntityManager/action/resetToDefault', {
+                    scope: this.scope
+                }).then(function () {
+                    Promise.all([
+                        new Promise(function (resolve) {
+                            this.getMetadata().load(function () {
+                                this.getMetadata().storeToCache();
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this)),
+                        new Promise(function (resolve) {
+                            this.getLanguage().load(function () {
+                                resolve();
+                            }.bind(this), true);
+                        }.bind(this))
+                    ]).then(function () {
+                        this.setupData();
+                        this.model.fetchedAttributes = this.model.getClonedAttributes();
+                        this.notify('Done', 'success');
+                    }.bind(this));
+                }.bind(this));
+            }, this);
+        }
+
     });
 });
-

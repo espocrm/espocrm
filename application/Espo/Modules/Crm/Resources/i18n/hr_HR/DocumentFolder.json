@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Kreiranje mape za dokumente",
+    "Manage Categories": "Upravljanje mapama",
+    "Documents": "Dokumenti"
+  },
+  "links": {
+    "documents": "Dokumenti"
+  }
+}

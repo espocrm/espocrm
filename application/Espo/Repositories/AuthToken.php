@@ -36,4 +36,6 @@ class AuthToken extends \Espo\Core\ORM\Repositories\RDB
     protected $hooksDisabled = true;
 
     protected $processFieldsAfterSaveDisabled = true;
+
+    protected $processFieldsBeforeSaveDisabled = true;
 }

@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "action": "Akcia",
+    "actionDate": "Dátum",
+    "data": "Dáta",
+    "campaign": "Kampaň",
+    "parent": "Cieľ",
+    "object": "Objekt",
+    "application": "Aplikácia",
+    "queueItem": "Položka fronty",
+    "stringData": "Reťazcové dáta",
+    "stringAdditionalData": "Reťazcové dodatočné data",
+    "isTest": "Je test"
+  },
+  "links": {
+    "queueItem": "Položka fronty",
+    "parent": "Rodič",
+    "object": "Objekt",
+    "campaign": "Kampaň"
+  },
+  "options": {
+    "action": {
+      "Sent": "Odoslaný",
+      "Opened": "Otvorený",
+      "Opted Out": "Odregistrovaný",
+      "Bounced": "Vrátený",
+      "Clicked": "Kliknutý",
+      "Lead Created": "Stopa vytvorená"
+    }
+  },
+  "labels": {
+    "All": "Všetko"
+  },
+  "presetFilters": {
+    "sent": "Odoslaný",
+    "opened": "Otvorený",
+    "optedOut": "Odregistrovaný",
+    "bounced": "Vrátený",
+    "clicked": "Kliknutý",
+    "leadCreated": "Stopa vytvorená"
+  }
+}

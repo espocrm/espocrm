@@ -34,6 +34,8 @@ Espo.define('views/settings/fields/theme', 'views/fields/enum', function (Dep) {
                 return this.translate(v1, 'theme').localeCompare(this.translate(v2, 'theme'));
             }.bind(this));
 
+            this.params.isSorted = true;
+
             Dep.prototype.setup.call(this);
         },
 

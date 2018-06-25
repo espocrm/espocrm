@@ -28,5 +28,12 @@
     "notMergeable":true,
     "notCreatable":true,
     "filter":true,
-    "skipOrmDefs": true
+    "skipOrmDefs": true,
+    "personalData": true,
+    "textFilter": true,
+    "fullTextSearch": true,
+    "fullTextSearchColumnList": [
+        "first",
+        "last"
+    ]
 }

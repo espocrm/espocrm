@@ -14,22 +14,15 @@
     "Congratulation! Welcome to EspoCRM": "¡Felicitaciones! EspoCRM(México) se ha instalado correctamente.",
     "More Information": "Para más información, por favor visite nuestro {BLOG} o síganos en {TWITTER}.<br><br>Si tiene alguna pregunta o sugerencia, por favor hágala en el {FORUM}. ",
     "share": "Si te gusta EspoCRM, coméntalo con tus amigos, para que conozcan los beneficios que les ofrece este sistema.",
-    "blog": "blog",
-    "twitter": "twitter",
     "forum": "foro",
     "Installation Guide": "Guía de instalación",
-    "admin": "admin",
-    "localhost": "localhost",
-    "port": "3306",
     "Locale": "Localización",
     "Outbound Email Configuration": "Configuración de Correo Saliente",
-    "SMTP": "SMTP",
     "Start": "Comenzar",
     "Back": "Anterior",
     "Next": "Siguiente",
     "Go to EspoCRM": "Ir a EspoCRM(México)",
     "Re-check": "Revisar otra vez",
-    "Version": "Version",
     "Test settings": "Probar conexión",
     "Database Settings Description": "Ingresa la información de conexión a tu Base de Datos MySQL (nombre del host, usuario y contraseña). Puedes especificar el puerto del servidor por ejemplo localhost:3306.",
     "Install": "Instalar",
@@ -41,8 +34,7 @@
     "mysqlVersion": "Versión MySQL",
     "dbHostName": "Servidor usualmente(localhost)",
     "dbName": "Nombre de la Base de Datos",
-    "dbUserName": "Usuario de la Base de Datos",
-    "OK": "OK"
+    "dbUserName": "Usuario de la Base de Datos"
   },
   "fields": {
     "Choose your language": "Seleccione su idioma",
@@ -109,13 +101,14 @@
     "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}"
   },
   "options": {
-    "db driver": {
-      "mysqli": "MySQLi",
-      "pdo_mysql": "PDO MySQL"
-    },
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>"
+        "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>",
+        "linux": "<br><br>1. Permita \"mod_rewrite\". Para hacerlo, ejecute estos comandos en una sesión de Terminal:<pre>{APACHE1}</pre><br>2. Permita soporte .htaccess  Agregue/edite la configuración del servidor (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Después de correr esto en una sesión de Terminal:<pre>{APACHE3}</pre><br>3. Trate de agregar la ruta RewriteBase, abra el archivo {API_PATH}.htaccess y reemplace la línea:<pre>{APACHE4}</pre> por <pre>{APACHE5}</pre><br> Para más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">Apache server configuration for EspoCRM (en inglés)</a>.<br><br>"
+      },
+      "nginx": {
+        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM (en inglés)</a>.<br><br>",
+        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM (en inglés)</a>.<br><br>"
       }
     },
     "modRewriteTitle": {

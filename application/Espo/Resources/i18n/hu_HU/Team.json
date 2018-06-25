@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Név",
+    "roles": "szerepek",
+    "positionList": "Pozíciójegyzék"
+  },
+  "links": {
+    "users": "felhasználók",
+    "notes": "Megjegyzések",
+    "roles": "szerepek",
+    "inboundEmails": "Csoportos e-mail fiókok"
+  },
+  "tooltips": {
+    "roles": "Hozzáférési szerepek. A csapat felhasználói hozzáférést biztosítanak a kiválasztott szerepekhez.",
+    "positionList": "Elérhető pozíciók ebben a csapatban. Például. Értékes, menedzser."
+  },
+  "labels": {
+    "Create Team": "Csapat létrehozása"
+  }
+}

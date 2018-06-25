@@ -112,28 +112,32 @@
         "userPermission",
         "portalPermission",
         "groupEmailAccountPermission",
-        "exportPermission"
+        "exportPermission",
+        "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
         "userPermission": "all",
         "portalPermission": "yes",
         "groupEmailAccountPermission": "all",
-        "exportPermission": "yes"
+        "exportPermission": "yes",
+        "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
         "userPermission": "all",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no",
-        "exportPermission": "yes"
+        "exportPermission": "yes",
+        "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
         "userPermission": "no",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no",
-        "exportPermission": "no"
+        "exportPermission": "no",
+        "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {
         "boolean": true,

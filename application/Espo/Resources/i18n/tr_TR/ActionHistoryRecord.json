@@ -5,11 +5,9 @@
     "createdAt": "Tarih",
     "target": "Hedef",
     "targetType": "Hedef Tipi",
-    "authToken": "Auth Token",
     "ipAddress": "IP Adresi"
   },
   "links": {
-    "authToken": "Auth Token",
     "user": "Kullanıcı",
     "target": "Hedef"
   },

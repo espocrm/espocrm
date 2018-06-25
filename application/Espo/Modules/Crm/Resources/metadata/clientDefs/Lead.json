@@ -6,28 +6,6 @@
     "recordViews":{
         "detail":"crm:views/lead/record/detail"
     },
-    "formDependency":{
-        "status":{
-            "map":{
-                "Converted":[
-                    {
-                        "action":"show",
-                        "panels":[
-                            "convertedTo"
-                        ]
-                    }
-                ]
-            },
-            "default":[
-                {
-                    "action":"hide",
-                    "panels":[
-                        "convertedTo"
-                    ]
-                }
-            ]
-        }
-    },
     "sidePanels":{
         "detail":[
             {
@@ -112,14 +90,15 @@
     },
     "relationshipPanels":{
         "campaignLogRecords":{
-            "rowActionsView":"Record.RowActions.Empty",
+            "rowActionsView":"views/record/row-actions/empty",
             "select":false,
             "create":false
         },
         "targetLists":{
-            "create":false,
-            "rowActionsView":"views/record/row-actions/relationship-unlink-only",
-            "layout": "listForTarget"
+            "create": false,
+            "rowActionsView": "crm:views/record/row-actions/relationship-target",
+            "layout": "listForTarget",
+            "view": "crm:views/record/panels/target-lists"
         }
     },
     "filterList":[
@@ -154,6 +133,21 @@
                     ]
                 }
             }
+        },
+        "panels": {
+            "convertedTo": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Converted"
+                        }
+                    ]
+                }
+            }
         }
-    }
+    },
+    "color": "#d6a2c9",
+    "iconClass": "fas fa-address-card"
 }

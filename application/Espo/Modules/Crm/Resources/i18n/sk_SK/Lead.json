@@ -1,0 +1,67 @@
+{
+  "labels": {
+    "Converted To": "Konvertovaný na",
+    "Create Lead": "Vytvoriť stopu",
+    "Convert": "Konvertovať",
+    "convert": "konvertovať"
+  },
+  "fields": {
+    "name": "Názov",
+    "title": "Titul",
+    "website": "Webová stránka",
+    "phoneNumber": "Telefón",
+    "accountName": "Názov účtu",
+    "doNotCall": "Nevolať",
+    "address": "Adresa",
+    "status": "Stav",
+    "source": "Zdroj",
+    "opportunityAmount": "Obnos príležitosti",
+    "opportunityAmountConverted": "Obnos príležitosti (konvertovaný)",
+    "description": "Popis",
+    "createdAccount": "Účet",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Príležitosť",
+    "campaign": "Kampaň",
+    "targetLists": "Cieľové zoznamy",
+    "targetList": "Cieľový zoznam",
+    "industry": "Priemysel",
+    "acceptanceStatus": "Akceptačný stav",
+    "opportunityAmountCurrency": "Mena obnosu príležitosti",
+    "acceptanceStatusMeetings": "Akceptačný stav (stretnutia)",
+    "acceptanceStatusCalls": "Akceptačný stav (hovory)"
+  },
+  "links": {
+    "targetLists": "Cieľové zoznamy",
+    "campaignLogRecords": "Protokol kampane",
+    "campaign": "Kampaň",
+    "createdAccount": "Účet",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Príležitosť",
+    "cases": "Prípady",
+    "documents": "Dokumenty"
+  },
+  "options": {
+    "status": {
+      "New": "Nový",
+      "Assigned": "Priradený",
+      "In Process": "V procese",
+      "Converted": "Konvertovaný",
+      "Recycled": "Recyklovaný",
+      "Dead": "Mŕtvy"
+    },
+    "source": {
+      "": "Žiadny",
+      "Call": "Hovor",
+      "Existing Customer": "Existujúci zákazník",
+      "Public Relations": "Vzťahy s verejnosťou",
+      "Web Site": "Webová stránka",
+      "Campaign": "Kampaň",
+      "Other": "Iné"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktívny",
+    "actual": "Aktuálny",
+    "converted": "Konvertovaný"
+  }
+}

@@ -36,8 +36,6 @@ Espo.define('views/admin/auth-token/record/list', 'views/record/list', function 
 
         checkAllResultMassActionList: ['remove', 'setInactive'],
 
-        rowActionsColumnWidth: '5%',
-
         massActionSetInactive: function () {
             var ids = false;
             var allResultIsChecked = this.allResultIsChecked;

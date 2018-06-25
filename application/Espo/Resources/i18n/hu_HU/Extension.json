@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Név",
+    "version": "Változat",
+    "description": "Leírás",
+    "isInstalled": "telepített"
+  },
+  "labels": {
+    "Uninstall": "Eltávolítás",
+    "Install": "Telepítés"
+  },
+  "messages": {
+    "uninstalled": "A (z) {name} bővítmény eltávolításra került"
+  }
+}

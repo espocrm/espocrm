@@ -114,7 +114,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -165,7 +166,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -223,7 +225,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                'hasAttachment'
             ],
             'leftJoins' => [['users', 'usersLeft']],
             'whereClause' => array(
@@ -269,7 +272,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'whereClause' => array(),
             'customJoin' => ''
@@ -375,7 +379,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                ['VALUE:', 'hasAttachment']
             ],
             'whereClause' => array()
         );
@@ -480,7 +485,8 @@ class Activities extends \Espo\Core\Services\Base
                 'parentType',
                 'parentId',
                 'status',
-                'createdAt'
+                'createdAt',
+                'hasAttachment'
             ],
             'whereClause' => array(),
             'customJoin' => ''
@@ -627,15 +633,21 @@ class Activities extends \Espo\Core\Services\Base
 
         $sth->execute();
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        $list = array();
-        foreach ($rows as $row) {
+        $boolAttributeList = ['hasAttachment'];
+
+        $list = [];
+        foreach ($rowList as $row) {
+            foreach ($boolAttributeList as $attribute) {
+                if (!array_key_exists($attribute, $row)) continue;
+                $row[$attribute] = $row[$attribute] == '1' ? true : false;
+            }
             $list[] = $row;
         }
 
         return array(
-            'list' => $rows,
+            'list' => $list,
             'total' => $totalCount
         );
     }
@@ -836,7 +848,6 @@ class Activities extends \Espo\Core\Services\Base
                 'createdAt'
             ],
             'whereClause' => array(
-                'assignedUserId' => $userId,
                 array(
                     'OR' => array(
                         array(
@@ -857,6 +868,14 @@ class Activities extends \Espo\Core\Services\Base
                 )
             )
         );
+
+        if ($this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple') {
+            $selectManager->setDistinct(true, $selectParams);
+            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
+            $selectParams['whereClause'][] = ['assignedUsers.id' => $userId];
+        } else {
+            $selectParams['whereClause'][] = ['assignedUserId' => $userId];
+        }
 
         return $this->getEntityManager()->getQuery()->createSelectQuery('Task', $selectParams);
     }
@@ -890,6 +909,8 @@ class Activities extends \Espo\Core\Services\Base
         }
 
         if ($seed->hasRelation('assignedUsers')) {
+            $selectManager->setDistinct(true, $selectParams);
+            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
             $wherePart['assignedUsersMiddle.userId'] = $userId;
         }
 
@@ -995,7 +1016,8 @@ class Activities extends \Espo\Core\Services\Base
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
             ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
             'status',
-            'createdAt'
+            'createdAt',
+            ['VALUE:', 'hasAttachment']
         ];
 
         $selectParams = $selectManager->getEmptySelectParams();
@@ -1020,6 +1042,63 @@ class Activities extends \Espo\Core\Services\Base
         $selectManager->applyAccess($selectParams);
 
         return $selectParams;
+    }
+
+    public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
+    {
+        if ($this->getAcl()->get('userPermission') === 'no') {
+            throw new Forbidden("User Permission not allowing to view calendars of other users.");
+        }
+        if ($this->getAcl()->get('userPermission') === 'team') {
+            $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+            foreach ($teamIdList as $teamId) {
+                if (!in_array($teamId, $userTeamIdList)) {
+                    throw new Forbidden("User Permission not allowing to view calendars of other teams.");
+                }
+            }
+        }
+
+        $userIdList = [];
+
+        $userList = $this->getEntityManager()->getRepository('User')->select(['id', 'name'])->leftJoin([['teams', 'teams']])->where([
+            'isActive' => true,
+            'teamsMiddle.teamId' => $teamIdList
+        ])->distinct()->find([], true);
+
+        $userNames = (object) [];
+
+        foreach ($userList as $user) {
+            $userIdList[] = $user->id;
+            $userNames->{$user->id} = $user->get('name');
+        }
+
+
+        $eventList = [];
+        foreach ($userIdList as $userId) {
+            $userEventList = $this->getEvents($userId, $from, $to, $scopeList);
+            foreach ($userEventList as $event) {
+                foreach ($eventList as &$e) {
+                    if ($e['scope'] == $event['scope'] && $e['id'] == $event['id']) {
+                        $e['userIdList'][] = $userId;
+                        continue 2;
+                    }
+                }
+
+                $event['userIdList'] = [$userId];
+                $eventList[] = $event;
+            }
+        }
+
+        foreach ($eventList as &$event) {
+            $eventUserNames = (object) [];
+            foreach ($event['userIdList'] as $userId) {
+                $eventUserNames->$userId = $userNames->$userId;
+            }
+            $event['userNameMap'] = $eventUserNames;
+        }
+
+
+        return $eventList;
     }
 
     public function getEvents($userId, $from, $to, $scopeList = null)
@@ -1149,7 +1228,7 @@ class Activities extends \Espo\Core\Services\Base
         return $result;
     }
 
-    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null)
+    public function getUpcomingActivities($userId, $params = array(), $entityTypeList = null, $futureDays = null)
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $this->accessCheck($user);
@@ -1157,6 +1236,11 @@ class Activities extends \Espo\Core\Services\Base
         if (!$entityTypeList) {
             $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
         }
+
+        if (is_null($futureDays)) {
+            $futureDays = self::UPCOMING_ACTIVITIES_FUTURE_DAYS;
+        }
+        $beforeString = (new \DateTime())->modify('+' . $futureDays . ' days')->format('Y-m-d H:i:s');
 
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
@@ -1181,15 +1265,40 @@ class Activities extends \Espo\Core\Services\Base
                 $selectManager->applyTextFilter($params['textFilter'], $selectParams);
             }
 
-
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
             if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
 
             $selectManager->applyBoolFilter('onlyMy', $selectParams);
 
-
             if ($entityType === 'Task') {
-                $selectManager->applyPrimaryFilter('actualStartingNotInFuture', $selectParams);
+                $selectManager->applyPrimaryFilter('actual', $selectParams);
+
+                $selectManager->addOrWhere([
+                    [
+                        'dateStart' => null
+                    ],
+                    [
+                        'dateStart!=' => null,
+                        'OR' => array(
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'past',
+                                'attribute' => 'dateStart',
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            )),
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'today',
+                                'attribute' => 'dateStart',
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            )),
+                            $selectManager->convertDateTimeWhere(array(
+                                'type' => 'before',
+                                'attribute' => 'dateStart',
+                                'value' => $beforeString,
+                                'timeZone' => $selectManager->getUserTimeZone()
+                            ))
+                        )
+                    ]
+                ], $selectParams);
             } else {
                 $selectManager->applyPrimaryFilter('planned', $selectParams);
 
@@ -1208,7 +1317,7 @@ class Activities extends \Espo\Core\Services\Base
                         $selectManager->convertDateTimeWhere(array(
                             'type' => 'before',
                             'field' => 'dateStart',
-                            'value' => (new \DateTime())->modify('+' . self::UPCOMING_ACTIVITIES_FUTURE_DAYS . ' days')->format('Y-m-d H:i:s'),
+                            'value' => $beforeString,
                             'timeZone' => $selectManager->getUserTimeZone()
                         ))
                     ]
@@ -1236,7 +1345,7 @@ class Activities extends \Espo\Core\Services\Base
         $row = $sth->fetch(\PDO::FETCH_ASSOC);
         $totalCount = $row['COUNT'];
 
-        $unionSql .= " ORDER BY dateStart, dateEnd ASC";
+        $unionSql .= " ORDER BY dateStart ASC, dateEnd ASC, name ASC";
         $unionSql .= " LIMIT :offset, :maxSize";
 
         $sth = $pdo->prepare($unionSql);

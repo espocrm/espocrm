@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "username": "Felhasználónév",
+    "ipAddress": "IP-cím",
+    "requestTime": "Kérés ideje",
+    "createdAt": "Kért At",
+    "isDenied": "Megtagadva",
+    "portal": "Portál",
+    "user": "használó",
+    "authToken": "Hitel Token létrehozva",
+    "requestUrl": "URL kérése",
+    "requestMethod": "Kérés módja",
+    "authTokenIsActive": "Az Auth Token aktív"
+  },
+  "links": {
+    "authToken": "Hitel Token létrehozva",
+    "user": "használó",
+    "portal": "Portál",
+    "actionHistoryRecords": "Akció története"
+  },
+  "presetFilters": {
+    "denied": "tiltott",
+    "accepted": "Elfogadott"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Érvénytelen hitelesítő adatok",
+      "INACTIVE_USER": "Inaktív felhasználó",
+      "IS_PORTAL_USER": "Portál felhasználó",
+      "IS_NOT_PORTAL_USER": "Nem portál felhasználó",
+      "USER_IS_NOT_IN_PORTAL": "A felhasználó nem kapcsolódik a portálhoz"
+    }
+  }
+}

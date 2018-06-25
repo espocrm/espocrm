@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "dateFormat": "Format datuma",
+    "timeFormat": "Format vremena",
+    "timeZone": "Vremenska zona",
+    "weekStart": "Prvi dan tjedna",
+    "thousandSeparator": "Oznaka tisućica",
+    "decimalMark": "Decimalna oznaka",
+    "defaultCurrency": "Uobičajena valuta",
+    "currencyList": "Popis valuta",
+    "language": "Jezik",
+    "smtpAuth": "Autorizacija",
+    "smtpSecurity": "Sigurnost",
+    "smtpUsername": "Korisničko ime",
+    "emailAddress": "Adresa e-pošte",
+    "smtpPassword": "Lozinka",
+    "smtpEmailAddress": "Adresa e-pošte",
+    "exportDelimiter": "Graničnik izvoza",
+    "signature": "E-pošta potpis",
+    "dashboardTabList": "Lista kartica",
+    "tabList": "Lista kartica",
+    "defaultReminders": "Početni podsjetnici",
+    "theme": "Tema",
+    "useCustomTabList": "Prilagođena Lista kartica",
+    "receiveAssignmentEmailNotifications": "E-mail obavijesti prilikom dodeljivanja",
+    "receiveMentionEmailNotifications": "Email obavijesti o spominjanju u postovima",
+    "receiveStreamEmailNotifications": "E-mail obavijesti o porukama i ažuriranju statusa",
+    "dashboardLayout": "Raspored za Kontrolni prikaz",
+    "emailReplyForceHtml": "E-mail odgovor u HTML",
+    "autoFollowEntityTypeList": "Globalni Auto-Follow",
+    "emailReplyToAllByDefault": "Postavi 'Odgovori na sve' kao početnu vrijednost",
+    "doNotFillAssignedUserIfNotRequired": "Ne popunjavaj automatski dodijeljenog korisnika pri kreiranju zapisa",
+    "followEntityOnStreamPost": "Automatsko slijeđenje zapisa nakon upisa u tok vijesti",
+    "followCreatedEntities": "Automatsko slijeđenje kreiranih zapisa",
+    "followCreatedEntityTypeList": "Automatsko slijeđenje kreiranih zapisa odabrane vrste entiteta"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Nedjelja",
+      "1": "Ponedjeljak"
+    }
+  },
+  "labels": {
+    "Notifications": "Obavijesti",
+    "User Interface": "Korisničko sučelje",
+    "Misc": "Ostalo",
+    "Locale": "Lokalno"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatically slijedi SVE nove zapise odabrane vrste entiteta (kreirane od svih korisnika). Kako bi bili u mogućnosti vidjeti informacije tijeka vijesti i primati obavijesti o svim zapisima u sustavu.",
+    "doNotFillAssignedUserIfNotRequired": "Pri kreiranju zapisa, podatak \"dodijeljeni korisnik\" neće biti popunjen vlastitim imenom osim ako je polje obavezno za unos.",
+    "followCreatedEntities": "Pri kreiranju zapisa, biti će automatski slijeđeni, čak i ako se dodijele drugom korisniku.",
+    "followCreatedEntityTypeList": "Pri kreiranju zapisa vrste odabranog entiteta, biti će automatski slijeđeni, čak i ako se dodijele drugom korisniku."
+  }
+}

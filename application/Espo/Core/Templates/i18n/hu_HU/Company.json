@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "számlázási cím",
+    "shippingAddress": "szállítási cím",
+    "website": "Weboldal"
+  },
+  "links": {
+    "meetings": "találkozók",
+    "calls": "felhívja",
+    "tasks": "feladatok"
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} létrehozása"
+  }
+}

@@ -42,16 +42,35 @@ class Meeting extends \Espo\Core\Repositories\Event
 
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
-        if ($parentId && $parentType) {
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+
+        if ($entity->isAttributeChanged('parentId') || $entity->isAttributeChanged('parentType')) {
+            $parent = null;
+            if ($parentId && $parentType) {
+                if ($this->getEntityManager()->hasRepository($parentType)) {
+                    $columnList = ['id', 'name'];
+                    if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'accountId'])) {
+                        $columnList[] = 'accountId';
+                    }
+                    if ($parentType === 'Lead') {
+                        $columnList[] = 'status';
+                        $columnList[] = 'createdAccountId';
+                        $columnList[] = 'createdAccountName';
+                    }
+                    $parent = $this->getEntityManager()->getRepository($parentType)->select($columnList)->get($parentId);
+                }
+            }
+            $accountId = null;
+            $accountName = null;
+
             if ($parent) {
-                $accountId = null;
                 if ($parent->getEntityType() == 'Account') {
                     $accountId = $parent->id;
+                    $accountName = $parent->get('name');
                 } else if ($parent->getEntityType() == 'Lead') {
                     if ($parent->get('status') == 'Converted') {
                         if ($parent->get('createdAccountId')) {
                             $accountId = $parent->get('createdAccountId');
+                            $accountName = $parent->get('createdAccountName');
                         }
                     }
                 }
@@ -60,12 +79,24 @@ class Meeting extends \Espo\Core\Repositories\Event
                 }
                 if ($accountId) {
                     $entity->set('accountId', $accountId);
+                    $entity->set('accountName', $accountName);
+                }
+            }
+
+            if (
+                $entity->get('accountId')
+                &&
+                !$entity->get('accountName')
+            ) {
+                $account = $this->getEntityManager()->getRepository('Account')->select(['id', 'name'])->get($entity->get('accountId'));
+                if ($account) {
+                    $entity->set('accountName', $account->get('name'));
                 }
             }
         }
 
         if (!$entity->isNew()) {
-            if ($entity->isFieldChanged('dateStart') && $entity->isFieldChanged('dateStart') && !$entity->isFieldChanged('dateEnd')) {
+            if ($entity->isAttributeChanged('dateStart') && $entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateEnd')) {
                 $dateEndPrevious = $entity->getFetched('dateEnd');
                 $dateStartPrevious = $entity->getFetched('dateStart');
                 if ($dateStartPrevious && $dateEndPrevious) {

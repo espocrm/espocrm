@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "enabled": "Povolený",
+    "clientId": "ID klienta",
+    "clientSecret": "Bezpečnostná fráza klienta",
+    "redirectUri": "URI na presmerovanie",
+    "apiKey": "API kľúč"
+  },
+  "messages": {
+    "selectIntegration": "Vyberte integráciu z ponuky",
+    "noIntegrations": "Žiadne integrácie nie sú dostupné."
+  },
+  "help": {
+    "Google": "<p><b>Získať OAuth 2.0 prihlasovacie údaje z Google Developers Console.</b></p><p>Navštívte <a href=\"https://console.developers.google.com/project\">Google Developers Console</a> na získanie OAuth 2.0 prihlasovacích údajov ako je Client ID a Client Secret, ktoré sú známe obom aj Google aj aplikácii EspoCRM.</p>",
+    "GoogleMaps": "<p>Získať API kľúč <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">tu</a>.</p>"
+  }
+}

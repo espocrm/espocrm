@@ -5,10 +5,8 @@
   },
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "file": "Plik",
     "type": "Typ",
-    "source": "Źródło",
     "publishDate": "Data publikacji",
     "expirationDate": "Data przedawnienia",
     "description": "Opis",
@@ -18,7 +16,9 @@
   "links": {
     "accounts": "Klienci",
     "opportunities": "Szanse sprzedaży",
-    "folder": "Katalog"
+    "folder": "Katalog",
+    "leads": "Leady",
+    "contacts": "Kontakty"
   },
   "options": {
     "status": {
@@ -30,8 +30,6 @@
     "type": {
       "": "Brak",
       "Contract": "Kontrakt",
-      "NDA": "NDA",
-      "EULA": "EULA",
       "License Agreement": "Postanowienia licencyjne"
     }
   },

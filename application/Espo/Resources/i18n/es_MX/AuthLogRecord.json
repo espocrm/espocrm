@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "username": "Nombre del Usuario",
+    "ipAddress": "Dirección IP",
+    "requestTime": "Hr. de la Solicitud",
+    "createdAt": "Fecha de la Solicitud",
+    "isDenied": "Fue denegado",
+    "denialReason": "Razón de denegación",
+    "user": "Usuario",
+    "authToken": "Clave de Aut. creada",
+    "requestUrl": "URL de la Solicitud",
+    "requestMethod": "Método de la Solicitud",
+    "authTokenIsActive": "La clave de aut. está activa"
+  },
+  "links": {
+    "authToken": "Clave de aut. creada",
+    "user": "Usuario",
+    "actionHistoryRecords": "Historial de Acciones"
+  },
+  "presetFilters": {
+    "denied": "Denegado",
+    "accepted": "Aceptado"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Credenciales inválidas",
+      "INACTIVE_USER": "Usuario inactivo",
+      "IS_PORTAL_USER": "Usuario del Portal",
+      "IS_NOT_PORTAL_USER": "No es un usuario del portal",
+      "USER_IS_NOT_IN_PORTAL": "El usuario no se relaciona con el portal"
+    }
+  }
+}

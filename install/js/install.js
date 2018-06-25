@@ -60,10 +60,6 @@ var InstallScript = function(opt) {
 	this.emailSettings = {};
 	this.checkActions = [
 		{
-			'action': 'checkModRewrite',
-			'break': true
-		},
-		{
 			'action': 'checkPermission',
 			'break': true
 		},
@@ -71,14 +67,14 @@ var InstallScript = function(opt) {
 			'action': 'applySett',
 			'break': true
 		},
+        {
+            'action': 'checkModRewrite',
+            'break': true
+        },
 		{
 			'action': 'buildDatabase',
 			'break': true
-		}/*,
-		{
-			'action': 'createUser',
-			'break': true
-		}*/
+		}
 
 	];
 	this.checkIndex = 0;

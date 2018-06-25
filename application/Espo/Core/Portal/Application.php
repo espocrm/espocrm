@@ -99,6 +99,6 @@ class Application extends \Espo\Core\Application
         $this->getContainer()->get('clientManager')->display(null, 'html/portal.html', array(
             'portalId' => $this->getPortal()->id
         ));
+        exit;
     }
 }
-

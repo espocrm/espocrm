@@ -536,6 +536,80 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Hello Test 12', $result);
     }
 
+    function testStringLength()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\length",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHello"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(9, $actual);
+    }
+
+    function testStringContains()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\contains",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHello"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Test"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertTrue($actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\contains",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHello"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Hello"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertTrue($actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\contains",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "TestHello"
+                    },
+                    {
+                        "type": "value",
+                        "value": "Hello1"
+                    }
+                ]
+            }
+        ');
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
+    }
+
     function testSummationAndDivision()
     {
         $item = json_decode('

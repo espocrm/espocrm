@@ -4,13 +4,10 @@
     "emailAddress": "E-mail Adresi",
     "status": "Durum",
     "assignToUser": "Kullanıcıyı Görevlendir",
-    "host": "Host",
     "username": "Kullanıcı Adı",
     "password": "Şifre",
-    "port": "Port",
     "monitoredFolders": "İzlenen Klasörler",
     "trashFolder": "Çöp Klasörü ",
-    "ssl": "SSL",
     "createCase": "Dosya Oluştur",
     "reply": "Oto-Cevap",
     "caseDistribution": "Dosya Dağıtımı",
@@ -22,7 +19,12 @@
     "fetchSince": "Şundan itibaren çek",
     "addAllTeamUsers": "Tüm takım kullanıcıları için",
     "team": "Hedef Ekibi",
-    "teams": "Takımlar"
+    "teams": "Takımlar",
+    "sentFolder": "Gönderilenler Klasörü",
+    "storeSentEmails": "Gönderilen Emailleri Sakla",
+    "useSmtp": "SMTP Kullan",
+    "smtpSecurity": "SMTP Güvenlik",
+    "smtpUsername": "SMTP Kullanıcı Adı"
   },
   "tooltips": {
     "reply": "E-posta gönderenlerine e-postalarının alındığını bildirin. \\ N \\ n Döngüleri önlemek için belirli bir süre boyunca belirli bir alıcıya yalnızca bir e-posta gönderilir.",
@@ -47,13 +49,11 @@
     "caseDistribution": {
       "": "Hiç",
       "Direct-Assignment": "Direk-Görevlendirme",
-      "Round-Robin": "Round-Robin",
       "Least-Busy": "En az meşgul"
     }
   },
   "labels": {
     "Create InboundEmail": "E-mail Hesabı Oluştur",
-    "IMAP": "IMAP",
     "Actions": "Eylemler",
     "Main": "Ana"
   },

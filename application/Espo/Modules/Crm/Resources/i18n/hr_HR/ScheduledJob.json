@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Pošalji masovne e-pooruke",
+      "ControlKnowledgeBaseArticleStatus": "Kontrola statusa članaka baze znanja"
+    }
+  }
+}

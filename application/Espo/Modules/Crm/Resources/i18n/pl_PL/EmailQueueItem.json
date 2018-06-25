@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "target": "Cel",
     "sentAt": "Data wysłania",
     "attemptCount": "Próby",

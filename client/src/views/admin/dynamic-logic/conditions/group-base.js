@@ -36,7 +36,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             return {
                 viewDataList: this.viewDataList,
                 operator: this.operator,
-                level: this.level
+                level: this.level,
+                groupOperator: this.getGroupOperator()
             };
         },
 
@@ -45,16 +46,16 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 e.stopPropagation();
                 this.trigger('remove-item');
             },
-            'click > div.group-head [data-action="addField"]': function (e) {
+            'click > div.group-bottom [data-action="addField"]': function (e) {
                 this.actionAddField();
             },
-            'click > div.group-head [data-action="addAnd"]': function (e) {
+            'click > div.group-bottom [data-action="addAnd"]': function (e) {
                 this.actionAddGroup('and');
             },
-            'click > div.group-head [data-action="addOr"]': function (e) {
+            'click > div.group-bottom [data-action="addOr"]': function (e) {
                 this.actionAddGroup('or');
             },
-            'click > div.group-head [data-action="addNot"]': function (e) {
+            'click > div.group-bottom [data-action="addNot"]': function (e) {
                 this.actionAddGroup('not');
             }
         },
@@ -77,6 +78,12 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 this.createItemView(i, key, item);
                 this.addViewDataListItem(i, key);
             }, this);
+        },
+
+        getGroupOperator: function () {
+            if (this.operator === 'or') return 'or';
+
+            return 'and';
         },
 
         getKey: function (i) {
@@ -126,6 +133,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                     view.render()
                 }
 
+                this.controlAddItemVisibility();
+
                 this.listenToOnce(view, 'remove-item', function () {
                     this.removeItem(number);
                 }, this);
@@ -151,6 +160,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             this.clearView(key);
 
             this.$el.find('[data-view-key="'+key+'"]').remove();
+            this.$el.find('[data-view-ref-key="'+key+'"]').remove();
 
             var index = -1;
             this.viewDataList.forEach(function (data, i) {
@@ -161,6 +171,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             if (~index) {
                 this.viewDataList.splice(index, 1);
             }
+
+            this.controlAddItemVisibility();
         },
 
         actionAddField: function () {
@@ -216,6 +228,10 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
         addItemContainer: function (i) {
             var $item = $('<div data-view-key="'+this.getKey(i)+'"></div>');
             this.$el.find('> .item-list').append($item);
+
+            var groupOperatorLabel = this.translate(this.getGroupOperator(), 'logicalOperators', 'Admin');
+            var $operatorItem = $('<div class="group-operator" data-view-ref-key="'+this.getKey(i)+'">' + groupOperatorLabel +'</div>');
+            this.$el.find('> .item-list').append($operatorItem);
         },
 
         actionAddGroup: function (operator) {
@@ -230,6 +246,12 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 value: []
             });
         },
+
+        afterRender: function () {
+            this.controlAddItemVisibility();
+        },
+
+        controlAddItemVisibility: function () {}
 
     });
 

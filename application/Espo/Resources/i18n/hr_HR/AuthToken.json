@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "user": "Korisnik",
+    "ipAddress": "IP adresa",
+    "lastAccess": "Zadnji pristup",
+    "createdAt": "Prijava",
+    "isActive": "Je aktivan"
+  },
+  "links": {
+    "actionHistoryRecords": "Povijest akcija"
+  },
+  "presetFilters": {
+    "active": "Je aktivan",
+    "inactive": "Je neaktivan"
+  },
+  "labels": {
+    "Set Inactive": "Postavi kao neaktivan"
+  },
+  "massActions": {
+    "setInactive": "Postavi kao neaktivan"
+  }
+}

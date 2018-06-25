@@ -135,13 +135,27 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         getFieldViews: function () {
-            return Espo.Utils.clone(this.nestedViews);
+            var nestedViews = this.nestedViews;
+            var fieldViews = {};
+            for (var viewKey in this.nestedViews) {
+                var name = this.nestedViews[viewKey].name;
+                fieldViews[name] = this.nestedViews[viewKey];
+            }
+            return fieldViews;
         },
 
         getFieldView: function (name) {
             return (this.getFieldViews() || {})[name];
+        },
+
+        // TODO remove in 5.4.0
+        getView: function (name) {
+            var view = Dep.prototype.getView.call(this, name);
+            if (!view) {
+                view = this.getFieldView(name);
+            }
+            return view;
         }
+
     });
 });
-
-

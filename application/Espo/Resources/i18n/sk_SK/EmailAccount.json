@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "Názov",
+    "status": "Stav",
+    "username": "Používateľské meno",
+    "password": "Heslo",
+    "monitoredFolders": "Sledované priečinky",
+    "fetchSince": "Stiahnuť od",
+    "emailAddress": "Emailová adresa",
+    "sentFolder": "Priečinok Odoslané",
+    "storeSentEmails": "Uložiť odoslané emaily",
+    "keepFetchedEmailsUnread": "Ponechať stiahnuté emaily neprečítané",
+    "emailFolder": "Vložiť do priečinku",
+    "useSmtp": "Použiť SMTP",
+    "smtpHost": "SMTP server",
+    "smtpPort": "SMTP port",
+    "smtpSecurity": "SMTP bezpečnosť",
+    "smtpUsername": "SMTP používateľské meno",
+    "smtpPassword": "SMTP heslo",
+    "useImap": "Načítať emaily"
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Emaily"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktívne",
+      "Inactive": "Neaktívne"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Vytvoriť emailový účet",
+    "Main": "Hlavné",
+    "Test Connection": "Test spojenia",
+    "Send Test Email": "Odoslať testovací email"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nedá sa pripojiť k IMAP serveru",
+    "connectionIsOk": "Spojenie je OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Viaceré priečinky majú byť oddelené čiarkou.\n\nMôžete pridať priečinok s odoslanou poštou na synchronizovanie emailov odoslaných exteným emailovým klientom.",
+    "storeSentEmails": "Odoslané emaily budú uložené na serveri IMAP. Pole s emailovou adresou by sa malo zhodovať s adresou, z ktorej budú emaily odoslané."
+  }
+}

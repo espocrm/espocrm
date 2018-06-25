@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
+
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
 

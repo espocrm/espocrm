@@ -3,7 +3,7 @@
         "label": "Configuration",
         "rows": [
             [{"name": "authenticationMethod"}, {"name": "authTokenLifetime"}],
-            [false, {"name": "authTokenMaxIdleTime"}]
+            [{"name": "authTokenPreventConcurrent"}, {"name": "authTokenMaxIdleTime"}]
         ]
     },
     {

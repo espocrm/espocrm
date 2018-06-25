@@ -72,11 +72,20 @@ class Email extends \Espo\Core\ORM\Entity
         }
     }
 
+    protected function _getBodyPlain()
+    {
+        return $this->getBodyPlain();
+    }
+
+    public function hasBodyPlain()
+    {
+        return !empty($this->valuesContainer['bodyPlain']);
+    }
+
     public function getBodyPlain()
     {
-        $bodyPlain = $this->get('bodyPlain');
-        if (!empty($bodyPlain)) {
-            return $bodyPlain;
+        if (!empty($this->valuesContainer['bodyPlain'])) {
+            return $this->valuesContainer['bodyPlain'];
         }
 
         $body = $this->get('body');
@@ -84,6 +93,34 @@ class Email extends \Espo\Core\ORM\Entity
         $breaks = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
+
+        $reList = [
+            '/&(quot|#34);/i',
+            '/&(amp|#38);/i',
+            '/&(lt|#60);/i',
+            '/&(gt|#62);/i',
+            '/&(nbsp|#160);/i',
+            '/&(iexcl|#161);/i',
+            '/&(cent|#162);/i',
+            '/&(pound|#163);/i',
+            '/&(copy|#169);/i',
+            '/&(reg|#174);/i'
+        ];
+        $replaceList = [
+            '',
+            '&',
+            '<',
+            '>',
+            ' ',
+            chr(161),
+            chr(162),
+            chr(163),
+            chr(169),
+            chr(174)
+        ];
+
+        $body = preg_replace($reList, $replaceList, $body);
+
         return $body;
     }
 

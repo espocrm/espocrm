@@ -1,7 +1,6 @@
 {
   "labels": {
     "Revert Import": "Cofnij import",
-    "Return to Import": "Return to Import",
     "Run Import": "Uruchom import",
     "Back": "Wróć",
     "Field Mapping": "Mapowanie pól",
@@ -19,7 +18,6 @@
     "Create and Update": "Utwórz i aktualizuj",
     "Update Only": "Tylko aktualizuj",
     "Update by": "Zaktualizowane przez",
-    "Set as Not Duplicate": "Set as Not Duplicate",
     "File (CSV)": "Plik (CSV)",
     "First Row Value": "Wartość pierwszego rzędu",
     "Skip": "Pomiń",
@@ -30,10 +28,6 @@
     "What to do?": "Co do zrobienia?",
     "Properties": "Właściwości",
     "Header Row": "Wiersz nagłówka",
-    "Person Name Format": "Person Name Format",
-    "John Smith": "John Smith",
-    "Smith John": "Smith John",
-    "Smith, John": "Smith, John",
     "Field Delimiter": "Rozgranicznik pól",
     "Date Format": "Format daty",
     "Decimal Mark": "Znak rozdzielenia",
@@ -44,13 +38,9 @@
     "Next": "Następny",
     "Step 1": "Krok 1",
     "Step 2": "Krok 2",
-    "Double Quote": "Double Quote",
-    "Single Quote": "Single Quote",
-    "Imported": "Imported",
     "Duplicates": "Duplikaty"
   },
   "messages": {
-    "utf8": "Should be UTF-8 encoded",
     "duplicatesRemoved": "Duplikaty usunięte"
   },
   "fields": {
@@ -59,5 +49,12 @@
     "imported": "Zaimportowane rekordy",
     "duplicates": "Zdublowane rekordy",
     "updated": "Zaktualizowane rekordy"
+  },
+  "options": {
+    "status": {
+      "Failed": "Niepowodzenie",
+      "In Process": "W trakcie",
+      "Complete": "Ukończone"
+    }
   }
 }

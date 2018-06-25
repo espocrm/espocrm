@@ -1,0 +1,21 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Równa się",
+      "notEquals": "Nie równa się",
+      "greaterThan": "Większy niż",
+      "lessThan": "Mniejszy niż",
+      "greaterThanOrEquals": "Większy lub równy",
+      "lessThanOrEquals": "Mniejszy lub równy",
+      "isToday": "Dziś",
+      "isTrue": "Prawda",
+      "isFalse": "Fałsz",
+      "isEmpty": "Pusty",
+      "isNotEmpty": "Nie jest pusty",
+      "contains": "Zawiera",
+      "has": "Zawiera",
+      "notContains": "Nie zawiera",
+      "notHas": "Nie zawiera"
+    }
+  }
+}

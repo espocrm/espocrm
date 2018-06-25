@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "posta",
+    "attachments": "Mellékletek",
+    "targetType": "Cél",
+    "teams": "csapatok",
+    "users": "felhasználók",
+    "portals": "portálok",
+    "type": "típus",
+    "isGlobal": "Globális",
+    "isInternal": "Belső (belső felhasználók számára)",
+    "related": "Összefüggő",
+    "createdByGender": "Létrehozta Nem",
+    "data": "Adat",
+    "number": "Szám"
+  },
+  "filters": {
+    "all": "Minden",
+    "posts": "Hozzászólások",
+    "updates": "Frissítés"
+  },
+  "messages": {
+    "writeMessage": "Írja ide az üzenetet"
+  },
+  "options": {
+    "targetType": {
+      "self": "magamnak",
+      "users": "az adott felhasználó (k) számára",
+      "teams": "bizonyos csapat (ok)",
+      "all": "minden belső felhasználó számára",
+      "portals": "a portál felhasználók számára"
+    },
+    "type": {
+      "Post": "posta"
+    }
+  },
+  "links": {
+    "superParent": "Szuper szülő",
+    "related": "Összefüggő"
+  }
+}

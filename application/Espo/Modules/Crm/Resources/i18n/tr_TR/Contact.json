@@ -17,7 +17,8 @@
     "targetList": "Hedef Liste",
     "portalUser": "Portal Kullanıcı",
     "originalLead": "Orijinal Müşteri Potansiyeli",
-    "acceptanceStatus": "Kabul Durumu"
+    "acceptanceStatus": "Kabul Durumu",
+    "accountIsInactive": "Hesap Inaktif"
   },
   "links": {
     "opportunities": "Fırsatlar",
@@ -45,6 +46,7 @@
   },
   "presetFilters": {
     "portalUsers": "Portal Kullanıcıları",
-    "notPortalUsers": "Portal Kullanıcıları Değildir"
+    "notPortalUsers": "Portal Kullanıcıları Değildir",
+    "accountActive": "Aktif"
   }
 }

@@ -38,6 +38,8 @@ use Espo\ORM\Entity;
 
 class Import extends \Espo\Services\Record
 {
+    const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
+
     protected function init()
     {
         parent::init();
@@ -223,6 +225,17 @@ class Import extends \Espo\Services\Record
 
         $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
 
+        $removeFromDb = false;
+        $createdAt = $import->get('createdAt');
+        if ($createdAt) {
+            $dtNow = new \DateTime();
+            $createdAtDt = new \DateTime($createdAt);
+            $dayDiff = ($dtNow->getTimestamp() - $createdAtDt->getTimestamp()) / 60 / 60 / 24;
+            if ($dayDiff < self::REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS) {
+                $removeFromDb = true;
+            }
+        }
+
         $sth = $pdo->prepare($sql);
         $sth->execute();
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -234,12 +247,20 @@ class Import extends \Espo\Services\Record
 
             $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
             if ($entity) {
-                $this->getEntityManager()->removeEntity($entity);
+                $this->getEntityManager()->removeEntity($entity, [
+                    'noStream' => true,
+                    'noNotifications' => true,
+                    'import' => true
+                ]);
             }
-            $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
+            if ($removeFromDb) {
+                $this->getEntityManager()->getRepository($entityType)->deleteFromDb($entityId);
+            }
         }
 
         $this->getEntityManager()->removeEntity($import);
+
+        $this->processActionHistoryRecord('delete', $import);
 
         return true;
     }
@@ -269,7 +290,7 @@ class Import extends \Espo\Services\Record
             if ($entity) {
                 $this->getEntityManager()->removeEntity($entity);
             }
-            $this->getEntityManager()->getRepository($scope)->deleteFromDb($entityId);
+            $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entityId);
         }
 
         return true;
@@ -325,6 +346,8 @@ class Import extends \Espo\Services\Record
         }
 
         $this->getEntityManager()->saveEntity($import);
+
+        $this->processActionHistoryRecord('create', $import);
 
         if (!empty($params['idleMode'])) {
             $params['idleMode'] = false;
@@ -500,19 +523,22 @@ class Import extends \Espo\Services\Record
                     if ($value !== '') {
                         $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
                         if ($type == 'personName') {
-                            $lastNameField = 'last' . ucfirst($field);
-                            $firstNameField = 'first' . ucfirst($field);
+                            $firstNameAttribute = 'first' . ucfirst($field);
+                            $lastNameAttribute = 'last' . ucfirst($field);
 
                             $personName = $this->parsePersonName($value, $params['personNameFormat']);
 
-                            if (!$entity->get($firstNameField)) {
-                                $entity->set($firstNameField, $personName['firstName']);
+                            if (!$entity->get($firstNameAttribute)) {
+                                $personName['firstName'] = $this->prepareAttributeValue($entity, $firstNameAttribute, $personName['firstName']);
+                                $entity->set($firstNameAttribute, $personName['firstName']);
                             }
-                            if (!$entity->get($lastNameField)) {
-                                $entity->set($lastNameField, $personName['lastName']);
+                            if (!$entity->get($lastNameAttribute)) {
+                                $personName['lastName'] = $this->prepareAttributeValue($entity, $lastNameAttribute, $personName['lastName']);
+                                $entity->set($lastNameAttribute, $personName['lastName']);
                             }
                             continue;
                         }
+
                         $entity->set($field, $this->parseValue($entity, $field, $value, $params));
                     }
                 } else {
@@ -535,6 +561,21 @@ class Import extends \Espo\Services\Record
 
                         $entity->set('phoneNumberData', $phoneNumberData);
                     }
+                }
+            }
+        }
+
+        $defaultCurrency = $this->getConfig('defaultCurrency');
+        if (!empty($params['currency'])) {
+            $defaultCurrency = $params['currency'];
+        }
+
+        $mFieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
+        foreach ($mFieldsDefs as $field => $defs) {
+            if (!empty($defs['type']) && $defs['type'] === 'currency') {
+                if ($entity->has($field) && !$entity->get($field . 'Currency')) {
+                    $entity->set($field . 'Currency', $defaultCurrency);
                 }
             }
         }
@@ -613,6 +654,19 @@ class Import extends \Espo\Services\Record
         return $result;
     }
 
+    protected function prepareAttributeValue($entity, $attribute, $value)
+    {
+        if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
+            $maxLength = $entity->getAttributeParam($attribute, 'len');
+            if ($maxLength) {
+                if (mb_strlen($value) > $maxLength) {
+                    $value = substr($value, 0, $maxLength);
+                }
+            }
+        }
+        return $value;
+    }
+
     protected function parsePersonName($value, $format)
     {
         $firstName = '';
@@ -650,11 +704,6 @@ class Import extends \Espo\Services\Record
             $decimalMark = $params['decimalMark'];
         }
 
-        $defaultCurrency = 'USD';
-        if (!empty($params['defaultCurrency'])) {
-            $defaultCurrency = $params['defaultCurrency'];
-        }
-
         $dateFormat = 'Y-m-d';
         if (!empty($params['dateFormat'])) {
             if (!empty($this->dateFormatsMap[$params['dateFormat']])) {
@@ -677,6 +726,7 @@ class Import extends \Espo\Services\Record
                 if ($dt) {
                     return $dt->format('Y-m-d');
                 }
+                return null;
                 break;
             case Entity::DATETIME:
                 $timezone = new \DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
@@ -685,24 +735,19 @@ class Import extends \Espo\Services\Record
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     return $dt->format('Y-m-d H:i:s');
                 }
+                return null;
                 break;
             case Entity::FLOAT:
-                $currencyAttribute = $attribute . 'Currency';
-                if ($entity->hasAttribute($currencyAttribute)) {
-                    if (!$entity->has($currencyAttribute)) {
-                        $entity->set($currencyAttribute, $defaultCurrency);
-                    }
-                }
-
                 $a = explode($decimalMark, $value);
                 $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
 
                 if (count($a) > 1) {
-                    return $a[0] . '.' . $a[1];
+                    return floatval($a[0] . '.' . $a[1]);
                 } else {
-                    return $a[0];
+                    return floatval($a[0]);
                 }
-                break;
+            case Entity::INT:
+                return intval($value);
             case Entity::JSON_OBJECT:
                 $value = \Espo\Core\Utils\Json::decode($value);
                 return $value;
@@ -717,6 +762,8 @@ class Import extends \Espo\Services\Record
                     return $value;
                 }
         }
+
+        $value = $this->prepareAttributeValue($entity, $attribute, $value);
 
         return $value;
     }
@@ -753,4 +800,3 @@ class Import extends \Espo\Services\Record
         }
     }
 }
-

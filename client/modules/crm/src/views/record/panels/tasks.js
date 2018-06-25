@@ -111,6 +111,12 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         setup: function () {
             this.scope = this.model.name;
 
+            this.link = 'tasks';
+
+            if (this.scope == 'Account') {
+                this.link = 'tasksPrimary';
+            }
+
             this.currentTab = this.getStorage().get('state', this.getStorageKey()) || this.defaultTab;
 
             this.where = [
@@ -122,12 +128,8 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
         },
 
         afterRender: function () {
-            var link = 'tasks';
 
-            if (this.scope == 'Account') {
-                link = 'tasksPrimary';
-            }
-            var url = this.model.name + '/' + this.model.id + '/' + link;
+            var url = this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!this.getAcl().check('Task', 'read')) {
                 this.$el.find('.list-container').html(this.translate('No Access'));
@@ -146,26 +148,29 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
 
                 var rowActionsView = 'crm:views/record/row-actions/tasks';
 
-                this.listenToOnce(this.collection, 'sync', function () {
-                    this.createView('list', 'views/record/list-expanded', {
-                        el: this.getSelector() + ' > .list-container',
-                        pagination: false,
-                        type: 'listRelationship',
-                        rowActionsView: rowActionsView,
-                        checkboxes: false,
-                        collection: collection,
-                        listLayout: this.listLayout,
-                    }, function (view) {
-                        view.render();
-                    });
-                }.bind(this));
-                this.collection.fetch();
+                this.createView('list', 'views/record/list-expanded', {
+                    el: this.getSelector() + ' > .list-container',
+                    pagination: false,
+                    type: 'listRelationship',
+                    rowActionsView: rowActionsView,
+                    checkboxes: false,
+                    collection: collection,
+                    listLayout: this.listLayout,
+                    skipBuildRows: true
+                }, function (view) {
+                    view.getSelectAttributeList(function (selectAttributeList) {
+                        if (selectAttributeList) {
+                            this.collection.data.select = selectAttributeList.join(',');
+                        }
+                        this.collection.fetch();
+                    }.bind(this));
+                });
             }, this);
         },
 
         actionCreateTask: function (data) {
             var self = this;
-            var link = 'tasks';
+            var link = this.link;
             var scope = 'Task';
             var foreignLink = this.model.defs['links'][link].foreign;
 

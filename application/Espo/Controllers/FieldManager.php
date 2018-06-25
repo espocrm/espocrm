@@ -77,6 +77,11 @@ class FieldManager extends \Espo\Core\Controllers\Base
         return $fieldManager->read($params['scope'], $data->name);
     }
 
+    public function patchActionUpdate($params, $data)
+    {
+        return $this->putActionUpdate($params, $data);
+    }
+
     public function putActionUpdate($params, $data)
     {
         if (empty($params['scope']) || empty($params['name'])) {

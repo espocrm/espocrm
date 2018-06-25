@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "Hónap",
+    "week": "Hét",
+    "agendaWeek": "Hét",
+    "day": "Nap",
+    "agendaDay": "Nap",
+    "timeline": "Idővonal"
+  },
+  "labels": {
+    "Today": "Ma",
+    "Create": "Teremt",
+    "Shared": "megosztott",
+    "Add User": "Felhasználó hozzáadása",
+    "current": "jelenlegi",
+    "time": "idő",
+    "User List": "Felhasználói lista",
+    "Manage Users": "Felhasználók kezelése",
+    "View Calendar": "Naptár megtekintése",
+    "Create Shared View": "Megosztott nézet létrehozása"
+  }
+}

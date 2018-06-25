@@ -1,0 +1,21 @@
+{
+  "modes": {
+    "month": "Mjesec",
+    "week": "Tjedan",
+    "agendaWeek": "Tjedan",
+    "day": "Dan",
+    "agendaDay": "Dan",
+    "timeline": "Vremenska linija"
+  },
+  "labels": {
+    "Today": "Danas",
+    "Create": "Kreiraj",
+    "Shared": "Dijeljeno",
+    "Add User": "Dodaj korisnika",
+    "current": "trenutno",
+    "time": "vrijeme",
+    "User List": "Lista korisnika",
+    "Manage Users": "Upravljanje korisnicima",
+    "View Calendar": "Prikaži kalendar"
+  }
+}

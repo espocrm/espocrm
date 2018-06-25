@@ -104,6 +104,10 @@ Espo.define('views/main', 'view', function (Dep) {
             return '<div class="clearfix header-breadcrumbs">' + a.join('<div class="pull-left breadcrumb-separator"> &raquo </div>') + '</div>';
         },
 
+        getHeaderIconHtml: function () {
+            return this.getHelper().getScopeColorIconHtml(this.scope);
+        },
+
         actionShowModal: function (data) {
             var view = data.view;
             if (!view) {

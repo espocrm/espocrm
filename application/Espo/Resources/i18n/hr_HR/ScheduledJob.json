@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Ime",
+    "job": "Posao",
+    "scheduling": "Zakazivanje"
+  },
+  "links": {
+    "log": "Dnevnik"
+  },
+  "labels": {
+    "Create ScheduledJob": "Napravi zakazan posao"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Pospremanje",
+      "CheckInboundEmails": "Provjerite grupne račune e-pošte",
+      "CheckEmailAccounts": "Provjerite osobne račune e-pošte",
+      "SendEmailReminders": "Pošalji podsjetnike e-poštom",
+      "AuthTokenControl": "Kontrola autorizacijskih tokena",
+      "SendEmailNotifications": "Pošalji E-mail obavijesti",
+      "CheckNewVersion": "Provjera za novom verzijom"
+    },
+    "cronSetup": {
+      "linux": "Napomena: Dodajte ovu liniju u crontab datoteku za pokretanje ESPO zakazanih poslova:",
+      "mac": "Napomena: Dodajte ovu liniju u crontab datoteku za pokretanje ESPO zakazanih poslova:",
+      "windows": "Bilješka: Napravi datoteku sa slijedećim komandama kako bi se pokretali Espo zakazani poslovi koristeći Windows zakazane zadatke:",
+      "default": "Napomena: Dodaj ovu komandu za Cron Job (Planirani Zadatak):"
+    },
+    "status": {
+      "Active": "Aktivan",
+      "Inactive": "Neaktivan"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Crontab bilješka. Definira učestalost posla.\n\n*/5 * * * * - svakih 5 minuta\n\n0 */2 * * * - svaka 2 sata\n\n30 1 * * * - u 01:30 svakog dana\n\n0 0 1 * * - prvog dana u mjesecu"
+  }
+}

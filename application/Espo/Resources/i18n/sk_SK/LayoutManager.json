@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "width": "Šírka (%)",
+    "link": "Odkaz",
+    "notSortable": "Nezoraditeľné",
+    "align": "Zarovnať",
+    "panelName": "Názov panela",
+    "style": "Štýl",
+    "sticked": "Prilepený",
+    "isLarge": "Veľká veľkosť písma"
+  },
+  "options": {
+    "align": {
+      "left": "Vľavo",
+      "right": "Vpravo"
+    },
+    "style": {
+      "default": "Predvolený",
+      "success": "Úspech",
+      "danger": "Nebezpečný",
+      "warning": "Varovanie",
+      "primary": "Primárny"
+    }
+  },
+  "labels": {
+    "New panel": "Nový panel",
+    "Layout": "Rozmiestnenie"
+  }
+}

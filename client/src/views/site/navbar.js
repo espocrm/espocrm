@@ -38,7 +38,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             return {
                 tabDefsList: this.tabDefsList,
                 title: this.options.title,
-                menu: this.getMenuDefs(),
+                menuDataList: this.getMenuDataList(),
                 quickCreateList: this.quickCreateList,
                 enableQuickCreate: this.quickCreateList.length > 0,
                 userName: this.getUser().get('name'),
@@ -80,10 +80,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             var $body = $('body');
             if ($body.hasClass('minimized')) {
                 $body.removeClass('minimized');
-                this.getStorage().clear('state', 'layoutMinimized');
+                this.getStorage().set('state', 'siteLayoutState', 'expanded');
             } else {
                 $body.addClass('minimized');
-                this.getStorage().set('state', 'layoutMinimized', true);
+                this.getStorage().set('state', 'siteLayoutState', 'collapsed');
             }
             if (window.Event) {
                 try {
@@ -202,7 +202,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 44) + 1;
+                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
                 $moreLi = $moreDd.closest('li');
@@ -313,7 +313,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         afterRender: function () {
             this.selectTab(this.getRouter().getLast().controller);
 
-            if (this.getStorage().get('state', 'layoutMinimized')) {
+            var layoutState = this.getStorage().get('state', 'siteLayoutState');
+            var layoutMinimized = false;
+            if (layoutState === 'collapsed') {
+                layoutMinimized = true;
+            }
+
+            if (layoutMinimized) {
                 var $body = $('body');
                 $body.addClass('minimized');
             }
@@ -368,45 +374,85 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         setupTabDefsList: function () {
             var tabDefsList = [];
-            var moreIsMet = false;;
+            var moreIsMet = false;
+            var colorsDisabled =
+                this.getPreferences().get('scopeColorsDisabled') ||
+                this.getPreferences().get('tabColorsDisabled') ||
+                this.getConfig().get('scopeColorsDisabled') ||
+                this.getConfig().get('tabColorsDisabled');
+            var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+
             this.tabList.forEach(function (tab, i) {
                 if (tab === '_delimiter_') {
                     moreIsMet = true;
                     return;
                 }
                 var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+                var color = null;
+                if (!colorsDisabled) {
+                    var color = this.getMetadata().get(['clientDefs', tab, 'color']);
+                }
+
+                var shortLabel = label.substr(0, 2);
+
+                var iconClass = null;
+                if (!tabIconsDisabled) {
+                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
+                }
+
                 var o = {
                     link: '#' + tab,
                     label: label,
-                    shortLabel: label.substr(0, 2),
+                    shortLabel: shortLabel,
                     name: tab,
-                    isInMore: moreIsMet
+                    isInMore: moreIsMet,
+                    color: color,
+                    iconClass: iconClass
                 };
+                if (color && !iconClass) {
+                    o.colorIconClass = 'color-icon glyphicon glyphicon-stop';
+                }
                 tabDefsList.push(o);
             }, this);
             this.tabDefsList = tabDefsList;
         },
 
-        getMenuDefs: function () {
-            var menuDefs = [
+        getMenuDataList: function () {
+            var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
+            if (avatarHtml) avatarHtml += ' ';
+
+            var list = [
                 {
-                    link: '#Preferences',
-                    label: this.getLanguage().translate('Preferences')
-                }
+                    link: '#User/view/' + this.getUser().id,
+                    html: avatarHtml + this.getUser().get('name')
+                },
+                {divider: true}
             ];
 
+            if (this.getUser().isAdmin()) {
+                list.push({
+                    link: '#Admin',
+                    label: this.getLanguage().translate('Administration')
+                });
+            }
+
+            list.push({
+                link: '#Preferences',
+                label: this.getLanguage().translate('Preferences')
+            });
+
             if (!this.getConfig().get('actionHistoryDisabled')) {
-                menuDefs.push({
+                list.push({
                     divider: true
                 });
-                menuDefs.push({
+                list.push({
                     action: 'showLastViewed',
                     link: '#LastViewed',
                     label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
                 });
             }
 
-            menuDefs = menuDefs.concat([
+            list = list.concat([
                 {
                     divider: true
                 },
@@ -427,13 +473,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             ]);
 
-            if (this.getUser().isAdmin()) {
-                menuDefs.unshift({
-                    link: '#Admin',
-                    label: this.getLanguage().translate('Administration')
-                });
-            }
-            return menuDefs;
+
+
+            return list;
         },
 
         quickCreate: function (scope) {

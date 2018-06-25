@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "target": "Cél",
+    "sentAt": "Dátum elküldve",
+    "attemptCount": "Kísérletek",
+    "emailAddress": "Email cím",
+    "massEmail": "Tömeges e-mail",
+    "isTest": "A teszt"
+  },
+  "links": {
+    "target": "Cél",
+    "massEmail": "Tömeges e-mail"
+  },
+  "options": {
+    "status": {
+      "Pending": "Függőben levő",
+      "Sent": "Küldött",
+      "Failed": "nem sikerült",
+      "Sending": "elküldés"
+    }
+  },
+  "presetFilters": {
+    "pending": "Függőben levő",
+    "sent": "Küldött",
+    "failed": "nem sikerült"
+  }
+}

@@ -17,8 +17,9 @@
       "CheckInboundEmails": "Comprobar Correos Entrantes",
       "CheckEmailAccounts": "Compruebe cuentas de correo personales",
       "SendEmailReminders": "Enviar Recordatorios por Correo",
-      "AuthTokenControl": "Control del Token de Autorización",
-      "SendEmailNotifications": "Enviar Notificaciones por Correo"
+      "AuthTokenControl": "Control de la Clave de Autorización",
+      "SendEmailNotifications": "Enviar Notificaciones por Correo",
+      "CheckNewVersion": "Verificar Nueva Versión"
     },
     "cronSetup": {
       "linux": "<b>Nota</b>: Agregue esta línea al archivo crontab de su servidor para que ejecute los trabajos programados de EspoCRM:",

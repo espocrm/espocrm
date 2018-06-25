@@ -2,7 +2,6 @@
   "fields": {
     "name": "İsim",
     "emailAddress": "Eposta",
-    "website": "Website",
     "phoneNumber": "Telefon",
     "billingAddress": "Fatura Adresi",
     "shippingAddress": "Teslimat Adresi",
@@ -14,7 +13,8 @@
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "contactIsInactive": "Inaktif"
   },
   "links": {
     "contacts": "Bağlantılar",
@@ -93,7 +93,8 @@
   },
   "labels": {
     "Create Account": "Hesap Oluştur",
-    "Copy Billing": "Faturalamayı Kopyala"
+    "Copy Billing": "Faturalamayı Kopyala",
+    "Set Primary": "Birincil Yap"
   },
   "presetFilters": {
     "customers": "Müşteriler",

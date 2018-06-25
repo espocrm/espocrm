@@ -55,6 +55,21 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             });
 
             this.header = this.getLanguage().translate('Compose Email');
+
+            if (this.getPreferences().get('emailUseExternalClient')) {
+                var attributes = this.options.attributes || {};
+
+                require('email-helper', function (EmailHelper) {
+                    var emailHelper = new EmailHelper();
+                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    document.location.href = link;
+                }.bind(this));
+
+                this.once('after:render', function () {
+                    this.actionClose();
+                }, this);
+                return;
+            }
         },
 
         createRecordView: function (model, callback) {
@@ -67,7 +82,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 columnCount: this.columnCount,
                 buttonsPosition: false,
                 selectTemplateDisabled: this.options.selectTemplateDisabled,
-                keepAttachmentsOnSelectTemplate: this.options.keepAttachmentsOnSelectTemplate,
+                removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 exit: function () {}
             };

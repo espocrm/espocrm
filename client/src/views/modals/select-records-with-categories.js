@@ -47,7 +47,11 @@ Espo.define('views/modals/select-records-with-categories', ['views/modals/select
         },
 
         setup: function () {
+            this.scope = this.entityType = this.options.scope || this.scope;
+            this.categoryScope = this.categoryScope || this.scope + 'Category';
+
             Dep.prototype.setup.call(this);
+
             this.categoriesDisabled = this.categoriesDisabled ||
                                    this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
                                    !this.getAcl().checkScope(this.categoryScope);

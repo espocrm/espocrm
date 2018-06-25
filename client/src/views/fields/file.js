@@ -32,7 +32,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         type: 'file',
 
-        listTemplate: 'fields/file/detail',
+        listTemplate: 'fields/file/list',
 
         detailTemplate: 'fields/file/detail',
 
@@ -108,6 +108,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 data.sourceList = this.sourceList;
             }
 
+            data.valueIsSet = this.model.has(this.idName);
+
             return data;
         },
 
@@ -122,7 +124,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     var $target;
                     if (this.isUploading) {
                         $target = this.$el.find('.gray-box');
@@ -139,7 +141,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         validateReady: function () {
             if (this.isUploading) {
                 var $target = this.$el.find('.gray-box');
-                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg, $target);
                 return true;
             }
@@ -227,7 +229,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>'; 
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>';
             }
             return preview;
         },
@@ -331,7 +333,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
             if (exceedsMaxFileSize) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                          .replace('{field}', this.getLabelText())
                           .replace('{max}', maxFileSize);
                 this.showValidationMessage(msg, '.attachment-button label');
                 return;
@@ -361,7 +363,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('file', result);
                         attachment.set('field', this.name);
 
-                        attachment.save().then(function () {
+                        attachment.save({}, {timeout: 0}).then(function () {
                             this.isUploading = false;
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');

@@ -39,6 +39,8 @@ class ActionHistoryRecord extends Record
 
     protected $listCountQueryDisabled = true;
 
+    protected $forceSelectAllAttributes = true;
+
     public function loadParentNameFields(\Espo\ORM\Entity $entity)
     {
         if ($entity->get('targetId') && $entity->get('targetType')) {

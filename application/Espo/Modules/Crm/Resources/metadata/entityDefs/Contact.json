@@ -1,7 +1,8 @@
 {
     "fields": {
         "name": {
-            "type": "personName"
+            "type": "personName",
+            "isPersonalData": true
         },
         "salutationName": {
             "type": "enum",
@@ -71,18 +72,21 @@
             "type": "text"
         },
         "emailAddress": {
-            "type": "email"
+            "type": "email",
+            "isPersonalData": true
         },
         "phoneNumber": {
             "type": "phone",
             "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
+            "defaultType": "Mobile",
+            "isPersonalData": true
         },
         "doNotCall": {
             "type": "bool"
         },
         "address": {
-            "type": "address"
+            "type": "address",
+            "isPersonalData": true
         },
         "addressStreet": {
             "type": "text",
@@ -115,7 +119,8 @@
             "columns": {
                 "role": "contactRole",
                 "isInactive": "contactIsInactive"
-            }
+            },
+            "orderBy": "name"
         },
         "accountRole": {
             "type": "varchar",
@@ -162,6 +167,10 @@
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationIsSortedDisabled": true,
+            "customizationAuditedDisabled": true,
+            "customizationReadOnlyDisabled": true,
             "where": {
                 "=": {
                     "leftJoins": ["opportunities"],
@@ -280,6 +289,12 @@
             "layoutListDisabled": true,
             "readOnly": true,
             "view": "views/fields/link-one"
+        },
+        "targetListIsOptedOut": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
         }
     },
     "links": {
@@ -404,11 +419,14 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true,
+        "sortBy": "createdAt",
+        "asc": false,
         "textFilterFields": ["name", "emailAddress"]
     },
     "indexes": {
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        },
         "firstName": {
             "columns": ["firstName", "deleted"]
         },

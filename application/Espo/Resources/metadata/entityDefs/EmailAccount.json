@@ -78,7 +78,8 @@
         },
         "assignedUser": {
             "type": "link",
-            "required": true
+            "required": true,
+            "view": "views/fields/assigned-user"
         },
         "useImap": {
             "type": "bool",

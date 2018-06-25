@@ -52,8 +52,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         textFilterDisabled: false,
 
+        viewModeIconClassMap: {
+            list: 'glyphicon glyphicon-align-justify',
+            kanban: 'glyphicon glyphicon-equalizer icon-rotate-180'
+        },
+
         data: function () {
-            return {
+             return {
                 scope: this.scope,
                 entityType: this.entityType,
                 textFilter: this.textFilter,
@@ -64,7 +69,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 presetName: this.presetName,
                 presetFilterList: this.getPresetFilterList(),
                 leftDropdown: this.isLeftDropdown(),
-                textFilterDisabled: this.textFilterDisabled
+                textFilterDisabled: this.textFilterDisabled,
+                viewMode: this.viewMode,
+                viewModeDataList: this.viewModeDataList || [],
+                hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1
             };
         },
 
@@ -79,6 +87,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;
             }
+
+            this.viewMode = this.options.viewMode;
+            this.viewModeList = this.options.viewModeList;
 
             this.addReadyCondition(function () {
                 return this.fieldList != null && this.moreFieldList != null;
@@ -153,6 +164,44 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.model.clear();
 
             this.createFilters();
+
+            this.setupViewModeDataList();
+        },
+
+        setupViewModeDataList: function () {
+            if (!this.viewModeList) {
+                return [];
+            }
+            var list = [];
+            this.viewModeList.forEach(function (item) {
+                var o = {
+                    name: item,
+                    title: this.translate(item, 'listViewModes'),
+                    iconClass: this.viewModeIconClassMap[item]
+                };
+                list.push(o);
+            }, this);
+
+            this.viewModeDataList = list;
+        },
+
+        setViewMode: function (mode, preventLoop, toTriggerEvent) {
+            this.viewMode = mode;
+
+            if (this.isRendered()) {
+                this.$el.find('[data-action="switchViewMode"]').removeClass('active');
+                this.$el.find('[data-action="switchViewMode"][data-name="'+mode+'"]').addClass('active');
+            } else {
+                if (this.isBeingRendered() && !preventLoop) {
+                    this.once('after:render', function () {
+                        this.setViewMode(mode, true);
+                    });
+                }
+            }
+
+            if (toTriggerEvent) {
+                this.trigger('change-view-mode', mode);
+            }
         },
 
         isLeftDropdown: function () {
@@ -279,6 +328,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 e.stopPropagation();
                 this.search();
                 this.manageLabels();
+            },
+            'click [data-action="switchViewMode"]': function (e) {
+                var mode = $(e.currentTarget).data('name');
+
+                if (mode === this.viewMode) return;
+
+                this.setViewMode(mode, false, true);
             }
         },
 

@@ -1,0 +1,101 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dinamikus logika",
+    "Name": "Név",
+    "Label": "Címke",
+    "Type": "típus"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Egyik sem",
+      "javascript: return this.dateTime.getNow(1);": "Most",
+      "javascript: return this.dateTime.getNow(5);": "Most (5 m)",
+      "javascript: return this.dateTime.getNow(15);": "Most (15 m)",
+      "javascript: return this.dateTime.getNow(30);": "Most (30 m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+ 6 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+ 11 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 óra",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 nap",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 hét"
+    },
+    "dateDefault": {
+      "": "Egyik sem",
+      "javascript: return this.dateTime.getToday();": "Ma",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 nap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 hét",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+ 2 hét",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 hét",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+ 2 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+ 3 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+ 5 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+ 6 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+ 7 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+ 10 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+ 11 hónap",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 év"
+    }
+  },
+  "tooltips": {
+    "audited": "A frissítések naplózásra kerülnek.",
+    "required": "A mező kötelező lesz. Nem lehet üresen hagyni.",
+    "default": "A létrehozáskor alapértelmezett érték lesz.",
+    "min": "Minimális elfogadható érték.",
+    "max": "Maximális elfogadható érték.",
+    "seeMoreDisabled": "Ha nincs bejelölve, a hosszú szövegek lerövidülnek.",
+    "lengthOfCut": "Mennyi ideig lehet a szöveg előtt vágni.",
+    "maxLength": "Max elfogadható szöveghossz.",
+    "before": "A dátumértéknek meg kell felelnie a megadott mező dátumértékének.",
+    "after": "A dátumértéknek a megadott mező dátumértékének után kell lennie.",
+    "readOnly": "A mező értékét a felhasználó nem határozhatja meg. De kiszámítható a képlet szerint.",
+    "maxFileSize": "Ha üres vagy 0, akkor nincs korlátozás."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "utca",
+      "city": "Város",
+      "state": "Állapot",
+      "country": "Ország",
+      "postalCode": "Irányítószám",
+      "map": "Térkép"
+    },
+    "personName": {
+      "salutation": "Üdvözlés",
+      "first": "Első",
+      "last": "Utolsó"
+    },
+    "currency": {
+      "converted": "(Konvertált)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Dátum"
+    }
+  }
+}

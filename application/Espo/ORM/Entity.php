@@ -413,6 +413,12 @@ abstract class Entity implements IEntity
         $this->fetchedValuesContainer = $this->valuesContainer;
     }
 
+    public function setAsNotFetched()
+    {
+        $this->isFetched = false;
+        $this->resetFetchedValues();
+    }
+
     public function populateDefaults()
     {
         foreach ($this->fields as $field => $defs) {

@@ -50,6 +50,9 @@
         "sharedCalendarUserList": {
             "type": "jsonArray"
         },
+        "calendarViewDataList": {
+            "type": "jsonArray"
+        },
         "presetFilters": {
             "type": "jsonObject"
         },
@@ -166,6 +169,15 @@
             "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
             "tooltip": true
+        },
+        "emailUseExternalClient": {
+            "type": "bool"
+        },
+        "scopeColorsDisabled": {
+            "type": "bool"
+        },
+        "tabColorsDisabled": {
+            "type": "bool"
         }
     }
 }

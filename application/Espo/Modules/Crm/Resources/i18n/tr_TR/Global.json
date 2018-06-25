@@ -102,11 +102,6 @@
     "addressStreet": "Sokak",
     "billingAddressMap": "Harita",
     "addressMap": "Harita",
-    "shippingAddressCity": "City (Shipping)",
-    "shippingAddressStreet": "Street (Shipping)",
-    "shippingAddressCountry": "Country (Shipping)",
-    "shippingAddressState": "State (Shipping)",
-    "shippingAddressPostalCode": "Postal Code (Shipping)",
     "shippingAddressMap": "Harita (Sevkiyat)"
   },
   "options": {

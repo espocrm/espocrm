@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Názov",
+    "body": "Telo",
+    "entityType": "Typ entity",
+    "header": "Hlavička",
+    "footer": "Päta",
+    "leftMargin": "Ľavý okraj",
+    "topMargin": "Horný okraj",
+    "rightMargin": "Pravý okraj",
+    "bottomMargin": "Spodný okraj",
+    "printFooter": "Tlačiť pätu",
+    "footerPosition": "Pozícia päty",
+    "variables": "Dostupné náhrady",
+    "pageOrientation": "Orientácia stránky",
+    "pageFormat": "Formát papiera"
+  },
+  "labels": {
+    "Create Template": "Vytvoriť šablónu"
+  },
+  "tooltips": {
+    "footer": "Použiť {pageNumber} na tlač čísla strany.",
+    "variables": "Nakopírujte požadovanú náhradu do hlavičky, tela a päty."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Na výšku",
+      "Landscape": "Na šírku"
+    },
+    "placeholders": {
+      "today": "Dnes (dátum)",
+      "now": "Teraz (dátum a čas)"
+    }
+  }
+}

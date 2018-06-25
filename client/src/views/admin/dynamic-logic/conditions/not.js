@@ -38,7 +38,9 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
             return {
                 viewKey: this.viewKey,
                 operator: this.operator,
-                hasItem: this.hasView(this.viewKey)
+                hasItem: this.hasView(this.viewKey),
+                level: this.level,
+                groupOperator: this.getGroupOperator()
             };
         },
 
@@ -60,6 +62,8 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
         removeItem: function () {
             var key = this.getKey();
             this.clearView(key);
+
+            this.controlAddItemVisibility();
         },
 
         getKey: function () {
@@ -78,13 +82,29 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
         },
 
         fetch: function () {
-            var value = this.getView(this.viewKey).fetch();
+            var view = this.getView(this.viewKey);
+            if (!view) return {
+                type: 'and',
+                value: []
+            };
+
+            var value = view.fetch();
+
+            console.log(value);
 
             return {
                 type: this.operator,
                 value: value
             };
         },
+
+        controlAddItemVisibility: function () {
+            if (this.getView(this.getKey())) {
+                this.$el.find(' > .group-bottom').addClass('hidden');
+            } else {
+                this.$el.find(' > .group-bottom').removeClass('hidden');
+            }
+        }
 
     });
 

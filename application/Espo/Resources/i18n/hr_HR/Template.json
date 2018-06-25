@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Ime",
+    "body": "Sadržaj",
+    "entityType": "Vrsta entiteta",
+    "leftMargin": "Lijeva margina",
+    "topMargin": "Gornja margina",
+    "rightMargin": "Desna margina",
+    "bottomMargin": "Donja margina",
+    "printFooter": "Štampaj footer",
+    "footerPosition": "Pozicija footera",
+    "variables": "Dostupni zapisi",
+    "pageOrientation": "Orijentacija stranice",
+    "pageFormat": "Format stranice"
+  },
+  "labels": {
+    "Create Template": "Napravi šablonu"
+  },
+  "tooltips": {
+    "footer": "Koristiti {pageNumber} za ispis stranice određenog broja."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portret",
+      "Landscape": "Pejzaž"
+    }
+  }
+}

@@ -63,12 +63,19 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     view.render();
                 }, this);
             } else {
+                var teamIdList = null;
+
+                if (~['basicWeek', 'month', 'basicDay'].indexOf(mode)) {
+                    teamIdList = this.getOption('teamsIds');
+                }
+
                 this.createView('calendar', 'crm:views/calendar/calendar', {
                     mode: mode,
                     el: this.options.el + ' > .calendar-container',
                     header: false,
                     enabledScopeList: this.getOption('enabledScopeList'),
-                    containerSelector: this.options.el
+                    containerSelector: this.options.el,
+                    teamIdList: teamIdList
                 }, function (view) {
                     this.listenTo(view, 'view', function () {
                         if (this.getOption('mode') === 'month') {

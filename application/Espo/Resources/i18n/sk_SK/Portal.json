@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "Názov",
+    "portalRoles": "Role",
+    "isActive": "Je aktívny",
+    "isDefault": "Je predvolený",
+    "tabList": "Záložkový zoznam",
+    "quickCreateList": "Rýchle vytvorenie zoznamu",
+    "theme": "Téma",
+    "language": "Jazyk",
+    "dashboardLayout": "Rozloženie plochy",
+    "dateFormat": "Formát dátumu",
+    "timeFormat": "Formát času",
+    "timeZone": "Časová zóna",
+    "weekStart": "Prvý deň týždňa",
+    "defaultCurrency": "Predvolená mena",
+    "customUrl": "Vlastná URL",
+    "customId": "Vlastné ID"
+  },
+  "links": {
+    "users": "Používatelia",
+    "portalRoles": "Role",
+    "notes": "Poznámky"
+  },
+  "tooltips": {
+    "portalRoles": "Špecifikované portálové role budú aplikované na všetkých používateľov tohoto portálu."
+  },
+  "labels": {
+    "Create Portal": "Vytvoriť portál",
+    "User Interface": "Používateľské rozhranie",
+    "General": "Všeobecné",
+    "Settings": "Nastavenia"
+  }
+}

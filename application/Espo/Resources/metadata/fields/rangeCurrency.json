@@ -15,7 +15,5 @@
    "notMergeable": true,
    "notCreatable": true,
    "filter": false,
-   "fieldDefs": {
-      "notStorable": true
-   }
+   "skipOrmDefs": true
 }

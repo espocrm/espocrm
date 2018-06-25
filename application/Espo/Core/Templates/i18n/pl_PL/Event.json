@@ -1,5 +1,20 @@
 {
-    "labels": {
-        "Create {entityType}": "Utwórz {entityTypeTranslated}"
+  "fields": {
+    "dateStart": "Data rozpoczęcia",
+    "dateEnd": "Data zakończenia",
+    "duration": "Czas trwania",
+    "reminders": "Przypomnienia"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planowane"
     }
+  },
+  "labels": {
+    "Create {entityType}": "Utwórz {entityTypeTranslated}",
+    "Schedule {entityType}": "Zaplanuj {entityTypeTranslated} "
+  },
+  "presetFilters": {
+    "planned": "Planowane"
+  }
 }

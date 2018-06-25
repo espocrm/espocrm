@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "Cím"
+  },
+  "links": {
+    "meetings": "találkozók",
+    "calls": "felhívja",
+    "tasks": "feladatok"
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} létrehozása"
+  }
+}

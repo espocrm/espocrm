@@ -1,0 +1,17 @@
+{
+  "links": {
+    "users": "Korisnici"
+  },
+  "labels": {
+    "Access": "Pristup",
+    "Create PortalRole": "Stvoriti Portal ulogu",
+    "Scope Level": "Nivo obuhvata",
+    "Field Level": "Nivo polja"
+  },
+  "fields": {
+    "exportPermission": "Dozvola Izvoza"
+  },
+  "tooltips": {
+    "exportPermission": "Određuje da li portalski korisnik ima pravo izvoza podataka."
+  }
+}

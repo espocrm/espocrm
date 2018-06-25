@@ -1,3 +1,4 @@
 {
-   "controller": "controllers/stream"
+   "controller": "controllers/stream",
+   "iconClass": "far fa-newspaper"
 }

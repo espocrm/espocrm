@@ -1,23 +1,18 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
     "storeSentEmails": "Zapisz wysłane wiadomości",
     "startAt": "Data rozpoczęcia",
     "fromAddress": "Z adresu",
     "fromName": "Od",
-    "replyToAddress": "Reply-to Address",
-    "replyToName": "Reply-to Name",
     "campaign": "Kampania",
     "emailTemplate": "Szablon wiadomości",
     "inboundEmail": "Konto pocztowe",
     "targetLists": "Listy docelowe",
-    "excludingTargetLists": "Excluding Target Lists",
     "optOutEntirely": "Wypisz się całkowicie"
   },
   "links": {
     "targetLists": "Listy docelowe",
-    "excludingTargetLists": "Excluding Target Lists",
     "queueItems": "Elementy kolejki",
     "campaign": "Kampania",
     "emailTemplate": "Szablon wiadomości",
@@ -42,8 +37,10 @@
     "testSent": "Wiadomość testowa powinna być wysłana"
   },
   "tooltips": {
-    "optOutEntirely": "Email addresses of recipients that unsubscribed will be marked as opted out and they will not receive any mass emails anymore.",
     "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",
     "excludingTargetLists": "Adresaci, którzy nie powinni otrzymać wiadomości."
+  },
+  "presetFilters": {
+    "complete": "Ukończone"
   }
 }

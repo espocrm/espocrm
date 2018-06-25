@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Rovná sa",
+      "notEquals": "Nerovná sa",
+      "greaterThan": "Väčší ako",
+      "lessThan": "Menší ako",
+      "greaterThanOrEquals": "Väčší ako alebo rovný",
+      "lessThanOrEquals": "Menší alebo rovný",
+      "in": "V",
+      "notIn": "Nie v",
+      "inPast": "V minulosti",
+      "inFuture": "V budúcnosti",
+      "isToday": "Je dnes",
+      "isTrue": "Je pravda",
+      "isFalse": "Je nepravda",
+      "isEmpty": "Je prázdny",
+      "isNotEmpty": "Nie je prázdny",
+      "contains": "Obsahuje",
+      "has": "Obsahuje",
+      "notContains": "Neobsahuje",
+      "notHas": "Neobsahuje"
+    }
+  },
+  "labels": {
+    "Field": "Pole"
+  }
+}

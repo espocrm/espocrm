@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Ime",
+    "target": "Meta",
+    "sentAt": "Datum slanja",
+    "attemptCount": "Pokušaji",
+    "emailAddress": "Email adresa",
+    "massEmail": "Masovna e-pošta",
+    "isTest": "Je test"
+  },
+  "links": {
+    "target": "Meta",
+    "massEmail": "Masovna e-pošta"
+  },
+  "options": {
+    "status": {
+      "Pending": "Čeka",
+      "Sent": "Poslano",
+      "Failed": "Neuspješno",
+      "Sending": "Slanje"
+    }
+  },
+  "presetFilters": {
+    "pending": "Čeka",
+    "sent": "Poslano",
+    "failed": "Neuspješno"
+  }
+}

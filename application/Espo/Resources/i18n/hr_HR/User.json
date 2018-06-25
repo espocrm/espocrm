@@ -1,0 +1,99 @@
+{
+  "fields": {
+    "name": "Ime",
+    "userName": "Korisničko ime",
+    "title": "Naslov",
+    "isAdmin": "Je admin",
+    "defaultTeam": "Početni tim",
+    "emailAddress": "E-pošta",
+    "phoneNumber": "Telefon",
+    "roles": "Uloge",
+    "portals": "Portali",
+    "portalRoles": "Uloge za portal",
+    "teamRole": "Položaj",
+    "password": "Lozinka",
+    "currentPassword": "Trenutna lozinka",
+    "passwordConfirm": "Potvrdite lozinku",
+    "newPassword": "Nova lozinka",
+    "newPasswordConfirm": "Potvrdite novu lozinku",
+    "isActive": "Je aktivno",
+    "isPortalUser": "Je korisnik portala",
+    "contact": "Kontakt",
+    "accounts": "Tvrtke",
+    "account": "Tvrtka (osnovno)",
+    "sendAccessInfo": "Pošaljite e-poštu sa pristupnim podacima za korisnike",
+    "gender": "Spol",
+    "position": "Pozicija u timu",
+    "ipAddress": "IP adresa",
+    "passwordPreview": "Pregled lozinke",
+    "isSuperAdmin": "Je Super Admin"
+  },
+  "links": {
+    "teams": "Timovi",
+    "roles": "Uloge",
+    "notes": "Bilješke",
+    "portals": "Portali",
+    "portalRoles": "Uloge za portal",
+    "contact": "Kontakt",
+    "accounts": "Tvrtke",
+    "account": "Tvrtka (osnovno)",
+    "tasks": "Zadaci"
+  },
+  "labels": {
+    "Create User": "Napravi korisnika",
+    "Generate": "Generiraj",
+    "Access": "Pristup",
+    "Preferences": "Postavke",
+    "Change Password": "Promjena lozinke",
+    "Teams and Access Control": "Timovi i kontrola pristupa",
+    "Forgot Password?": "Zaboravili ste lozinku?",
+    "Password Change Request": "Zahtjev za promjenu lozinke",
+    "Email Address": "Adresa e-pošte",
+    "External Accounts": "Eksterni računi",
+    "Email Accounts": "Nalozi e-pošte",
+    "Create Portal User": "Napravi korisnika portala",
+    "Proceed w/o Contact": "Nastavite bez kontakta"
+  },
+  "tooltips": {
+    "defaultTeam": "Svi zapisi napravljeni od strane ovog korisnika će inicijalno biti u vezi sa ovim timom.",
+    "userName": "Slova AZ, broj 0-9, točke, crtice, @-znak i donje crte su dozvoljeni.",
+    "isAdmin": "Admin korisnik može pristupiti svemu.",
+    "isActive": "Ukoliko nije označeno, korisnik se neće moći prijaviti.",
+    "teams": "Timovi kojima ovaj korisnik pripada. Nivo kontrole pristupa je naslijeđen od uloga tima.",
+    "roles": "Dodatne pristupne uloge. Koristite ovo ako korisnik ne pripada nijednoj ekipi ili treba da prošire nivo kontrole pristupa isključivo za ovog korisnika.",
+    "portalRoles": "Dodatne portal uloge. Koristite za veći nivo kontrole pristupa isključivo ovog korisnika.",
+    "portals": "Portali kojima korisnik ima pristup."
+  },
+  "messages": {
+    "passwordWillBeSent": "Lozinka će biti poslana na adresu korisnika.",
+    "accountInfoEmailSubject": "EspoCRM Korisnik - podaci za pristup",
+    "accountInfoEmailBody": "Vaši podaci za pristup:\n\nKorisničko ime: {userName} \nLozinka: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Upit za promjenu lozinke",
+    "passwordChanged": "Lozinka je promijenjena",
+    "userCantBeEmpty": "Korisničko ime ne može biti prazno",
+    "wrongUsernamePasword": "Pogrešno korisničko ime/lozinka",
+    "emailAddressCantBeEmpty": "Adresa e-pošte ne može biti prazna",
+    "userNameEmailAddressNotFound": "Korisničko ime/Adresa e-pošte nije pronađena",
+    "forbidden": "Zabranjeno, pokušajte kasnije",
+    "uniqueLinkHasBeenSent": "Jedinstvena URL adresa je poslana na određenu adresu.",
+    "passwordChangedByRequest": "Lozinka je promijenjena.",
+    "setupSmtpBefore": "Potrebno je da <a href=\"{url}\">SMTP postavke</a>href=\"{url}\"> budu unijete i točne kako bi lozinka bila poslana.",
+    "passwordChangeLinkEmailBody": "Možete promijeniti lozinku prateći ovaj link {link}. Ovaj jedinstveni URL traje samo kratko vrijeme.",
+    "userNameExists": "Korisničko ime već postoji"
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Samo moj tim"
+  },
+  "presetFilters": {
+    "active": "Aktivno",
+    "activePortal": "Portal aktivan"
+  },
+  "options": {
+    "gender": {
+      "": "Nije postavljeno",
+      "Male": "Muški",
+      "Female": "Ženski",
+      "Neutral": "Neutralan"
+    }
+  }
+}

@@ -63,6 +63,21 @@ class User extends Record
         'accountsIds'
     ];
 
+    protected $mandatorySelectAttributeList = [
+        'isPortalUser',
+        'isActive',
+        'userName',
+        'isAdmin'
+    ];
+
+    protected $linkSelectParams = array(
+        'targetLists' => array(
+            'additionalColumns' => array(
+                'optedOut' => 'isOptedOut'
+            )
+        )
+    );
+
     protected function getMailSender()
     {
         return $this->getContainer()->get('mailSender');
@@ -334,9 +349,9 @@ class User extends Record
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             if (
-                ($user->get('isActive') && $user->isFieldChanged('isActive') && !$user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->get('isPortalUser'))
                 ||
-                (!$user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+                (!$user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
             ) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
@@ -346,9 +361,9 @@ class User extends Record
         }
         if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
             if (
-                ($user->get('isActive') && $user->isFieldChanged('isActive') && $user->get('isPortalUser'))
+                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->get('isPortalUser'))
                 ||
-                ($user->get('isPortalUser') && $user->isFieldChanged('isPortalUser'))
+                ($user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
             ) {
                 $portalUserCount = $this->getPortalUserCount();
                 if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
@@ -554,5 +569,52 @@ class User extends Record
             }
         }
     }
-}
 
+    public function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+        $this->loadLastAccessField($entity);
+    }
+
+    public function loadLastAccessField(Entity $entity)
+    {
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        if (in_array('lastAccess', $forbiddenFieldList)) return;
+
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'lastAccess'])->where([
+            'userId' => $entity->id
+        ])->order('lastAccess', true)->findOne();
+
+        $lastAccess = null;
+
+        if ($authToken) {
+            $lastAccess = $authToken->get('lastAccess');
+        }
+
+        $dt = null;
+
+        if ($lastAccess) {
+            try {
+                $dt = new \DateTime($lastAccess);
+            } catch (\Exception $e) {}
+        }
+
+        $where = [
+            'userId' => $entity->id,
+            'isDenied' => false
+        ];
+
+        if ($dt) {
+            $where['requestTime>'] = $dt->format('U');
+        }
+
+        $authLogRecord = $this->getEntityManager()->getRepository('AuthLogRecord')
+            ->select(['id', 'createdAt'])->where($where)->order('requestTime', true)->findOne();
+
+        if ($authLogRecord) {
+            $lastAccess = $authLogRecord->get('createdAt');
+        }
+
+        $entity->set('lastAccess', $lastAccess);
+    }
+}

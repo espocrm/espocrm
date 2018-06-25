@@ -18,8 +18,6 @@
     "Clear Cache": "Borrar Cache",
     "Rebuild": "Reconstruir",
     "Teams": "Equipos",
-    "Roles": "Roles",
-    "Portal": "Portal",
     "Portals": "Portales",
     "Portal Roles": "Roles",
     "Outbound Emails": "Correos Salientes",
@@ -30,7 +28,7 @@
     "Import": "Importación",
     "Layout Manager": "Formatos",
     "User Interface": "Interfaz de Usuario",
-    "Auth Tokens": "Tokens",
+    "Auth Tokens": "Clave de Aut.",
     "Authentication": "Autorización",
     "Currency": "Moneda",
     "Integrations": "Integracion",
@@ -56,7 +54,8 @@
     "Email Filters": "Filtros de Correo",
     "Portal Users": "Usuarios",
     "Action History": "Historial",
-    "Label Manager": "Etiquetas"
+    "Label Manager": "Etiquetas",
+    "Auth Log": "Historial de Autorizaciones"
   },
   "layouts": {
     "list": "Lista",
@@ -69,7 +68,13 @@
     "sidePanelsDetail": "Paneles auxiliares (detalle)",
     "sidePanelsEdit": "Paneles auxiliares (editar)",
     "sidePanelsDetailSmall": "Paneles auxiliares (detalle pequeño)",
-    "sidePanelsEditSmall": "Paneles auxiliares (editar pequeño)"
+    "sidePanelsEditSmall": "Paneles auxiliares (editar pequeño)",
+    "detailPortal": "Detalle (Portal)",
+    "detailSmallPortal": "Detalle (Pequeño, Portal)",
+    "listSmallPortal": "Lista (Pequeño, Portal)",
+    "listPortal": "Lista (Portal)",
+    "relationshipsPortal": "Paneles de Relaciones (Portal)",
+    "kanban": "Tarjetas"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -82,22 +87,17 @@
     "bool": "Sí/No",
     "currency": "Moneda",
     "date": "Fecha",
-    "datetime": "Fecha/Hora",
-    "datetimeOptional": "Fecha/FechaHora",
     "email": "Correo",
     "enum": "Lista",
     "enumInt": "Lista Enteros",
     "enumFloat": "Lista Numérica",
     "float": "Numérico",
-    "int": "Entero",
     "link": "Liga",
     "linkMultiple": "Ligas",
     "linkParent": "Liga Orígen",
-    "multienim": "Lista Múltiple",
     "phone": "Teléfono",
     "text": "Texto",
     "url": "Dirección Web",
-    "varchar": "Varchar",
     "file": "Archivo",
     "image": "Imagen",
     "multiEnum": "Lista Múltiple",
@@ -105,11 +105,13 @@
     "rangeInt": "Rango Entero",
     "rangeFloat": "Rango Numérico",
     "rangeCurrency": "Rango de Moneda",
-    "wysiwyg": "Wysiwyg",
     "map": "Mapa",
     "currencyConverted": "Moneda (Convertida)",
-    "number": "Numérico",
-    "colorpicker": "Selector de Colores"
+    "colorpicker": "Selector de Colores",
+    "int": "Entero",
+    "number": "Número (auto-incremeto)",
+    "jsonArray": "Arreglo Json",
+    "jsonObject": "Objeto Json"
   },
   "fields": {
     "type": "Tipo",
@@ -151,7 +153,9 @@
     "dynamicLogicOptions": "Opciones condicionales",
     "probabilityMap": "Probabilidades de la Etapa (%)",
     "readOnly": "Solo-lectura",
-    "noEmptyString": "No se permite el campo vacío"
+    "noEmptyString": "No se permite el campo vacío",
+    "maxFileSize": "Tamaño máximo (Mb)",
+    "isPersonalData": "Son Datos Personales"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -165,7 +169,11 @@
     "upgradeDone": "EspoCRM fué actualizado a la versión <strong>{version}</strong>.",
     "upgradeBackup": "Le recomendamos hacer un respaldo de sus datos y sistema EspoCRM antes de actualizarlo.",
     "thousandSeparatorEqualsDecimalMark": "El caracter separador de miles no puede ser el mismo que el separador decimal.",
-    "userHasNoEmailAddress": "Este usuario no tiene correo de contacto."
+    "userHasNoEmailAddress": "Este usuario no tiene correo de contacto.",
+    "newVersionIsAvailable": "Hay una nueva versión disponible de EspoCRM. ({latestVersion}).",
+    "newExtensionVersionIsAvailable": "Hay una nueva versión de {extensionName} disponible. ({latestversion}).",
+    "cronIsNotConfigured": "Las tareas programadas no están funcionando.  Los correos, notificaciones y recordatorios no están operando.  Favor de seguir estas <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instrucciones</a> para configurar el cron job.",
+    "uninstallConfirmation": "¿Realmente quiere desinstalar esta extensión?"
   },
   "descriptions": {
     "settings": "Configuración del sistema de aplicación.",
@@ -196,7 +204,8 @@
     "entityManager": "Crear y editar entidades personalizadas.  Administrar campos y relaciones.",
     "emailFilters": "Los mensajes de correo que cumplan con el filtro indicado, no se importarán.",
     "actionHistory": "Historial de acciones del usuario.",
-    "labelManager": "Personalizar etiquetas de aplicación"
+    "labelManager": "Personalizar etiquetas de aplicación",
+    "authLog": "Historial de Ingresos"
   },
   "options": {
     "previewSize": {

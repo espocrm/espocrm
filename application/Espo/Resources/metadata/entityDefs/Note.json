@@ -133,7 +133,6 @@
             "Dead" : "danger"
         },
         "Case": {
-            "New" : "primary",
             "Assigned" : "primary",
             "Pending" : "default",
             "Closed" : "success",

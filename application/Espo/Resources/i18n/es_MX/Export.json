@@ -3,11 +3,5 @@
     "fieldList": "Lista de Campos",
     "exportAllFields": "Exportar todos los campos",
     "format": "Formato"
-  },
-  "options": {
-    "format": {
-      "csv": "CSV",
-      "xlsx": "XLSX (Excel)"
-    }
   }
 }

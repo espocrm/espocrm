@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Dokumentummappa létrehozása",
+    "Manage Categories": "Mappák kezelése",
+    "Documents": "Dokumentumok"
+  },
+  "links": {
+    "documents": "Dokumentumok"
+  }
+}

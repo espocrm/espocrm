@@ -14,7 +14,8 @@
     "boolFilterList": "Filtros Adicionales",
     "sortBy": "Campo para Ordenar",
     "sortDirection": "Ordenar (dirección)",
-    "expandedLayout": "Formato"
+    "expandedLayout": "Formato",
+    "dateFilter": "Filtro de Fecha"
   },
   "options": {
     "mode": {

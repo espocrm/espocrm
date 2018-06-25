@@ -1,17 +1,32 @@
 {
-   "params":[
+   "params": [
       {
          "name":"required",
          "type":"bool",
          "default":false
       }
    ],
+   "actualFields":[
+      "isOptedOut",
+      ""
+   ],
    "notActualFields":[
       "data"
    ],
+   "fields":{
+      "isOptedOut":{
+         "type": "bool",
+         "notStorable": true,
+         "layoutDetailDisabled": true,
+         "customizationDefaultDisabled": true,
+         "customizationReadOnlyDisabled": true
+      }
+   },
    "notCreatable": true,
    "filter": true,
    "fieldDefs":{
       "notStorable":true
-   }
+   },
+   "textFilter": true,
+   "personalData": true
 }

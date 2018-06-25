@@ -36,7 +36,7 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Opportunity extends \Espo\Services\Record
 {
-    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null)
+    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false)
     {
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
@@ -46,19 +46,27 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
+        $lostStageList = $this->getLostStageList();
+
         $pdo = $this->getEntityManager()->getPDO();
 
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
         $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
 
+        $stageField = 'stage';
+        if ($useLastStage) {
+            $stageField = 'lastStage';
+        }
+
         $selectParams = [
-            'select' => ['stage', ['SUM:amountConverted', 'amount']],
+            'select' => [$stageField, ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost'
+                [$stageField . '!=' => $lostStageList],
+                [$stageField . '!=' => null]
             ],
-            'orderBy' => 'LIST:stage:' . implode(',', $options),
-            'groupBy' => ['stage']
+            'orderBy' => 'LIST:'.$stageField.':' . implode(',', $options),
+            'groupBy' => [$stageField]
         ];
 
         if ($dateFilter !== 'ever') {
@@ -81,7 +89,7 @@ class Opportunity extends \Espo\Services\Record
 
         $result = array();
         foreach ($rows as $row) {
-            $result[$row['stage']] = floatval($row['amount']);
+            $result[$row[$stageField]] = floatval($row['amount']);
         }
 
         return $result;
@@ -109,7 +117,7 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => ['leadSource', ['SUM:amountWeightedConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost',
+                'stage!=' => $this->getLostStageList(),
                 ['leadSource!=' => ''],
                 ['leadSource!=' => null]
             ],
@@ -162,8 +170,12 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => ['stage', ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage!=' => 'Closed Lost',
-                'stage!=' => 'Closed Won'
+                [
+                    'stage!=' => $this->getLostStageList()
+                ],
+                [
+                    'stage!=' => $this->getWonStageList()
+                ]
             ],
             'orderBy' => 'LIST:stage:' . implode(',', $options),
             'groupBy' => ['stage']
@@ -175,6 +187,8 @@ class Opportunity extends \Espo\Services\Record
                 'closeDate<' => $dateTo
             ];
         }
+
+        $stageIgnoreList = array_merge($this->getLostStageList(), $this->getWonStageList());
 
         $selectManager->applyAccess($selectParams);
 
@@ -189,6 +203,7 @@ class Opportunity extends \Espo\Services\Record
 
         $result = array();
         foreach ($rows as $row) {
+            if (in_array($row['stage'], $stageIgnoreList)) continue;
             $result[$row['stage']] = floatval($row['amount']);
         }
 
@@ -212,7 +227,7 @@ class Opportunity extends \Espo\Services\Record
         $selectParams = [
             'select' => [['MONTH:closeDate', 'month'], ['SUM:amountConverted', 'amount']],
             'whereClause' => [
-                'stage' => 'Closed Won'
+                'stage' => $this->getWonStageList()
             ],
             'orderBy' => 1,
             'groupBy' => ['MONTH:closeDate']
@@ -316,5 +331,107 @@ class Opportunity extends \Espo\Services\Record
                 ];
         }
         return [0, 0];
+    }
+
+    public function massConvertCurrency($field, $targetCurrency, $params, $baseCurrency, $rates)
+    {
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        if (in_array($field, $forbiddenFieldList)) {
+            throw new Forbidden();
+        }
+
+        $count = 0;
+
+        $idUpdatedList = [];
+        $repository = $this->getRepository();
+
+        if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+            $p = [];
+            $p['where'] = $where;
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+        } else if (array_key_exists('ids', $params)) {
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = ['id' => $params['ids']];
+        } else {
+            throw new Error();
+        }
+
+        $collection = $repository->find($selectParams);
+
+        $currencyAttribute = $field . 'Currency';
+
+        foreach ($collection as $entity) {
+            if ($entity->get($field) === null) continue;
+
+            $currentCurrency = $entity->get($currencyAttribute);
+            $value = $entity->get($field);
+
+            if ($currentCurrency === $targetCurrency) continue;
+
+            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
+                continue;
+            }
+
+            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
+            $value = $value * $rate1;
+
+            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
+            $value = $value / $rate2;
+
+            if (!$rate2) continue;
+
+            $value = round($value, 2);
+
+            $data = [];
+            $data[$currencyAttribute] = $targetCurrency;
+
+            $data[$field] = $value;
+
+            if ($this->getAcl()->check($entity, 'edit')) {
+                $entity->set($data);
+                if ($repository->save($entity)) {
+                    $idUpdatedList[] = $entity->id;
+                    $count++;
+
+                    $this->processActionHistoryRecord('update', $entity);
+                }
+            }
+        }
+
+        return array(
+            'count' => $count
+        );
+    }
+
+    protected function getLostStageList()
+    {
+        $lostStageList = [];
+        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (empty($probabilityMap[$stage])) {
+                $lostStageList[] = $stage;
+            }
+        }
+        return $lostStageList;
+    }
+
+    protected function getWonStageList()
+    {
+        $wonStageList = [];
+        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        foreach ($stageList as $stage) {
+            if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] == 100) {
+                $wonStageList[] = $stage;
+            }
+        }
+        return $wonStageList;
     }
 }

@@ -73,31 +73,48 @@ class GlobalSearch extends \Espo\Core\Services\Base
     {
         $entityTypeList = $this->getConfig()->get('globalSearchEntityList');
 
+        $hasFullTextSearch = false;
+
+        $relevanceSelectPosition = 0;
+
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
             if (!$this->getAcl()->checkScope($entityType, 'read')) {
                 continue;
             }
-            if (!$this->getMetadata()->get('scopes.' . $entityType)) {
+            if (!$this->getMetadata()->get(['scopes', $entityType])) {
                 continue;
             }
-            $params = array(
-                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
-            );
 
             $selectManager = $this->getSelectManagerFactory()->create($entityType);
+
+            $params = [
+                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
+            ];
+
+            $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
+
+            if ($fullTextSearchData) {
+                $hasFullTextSearch = true;
+                $params['select'][] = [$fullTextSearchData['where'], '_relevance'];
+            } else {
+                $params['select'][] = ['VALUE:1.1', '_relevance'];
+                $relevanceSelectPosition = count($params['select']);
+            }
+
             $selectManager->manageAccess($params);
-            $selectManager->manageTextFilter($query, $params);
+            $params['useFullTextSearch'] = true;
+            $selectManager->applyTextFilter($query, $params);
 
             $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
 
             $unionPartList[] = '' . $sql . '';
         }
         if (empty($unionPartList)) {
-            return array(
+            return [
                 'total' => 0,
                 'list' => []
-            );
+            ];
         }
 
         $pdo = $this->getEntityManager()->getPDO();
@@ -114,10 +131,15 @@ class GlobalSearch extends \Espo\Core\Services\Base
             foreach ($entityTypeList as $entityType) {
                 $entityListQuoted[] = $pdo->quote($entityType);
             }
-            $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+            if ($hasFullTextSearch) {
+                $unionSql .= " ORDER BY " . $relevanceSelectPosition . " DESC, FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+            } else {
+                $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
+            }
         } else {
             $unionSql .= " ORDER BY name";
         }
+
         $unionSql .= " LIMIT :offset, :maxSize";
 
         $sth = $pdo->prepare($unionSql);

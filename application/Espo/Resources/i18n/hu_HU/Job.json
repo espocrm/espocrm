@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "status": "Állapot",
+    "attempts": "Kísérletek balra",
+    "failedAttempts": "Sikertelen kísérletek",
+    "serviceName": "Szolgáltatás",
+    "methodName": "Módszer",
+    "scheduledJob": "Ütemezett munka",
+    "data": "Adat",
+    "method": "Módszer (elavult)",
+    "scheduledJobJob": "Ütemezett feladat neve"
+  },
+  "options": {
+    "status": {
+      "Pending": "Függőben levő",
+      "Success": "Siker",
+      "Running": "Futás",
+      "Failed": "nem sikerült"
+    }
+  }
+}

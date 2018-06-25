@@ -223,7 +223,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.mode = this.options.mode || this.mode;
 
-            this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly');
+            this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
@@ -577,10 +577,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return false;
         },
 
+        getLabelText: function () {
+            return this.options.labelText || this.translate(this.name, 'fields', this.model.name);
+        },
+
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === '') {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
                     return true;
                 }

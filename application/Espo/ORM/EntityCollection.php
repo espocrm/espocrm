@@ -37,6 +37,8 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
 
     private $position = 0;
 
+    protected $isFetched = false;
+
     protected $container = array();
 
     public function __construct($data = array(), $entityName = null, EntityFactory $entityFactory = null)
@@ -163,7 +165,9 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
         $entity = $this->entityFactory->create($this->entityName);
         if ($entity) {
             $entity->set($dataArray);
-            $entity->setAsFetched();
+            if ($this->isFetched) {
+                $entity->setAsFetched();
+            }
             return $entity;
         }
     }
@@ -248,5 +252,20 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
     public function getValueMapList()
     {
         return $this->toArray(true);
+    }
+
+    public function setAsFetched()
+    {
+        $this->isFetched = true;
+    }
+
+    public function setAsNotFetched()
+    {
+        $this->isFetched = false;
+    }
+
+    public function isFetched()
+    {
+        return $this->isFetched;
     }
 }

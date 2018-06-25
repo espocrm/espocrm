@@ -64,7 +64,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
     protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
-        $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User');
+        $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, 'User', true);
         if ($user) {
             $entity->addLinkMultipleId('users', $user->id);
             if ($addAssignedUser) {
@@ -121,7 +121,20 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc'])
+    public function loadReplyToField(Entity $entity)
+    {
+        $entity->loadLinkMultipleField('replyToEmailAddresses');
+        $names = $entity->get('replyToEmailAddressesNames');
+        if (!empty($names)) {
+            $arr = array();
+            foreach ($names as $id => $address) {
+                $arr[] = $address;
+            }
+            $entity->set('replyTo', implode(';', $arr));
+        }
+    }
+
+    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
     {
         $addressList = array();
         if (in_array('from', $fieldList) && $entity->get('from')) {
@@ -147,6 +160,14 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
         }
         if (in_array('bcc', $fieldList)) {
             $arr = explode(';', $entity->get('bcc'));
+            foreach ($arr as $address) {
+                if (!in_array($address, $addressList)) {
+                    $addressList[] = $address;
+                }
+            }
+        }
+        if (in_array('replyTo', $fieldList)) {
+            $arr = explode(';', $entity->get('replyTo'));
             foreach ($arr as $address) {
                 if (!in_array($address, $addressList)) {
                     $addressList[] = $address;
@@ -212,7 +233,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {
-                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User');
+                            $user = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($entity->get('fromEmailAddressId'), 'User', true);
                             if ($user) {
                                 $entity->set('sentById', $user->id);
                             }
@@ -303,7 +324,7 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::afterSave($entity, $options);
         if (!$entity->isNew()) {
-            if ($entity->get('parentType') && $entity->get('parentId') && $entity->isFieldChanged('parentId')) {
+            if ($entity->get('parentType') && $entity->get('parentId') && $entity->isAttributeChanged('parentId')) {
                 $replyList = $this->findRelated($entity, 'replies');
                 foreach ($replyList as $reply) {
                     if ($reply->id === $entity->id) continue;

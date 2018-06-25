@@ -3,7 +3,7 @@
     "stylesheetIframe": "client/css/espo/espo-iframe.css",
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
-    "navbarHeight": 44,
+    "navbarHeight": 43,
     "modalFooterAtTheTop": true,
     "modalFullHeight": true,
     "fontSize": 14,

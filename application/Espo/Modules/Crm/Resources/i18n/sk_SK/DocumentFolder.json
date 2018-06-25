@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Vytvoriť priečinok pre dokumenty",
+    "Manage Categories": "Spravovať priečinky",
+    "Documents": "Dokumenty"
+  },
+  "links": {
+    "documents": "Dokumenty"
+  }
+}

@@ -296,6 +296,16 @@ class Container
         );
     }
 
+    protected function loadBaseLanguage()
+    {
+        return new \Espo\Core\Utils\Language(
+            'en_US',
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('useCache')
+        );
+    }
+
     protected function loadDefaultLanguage()
     {
         return new \Espo\Core\Utils\Language(
@@ -330,8 +340,6 @@ class Container
     protected function loadFieldManager()
     {
         return new \Espo\Core\Utils\FieldManager(
-            $this->get('metadata'),
-            $this->get('language'),
             $this
         );
     }

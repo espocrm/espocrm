@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "name": "Név",
+    "emailAddress": "Email cím",
+    "status": "Állapot",
+    "assignToUser": "Hozzárendelés a felhasználóhoz",
+    "host": "Házigazda",
+    "username": "Felhasználónév",
+    "password": "Jelszó",
+    "port": "Kikötő",
+    "monitoredFolders": "Figyelt mappák",
+    "trashFolder": "Kuka mappa",
+    "createCase": "Létrehozás",
+    "reply": "Autómatikus válasz",
+    "replyEmailTemplate": "Válasz e-mail sablon",
+    "replyFromAddress": "Válasz a címről",
+    "replyToAddress": "Válasz a címre",
+    "replyFromName": "Válasz a névből",
+    "targetUserPosition": "Célozza meg a felhasználó pozícióját",
+    "fetchSince": "Fetch As",
+    "addAllTeamUsers": "Minden csapatfelhasználó számára",
+    "team": "Célcsoport",
+    "teams": "csapatok",
+    "sentFolder": "Elküldött mappa",
+    "storeSentEmails": "Elküldött e-mailek tárolása",
+    "useSmtp": "SMTP használata",
+    "smtpHost": "SMTP fogadó",
+    "smtpPort": "SMTP port",
+    "smtpAuth": "SMTP hitelesítés",
+    "smtpSecurity": "SMTP biztonság",
+    "smtpUsername": "SMTP felhasználónév",
+    "smtpPassword": "SMTP jelszó",
+    "fromName": "Névből",
+    "smtpIsShared": "Az SMTP megosztott",
+    "smtpIsForMassEmail": "Az SMTP a tömeges e-mailhez tartozik",
+    "useImap": "E-mailek lekérése"
+  },
+  "tooltips": {
+    "reply": "Értesítse az e-maileket arról, hogy e-mailjeiket megkapta.\n\n Néhány idő alatt csak egy e-mailt küldünk egy adott címzettnek a hurkolás megakadályozása érdekében.",
+    "createCase": "Automatikusan hozzon létre ügyet a bejövő e-mailekről.",
+    "replyToAddress": "Adja meg e postafiók e-mail címét, hogy a válaszok itt érkezzenek.",
+    "caseDistribution": "Az ügyek rendezésének módja. Közvetlenül a felhasználóhoz vagy a csapathoz rendelhető.",
+    "assignToUser": "A felhasználói ügyek hozzárendelésre kerülnek.",
+    "team": "Csapatügyek fognak hozzárendelni.",
+    "teams": "A csoportok e-mailjeihez hozzárendelnek.",
+    "addAllTeamUsers": "Az e-mailek megjelennek a megadott csoportok összes felhasználójának Postafiókjában.",
+    "targetUserPosition": "Meghatározott pozícióval rendelkező felhasználókat az esetekkel osztják el.",
+    "monitoredFolders": "A több mappát vesszővel kell elválasztani.",
+    "smtpIsShared": "Ha be van jelölve, akkor a felhasználók e-maileket küldhetnek az SMTP használatával. Az elérhetőséget a Szerepkörök a csoportos e-mail fiók engedélyével szabályozzák.",
+    "smtpIsForMassEmail": "Ha be van jelölve, az SMTP elérhető lesz a Mass Email-hez.",
+    "storeSentEmails": "Az elküldött e-maileket az IMAP szerveren tárolja."
+  },
+  "links": {
+    "filters": "Szűrők",
+    "emails": "e-mailek",
+    "assignToUser": "Hozzárendelés a felhasználóhoz"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktív",
+      "Inactive": "tétlen"
+    },
+    "caseDistribution": {
+      "": "Egyik sem",
+      "Direct-Assignment": "Közvetlen hozzárendelés",
+      "Least-Busy": "A legkevésbé foglalt"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "E-mail fiók létrehozása",
+    "Actions": "Hozzászólások",
+    "Main": "Fő"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nem sikerült csatlakozni az IMAP kiszolgálóhoz"
+  }
+}

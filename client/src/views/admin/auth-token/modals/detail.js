@@ -30,8 +30,9 @@ Espo.define('views/admin/auth-token/modals/detail', ['views/modals/detail'], fun
 
     return Dep.extend({
 
-        sideDisabled: true
+        sideDisabled: true,
+
+        editDisabled: true
 
     });
 });
-

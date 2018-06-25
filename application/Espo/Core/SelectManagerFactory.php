@@ -57,7 +57,7 @@ class SelectManagerFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create($entityType)
+    public function create($entityType, $user = null)
     {
         $normalizedName = Util::normilizeClassName($entityType);
 
@@ -74,7 +74,14 @@ class SelectManagerFactory
             }
         }
 
-        $selectManager = new $className($this->entityManager, $this->user, $this->acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
+        if ($user) {
+            $acl = $this->aclManager->createUserAcl($user);
+        } else {
+            $acl = $this->acl;
+            $user = $this->user;
+        }
+
+        $selectManager = new $className($this->entityManager, $user, $acl, $this->aclManager, $this->metadata, $this->config, $this->injectableFactory);
         $selectManager->setEntityType($entityType);
 
         return $selectManager;

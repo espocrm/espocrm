@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "parent": "Szülő",
+    "dateStart": "Dátum kezdete",
+    "dateEnd": "Dátum vége",
+    "duration": "tartam",
+    "status": "Állapot",
+    "reminders": "Emlékeztetők"
+  },
+  "links": {
+    "parent": "Szülő"
+  },
+  "options": {
+    "status": {
+      "Planned": "Tervezett",
+      "Not Held": "Nem tartott"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "{EntityTypeTranslated} létrehozása",
+    "Schedule {entityType}": "{EntityTypeTranslated} ütemezése"
+  },
+  "presetFilters": {
+    "planned": "Tervezett",
+    "todays": "A mai"
+  }
+}

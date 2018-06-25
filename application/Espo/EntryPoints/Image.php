@@ -197,6 +197,7 @@ class Image extends \Espo\Core\EntryPoints\Base
                 break;
         }
 
+        $targetImage = imagerotate($targetImage, array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[@exif_read_data($filePath)['Orientation'] ?: 0], 0);
 
         return $targetImage;
     }

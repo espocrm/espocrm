@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Rodič",
+    "dateStart": "Dátum začiatku",
+    "dateEnd": "Dátum konca",
+    "duration": "Trvanie",
+    "status": "Stav",
+    "reminders": "Pripomienky"
+  },
+  "links": {
+    "parent": "Rodič"
+  },
+  "options": {
+    "status": {
+      "Planned": "Plánovaný",
+      "Held": "Pozdržaný",
+      "Not Held": "Nepozdržaný"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Vytvoriť {entityTypeTranslated}",
+    "Schedule {entityType}": "Naplánovať {entityTypeTranslated}",
+    "Log {entityType}": "Protokol {entityTypeTranslated}",
+    "Set Held": "Nastav pozdržaný",
+    "Set Not Held": "Nastav nepozdržaný"
+  },
+  "massActions": {
+    "setHeld": "Nastav pozdržaný",
+    "setNotHeld": "Nastav nepozdržaný"
+  },
+  "presetFilters": {
+    "planned": "Plánovaný",
+    "held": "Pozdržaný",
+    "todays": "Dnešné"
+  }
+}

@@ -47,6 +47,8 @@ class AclManager
 
     protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
 
+    protected $userAclClassName = '\\Espo\\Core\\Acl';
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -180,9 +182,15 @@ class AclManager
 
         $impl = $this->getImplementation($scope);
 
-        $methodName = 'checkEntity' . ucfirst($action);
-        if (method_exists($impl, $methodName)) {
-            return $impl->$methodName($user, $entity, $data);
+        if (!$action) {
+            $action = 'read';
+        }
+
+        if ($action) {
+            $methodName = 'checkEntity' . ucfirst($action);
+            if (method_exists($impl, $methodName)) {
+                return $impl->$methodName($user, $entity, $data);
+            }
         }
 
         return $impl->checkEntity($user, $entity, $data, $action);
@@ -279,5 +287,11 @@ class AclManager
     {
         return $this->checkUserPermission($user, $target, 'assignmentPermission');
     }
-}
 
+    public function createUserAcl(User $user)
+    {
+        $className = $this->userAclClassName;
+        $acl = new $className($this, $user);
+        return $acl;
+    }
+}

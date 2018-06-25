@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Ime",
+    "parent": "Nadređeni",
+    "dateStart": "Početni datum",
+    "dateEnd": "Završni datum",
+    "direction": "Smjer",
+    "duration": "Trajanje",
+    "description": "Opis",
+    "users": "Korisnici",
+    "contacts": "Kontakti",
+    "leads": "Izvori",
+    "reminders": "Podsjetnici",
+    "account": "Tvrtka",
+    "acceptanceStatus": "Status prihvaćanja"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planiran",
+      "Held": "Održan",
+      "Not Held": "Nije održano"
+    },
+    "direction": {
+      "Outbound": "Odlazna",
+      "Inbound": "Dolazna"
+    },
+    "acceptanceStatus": {
+      "None": "Nema",
+      "Accepted": "Prihvaćeno",
+      "Declined": "Odbijeno",
+      "Tentative": "Tentativni"
+    }
+  },
+  "massActions": {
+    "setHeld": "Postavi kao održano",
+    "setNotHeld": "Postavi kao nije održano"
+  },
+  "labels": {
+    "Create Call": "Postavi poziv",
+    "Set Held": "Postavi kao održano",
+    "Set Not Held": "Postavi kao nije održano",
+    "Send Invitations": "Pošalji Pozivnice"
+  },
+  "presetFilters": {
+    "planned": "Planirano",
+    "held": "Održan",
+    "todays": "Današnji"
+  }
+}

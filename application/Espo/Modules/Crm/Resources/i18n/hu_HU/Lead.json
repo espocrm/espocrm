@@ -1,0 +1,67 @@
+{
+  "labels": {
+    "Converted To": "Átalakítva",
+    "Create Lead": "Lead létrehozása",
+    "Convert": "Alakítani",
+    "convert": "alakítani"
+  },
+  "fields": {
+    "name": "Név",
+    "title": "Cím",
+    "website": "Weboldal",
+    "phoneNumber": "Telefon",
+    "accountName": "Felhasználónév",
+    "doNotCall": "Ne hívj",
+    "address": "Cím",
+    "status": "Állapot",
+    "source": "Forrás",
+    "opportunityAmount": "Lehetőség összege",
+    "opportunityAmountConverted": "Lehetőség Összeg (konvertált)",
+    "description": "Leírás",
+    "createdAccount": "számla",
+    "createdContact": "Kapcsolatba lépni",
+    "createdOpportunity": "Lehetőség",
+    "campaign": "Kampány",
+    "targetLists": "Céllista",
+    "targetList": "Tűztábla",
+    "industry": "Ipar",
+    "acceptanceStatus": "Átvételi állapot",
+    "opportunityAmountCurrency": "Lehetőség Összeg Valuta",
+    "acceptanceStatusMeetings": "Átvételi állapot (ülések)",
+    "acceptanceStatusCalls": "Átvételi állapot (hívások)"
+  },
+  "links": {
+    "targetLists": "Céllista",
+    "campaignLogRecords": "Kampánynapló",
+    "campaign": "Kampány",
+    "createdAccount": "számla",
+    "createdContact": "Kapcsolatba lépni",
+    "createdOpportunity": "Lehetőség",
+    "cases": "Olyan esetek,",
+    "documents": "Dokumentumok"
+  },
+  "options": {
+    "status": {
+      "New": "Új",
+      "Assigned": "Kijelölt",
+      "In Process": "Folyamatban",
+      "Converted": "konvertált",
+      "Recycled": "újrahasznosított",
+      "Dead": "Halott"
+    },
+    "source": {
+      "": "Egyik sem",
+      "Call": "Hívás",
+      "Existing Customer": "A meglévő ügyfelek",
+      "Public Relations": "Közkapcsolatok",
+      "Web Site": "Weboldal",
+      "Campaign": "Kampány",
+      "Other": "Más"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktív",
+    "actual": "Tényleges",
+    "converted": "konvertált"
+  }
+}

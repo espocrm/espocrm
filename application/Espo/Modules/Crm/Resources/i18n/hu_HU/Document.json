@@ -1,0 +1,39 @@
+{
+  "labels": {
+    "Create Document": "Dokumentum létrehozása",
+    "Details": "Részletek"
+  },
+  "fields": {
+    "name": "Név",
+    "status": "Állapot",
+    "file": "fájl",
+    "type": "típus",
+    "publishDate": "Megjelenési dátum",
+    "expirationDate": "Lejárati dátum",
+    "description": "Leírás",
+    "accounts": "Fiókok"
+  },
+  "links": {
+    "accounts": "Fiókok",
+    "opportunities": "lehetőségek",
+    "leads": "vezet",
+    "contacts": "Kapcsolatok"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktív",
+      "Draft": "vázlat",
+      "Expired": "Lejárt",
+      "Canceled": "Törölve"
+    },
+    "type": {
+      "": "Egyik sem",
+      "Contract": "Szerződés",
+      "License Agreement": "Licencszerződés"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktív",
+    "draft": "vázlat"
+  }
+}

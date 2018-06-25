@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Názov",
+    "description": "Popis",
+    "entryCount": "Počet vstupov",
+    "campaigns": "Kampane",
+    "endDate": "Dátum ukončenia",
+    "targetLists": "Cieľové zoznamy",
+    "includingActionList": "Vrátane",
+    "excludingActionList": "Vylúčené"
+  },
+  "links": {
+    "accounts": "Účty",
+    "contacts": "Kontakty",
+    "leads": "Stopy",
+    "campaigns": "Kampane",
+    "massEmails": "Hromadné emaily"
+  },
+  "options": {
+    "type": {
+      "Television": "Televízia",
+      "Radio": "Rozhlas",
+      "Newsletter": "Novinky"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Vytvoriť zoznam cieľov",
+    "Opted Out": "Odregistrovaný",
+    "Cancel Opt-Out": "Zrušiť odregistrovanie",
+    "Opt-Out": "Odregistrovať"
+  }
+}

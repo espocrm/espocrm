@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "Omogućeno",
+    "clientId": "ID klijenta",
+    "clientSecret": "Tajna Klijenta",
+    "redirectUri": "Preusmjeravanje URI",
+    "apiKey": "API ključ"
+  },
+  "messages": {
+    "selectIntegration": "Izaberite neku integraciju iz menija.",
+    "noIntegrations": "Nema integracija je na raspolaganju."
+  },
+  "help": {
+    "Google": "<p><b>Dohvaćanje OAuth2.0 akreditiva iz Google konzole.</b></p><p>Posetite<a href=\"https://console.developers.google.com/project\">Google konzolu</a> da dobijete OAuth2.0 akreditiv kao što su ID klijenta i Tajna Klijenta koje moraju znati i Google i EspoCRM.</p>",
+    "GoogleMaps": "<p>Nabavite API ključ <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">ovdje</a>.</p>"
+  },
+  "titles": {
+    "GoogleMaps": "Google mape"
+  }
+}

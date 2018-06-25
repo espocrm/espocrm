@@ -50,11 +50,11 @@ class ManyMany extends Base
             $entityName => array(
                 'fields' => array(
                        $linkName.'Ids' => array(
-                        'type' => 'varchar',
+                        'type' => 'jsonArray',
                         'notStorable' => true,
                     ),
                     $linkName.'Names' => array(
-                        'type' => 'varchar',
+                        'type' => 'jsonObject',
                         'notStorable' => true,
                     ),
                 ),

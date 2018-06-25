@@ -38,12 +38,15 @@ class Metadata
         $this->data = $data;
     }
 
-    public function get($entityType)
+    public function get($entityType, $key = null, $default = null)
     {
         if (!array_key_exists($entityType, $this->data)) {
             return null;
         }
-        return $this->data[$entityType];
+        $data = $this->data[$entityType];
+        if (!$key) return $data;
+
+        return \Espo\Core\Utils\Util::getValueByKey($data, $key, $default);
     }
 
     public function has($entityType)

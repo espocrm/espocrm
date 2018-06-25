@@ -108,6 +108,10 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
             this.listenTo(this.model, 'opt-out', function () {
                 this.actionRefresh();
             }, this);
+
+            this.listenTo(this.model, 'cancel-opt-out', function () {
+                this.actionRefresh();
+            }, this);
         },
 
         afterRender: function () {

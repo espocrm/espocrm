@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": "Ime",
+    "roles": "Uloge",
+    "positionList": "Lista pozicija"
+  },
+  "links": {
+    "users": "Korisnici",
+    "notes": "Bilješke",
+    "roles": "Uloge",
+    "inboundEmails": "Grupni E-mail računi"
+  },
+  "tooltips": {
+    "roles": "Pristupne uloge. Korisnici ovog tima dobivaju kontrolu pristupa za odabrane uloge.",
+    "positionList": "Slobodne pozicije u ovom timu. Npr. prodavač, direktor."
+  },
+  "labels": {
+    "Create Team": "Napravi tim"
+  }
+}

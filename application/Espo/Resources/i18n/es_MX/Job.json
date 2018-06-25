@@ -5,9 +5,11 @@
     "attempts": "Intentos Izquierda",
     "failedAttempts": "Intentos Fallidos",
     "serviceName": "Servicio",
-    "method": "Método",
+    "methodName": "Método",
     "scheduledJob": "Tarea Programada",
-    "data": "Datos"
+    "data": "Datos",
+    "method": "Método (obsoleto)",
+    "scheduledJobJob": "Nombre del Trabajo Programado"
   },
   "options": {
     "status": {

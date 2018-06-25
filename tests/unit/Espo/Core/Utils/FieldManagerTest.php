@@ -42,10 +42,24 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
+        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
+
         $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
         $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['baseLanguage'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\FieldManager($this->objects['metadata'], $this->objects['language']);
+        $map = array(
+            array('baseLanguage', $this->objects['baseLanguage']),
+            array('language', $this->objects['language']),
+            array('metadata', $this->objects['metadata'])
+        );
+
+        $this->objects['container']
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap($map));
+
+        $this->object = new \Espo\Core\Utils\FieldManager($this->objects['container']);
 
         $this->reflection = new ReflectionHelper($this->object);
     }
@@ -74,11 +88,6 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCoreField()
     {
-        $this->objects['language']
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue('Name'));
-
         $this->objects['metadata']
             ->expects($this->once())
             ->method('set')
@@ -118,17 +127,12 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCoreFieldWithNoChanges()
     {
-        $this->objects['language']
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue('Name'));
-
         $this->objects['metadata']
             ->expects($this->never())
             ->method('set');
 
         $this->objects['language']
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('save');
 
         $data = array(

@@ -1,14 +1,21 @@
 {
   "fields": {
     "width": "Szerokość (%)",
-    "link": "Link",
     "notSortable": "Niesortowalne",
-    "align": "Wyrównanie"
+    "align": "Wyrównanie",
+    "panelName": "Nazwa panelu",
+    "style": "Styl"
   },
   "options": {
     "align": {
       "left": "Lewy",
       "right": "Prawy"
+    },
+    "style": {
+      "success": "Powodzenie",
+      "danger": "Niebezpieczeństwo",
+      "info": "Informacje",
+      "warning": "Ostrzeżenie"
     }
   }
 }

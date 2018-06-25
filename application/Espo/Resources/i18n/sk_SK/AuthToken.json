@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "Používateľ",
+    "ipAddress": "IP Adresa",
+    "lastAccess": "Dátum posledného prístupu",
+    "createdAt": "Dátum prihlásenia",
+    "isActive": "Je aktívny",
+    "portal": "Portál"
+  },
+  "links": {
+    "actionHistoryRecords": "História akcií"
+  },
+  "presetFilters": {
+    "active": "Aktívny",
+    "inactive": "Neaktívny"
+  },
+  "labels": {
+    "Set Inactive": "Nastaviť neaktívny"
+  },
+  "massActions": {
+    "setInactive": "Nastaviť neaktívny"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Od",
+    "to": "Za",
+    "subject": "Predmet",
+    "bodyContains": "Tekst sadži",
+    "action": "Akcija",
+    "isGlobal": "Je globalna",
+    "emailFolder": "Mapa"
+  },
+  "labels": {
+    "Create EmailFilter": "Napravi filter e-pošte",
+    "Emails": "E-poruke"
+  },
+  "tooltips": {
+    "from": "Poruke poslane sa navedene adrese. Ostaviti prazno ako nije potrebno. Možete koristiti asterisk *.",
+    "to": "Poruke za navedenu adresu. Ostaviti prazno ako nije potrebno. Možete koristiti asterisk *.",
+    "name": "Dajte filteru opisno ime.",
+    "subject": "Koristite asterisk *:\n\ntext* - počinje sa text,\n*text* - sadrži text,\n*text - završava sa text.",
+    "bodyContains": "Sadržaj e-pošte ima bilo koju od navedenih riječi ili fraza.",
+    "isGlobal": "Primjenjuje ovaj filter na svim email porukama koje dolaze u sustav."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorirati",
+      "Move to Folder": "Staviti u mapu"
+    }
+  }
+}

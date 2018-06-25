@@ -1,0 +1,1 @@
+<div class="record">{{{record}}}</div>

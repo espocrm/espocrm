@@ -14,7 +14,6 @@
     "password": "Şifre",
     "currentPassword": "Şuan ki Şifre",
     "passwordConfirm": "Şifreyi Doğrulayın",
-    "newPassword": "New Password",
     "newPasswordConfirm": "Yeni şifreyi onayla",
     "avatar": "Resim",
     "isActive": "Aktif",
@@ -23,10 +22,10 @@
     "accounts": "Hesaplar",
     "account": "Hesap (Birincil)",
     "sendAccessInfo": "Kullanıcıya Erişim Bilgisiyle E-posta Gönder",
-    "portal": "Portal",
     "gender": "Cinsiyet",
     "position": "Takım halinde pozisyon",
-    "ipAddress": "IP Adresi"
+    "ipAddress": "IP Adresi",
+    "passwordPreview": "Şifre Ön İzleme"
   },
   "links": {
     "teams": "Takımlar",
@@ -41,10 +40,8 @@
   },
   "labels": {
     "Create User": "Kullanıcı Oluştur",
-    "Generate": "Generate",
     "Access": "Giriş",
     "Preferences": "Seçenekler",
-    "Change Password": "Change Password",
     "Teams and Access Control": "Takımlar ve Erişim Kontrolü",
     "Forgot Password?": "Şifremi unuttum?",
     "Password Change Request": "Şifre Değiştirme İsteği",
@@ -66,11 +63,9 @@
     "portals": "Bu kullanıcının erişebildiği portallar."
   },
   "messages": {
-    "passwordWillBeSent": "Password will be sent to user's email address.",
     "accountInfoEmailSubject": "Account info",
     "accountInfoEmailBody": "Your account information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Parola Talebini Değiştir",
-    "passwordChanged": "Password has been changed",
     "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
     "wrongUsernamePasword": "Yanlış kullanıcı adı / şifre",
     "emailAddressCantBeEmpty": "E-posta Adresi boş olamaz",

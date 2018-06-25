@@ -1,0 +1,72 @@
+{
+  "labels": {
+    "Revert Import": "Visszavált importálás",
+    "Return to Import": "Vissza az Importáláshoz",
+    "Run Import": "Importálás futtatása",
+    "Back": "Hát",
+    "Default Values": "Alapértelmezett értékek",
+    "Add Field": "Mező hozzáadása",
+    "Created": "Alkotó",
+    "Updated": "korszerűsített",
+    "Result": "Eredmény",
+    "Show records": "Rekordok megjelenítése",
+    "Remove Duplicates": "Duplikátumok eltávolítása",
+    "importedCount": "Importált (számlálás)",
+    "duplicateCount": "Duplikátumok (számlálás)",
+    "updatedCount": "Frissítve (számlálás)",
+    "Create Only": "Csak hozzon létre",
+    "Create and Update": "Létrehozása és frissítése",
+    "Update Only": "Frissítés csak",
+    "Update by": "Frissítés",
+    "Set as Not Duplicate": "Állítsa be, hogy ne legyen kettős",
+    "File (CSV)": "Fájl (CSV)",
+    "First Row Value": "Első soros érték",
+    "Field": "Mező",
+    "What to Import?": "Mi importálni?",
+    "What to do?": "Mit kell tenni?",
+    "Properties": "Tulajdonságok",
+    "Header Row": "Fejléc sor",
+    "Person Name Format": "Személynév formátum",
+    "Field Delimiter": "Mezőhatároló",
+    "Date Format": "Dátum formátum",
+    "Decimal Mark": "Tizedesjel",
+    "Time Format": "Idő formátum",
+    "Currency": "Valuta",
+    "Preview": "Előnézet",
+    "Next": "Következő",
+    "Step 1": "1. lépés",
+    "Step 2": "2. lépés",
+    "Double Quote": "Dupla idézet",
+    "Single Quote": "Egyetlen idézet",
+    "Imported": "Importált",
+    "Duplicates": "ismétlődések",
+    "Skip searching for duplicates": "Keresse meg a másolatok keresését",
+    "Timezone": "Időzóna",
+    "Remove Import Log": "Importálási napló eltávolítása"
+  },
+  "messages": {
+    "utf8": "Kell UTF-8 kódolva",
+    "duplicatesRemoved": "A másolatok eltávolítása",
+    "inIdle": "Végrehajtás készenléti állapotban (nagy adatok esetén cronon keresztül)",
+    "revert": "Ez véglegesen eltávolítja az importált rekordokat.",
+    "removeDuplicates": "Ez véglegesen eltávolítja az összes olyan importált rekordot, amelyet duplikátumként ismernek el.",
+    "confirmRevert": "Ez véglegesen eltávolítja az importált rekordokat. biztos vagy ebben?",
+    "confirmRemoveDuplicates": "Ez véglegesen eltávolítja az összes olyan importált rekordot, amelyet duplikátumként ismernek el. biztos vagy ebben?",
+    "confirmRemoveImportLog": "Ez eltávolítja az importnaplót. Minden importált nyilvántartást vezetnek. Nem tudja visszaállítani az importálási eredményeket. Biztos vagy benne?",
+    "removeImportLog": "Ez eltávolítja az importnaplót. Minden importált nyilvántartást vezetnek. Használja, ha biztos benne, hogy az import rendben van."
+  },
+  "fields": {
+    "file": "fájl",
+    "imported": "Importált rekordok",
+    "duplicates": "Duplikált felvételek",
+    "updated": "Frissített felvételek",
+    "status": "Állapot"
+  },
+  "options": {
+    "status": {
+      "Failed": "nem sikerült",
+      "In Process": "Folyamatban",
+      "Complete": "teljes"
+    }
+  }
+}

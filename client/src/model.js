@@ -242,7 +242,23 @@ Espo.define('model', [], function () {
 
         isRemovable: function () {
             return true;
+        },
+
+        getEntityType: function () {
+            return this.name;
+        },
+
+        fetch: function (options) {
+            this.lastXhr = Dep.prototype.fetch.call(this, options);
+            return this.lastXhr;
+        },
+
+        abortLastFetch: function () {
+            if (this.lastXhr && this.lastXhr.readyState < 4) {
+                this.lastXhr.abort();
+            }
         }
+
     });
 
     return Model;

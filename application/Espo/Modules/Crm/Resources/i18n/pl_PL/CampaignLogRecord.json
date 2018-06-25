@@ -22,8 +22,7 @@
       "Opened": "Otwarty",
       "Opted Out": "Wypisany",
       "Bounced": "Odrzucone",
-      "Clicked": "Kliknięte",
-      "Lead Created": "Lead Created"
+      "Clicked": "Kliknięte"
     }
   },
   "labels": {
@@ -34,7 +33,6 @@
     "opened": "Otwarty",
     "optedOut": "Wypisany",
     "bounced": "Odrzucone",
-    "clicked": "Kliknięte",
-    "leadCreated": "Lead Created"
+    "clicked": "Kliknięte"
   }
 }

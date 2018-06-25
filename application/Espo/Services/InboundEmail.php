@@ -236,10 +236,6 @@ class InboundEmail extends \Espo\Services\Record
         }
 
         $parserName = 'MailMimeParser';
-        if (extension_loaded('mailparse')) {
-            $parserName = 'PhpMimeMailParser';
-        }
-
         if ($this->getConfig()->get('emailParser')) {
             $parserName = $this->getConfig()->get('emailParser');
         }
@@ -757,6 +753,8 @@ class InboundEmail extends \Espo\Services\Record
     {
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
         $teamIdList = $user->getLinkMultipleIdList('teams');
+
+        $inboundEmail = null;
 
         $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {

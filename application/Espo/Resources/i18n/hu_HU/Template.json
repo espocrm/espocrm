@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": "Név",
+    "body": "Test",
+    "header": "Fejléc",
+    "footer": "Lábjegyzet",
+    "leftMargin": "Bal margó",
+    "topMargin": "Felső margó",
+    "rightMargin": "Jobb margó",
+    "bottomMargin": "Alsó margó",
+    "printFooter": "Nyomtatási Lábléc",
+    "variables": "Szabad helyfoglalók",
+    "pageOrientation": "Oldal tájolása",
+    "pageFormat": "Papírformátum"
+  },
+  "labels": {
+    "Create Template": "Sablon létrehozása"
+  },
+  "tooltips": {
+    "footer": "Használja a {pageNumber} gombot az oldalszám nyomtatásához.",
+    "variables": "Másolja be a szükséges helyőrzőt a fejlécre, a testre vagy a láblécre."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "portré",
+      "Landscape": "Tájkép"
+    },
+    "placeholders": {
+      "today": "Ma (dátum)",
+      "now": "Most (dátum-idő)"
+    }
+  }
+}

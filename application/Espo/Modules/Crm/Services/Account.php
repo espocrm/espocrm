@@ -39,6 +39,11 @@ class Account extends \Espo\Services\Record
                 'role' => 'accountRole',
                 'isInactive' => 'accountIsInactive'
             )
+        ),
+        'targetLists' => array(
+            'additionalColumns' => array(
+                'optedOut' => 'isOptedOut'
+            )
         )
     );
 

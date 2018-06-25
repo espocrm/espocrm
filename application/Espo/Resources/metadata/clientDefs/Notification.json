@@ -1,5 +1,7 @@
 {
     "controller": "controllers/notification",
+    "acl": "acl/notification",
+    "aclPortal": "acl-portal/notification",
     "collection": "collections/note",
     "itemViews": {
         "System": "views/notification/items/system"

@@ -1,13 +1,13 @@
 {
   "fields": {
     "name": "Nazwa",
-    "roles": "Rola",
-    "positionList": "Position List"
+    "roles": "Rola"
   },
   "links": {
     "users": "Użytkownik",
     "notes": "Notatki",
-    "roles": "Role"
+    "roles": "Role",
+    "inboundEmails": "Grupowe konta pocztowe"
   },
   "tooltips": {
     "roles": "Wszyscy użytkownicy z zespołu otrzymają dostęp do ustawień zgodnie z rolami.",

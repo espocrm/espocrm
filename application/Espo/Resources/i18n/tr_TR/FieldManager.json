@@ -71,5 +71,25 @@
     "before": "Tarih değeri belirtilen alanın tarih değerinden önce olmalıdır.",
     "after": "Tarih değeri, belirtilen alanın tarih değerinden sonra olmalıdır.",
     "readOnly": "Alan değeri kullanıcı tarafından belirlenemez. Ancak formülle hesaplanabilir."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Sokak",
+      "city": "Şehir",
+      "state": "Bölge",
+      "country": "Ülke",
+      "postalCode": "Posta Kodu",
+      "map": "Harita"
+    },
+    "personName": {
+      "first": "İlk",
+      "last": "Son"
+    },
+    "currency": {
+      "converted": "(Çevrilmiş)"
+    },
+    "datetimeOptional": {
+      "date": "Tarih"
+    }
   }
 }

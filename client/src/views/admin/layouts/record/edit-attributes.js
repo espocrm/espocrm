@@ -34,8 +34,19 @@ Espo.define('views/admin/layouts/record/edit-attributes', 'views/record/base', f
 
         data: function () {
             return {
-                attributeList: this.attributeList
+                attributeDataList: this.getAttributeDataList()
             };
+        },
+
+        getAttributeDataList: function () {
+            var list = [];
+            this.attributeList.forEach(function (item) {
+                list.push({
+                    name: item,
+                    viewKey: item + 'Field'
+                });
+            }, this);
+            return list;
         },
 
         setup: function () {

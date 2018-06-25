@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Céllista"
+  },
+  "fields": {
+    "acceptanceStatus": "Átvételi állapot",
+    "acceptanceStatusMeetings": "Átvételi állapot (ülések)",
+    "acceptanceStatusCalls": "Átvételi állapot (hívások)"
+  }
+}

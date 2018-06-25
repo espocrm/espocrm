@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "name": "Názov",
+    "emailAddress": "Emailová adresa",
+    "status": "Stav",
+    "assignToUser": "Priradiť používateľovi",
+    "username": "Používateľské meno",
+    "password": "Heslo",
+    "monitoredFolders": "Monitorované priečinky",
+    "trashFolder": "Priečinok na smeti",
+    "createCase": "Vytvoriť prípad",
+    "reply": "Auto odpoveď",
+    "caseDistribution": "Distribúcia prípadu",
+    "replyEmailTemplate": "Šablóna na odpoveď",
+    "replyFromAddress": "Odpovedať z adresy",
+    "replyToAddress": "Odpovedať na adresu",
+    "replyFromName": "Odpovedať pod menom",
+    "targetUserPosition": "Cieľová užívateľská pozícia",
+    "fetchSince": "Načítať od",
+    "addAllTeamUsers": "Pre všetkých používateľov tímu",
+    "team": "Cieľový tím",
+    "teams": "Tímy",
+    "sentFolder": "Odoslaný priečinok",
+    "storeSentEmails": "Uložiť odoslané emaily",
+    "useSmtp": "Použiť SMTP",
+    "smtpHost": "SMTP server",
+    "smtpPort": "SMTP port",
+    "smtpSecurity": "SMTP bezpečnosť",
+    "smtpUsername": "SMTP používateľské meno",
+    "smtpPassword": "SMTP heslo",
+    "fromName": "Meno odosielateľa",
+    "smtpIsShared": "SMTP je zdieľané",
+    "smtpIsForMassEmail": "SMTP je pre hromadné emaily",
+    "useImap": "Načítať emaily"
+  },
+  "tooltips": {
+    "reply": "Upozorniť odosielateľov, že ich emaily boli prijaté.\n\nLen jeden mail bude poslaný určitému adresátovi počas nejakého časového úseku, aby sa zabránilo zacykleniu.",
+    "createCase": "Automaticky vytvoriť prípad z prichádzajúceho mailu",
+    "replyToAddress": "Definujte emailovú adresu tejto emailovej schránky aby odpovede prišli sem.",
+    "caseDistribution": "Ako budú prípady priradené. Priradené priamo použivateľovi alebo tímu.",
+    "assignToUser": "Používateľ, ktorému budú priradené prípady.",
+    "team": "Tím, ktorému budú priradené prípady.",
+    "teams": "Tímy, ktorým budú priradené emaily.",
+    "addAllTeamUsers": "Emaily sa objavia v doručenej pošte všetkých používateľov špecifikovaného tímu.",
+    "targetUserPosition": "Používatelia s danou pozíciou budú distribuované s prípadmi.",
+    "monitoredFolders": "Viaceré priečinky majú byť oddelené čiarkou.",
+    "smtpIsShared": "Ak je označené, potom budú používatelia môcť posielať emaily pomocou tohoto SMTP. Dostupnosť je riadená rolami cez práva skupinového emailového účtu.",
+    "smtpIsForMassEmail": "Ak je označené, potom SMTP bude k dispozícii pre hromadné emaily.",
+    "storeSentEmails": "Odoslané emaily budú uložené na serveri IMAP."
+  },
+  "links": {
+    "filters": "Filtre",
+    "emails": "Emaily",
+    "assignToUser": "Priradiť používateľovi"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktívny",
+      "Inactive": "Neaktívny"
+    },
+    "caseDistribution": {
+      "": "Žiadny",
+      "Direct-Assignment": "Priame priradenie",
+      "Least-Busy": "Najmenej vyťažený"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Vutvoriť emailový účet",
+    "Actions": "Akcie",
+    "Main": "Hlavný"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nedá sa pripojiť k IMAP serveru"
+  }
+}

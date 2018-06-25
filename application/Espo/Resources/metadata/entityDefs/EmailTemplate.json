@@ -10,7 +10,8 @@
         },
         "body": {
             "type": "text",
-            "view": "views/fields/wysiwyg"
+            "view": "views/fields/wysiwyg",
+            "useIframe": true
         },
         "isHtml": {
             "type": "bool",
@@ -23,6 +24,10 @@
         },
         "attachments": {
             "type": "attachmentMultiple"
+        },
+        "category": {
+            "type": "link",
+            "view": "views/fields/link-category-tree"
         },
         "assignedUser": {
             "type": "link"
@@ -54,6 +59,11 @@
             "type": "hasChildren",
             "entity": "Attachment",
             "foreign": "parent"
+        },
+        "category": {
+            "type": "belongsTo",
+            "foreign": "emailTemplates",
+            "entity": "EmailTemplateCategory"
         },
         "teams": {
             "type": "hasMany",

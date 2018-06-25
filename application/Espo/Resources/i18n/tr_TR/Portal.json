@@ -1,9 +1,6 @@
 {
   "fields": {
     "name": "İsim",
-    "logo": "Logo",
-    "companyLogo": "Logo",
-    "url": "URL",
     "portalRoles": "Roller",
     "isActive": "Aktif",
     "isDefault": "Ön Tanımlı",

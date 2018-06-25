@@ -1,6 +1,7 @@
 {
     "layouts": {
         "detailConvert": "Convert Lead",
-        "listForAccount": "List (for Account)"
+        "listForAccount": "List (for Account)",
+        "listForContact": "List (for Contact)"
     }
 }

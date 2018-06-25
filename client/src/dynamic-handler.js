@@ -37,7 +37,11 @@ define('dynamic-handler', [], function () {
 
         init: function () {},
 
-        onChange: function (model, o) {}
+        onChange: function (model, o) {},
+
+        getMetadata: function () {
+            return this.recordView.getMetadata()
+        }
     });
 
     DynamicHandler.extend = Backbone.Router.extend;

@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "title": "Nadpis",
+    "dateFrom": "Dátum od",
+    "dateTo": "Dátum do",
+    "autorefreshInterval": "Interval auto obnovy",
+    "displayRecords": "Zobrazené záznamy",
+    "isDoubleHeight": "Výška 2x",
+    "mode": "Režim",
+    "enabledScopeList": "Čo zobraziť",
+    "users": "Používatelia",
+    "entityType": "Typ entity",
+    "primaryFilter": "Primárny filter",
+    "boolFilterList": "Dodatočné filtre",
+    "sortBy": "Poradie (pole)",
+    "sortDirection": "Poradie (smer)",
+    "expandedLayout": "Rozmiestnenie",
+    "dateFilter": "Filter dátumu"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Týždeň (agenda)",
+      "basicWeek": "Týždeň",
+      "month": "Mesiac",
+      "basicDay": "Deň",
+      "agendaDay": "Deň (agenda)",
+      "timeline": "Časová os"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Vyberte typ entity v možnostiach dashletu."
+  }
+}

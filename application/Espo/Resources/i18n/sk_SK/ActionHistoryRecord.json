@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "user": "Používateľ",
+    "action": "Akcia",
+    "createdAt": "Dátum",
+    "target": "Cieľ",
+    "targetType": "Typ cieľa",
+    "authToken": "Auth token",
+    "ipAddress": "IP Adresa",
+    "authLogRecord": "Záznam Auth protokolu"
+  },
+  "links": {
+    "authToken": "Auth token",
+    "user": "Používateľ",
+    "target": "Cieľ",
+    "authLogRecord": "Záznam Auth protokolu"
+  },
+  "presetFilters": {
+    "onlyMy": "Len moje"
+  },
+  "options": {
+    "action": {
+      "read": "Čítať",
+      "update": "Zmeniť",
+      "delete": "Zmazať",
+      "create": "Vytvoriť"
+    }
+  }
+}

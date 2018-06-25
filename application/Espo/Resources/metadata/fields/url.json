@@ -25,5 +25,6 @@
    "filter": true,
    "fieldDefs":{
       "type":"varchar"
-   }
+   },
+   "personalData": true
 }

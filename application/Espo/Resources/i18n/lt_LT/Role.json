@@ -44,7 +44,7 @@
   },
   "actions": {
     "read": "Skaityti",
-    "edit": "Taidyti",
+    "edit": "Taisyti",
     "delete": "Ištrinti",
     "stream": "Srautas",
     "create": "Sukurti"

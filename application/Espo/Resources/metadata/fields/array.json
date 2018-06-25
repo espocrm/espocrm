@@ -34,5 +34,6 @@
    "fieldDefs":{
       "type":"jsonArray"
    },
-   "translatedOptions": true
+   "translatedOptions": true,
+   "personalData": true
 }

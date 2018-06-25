@@ -5,6 +5,7 @@
         "Team": "Team",
         "Role": "Role",
         "EmailTemplate": "Email Template",
+        "EmailTemplateCategory": "Email Template Categories",
         "EmailAccount": "Personal Email Account",
         "EmailAccountScope": "Personal Email Account",
         "OutboundEmail": "Outbound Email",
@@ -41,7 +42,9 @@
         "Global": "Global",
         "Preferences": "Preferences",
         "EmailAddress": "Email Address",
-        "PhoneNumber": "Phone Number"
+        "PhoneNumber": "Phone Number",
+        "AuthLogRecord": "Auth Log Record",
+        "AuthFailLogRecord": "Auth Fail Log Record"
     },
     "scopeNamesPlural": {
         "Email": "Emails",
@@ -49,6 +52,7 @@
         "Team": "Teams",
         "Role": "Roles",
         "EmailTemplate": "Email Templates",
+        "EmailTemplateCategory": "Email Template Categories",
         "EmailAccount": "Personal Email Accounts",
         "EmailAccountScope": "Personal Email Accounts",
         "OutboundEmail": "Outbound Emails",
@@ -72,7 +76,9 @@
         "ActionHistoryRecord": "Action History",
         "AuthToken": "Auth Tokens",
         "UniqueId": "Unique IDs",
-        "LastViewed": "Last Viewed"
+        "LastViewed": "Last Viewed",
+        "AuthLogRecord": "Auth Log",
+        "AuthFailLogRecord": "Auth Fail Log"
     },
     "labels": {
         "Misc": "Misc",
@@ -222,7 +228,11 @@
         "Collapse": "Collapse",
         "New notifications": "New notifications",
         "Manage Categories": "Manage Categories",
-        "Manage Folders": "Manage Folders"
+        "Manage Folders": "Manage Folders",
+        "Convert to": "Convert to",
+        "View Personal Data": "View Personal Data",
+        "Personal Data": "Personal Data",
+        "Erase": "Erase"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -278,7 +288,9 @@
         "massFollowResultSingle": "{count} record now is followed",
         "massUnfollowResultSingle": "{count} record now is not followed",
         "massFollowZeroResult": "Nothing got followed",
-        "massUnfollowZeroResult": "Nothing got unfollowed"
+        "massUnfollowZeroResult": "Nothing got unfollowed",
+        "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+        "massPrintPdfMaxCountError": "Can't print more that {maxCount} records."
     },
     "boolFilters": {
         "onlyMy": "Only My",
@@ -294,7 +306,9 @@
         "massUpdate": "Mass Update",
         "export": "Export",
         "follow": "Follow",
-        "unfollow": "Unfollow"
+        "unfollow": "Unfollow",
+        "convertCurrency": "Convert Currency",
+        "printPdf": "Print to PDF"
     },
     "fields": {
         "name": "Name",
@@ -304,6 +318,8 @@
         "assignedUser": "Assigned User",
         "assignedUsers": "Assigned Users",
         "emailAddress": "Email",
+        "emailAddressData": "Email Address Data",
+        "emailAddressIsOptedOut": "Email Address is Opted-Out",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",
         "createdAt": "Created At",
@@ -318,10 +334,14 @@
         "phoneNumberFax": "Phone (Fax)",
         "phoneNumberOffice": "Phone (Office)",
         "phoneNumberOther": "Phone (Other)",
+        "phoneNumberData": "Phone Number Data",
         "order": "Order",
         "parent": "Parent",
         "children": "Children",
-        "id": "ID"
+        "id": "ID",
+        "ids": "IDs",
+        "names": "Names",
+        "targetListIsOptedOut": "Is Opted Out (Target List)"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -701,15 +721,19 @@
             }
         }
     },
+    "listViewModes": {
+        "list": "List",
+        "kanban": "Kanban"
+    },
     "themes": {
-        "Espo": "Espo",
+        "Espo": "Classic Espo",
         "EspoRtl": "RTL Espo",
-        "Sakura": "Sakura",
-        "EspoVertical": "Espo w/ sidebar",
-        "SakuraVertical": "Sakura w/ sidebar",
-        "Violet": "Violet",
-        "VioletVertical": "Violet w/ sidebar",
-        "Hazyblue": "Hazyblue",
-        "HazyblueVertical": "Hazyblue w/ sidebar"
+        "Sakura": "Classic Sakura",
+        "EspoVertical": "Vertical Espo",
+        "SakuraVertical": "Vertical Sakura",
+        "Violet": "Classic Violet",
+        "VioletVertical": "Vertical Violet",
+        "Hazyblue": "Classic Hazyblue",
+        "HazyblueVertical": "Vertical Hazyblue"
     }
 }

@@ -1,21 +1,26 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
-    "host": "Host",
     "username": "Nazwa użytkownika",
     "password": "Hasło",
-    "port": "Port",
     "monitoredFolders": "Monitorowane katalogi",
-    "ssl": "SSL",
     "fetchSince": "Od dnia",
     "emailAddress": "Adres e-mail",
     "sentFolder": "Folder wysłanych",
     "storeSentEmails": "Zapisz wysłane wiadomości",
-    "keepFetchedEmailsUnread": "Pozostaw pobrane wiadomości jako nieprzeczytane"
+    "keepFetchedEmailsUnread": "Pozostaw pobrane wiadomości jako nieprzeczytane",
+    "emailFolder": "Upuść w folderze",
+    "useSmtp": "Użyj SMTP",
+    "smtpHost": "Serwer SMTP",
+    "smtpPort": "Port serwera",
+    "smtpAuth": "Autoryzacja SMTP",
+    "smtpSecurity": "Zabezpieczenia SMTP",
+    "smtpUsername": "Nazwa użytkownika SMTP",
+    "smtpPassword": "Hasło SMTP"
   },
   "links": {
-    "filters": "Filtry"
+    "filters": "Filtry",
+    "emails": "Wiadomości"
   },
   "options": {
     "status": {
@@ -25,9 +30,9 @@
   },
   "labels": {
     "Create EmailAccount": "Utwórz konto pocztowe",
-    "IMAP": "IMAP",
     "Main": "Główne",
-    "Test Connection": "Test połączenia"
+    "Test Connection": "Test połączenia",
+    "Send Test Email": "Wyślij wiadomość testową"
   },
   "messages": {
     "couldNotConnectToImap": "Nie można połączyć z serwerem IMAP",

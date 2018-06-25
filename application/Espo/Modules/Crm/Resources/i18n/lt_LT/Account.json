@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Vardas",
+    "name": "Pavadinimas",
     "emailAddress": "El. paštas",
     "website": "Internetinė Svetainė",
     "phoneNumber": "Telefonas",

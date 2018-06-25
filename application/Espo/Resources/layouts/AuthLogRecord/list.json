@@ -1,0 +1,7 @@
+[
+    {"name":"username"},
+    {"name":"isDenied", "widthPx": "100"},
+    {"name":"ipAddress", "width": "15"},
+    {"name":"denialReason", "width": "22"},
+    {"name":"createdAt", "width": "15"}
+]

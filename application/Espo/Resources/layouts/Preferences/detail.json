@@ -61,7 +61,9 @@
                 }
             ],
             [
-                false,
+                {
+                    "name": "emailUseExternalClient"
+                },
                 {
                     "name": "followCreatedEntities"
                 }
@@ -80,6 +82,10 @@
             [
                 {"name":"theme"},
                 false
+            ],
+            [
+                {"name":"scopeColorsDisabled"},
+                {"name":"tabColorsDisabled"}
             ],
             [
                 {"name":"useCustomTabList"},

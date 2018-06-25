@@ -49,12 +49,10 @@
     "theme": "Tema",
     "userThemesDisabled": "Desactivar Temas de Usuarios",
     "emailMessageMaxSize": "Tamaño máximo del Correo (MB)",
-    "massEmailMaxPerHourCount": "Número mäximo de correos enviados por hora",
-    "personalEmailMaxPortionSize": "Máximo tamaño de la porción de correo para recuperar de una cuenta personal",
-    "inboundEmailMaxPortionSize": "Máximo tamaño de la porción de correo para recuperar de una cuenta de grupo",
-    "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario",
-    "authTokenLifetime": "Vida del Token de Autorización (horas)",
-    "authTokenMaxIdleTime": "Máximo tiempo de inactividad del Token de Autorización (horas)",
+    "personalEmailMaxPortionSize": "Porción máxima recuperable de correo de cuentas personales",
+    "inboundEmailMaxPortionSize": "Porción máxima recuperable de correo de cuentas de grupo",
+    "authTokenLifetime": "Vida de la Clave de Autorización (horas)",
+    "authTokenMaxIdleTime": "Máximo tiempo de inactividad de la Clave de Autorización (horas)",
     "dashboardLayout": "Diseño del Tablero (por omisión)",
     "siteUrl": "URL del Sitio",
     "addressPreview": "Vista previa de la Dirección",
@@ -88,7 +86,18 @@
     "currencyDecimalPlaces": "Decimales en Moneda",
     "aclStrictMode": "Modo estricto ACL",
     "followCreatedEntities": "Seguir los registros creados",
-    "aclAllowDeleteCreated": "Permitir la eliminación de registros creados"
+    "aclAllowDeleteCreated": "Permitir la eliminación de registros creados",
+    "adminNotifications": "Notificaciones del sistema en el panel de administración",
+    "adminNotificationsNewVersion": "Notificar cuando haya una nueva versión disponible de EspoCRM",
+    "massEmailMaxPerHourCount": "Número mäximo de correos enviados por hora",
+    "maxEmailAccountCount": "Máximo número de cuentas de correo personal por usuario",
+    "streamEmailNotificationsTypeList": "Que cosa notificar",
+    "authTokenPreventConcurrent": "Sólo se puede una clave de aut. por usuario",
+    "scopeColorsDisabled": "Desactivar colores en alcance",
+    "tabColorsDisabled": "Desactivar Colores en Pestañas",
+    "tabIconsDisabled": "Desactivar Iconos en Pestañas",
+    "textFilterUseContainsForVarchar": "Use el operador 'contiene' para filtrar campos alfanuméricos",
+    "emailAddressIsOptedOutByDefault": "Marcar direcciones como confirmadas"
   },
   "options": {
     "weekStart": {
@@ -96,17 +105,21 @@
       "1": "Lunes"
     },
     "currencyFormat": {
-      "1": "10 MXP",
-      "2": "$10"
+      "1": "10 MXP"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "Publicaciones",
+      "Status": "Actualizaciones de Estátus",
+      "EmailReceived": "Correos recibidos"
     }
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a desplegar inicialmente en las vistas",
     "recordsPerPageSmall": "Contador de registros en los paneles de información",
     "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos hayan creado.",
-    "emailMessageMaxSize": "Todos los correos entrantes que superen un tamaño especificado se omitirán.",
-    "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
-    "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
+    "emailMessageMaxSize": "Los correos de entrada que excedan el máximo sólo tendrán asunto (sin texto ni adjuntos).",
+    "authTokenLifetime": "Define cuanto duran las claves de aut.\n0 - significa que no caduca.",
+    "authTokenMaxIdleTime": "Define cuándo caduca la clave luego del último acceso.\n0 - significa que no caduca.",
     "userThemesDisabled": "Si está marcado, los usuarios no podrán seleccionar otro tema",
     "ldapUsername": "The full system user DN which allows to search other users. E.g. \"CN=LDAP System User,OU=users,OU=espocrm, DC=test,DC=lan\". ",
     "ldapPassword": "Contraseña de acceso al servidor LDAP.",
@@ -133,12 +146,15 @@
     "currencyDecimalPlaces": "Posiciones decimales. Si está vacío, se mostrarán todos los decimales",
     "aclStrictMode": "Activado: El acceso a los alcances estará prohibido si no se especifica en los roles\nDesactivado: El acceso a los alcances será permitido si no se especifica en los roles",
     "outboundEmailIsShared": "Permitir a los usuarios enviar correos desde esta dirección",
-    "aclAllowDeleteCreated": "Los usuarios podrán eliminar los registros que hayan creado, aunque no tengan permiso de borrado."
+    "aclAllowDeleteCreated": "Los usuarios podrán eliminar los registros que hayan creado, aunque no tengan permiso de borrado.",
+    "textFilterUseContainsForVarchar": "Si no lo marca, se usará el operador 'starts with' (inicia con).  Puede utilizar el comodín '%'.",
+    "streamEmailNotificationsEntityList": "Notificaciones de actualización de registros con seguimiento.  Los Usuarios recibirán notificaciones por correo sólo para los tipos de entidad especificados.",
+    "authTokenPreventConcurrent": "Los usuarios no podrán ingresar en distintos dispositivos al mismo tiempo",
+    "emailAddressIsOptedOutByDefault": "Las nuevas direcciones de correo serán marcadas como confirmadas."
   },
   "labels": {
     "System": "Sistema",
     "Locale": "Localización",
-    "SMTP": "SMTP",
     "Configuration": "Configuración",
     "In-app Notifications": "Notificaciones del CRM",
     "Email Notifications": "Notificaciones por Correo",
@@ -147,7 +163,8 @@
     "Mass Email": "Correo Masivo",
     "Test Connection": "Probar Conexión",
     "Connecting": "Conectando...",
-    "Activities": "Actividades"
+    "Activities": "Actividades",
+    "Admin Notifications": "Notificaciones al Administrador"
   },
   "messages": {
     "ldapTestConnection": "La conexión se ha establecido satisfactoriamente"

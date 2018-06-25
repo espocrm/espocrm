@@ -11,7 +11,8 @@
   },
   "labels": {
     "Create EmailTemplate": "Crear Plantilla de Correo",
-    "Info": "Información"
+    "Info": "Información",
+    "Available placeholders": "Marcadores disponibles"
   },
   "tooltips": {
     "oneOff": "Compruebe si usted va a utilizar esta plantilla sólo una vez. Por ejemplo: para Correo Masivo."
@@ -20,6 +21,10 @@
     "actual": "Actuales"
   },
   "messages": {
-    "infoText": "Variables disponibles:\n\n{optOutUrl} &#8211; URL de la liga para cancelar suscripción;\n\n{optOutLink} &#8211; texto de la liga para cancelar suscripción."
+    "infoText": "Marcadores disponibles:\n\n{optOutUrl} &#8211; Dirección URL para deslistarse;\n\n{optOutLink} &#8211; una liga para deslistarse."
+  },
+  "placeholderTexts": {
+    "optOutUrl": "Dirección URL para deslistarse",
+    "optOutLink": "una liga para deslistarse"
   }
 }

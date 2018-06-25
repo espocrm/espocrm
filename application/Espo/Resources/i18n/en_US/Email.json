@@ -38,7 +38,10 @@
         "hasAttachment": "Has Attachment",
         "assignedUsers": "Assigned Users",
         "sentBy": "Sent By",
+        "toEmailAddresses": "To EmailAddresses",
         "ccEmailAddresses": "CC Email Addresses",
+        "bccEmailAddresses": "BCC EmailAddresses",
+        "replyToEmailAddresses": "Reply-To EmailAddresses",
         "messageId": "Message Id",
         "messageIdInternal": "Message Id (Internal)",
         "folderId": "Folder Id",
@@ -54,7 +57,12 @@
         "emailAccounts": "Personal Accounts",
         "assignedUsers": "Assigned Users",
         "sentBy": "Sent By",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "fromEmailAddress": "From Email Address",
+        "toEmailAddresses": "To EmailAddresses",
+        "ccEmailAddresses": "CC EmailAddresses",
+        "bccEmailAddresses": "BCC EmailAddresses",
+        "replyToEmailAddresses": "Reply-To EmailAddresses"
     },
     "options": {
         "status": {
@@ -98,7 +106,8 @@
         "noSmtpSetup": "No SMTP setup. {link}.",
         "testEmailSent": "Test email has been sent",
         "emailSent": "Email has been sent",
-        "savedAsDraft": "Saved as draft"
+        "savedAsDraft": "Saved as draft",
+        "confirmInsertTemplate": "The email body will be lost. Are you sure you want to insert the template?"
     },
     "presetFilters": {
         "sent": "Sent",

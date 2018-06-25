@@ -37,10 +37,18 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.initialBody = null;
+            this.initialIsHtml = null;
+
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
+            }
+
+            if (this.model.get('body')) {
+                this.initialBody = this.model.get('body');
+                this.initialIsHtml = this.model.get('isHtml');
             }
 
             if (!this.options.signatureDisabled && this.hasSignature()) {
@@ -48,41 +56,94 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
                 this.model.set('body', body);
             }
 
-            if (this.options.keepAttachmentsOnSelectTemplate) {
+            this.isBodyChanged = false;
+
+            this.listenTo(this.model, 'change:body', function () {
+                this.isBodyChanged = true;
+            }, this);
+
+            if (!this.options.removeAttachmentsOnSelectTemplate) {
                 this.initialAttachmentsIds = this.model.get('attachmentsIds') || [];
                 this.initialAttachmentsNames = this.model.get('attachmentsNames') || {};
             }
 
             this.listenTo(this.model, 'insert-template', function (data) {
-                var body = data.body;
-                if (this.hasSignature()) {
-                    body = this.appendSignature(body || '', data.isHtml);
-                }
-                this.model.set('isHtml', data.isHtml);
-                this.model.set('name', data.subject);
-                this.model.set('body', '');
-                this.model.set('body', body);
+                var body = this.model.get('body') || '';
 
-                if (this.options.keepAttachmentsOnSelectTemplate) {
-                    this.initialAttachmentsIds.forEach(function (id) {
-                        if (data.attachmentsIds) {
-                            data.attachmentsIds.push(id);
-                        }
-                        if (data.attachmentsNames) {
-                            data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
-                        }
+                var bodyPlain = body.replace(/<br\s*\/?>/mg, '');
+                bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
+                bodyPlain = bodyPlain.replace(/ /g, '');
+                bodyPlain = bodyPlain.replace(/\n/g, '');
+
+                var $div = $('<div>').html(bodyPlain);
+                bodyPlain = $div.text();
+
+                if (
+                    bodyPlain !== '' &&
+                    this.isBodyChanged
+                ) {
+                    this.confirm({
+                        message: this.translate('confirmInsertTemplate', 'messages', 'Email'),
+                        confirmText: this.translate('Yes')
+                    }, function () {
+                        this.insertTemplate(data);
                     }, this);
+                } else {
+                    this.insertTemplate(data);
                 }
 
-                this.model.set({
-                    attachmentsIds: data.attachmentsIds,
-                    attachmentsNames: data.attachmentsNames
-                });
             }, this);
 
             if (this.options.selectTemplateDisabled) {
                 this.hideField('selectTemplate');
             }
+        },
+
+        insertTemplate: function (data) {
+            var body = data.body;
+            if (this.hasSignature()) {
+                body = this.appendSignature(body || '', data.isHtml);
+            }
+
+            if (this.initialBody) {
+                var initialBody = this.initialBody;
+                if (data.isHtml !== this.initialIsHtml) {
+                    if (data.isHtml) {
+                        initialBody = this.plainToHtml(initialBody);
+                    } else {
+                        initialBody = this.htmlToPlain(initialBody);
+                    }
+                }
+
+                body += initialBody;
+            }
+
+            this.model.set('isHtml', data.isHtml);
+
+            if (data.subject) {
+                this.model.set('name', data.subject);
+            }
+
+            this.model.set('body', '');
+            this.model.set('body', body);
+
+            if (!this.options.removeAttachmentsOnSelectTemplate) {
+                this.initialAttachmentsIds.forEach(function (id) {
+                    if (data.attachmentsIds) {
+                        data.attachmentsIds.push(id);
+                    }
+                    if (data.attachmentsNames) {
+                        data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
+                    }
+                }, this);
+            }
+
+            this.model.set({
+                attachmentsIds: data.attachmentsIds,
+                attachmentsNames: data.attachmentsNames
+            });
+
+            this.isBodyChanged = false;
         },
 
         prependSignature: function (body, isHtml) {
@@ -136,8 +197,28 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             model.set('status', 'Draft');
 
             this.save();
+        },
+
+        htmlToPlain: function (text) {
+            text = text || '';
+            var value = text.replace(/<br\s*\/?>/mg, '\n');
+
+            value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
+
+            var $div = $('<div>').html(value);
+            $div.find('style').remove();
+            $div.find('link[ref="stylesheet"]').remove();
+
+            value =  $div.text();
+
+            return value;
+        },
+
+        plainToHtml: function (html) {
+            html = html || '';
+            var value = html.replace(/\n/g, '<br>');
+            return value;
         }
 
     });
-
 });

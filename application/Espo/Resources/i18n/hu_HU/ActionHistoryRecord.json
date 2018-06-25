@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "user": "használó",
+    "action": "Akció",
+    "createdAt": "Dátum",
+    "target": "Cél",
+    "targetType": "Cél típus",
+    "authToken": "Hitel Token",
+    "ipAddress": "IP-cím",
+    "authLogRecord": "Hitelesítési napló"
+  },
+  "links": {
+    "authToken": "Hitel Token",
+    "user": "használó",
+    "target": "Cél",
+    "authLogRecord": "Hitelesítési napló"
+  },
+  "presetFilters": {
+    "onlyMy": "Csak az enyém"
+  },
+  "options": {
+    "action": {
+      "read": "Olvas",
+      "update": "frissítés",
+      "delete": "Töröl",
+      "create": "Teremt"
+    }
+  }
+}

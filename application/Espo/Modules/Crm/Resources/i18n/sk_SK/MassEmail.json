@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Názov",
+    "status": "Stav",
+    "storeSentEmails": "Uložiť odoslané emaily",
+    "startAt": "Dátum začatia",
+    "fromAddress": "Adresa odosielateľa",
+    "fromName": "Meno odosielateľa",
+    "replyToAddress": "Odpovedať na adresu",
+    "replyToName": "Odpovedať na meno",
+    "campaign": "Kampaň",
+    "emailTemplate": "Šablóna emailu",
+    "inboundEmail": "Emailový účet",
+    "targetLists": "Cieľové zoznamy",
+    "excludingTargetLists": "Vylúčiť cieľové zoznamy",
+    "optOutEntirely": "Odregistrovať úplne",
+    "smtpAccount": "účet SMTP"
+  },
+  "links": {
+    "targetLists": "Cieľové zoznamy",
+    "excludingTargetLists": "Vylúčiť cieľové zoznamy",
+    "queueItems": "Položky fronty",
+    "campaign": "Kampaň",
+    "emailTemplate": "Šablóna emailu",
+    "inboundEmail": "Emailový účet"
+  },
+  "options": {
+    "status": {
+      "Draft": "Koncept",
+      "Pending": "Nevybavený",
+      "In Process": "V procese",
+      "Complete": "Kompletný",
+      "Canceled": "Zrušený",
+      "Failed": "Chybný"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Vytvoriť hromadný email",
+    "Send Test": "Poslať test",
+    "System SMTP": "SMTP systém",
+    "system": "systém",
+    "group": "skupina"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Vyberte aspoň jeden cieľ",
+    "testSent": "Testovaci(e) email(y) sa považujú za odoslané"
+  },
+  "tooltips": {
+    "optOutEntirely": "Emailové adresy adresátov, ktorý sa odhlásili z odberu, budú označené ako odregistrované a nebudú sa im odosielať žiadne hromadné emaily.",
+    "targetLists": "Ciele, ktoré by mali obdržať správy.",
+    "excludingTargetLists": "Ciele, ktoré by nemali obdržať správy.",
+    "storeSentEmails": "Emaily budú uložené v CRM"
+  },
+  "presetFilters": {
+    "actual": "Aktuálny",
+    "complete": "Dokončiť"
+  }
+}

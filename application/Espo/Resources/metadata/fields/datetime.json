@@ -57,5 +57,6 @@
    "filter": true,
    "fieldDefs":{
       "notNull":false
-   }
+   },
+   "personalData": true
 }

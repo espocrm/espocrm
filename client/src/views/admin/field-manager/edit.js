@@ -102,6 +102,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.type = model.getFieldType(this.field);
                 }
 
+                if (
+                    this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
+                    &&
+                    this.getMetadata().get(['fields', this.type, 'personalData'])
+                ) {
+                    this.hasPersonalData = true;
+                }
+
                 Promise.race([
                     new Promise(function (resolve) {
                         if (this.isNew) {
@@ -137,6 +145,13 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         this.paramList.push(o);
                     }, this);
 
+                    if (this.hasPersonalData) {
+                        this.paramList.push({
+                            name: 'isPersonalData',
+                            type: 'bool'
+                        });
+                    }
+
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
@@ -159,17 +174,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         rows: 1
                     });
 
-                    this.paramList.forEach(function (o) {
-                        if (o.hidden) {
-                            return;
-                        }
-                        var options = {};
-                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
-                            options.tooltip = true;
-                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
-                        }
-                        this.createFieldView(o.type, o.name, null, o, options);
-                    }, this);
+                    if (this.hasPersonalData) {
+                        this.createFieldView('bool', 'isPersonalData', null, {});
+                    }
+
+                    this.createFieldView('text', 'tooltipText', null, {
+                        trim: true,
+                        rows: 1
+                    });
 
                     this.hasDynamicLogicPanel = false;
                     if (
@@ -228,6 +240,20 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         };
                     }
 
+                    this.model.fetchedAttributes = this.model.getClonedAttributes();
+
+                    this.paramList.forEach(function (o) {
+                        if (o.hidden) {
+                            return;
+                        }
+                        var options = {};
+                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                            options.tooltip = true;
+                            options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+                        }
+                        this.createFieldView(o.type, o.name, null, o, options);
+                    }, this);
+
                     callback();
 
                 }.bind(this));
@@ -259,7 +285,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }
                 this.model.set('label', label);
                 if (name) {
-                    name = name.replace(/-/i, '').replace(/_/i, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
+                    name = name.replace(/-/g, '').replace(/_/g, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function(match, g) {
                         return g.toUpperCase();
                     }).replace(' ', '');
                     if (name.length) {
@@ -333,7 +359,19 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             this.fieldList.push(name);
         },
 
+        disableButtons: function () {
+            this.$el.find('[data-action="save"]').attr('disabled', 'disabled').addClass('disabled');
+            this.$el.find('[data-action="resetToDefault"]').attr('disabled', 'disabled').addClass('disabled');
+        },
+
+        enableButtons: function () {
+            this.$el.find('[data-action="save"]').removeAttr('disabled').removeClass('disabled');
+            this.$el.find('[data-action="resetToDefault"]').removeAttr('disabled').removeClass('disabled');
+        },
+
         save: function () {
+            this.disableButtons();
+
             this.fieldList.forEach(function (field) {
                 var view = this.getView(field);
                 if (!view.readOnly) {
@@ -348,6 +386,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             if (notValid) {
                 this.notify('Not valid', 'error');
+
+                this.enableButtons();
                 return;
             }
 
@@ -359,18 +399,56 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.listenToOnce(this.model, 'sync', function () {
                 Espo.Ui.notify(false);
-
-                this.getMetadata().load(function () {
-                    this.getMetadata().storeToCache();
-                    this.trigger('after:save');
-                }.bind(this), true);
+                this.enableButtons();
 
                 this.updateLanguage();
 
-            }.bind(this));
+                Promise.all([
+                    new Promise(function (resolve) {
+                        this.getMetadata().load(function () {
+                            this.getMetadata().storeToCache();
+                            resolve();
+                        }.bind(this), true);
+                    }.bind(this)),
+                    new Promise(function (resolve) {
+                        this.getLanguage().load(function () {
+                            resolve();
+                        }, true);
+                    }.bind(this))
+                ]).then(function () {
+                    this.trigger('after:save');
+                }.bind(this));
+
+                this.model.fetchedAttributes = this.model.getClonedAttributes();
+            }, this);
 
             this.notify('Saving...');
-            this.model.save();
+
+            if (this.isNew) {
+                this.model.save().error(function () {
+                    this.enableButtons();
+                }.bind(this));
+            } else {
+                var attributes = this.model.getClonedAttributes();
+
+                if (this.model.fetchedAttributes.label === attributes.label) {
+                    delete attributes.label;
+                }
+
+                if (this.model.fetchedAttributes.tooltipText === attributes.tooltipText || !this.model.fetchedAttributes.tooltipText && !attributes.tooltipText) {
+                    delete attributes.tooltipText;
+                }
+
+                if ('translatedOptions' in attributes) {
+                    if (_.isEqual(this.model.fetchedAttributes.translatedOptions, attributes.translatedOptions)) {
+                        delete attributes.translatedOptions;
+                    }
+                }
+
+                this.model.save(attributes, {patch: true}).error(function () {
+                    this.enableButtons();
+                }.bind(this));
+            }
         },
 
         updateLanguage: function () {

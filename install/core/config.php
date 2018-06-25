@@ -44,7 +44,6 @@ return array(
             'zip',
             'gd',
             'mbstring',
-            'imap',
             'curl',
             'xml',
             'max_execution_time' => 180,
