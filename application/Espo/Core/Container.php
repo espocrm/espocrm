@@ -273,7 +273,7 @@ class Container
         return new \Espo\Core\Utils\Metadata\OrmMetadata(
             $this->get('metadata'),
             $this->get('fileManager'),
-            $this->get('config')->get('useCache')
+            $this->get('config')
         );
     }
 

@@ -49,7 +49,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
         $ormMeta = $container->get('ormMetadata')->getData(true);
 
         $databaseSchema = $container->get('schema');
-        $maxIndexLength = $databaseSchema->getMaxIndexLength();
+        $maxIndexLength = $databaseSchema->getDatabaseHelper()->getMaxIndexLength();
         if ($maxIndexLength > 1000) {
             $maxIndexLength = 1000;
         }

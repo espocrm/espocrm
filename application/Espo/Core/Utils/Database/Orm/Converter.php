@@ -28,20 +28,28 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Orm;
-use Espo\Core\Utils\Util,
-    Espo\ORM\Entity;
+
+use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 class Converter
 {
     private $metadata;
+
     private $fileManager;
+
+    private $config;
+
     private $metadataHelper;
+
+    private $databaseHelper;
 
     private $relationManager;
 
     private $entityDefs;
 
     protected $defaultFieldType = 'varchar';
+
     protected $defaultNaming = 'postfix';
 
     protected $defaultLength = array(
@@ -99,19 +107,26 @@ class Converter
         'additionalTables',
     );
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
+        $this->config = $config;
 
         $this->relationManager = new RelationManager($this->metadata);
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
+        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
     }
 
     protected function getMetadata()
     {
         return $this->metadata;
+    }
+
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     protected function getEntityDefs($reload = false)
@@ -136,6 +151,11 @@ class Converter
     protected function getMetadataHelper()
     {
         return $this->metadataHelper;
+    }
+
+    protected function getDatabaseHelper()
+    {
+        return $this->databaseHelper;
     }
 
     /**
