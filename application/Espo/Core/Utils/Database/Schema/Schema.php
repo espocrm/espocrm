@@ -48,12 +48,7 @@ class Schema
 
     private $converter;
 
-    private $connection;
-
-    protected $drivers = array(
-        'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
-        'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
-    );
+    private $databaseHelper;
 
     protected $fieldTypePaths = array(
         'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
@@ -79,8 +74,6 @@ class Schema
      */
     protected $rebuildActionClasses = null;
 
-
-
     public function __construct(\Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\ORM\EntityManager $entityManager, \Espo\Core\Utils\File\ClassParser $classParser, \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata)
     {
         $this->config = $config;
@@ -89,16 +82,16 @@ class Schema
         $this->entityManager = $entityManager;
         $this->classParser = $classParser;
 
+        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
+
         $this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
         $this->initFieldTypes();
 
-        $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager);
-
+        $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager, $this->config);
         $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this, $this->config);
 
         $this->ormMetadata = $ormMetadata;
     }
-
 
     protected function getConfig()
     {
@@ -140,25 +133,15 @@ class Schema
         return $this->getConnection()->getDatabasePlatform();
     }
 
+    public function getDatabaseHelper()
+    {
+        return $this->databaseHelper;
+    }
 
     public function getConnection()
     {
-        if (isset($this->connection)) {
-            return $this->connection;
-        }
-
-        $dbalConfig = new \Doctrine\DBAL\Configuration();
-
-        $connectionParams = $this->getConfig()->get('database');
-
-        $connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
-        unset($connectionParams['driver']);
-
-        $this->connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dbalConfig);
-
-        return $this->connection;
+        return $this->getDatabaseHelper()->getDbalConnection();
     }
-
 
     protected function initFieldTypes()
     {
@@ -186,8 +169,6 @@ class Schema
             }
         }
     }
-
-
 
     /*
      * Rebuild database schema
@@ -224,7 +205,6 @@ class Schema
         return (bool) $result;
     }
 
-
     /*
     * Get current database schema
     *
@@ -248,7 +228,6 @@ class Schema
         //return $schema->toSql($this->getPlatform()); //it can return with DROP TABLE
     }
 
-
     /*
     * Get SQL queries to get from one to another schema
     *
@@ -260,8 +239,6 @@ class Schema
 
         return $this->toSql($schemaDiff); //$schemaDiff->toSql($this->getPlatform());
     }
-
-
 
     /**
      * Init Rebuild Actions, get all classes and create them
@@ -310,67 +287,5 @@ class Schema
                 $rebuildActionClass->$action();
             }
         }
-    }
-
-    public function getMaxIndexLength()
-    {
-        $connection = $this->getConnection();
-        $mysqlEngine = $this->getMysqlEngine();
-
-        switch ($mysqlEngine) {
-            case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
-
-                if (version_compare($mysqlVersion, '10.0.0') >= 0) {
-                    return 767; //InnoDB, MariaDB
-                }
-
-                if (version_compare($mysqlVersion, '5.7.0') >= 0) {
-                    return 3072; //InnoDB, MySQL 5.7+
-                }
-
-                return 767; //InnoDB
-                break;
-        }
-
-        return 1000; //MyISAM
-    }
-
-    protected function getMysqlVersion()
-    {
-        $connection = $this->getConnection();
-        return $connection->fetchColumn("select version()");
-    }
-
-    protected function getMysqlEngine()
-    {
-        $connection = $this->getConnection();
-        $result = $connection->fetchColumn("SHOW TABLE STATUS WHERE Engine = 'MyISAM'");
-
-        if (!empty($result)) {
-            return 'MyISAM';
-        }
-
-        return 'InnoDB';
-    }
-
-    public function isFulltextSupports()
-    {
-        $connection = $this->getConnection();
-        $mysqlEngine = $this->getMysqlEngine();
-
-        switch ($mysqlEngine) {
-            case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
-
-                if (version_compare($mysqlVersion, '5.6.0') >= 0) {
-                    return true; //InnoDB, MySQL 5.6+
-                }
-
-                return false; //InnoDB
-                break;
-        }
-
-        return true; //MyISAM
     }
 }
