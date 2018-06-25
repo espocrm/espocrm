@@ -45,13 +45,18 @@ class OrmMetadata
 
     protected $useCache;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, $config)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-        $this->config = $config;
 
-        $this->useCache = $this->config->get('useCache', false);
+        $this->useCache = false;
+        if ($config instanceof \Espo\Core\Utils\Config) {
+            $this->config = $config;
+            $this->useCache = $this->config->get('useCache', false);
+        } elseif (is_bool($config)) {
+            $this->useCache = $config;
+        }
     }
 
     protected function getConverter()
