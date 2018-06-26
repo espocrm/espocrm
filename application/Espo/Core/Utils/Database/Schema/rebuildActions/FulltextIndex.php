@@ -35,9 +35,7 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
     {
         $pdo = $this->getEntityManager()->getPDO();
 
-        $currentSchema = $this->getCurrentSchema();
         $metadataSchema = $this->getMetadataSchema();
-
         $tables = $metadataSchema->getTables();
 
         foreach ($tables as $table) {
