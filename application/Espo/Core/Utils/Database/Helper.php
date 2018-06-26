@@ -61,6 +61,11 @@ class Helper
             }
 
             $connectionParams = $this->getConfig()->get('database');
+
+            if (empty($connectionParams['dbname']) || empty($connectionParams['user'])) {
+                return null;
+            }
+
             $connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
             unset($connectionParams['driver']);
 
