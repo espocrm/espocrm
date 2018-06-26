@@ -340,6 +340,7 @@
         "children": "Children",
         "id": "ID",
         "ids": "IDs",
+        "type": "Type",
         "names": "Names",
         "targetListIsOptedOut": "Is Opted Out (Target List)"
     },

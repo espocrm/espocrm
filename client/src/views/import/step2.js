@@ -166,7 +166,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             for (var field in defs) {
                 var d = defs[field];
 
-                if (!~this.allowedFieldList.indexOf(field) && (d.readOnly || d.disabled || d.importDisabled)) {
+                if (!~this.allowedFieldList.indexOf(field) && (d.disabled || d.importDisabled)) {
                     continue;
                 }
                 fieldList.push(field);
@@ -187,7 +187,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
 
             for (var field in fields) {
                 var d = fields[field];
-                if (!~this.allowedFieldList.indexOf(field) && (((d.readOnly || d.disabled) && !d.importNotDisabled) || d.importDisabled)) {
+                if (!~this.allowedFieldList.indexOf(field) && (((d.disabled) && !d.importNotDisabled) || d.importDisabled)) {
                     continue;
                 }
 
@@ -260,6 +260,11 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                             label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
                         }
+                    } else if (field.indexOf('Type') === field.length - 4) {
+                        var baseField = field.substr(0, field.length - 4);
+                        if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
+                        }
                     } else if (field.indexOf('phoneNumber') === 0) {
                         var phoneNumberType = field.substr(11);
                         var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
@@ -300,7 +305,13 @@ Espo.define('views/import/step2', 'view', function (Dep) {
             $('#default-values-container').append(html);
 
             var type = Espo.Utils.upperCaseFirst(this.model.getFieldParam(name, 'type'));
-            this.createView(name, this.getFieldManager().getViewName(type), {
+
+            var viewName =
+                this.getMetadata().get(['entityDefs', this.scope, 'fields', name, 'view'])
+                ||
+                this.getFieldManager().getViewName(type);
+
+            this.createView(name, viewName, {
                 model: this.model,
                 el: this.getSelector() + ' .field[data-name="' + name + '"]',
                 defs: {

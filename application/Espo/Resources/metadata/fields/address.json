@@ -35,7 +35,8 @@
          "layoutListDisabled": true,
          "provider": "Google",
          "height": 300,
-         "exportDisabled": true
+         "exportDisabled": true,
+         "importDisabled": true
       }
    },
    "notMergeable":true,
