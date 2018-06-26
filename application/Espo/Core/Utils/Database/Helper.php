@@ -165,8 +165,8 @@ class Helper
             case 'InnoDB':
                 $mysqlVersion = $this->getMysqlVersion();
 
-                if (version_compare($mysqlVersion, '5.6.0') >= 0) {
-                    return true; //InnoDB, MySQL 5.6+
+                if (version_compare($mysqlVersion, '5.6.4') >= 0) {
+                    return true; //InnoDB, MySQL 5.6.4+
                 }
 
                 return false; //InnoDB
