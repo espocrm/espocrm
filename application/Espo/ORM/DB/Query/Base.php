@@ -837,6 +837,7 @@ abstract class Base
                 if (empty($isComplex)) {
 
                     if (!isset($entity->fields[$field])) {
+                        $whereParts[] = '0';
                         continue;
                     }
 
