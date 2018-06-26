@@ -100,9 +100,9 @@ class Htmlizer
             $forbidenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
         }
 
+
         foreach ($fieldList as $field) {
             if (in_array($field, $forbidenAttributeList)) continue;
-
 
             $type = $entity->getAttributeType($field);
 
@@ -219,6 +219,14 @@ class Htmlizer
                         return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
                     }
                     return '';
+                },
+                'var' => function ($context, $options) {
+                    if ($context && isset($context[0]) && isset($context[1])) {
+                        if (isset($context[1][$context[0]])) {
+                            return $context[1][$context[0]];
+                        }
+                    }
+                    return;
                 }
             ],
             'hbhelpers' => [

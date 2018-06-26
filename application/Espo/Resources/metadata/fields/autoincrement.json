@@ -8,5 +8,6 @@
       "autoincrement":true,
       "unique":true
    },
+   "textFilter": true,
    "readOnly": true
 }

@@ -27,5 +27,6 @@
    "fieldDefs":{
       "notStorable":true
    },
+   "textFilter": true,
    "personalData": true
 }

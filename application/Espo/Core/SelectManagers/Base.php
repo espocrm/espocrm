@@ -1504,7 +1504,7 @@ class Base
         );
     }
 
-    public function getFullTextSearchDataForTextFilter($textFilter, $stripWildcard = false)
+    public function getFullTextSearchDataForTextFilter($textFilter, $isAuxiliaryUse = false)
     {
         if (array_key_exists($textFilter, $this->fullTextSearchDataCacheHash)) {
             return $this->fullTextSearchDataCacheHash[$textFilter];
@@ -1518,7 +1518,7 @@ class Base
 
         $fieldList = $this->getTextFilterFieldList();
 
-        if ($stripWildcard) {
+        if ($isAuxiliaryUse) {
             $textFilter = str_replace('%', '', $textFilter);
         }
 
@@ -1562,6 +1562,8 @@ class Base
 
         if ($useFullTextSearch) {
             if (
+                $isAuxiliaryUse
+                ||
                 mb_strpos($textFilter, ' ') === false
                 &&
                 mb_strpos($textFilter, '+') === false
@@ -1644,14 +1646,21 @@ class Base
                 $attributeType = $fieldDefs[$field]['type'];
             }
 
+            if ($attributeType === 'int') {
+                if (is_numeric($textFilter)) {
+                    $group[$field] = intval($textFilter);
+                }
+                continue;
+            }
+
             if (!$skipWidlcards) {
                 if (
-                    strlen($textFilter) >= $textFilterContainsMinLength
+                    mb_strlen($textFilter) >= $textFilterContainsMinLength
                     &&
                     (
                         $attributeType == 'text'
                         ||
-                        !empty($this->textFilterUseContainsAttributeList[$field])
+                        in_array($field, $this->textFilterUseContainsAttributeList)
                         ||
                         $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
                     )
@@ -1679,6 +1688,10 @@ class Base
             $group[$field . '*'] = $expression;
         }
 
+        if (!$forceFullTextSearch) {
+            $this->applyAdditionalToTextFilterGroup($textFilter, $group);
+        }
+
         if (!empty($fullTextGroup)) {
             $group['AND'] = $fullTextGroup;
         }
@@ -1692,6 +1705,10 @@ class Base
         $result['whereClause'][] = [
             'OR' => $group
         ];
+    }
+
+    protected function applyAdditionalToTextFilterGroup($textFilter, &$group)
+    {
     }
 
     public function applyAccess(&$result)

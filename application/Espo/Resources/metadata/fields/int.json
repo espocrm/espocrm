@@ -31,5 +31,6 @@
       }
    ],
    "filter": true,
+   "textFilter": true,
    "personalData": true
 }
