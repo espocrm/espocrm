@@ -33,7 +33,13 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
     public function beforeRebuild()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $currentSchema = $this->getCurrentSchema();
+        $tables = $currentSchema->getTables();
+
+        if (empty($tables)) return;
+
+        $databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
+        $connection = $databaseHelper->getDbalConnection();
 
         $metadataSchema = $this->getMetadataSchema();
         $tables = $metadataSchema->getTables();
@@ -51,18 +57,18 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
                 foreach ($columns as $columnName) {
 
                     $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
-                    $sth = $pdo->prepare($query);
-                    $sth->execute();
 
-                    $row = $sth->fetch(\PDO::FETCH_ASSOC);
+                    try {
+                        $row = $connection->fetchAssoc($query);
+                    } catch (\Exception $e) {
+                        continue;
+                    }
 
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
                             $alterQuery = "ALTER TABLE `". $tableName ."` MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
                             $GLOBALS['log']->info('SCHEMA, Execute Query: ' . $alterQuery);
-
-                            $alterSth = $pdo->prepare($alterQuery);
-                            $alterSth->execute();
+                            $connection->executeQuery($alterQuery);
                             break;
                     }
                 }
