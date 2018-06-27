@@ -173,7 +173,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             }, this);
 
             newList.sort(function (v1, v2) {
-                return v1.index > v2.index;
+                return v1.index - v2.index;
             });
 
             this.panelList = newList;

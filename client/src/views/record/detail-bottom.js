@@ -265,7 +265,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.panelList.sort(function(item1, item2) {
                     var order1 = item1.order || 0;
                     var order2 = item2.order || 0;
-                    return order1 > order2;
+                    return order1 - order2;
                 });
 
                 this.setupPanelViews();

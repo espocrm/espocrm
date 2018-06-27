@@ -56,9 +56,9 @@ Espo.define('views/admin/index', 'view', function (Dep) {
             }
 
             this.panelDataList.sort(function (v1, v2) {
-                if (!('order' in v1) && ('order' in v2)) return true;
-                if (!('order' in v2)) return false;
-                return v1.order > v2.order;
+                if (!('order' in v1) && ('order' in v2)) return 0;
+                if (!('order' in v2)) return 0;
+                return v1.order - v2.order;
             }.bind(this));
 
             var iframeParams = [

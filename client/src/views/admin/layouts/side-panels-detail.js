@@ -140,7 +140,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
                 }
             }, this);
             this.rowLayout.sort(function (v1, v2) {
-                return v1.index > v2.index;
+                return v1.index - v2.index;
             });
         },
 
