@@ -149,6 +149,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             'fileList' => $fileList,
             'description' => $manifest['description'],
         );
+
+        if (!empty($manifest['checkVersionUrl'])) {
+            $data['checkVersionUrl'] = $manifest['checkVersionUrl'];
+        }
+
         $extensionEntity->set($data);
 
         return $entityManager->saveEntity($extensionEntity);

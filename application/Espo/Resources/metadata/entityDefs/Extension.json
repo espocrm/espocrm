@@ -19,6 +19,9 @@
             "type": "bool",
             "default": false
         },
+        "checkVersionUrl": {
+            "type": "url"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
