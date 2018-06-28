@@ -116,6 +116,8 @@ class EventConfirmation extends \Espo\Core\EntryPoints\Base
             ";
 
             $this->getClientManager()->display($runScript);
+
+            return;
         }
 
         throw new Error();
