@@ -31,7 +31,7 @@ Espo.define('crm:controllers/event-confirmation', 'controller', function (Dep) {
     return Dep.extend({
 
         confirmEvent: function (actionData) {
-            var viewName = this.getMetadata().get(['clientDefs', 'EventConfrmation', 'confirmationView']) ||
+            var viewName = this.getMetadata().get(['clientDefs', 'EventConfirmation', 'confirmationView']) ||
                 'crm:views/event-confirmation/confirmation';
             this.entire(viewName, {
                 actionData: actionData
