@@ -280,6 +280,18 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    protected function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
+    {
+        foreach ($selectAttributeList as $attribute) {
+            if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+                $field = $entity->getAttributeParam($attribute, 'relation');
+                if (!$field) continue;
+                if ($entity->has($attribute)) continue;
+                $entity->loadLinkMultipleField($field);
+            }
+        }
+    }
+
     protected function loadLinkFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
@@ -920,6 +932,9 @@ class Record extends \Espo\Core\Services\Base
             if (!empty($params['loadAdditionalFields'])) {
                 $this->loadAdditionalFields($e);
             }
+            if (!empty($selectAttributeList)) {
+                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+            }
             $this->prepareEntityForOutput($e);
         }
 
@@ -1018,6 +1033,9 @@ class Record extends \Espo\Core\Services\Base
                 $this->loadAdditionalFieldsForList($e);
                 if (!empty($params['loadAdditionalFields'])) {
                     $this->loadAdditionalFields($e);
+                }
+                if (!empty($selectAttributeList)) {
+                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
                 }
                 $this->prepareEntityForOutput($e);
 
@@ -1127,6 +1145,9 @@ class Record extends \Espo\Core\Services\Base
             $recordService->loadAdditionalFieldsForList($e);
             if (!empty($params['loadAdditionalFields'])) {
                 $recordService->loadAdditionalFields($e);
+            }
+            if (!empty($selectAttributeList)) {
+                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
             }
             $recordService->prepareEntityForOutput($e);
         }

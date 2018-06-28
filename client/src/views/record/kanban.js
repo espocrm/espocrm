@@ -523,6 +523,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
             var $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
 
+            collection.data.select = this.collection.data.select;
+
             this.showMoreRecords(collection, $list, $showMore, function () {
                 this.noRebuild = false;
                 collection.models.forEach(function (model) {

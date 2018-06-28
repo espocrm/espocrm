@@ -159,9 +159,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
         },
 
         checkFieldType: function (type) {
-            if (['linkMultiple'].indexOf(type) != -1) {
-                return false;
-            }
+
             return true;
         },
 

@@ -118,6 +118,9 @@ module.exports = function (grunt) {
         clean: {
             start: ['build/*'],
             final: ['build/tmp'],
+            beforeFinal: {
+                src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess']
+            }
         },
         less: lessData,
         uglify: {
@@ -290,9 +293,10 @@ module.exports = function (grunt) {
         'copy:frontendLib',
         'copy:backend',
         'replace',
+        'clean:beforeFinal',
         'copy:final',
         'chmod',
-        'clean:final',
+        'clean:final'
     ]);
 
 };
