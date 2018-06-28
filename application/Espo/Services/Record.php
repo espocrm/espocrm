@@ -1034,6 +1034,9 @@ class Record extends \Espo\Core\Services\Base
                 if (!empty($params['loadAdditionalFields'])) {
                     $this->loadAdditionalFields($e);
                 }
+                if (!empty($selectAttributeList)) {
+                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+                }
                 $this->prepareEntityForOutput($e);
 
                 $collection[] = $e;
