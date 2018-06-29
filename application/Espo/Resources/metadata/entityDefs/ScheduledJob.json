@@ -83,8 +83,8 @@
             "isSystem": true,
             "scheduling": "15 5 * * *"
         },
-        "CheckNewExtensionsVersions": {
-            "name": "Check for New Version of Installed Extensions",
+        "CheckNewExtensionVersion": {
+            "name": "Check for New Versions of Installed Extensions",
             "isSystem": true,
             "scheduling": "25 5 * * *"
         }

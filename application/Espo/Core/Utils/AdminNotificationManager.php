@@ -95,7 +95,13 @@ class AdminNotificationManager
             $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
             if (!empty($extensionsNeedingUpgrade)) {
                 foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
-                    $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    $label = 'new' . Util::toCamelCase($extensionName, ' ', true) .'VersionIsAvailable';
+
+                    $message = $this->getLanguage()->get(['Admin', 'messages', $label]);
+                    if (!$message) {
+                        $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    }
+
                     $notificationList[] = array(
                         'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
                         'type' => 'newExtensionVersionIsAvailable',

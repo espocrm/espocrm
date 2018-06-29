@@ -31,7 +31,7 @@ namespace Espo\Jobs;
 
 use Espo\Core\Exceptions;
 
-class CheckNewExtensionsVersions extends CheckNewVersion
+class CheckNewExtensionVersion extends CheckNewVersion
 {
     public function run()
     {
@@ -41,9 +41,9 @@ class CheckNewExtensionsVersions extends CheckNewVersion
 
         $job = $this->getEntityManager()->getEntity('Job');
         $job->set(array(
-            'name' => 'Check for New Version of installed extensions (job)',
+            'name' => 'Check for new versions of installed extensions (job)',
             'serviceName' => 'AdminNotifications',
-            'methodName' => 'jobCheckNewExtensionsVersions',
+            'methodName' => 'jobCheckNewExtensionVersion',
             'executeTime' => $this->getRunTime()
         ));
 

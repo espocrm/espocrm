@@ -5,7 +5,7 @@
                 <div class="list-group list list-expanded">
                 {{#each notificationList}}
                     <div data-id="{{id}}" class="list-group-item notificatin-item">
-                        <div class="text-danger">{{{message}}}</div>
+                        <div class="text-danger complex-text">{{complexText message}}</div>
                     </div>
                 {{/each}}
                 </div>

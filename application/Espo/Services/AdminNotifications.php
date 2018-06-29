@@ -78,7 +78,7 @@ class AdminNotifications extends \Espo\Core\Services\Base
      *
      * @return boolean
      */
-    public function jobCheckNewExtensionsVersions($data)
+    public function jobCheckNewExtensionVersion($data)
     {
         $config = $this->getConfig();
 
