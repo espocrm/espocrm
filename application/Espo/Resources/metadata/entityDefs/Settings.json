@@ -453,6 +453,9 @@
         "adminNotificationsNewVersion": {
             "type": "bool"
         },
+        "adminNotificationsNewExtensionVersion": {
+            "type": "bool"
+        },
         "textFilterUseContainsForVarchar": {
             "type": "bool",
             "tooltip": true
