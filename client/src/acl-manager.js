@@ -251,6 +251,11 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             this.forbiddenAttributesCache[key] = attributeList;
 
             return attributeList;
+        },
+
+        checkTeamAssignmentPermission: function (teamId) {
+            if (this.get('assignmentPermission') === 'all') return true;
+            return ~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
         }
 
     });

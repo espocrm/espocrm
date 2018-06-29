@@ -27,11 +27,11 @@
  ************************************************************************/
 
 
-Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', function (Dep) {
+Espo.define('crm:views/campaign-log-record/fields/data', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'crm:campaign-log-record.fields.data.detail',
+        listTemplate: 'crm:campaign-log-record/fields/data/detail',
 
     	getValueForDisplay: function () {
     		var action = this.model.get('action');
@@ -64,5 +64,3 @@ Espo.define('Crm:Views.CampaignLogRecord.Fields.Data', 'Views.Fields.Base', func
 
     });
 });
-
-

@@ -172,6 +172,7 @@ return array (
     'textFilterUseContainsForVarchar' => false,
     'tabColorsDisabled' => false,
     'massPrintPdfMaxCount' => 50,
+    'emailKeepParentTeamsEntityList' => ['Case'],
     'isInstalled' => false
 );
 
