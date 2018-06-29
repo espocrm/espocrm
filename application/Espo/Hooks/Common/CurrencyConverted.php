@@ -76,8 +76,8 @@ class CurrencyConverted extends \Espo\Core\Hooks\Base
                             $targetValue = $value;
                         } else {
                             $targetValue = $value;
-                            $targetValue = $targetValue * (isset($rates[$defaultCurrency]) ? $rates[$defaultCurrency] : 1.0);
-                            $targetValue = $targetValue / (isset($rates[$currency]) ? $rates[$currency] : 1.0);
+                            $targetValue = $targetValue / (isset($rates[$baseCurrency]) ? $rates[$baseCurrency] : 1.0);
+                            $targetValue = $targetValue * (isset($rates[$currency]) ? $rates[$currency] : 1.0);
                             $targetValue = round($targetValue, 2);
                         }
                         $entity->set($fieldName, $targetValue);
