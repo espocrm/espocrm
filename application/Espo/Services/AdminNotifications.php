@@ -165,9 +165,10 @@ class AdminNotifications extends \Espo\Core\Services\Base
         if (function_exists('curl_version')) {
             $ch = curl_init();
 
-            $requestUrl = $url ? $url : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
+            $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
+            $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
 
-            curl_setopt($ch, CURLOPT_URL, $requestUrl. '?' . http_build_query($requestData));
+            curl_setopt($ch, CURLOPT_URL, $requestUrl . '?' . http_build_query($requestData));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
 
