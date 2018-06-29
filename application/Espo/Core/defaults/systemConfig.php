@@ -154,7 +154,11 @@ return array (    'defaultPermissions' =>
         'ldapUserTeamsIds',
         'ldapUserTeamsNames',
         'cleanupJobPeriod',
-        'cleanupActionHistoryPeriod'
+        'cleanupActionHistoryPeriod',
+        'adminNotifications',
+        'adminNotificationsNewVersion',
+        'adminNotificationsCronIsNotConfigured',
+        'adminNotificationsNewExtensionVersion'
     ),
     'userItems' =>
     array (

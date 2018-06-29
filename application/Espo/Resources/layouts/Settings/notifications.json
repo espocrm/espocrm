@@ -19,7 +19,7 @@
         "label": "Admin Notifications",
         "rows": [
             [{"name": "adminNotifications"}, false],
-            [{"name": "adminNotificationsNewVersion"}, false]
+            [{"name": "adminNotificationsNewVersion"}, {"name": "adminNotificationsNewExtensionVersion"}]
         ]
     }
 ]

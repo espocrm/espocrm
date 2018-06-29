@@ -111,6 +111,7 @@ return array (
     'adminNotifications' => true,
     'adminNotificationsNewVersion' => true,
     'adminNotificationsCronIsNotConfigured' => true,
+    'adminNotificationsNewExtensionVersion' => true,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
     'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Task', 'Email'],
