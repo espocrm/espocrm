@@ -43,6 +43,8 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('detail', Util::toCamelCase('detail'));
         $this->assertEquals('detailView', Util::toCamelCase('detail-view', '-'));
         $this->assertEquals('myDetailView', Util::toCamelCase('my_detail_view'));
+        $this->assertEquals('AdvancedPack', Util::toCamelCase('Advanced Pack', ' ', true));
+        $this->assertEquals('advancedPack', Util::toCamelCase('Advanced Pack', ' '));
 
         $input = array(
             'detail',

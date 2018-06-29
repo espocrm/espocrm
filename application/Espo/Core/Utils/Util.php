@@ -86,10 +86,12 @@ class Util
             return $name;
         }
 
-        if($capitaliseFirstChar) {
-            $name[0] = strtoupper($name[0]);
+        $name = lcfirst($name);
+        if ($capitaliseFirstChar) {
+            $name = ucfirst($name);
         }
-        return preg_replace_callback('/'.$symbol.'([a-z])/', 'static::toCamelCaseConversion', $name);
+
+        return preg_replace_callback('/'.$symbol.'([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
     }
 
     protected static function toCamelCaseConversion($matches)
