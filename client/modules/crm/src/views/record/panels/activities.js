@@ -400,6 +400,28 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
                     }
                 }
             }
+
+            var emailKeepParentTeamsEntityList = this.getConfig().get('emailKeepParentTeamsEntityList') || [];
+
+            if (
+                attributes.parentType
+                &&
+                attributes.parentType === this.model.name
+                &&
+                ~emailKeepParentTeamsEntityList.indexOf(attributes.parentType)
+                && this.model.get('teamsIds') && this.model.get('teamsIds').length
+            ) {
+                attributes.teamsIds = Espo.Utils.clone(this.model.get('teamsIds'));
+                attributes.teamsNames = Espo.Utils.clone(this.model.get('teamsNames') || {});
+                var defaultTeamId = this.getUser().get('defaultTeamId');
+                if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
+                    attributes.teamsIds.push(defaultTeamId);
+                    attributes.teamsNames[defaultTeamId] = this.getUser().get('defaultTeamName');
+                }
+                attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
+                    return this.getAcl().checkTeamAssignmentPermission(teamId);
+                }, this);
+            }
             callback.call(this, attributes);
         },
 

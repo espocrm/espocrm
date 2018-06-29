@@ -28,10 +28,11 @@
 
 Espo.define('email-helper', [], function () {
 
-    var EmailHelper = function (language, user, dateTime) {
+    var EmailHelper = function (language, user, dateTime, acl) {
         this.language = language;
         this.user = user;
         this.dateTime = dateTime;
+        this.acl = acl;
 
         this.erasedPlaceholder = 'ERASED:';
     }
@@ -165,10 +166,14 @@ Espo.define('email-helper', [], function () {
                 attributes.teamsIds = Espo.Utils.clone(model.get('teamsIds'));
                 attributes.teamsNames = Espo.Utils.clone(model.get('teamsNames') || {});
 
-                if (this.user.get('defaultTeamId')) {
+                var defaultTeamId = this.user.get('defaultTeamId');
+                if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                     attributes.teamsIds.push(this.user.get('defaultTeamId'));
                     attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
                 }
+                attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
+                    return this.acl.checkTeamAssignmentPermission(teamId);
+                }, this);
             }
 
             attributes.nameHash = nameHash;

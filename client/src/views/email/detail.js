@@ -104,7 +104,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         actionCreateLead: function () {
             var attributes = {};
 
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             if (fromString) {
@@ -221,7 +221,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         actionCreateContact: function () {
             var attributes = {};
 
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             if (fromString) {
@@ -304,7 +304,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         },
 
         actionReply: function (data, e, cc) {
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
@@ -328,7 +328,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
         },
 
         actionForward: function (data, cc) {
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime());
+            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
             var attributes = emailHelper.getForwardAttributes(this.model, data, cc);
 

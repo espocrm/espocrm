@@ -300,6 +300,23 @@ class Importer
 
         $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
 
+        if ($parentFound) {
+            $parentType = $email->get('parentType');
+            $parentId = $email->get('parentId');
+            $emailKeepParentTeamsEntityList = $this->getConfig()->get('emailKeepParentTeamsEntityList', []);
+            if ($parentId && in_array($parentType, $emailKeepParentTeamsEntityList)) {
+                if ($this->getEntityManager()->hasRepository($parentType)) {
+                    $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+                    if ($parent) {
+                        $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
+                        foreach ($parentTeamIdList as $parentTeamId) {
+                            $email->addLinkMultipleId('teams', $parentTeamId);
+                        }
+                    }
+                }
+            }
+        }
+
         $this->getEntityManager()->saveEntity($email);
 
         foreach ($inlineAttachmentList as $attachment) {
