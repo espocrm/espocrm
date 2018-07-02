@@ -906,6 +906,21 @@ table.no-margin {
     text-overflow: ellipsis;
 }
 
+.expanded-row .cell .complex-text {
+    white-space: normal;
+    overflow: hidden;
+}
+
+.expanded-row .cell {
+    display: inline;
+}
+
+.notification-list .expanded-row > .cell[data-name="data"],
+#notifications-panel .expanded-row > .cell[data-name="data"] {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 #notifications-panel .expanded-row {
     white-space: normal;
     overflow: hidden;
@@ -913,10 +928,6 @@ table.no-margin {
 
 #notifications-panel .right {
     padding-top: 5px;
-}
-
-.expanded-row .cell {
-    display: inline-block;
 }
 
 .caret-up {
