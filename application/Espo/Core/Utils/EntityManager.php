@@ -128,6 +128,28 @@ class EntityManager
         return false;
     }
 
+    protected function checkRelationshipExists($name)
+    {
+        $name = ucfirst($name);
+
+        $scopeList = array_keys($this->getMetadata()->get(['scopes'], []));
+
+        foreach ($scopeList as $entityType) {
+            $relationsDefs = $this->getEntityManager()->getMetadata()->get($entityType, 'relations');
+            if (empty($relationsDefs)) continue;
+            foreach ($relationsDefs as $link => $item) {
+                if (empty($item['type'])) continue;
+                if (empty($item['relationName'])) continue;
+                if ($item['type'] === 'manyMany') {
+                    if (ucfirst($item['relationName']) === $name) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public function create($name, $type, $params = [], $replaceData = [])
     {
         $name = ucfirst($name);
@@ -170,6 +192,10 @@ class EntityManager
 
         if (in_array(strtolower($name), $this->reservedWordList)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+        }
+
+        if ($this->checkRelationshipExists($name)) {
+            throw new Conflict('Relationship with the same name \''.$name.'\' exists.');
         }
 
         $normalizedName = Util::normilizeClassName($name);
@@ -555,6 +581,12 @@ class EntityManager
                 $relationName = $params['relationName'];
             } else {
                 $relationName = lcfirst($entity) . $entityForeign;
+            }
+            if ($this->getMetadata()->get(['scopes', ucfirst($relationName)])) {
+                throw new Conflict("Entity with the same name '{$relationName}' exists.");
+            }
+            if ($this->checkRelationshipExists($relationName)) {
+                throw new Conflict("Relationship with the same name '{$relationName}' exists.");
             }
         }
 
