@@ -49,7 +49,11 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
 
         $address = $entity->get($type);
         $idList = [];
-        if (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL)) {
+        if (
+            (!empty($address) || !filter_var($address, FILTER_VALIDATE_EMAIL))
+            &&
+            $type !== 'replyTo'
+        ) {
             $arr = array_map(function ($e) {
                 return trim($e);
             }, explode(';', $address));
