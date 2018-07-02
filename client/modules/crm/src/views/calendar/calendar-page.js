@@ -103,7 +103,9 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         setupCalendar: function () {
-            this.createView('calendar', 'crm:views/calendar/calendar', {
+            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) || 'crm:views/calendar/calendar';
+
+            this.createView('calendar', viewName, {
                 date: this.date,
                 userId: this.options.userId,
                 userName: this.options.userName,
@@ -136,7 +138,9 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         setupTimeline: function () {
-            this.createView('calendar', 'crm:views/calendar/timeline', {
+            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) || 'crm:views/calendar/timeline';
+
+            this.createView('calendar', viewName, {
                 date: this.date,
                 userId: this.options.userId,
                 userName: this.options.userName,

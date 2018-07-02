@@ -53,7 +53,9 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     });
                 }, this);
 
-                this.createView('calendar', 'crm:views/calendar/timeline', {
+                var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) || 'crm:views/calendar/timeline';
+
+                this.createView('calendar', viewName, {
                     el: this.options.el + ' > .calendar-container',
                     header: false,
                     calendarType: 'shared',
@@ -69,7 +71,9 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     teamIdList = this.getOption('teamsIds');
                 }
 
-                this.createView('calendar', 'crm:views/calendar/calendar', {
+                var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) || 'crm:views/calendar/calendar';
+
+                this.createView('calendar', viewName, {
                     mode: mode,
                     el: this.options.el + ' > .calendar-container',
                     header: false,
