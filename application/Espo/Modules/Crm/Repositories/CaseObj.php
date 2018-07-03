@@ -56,7 +56,7 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
             if ($entity->getFetched('contactId')) {
                 $previousPortalUser = $this->getEntityManager()->getRepository('User')->where(array(
                     'contactId' => $entity->getFetched('contactId'),
-                    'isPortal' => true
+                    'isPortalUser' => true
                 ))->findOne();
                 if ($previousPortalUser) {
                     $this->getInjection('serviceFactory')->create('Stream')->unfollowEntity($entity, $previousPortalUser->id);
@@ -70,9 +70,10 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
 
             $portalUser = $this->getEntityManager()->getRepository('User')->where(array(
                 'contactId' => $contactId,
-                'isPortal' => true,
+                'isPortalUser' => true,
                 'isActive' => true
             ))->findOne();
+
             if ($portalUser) {
                 $this->getInjection('serviceFactory')->create('Stream')->followEntity($entity, $portalUser->id);
             }
@@ -97,4 +98,3 @@ class CaseObj extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-
