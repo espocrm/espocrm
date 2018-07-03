@@ -51,6 +51,11 @@ class Contact extends \Espo\Core\Templates\Services\Person
         )
     );
 
+    protected $mandatorySelectAttributeList = [
+        'accountId',
+        'accountName'
+    ];
+
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if (!empty($data->emailId)) {
