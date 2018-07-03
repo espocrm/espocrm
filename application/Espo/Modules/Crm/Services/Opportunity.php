@@ -36,6 +36,11 @@ use \Espo\Core\Exceptions\Forbidden;
 
 class Opportunity extends \Espo\Services\Record
 {
+    protected $mandatorySelectAttributeList = [
+        'accountId',
+        'accountName'
+    ];
+
     public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false)
     {
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
