@@ -173,24 +173,39 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             attributes.emailsIds = [this.model.id];
             attributes.emailId = this.model.id;
             attributes.name = this.model.get('name');
+            attributes.description = this.model.get('bodyPlain') || '';
 
-            var viewName = this.getMetadata().get('clientDefs.Case.modalViews.detail') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.Case.modalViews.detail') || 'views/modals/edit';
 
-            this.notify('Loading...');
-            this.createView('quickCreate', viewName, {
-                scope: 'Case',
-                attributes: attributes,
-            }, function (view) {
-                view.render();
-                view.notify(false);
-                view.once('after:save', function () {
-                    this.model.fetch();
-                    this.removeMenuItem('createCase');
-                    view.close();
+            Espo.Ui.notify(this.translate('loading', 'messsages'));
+
+            (new Promise(function (resolve) {
+                if (!(this.model.get('attachmentsIds') || []).length) {
+                    resolve();
+                    return;
+                }
+                this.ajaxPostRequest('Email/action/getCopiedAttachments', {
+                    id: this.model.id
+                }).then(function (data) {
+                    attributes.attachmentsIds = data.ids;
+                    attributes.attachmentsNames = data.names;
+                    resolve();
                 }.bind(this));
+            }.bind(this))).then(function () {
+                this.createView('quickCreate', viewName, {
+                    scope: 'Case',
+                    attributes: attributes,
+                }, function (view) {
+                    view.render();
+                    Espo.Ui.notify(false);
+                    this.listenToOnce(view, 'after:save', function () {
+                        this.model.fetch();
+                        this.removeMenuItem('createCase');
+                        view.close();
+                    }, this);
+                });
             }.bind(this));
         },
-
 
         actionCreateTask: function () {
             var attributes = {};
@@ -203,7 +218,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
 
             attributes.name = this.translate('Email', 'scopeNames') + ': ' + this.model.get('name');
 
-            var viewName = this.getMetadata().get('clientDefs.Task.modalViews.detail') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.Task.modalViews.detail') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
