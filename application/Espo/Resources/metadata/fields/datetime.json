@@ -46,6 +46,10 @@
          "type":"varchar"
       },
       {
+         "type": "bool",
+         "name":"useNumericFormat"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

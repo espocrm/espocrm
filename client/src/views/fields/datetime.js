@@ -69,7 +69,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             }
 
             if (this.mode == 'list' || this.mode == 'detail') {
-                if (this.getConfig().get('readableDateFormatDisabled')) {
+                if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
                     return this.getDateTime().toDisplayDateTime(value);
                 }
 

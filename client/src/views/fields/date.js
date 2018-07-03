@@ -76,7 +76,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             }
 
             if (this.mode == 'list' || this.mode == 'detail') {
-                if (this.getConfig().get('readableDateFormatDisabled')) {
+                if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
                     return this.getDateTime().toDisplayDate(value);
                 }
 
