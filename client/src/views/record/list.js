@@ -101,18 +101,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             },
             'click a.sort': function (e) {
                 var field = $(e.currentTarget).data('name');
-
-                var asc = true;
-                if (field === this.collection.sortBy && this.collection.asc) {
-                    asc = false;
-                }
-                this.notify('Please wait...');
-                this.collection.once('sync', function () {
-                    this.notify(false);
-                    this.trigger('sort', {sortBy: field, asc: asc});
-                }, this);
-                this.collection.sort(field, asc);
-                this.deactivate();
+                this.toggleSort(field);
             },
             'click .pagination a': function (e) {
                 var page = $(e.currentTarget).data('page');
@@ -169,6 +158,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.massAction(action);
                 }
             }
+        },
+
+        toggleSort: function (field) {
+            var asc = true;
+            if (field === this.collection.sortBy && this.collection.asc) {
+                asc = false;
+            }
+            this.notify('Please wait...');
+            this.collection.once('sync', function () {
+                this.notify(false);
+                this.trigger('sort', {sortBy: field, asc: asc});
+            }, this);
+            var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
+            while (this.collection.length > maxSizeLimit) {
+                this.collection.pop();
+            }
+            this.collection.sort(field, asc);
+            this.deactivate();
         },
 
         selectAllHandler: function (isChecked) {
