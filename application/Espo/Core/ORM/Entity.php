@@ -165,7 +165,18 @@ class Entity extends \Espo\ORM\Entity
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Id')) return;
         if ($this->getRelationType($field) !== 'hasOne' && $this->getRelationType($field) !== 'belongsTo') return;
 
-        $entity = $this->get($field);
+        $relatedEntityType = $this->getRelationParam($field, 'entity');
+
+        $select = ['id', 'name'];
+        if ($relatedEntityType === 'Lead') {
+            $select[] = 'accountName';
+            $select[] = 'emailAddress';
+            $select[] = 'phoneNumber';
+        }
+
+        $entity = $this->get($field, [
+            'select' => $select
+        ]);
 
         $entityId = null;
         $entityName = null;

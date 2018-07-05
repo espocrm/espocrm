@@ -62,18 +62,26 @@ class Xlsx extends \Espo\Core\Injectable
     public function loadAdditionalFields(Entity $entity, $fieldList)
     {
         foreach ($entity->getRelationList() as $link) {
-            if ($entity->getRelationType($link) === 'belongsToParent') {
-                if (in_array($link, $fieldList)) {
-                    $parent = $entity->get($link);
-                    if ($parent instanceof Entity) {
-                        $entity->set($link . 'Name', $parent->get('name'));
+            if (in_array($link, $fieldList)) {
+                if ($entity->getRelationType($link) === 'belongsToParent') {
+                    if (!$entity->get($link . 'Name')) {
+                        $entity->loadParentNameField($link);
                     }
-                }
-            } else if ($entity->getRelationType($link) === 'belongsTo' && $entity->getRelationParam($link, 'noJoin') && $entity->hasField($link . 'Name')) {
-                if (in_array($link, $fieldList)) {
-                    $related = $entity->get($link);
-                    if ($related instanceof Entity) {
-                        $entity->set($link . 'Name', $related->get('name'));
+                } else if (
+                    (
+                        (
+                            $entity->getRelationType($link) === 'belongsTo'
+                            &&
+                            $entity->getRelationParam($link, 'noJoin')
+                        )
+                        ||
+                        $entity->getRelationType($link) === 'hasOne'
+                    )
+                    &&
+                    $entity->hasAttribute($link . 'Name')
+                ) {
+                    if (!$entity->get($link . 'Name') || !$entity->get($link . 'Id')) {
+                        $entity->loadLinkField($link);
                     }
                 }
             }
