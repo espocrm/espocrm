@@ -66,7 +66,11 @@ class FieldManagerUtil
             }
             if ($naming == 'prefix') {
                 foreach ($list as $f) {
-                    $fieldList[] = $f . ucfirst($name);
+                    if ($f === '') {
+                        $fieldList[] = $name;
+                    } else {
+                        $fieldList[] = $f . ucfirst($name);
+                    }
                 }
             } else {
                 foreach ($list as $f) {

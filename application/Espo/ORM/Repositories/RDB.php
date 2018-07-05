@@ -192,10 +192,11 @@ class RDB extends \Espo\ORM\Repository
 
     public function find(array $params = array())
     {
+        $params = $this->getSelectParams($params);
+
         if (empty($params['skipAdditionalSelectParams'])) {
             $this->handleSelectParams($params);
         }
-        $params = $this->getSelectParams($params);
 
         $dataArr = $this->getMapper()->select($this->seed, $params);
 

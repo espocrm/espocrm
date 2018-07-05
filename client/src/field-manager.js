@@ -119,7 +119,11 @@
                     }
                     if (naming == 'prefix') {
                         notActualFields.forEach(function (f) {
-                            fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
+                            if (f === '') {
+                                fieldNames.push(fieldName);
+                            } else {
+                                fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
+                            }
                         });
                     } else {
                         notActualFields.forEach(function (f) {
