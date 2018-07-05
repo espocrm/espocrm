@@ -257,12 +257,13 @@ class Record extends \Espo\Core\Services\Base
 
     protected function loadFollowers(Entity $entity)
     {
-        if ($this->getMetadata()->get("scopes.".$entity->getEntityType().".stream")) {
-            $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
-            if ($data) {
-                $entity->set('followersIds', $data['idList']);
-                $entity->set('followersNames', $data['nameMap']);
-            }
+        if ($this->getUser()->isPortal()) return;
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) return;
+
+        $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
+        if ($data) {
+            $entity->set('followersIds', $data['idList']);
+            $entity->set('followersNames', $data['nameMap']);
         }
     }
 
