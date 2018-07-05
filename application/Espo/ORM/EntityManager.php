@@ -236,6 +236,11 @@ class EntityManager
         return $collection;
     }
 
+    public function getEntityFactory()
+    {
+        return $this->entityFactory;
+    }
+
     protected function init()
     {
     }

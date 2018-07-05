@@ -1616,6 +1616,8 @@ class Record extends \Espo\Core\Services\Base
         }
         $exportObj = $this->getInjection('injectableFactory')->createByClassName($className);
 
+        $collection = null;
+
         if (array_key_exists('collection', $params)) {
             $collection = $params['collection'];
         } else {
@@ -1651,7 +1653,11 @@ class Record extends \Espo\Core\Services\Base
                 $selectManager->applyOrder($orderBy, $desc, $selectParams);
             }
 
-            $collection = $this->getRepository()->find($selectParams);
+            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
+            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+            $sth->execute();
         }
 
         $arr = array();
@@ -1723,7 +1729,39 @@ class Record extends \Espo\Core\Services\Base
             $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
         }
 
-        foreach ($collection as $entity) {
+        if ($collection) {
+            foreach ($collection as $entity) {
+                $this->loadAdditionalFieldsForExport($entity);
+                if (method_exists($exportObj, 'loadAdditionalFields')) {
+                    $exportObj->loadAdditionalFields($entity, $fieldList);
+                }
+                $row = array();
+                foreach ($attributeList as $attribute) {
+                    $value = $this->getAttributeFromEntityForExport($entity, $attribute);
+                    $row[$attribute] = $value;
+                }
+                $arr[] = $row;
+            }
+        } else {
+            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
+                $entity->set($dataRow);
+                $entity->setAsFetched();
+
+                $this->loadAdditionalFieldsForExport($entity);
+                if (method_exists($exportObj, 'loadAdditionalFields')) {
+                    $exportObj->loadAdditionalFields($entity, $fieldList);
+                }
+                $row = array();
+                foreach ($attributeList as $attribute) {
+                    $value = $this->getAttributeFromEntityForExport($entity, $attribute);
+                    $row[$attribute] = $value;
+                }
+                $arr[] = $row;
+            }
+        }
+
+        /*foreach ($collection as $entity) {
             $this->loadAdditionalFieldsForExport($entity);
             if (method_exists($exportObj, 'loadAdditionalFields')) {
                 $exportObj->loadAdditionalFields($entity, $fieldList);
@@ -1734,7 +1772,7 @@ class Record extends \Espo\Core\Services\Base
                 $row[$attribute] = $value;
             }
             $arr[] = $row;
-        }
+        }*/
 
         if (is_null($attributeList)) {
             $attributeList = [];
