@@ -1656,8 +1656,6 @@ class Record extends \Espo\Core\Services\Base
 
         $arr = array();
 
-        $collection->toArray();
-
         $attributeListToSkip = [
             'deleted'
         ];
