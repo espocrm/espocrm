@@ -81,6 +81,7 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
                 if (scope == 'Account' && this.getConfig().get('b2cMode')) {
                     return;
                 }
+                if (this.getMetadata().get(['scopes', scope, 'disabled'])) return;
                 if (this.getAcl().check(scope, 'edit')) {
                     scopeList.push(scope);
                 }
