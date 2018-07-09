@@ -30,7 +30,8 @@ Espo.define('controllers/base', 'controller', function (Dep) {
     return Dep.extend({
 
         login: function () {
-            this.entire('views/login', {}, function (login) {
+            var viewName = this.getMetadata().get(['clientDefs', 'App', 'loginView']) || 'views/login';
+            this.entire(viewName, {}, function (login) {
                 login.render();
                 login.on('login', function (data) {
                     this.trigger('login', data);
