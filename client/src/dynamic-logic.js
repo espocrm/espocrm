@@ -176,7 +176,7 @@ Espo.define('dynamic-logic', [], function () {
             } else if (type === 'contains' || type === 'has') {
                 if (!setValue) return false;
                 return !!~setValue.indexOf(value);
-            } else if (type === 'notContains' || type === 'hasNot') {
+            } else if (type === 'notContains' || type === 'notHas') {
                 if (!setValue) return true;
                 return !~setValue.indexOf(value);
             } else if (type === 'greaterThan') {
