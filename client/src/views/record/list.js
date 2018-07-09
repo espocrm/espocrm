@@ -321,6 +321,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.$el.find('.list > table tbody tr').removeClass('active');
+
+            this.trigger('select-all-results');
         },
 
         unselectAllResult: function () {

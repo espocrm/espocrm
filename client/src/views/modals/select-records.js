@@ -217,6 +217,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                             this.disableButton('select');
                         }
                     }, this);
+                    this.listenTo(view, 'select-all-results', function () {
+                        this.enableButton('select');
+                    }, this);
                 }
 
                 view.getSelectAttributeList(function (selectAttributeList) {
