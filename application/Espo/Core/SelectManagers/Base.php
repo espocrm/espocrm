@@ -1689,7 +1689,7 @@ class Base
         }
 
         if (!$forceFullTextSearch) {
-            $this->applyAdditionalToTextFilterGroup($textFilter, $group);
+            $this->applyAdditionalToTextFilterGroup($textFilter, $group, $result);
         }
 
         if (!empty($fullTextGroup)) {
@@ -1707,7 +1707,7 @@ class Base
         ];
     }
 
-    protected function applyAdditionalToTextFilterGroup($textFilter, &$group)
+    protected function applyAdditionalToTextFilterGroup($textFilter, &$group, &$result)
     {
     }
 

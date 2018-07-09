@@ -270,7 +270,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function applyAdditionalToTextFilterGroup($textFilter, &$group)
+    protected function applyAdditionalToTextFilterGroup($textFilter, &$group, &$result)
     {
         if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
             $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
