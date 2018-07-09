@@ -1435,10 +1435,19 @@ class Record extends \Espo\Core\Services\Base
             }
 
             $selectParams = $this->getSelectParams($p);
-            $skipTextColumns['skipTextColumns'] = true;
-            $collection = $repository->find($selectParams);
+            $selectParams['skipTextColumns'] = true;
 
-            foreach ($collection as $entity) {
+            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
+            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+            $sth->execute();
+
+            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
+                $entity->set($dataRow);
+                $entity->setAsFetched();
+
                 if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {
                         $idsRemoved[] = $entity->id;
