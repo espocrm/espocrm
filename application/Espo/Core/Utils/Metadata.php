@@ -358,6 +358,14 @@ class Metadata
      */
     public function saveCustom($key1, $key2, $data)
     {
+        if (is_object($data)) {
+            foreach ($data as $key => $item) {
+                if ($item == new \stdClass()) {
+                    unset($data->$key);
+                }
+            }
+        }
+
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -380,6 +388,14 @@ class Metadata
     */
     public function set($key1, $key2, $data)
     {
+        if (is_array($data)) {
+            foreach ($data as $key => $item) {
+                if (is_array($item) && empty($item)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
         $newData = array(
             $key1 => array(
                 $key2 => $data,
