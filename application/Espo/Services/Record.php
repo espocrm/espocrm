@@ -1352,9 +1352,17 @@ class Record extends \Espo\Core\Services\Base
 
             $selectParams = $this->getSelectParams($p);
 
-            $collection = $repository->find($selectParams);
+            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            foreach ($collection as $entity) {
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
+            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+            $sth->execute();
+
+            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
+                $entity->set($dataRow);
+                $entity->setAsFetched();
+
                 if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
                     $entity->set($data);
                     if ($this->checkAssignment($entity)) {
