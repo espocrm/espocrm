@@ -1761,19 +1761,6 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        /*foreach ($collection as $entity) {
-            $this->loadAdditionalFieldsForExport($entity);
-            if (method_exists($exportObj, 'loadAdditionalFields')) {
-                $exportObj->loadAdditionalFields($entity, $fieldList);
-            }
-            $row = array();
-            foreach ($attributeList as $attribute) {
-                $value = $this->getAttributeFromEntityForExport($entity, $attribute);
-                $row[$attribute] = $value;
-            }
-            $arr[] = $row;
-        }*/
-
         if (is_null($attributeList)) {
             $attributeList = [];
         }
