@@ -182,10 +182,6 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
             }.bind(this));
-
-            if (!this.model.get(this.idsName)) {
-                this.clearIds(true);
-            }
         },
 
         setupSearch: function () {
@@ -232,7 +228,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         removeId: function (id) {
-            var arr = _.clone(this.model.get(this.idsName));
+            var arr = _.clone(this.model.get(this.idsName) || []);
             var i = arr.indexOf(id);
             arr.splice(i, 1);
             this.model.set(this.idsName, arr);
@@ -584,7 +580,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (this.model.get(this.idsName).length == 0) {
+                if ((this.model.get(this.idsName) || []).length == 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, 'label');
                     return true;
@@ -602,7 +598,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         fetch: function () {
             var data = {};
-            data[this.idsName] = this.model.get(this.idsName);
+            data[this.idsName] = this.model.get(this.idsName) || [];
             return data;
         },
 
