@@ -85,7 +85,7 @@
             <header>{{translate 'Disabled' scope='Admin'}}</header>
             <ul class="disabled connected">
                 {{#each disabledFields}}
-                    <li draggable="true" data-name="{{name}}">
+                    <li draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
                         <div class="left">
                             <label>{{label}}</label>
                         </div>

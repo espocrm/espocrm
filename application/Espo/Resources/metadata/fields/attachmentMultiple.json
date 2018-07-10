@@ -30,6 +30,7 @@
       "layoutRelationshipsDisabled": true,
       "relationName": "attachments"
    },
+   "notSortable": true,
    "filter": true,
    "fieldDefs": {
       "layoutListDisabled": true

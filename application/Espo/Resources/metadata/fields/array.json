@@ -31,6 +31,7 @@
    ],
    "filter": true,
    "notCreatable": false,
+   "notSortable": true,
    "fieldDefs":{
       "type":"jsonArray"
    },

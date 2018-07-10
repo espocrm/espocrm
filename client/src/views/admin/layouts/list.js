@@ -127,10 +127,18 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                         duplicateLabelList.push(label);
                     }
                     labelList.push(label);
-                    this.disabledFields.push({
-                        name: allFields[i],
+                    var fieldName = allFields[i];
+                    var o = {
+                        name: fieldName,
                         label: label
-                    });
+                    };
+                    var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+                    if (fieldType) {
+                        if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                            o.notSortable = true;
+                        }
+                    }
+                    this.disabledFields.push(o);
                 }
             }
 
