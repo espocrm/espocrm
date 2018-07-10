@@ -1236,6 +1236,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (built == count) {
                             func();
                             this.wait(false);
+                            this.trigger('after:build-rows');
                         }
                     }.bind(this));
                 }, this);
@@ -1249,6 +1250,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 if (typeof callback == 'function') {
                     callback();
+                    this.trigger('after:build-rows');
                 }
             }
         },

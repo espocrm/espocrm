@@ -134,6 +134,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             this.header = iconHtml + this.header;
 
             this.waitForView('list');
+            if (this.searchPanel) {
+                this.waitForView('search');
+            }
 
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
@@ -143,6 +146,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 this.defaultAsc = collection.asc;
 
                 this.loadSearch();
+                this.wait(true);
                 this.loadList();
             }, this);
 
@@ -225,6 +229,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
+                    this.listenToOnce(view, 'after:build-rows', function () {
+                        this.wait(false);
+                    }, this);
                     this.collection.fetch();
                 }.bind(this));
             });
