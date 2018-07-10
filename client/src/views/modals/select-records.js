@@ -144,7 +144,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
                 this.loadSearch();
                 this.loadList();
-                collection.fetch();
             }, this);
 
         },
