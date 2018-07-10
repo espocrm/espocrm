@@ -40,7 +40,8 @@ class AttachmentMultiple extends Base
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'orderBy' => [['createdAt', 'ASC'], ['name', 'ASC']],
-                        'isLinkMultipleIdList' => true
+                        'isLinkMultipleIdList' => true,
+                        'relation' => $fieldName
                     ),
                     $fieldName.'Names' => array(
                         'type' => 'jsonObject',

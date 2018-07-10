@@ -24,8 +24,5 @@
    ],
    "notCreatable": true,
    "notSortable": true,
-   "filter": true,
-   "fieldDefs": {
-      "layoutListDisabled": true
-   }
+   "filter": true
 }

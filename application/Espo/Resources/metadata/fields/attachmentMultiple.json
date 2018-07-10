@@ -32,9 +32,6 @@
    },
    "notSortable": true,
    "filter": true,
-   "fieldDefs": {
-      "layoutListDisabled": true
-   },
    "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\AttachmentMultipleType",
    "personalData": true
 }

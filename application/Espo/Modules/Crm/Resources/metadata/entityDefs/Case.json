@@ -82,8 +82,7 @@
             "view": "views/fields/teams"
         },
         "attachments": {
-            "type": "attachmentMultiple",
-            "layoutListDisabled": true
+            "type": "attachmentMultiple"
         }
     },
     "links": {

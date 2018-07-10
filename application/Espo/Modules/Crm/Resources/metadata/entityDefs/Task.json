@@ -99,8 +99,7 @@
         },
         "attachments": {
             "type": "attachmentMultiple",
-            "sourceList": ["Document"],
-            "layoutListDisabled": true
+            "sourceList": ["Document"]
         }
     },
     "links": {
