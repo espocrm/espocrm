@@ -89,8 +89,12 @@ class Sender
 
         $this->transport = new SmtpTransport();
 
+        $config = $this->config;
+
+        $localHostName = $config->get('smtpLocalHostName', gethostname());
+
         $opts = array(
-            'name' => 'admin',
+            'name' => $localHostName,
             'host' => $params['server'],
             'port' => $params['port'],
             'connection_config' => array()
@@ -132,8 +136,10 @@ class Sender
 
         $config = $this->config;
 
+        $localHostName = $config->get('smtpLocalHostName', gethostname());
+
         $opts = array(
-            'name' => 'admin',
+            'name' => $localHostName,
             'host' => $config->get('smtpServer'),
             'port' => $config->get('smtpPort'),
             'connection_config' => array()
