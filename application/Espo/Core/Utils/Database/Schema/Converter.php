@@ -180,7 +180,7 @@ class Converter
 
         $schema = $this->getSchema(true);
 
-        $indexList = SchemaUtils::getIndexList($ormMeta);
+        $indexList = SchemaUtils::getIndexList($ormMeta, ['fulltext']);
         $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength(), $indexList);
 
         $tables = array();
