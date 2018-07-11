@@ -285,6 +285,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'disabled'])) {
                         return false;
                     }
+                    if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'textFilterDisabled'])) {
+                        return false;
+                    }
                     return true;
                 }, this);
 

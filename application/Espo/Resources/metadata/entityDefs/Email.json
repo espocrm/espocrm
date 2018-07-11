@@ -31,28 +31,33 @@
             "type": "varchar",
             "notStorable": true,
             "required": true,
-            "view": "views/email/fields/from-address-varchar"
+            "view": "views/email/fields/from-address-varchar",
+            "textFilterDisabled": true
         },
         "to": {
             "type": "varchar",
             "notStorable": true,
             "required": true,
-            "view": "views/email/fields/email-address-varchar"
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
         },
         "cc": {
             "type": "varchar",
             "notStorable": true,
-            "view": "views/email/fields/email-address-varchar"
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
         },
         "bcc": {
             "type": "varchar",
             "notStorable": true,
-            "view": "views/email/fields/email-address-varchar"
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
         },
         "replyTo": {
             "type": "varchar",
             "notStorable": true,
-            "view": "views/email/fields/email-address-varchar"
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
         },
         "personStringData": {
             "type": "varchar",
@@ -98,7 +103,8 @@
         "folderId": {
             "type": "varchar",
             "notStorable": true,
-            "default": false
+            "default": false,
+            "textFilterDisabled": true
         },
         "isUsers": {
             "type": "bool",
@@ -137,7 +143,8 @@
         "messageIdInternal": {
             "type": "varchar",
             "maxLength": 300,
-            "readOnly": true
+            "readOnly": true,
+            "textFilterDisabled": true
         },
         "emailAddress": {
             "type": "base",
@@ -146,7 +153,8 @@
         },
         "fromEmailAddress": {
             "type": "link",
-            "view": "views/email/fields/from-email-address"
+            "view": "views/email/fields/from-email-address",
+            "textFilterDisabled": true
         },
         "toEmailAddresses": {
             "type": "linkMultiple"
