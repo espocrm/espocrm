@@ -27,7 +27,8 @@
         "order": {
             "type": "int",
             "required": true,
-            "disableFormatting": true
+            "disableFormatting": true,
+            "textFilterDisabled": true
         },
         "teams": {
             "type": "linkMultiple",

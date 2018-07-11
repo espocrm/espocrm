@@ -8,7 +8,8 @@
         "order": {
             "type": "int",
             "minValue": 1,
-            "required": true
+            "required": true,
+            "textFilterDisabled": true
         },
         "description": {
             "type": "text"

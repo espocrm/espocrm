@@ -34,7 +34,8 @@
         },
         "order": {
             "type": "int",
-            "disableFormatting": true
+            "disableFormatting": true,
+            "textFilterDisabled": true
         },
         "description": {
             "type": "text"

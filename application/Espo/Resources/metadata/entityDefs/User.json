@@ -96,7 +96,8 @@
             },
             "trim": true,
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "textFilterDisabled": true
         },
         "emailAddress": {
             "type": "email",
