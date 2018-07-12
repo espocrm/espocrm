@@ -65,8 +65,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $sth->execute();
         }
 
-        $indexList = SchemaUtils::getIndexList($ormMeta, ['fulltext']);
-        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $maxIndexLength, $indexList);
+        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $maxIndexLength);
 
         foreach ($ormMeta as $entityName => $entityParams) {
 

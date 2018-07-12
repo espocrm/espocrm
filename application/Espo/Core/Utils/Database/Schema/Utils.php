@@ -110,7 +110,7 @@ class Utils
         $fields = array();
 
         if (!isset($indexList)) {
-            $indexList = static::getIndexList($ormMeta);
+            $indexList = static::getIndexList($ormMeta, ['fulltext']);
         }
 
         foreach ($indexList as $entityName => $indexes) {
