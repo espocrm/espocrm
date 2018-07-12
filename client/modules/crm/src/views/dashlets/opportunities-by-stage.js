@@ -135,7 +135,7 @@ Espo.define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abs
                 mouse: {
                     track: true,
                     relative: true,
-                    position: 's',
+                    position: 'w',
                     lineColor: this.hoverColor,
                     trackFormatter: function (obj) {
                         var label = (obj.series.label || self.translate('None'));
