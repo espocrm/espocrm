@@ -392,7 +392,8 @@ class Base
     protected function q($params, &$result)
     {
         if (isset($params['q']) && $params['q'] !== '') {
-            $this->textFilter($params['q'], $result);
+            $textFilter = $params['q'];
+            $this->textFilter($textFilter, $result);
         }
     }
 
@@ -1535,7 +1536,8 @@ class Base
             if (!$fullTextSearchMinLength) {
                 $fullTextSearchMinLength = 0;
             }
-            if (mb_strlen($textFilter) >= $fullTextSearchMinLength) {
+            $textFilterWoWildcards = str_replace('*', '', $textFilter);
+            if (mb_strlen($textFilterWoWildcards) >= $fullTextSearchMinLength) {
                 $useFullTextSearch = true;
             }
         }
@@ -1562,7 +1564,7 @@ class Base
 
         if ($useFullTextSearch) {
             if (
-                $isAuxiliaryUse
+                $isAuxiliaryUse && mb_strpos($textFilter, '*') === false
                 ||
                 mb_strpos($textFilter, ' ') === false
                 &&
@@ -1617,15 +1619,21 @@ class Base
             $forceFullTextSearch = true;
         }
 
+        $textFilterForFullTextSearch = $textFilter;
+
         $skipWidlcards = false;
         if (!$useFullTextSearch) {
             if (mb_strpos($textFilter, '*') !== false) {
                 $skipWidlcards = true;
                 $textFilter = str_replace('*', '%', $textFilter);
+            } else {
+                $textFilterForFullTextSearch .= '*';
             }
+
+            $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
         }
 
-        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilter, !$useFullTextSearch);
+        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
 
         $fullTextGroup = [];
 
