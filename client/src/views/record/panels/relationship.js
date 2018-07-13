@@ -42,6 +42,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         fetchOnModelAfterRelate: false,
 
+        skipCollectionSelect: false,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -196,12 +198,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true
                     }, function (view) {
-                        view.getSelectAttributeList(function (selectAttributeList) {
-                            if (selectAttributeList) {
-                                collection.data.select = selectAttributeList.join(',');
-                            }
+                        if (this.skipCollectionSelect) {
                             collection.fetch();
-                        }.bind(this));
+                        } else {
+                            view.getSelectAttributeList(function (selectAttributeList) {
+                                if (selectAttributeList) {
+                                    collection.data.select = selectAttributeList.join(',');
+                                }
+                                collection.fetch();
+                            }.bind(this));
+                        }
                     });
                 }, this);
 
