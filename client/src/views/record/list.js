@@ -507,10 +507,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
 	                    if (count) {
 	                        idsRemoved.forEach(function (id) {
 	                            Espo.Ui.notify(false);
-	                            this.checkedList = [];
 
                                 this.collection.trigger('model-removing', id);
                                 this.removeRecordFromList(id);
+                                this.uncheckRecord(id, null, true);
 
 	                        }, this);
 	                        var msg = 'massRemoveResult';
@@ -1057,7 +1057,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return layout;
         },
 
-        checkRecord: function (id, $target) {
+        checkRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
             if (!$target.size()) return;
@@ -1071,24 +1071,28 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             $target.closest('tr').addClass('active');
 
-            this.handleAfterCheck();
+            this.handleAfterCheck(isSilent);
         },
 
-        uncheckRecord: function (id, $target) {
+        uncheckRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
-            $target.get(0).checked = false;
+            if ($target.get(0)) {
+                $target.get(0).checked = false;
+            }
 
             var index = this.checkedList.indexOf(id);
             if (index != -1) {
                 this.checkedList.splice(index, 1);
             }
 
-            $target.closest('tr').removeClass('active');
+            if ($target.get(0)) {
+                $target.closest('tr').removeClass('active');
+            }
 
-            this.handleAfterCheck();
+            this.handleAfterCheck(isSilent);
         },
 
-        handleAfterCheck: function () {
+        handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
                 this.$el.find('.actions-button').removeAttr('disabled');
             } else {
@@ -1101,7 +1105,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.$el.find('.select-all').prop('checked', false);
             }
 
-            this.trigger('check');
+            if (!isSilent) {
+                this.trigger('check');
+            }
         },
 
         getRowActionsDefs: function () {
