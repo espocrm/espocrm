@@ -1577,6 +1577,8 @@ class Base
                 $function = 'MATCH_NATURAL_LANGUAGE';
             } else {
                 $function = 'MATCH_BOOLEAN';
+
+                $textFilter = str_replace('@', '*', $textFilter);
             }
 
             $fullTextSearchColumnSanitizedList = [];
