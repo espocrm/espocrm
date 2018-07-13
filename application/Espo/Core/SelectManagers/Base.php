@@ -1563,6 +1563,8 @@ class Base
         }
 
         if ($useFullTextSearch) {
+            $textFilter = str_replace(['(', ')'], '', $textFilter);
+
             if (
                 $isAuxiliaryUse && mb_strpos($textFilter, '*') === false
                 ||
@@ -1579,6 +1581,14 @@ class Base
                 $function = 'MATCH_BOOLEAN';
 
                 $textFilter = str_replace('@', '*', $textFilter);
+            }
+
+            while (strpos($textFilter, '**')) {
+                $textFilter = str_replace('**', '*', $textFilter);
+            }
+
+            while (mb_strpos($textFilter, ' *') === mb_strlen($textFilter) - 2) {
+                $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
             }
 
             $fullTextSearchColumnSanitizedList = [];
