@@ -1585,10 +1585,12 @@ class Base
 
             while (strpos($textFilter, '**')) {
                 $textFilter = str_replace('**', '*', $textFilter);
+                $textFilter = trim($textFilter);
             }
 
-            while (mb_strpos($textFilter, ' *') === mb_strlen($textFilter) - 2) {
+            while (mb_substr($textFilter, -2)  === ' *') {
                 $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
+                $textFilter = trim($textFilter);
             }
 
             $fullTextSearchColumnSanitizedList = [];
