@@ -153,7 +153,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
                 if (method in this) {
-                	this[method]();
+                    this[method]();
                 } else {
                     this.massAction(action);
                 }
@@ -311,9 +311,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.select-all').prop('checked', true);
 
             this.massActionList.forEach(function(item) {
-            	if (!~this.checkAllResultMassActionList.indexOf(item)) {
-            		this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
-            	}
+                if (!~this.checkAllResultMassActionList.indexOf(item)) {
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
+                }
             }, this);
 
             if (this.checkAllResultMassActionList.length) {
@@ -333,9 +333,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
 
             this.massActionList.forEach(function(item) {
-            	if (!~this.checkAllResultMassActionList.indexOf(item)) {
-            		this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
-            	}
+                if (!~this.checkAllResultMassActionList.indexOf(item)) {
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
+                }
             }, this);
         },
 
@@ -469,11 +469,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var ids = [];
                 var data = {};
                 if (this.allResultIsChecked) {
-                	data.where = this.collection.getWhere();
+                    data.where = this.collection.getWhere();
                     data.selectData = this.collection.data || {};
-                	data.byWhere = true;
+                    data.byWhere = true;
                 } else {
-                	data.ids = ids;
+                    data.ids = ids;
                 }
 
                 for (var i in this.checkedList) {
@@ -485,45 +485,45 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-            		result = result || {};
-            		var count = result.count;
-                	if (this.allResultIsChecked) {
-                		if (count) {
-                			this.unselectAllResult();
-                			this.listenToOnce(this.collection, 'sync', function () {
-		                        var msg = 'massRemoveResult';
-		                        if (count == 1) {
-		                            msg = 'massRemoveResultSingle'
-		                        }
-                				Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                			}, this);
-                			this.collection.fetch();
-                			Espo.Ui.notify(false);
-                		} else {
-                			Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
-                		}
-                	} else {
-                		var idsRemoved = result.ids || [];
-	                    if (count) {
-	                        idsRemoved.forEach(function (id) {
-	                            Espo.Ui.notify(false);
+                    result = result || {};
+                    var count = result.count;
+                    if (this.allResultIsChecked) {
+                        if (count) {
+                            this.unselectAllResult();
+                            this.listenToOnce(this.collection, 'sync', function () {
+                                var msg = 'massRemoveResult';
+                                if (count == 1) {
+                                    msg = 'massRemoveResultSingle'
+                                }
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            }, this);
+                            this.collection.fetch();
+                            Espo.Ui.notify(false);
+                        } else {
+                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+                        }
+                    } else {
+                        var idsRemoved = result.ids || [];
+                        if (count) {
+                            idsRemoved.forEach(function (id) {
+                                Espo.Ui.notify(false);
 
                                 this.collection.trigger('model-removing', id);
                                 this.removeRecordFromList(id);
                                 this.uncheckRecord(id, null, true);
 
-	                        }, this);
-	                        var msg = 'massRemoveResult';
-	                        if (count == 1) {
-	                            msg = 'massRemoveResultSingle'
-	                        }
-	                        Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
-	                    } else {
-	                        Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
-	                    }
-	                }
+                            }, this);
+                            var msg = 'massRemoveResult';
+                            if (count == 1) {
+                                msg = 'massRemoveResultSingle'
+                            }
+                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
+                        } else {
+                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
+                        }
+                    }
                 }.bind(this));
-			}, this);
+            }, this);
         },
 
         massActionPrintPdf: function () {
@@ -681,12 +681,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
                         }
                         if (allResultIsChecked) {
-                        	this.selectAllResult();
-	                    } else {
-	                        ids.forEach(function (id) {
-	                            this.checkRecord(id);
-	                        }, this);
-	                    }
+                            this.selectAllResult();
+                        } else {
+                            ids.forEach(function (id) {
+                                this.checkRecord(id);
+                            }, this);
+                        }
                     }.bind(this));
                     this.collection.fetch();
                 }, this);
@@ -694,16 +694,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         massActionExport: function () {
-	        if (!this.getConfig().get('exportDisabled') || this.getUser().get('isAdmin')) {
-	            this.export();
-	        }
+            if (!this.getConfig().get('exportDisabled') || this.getUser().get('isAdmin')) {
+                this.export();
+            }
         },
 
         removeMassAction: function (item) {
-			var index = this.massActionList.indexOf(item);
-			if (~index) {
-				this.massActionList.splice(index, 1);
-			}
+            var index = this.massActionList.indexOf(item);
+            if (~index) {
+                this.massActionList.splice(index, 1);
+            }
         },
 
         addMassAction: function (item, allResult) {
@@ -758,9 +758,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var checkAllResultMassActionList = [];
             this.checkAllResultMassActionList.forEach(function (item) {
-            	if (~this.massActionList.indexOf(item)) {
-            		checkAllResultMassActionList.push(item);
-            	}
+                if (~this.massActionList.indexOf(item)) {
+                    checkAllResultMassActionList.push(item);
+                }
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
@@ -790,7 +790,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 ||
                 this.getAcl().get('exportPermission') === 'no'
             ) {
-            	this.removeMassAction('export');
+                this.removeMassAction('export');
             }
 
             if (
@@ -970,13 +970,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var defs = [];
 
             for (var i in this.listLayout) {
-            	var width = false;
+                var width = false;
 
                 if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
                     width = this.listLayout[i].width + '%';
-				} else if ('widthPx' in this.listLayout[i]) {
-					width = this.listLayout[i].widthPx;
-				}
+                } else if ('widthPx' in this.listLayout[i]) {
+                    width = this.listLayout[i].widthPx;
+                }
 
                 var item = {
                     name: this.listLayout[i].name,
