@@ -423,19 +423,19 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         onScrollEdit: function (e) {
             var $target = $(e.target);
             var toolbarHeight = this.$toolbar.height();
-            var top;
+            var edgeTop, edgeTopAbsolute;
             if ($target.get(0) === window.document) {
                 var $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
                 var offset = $buttonContainer.offset();
                 if (offset) {
-                    var edgeTop = offset.top + $buttonContainer.height();
-                    var edgeTopAbsolute = edgeTop - $(window).scrollTop();
+                    edgeTop = offset.top + $buttonContainer.height();
+                    edgeTopAbsolute = edgeTop - $(window).scrollTop();
                 }
             } else {
                 var offset = $target.offset();
                 if (offset) {
-                    var edgeTop = offset.top;
-                    var edgeTopAbsolute = edgeTop;
+                    edgeTop = offset.top;
+                    edgeTopAbsolute = edgeTop;
                 }
             }
 
