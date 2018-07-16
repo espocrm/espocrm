@@ -56,6 +56,11 @@ class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
 
         $fulltextFieldList = $entityManager->getOrmMetadata()->get($entityName, 'fullTextSearchColumnList');
 
+        if (!$fulltextFieldList) {
+            $this->assertNull($fulltextFieldList);
+            return;
+        }
+
         $query = "SHOW INDEX FROM `". Util::toCamelCase($entityName) ."` WHERE Index_type = 'FULLTEXT'";
         $sth = $pdo->prepare($query);
         $sth->execute();
