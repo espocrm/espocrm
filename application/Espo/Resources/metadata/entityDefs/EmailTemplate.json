@@ -85,6 +85,7 @@
     },
     "collection": {
         "sortBy": "createdAt",
-        "asc": false
+        "asc": false,
+        "textFilterFields": ["name", "bodyPlain", "body", "subject"]
     }
 }
