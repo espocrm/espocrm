@@ -1,0 +1,11 @@
+{
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false,
+        "textFilterFields": [
+            "name",
+            "emailAddress"
+        ],
+        "fullTextSearch": true
+    }
+}
