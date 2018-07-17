@@ -1,0 +1,12 @@
+{
+    "collection": {
+        "sortBy": "dateSent",
+        "asc": false,
+        "textFilterFields": [
+            "name",
+            "bodyPlain",
+            "body"
+        ],
+        "fullTextSearch": true
+    }
+}

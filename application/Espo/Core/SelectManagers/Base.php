@@ -392,7 +392,8 @@ class Base
     protected function q($params, &$result)
     {
         if (isset($params['q']) && $params['q'] !== '') {
-            $this->textFilter($params['q'], $result);
+            $textFilter = $params['q'];
+            $this->textFilter($textFilter, $result);
         }
     }
 
@@ -1535,7 +1536,8 @@ class Base
             if (!$fullTextSearchMinLength) {
                 $fullTextSearchMinLength = 0;
             }
-            if (mb_strlen($textFilter) >= $fullTextSearchMinLength) {
+            $textFilterWoWildcards = str_replace('*', '', $textFilter);
+            if (mb_strlen($textFilterWoWildcards) >= $fullTextSearchMinLength) {
                 $useFullTextSearch = true;
             }
         }
@@ -1561,8 +1563,10 @@ class Base
         }
 
         if ($useFullTextSearch) {
+            $textFilter = str_replace(['(', ')'], '', $textFilter);
+
             if (
-                $isAuxiliaryUse
+                $isAuxiliaryUse && mb_strpos($textFilter, '*') === false
                 ||
                 mb_strpos($textFilter, ' ') === false
                 &&
@@ -1575,6 +1579,18 @@ class Base
                 $function = 'MATCH_NATURAL_LANGUAGE';
             } else {
                 $function = 'MATCH_BOOLEAN';
+
+                $textFilter = str_replace('@', '*', $textFilter);
+            }
+
+            while (strpos($textFilter, '**')) {
+                $textFilter = str_replace('**', '*', $textFilter);
+                $textFilter = trim($textFilter);
+            }
+
+            while (mb_substr($textFilter, -2)  === ' *') {
+                $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
+                $textFilter = trim($textFilter);
             }
 
             $fullTextSearchColumnSanitizedList = [];
@@ -1617,15 +1633,21 @@ class Base
             $forceFullTextSearch = true;
         }
 
+        $textFilterForFullTextSearch = $textFilter;
+
         $skipWidlcards = false;
         if (!$useFullTextSearch) {
             if (mb_strpos($textFilter, '*') !== false) {
                 $skipWidlcards = true;
                 $textFilter = str_replace('*', '%', $textFilter);
+            } else {
+                $textFilterForFullTextSearch .= '*';
             }
+
+            $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
         }
 
-        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilter, !$useFullTextSearch);
+        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
 
         $fullTextGroup = [];
 

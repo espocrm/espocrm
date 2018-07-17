@@ -423,19 +423,21 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         onScrollEdit: function (e) {
             var $target = $(e.target);
             var toolbarHeight = this.$toolbar.height();
-            var top;
+            var toolbarWidth = this.$toolbar.parent().width();
+            var edgeTop, edgeTopAbsolute;
+
             if ($target.get(0) === window.document) {
                 var $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
                 var offset = $buttonContainer.offset();
                 if (offset) {
-                    var edgeTop = offset.top + $buttonContainer.height();
-                    var edgeTopAbsolute = edgeTop - $(window).scrollTop();
+                    edgeTop = offset.top + $buttonContainer.height();
+                    edgeTopAbsolute = edgeTop - $(window).scrollTop();
                 }
             } else {
                 var offset = $target.offset();
                 if (offset) {
-                    var edgeTop = offset.top;
-                    var edgeTopAbsolute = edgeTop;
+                    edgeTop = offset.top;
+                    edgeTopAbsolute = edgeTop - $(window).scrollTop();
                 }
             }
 
@@ -449,7 +451,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             if (toStick) {
                 this.$toolbar.css({
-                    top: edgeTopAbsolute + 'px'
+                    top: edgeTopAbsolute + 'px',
+                    width: toolbarWidth + 'px'
                 });
                 this.$toolbar.addClass('sticked');
                 this.$area.css({
@@ -458,7 +461,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 });
             } else {
                 this.$toolbar.css({
-                    top: ''
+                    top: '',
+                    width: ''
                 });
                 this.$toolbar.removeClass('sticked');
                 this.$area.css({

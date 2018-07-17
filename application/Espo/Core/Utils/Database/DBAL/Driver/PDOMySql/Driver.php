@@ -25,16 +25,19 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Core\Utils\Database\DBAL\Driver\PDOMySql;
 
-class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver 
+class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 {
-
     public function getDatabasePlatform()
     {
         return new \Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform();
     }
-    
+
+    public function getSchemaManager(\Doctrine\DBAL\Connection $conn)
+    {
+        return new \Espo\Core\Utils\Database\DBAL\Schema\MySqlSchemaManager($conn);
+    }
 }

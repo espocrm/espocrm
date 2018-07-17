@@ -27,27 +27,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Schema;
+namespace tests\integration\Espo\Core\FulltextIndex;
 
-class Schema extends \Doctrine\DBAL\Schema\Schema
+use Espo\Core\Utils\Util;
+
+class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
 {
-    /**
-     * Creates a new table.
-     *
-     * @param string $tableName
-     *
-     * @return \Doctrine\DBAL\Schema\Table
-     */
-    public function createTable($tableName)
+    protected $dataFile = 'InitData.php';
+
+    protected $pathToFiles = 'Core/FulltextIndex/customFiles';
+
+    public function entitylist()
     {
-        $table = new Table($tableName);
-        $this->_addTable($table);
-
-        foreach ($this->_schemaConfig->getDefaultTableOptions() as $name => $value) {
-            $table->addOption($name, $value);
-        }
-
-        return $table;
+        return [
+            ['Email'],
+            ['Account'],
+            ['Contact'],
+        ];
     }
 
+    /**
+     * @dataProvider entitylist
+     */
+    public function testCreatedIndexes($entityName)
+    {
+        $entityManager = $this->getContainer()->get('entityManager');
+        $pdo = $entityManager->getPDO();
+
+        $fulltextFieldList = $entityManager->getOrmMetadata()->get($entityName, 'fullTextSearchColumnList');
+
+        if (!$fulltextFieldList) {
+            $this->assertNull($fulltextFieldList);
+            return;
+        }
+
+        $query = "SHOW INDEX FROM `". Util::toCamelCase($entityName) ."` WHERE Index_type = 'FULLTEXT'";
+        $sth = $pdo->prepare($query);
+        $sth->execute();
+
+        $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        $this->assertNotEmpty($rowList);
+
+        $result = [];
+        foreach ($rowList as $row) {
+            $result[] = Util::toCamelCase($row['Column_name']);
+        }
+
+        asort($fulltextFieldList);
+        asort($result);
+
+        $this->assertEquals($fulltextFieldList, $result);
+    }
 }

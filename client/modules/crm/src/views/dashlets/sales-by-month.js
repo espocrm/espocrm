@@ -160,6 +160,7 @@ Espo.define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/ch
                     track: true,
                     relative: true,
                     lineColor: this.hoverColor,
+                    position: 's',
                     trackFormatter: function (obj) {
                         var i = parseInt(obj.x);
                         var value = '';
