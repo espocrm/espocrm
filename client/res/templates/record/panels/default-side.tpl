@@ -1,3 +1,4 @@
+{{#if fieldList.length}}
 <div class="row">
 {{#each fieldList}}
 <div class="cell form-group col-sm-6 col-md-12{{#if hidden}} hidden-cell{{/if}}" data-name="{{name}}">
@@ -8,6 +9,7 @@
 </div>
 {{/each}}
 </div>
+{{/if}}
 
 {{#unless complexDateFieldsDisabled}}
 <div class="row">

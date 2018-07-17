@@ -120,6 +120,12 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
             this.createFields();
         },
 
+        afterRender: function () {
+            if (this.$el.children().size() === 0) {
+                this.$el.parent().addClass('hidden');
+            }
+        },
+
         setupFields: function () {
         },
 
