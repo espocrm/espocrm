@@ -576,7 +576,12 @@ abstract class Base
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
                 $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
-                $part = "FIELD(" . $fieldPath . ", '" . implode("', '", array_reverse(explode(",", $list))) . "') DESC";
+                $listQuoted = [];
+                $list = array_reverse(explode(',', $list));
+                foreach ($list as $i => $listItem) {
+                    $listQuoted[] = $this->quote($listItem);
+                }
+                $part = "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
                 return $part;
             }
 
