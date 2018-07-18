@@ -1,3 +1,6 @@
+{{#if isReplied}}
+<span class="glyphicon glyphicon-share-alt small text-muted icon-flip-horizontal pull-right"></span>
+{{/if}}
 {{#if hasAttachment}}
 <span class="glyphicon glyphicon-paperclip small text-muted pull-right"></span>
 {{/if}}

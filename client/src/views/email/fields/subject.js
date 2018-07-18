@@ -37,6 +37,7 @@ Espo.define('views/email/fields/subject', 'views/fields/varchar', function (Dep)
             data.isRead = (this.model.get('sentById') === this.getUser().id) || this.model.get('isRead');
             data.isImportant = this.model.get('isImportant');
             data.hasAttachment = this.model.get('hasAttachment');
+            data.isReplied = this.model.get('isReplied');
 
             if (!data.isNotEmpty) {
                 if (
