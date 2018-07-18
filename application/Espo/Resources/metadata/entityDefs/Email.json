@@ -62,7 +62,8 @@
         "personStringData": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "view": "views/email/fields/person-string-data"
         },
         "isRead": {
             "type": "bool",
