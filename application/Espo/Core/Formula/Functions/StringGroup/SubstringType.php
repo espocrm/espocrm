@@ -52,9 +52,9 @@ class SubstringType extends \Espo\Core\Formula\Functions\Base
 
         if (count($item->value) > 2) {
             $length = $this->evaluate($item->value[2]);
-            return substr($string, $start, $length);
+            return mb_substr($string, $start, $length);
         } else {
-            return substr($string, $start);
+            return mb_substr($string, $start);
         }
     }
 }
