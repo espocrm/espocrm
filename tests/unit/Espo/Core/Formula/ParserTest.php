@@ -305,6 +305,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ];
+
         $this->assertEquals($expected, $actual);
 
         $expression = "!value * 10";
