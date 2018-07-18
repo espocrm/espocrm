@@ -579,6 +579,7 @@ abstract class Base
                 $listQuoted = [];
                 $list = array_reverse(explode(',', $list));
                 foreach ($list as $i => $listItem) {
+                    $listItem = str_replace('_COMMA_', ',', $listItem);
                     $listQuoted[] = $this->quote($listItem);
                 }
                 $part = "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
