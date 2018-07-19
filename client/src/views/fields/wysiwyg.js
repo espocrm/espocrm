@@ -212,6 +212,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
                         var $document = $(documentElement);
 
+                        var processWidth = function () {
+                            var bodyElement = $body.get(0);
+                            if (bodyElement) {
+                                if (bodyElement.clientWidth !== iframeElement.scrollWidth) {
+                                    iframeElement.style.height = (iframeElement.scrollHeight + 20) + 'px';
+                                }
+                            }
+                        };
+
                         var increaseHeightStep = 10;
                         var processIncreaseHeight = function (iteration, previousDiff) {
                             $body.css('height', '');
@@ -229,6 +238,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             if (typeof previousDiff !== 'undefined') {
                                 if (diff === previousDiff) {
                                     $body.css('height', (iframeElement.clientHeight - increaseHeightStep) + 'px');
+                                    processWidth();
                                     return;
                                 }
                             }
@@ -238,12 +248,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 iframeElement.style.height = height + 'px';
                                 processIncreaseHeight(iteration, diff);
                             } else {
-                                var bodyElement = $body.get(0);
-                                if (bodyElement) {
-                                    if (bodyElement.clientWidth !== iframeElement.scrollWidth) {
-                                        iframeElement.style.height = (iframeElement.scrollHeight + 20) + 'px';
-                                    }
-                                }
+                                processWidth();
                             }
                         };
 
