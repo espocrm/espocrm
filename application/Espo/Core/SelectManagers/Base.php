@@ -161,6 +161,9 @@ class Base
                     if ($desc) {
                         $list = array_reverse($list);
                     }
+                    foreach ($list as $i => $listItem) {
+                        $list[$i] = str_replace(',', '_COMMA_', $listItem);
+                    }
                     $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
                     return;
                 }
@@ -1636,18 +1639,31 @@ class Base
         $textFilterForFullTextSearch = $textFilter;
 
         $skipWidlcards = false;
-        if (!$useFullTextSearch) {
-            if (mb_strpos($textFilter, '*') !== false) {
-                $skipWidlcards = true;
-                $textFilter = str_replace('*', '%', $textFilter);
-            } else {
+
+        if (mb_strpos($textFilter, '*') !== false) {
+            $skipWidlcards = true;
+            $textFilter = str_replace('*', '%', $textFilter);
+        } else {
+            if (!$useFullTextSearch) {
                 $textFilterForFullTextSearch .= '*';
             }
-
-            $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
         }
 
-        $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
+        $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
+
+        $skipFullTextSearch = false;
+        if (!$forceFullTextSearch) {
+            if (mb_strpos($textFilterForFullTextSearch, '*') === 0) {
+                $skipFullTextSearch = true;
+            } else if (mb_strpos($textFilterForFullTextSearch, ' *') !== false) {
+                $skipFullTextSearch = true;
+            }
+        }
+
+        $fullTextSearchData = null;
+        if (!$skipFullTextSearch) {
+            $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
+        }
 
         $fullTextGroup = [];
 

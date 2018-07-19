@@ -132,7 +132,14 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     border-left: 0;
 }
 
-.list > table.table td > span.glyphicon.pull-right,
+.list > table.table td > span.list-icon-container.pull-right {
+    margin-left: 5px;
+}
+
+.list > table.table td > span.list-icon-container.pull-left {
+    margin-right: 5px;
+}
+
 .list > ul.list-group > li.list-row .cell > span.glyphicon.pull-right {
     margin-left: 5px;
     margin-top: 4px;
@@ -373,6 +380,10 @@ ul.dropdown-menu > li.checkbox {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.dropdown-menu > li > a {
+    line-height: @line-height-computed;
 }
 
 ul.dropdown-menu > li > a.active {
@@ -961,8 +972,8 @@ table.list th {
 .list > table th[data-name="r-checkbox"] {
     white-space: nowrap;
     .select-all-container {
-        line-height: @line-height-base;
-        height: unit(@line-height-base, em);
+        line-height: @line-height-computed;
+        height: @line-height-computed;
         float: left;
     }
 }
@@ -975,6 +986,11 @@ table.list th {
 .list .checkbox-dropdown > a {
     padding: 0;
     line-height: 1;
+}
+
+.list .record-checkbox-container {
+    height: @line-height-computed;
+    display: block;
 }
 
 .list > table td > div.field {
@@ -1272,6 +1288,15 @@ label.attach-file-label {
     -ms-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     transform: rotate(90deg);
+}
+
+.icon-flip-horizontal {
+   -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    -ms-filter: fliph;
+    filter: fliph;
 }
 
 .post-container > textarea.note,

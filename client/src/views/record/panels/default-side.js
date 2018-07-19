@@ -34,28 +34,44 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            if (this.complexCreatedDisabled && this.complexModifiedDisabled) {
+            if (this.complexCreatedDisabled && this.complexModifiedDisabled  || (!this.hasComplexCreated && !this.hasComplexModified)) {
                 data.complexDateFieldsDisabled = true;
             }
+            data.hasComplexCreated = this.hasComplexCreated;
+            data.hasComplexModified = this.hasComplexModified;
             return data;
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.hasComplexCreated =
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdAt'])
+                &&
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdBy']);
+
+            this.hasComplexModified =
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedAt'])
+                &&
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedBy']);
+
             if (!this.complexCreatedDisabled) {
-                this.createField('createdBy', null, null, null, true);
-                this.createField('createdAt', null, null, null, true);
-                if (!this.model.get('createdById')) {
-                    this.recordViewObject.hideField('complexCreated');
+                if (this.hasComplexCreated) {
+                    this.createField('createdBy', null, null, null, true);
+                    this.createField('createdAt', null, null, null, true);
+                    if (!this.model.get('createdById')) {
+                        this.recordViewObject.hideField('complexCreated');
+                    }
                 }
             } else {
                 this.recordViewObject.hideField('complexCreated');
             }
 
             if (!this.complexModifiedDisabled) {
-                this.createField('modifiedBy', null, null, null, true);
-                this.createField('modifiedAt', null, null, null, true);
+                if (this.hasComplexModified) {
+                    this.createField('modifiedBy', null, null, null, true);
+                    this.createField('modifiedAt', null, null, null, true);
+                }
                 if (!this.model.get('modifiedById')) {
                     this.recordViewObject.hideField('complexModified');
                 }
@@ -63,13 +79,13 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
                 this.recordViewObject.hideField('complexModified');
             }
 
-            if (!this.complexCreatedDisabled) {
+            if (!this.complexCreatedDisabled && this.hasComplexCreated) {
                 this.listenTo(this.model, 'change:createdById', function () {
                     if (!this.model.get('createdById')) return;
                     this.recordViewObject.showField('complexCreated');
                 }, this);
             }
-            if (!this.complexModifiedDisabled) {
+            if (!this.complexModifiedDisabled && this.hasComplexModified) {
                 this.listenTo(this.model, 'change:modifiedById', function () {
                     if (!this.model.get('modifiedById')) return;
                     this.recordViewObject.showField('complexModified');

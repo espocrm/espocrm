@@ -92,14 +92,16 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             $document = $(document);
             $document.on('mouseup.global-search', function (e) {
                 if (e.which !== 1) return;
+                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                    this.closePanel();
+                }
+            }.bind(this));
+            $document.on('click.global-search', function (e) {
                 if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
                     setTimeout(function () {
                         this.closePanel();
                     }.bind(this), 100);
                     return;
-                }
-                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    this.closePanel();
                 }
             }.bind(this));
         },
@@ -112,11 +114,10 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
             };
-             $document.off('mouseup.global-search');
-               $container.remove();
-        },
+            $document.off('mouseup.global-search');
+            $document.off('click.global-search');
+            $container.remove();
+        }
 
     });
-
 });
-

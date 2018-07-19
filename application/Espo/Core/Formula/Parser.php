@@ -176,6 +176,8 @@ class Parser
 
         $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
 
+        $expressionOutOfBraceList = [];
+
         for ($i = 0; $i < strlen($modifiedExpression); $i++) {
             if ($modifiedExpression[$i] === '(') {
                 $braceCounter++;
@@ -185,6 +187,11 @@ class Parser
             }
             if ($braceCounter === 0 && $i < strlen($modifiedExpression) - 1) {
                 $hasExcessBraces = false;
+            }
+            if ($braceCounter === 0) {
+                $expressionOutOfBraceList[] = true;
+            } else {
+                $expressionOutOfBraceList[] = false;
             }
         }
         if ($braceCounter !== 0) {
@@ -226,7 +233,13 @@ class Parser
 
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
-                $index = strpos($expression, $operator, 1);
+                $startFrom = 1;
+                while (true) {
+                    $index = strpos($expression, $operator, $startFrom);
+                    if ($index === false) break;
+                    if ($expressionOutOfBraceList[$index]) break;
+                    $startFrom = $index + 1;
+                }
                 if ($index !== false) {
                     $possibleRightOperator = null;
                     if (strlen($operator) === 1) {

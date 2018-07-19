@@ -58,16 +58,30 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
 
                 foreach ($userIdList as $userId) {
                     if (in_array($userId, $fetchedAssignedUserIdList)) continue;
-                    if ($this->getUser()->id === $userId) continue;
+                    if (!$this->isNotSelfAssignment($entity, $userId)) continue;
                     $this->createJob($entity, $userId);
                 }
             } else {
                 $userId = $entity->get('assignedUserId');
-                if (!empty($userId) && $userId != $this->getUser()->id && $entity->isAttributeChanged('assignedUserId')) {
+                if (!empty($userId) && $entity->isAttributeChanged('assignedUserId') && $this->isNotSelfAssignment($entity, $userId)) {
                     $this->createJob($entity, $userId);
                 }
             }
         }
+    }
+
+    protected function isNotSelfAssignment(Entity $entity, $assignedUserId)
+    {
+        if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
+            if ($entity->isNew()) {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
+            } else {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
+            }
+        } else {
+            $isNotSelfAssignment = $assignedUserId !== $this->getUser()->id;
+        }
+        return $isNotSelfAssignment;
     }
 
     protected function createJob(Entity $entity, $userId)
