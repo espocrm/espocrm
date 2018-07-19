@@ -382,6 +382,10 @@ ul.dropdown-menu > li.checkbox {
     user-select: none;
 }
 
+.dropdown-menu > li > a {
+    line-height: @line-height-computed;
+}
+
 ul.dropdown-menu > li > a.active {
     background-color: @gray-lighter;
     text-decoration: none;
@@ -968,8 +972,8 @@ table.list th {
 .list > table th[data-name="r-checkbox"] {
     white-space: nowrap;
     .select-all-container {
-        line-height: @line-height-base;
-        height: unit(@line-height-base, em);
+        line-height: @line-height-computed;
+        height: @line-height-computed;
         float: left;
     }
 }
@@ -982,6 +986,11 @@ table.list th {
 .list .checkbox-dropdown > a {
     padding: 0;
     line-height: 1;
+}
+
+.list .record-checkbox-container {
+    height: @line-height-computed;
+    display: block;
 }
 
 .list > table td > div.field {
