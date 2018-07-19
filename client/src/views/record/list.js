@@ -1013,7 +1013,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 layout.push({
                     name: 'r-checkboxField',
                     columnName: 'r-checkbox',
-                    template: 'record.list-checkbox'
+                    template: 'record/list-checkbox'
                 });
             }
 
