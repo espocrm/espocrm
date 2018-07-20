@@ -109,7 +109,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
 
             if (this.options.customOptionList) {
-                this.setOptionList(this.options.customOptionList);
+                this.setOptionList(this.options.customOptionList, true);
             }
         },
 
@@ -146,13 +146,21 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         },
 
-        setOptionList: function (optionList) {
+        setOptionList: function (optionList, silent) {
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
             }
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode == 'edit') {
+            if (this.mode == 'edit' && !silent) {
+                var selectedOptionList = [];
+                this.selected.forEach(function (option) {
+                    if (~optionList.indexOf(option)) {
+                        selectedOptionList.push(option);
+                    }
+                }, this);
+                this.selected = selectedOptionList;
+
                 if (this.isRendered()) {
                     this.reRender();
                     this.trigger('change');
