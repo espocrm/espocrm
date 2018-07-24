@@ -361,8 +361,6 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $job->set('array', ['2', '1']);
 
         $this->db->update($job);
-
-
     }
 
     public function testUpdateArray2()
