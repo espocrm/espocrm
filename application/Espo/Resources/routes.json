@@ -47,6 +47,13 @@
         }
     },
     {
+        "route": "/Settings",
+        "method": "put",
+        "params": {
+            "controller": "Settings"
+        }
+    },
+    {
         "route":"User/passwordChangeRequest",
         "method":"post",
         "params":{
