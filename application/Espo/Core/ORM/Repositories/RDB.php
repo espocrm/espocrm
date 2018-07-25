@@ -465,17 +465,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                         $data->$columnName = $foreignEntity->get($columnField);
                                     }
                                     $existingColumnsData->$foreignId = $data;
-                                    $entity->setFetched($columnsFieldsName, $existingColumnsData);
+                                    if (!$entity->isNew()) {
+                                        $entity->setFetched($columnsFieldsName, $existingColumnsData);
+                                    }
                                 }
 
                             }
                         }
 
-                        if ($entity->has($fieldName)) {
-                            $entity->setFetched($fieldName, $existingIds);
-                        }
-                        if ($entity->has($columnsFieldsName) && !empty($columns)) {
-                            $entity->setFetched($columnsFieldsName, $existingColumnsData);
+                        if (!$entity->isNew()) {
+                            if ($entity->has($fieldName)) {
+                                $entity->setFetched($fieldName, $existingIds);
+                            }
+                            if ($entity->has($columnsFieldsName) && !empty($columns)) {
+                                $entity->setFetched($columnsFieldsName, $existingColumnsData);
+                            }
                         }
 
                         foreach ($existingIds as $id) {
@@ -540,13 +544,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $where[$foreignKey] = $entity->id;
                 $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
                 if ($previousForeignEntity) {
-                    $entity->setFetched($idFieldName, $previousForeignEntity->id);
+                    if (!$entity->isNew()) {
+                        $entity->setFetched($idFieldName, $previousForeignEntity->id);
+                    }
                     if ($previousForeignEntity->id !== $entity->get($idFieldName)) {
                         $previousForeignEntity->set($foreignKey, null);
                         $this->getEntityManager()->saveEntity($previousForeignEntity);
                     }
                 } else {
-                    $entity->setFetched($idFieldName, null);
+                    if (!$entity->isNew()) {
+                        $entity->setFetched($idFieldName, null);
+                    }
                 }
 
                 if ($entity->get($idFieldName)) {
