@@ -381,15 +381,24 @@ abstract class Entity implements IEntity
         if (!$this->hasFetched($name)) {
             return true;
         }
-        return !self::areValuesEqual($this->getAttributeType($name), $this->get($name), $this->getFetched($name));
+        return !self::areValuesEqual(
+            $this->getAttributeType($name),
+            $this->get($name),
+            $this->getFetched($name),
+            $this->getAttributeParam($name, 'isUnordered')
+        );
 
         return $this->get($name) != $this->getFetched($name);
     }
 
-    public static function areValuesEqual($type, $v1, $v2)
+    public static function areValuesEqual($type, $v1, $v2, $isUnordered = false)
     {
         if ($type === self::JSON_ARRAY) {
             if (is_array($v1) && is_array($v2)) {
+                if ($isUnordered) {
+                    sort($v1);
+                    sort($v2);
+                }
                 if ($v1 != $v2) {
                     return false;
                 }

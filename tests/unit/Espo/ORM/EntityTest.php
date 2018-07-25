@@ -124,6 +124,26 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($job->isAttributeChanged('array'));
 
         $job = new \Espo\Entities\Job();
+        $job->setFetched('arrayUnordered', ['1', '2']);
+        $job->set('arrayUnordered', ['2', '1']);
+        $this->assertFalse($job->isAttributeChanged('arrayUnordered'));
+
+        $job = new \Espo\Entities\Job();
+        $job->setFetched('arrayUnordered', ['1', '2']);
+        $job->set('arrayUnordered', ['1', '2']);
+        $this->assertFalse($job->isAttributeChanged('arrayUnordered'));
+
+        $job = new \Espo\Entities\Job();
+        $job->setFetched('arrayUnordered', ['1', '2']);
+        $job->set('arrayUnordered', ['1', '2', '3']);
+        $this->assertTrue($job->isAttributeChanged('arrayUnordered'));
+
+        $job = new \Espo\Entities\Job();
+        $job->setFetched('arrayUnordered', ['1', '2']);
+        $job->set('arrayUnordered', null);
+        $this->assertTrue($job->isAttributeChanged('arrayUnordered'));
+
+        $job = new \Espo\Entities\Job();
         $job->setFetched('object', (object) ['1' => 'value-1']);
         $job->set('object', (object) ['1' => 'value-1']);
         $this->assertFalse($job->isAttributeChanged('object'));

@@ -257,6 +257,10 @@ class Job extends TEntity
         'array' => array(
             'type' => Entity::JSON_ARRAY
         ),
+        'arrayUnordered' => array(
+            'type' => Entity::JSON_ARRAY,
+            'isUnordered' => true
+        ),
         'object' => array(
             'type' => Entity::JSON_OBJECT
         ),
