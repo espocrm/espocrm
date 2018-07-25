@@ -32,7 +32,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         type: 'array',
 
-        listTemplate: 'fields/array/detail',
+        listTemplate: 'fields/array/list',
 
         detailTemplate: 'fields/array/detail',
 
@@ -51,7 +51,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 translatedOptions: this.translatedOptions,
                 hasOptions: this.params.options ? true : false,
                 itemHtmlList: itemHtmlList,
-                isEmpty: (this.selected || []).length === 0
+                isEmpty: (this.selected || []).length === 0,
+                valueIsSet: this.model.has(this.name)
             }, Dep.prototype.data.call(this));
         },
 

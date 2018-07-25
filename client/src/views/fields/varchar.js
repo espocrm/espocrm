@@ -58,6 +58,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             ) {
                 data.isNotEmpty = true;
             }
+            data.valueIsSet = this.model.has(this.name);
+
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
