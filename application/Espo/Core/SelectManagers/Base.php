@@ -1255,7 +1255,7 @@ class Base
 
                     $value = $item['value'];
 
-                    if (is_null($value)) break;
+                    if (is_null($value) || !$value && !is_array($value)) break;
 
                     $relationType = $seed->getRelationType($link);
 
