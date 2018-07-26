@@ -45,21 +45,25 @@ class MassEmail extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function acessOnlyOwn(&$result)
+    protected function accessOnlyOwn(&$result)
     {
+        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
+
         $result['whereClause'][] = array(
-            'campaign.assignedUserId' => $this->getUser()->id
+            'campaignAccess.assignedUserId' => $this->getUser()->id
         );
     }
 
     protected function accessOnlyTeam(&$result)
     {
-        $teamIdList = $this->user->get('teamsIds');
+        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
+
+        $teamIdList = $this->user->getLinkMultipleIdList('teams');
         if (empty($result['customWhere'])) {
             $result['customWhere'] = '';
         }
         if (empty($teamIdList)) {
-            $result['customWhere'] .= " AND campaign.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id);
+            $result['customWhere'] .= " AND campaignAccess.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id);
             return;
         }
         $arr = [];
@@ -69,12 +73,12 @@ class MassEmail extends \Espo\Core\SelectManagers\Base
             }
         }
 
-        $result['customJoin'] .= " LEFT JOIN entity_team AS teamsMiddle ON teamsMiddle.entity_type = 'Campaign' AND teamsMiddle.entity_id = campaign.id AND teamsMiddle.deleted = 0";
+        $result['customJoin'] .= " LEFT JOIN entity_team AS teamsMiddle ON teamsMiddle.entity_type = 'Campaign' AND teamsMiddle.entity_id = campaignAccess.id AND teamsMiddle.deleted = 0";
         $result['customWhere'] .= "
             AND (
                 teamsMiddle.team_id IN (" . implode(', ', $arr) . ")
                  OR
-                campaign.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id)."
+                campaignAccess.assigned_user_id = ".$this->getEntityManager()->getPDO()->quote($this->getUser()->id)."
             )
         ";
         $result['whereClause'][] = array(
