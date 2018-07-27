@@ -2191,7 +2191,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         // TODO remove in 5.5.0
-        if (in_array($this->getEntityType(), ['Report', 'Workflow'])) {
+        if (in_array($this->getEntityType(), ['Report', 'Workflow', 'ReportPanel'])) {
             return null;
         }
 

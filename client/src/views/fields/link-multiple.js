@@ -32,7 +32,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         type: 'linkMultiple',
 
-        listTemplate: 'fields/link-multiple/detail',
+        listTemplate: 'fields/link-multiple/list',
 
         detailTemplate: 'fields/link-multiple/detail',
 
