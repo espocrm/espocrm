@@ -46,6 +46,8 @@ Espo.define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
             data.lastMaxLength = this.model.getFieldParam(this.lastField, 'maxLength');
 
+            data.valueIsSet = this.model.has(this.firstField) || this.model.has(this.lastField);
+
             if (this.mode === 'detail') {
                 data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.salutationValue;
             } else if (this.mode === 'list' || this.mode === 'listLink') {

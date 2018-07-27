@@ -50,6 +50,11 @@ Espo.define('model', [], function () {
             Dep.prototype.initialize.call(this);
         },
 
+        sync: function (method, model, options) {
+            if (method === 'patch') options.type = 'PUT';
+            return Dep.prototype.sync.call(this, method, model, options);
+        },
+
         set: function (key, val, options) {
             if (typeof key === 'object') {
                 var o = key;

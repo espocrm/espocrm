@@ -369,25 +369,92 @@ abstract class Entity implements IEntity
         return $this->isFetched;
     }
 
-    public function isFieldChanged($fieldName)
+    public function isFieldChanged($name)
     {
-        return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
+        return $this->has($name) && ($this->get($name) != $this->getFetched($name));
     }
 
-    public function isAttributeChanged($fieldName)
+    public function isAttributeChanged($name)
     {
-        return $this->has($fieldName) && ($this->get($fieldName) != $this->getFetched($fieldName));
+        if (!$this->has($name)) return false;
+
+        if (!$this->hasFetched($name)) {
+            return true;
+        }
+        return !self::areValuesEqual(
+            $this->getAttributeType($name),
+            $this->get($name),
+            $this->getFetched($name),
+            $this->getAttributeParam($name, 'isUnordered')
+        );
+
+        return $this->get($name) != $this->getFetched($name);
     }
 
-    public function setFetched($fieldName, $value)
+    public static function areValuesEqual($type, $v1, $v2, $isUnordered = false)
     {
-        $this->fetchedValuesContainer[$fieldName] = $value;
+        if ($type === self::JSON_ARRAY) {
+            if (is_array($v1) && is_array($v2)) {
+                if ($isUnordered) {
+                    sort($v1);
+                    sort($v2);
+                }
+                if ($v1 != $v2) {
+                    return false;
+                }
+                foreach ($v1 as $i => $itemValue) {
+                    if (is_object($v1[$i]) && is_object($v2[$i])) {
+                        if (!self::areValuesEqual(self::JSON_OBJECT, $v1[$i], $v2[$i])) {
+                            return false;
+                        }
+                        continue;
+                    }
+                    if ($v1[$i] !== $v2[$i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        } else if ($type === self::JSON_OBJECT) {
+            if (is_object($v1) && is_object($v2)) {
+                if ($v1 != $v2) {
+                    return false;
+                }
+                $a1 = get_object_vars($v1);
+                $a2 = get_object_vars($v2);
+                foreach ($v1 as $key => $itemValue) {
+                    if (is_object($a1[$key]) && is_object($a2[$key])) {
+                        if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
+                            return false;
+                        }
+                        continue;
+                    }
+                    if (is_array($a1[$key]) && is_array($a2[$key])) {
+                        if (!self::areValuesEqual(self::JSON_ARRAY, $a1[$key], $a2[$key])) {
+                            return false;
+                        }
+                        continue;
+                    }
+                    if ($a1[$key] !== $a2[$key]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        return $v1 === $v2;
     }
 
-    public function getFetched($fieldName)
+    public function setFetched($name, $value)
     {
-        if (isset($this->fetchedValuesContainer[$fieldName])) {
-            return $this->fetchedValuesContainer[$fieldName];
+        $this->fetchedValuesContainer[$name] = $value;
+    }
+
+    public function getFetched($name)
+    {
+        if (isset($this->fetchedValuesContainer[$name])) {
+            return $this->fetchedValuesContainer[$name];
         }
         return null;
     }

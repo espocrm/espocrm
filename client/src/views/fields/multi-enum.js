@@ -32,7 +32,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         type: 'multiEnum',
 
-        listTemplate: 'fields//array/detail',
+        listTemplate: 'fields//array/list',
 
         detailTemplate: 'fields/array/detail',
 

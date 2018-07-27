@@ -209,12 +209,15 @@ class EmailAccount extends Record
         if (empty($fetchData)) {
             $fetchData = new \StdClass();
         }
+        $fetchData = clone $fetchData;
         if (!property_exists($fetchData, 'lastUID')) {
-            $fetchData->lastUID = new \StdClass();;
+            $fetchData->lastUID = new \StdClass();
         }
         if (!property_exists($fetchData, 'lastDate')) {
-            $fetchData->lastDate = new \StdClass();;
+            $fetchData->lastDate = new \StdClass();
         }
+        $fetchData->lastUID = clone $fetchData->lastUID;
+        $fetchData->lastDate = clone $fetchData->lastDate;
 
         $storage = $this->getStorage($emailAccount);
 
@@ -385,7 +388,7 @@ class EmailAccount extends Record
         $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
             'emailAddress' => $address,
             'assignedUserId' => $user->id,
-            'active' => true
+            'status' => 'Active'
         ])->findOne();
 
         return $emailAccount;

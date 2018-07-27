@@ -1,1 +1,3 @@
-{{#unless isEmpty}}{{{value}}}{{else}}{{translate 'None'}}{{/unless}}
+{{#unless isEmpty}}{{{value}}}{{else}}
+    {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
+{{/unless}}

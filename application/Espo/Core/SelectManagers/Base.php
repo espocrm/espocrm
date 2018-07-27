@@ -1255,7 +1255,7 @@ class Base
 
                     $value = $item['value'];
 
-                    if (is_null($value)) break;
+                    if (is_null($value) || !$value && !is_array($value)) break;
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1565,6 +1565,12 @@ class Base
             $useFullTextSearch = false;
         }
 
+        if ($isAuxiliaryUse) {
+            if (mb_strpos($textFilter, '@') !== false) {
+                $useFullTextSearch = false;
+            }
+        }
+
         if ($useFullTextSearch) {
             $textFilter = str_replace(['(', ')'], '', $textFilter);
 
@@ -1582,9 +1588,10 @@ class Base
                 $function = 'MATCH_NATURAL_LANGUAGE';
             } else {
                 $function = 'MATCH_BOOLEAN';
-
-                $textFilter = str_replace('@', '*', $textFilter);
             }
+
+            $textFilter = str_replace('"*', '"', $textFilter);
+            $textFilter = str_replace('*"', '"', $textFilter);
 
             while (strpos($textFilter, '**')) {
                 $textFilter = str_replace('**', '*', $textFilter);

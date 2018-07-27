@@ -1,5 +1,3 @@
-{{#if value}}
+{{#if isNotEmpty}}
     <span title="{{value}} {{currencyValue}}">{{value}} {{currencyValue}}</span>
-{{else}}
-    {{translate 'None'}}
 {{/if}}

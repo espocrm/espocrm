@@ -972,7 +972,7 @@ class Stream extends \Espo\Core\Services\Base
         foreach ($auditedFields as $field => $item) {
             $updated = false;
             foreach ($item['actualList'] as $attribute) {
-                if ($entity->get($attribute) !== $entity->getFetched($attribute)) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
                     $updated = true;
                 }
             }

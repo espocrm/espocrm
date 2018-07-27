@@ -35,6 +35,7 @@ use Espo\Entities\Post;
 use Espo\Entities\Comment;
 use Espo\Entities\Tag;
 use Espo\Entities\Note;
+use Espo\Entities\Job;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
@@ -348,6 +349,34 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
         $this->db->update($this->post);
     }
 
+    public function testUpdateArray1()
+    {
+        $query = "UPDATE `job` SET `array` = '[\"2\",\"1\"]' WHERE job.id = '1' AND job.deleted = '0'";
+
+        $this->mockQuery($query, true);
+
+        $job = new \Espo\Entities\Job();
+        $job->id = '1';
+        $job->setFetched('array', ['1', '2']);
+        $job->set('array', ['2', '1']);
+
+        $this->db->update($job);
+    }
+
+    public function testUpdateArray2()
+    {
+        $query = "UPDATE `job` SET `array` = NULL WHERE job.id = '1' AND job.deleted = '0'";
+
+        $this->mockQuery($query, true);
+
+        $job = new \Espo\Entities\Job();
+        $job->id = '1';
+        $job->setFetched('array', ['1', '2']);
+        $job->set('array', null);
+
+        $this->db->update($job);
+    }
+
     public function testRemoveRelationHasMany()
     {
         $query = "UPDATE `comment` SET post_id = NULL WHERE comment.deleted = '0' AND comment.id = '100'";
@@ -448,6 +477,5 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             )
         ));
     }
+
 }
-
-

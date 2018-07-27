@@ -52,45 +52,41 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             var data = Dep.prototype.data.call(this);
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
 
-            data.postalCodeValue = this.model.get(this.postalCodeField);
-            data.streetValue = this.model.get(this.streetField);
-            data.cityValue = this.model.get(this.cityField);
-            data.stateValue = this.model.get(this.stateField);
-            data.countryValue = this.model.get(this.countryField);
+            this.addressPartList.forEach(function (item) {
+                var value = this.model.get(this[item + 'Field']);
+                data[item + 'Value'] = value;
+            }, this);
 
             if (this.mode == 'detail' || this.mode == 'list') {
                 data.formattedAddress = this.getFormattedAddress();
             }
 
-            data.isEmpty = !(data.postalCodeValue ||
-                           data.streetValue ||
-                           data.cityValue ||
-                           data.stateValue ||
-                           data.countryValue);
+            var isNotEmpty = false;
 
             return data;
         },
 
         setupSearch: function () {
-            this.searchData.value = this.getSearchParamsData().value || this.searchParams.additionalValue; 
+            this.searchData.value = this.getSearchParamsData().value || this.searchParams.additionalValue;
         },
 
         getFormattedAddress: function () {
-            var postalCodeValue = this.model.get(this.postalCodeField);
-            var streetValue = this.model.get(this.streetField);
-            var cityValue = this.model.get(this.cityField);
-            var stateValue = this.model.get(this.stateField);
-            var countryValue = this.model.get(this.countryField);
+            var isNotEmpty = false;
+            var isSet = false;
+            this.addressAttributeList.forEach(function (attribute) {
+                isNotEmpty = isNotEmpty || this.model.get(attribute);
+                isSet = isSet || this.model.has(attribute);
+            }, this);
 
-            var isEmpty = !(
-                postalCodeValue ||
-                streetValue ||
-                cityValue ||
-                stateValue ||
-                countryValue
-            );
+            var isEmpty = !isNotEmpty;
 
             if (isEmpty) {
+                if (this.mode === 'list') {
+                    return '';
+                }
+                if (!isSet) {
+                    return this.translate('...');
+                }
                 return this.translate('None');
             }
 
@@ -320,13 +316,18 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
             }
         },
 
-        init: function () {
-            this.postalCodeField = this.options.defs.name + 'PostalCode';
-            this.streetField = this.options.defs.name + 'Street';
-            this.stateField = this.options.defs.name + 'State';
-            this.cityField = this.options.defs.name + 'City';
-            this.countryField = this.options.defs.name + 'Country';
-            Dep.prototype.init.call(this);
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            var actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) || [];
+            this.addressAttributeList = [];
+            this.addressPartList = [];
+            actualAttributePartList.forEach(function (item) {
+                var attribute = this.name + Espo.Utils.upperCaseFirst(item);
+                this.addressAttributeList.push(attribute);
+                this.addressPartList.push(item);
+                this[item + 'Field'] = attribute;
+            }, this);
         },
 
         validateRequired: function () {
@@ -397,7 +398,7 @@ Espo.define('views/fields/address', 'views/fields/base', function (Dep) {
                             type: 'like',
                             field: this.countryField,
                             value: value + '%'
-                        },
+                        }
                     ],
                     data: {
                         value: value

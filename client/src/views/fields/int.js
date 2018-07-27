@@ -78,6 +78,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
                 data.isNotEmpty = true;
             }
+            data.valueIsSet = this.model.has(this.name);
             return data;
         },
 

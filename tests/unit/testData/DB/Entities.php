@@ -242,3 +242,32 @@ class Article extends TEntity
         )
     );
 }
+
+
+class Job extends TEntity
+{
+    public $fields = array(
+        'id' => array(
+            'type' => Entity::ID
+        ),
+        'string' => array(
+            'type' => Entity::VARCHAR,
+            'len' => 50
+        ),
+        'array' => array(
+            'type' => Entity::JSON_ARRAY
+        ),
+        'arrayUnordered' => array(
+            'type' => Entity::JSON_ARRAY,
+            'isUnordered' => true
+        ),
+        'object' => array(
+            'type' => Entity::JSON_OBJECT
+        ),
+        'deleted' => array(
+            'type' => Entity::BOOL,
+            'default' => 0
+        )
+    );
+}
+
