@@ -175,16 +175,24 @@ class Email extends Record
             if (!$this->getConfig()->get('outboundEmailIsShared')) {
                 throw new Error('Can not use system SMTP. System account is not shared.');
             }
-            $emailSender->setParams(array(
+            $emailSender->setParams([
                 'fromName' => $this->getConfig()->get('outboundEmailFromName')
-            ));
+            ]);
         }
 
         if (!$smtpParams && !$this->getConfig()->get('outboundEmailIsShared')) {
             throw new Error('No SMTP params found for '.$fromAddress.'.');
         }
 
-        $params = array();
+        if (!$smtpParams) {
+            if (in_array($fromAddress, $userAddressList)) {
+                $emailSender->setParams([
+                    'fromName' => $this->getUser()->get('name')
+                ]);
+            }
+        }
+
+        $params = [];
 
         $parent = null;
         if ($entity->get('parentType') && $entity->get('parentId')) {
