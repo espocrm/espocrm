@@ -38,7 +38,8 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                     name: 'preferences',
                     label: 'Preferences',
                     style: 'default',
-                    action: "preferences"
+                    action: "preferences",
+                    link: '#Preferences/edit/' + this.getUser().id
                 });
 
                 if (!this.model.get('isPortalUser')) {
@@ -47,7 +48,8 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                             name: 'emailAccounts',
                             label: "Email Accounts",
                             style: 'default',
-                            action: "emailAccounts"
+                            action: "emailAccounts",
+                            link: '#EmailAccount/list/userId=' + this.model.id + '&userName=' + encodeURIComponent(this.model.get('name'))
                         });
                     }
 
@@ -56,7 +58,8 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                             name: 'externalAccounts',
                             label: 'External Accounts',
                             style: 'default',
-                            action: "externalAccounts"
+                            action: "externalAccounts",
+                            link: '#ExternalAccount'
                         });
                     }
                 }
