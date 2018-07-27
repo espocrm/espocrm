@@ -173,11 +173,15 @@ class Email extends Record
 
         if (!$smtpParams && $fromAddress === strtolower($this->getConfig()->get('outboundEmailFromAddress'))) {
             if (!$this->getConfig()->get('outboundEmailIsShared')) {
-                throw new Error('Can not use system smtp. System SMTP is not shared.');
+                throw new Error('Can not use system SMTP. System account is not shared.');
             }
             $emailSender->setParams(array(
                 'fromName' => $this->getConfig()->get('outboundEmailFromName')
             ));
+        }
+
+        if (!$smtpParams && !$this->getConfig()->get('outboundEmailIsShared')) {
+            throw new Error('No SMTP params found for '.$fromAddress.'.');
         }
 
         $params = array();
