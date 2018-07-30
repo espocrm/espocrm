@@ -32,14 +32,14 @@ return [
     'requirements' => [
         'phpVersion' => '5.6',
         'phpRequires' => [
-            'JSON',
+            'json',
             'openssl',
-            'pdo_mysql'
-        ],
-        'phpRecommendations' => [
+            'pdo_mysql',
+            'mbstring',
             'zip',
             'gd',
-            'mbstring',
+        ],
+        'phpRecommendations' => [
             'curl',
             'xml',
             'exif',
