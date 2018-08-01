@@ -116,7 +116,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                        forceSelectAllAttributes: this.forceSelectAllAttributes
                     }, function (view) {
                         view.render();
                         this.notify(false);

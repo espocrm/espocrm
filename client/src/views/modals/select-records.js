@@ -235,7 +235,14 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
                         }
-                        selectAttributeList.push('hello');
+
+                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || [];
+                        mandatorySelectAttributeList.forEach(function (attribute) {
+                            if (!~selectAttributeList.indexOf(attribute)) {
+                                selectAttributeList.push(attribute);
+                            }
+                        }, this);
+
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
