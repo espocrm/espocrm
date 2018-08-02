@@ -186,6 +186,12 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
             }.bind(this));
+
+            this.once('remove', function () {
+                if (this.resizeIsBeingListened) {
+                    $(window).off('resize.' + this.cid);
+                }
+            }.bind(this));
         },
 
         setupSearch: function () {
@@ -200,6 +206,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         empty: function () {
             this.clearIds();
             this.$attachments.empty();
+        },
+
+        handleResize: function () {
+            var width = this.$el.width();
+            this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
         deleteAttachment: function (id) {
@@ -466,6 +477,16 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
+
+            if (this.mode === 'detail') {
+                if (this.previewSize === 'large') {
+                    this.handleResize();
+                    this.resizeIsBeingListened = true;
+                    $(window).on('resize.' + this.cid, function () {
+                        this.handleResize();
+                    }.bind(this));
+                }
+            }
         },
 
         isTypeIsImage: function (type) {
@@ -483,7 +504,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
             var preview = name;
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, this.previewSize)+'"></a>';
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, this.previewSize)+'" class="image-preview"></a>';
             }
             return preview;
         },
