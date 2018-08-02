@@ -13,6 +13,7 @@
         "ext-mbstring": "*",
         "ext-xml": "*",
         "ext-curl": "*",
+        "ext-exif": "*",
         "doctrine/dbal": "2.*",
         "slim/slim": "2.6.2",
         "mtdowling/cron-expression": "1.0.*",

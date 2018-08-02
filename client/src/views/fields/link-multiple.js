@@ -126,7 +126,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: true,
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                        forceSelectAllAttributes: this.forceSelectAllAttributes
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);

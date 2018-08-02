@@ -64,7 +64,7 @@ Espo.define('crm:views/case/record/panels/activities', 'crm:views/record/panels/
                             }, function () {resolve([])});
                         }, this);
                     } else if (parentModel.get('leadId')) {
-                        this.getModelFactory().create('Lead', function (account) {
+                        this.getModelFactory().create('Lead', function (lead) {
                             lead.id = parentModel.get('leadId');
                             lead.fetch().then(function () {
                                 resolve([lead]);

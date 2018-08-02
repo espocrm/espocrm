@@ -267,7 +267,7 @@ Espo.define('views/email/detail', ['views/detail', 'email-helper'], function (De
             }
             attributes.emailId = this.model.id;
 
-            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.detail') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.detail') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
