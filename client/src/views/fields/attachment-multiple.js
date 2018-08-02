@@ -495,7 +495,13 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 for (var id in nameHash) {
                     var type = typeHash[id] || false;
                     var name = nameHash[id];
-                    if (this.showPreviews && ~this.previewTypeList.indexOf(type) && this.mode !== 'list') {
+                    if (
+                        this.showPreviews
+                        &&
+                        ~this.previewTypeList.indexOf(type)
+                        &&
+                        (this.mode === 'detail' || this.mode === 'list' && this.showPreviewsInListMode)
+                    ) {
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
