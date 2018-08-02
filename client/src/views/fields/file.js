@@ -153,6 +153,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
 
+            this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
 
             this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {

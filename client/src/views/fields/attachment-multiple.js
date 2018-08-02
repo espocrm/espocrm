@@ -157,6 +157,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.idsName = this.name + 'Ids';
             this.foreignScope = 'Attachment';
 
+            this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+
             var self = this;
 
             this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -480,10 +482,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             name = Handlebars.Utils.escapeExpression(name);
 
             var preview = name;
-            var size = this.options.previewSize || this.params.previewSize || this.previewSize;
-
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, size)+'"></a>';
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, this.previewSize)+'"></a>';
             }
             return preview;
         },

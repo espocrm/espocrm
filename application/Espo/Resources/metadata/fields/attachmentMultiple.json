@@ -15,6 +15,12 @@
          "type": "float",
          "tooltip": true,
          "min": 0
+      },
+      {
+         "name": "previewSize",
+         "type": "enum",
+         "default": "medium",
+         "options": ["", "x-small", "small", "medium", "large"]
       }
    ],
    "actualFields":[
