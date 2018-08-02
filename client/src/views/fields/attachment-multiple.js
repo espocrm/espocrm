@@ -40,6 +40,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         searchTemplate: 'fields/link-multiple/search',
 
+        previewSize: 'medium',
+
         nameHashName: null,
 
         idsName: null,
@@ -478,9 +480,10 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             name = Handlebars.Utils.escapeExpression(name);
 
             var preview = name;
+            var size = this.options.previewSize || this.params.previewSize || this.previewSize;
 
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, 'medium')+'"></a>'; 
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, size)+'"></a>';
             }
             return preview;
         },

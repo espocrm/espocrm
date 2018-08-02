@@ -49,7 +49,9 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
         setup: function () {
 
             this.createField('post', null, null, 'views/stream/fields/post');
-            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
+                previewSize: this.options.isNotification ? 'small' : 'medium'
+            });
 
             this.isInternal = this.model.get('isInternal');
 

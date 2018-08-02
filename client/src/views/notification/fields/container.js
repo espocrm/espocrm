@@ -72,6 +72,7 @@ Espo.define('views/notification/fields/container', 'views/fields/base', function
                     isUserStream: true,
                     el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
+                    isNotification: true
                 });
                 this.wait(false);
             }, this);
@@ -88,6 +89,7 @@ Espo.define('views/notification/fields/container', 'views/fields/base', function
                     isUserStream: true,
                     el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
+                    isNotification: true
                 });
                 this.wait(false);
             }, this);
