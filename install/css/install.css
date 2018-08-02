@@ -71,10 +71,6 @@ select[name="user-lang"] {
 	color: #999;
 }
 
-input[type=checkbox].btn-default {
-	margin: 0;
-}
-
 .cron-help {
 	margin: 20px;
 }
@@ -170,4 +166,9 @@ span.ok {
 @-moz-keyframes left {
     from { -moz-transform: rotate(0deg);}
     to { -moz-transform: rotate(360deg);}
+}
+
+#license-agree {
+    margin-right: 5px;
+    margin-top: -1px;
 }

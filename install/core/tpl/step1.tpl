@@ -12,9 +12,9 @@
                 </div>
             </div>
         </div>
-        <div class="cell cell-website col-sm-12 form-group">
-            <input class="btn btn-default" type="checkbox" name="license-agree" id="license-agree" value="1" {if $fields['license-agree'].value}checked="checked"{/if}>
-            <label class="point-lbl" for="license-agree">&nbsp;&nbsp;&nbsp;{$langs['labels']['I accept the agreement']}</label>
+        <div class="cell cell-website form-group">
+            <input class="btn btn-default" type="checkbox" name="license-agree" id="license-agree" class="input-checkbox" value="1" {if $fields['license-agree'].value}checked="checked"{/if}>
+            <label class="point-lbl" for="license-agree">{$langs['labels']['I accept the agreement']}</label>
         </div>
     </form>
 
