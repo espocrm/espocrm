@@ -129,7 +129,7 @@ class Image extends \Espo\Core\EntryPoints\Base
         }
 
         if (!empty($size)) {
-            $fileName = $sourceId . '_' . $size . '.jpg';
+            $fileName = $size . '-' . $attachment->get('name');
         } else {
             $fileName = $attachment->get('name');
         }
