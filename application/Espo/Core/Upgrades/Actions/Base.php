@@ -631,7 +631,13 @@ abstract class Base
 
     protected function systemRebuild()
     {
-        return $this->getContainer()->get('dataManager')->rebuild();
+        try {
+            return $this->getContainer()->get('dataManager')->rebuild();
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('Database rebuild failure, details: '.$e->getMessage().'.');
+        }
+
+        return false;
     }
 
     /**

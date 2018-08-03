@@ -42,7 +42,18 @@ Espo.define('views/portal-user/list', 'views/list', function (Dep) {
             this.createView('modal', viewName, {
                 scope: 'Contact',
                 primaryFilterName: 'notPortalUsers',
-                createButton: false
+                createButton: false,
+                mandatorySelectAttributeList: [
+                    'salutationName',
+                    'firstName',
+                    'lastName',
+                    'accountName',
+                    'accountId',
+                    'emailAddress',
+                    'emailAddressData',
+                    'phoneNumber',
+                    'phoneNumberData'
+                ]
             }, function (view) {
                 view.render();
 

@@ -55,6 +55,10 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
             this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
 
             this.imageList = this.options.imageList || [];
+
+            this.once('remove', function () {
+                $(window).off('resize.image-review');
+            }, this);
         },
 
         getImageUrl: function () {
@@ -90,7 +94,8 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
                 $img.css('maxWidth', width);
             }.bind(this);
 
-            $(window).on('resize', function () {
+            $(window).off('resize.image-review');
+            $(window).on('resize.image-review', function () {
                 manageSize();
             });
 

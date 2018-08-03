@@ -46,7 +46,9 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                 this.createField('post', null, null, 'views/stream/fields/post');
             }
             if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
+                    previewSize: this.options.isNotification ? 'small' : null
+                });
             }
 
             var data = this.model.get('data');

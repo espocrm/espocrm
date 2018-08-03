@@ -153,6 +153,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
 
+            this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
 
             this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {
@@ -181,6 +183,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.acceptAttribue = this.accept.join('|');
             }
 
+            this.once('remove', function () {
+                if (this.resizeIsBeingListened) {
+                    $(window).off('resize.' + this.cid);
+                }
+            }.bind(this));
         },
 
         afterRender: function () {
@@ -219,6 +226,21 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
+
+            if (this.mode === 'detail') {
+                if (this.previewSize === 'large') {
+                    this.handleResize();
+                    this.resizeIsBeingListened = true;
+                    $(window).on('resize.' + this.cid, function () {
+                        this.handleResize();
+                    }.bind(this));
+                }
+            }
+        },
+
+        handleResize: function () {
+            var width = this.$el.width();
+            this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
         getDetailPreview: function (name, type, id) {
@@ -229,7 +251,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '"></a>';
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '" class="image-preview"></a>';
             }
             return preview;
         },

@@ -452,5 +452,17 @@ class MySqlPlatform extends \Doctrine\DBAL\Platforms\MySqlPlatform
 
         return 'MEDIUMTEXT';
     }
+
+    public function getColumnDeclarationListSQL(array $fields)
+    {
+        $queryFields = array();
+
+        foreach ($fields as $fieldName => $field) {
+            $quotedFieldName = $this->espoQuote($fieldName);
+            $queryFields[] = $this->getColumnDeclarationSQL($quotedFieldName, $field);
+        }
+
+        return implode(', ', $queryFields);
+    }
     //end: ESPO
 }

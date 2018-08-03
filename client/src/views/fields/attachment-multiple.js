@@ -40,6 +40,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         searchTemplate: 'fields/link-multiple/search',
 
+        previewSize: 'medium',
+
         nameHashName: null,
 
         idsName: null,
@@ -155,6 +157,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.idsName = this.name + 'Ids';
             this.foreignScope = 'Attachment';
 
+            this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+
             var self = this;
 
             this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
@@ -182,6 +186,12 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.listenTo(this.model, 'change:' + this.nameHashName, function () {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
             }.bind(this));
+
+            this.once('remove', function () {
+                if (this.resizeIsBeingListened) {
+                    $(window).off('resize.' + this.cid);
+                }
+            }.bind(this));
         },
 
         setupSearch: function () {
@@ -196,6 +206,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         empty: function () {
             this.clearIds();
             this.$attachments.empty();
+        },
+
+        handleResize: function () {
+            var width = this.$el.width();
+            this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
         deleteAttachment: function (id) {
@@ -462,6 +477,16 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
+
+            if (this.mode === 'detail') {
+                if (this.previewSize === 'large') {
+                    this.handleResize();
+                    this.resizeIsBeingListened = true;
+                    $(window).on('resize.' + this.cid, function () {
+                        this.handleResize();
+                    }.bind(this));
+                }
+            }
         },
 
         isTypeIsImage: function (type) {
@@ -478,9 +503,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             name = Handlebars.Utils.escapeExpression(name);
 
             var preview = name;
-
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, 'medium')+'"></a>'; 
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, this.previewSize)+'" class="image-preview"></a>';
             }
             return preview;
         },
@@ -495,7 +519,13 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 for (var id in nameHash) {
                     var type = typeHash[id] || false;
                     var name = nameHash[id];
-                    if (this.showPreviews && ~this.previewTypeList.indexOf(type) && this.mode !== 'list') {
+                    if (
+                        this.showPreviews
+                        &&
+                        ~this.previewTypeList.indexOf(type)
+                        &&
+                        (this.mode === 'detail' || this.mode === 'list' && this.showPreviewsInListMode)
+                    ) {
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }

@@ -1,1 +1,1 @@
-<span class="glyphicon glyphicon-envelope action text-muted" data-action="quickView" data-id="{{model.id}}" style="cursor: pointer; margin-left: -7px; top: 2px;" title="{{translate 'View'}}"></span>
+<span class="fas fa-envelope action text-muted" data-action="quickView" data-id="{{model.id}}" style="cursor: pointer; margin-left: -7px; top: 2px;" title="{{translate 'View'}}"></span>

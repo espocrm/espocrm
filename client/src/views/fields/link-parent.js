@@ -133,7 +133,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
+                        forceSelectAllAttributes: this.isForceSelectAllAttributes()
                     }, function (dialog) {
                         dialog.render();
                         Espo.Ui.notify(false);
@@ -179,6 +181,14 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.$elementName.val(model.get('name'));
             this.$elementId.val(model.get('id'));
             this.trigger('change');
+        },
+
+        getMandatorySelectAttributeList: function () {
+            this.mandatorySelectAttributeList;
+        },
+
+        isForceSelectAllAttributes: function () {
+            this.forceSelectAllAttributes;
         },
 
         getAutocompleteUrl: function () {

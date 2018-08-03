@@ -218,6 +218,7 @@ class Notification extends \Espo\Services\Record
                                 $note->set('relatedName', $related->get('name'));
                             }
                         }
+                        $note->loadLinkMultipleField('attachments');
                         $entity->set('noteData', $note->toArray());
                     } else {
                         unset($collection[$k]);

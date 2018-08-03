@@ -225,15 +225,33 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     }, this);
                 }
 
-                view.getSelectAttributeList(function (selectAttributeList) {
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
+                if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
                     this.listenToOnce(view, 'after:build-rows', function () {
                         this.wait(false);
                     }, this);
                     this.collection.fetch();
-                }.bind(this));
+                } else {
+                    view.getSelectAttributeList(function (selectAttributeList) {
+                        if (!~selectAttributeList.indexOf('name')) {
+                            selectAttributeList.push('name');
+                        }
+
+                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || [];
+                        mandatorySelectAttributeList.forEach(function (attribute) {
+                            if (!~selectAttributeList.indexOf(attribute)) {
+                                selectAttributeList.push(attribute);
+                            }
+                        }, this);
+
+                        if (selectAttributeList) {
+                            this.collection.data.select = selectAttributeList.join(',');
+                        }
+                        this.listenToOnce(view, 'after:build-rows', function () {
+                            this.wait(false);
+                        }, this);
+                        this.collection.fetch();
+                    }.bind(this));
+                }
             });
         },
 
