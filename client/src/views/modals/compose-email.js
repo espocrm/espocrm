@@ -80,7 +80,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 type: 'editSmall',
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
-                buttonsPosition: false,
+                buttonsDisabled: true,
                 selectTemplateDisabled: this.options.selectTemplateDisabled,
                 removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,

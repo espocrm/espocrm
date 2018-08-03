@@ -239,7 +239,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 type: 'detailSmall',
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
-                buttonsPosition: false,
+                buttonsDisabled: true,
                 inlineEditDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,

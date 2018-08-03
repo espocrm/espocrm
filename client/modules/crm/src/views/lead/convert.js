@@ -106,6 +106,7 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
                                 model: model,
                                 el: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                 buttonsPosition: false,
+                                buttonsDisabled: true,
                                 layoutName: 'detailConvert',
                                 exit: function () {},
                             }, function (view) {

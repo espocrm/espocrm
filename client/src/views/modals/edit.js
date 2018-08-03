@@ -151,7 +151,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 type: 'editSmall',
                 layoutName: this.layoutName || 'detailSmall',
                 columnCount: this.columnCount,
-                buttonsPosition: false,
+                buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
                 exit: function () {}

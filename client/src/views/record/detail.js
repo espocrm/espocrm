@@ -44,10 +44,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         detailLayout: null,
 
-        /**
-         * @property {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display buttons.
-         */
-        buttonsPosition: 'top',
+        buttonsDisabled: false,
 
         columnCount: 2,
 
@@ -607,8 +604,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 dropdownItemList: this.dropdownItemList,
                 dropdownEditItemList: this.dropdownEditItemList,
                 dropdownItemListEmpty: this.isDropdownItemListEmpty(),
-                buttonsTop: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'top',
-                buttonsBottom: this.buttonsPosition === 'both' || this.buttonsPosition === true || this.buttonsPosition === 'bottom',
+                buttonsDisabled: this.buttonsDisabled,
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
@@ -710,8 +706,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if ('buttonsPosition' in this.options) {
-                this.buttonsPosition = this.options.buttonsPosition;
+            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
+
+            // for backward compatibility
+            // TODO remove in 5.6.0
+            if ('buttonsPosition' in this.options && !this.options.buttonsPosition) {
+                this.buttonsDisabled = true;
             }
 
             if ('isWide' in this.options) {
