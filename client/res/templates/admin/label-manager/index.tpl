@@ -17,7 +17,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled" style="overflow-x: hidden;">
                 {{#each scopeList}}
                     <li>
                         <button class="btn btn-link" data-name="{{./this}}" data-action="selectScope">{{translate this category='scopeNames'}}</button>
