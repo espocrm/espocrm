@@ -69,6 +69,7 @@ Espo.define('views/email-folder/modals/select-folder', 'views/modal', function (
 
             this.getCollectionFactory().create('EmailFolder', function (collection) {
                 this.collection = collection;
+                collection.maxSize = this.getConfig().get('emailFolderMaxCount') || 100;
                 collection.data.boolFilterList = ['onlyMy'];
                 collection.fetch().then(function () {
                     this.wait(false);
