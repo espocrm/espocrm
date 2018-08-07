@@ -247,4 +247,12 @@ class App extends \Espo\Core\Services\Base
         $this->getInjection('container')->get('dataManager')->rebuild();
     }
 
+    // TODO remove in 5.5.0
+    public function jobPopulatePhoneNumberNumeric()
+    {
+        $numberList = $this->getEntityManager()->getRepository('PhoneNumber')->find();
+        foreach ($numberList as $number) {
+            $this->getEntityManager()->saveEntity($number);
+        }
+    }
 }

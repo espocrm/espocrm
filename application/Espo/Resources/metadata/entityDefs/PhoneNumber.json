@@ -8,6 +8,11 @@
         },
         "type": {
             "type": "enum"
+        },
+        "numeric": {
+            "type": "varchar",
+            "maxLength": 36,
+            "index": true
         }
     },
     "links": {

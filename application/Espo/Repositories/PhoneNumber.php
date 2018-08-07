@@ -438,4 +438,19 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
     {
         return !$this->getInjection('aclManager')->getImplementation('PhoneNumber')->checkEditInEntity($this->getInjection('user'), $entity, $excludeEntity);
     }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->has('name')) {
+            $number = $entity->get('name');
+            if (is_string($number)) {
+                $numeric = preg_replace('/[^0-9]/', '', $number);
+            } else {
+                $numeric = null;
+            }
+            $entity->set('numeric', $numeric);
+        }
+    }
 }
