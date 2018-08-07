@@ -136,6 +136,11 @@ class Util
         return static::fromCamelCase($name, '_');
     }
 
+    public static function camelCaseToUnderscore($value)
+    {
+        return static::toUnderScore($value);
+    }
+
     /**
      * Merge arrays recursively (default PHP function is not suitable)
      *

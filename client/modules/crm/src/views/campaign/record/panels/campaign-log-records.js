@@ -31,7 +31,7 @@ Espo.define('crm:views/campaign/record/panels/campaign-log-records', 'views/reco
 
     return Dep.extend({
 
-    	filterList: ["all", "sent", "opened", "optedOut", "bounced", "clicked", "leadCreated"],
+    	filterList: ["all", "sent", "opened", "optedOut", "bounced", "clicked", "optedIn", "leadCreated"],
 
     	data: function () {
     		return _.extend({

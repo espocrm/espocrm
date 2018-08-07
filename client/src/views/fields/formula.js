@@ -49,7 +49,7 @@ Espo.define('views/fields/formula', 'views/fields/text', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.height = this.options.height || this.params.height || this.height;
-            this.targetEntityType = this.options.targetEntityType || this.params.targetEntityType;
+            this.targetEntityType = this.options.targetEntityType || this.params.targetEntityType || this.targetEntityType;
 
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 

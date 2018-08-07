@@ -25,7 +25,8 @@
             "Opted Out": "Opted Out",
             "Bounced": "Bounced",
             "Clicked": "Clicked",
-            "Lead Created": "Lead Created"
+            "Lead Created": "Lead Created",
+            "Opted In": "Opted In"
     	}
     },
     "labels": {
@@ -35,6 +36,7 @@
         "sent": "Sent",
         "opened": "Opened",
         "optedOut": "Opted Out",
+        "optedIn": "Opted In",
         "bounced": "Bounced",
         "clicked": "Clicked",
         "leadCreated": "Lead Created"

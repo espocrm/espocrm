@@ -1,0 +1,42 @@
+{
+    "fields": {
+        "name": "Name",
+        "campaign": "Campaign",
+        "isActive": "Is Active",
+        "subscribeToTargetList": "Subscribe to Target List",
+        "subscribeContactToTargetList": "Subscribe Contact if exists",
+        "targetList": "Target List",
+        "fieldList": "Payload Fields",
+        "optInConfirmation": "Double Opt-In",
+        "optInConfirmationEmailTemplate": "Opt-in confirmation email template",
+        "optInConfirmationLifetime": "Opt-in confirmation lifetime (hours)",
+        "optInConfirmationSuccessMessage": "Text to show after opt-in confirmation",
+        "leadSource": "Lead Source",
+        "apiKey": "API Key",
+        "targetTeam": "Target Team",
+        "exampleRequestMethod": "Method",
+        "exampleRequestUrl": "URL",
+        "exampleRequestPayload": "Payload"
+    },
+    "links": {
+        "targetList": "Target List",
+        "campaign": "Campaign",
+        "optInConfirmationEmailTemplate": "Opt-in confirmation email template",
+        "targetTeam": "Target Team",
+        "logRecords": "Log"
+    },
+    "labels": {
+        "Create LeadCapture": "Create Entry Point",
+        "Generate New API Key": "Generate New API Key",
+        "Request": "Request",
+        "Confirm Opt-In": "Confirm Opt-In"
+    },
+    "messages": {
+        "generateApiKey": "Create new API Key",
+        "optInConfirmationExpired": "Opt-in confirmation link is expired.",
+        "optInIsConfirmed": "Opt-in is confirmed."
+    },
+    "tooltips": {
+        "optInConfirmationSuccessMessage": "Markdown is supported."
+    }
+}

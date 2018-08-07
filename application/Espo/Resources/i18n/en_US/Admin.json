@@ -57,7 +57,8 @@
         "Reset to Default": "Reset to Default",
         "Email Filters": "Email Filters",
         "Action History": "Action History",
-        "Label Manager": "Label Manager"
+        "Label Manager": "Label Manager",
+        "Lead Capture": "Lead Capture"
     },
     "layouts": {
         "list": "List",
@@ -213,7 +214,8 @@
         "emailFilters": "Email messages that match the specified filter won't be imported.",
         "actionHistory": "Log of user actions.",
         "labelManager": "Customize application labels.",
-        "authLog": "Login history."
+        "authLog": "Login history.",
+        "leadCapture": "API entry points for Web-to-Lead."
     },
     "options": {
         "previewSize": {

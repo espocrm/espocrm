@@ -1,0 +1,21 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [{"name": "name"}, {"name":"isActive"}],
+            [{"name": "subscribeToTargetList", "inlineEditDisabled": true}, {"name": "campaign"}],
+            [{"name": "subscribeContactToTargetList"}, {"name": "targetList"}],
+            [{"name": "targetTeam"}, {"name": "leadSource"}],
+            [{"name": "fieldList", "fullWidth": true}],
+            [{"name": "apiKey", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "",
+        "rows": [
+            [{"name": "optInConfirmation", "inlineEditDisabled": true}, false],
+            [{"name": "optInConfirmationEmailTemplate"}, {"name": "optInConfirmationLifetime"}],
+            [{"name": "optInConfirmationSuccessMessage", "fullWidth": true}]
+        ]
+    }
+]

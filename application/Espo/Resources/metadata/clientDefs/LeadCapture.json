@@ -1,0 +1,121 @@
+{
+    "controller": "controllers/record",
+    "searchPanelDisabled": true,
+    "recordViews": {
+        "detail": "views/lead-capture/record/detail"
+    },
+    "dynamicLogic": {
+        "fields": {
+            "targetList": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "subscribeToTargetList"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "subscribeToTargetList"
+                        }
+                    ]
+                }
+            },
+            "subscribeContactToTargetList": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "subscribeToTargetList"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "subscribeToTargetList"
+                        }
+                    ]
+                }
+            },
+            "optInConfirmationLifetime": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                }
+            },
+            "optInConfirmationSuccessMessage": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                }
+            },
+            "optInConfirmationEmailTemplate": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "optInConfirmation"
+                        }
+                    ]
+                }
+            },
+            "apiKey": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "request",
+                "label": "Request",
+                "isForm": true,
+                "view": "views/lead-capture/record/panels/request"
+            }
+        ]
+    },
+    "relationshipPanels": {
+        "logRecords": {
+            "rowActionsView": "views/record/row-actions/remove-only",
+            "layout": "listForLeadCapture",
+            "select": false,
+            "create": false
+        }
+    }
+}

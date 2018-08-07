@@ -1,0 +1,13 @@
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name": "name"}, {"name":"isActive"}],
+            [{"name": "campaign", "fullWidth": true}],
+            [{"name": "subscribeToTargetList", "inlineEditDisabled": true}, {"name":"subscribeContactToTargetList"}],
+            [{"name": "targetList", "fullWidth": true}],
+            [{"name": "leadSource", "fullWidth": true}],
+            [{"name": "apiKey", "fullWidth": true}]
+        ]
+    }
+]

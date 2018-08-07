@@ -1,0 +1,43 @@
+{
+    "fields": {
+        "number": {
+            "type": "autoincrement",
+            "index": true,
+            "readOnly": true
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "isCreated": {
+            "type": "bool"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "leadCapture": {
+            "type": "link"
+        },
+        "target": {
+            "type": "linkParent"
+        }
+    },
+    "links": {
+        "leadCapture": {
+            "type": "belongsTo",
+            "entity": "LeadCapture",
+            "foreign": "logRecords"
+        },
+        "target": {
+            "type": "belongsToParent",
+            "entityList": ["Contact", "Lead"]
+        }
+    },
+    "collection": {
+        "sortBy": "number",
+        "asc": false
+    }
+}

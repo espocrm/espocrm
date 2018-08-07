@@ -13,6 +13,7 @@
         "clickedCount": "Clicked",
         "optedOutCount": "Opted Out",
         "bouncedCount": "Bounced",
+        "optedInCount": "Opted In",
         "hardBouncedCount": "Hard Bounced",
         "softBouncedCount": "Soft Bounced",
         "leadCreatedCount": "Leads Created",

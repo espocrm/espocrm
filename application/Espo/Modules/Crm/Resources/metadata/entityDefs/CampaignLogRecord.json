@@ -4,7 +4,7 @@
             "type": "enum",
             "required": true,
             "maxLength": 50,
-            "options": ["Sent", "Opened", "Opted Out", "Bounced", "Clicked", "Lead Created"]
+            "options": ["Sent", "Opened", "Opted Out", "Bounced", "Clicked", "Opted In", "Lead Created"]
         },
         "actionDate": {
             "type": "datetime",

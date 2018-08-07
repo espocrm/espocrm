@@ -37,15 +37,17 @@ Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/pan
     		switch (type) {
     			case 'Email':
     			case 'Newsletter':
-    				fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
+    				fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
     				break;
     			case 'Web':
+                    fieldList = ['leadCreatedCount', 'optedInCount', 'revenue'];
+                    break;
     			case 'Television':
     			case 'Radio':
     				fieldList = ['leadCreatedCount', 'revenue'];
     				break;
     			case 'Mail':
-    				fieldList = ['sentCount', 'leadCreatedCount', 'revenue'];
+    				fieldList = ['sentCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
     				break;
     			default:
     				fieldList = ['leadCreatedCount', 'revenue'];
@@ -61,7 +63,7 @@ Espo.define('crm:views/campaign/record/panels/campaign-stats', 'views/record/pan
     	},
 
     	setupFields: function () {
-    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'revenue'];
+    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
             this.statsFieldList = this.fieldList;
     	},
 

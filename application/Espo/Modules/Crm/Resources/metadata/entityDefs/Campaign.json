@@ -78,6 +78,12 @@
             "readOnly": true,
             "disabled": true
         },
+        "optedInCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
         "optedOutCount": {
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",

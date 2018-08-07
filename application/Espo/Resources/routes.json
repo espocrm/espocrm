@@ -93,6 +93,18 @@
         }
     },
     {
+        "route": "/LeadCapture/:apiKey",
+        "method": "post",
+        "params": {
+            "controller": "LeadCapture",
+            "action": "leadCapture",
+            "apiKey": ":apiKey"
+        },
+        "conditions": {
+            "auth": false
+        }
+    },
+    {
         "route": "/:controller/action/:action",
         "method": "post",
         "params": {

@@ -1,0 +1,145 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true
+        },
+        "campaign": {
+            "type": "link"
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "subscribeToTargetList": {
+            "type": "bool",
+            "default": true
+        },
+        "subscribeContactToTargetList": {
+            "type": "bool",
+            "default": true
+        },
+        "targetList": {
+            "type": "link"
+        },
+        "fieldList": {
+            "type": "multiEnum",
+            "default": ["firstName", "lastName", "emailAddress"],
+            "view": "views/lead-capture/fields/field-list",
+            "required": true,
+            "ignoreFieldList": [
+                "targetList",
+                "targetLists",
+                "acceptanceStatusMeetings",
+                "acceptanceStatusCalls",
+                "campaign",
+                "source",
+                "teams",
+                "createdOpportunity",
+                "createdAccount",
+                "createdContact"
+            ]
+        },
+        "optInConfirmation": {
+            "type": "bool"
+        },
+        "optInConfirmationEmailTemplate": {
+            "type": "link"
+        },
+        "optInConfirmationLifetime": {
+            "type": "int",
+            "default": 48,
+            "min": 1
+        },
+        "optInConfirmationSuccessMessage": {
+            "type": "text",
+            "tooltip": true
+        },
+        "leadSource": {
+            "type": "enum",
+            "view": "crm:views/opportunity/fields/lead-source",
+            "customizationOptionsDisabled": true,
+            "default": "Web Site"
+        },
+        "apiKey": {
+            "type": "varchar",
+            "maxLength": 36,
+            "readOnly": true,
+            "view": "views/lead-capture/fields/api-key"
+        },
+        "targetTeam": {
+            "type": "link"
+        },
+        "exampleRequestUrl": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "exampleRequestMethod": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "exampleRequestPayload": {
+            "type": "text",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "targetList": {
+            "type": "belongsTo",
+            "entity": "TargetList"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign"
+        },
+        "targetTeam": {
+            "type": "belongsTo",
+            "entity": "Team"
+        },
+        "optInConfirmationEmailTemplate": {
+            "type": "belongsTo",
+            "entity": "EmailTemplate"
+        },
+        "targetList": {
+            "type": "belongsTo",
+            "entity": "TargetList"
+        },
+        "logRecords": {
+            "type": "hasMany",
+            "entity": "LeadCaptureLogRecord",
+            "foreign": "leadCapture"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}
