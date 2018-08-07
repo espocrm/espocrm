@@ -156,7 +156,7 @@ class LeadCapture extends Record
             $job = $this->getEntityManager()->getEntity('Job');
             $job->set([
                 'serviceName' => 'LeadCapture',
-                'methodName' => 'optInConfirmationJob',
+                'methodName' => 'jobOptInConfirmation',
                 'data' => (object) [
                     'id' => $uniqueId->get('name')
                 ]
@@ -298,7 +298,7 @@ class LeadCapture extends Record
         return true;
     }
 
-    public function optInConfirmationJob($jobData)
+    public function jobOptInConfirmation($jobData)
     {
         if (empty($jobData->id)) throw new Error();
 
