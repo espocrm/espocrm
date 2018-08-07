@@ -448,7 +448,7 @@ abstract class Base
                         if (!empty($fieldDefs['select'])) {
                             $part = $fieldDefs['select'];
                         } else {
-                            if (!empty($fieldDefs['notStorable'])) {
+                            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
                                 continue;
                             }
                             $part = $this->getFieldPath($entity, $attribute[0]);
