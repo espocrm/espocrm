@@ -7,10 +7,25 @@
     border-color: @btn-default-border;
 }
 
-.panel-default .panel-heading .btn-default {
+.panel .panel-heading .btn-default {
     background-color: @panel-default-heading-bg;
     border-color: @panel-default-heading-bg;
 }
+
+.panel .panel-heading .open .btn {
+    border-color: transparent;
+}
+
+.panel .panel-heading .btn-default {
+    &:active,
+    &.active {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+    }
+}
+
+.panel-default .panel-heading .btn-default
 
 .panel-title {
     font-size: 15px;
