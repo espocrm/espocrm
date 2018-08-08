@@ -177,8 +177,6 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
             var scope = 'Task';
             var foreignLink = this.model.defs['links'][link].foreign;
 
-
-
             this.notify('Loading...');
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
@@ -218,8 +216,7 @@ Espo.define('crm:views/record/panels/tasks', 'views/record/panels/relationship',
                     this.collection.fetch();
                 }.bind(this)
             });
-        },
+        }
 
     });
 });
-
