@@ -32,7 +32,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         type: 'date',
 
-        listTemplate: 'fields/date/detail',
+        listTemplate: 'fields/date/list',
+
+        listLinkTemplate: 'fields/date/list-link',
 
         detailTemplate: 'fields/date/detail',
 
@@ -69,13 +71,13 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         stringifyDateValue: function (value) {
             if (!value) {
-                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list') {
+                if (this.mode == 'edit' || this.mode == 'search' || this.mode == 'list' || this.mode == 'listLink') {
                     return '';
                 }
                 return this.translate('None');
             }
 
-            if (this.mode == 'list' || this.mode == 'detail') {
+            if (this.mode == 'list' || this.mode == 'detail' || this.mode == 'listLink') {
                 if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
                     return this.getDateTime().toDisplayDate(value);
                 }

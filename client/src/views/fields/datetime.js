@@ -62,13 +62,13 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             }
             var value = this.model.get(this.name);
             if (!value) {
-                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list') {
+                if (this.mode == 'edit' || this.mode == 'search' || this.mode === 'list' || this.mode == 'listLink') {
                     return '';
                 }
                 return this.translate('None');
             }
 
-            if (this.mode == 'list' || this.mode == 'detail') {
+            if (this.mode == 'list' || this.mode == 'detail' || this.mode == 'listLink') {
                 if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
                     return this.getDateTime().toDisplayDateTime(value);
                 }
