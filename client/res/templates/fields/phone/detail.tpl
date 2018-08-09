@@ -10,7 +10,9 @@
             </a>
             {{/unless}}
             {{#if ../doNotCall}}</s>{{/if}}
+            {{#if type}}
             <span class="text-muted small">({{translateOption type scope=../../scope field=../../name}})</span>
+            {{/if}}
         </div>
     {{/each}}
 {{else}}
