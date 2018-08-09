@@ -58,7 +58,7 @@ class LeadCapture extends Record
 
         $entity->set('exampleRequestMethod', 'POST');
 
-        $requestUrl = $this->getConfig()->getSiteUrl() . '/api/v1/' . $entity->get('apiKey');
+        $requestUrl = $this->getConfig()->getSiteUrl() . '/api/v1/LeadCapture/' . $entity->get('apiKey');
         $entity->set('exampleRequestUrl', $requestUrl);
 
         $fieldManagerUtil = $this->getInjection('fieldManagerUtil');
@@ -166,7 +166,7 @@ class LeadCapture extends Record
             return true;
         }
 
-        $this->leadCaptureProceed($leadCapture, $data);
+        return $this->leadCaptureProceed($leadCapture, $data);
     }
 
     protected function getLeadWithPopulatedData(Entity $leadCapture, $data)
