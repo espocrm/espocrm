@@ -95,6 +95,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
                 }
+                data.valueIsSet = this.model.has(this.name);
             }
 
             return data;

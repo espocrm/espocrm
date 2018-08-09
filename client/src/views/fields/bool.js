@@ -32,7 +32,7 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         type: 'bool',
 
-        listTemplate: 'fields/bool/detail',
+        listTemplate: 'fields/bool/list',
 
         detailTemplate: 'fields/bool/detail',
 
@@ -41,6 +41,12 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         searchTemplate: 'fields/bool/search',
 
         validations: [],
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.valueIsSet = this.model.has(this.name);
+            return data;
+        },
 
         fetch: function () {
             var value = this.$element.get(0).checked;

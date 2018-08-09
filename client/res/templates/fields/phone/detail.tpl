@@ -19,6 +19,6 @@
     {{#if value}}
     {{#if doNotCall}}<s>{{/if}}<a href="tel:{{value}}" data-phone-number="{{value}}" data-action="dial">{{value}}</a>{{#if ../doNotCall}}</s>{{/if}}
     {{else}}
-        {{translate 'None'}}
+        {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
     {{/if}}
 {{/if}}
