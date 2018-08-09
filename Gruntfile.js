@@ -28,6 +28,7 @@ module.exports = function (grunt) {
         'client/lib/handlebars.js',
         'client/lib/base64.js',
         'client/lib/jquery-ui.min.js',
+        'client/lib/jquery.ui.touch-punch.min.js',
         'client/lib/moment.min.js',
         'client/lib/moment-timezone-with-data.min.js',
         'client/lib/jquery.timepicker.min.js',

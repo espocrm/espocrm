@@ -52,7 +52,7 @@ Espo.define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'm
 
             var scope = this.scope = this.options.scope || false;
 
-            this.header = this.translate('Formula', 'labels', 'EntityManager') + ': ' + this.translate(scope, 'scopeName');
+            this.header = this.translate('Formula', 'labels', 'EntityManager') + ': ' + this.translate(scope, 'scopeNames');
 
             var model = this.model = new Model();
             model.name = 'EntityManager';

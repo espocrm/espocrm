@@ -18,6 +18,6 @@
     {{#if value}}
     <a href="javascript:" data-email-address="{{value}}" data-action="mailTo">{{value}}</a>
     {{else}}
-        {{translate 'None'}}
+        {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
     {{/if}}
 {{/if}}

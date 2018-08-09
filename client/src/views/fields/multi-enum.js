@@ -66,16 +66,24 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             if (this.mode == 'edit') {
                 var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
 
+                var data = [];
+
                 var valueList = Espo.Utils.clone(this.selected);
                 for (var i in valueList) {
+                    var value = valueList[i];
                     if (valueList[i] === '') {
                         valueList[i] = '__emptystring__';
+                    }
+                    if (!~(this.params.options || []).indexOf(value)) {
+                        data.push({
+                            value: value,
+                            label: value
+                        });
                     }
                 }
 
                 this.$element.val(valueList.join(':,:'));
 
-                var data = [];
                 (this.params.options || []).forEach(function (value) {
                     var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {

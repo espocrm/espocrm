@@ -76,12 +76,14 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
-                 phoneNumberData = [{
+                var o = {
                     phoneNumber: this.model.get(this.name),
-                    primary: true,
-                    primary: true,
-                    type: this.defaultType
-                }];
+                    primary: true
+                };
+                if (this.mode === 'edit' && this.model.isNew()) {
+                    o.type = this.defaultType;
+                }
+                phoneNumberData = [o];
             }
 
             var data = _.extend({
@@ -93,6 +95,7 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
                 }
+                data.valueIsSet = this.model.has(this.name);
             }
 
             return data;
