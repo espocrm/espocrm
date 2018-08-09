@@ -40,6 +40,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         searchTemplate: 'fields/array/search',
 
+        searchTypeList: ['anyOf'],
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -111,6 +113,28 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList, true);
+            }
+
+            if (this.mode === 'search') {
+                this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
+            }
+        },
+
+        setupSearch: function () {
+            this.events = _.extend({
+                'change select.search-type': function (e) {
+                    this.handleSearchType($(e.currentTarget).val());
+                }
+            }, this.events || {});
+        },
+
+        handleSearchType: function (type) {
+            var $inputContainer = this.$el.find('div.input-container');
+
+            if (~['anyOf', 'noneOf'].indexOf(type)) {
+                $inputContainer.removeClass('hidden');
+            } else {
+                $inputContainer.addClass('hidden');
             }
         },
 
@@ -225,7 +249,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         renderSearch: function () {
             var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
 
-            var valueList = this.searchParams.valueFront || [];
+            var valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
             this.$element.val(valueList.join(':,:'));
 
             var data = [];
@@ -263,6 +287,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             });
 
             this.$el.find('.selectize-dropdown-content').addClass('small');
+
+            var type = this.$el.find('select.search-type').val();
+            this.handleSearchType(type);
         },
 
         fetchFromDom: function () {
@@ -372,7 +399,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             var data = {
                 type: 'or',
                 value: arr,
-                valueFront: arrFront
+                data: {
+                    valueList: arrFront
+                }
             };
             return data;
         },
@@ -386,9 +415,11 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     return true;
                 }
             }
+        },
+
+        getSearchType: function () {
+            return this.getSearchParamsData().type || 'anyOf';
         }
 
     });
 });
-
-
