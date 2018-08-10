@@ -50,16 +50,6 @@ Espo.define('view', [], function () {
             Espo.Ui.notify(text, type, timeout);
         },
 
-        reRender: function () {
-            if (this.isRendered()) {
-                this.render();
-            } else if (this.isBeingRendered()) {
-                this.once('after:render', function () {
-                    this.render();
-                }, this);
-            }
-        },
-
         getHelper: function () {
             return this._helper;
         },
