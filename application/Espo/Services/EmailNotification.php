@@ -121,6 +121,8 @@ class EmailNotification extends \Espo\Core\Services\Base
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
 
+        $this->loadParentNameFields($entity);
+
         if (!$entity) return true;
         if (!$assignerUser) return true;
 
@@ -665,6 +667,16 @@ class EmailNotification extends \Espo\Core\Services\Base
             $this->getMailSender()->send($email);
         } catch (\Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+        }
+    }
+
+    protected function loadParentNameFields(Entity $entity)
+    {
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        foreach ($fieldDefs as $field => $defs) {
+            if (isset($defs['type']) && $defs['type'] == 'linkParent') {
+                $entity->loadParentNameField($field);
+            }
         }
     }
 }
