@@ -582,6 +582,9 @@ class EntityManager
             } else {
                 $relationName = lcfirst($entity) . $entityForeign;
             }
+            if (strlen($relationName) > 100) {
+                throw new Error('Relation name should not be longer than 100.');
+            }
             if ($this->getMetadata()->get(['scopes', ucfirst($relationName)])) {
                 throw new Conflict("Entity with the same name '{$relationName}' exists.");
             }
@@ -594,8 +597,8 @@ class EntityManager
             throw new BadRequest();
         }
 
-        if (strlen($link) > 255 || strlen($linkForeign) > 255) {
-            throw new Error('Link name should not be longer than 255.');
+        if (strlen($link) > 100 || strlen($linkForeign) > 100) {
+            throw new Error('Link name should not be longer than 100.');
         }
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {

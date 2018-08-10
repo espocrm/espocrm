@@ -168,7 +168,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'name',
                     params: {
                         required: true,
-                        trim: true
+                        trim: true,
+                        maxLength: 100
                     }
                 },
                 readOnly: scope != false

@@ -27,15 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Entities;
 
-class EmailFolder extends \Espo\Core\SelectManagers\Base
+class Currency extends \Espo\Core\ORM\Entity
 {
-    protected function access(&$result)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            $this->accessOnlyOwn($result);
-        }
-    }
-}
 
+}

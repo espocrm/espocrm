@@ -533,11 +533,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         fetch: function () {
             var data = {};
-            var fields = this.getFieldViews();
-            for (var i in fields) {
-                if (fields[i].mode == 'edit') {
-                    if (!fields[i].disabled && !fields[i].readOnly) {
-                        _.extend(data, fields[i].fetch());
+            var fieldViews = this.getFieldViews();
+            for (var i in fieldViews) {
+                var view = fieldViews[i];
+                if (view.mode == 'edit') {
+                    if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
+                        _.extend(data, view.fetch());
                     }
                 }
             };

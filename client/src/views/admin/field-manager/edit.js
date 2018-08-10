@@ -72,7 +72,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.model.defs = {
                 fields: {
-                    name: {required: true},
+                    name: {required: true, maxLength: 100},
                     label: {required: true},
                     tooltipText: {}
                 }

@@ -42,6 +42,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         searchTypeList: ['anyOf'],
 
+        maxItemLength: null,
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -54,7 +56,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 hasOptions: this.params.options ? true : false,
                 itemHtmlList: itemHtmlList,
                 isEmpty: (this.selected || []).length === 0,
-                valueIsSet: this.model.has(this.name)
+                valueIsSet: this.model.has(this.name),
+                maxItemLength: this.maxItemLength
             }, Dep.prototype.data.call(this));
         },
 

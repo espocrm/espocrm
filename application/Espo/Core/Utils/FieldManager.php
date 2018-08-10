@@ -98,8 +98,8 @@ class FieldManager
             throw new BadRequest();
         }
 
-        if (strlen($name) > 255) {
-            throw new Error('Field name should not be longer than 255.');
+        if (strlen($name) > 100) {
+            throw new Error('Field name should not be longer than 100.');
         }
 
         if (is_numeric($name[0])) {

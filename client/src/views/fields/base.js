@@ -507,7 +507,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.model.set(this.initialAttributes);
             }
 
-            this.render();
+            this.reRender(true);
         },
 
         inlineEdit: function () {
@@ -522,7 +522,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.addInlineEditLinks();
             }, this);
 
-            this.render();
+            this.reRender(true);
             this.trigger('inline-edit-on');
         },
 

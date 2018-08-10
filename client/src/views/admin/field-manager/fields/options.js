@@ -30,6 +30,8 @@ Espo.define('views/admin/field-manager/fields/options', 'views/fields/array', fu
 
     return Dep.extend({
 
+        maxItemLength: 100,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
