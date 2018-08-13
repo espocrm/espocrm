@@ -62,6 +62,11 @@ class App extends \Espo\Core\Services\Base
         return $this->getInjection('entityManager');
     }
 
+    protected function getMetadata()
+    {
+        return $this->getInjection('metadata');
+    }
+
     public function getUserData()
     {
         $preferencesData = $this->getPreferences()->getValueMap();
@@ -253,6 +258,56 @@ class App extends \Espo\Core\Services\Base
         $numberList = $this->getEntityManager()->getRepository('PhoneNumber')->find();
         foreach ($numberList as $number) {
             $this->getEntityManager()->saveEntity($number);
+        }
+    }
+
+    public function jobPopulateArrayValues()
+    {
+        $scopeList = array_keys($this->getMetadata()->get(['scopes']));
+
+        $sql = "DELETE FROM array_value";
+        $this->getEntityManager()->getPdo()->query($sql);
+
+        foreach ($scopeList as $scope) {
+            if (!$this->getMetadata()->get(['scopes', $scope, 'entity'])) continue;
+            if ($this->getMetadata()->get(['scopes', $scope, 'disabled'])) continue;
+
+            $seed = $this->getEntityManager()->getEntity($scope);
+            if (!$seed) continue;
+
+            $attributeList = [];
+
+            foreach ($seed->getAttributes() as $attribute => $defs) {
+                if (!isset($defs['type']) || $defs['type'] !== \Espo\ORM\Entity::JSON_ARRAY) continue;
+                if (!$seed->getAttributeParam($attribute, 'storeArrayValues')) continue;
+                if ($seed->getAttributeParam($attribute, 'notStorable')) continue;
+                $attributeList[] = $attribute;
+            }
+            $select = ['id'];
+            $orGroup = [];
+            foreach ($attributeList as $attribute) {
+                $select[] = $attribute;
+                $orGroup[$attribute . '!='] = null;
+            }
+
+            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($scope, [
+                'select' => $select,
+                'whereClause' => [
+                    'OR' => $orGroup
+                ]
+            ]);
+            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
+            $sth->execute();
+
+            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                $entity = $this->getEntityManager()->getEntityFactory()->create($scope);
+                $entity->set($dataRow);
+                $entity->setAsFetched();
+
+                foreach ($attributeList as $attribute) {
+                    $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute, true);
+                }
+            }
         }
     }
 }

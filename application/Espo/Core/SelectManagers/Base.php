@@ -1353,11 +1353,63 @@ class Base
                             $part[$key . '!='] = $value;
                         }
                     } else if ($relationType == 'hasOne') {
-                        $this->addLeftJoin([$link, alias], $result);
+                        $this->addLeftJoin([$link, $alias], $result);
                         $part[$alias . '.id!='] = $value;
                     } else {
                         break;
                     }
+                    $this->setDistinct(true, $result);
+                    break;
+
+                case 'arrayAnyOf':
+                case 'arrayNoneOf':
+                case 'arrayIsEmpty':
+                case 'arrayIsNotEmpty':
+                    $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
+                    $arrayAttribute = $attribute;
+                    $arrayEntityType = $this->getEntityType();
+                    $alias = lcfirst($arrayEntityType);
+
+                    if (strpos($attribute, '.') > 0) {
+                        list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
+                        $seed = $this->getSeed();
+                        $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
+                        $alias = $arrayAttributeLink;
+                    }
+
+                    if ($type === 'arrayAnyOf') {
+                        if (is_null($value) || !$value && !is_array($value)) break;
+                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
+                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityType' => $arrayEntityType,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute
+                        ]], $result);
+                        $part[$arrayValueAlias . '.value'] = $value;
+                    } else if ($type === 'arrayNoneOf') {
+                        if (is_null($value) || !$value && !is_array($value)) break;
+                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
+                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityType' => $arrayEntityType,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute,
+                            $arrayValueAlias . '.value=' => $value,
+                        ]], $result);
+                        $part[$arrayValueAlias . '.id'] = null;
+                    } else if ($type === 'arrayIsEmpty') {
+                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
+                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityType' => $arrayEntityType,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute,
+                        ]], $result);
+                        $part[$arrayValueAlias . '.id'] = null;
+                    } else if ($type === 'arrayIsNotEmpty') {
+                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
+                            $arrayValueAlias . '.entityId:' => $alias . '.id',
+                            $arrayValueAlias . '.entityType' => $arrayEntityType,
+                            $arrayValueAlias . '.attribute' => $arrayAttribute,
+                        ]], $result);
+                        $part[$arrayValueAlias . '.id!='] = null;
+                    }
+
                     $this->setDistinct(true, $result);
             }
         }

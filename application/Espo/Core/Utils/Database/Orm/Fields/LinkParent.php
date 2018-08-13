@@ -43,7 +43,8 @@ class LinkParent extends Base
                     $fieldName.'Type' => array(
                         'type' => 'foreignType',
                         'notNull' => false,
-                        'index' => $fieldName
+                        'index' => $fieldName,
+                        'len' => 100
                     ),
                     $fieldName.'Name' => array(
                         'type' => 'varchar',

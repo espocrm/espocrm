@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "value": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100
+        },
+        "entity": {
+            "type": "linkParent"
+        },
+        "attribute": {
+            "type": "varchar",
+            "maxLength": 100
+        }
+    },
+    "indexes": {
+        "entityTypeValue": {
+            "columns": ["entityType", "value"]
+        },
+        "entityValue": {
+            "columns": ["entityType", "entityId", "value"]
+        }
+    }
+}

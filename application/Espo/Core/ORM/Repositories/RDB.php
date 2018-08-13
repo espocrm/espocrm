@@ -287,6 +287,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $this->processPhoneNumberSave($entity);
             $this->processSpecifiedRelationsSave($entity);
             $this->processFileFieldsSave($entity);
+            $this->processArrayFieldsSave($entity);
         }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
@@ -402,6 +403,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
                 }
             }
+        }
+    }
+
+    protected function processArrayFieldsSave(Entity $entity)
+    {
+        foreach ($entity->getAttributes() as $attribute => $defs) {
+            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
+            if (!$entity->has($attribute)) continue;
+            if (!$entity->isAttributeChanged($attribute)) continue;
+            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
+            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
+            $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
         }
     }
 

@@ -40,7 +40,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         searchTemplate: 'fields/array/search',
 
-        searchTypeList: ['anyOf'],
+        searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
 
         maxItemLength: null,
 
@@ -116,10 +116,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList, true);
-            }
-
-            if (this.mode === 'search') {
-                this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
             }
         },
 
@@ -377,36 +373,64 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         fetchSearch: function () {
-            var field = this.name;
+            var type = this.$el.find('select.search-type').val() || 'anyOf';
+
             var arr = [];
             var arrFront = [];
 
-            var list = this.$element.val().split(':,:');
-            if (list.length == 1 && list[0] == '') {
-                list = [];
-            }
-
-            list.forEach(function(value) {
-                arr.push({
-                    type: 'like',
-                    field: field,
-                    value: "%" + value.replace(/\//g, '\\\\/' ) + "%"
-                });
-                arrFront.push(value);
-            });
-
-            if (arr.length == 0) {
-                return false;
-            }
-
-            var data = {
-                type: 'or',
-                value: arr,
-                data: {
-                    valueList: arrFront
+            if (~['anyOf', 'noneOf'].indexOf(type)) {
+                var valueList = this.$element.val().split(':,:');
+                if (valueList.length == 1 && valueList[0] == '') {
+                    valueList = [];
                 }
-            };
-            return data;
+            }
+
+            if (type === 'anyOf') {
+                var data = {
+                    type: 'arrayAnyOf',
+                    value: valueList,
+                    data: {
+                        type: 'anyOf',
+                        valueList: valueList
+                    }
+                };
+                if (!valueList.length) {
+                    data.value = null;
+                }
+                return data;
+            }
+
+            if (type === 'noneOf') {
+                var data = {
+                    type: 'arrayNoneOf',
+                    value: valueList,
+                    data: {
+                        type: 'noneOf',
+                        valueList: valueList
+                    }
+                };
+                return data;
+            }
+
+            if (type === 'isEmpty') {
+                var data = {
+                    type: 'arrayIsEmpty',
+                    data: {
+                        type: 'isEmpty'
+                    }
+                };
+                return data;
+            }
+
+            if (type === 'isNotEmpty') {
+                var data = {
+                    type: 'arrayIsNotEmpty',
+                    data: {
+                        type: 'isNotEmpty'
+                    }
+                };
+                return data;
+            }
         },
 
         validateRequired: function () {

@@ -90,6 +90,7 @@ class Converter
         'select' => 'select',
         'orderBy' => 'orderBy',
         'where' => 'where',
+        'storeArrayValues' => 'storeArrayValues'
     );
 
     protected $idParams = array(
