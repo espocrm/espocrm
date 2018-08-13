@@ -224,6 +224,67 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testJoinConditions1()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id', 'name'],
+            'leftJoins' => [['notes', 'notesLeft', ['notesLeft.name!=' => null]]]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' AND notesLeft.name IS NOT NULL " .
+            "WHERE post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinConditions2()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id', 'name'],
+            'leftJoins' => [['notes', 'notesLeft', ['notesLeft.name=:' => 'post.name']]]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = '0' AND notesLeft.name = post.name " .
+            "WHERE post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testJoinTable()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id', 'name'],
+            'leftJoins' => [['NoteTable', 'note', ['note.parentId=:' => 'post.id', 'note.parentType' => 'Post']]]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "LEFT JOIN `note_table` AS `note` ON note.parent_id = post.id AND note.parent_type = 'Post' " .
+            "WHERE post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereNotValue()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'name!=:' => 'post.id'
+            ]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "WHERE post.name <> post.id AND post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testSelectWithSubquery()
     {
         $sql = $this->query->createSelectQuery('Post', array(

@@ -823,6 +823,12 @@ abstract class Base
 
                 $leftPart = null;
 
+                $isNotValue = false;
+                if (substr($field, -1) === ':') {
+                    $field = substr($field, 0, strlen($field) - 1);
+                    $isNotValue = true;
+                }
+
                 if (!preg_match('/^[a-z0-9]+$/i', $field)) {
                     foreach (self::$comparisonOperators as $op => $opDb) {
                         if (strpos($field, $op) !== false) {
@@ -948,7 +954,11 @@ abstract class Base
                         $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
                     } else if (!is_array($value)) {
                         if (!is_null($value)) {
-                            $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                            if ($isNotValue) {
+                                $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
+                            } else {
+                                $whereParts[] = $leftPart . " " . $operator . " " . $this->pdo->quote($value);
+                            }
                         } else {
                             if ($operator == '=') {
                                 $whereParts[] = $leftPart . " IS NULL";
@@ -1024,50 +1034,71 @@ abstract class Base
 
     protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
     {
-        $joinsArr = array();
-        foreach ($joins as $relationName) {
-            if (is_array($relationName)) {
-                $arr = $relationName;
-                $relationName = $arr[0];
-                if (count($arr) > 1) {
-                    $joinAlias = $arr[1];
+        $joinSqlList = [];
+        foreach ($joins as $item) {
+            $itemConditions = [];
+            if (is_array($item)) {
+                $relationName = $item[0];
+                if (count($item) > 1) {
+                    $alias = $item[1];
+                    if (count($item) > 2) {
+                        $itemConditions = $item[2];
+                    }
                 } else {
-                    $joinAlias = $relationName;
+                    $alias = $relationName;
                 }
             } else {
-                $joinAlias = $relationName;
+                $relationName = $item;
+                $alias = $relationName;
             }
-            $conditions = array();
-            if (!empty($joinConditions[$joinAlias])) {
-                $conditions = $joinConditions[$joinAlias];
+            $conditions = [];
+            if (!empty($joinConditions[$alias])) {
+                $conditions = $joinConditions[$alias];
             }
-            if ($joinRelated = $this->getJoinRelated($entity, $relationName, $left, $conditions, $joinAlias)) {
-                $joinsArr[] = $joinRelated;
+            foreach ($itemConditions as $left => $right) {
+                $conditions[$left] = $right;
+            }
+            if ($sql = $this->getJoin($entity, $relationName, $left, $conditions, $alias)) {
+                $joinSqlList[] = $sql;
             }
         }
-        return implode(' ', $joinsArr);
+        return implode(' ', $joinSqlList);
     }
 
-    protected function buildJoinConditionStatement($alias, $f, $v)
+    protected function buildJoinConditionStatement($entity, $alias = null, $left, $right)
     {
-        $join = '';
+        $sql = '';
 
         $operator = '=';
 
-        if (!preg_match('/^[a-z0-9]+$/i', $f)) {
+        $isNotValue = false;
+        if (substr($left, -1) === ':') {
+            $left = substr($left, 0, strlen($left) - 1);
+            $isNotValue = true;
+        }
+
+        if (!preg_match('/^[a-z0-9]+$/i', $left)) {
             foreach (self::$comparisonOperators as $op => $opDb) {
-                if (strpos($f, $op) !== false) {
-                    $f = trim(str_replace($op, '', $f));
+                if (strpos($left, $op) !== false) {
+                    $left = trim(str_replace($op, '', $left));
                     $operator = $opDb;
                     break;
                 }
             }
         }
 
-        $join .= " AND {$alias}." . $this->toDb($this->sanitize($f)) . "";
-        if (is_array($v)) {
+        if (strpos($left, '.') > 0) {
+            list($alias, $attribute) = explode('.', $left);
+            $alias = $this->sanitize($alias);
+            $column = $this->toDb($this->sanitize($attribute));
+        } else {
+            $column = $this->toDb($this->sanitize($left));
+        }
+        $sql .= "{$alias}.{$column}";
+
+        if (is_array($right)) {
             $arr = [];
-            foreach ($v as $item) {
+            foreach ($right as $item) {
                 $arr[] = $this->pdo->quote($item);
             }
             $operator = "IN";
@@ -1075,33 +1106,75 @@ abstract class Base
                 $operator = 'NOT IN';
             }
             if (count($arr)) {
-                $join .= " " . $operator . " (" . implode(', ', $arr) . ")";
+                $sql .= " " . $operator . " (" . implode(', ', $arr) . ")";
             } else {
                 if ($operator === 'IN') {
-                    $join .= " IS NULL";
+                    $sql .= " IS NULL";
                 } else {
-                    $join .= " IS NOT NULL";
+                    $sql .= " IS NOT NULL";
                 }
             }
-        } else {
-            $join .= " " . $operator . " " . $this->pdo->quote($v);
-        }
+            return $sql;
 
-        return $join;
+        } else {
+            $value = $right;
+            if (is_null($value)) {
+                if ($operator === '=') {
+                    $sql .= " IS NULL";
+                } else if ($operator === '<>') {
+                    $sql .= " IS NOT NULL";
+                }
+                return $sql;
+            }
+
+            if ($isNotValue) {
+                $rightPart = $this->convertComplexExpression($entity, $value);
+                $sql .= " " . $operator . " " . $rightPart;
+
+                return $sql;
+            }
+
+            $sql .= " " . $operator . " " . $this->pdo->quote($value);
+
+            return $sql;
+        }
     }
 
-    protected function getJoinRelated(IEntity $entity, $relationName, $left = false, $conditions = array(), $joinAlias = null)
+    protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
     {
+        $prefix = ($left) ? 'LEFT ' : '';
+
+        if (!$entity->hasRelation($name)) {
+            if (!$alias) {
+                $alias = $this->sanitize($name);
+            }
+            $table = $this->toDb($this->sanitize($name));
+
+            $sql = $prefix . "JOIN `{$table}` AS `{$alias}` ON";
+
+            if (empty($conditions)) return '';
+
+            $joinSqlList = [];
+            foreach ($conditions as $left => $right) {
+                $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+            }
+            if (count($joinSqlList)) {
+                $sql .= " " . implode(" AND ", $joinSqlList);
+            }
+
+            return $sql;
+        }
+
+        $relationName = $name;
+
         $relOpt = $entity->relations[$relationName];
         $keySet = $this->getKeys($entity, $relationName);
 
-        if (!$joinAlias) {
-            $joinAlias = $relationName;
+        if (!$alias) {
+            $alias = $relationName;
         }
 
-        $joinAlias = $this->sanitize($joinAlias);
-
-        $pre = ($left) ? 'LEFT ' : '';
+        $alias = $this->sanitize($alias);
 
         $type = $relOpt['type'];
 
@@ -1117,64 +1190,77 @@ abstract class Base
 
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $alias = $joinAlias;
-
                 $midAlias = $alias . 'Middle';
 
-                $join =
-                    "{$pre}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+                $sql =
+                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     $conditions = array_merge($conditions, $relOpt['conditions']);
                 }
-                foreach ($conditions as $f => $v) {
-                    $join .= $this->buildJoinConditionStatement($midAlias, $f, $v);
+
+                $joinSqlList = [];
+                foreach ($conditions as $left => $right) {
+                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right);
+                }
+                if (count($joinSqlList)) {
+                    $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                $join .= " {$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-                return $join;
+                return $sql;
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $alias = $joinAlias;
-
-                $join =
-                    "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                $sql =
+                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-                foreach ($conditions as $f => $v) {
-                    $join .= $this->buildJoinConditionStatement($alias, $f, $v);
+
+                $joinSqlList = [];
+                foreach ($conditions as $left => $right) {
+                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+                }
+                if (count($joinSqlList)) {
+                    $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                return $join;
+                return $sql;
 
             case IEntity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
                 $foreignType = $keySet['foreignType'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $alias = $joinAlias;
-
-                $join =
-                    "{$pre}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                $sql =
+                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
                     . " AND "
                     . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
 
-                return $join;
+                $joinSqlList = [];
+                foreach ($conditions as $left => $right) {
+                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+                }
+                if (count($joinSqlList)) {
+                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+                }
+
+                return $sql;
 
             case IEntity::BELONGS_TO:
-                return $pre . $this->getBelongsToJoin($entity, $relationName, null, $joinAlias);
+                $sql = $prefix . $this->getBelongsToJoin($entity, $relationName, null, $alias);
+                return $sql;
         }
 
         return false;
