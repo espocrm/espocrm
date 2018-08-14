@@ -195,7 +195,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 )
             ),
             'createdAt<' => $datetime->format('Y-m-d H:i:s')
-        ))->limit(0, 1000)->find();
+        ))->limit(0, 5000)->find();
 
         foreach ($collection as $e) {
             $this->getEntityManager()->removeEntity($e);
@@ -220,7 +220,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
                 ),
                 'createdAt<' => $datetime->format('Y-m-d H:i:s'),
                 'createdAt>' => '2017-05-10 00:00:00'
-            ))->limit(0, 1000)->find();
+            ))->limit(0, 5000)->find();
 
             foreach ($collection as $e) {
                 $this->getEntityManager()->removeEntity($e);
