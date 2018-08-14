@@ -63,7 +63,7 @@ class EmailTemplate extends Record
         return $this->getInjection('language');
     }
 
-    public function parseTemplate(Entity $emailTemplate, array $params = array(), $copyAttachments = false)
+    public function parseTemplate(Entity $emailTemplate, array $params = [], $copyAttachments = false, $skipAcl = false)
     {
         $entityHash = array();
         if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
@@ -75,9 +75,9 @@ class EmailTemplate extends Record
         }
 
         if (!empty($params['emailAddress'])) {
-            $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where(array(
+            $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where([
                 'lower' => $params['emailAddress']
-            ))->findOne();
+            ])->findOne();
 
             $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($params['emailAddress']);
 
@@ -121,10 +121,10 @@ class EmailTemplate extends Record
         $body = $emailTemplate->get('body');
 
         foreach ($entityHash as $type => $entity) {
-            $subject = $this->parseText($type, $entity, $subject);
+            $subject = $this->parseText($type, $entity, $subject, false, null, $skipAcl);
         }
         foreach ($entityHash as $type => $entity) {
-            $body = $this->parseText($type, $entity, $body);
+            $body = $this->parseText($type, $entity, $body, false, null, $skipAcl);
         }
 
         $attachmentsIds = array();
@@ -173,11 +173,15 @@ class EmailTemplate extends Record
         return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
-    protected function parseText($type, Entity $entity, $text, $skipLinks = false, $prefixLink = null)
+    protected function parseText($type, Entity $entity, $text, $skipLinks = false, $prefixLink = null, $skipAcl = false)
     {
         $fieldList = array_keys($entity->getAttributes());
 
-        $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        if ($skipAcl) {
+            $forbiddenAttributeList = [];
+        } else {
+            $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        }
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenAttributeList)) continue;
@@ -238,13 +242,11 @@ class EmailTemplate extends Record
                         if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
                     }
 
-                    $text = $this->parseText($type, $relatedEntity, $text, true, $relation);
+                    $text = $this->parseText($type, $relatedEntity, $text, true, $relation, $skipAcl);
                 }
             }
         }
 
-
         return $text;
     }
 }
-

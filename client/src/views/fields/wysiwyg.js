@@ -297,9 +297,13 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                             });
                         }, 40);
 
+                        var windowWidth = $(window).width();
                         $(window).off('resize.' + this.cid);
                         $(window).on('resize.' + this.cid, function() {
-                            processHeight();
+                            if ($(window).width() != windowWidth) {
+                                processHeight();
+                                windowWidth = $(window).width();
+                            }
                         }.bind(this));
                     }
 
