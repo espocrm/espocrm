@@ -41,6 +41,8 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsBeforeSaveDisabled = true;
 
+    protected $processFieldsAfterRemoveDisabled = true;
+
     public function storeEntityAttribute(Entity $entity, $attribute, $populateMode = false)
     {
         if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
@@ -90,6 +92,22 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
                 'value' => $value
             ]);
             $this->save($arrayValue);
+        }
+    }
+
+    public function deleteEntityAttribute(Entity $entity, $attribute)
+    {
+        if (!$entity->id) {
+            throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");
+        }
+        $list = $this->select(['id'])->where([
+            'entityType' => $entity->getEntityType(),
+            'entityId' => $entity->id,
+            'attribute' => $attribute
+        ])->find();
+
+        foreach ($list as $arrayValue) {
+            $this->deleteFromDb($arrayValue->id);
         }
     }
 }

@@ -39,6 +39,8 @@ class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsBeforeSaveDisabled = true;
 
+    protected $processFieldsAfterRemoveDisabled = true;
+
     protected function getNewEntity()
     {
         $entity = parent::getNewEntity();

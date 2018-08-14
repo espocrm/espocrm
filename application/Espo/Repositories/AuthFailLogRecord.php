@@ -38,4 +38,6 @@ class AuthFailLogRecord extends \Espo\Core\ORM\Repositories\RDB
     protected $processFieldsAfterSaveDisabled = true;
 
     protected $processFieldsBeforeSaveDisabled = true;
+
+    protected $processFieldsAfterRemoveDisabled = true;
 }

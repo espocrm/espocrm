@@ -55,6 +55,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected $processFieldsBeforeSaveDisabled = false;
 
+    protected $processFieldsAfterRemoveDisabled = false;
+
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;
@@ -206,6 +208,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterRemove(Entity $entity, array $options = array())
     {
         parent::afterRemove($entity, $options);
+
+        if (!$this->processFieldsAfterRemoveDisabled) {
+            $this->processArrayFieldsRemove($entity);
+        }
+
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRemove', $entity, $options);
         }
@@ -415,6 +422,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
             if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
             $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
+        }
+    }
+
+    protected function processArrayFieldsRemove(Entity $entity)
+    {
+        foreach ($entity->getAttributes() as $attribute => $defs) {
+            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
+            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
+            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
+            $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
         }
     }
 
