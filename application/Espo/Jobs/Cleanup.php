@@ -45,7 +45,7 @@ class Cleanup extends \Espo\Core\Jobs\Base
 
     protected $cleanupRemovedNotesPeriod = '2 months';
 
-    protected $cleanupAttachmentsPeriod = '1 month';
+    protected $cleanupAttachmentsPeriod = '15 days';
 
     protected $cleanupAttachmentsFromPeriod = '3 months';
 
