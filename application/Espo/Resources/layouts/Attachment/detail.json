@@ -1,0 +1,19 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}, {"name": "role"}
+            ],
+            [
+                {"name": "parent"}, {"name": "related"}
+            ],
+            [
+                {"name": "type"}, {"name": "field"}
+            ],
+            [
+                {"name": "storage"}, {"name": "sourceId"}
+            ]
+        ]
+    }
+
+]

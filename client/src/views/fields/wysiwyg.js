@@ -342,6 +342,9 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 attachment.set('role', 'Inline Attachment');
                                 attachment.set('global', true);
                                 attachment.set('size', file.size);
+                                if (this.model.id) {
+                                    attachment.set('relatedId', this.model.id);
+                                }
                                 attachment.set('relatedType', this.model.name);
                                 attachment.set('file', e.target.result);
                                 attachment.set('field', this.name);

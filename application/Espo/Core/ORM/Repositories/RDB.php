@@ -295,6 +295,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $this->processSpecifiedRelationsSave($entity);
             $this->processFileFieldsSave($entity);
             $this->processArrayFieldsSave($entity);
+            $this->processWysiwygFieldsSave($entity);
         }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
@@ -422,6 +423,35 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
             if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
             $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
+        }
+    }
+
+    protected function processWysiwygFieldsSave(Entity $entity)
+    {
+        if (!$entity->isNew()) return;
+
+        $fieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        foreach ($fieldsDefs as $field => $defs) {
+            if (!empty($defs['type']) && $defs['type'] === 'wysiwyg') {
+                $content = $entity->get($field);
+                if (!$content) continue;
+                if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $content, $matches)) {
+                    if (!empty($matches[1]) && is_array($matches[1])) {
+                        foreach ($matches[1] as $id) {
+                            $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+                            if ($attachment) {
+                                if (!$attachment->get('relatedId') && !$attachment->get('sourceId')) {
+                                    $attachment->set([
+                                        'relatedId' => $entity->id,
+                                        'relatedType' => $entity->getEntityType()
+                                    ]);
+                                    $this->getEntityManager()->saveEntity($attachment);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

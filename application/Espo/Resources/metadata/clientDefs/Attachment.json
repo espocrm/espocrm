@@ -1,0 +1,14 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "recordViews": {
+        "list": "views/attachment/record/list",
+        "detail": "views/attachment/record/detail"
+    },
+    "modalViews": {
+        "detail": "views/attachment/modals/detail"
+    },
+    "filterList": [
+        "orphan"
+    ]
+}

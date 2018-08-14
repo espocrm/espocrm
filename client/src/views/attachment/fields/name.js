@@ -23,34 +23,25 @@
  * Section 5 of the GNU General Public License version 3.
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ * these Appropriate Legal Notices must retain the display of tтhe "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/action-history-record/fields/target', 'views/fields/link-parent', function (Dep) {
+Espo.define('views/attachment/fields/name', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue'],
+        detailTemplate: 'attachment/fields/name/detail',
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        data: function () {
+            var data = Dep.prototype.data.call(this);
 
-            var scopes = this.getMetadata().get('scopes') || {};
-            this.foreignScopeList = this.getMetadata().getScopeEntityList().filter(function (item) {
+            var url = this.getBasePath() + '?entryPoint=download&id=' + this.model.id;
+            if (this.getUser().get('portalId')) {
+                url += '&portalId=' + this.getUser().get('portalId');
+            }
 
-                if (!this.getUser().isAdmin()) {
-                    if (!this.getAcl().checkScopeHasAcl(item)) return;
-                }
-                if (~this.ignoreScopeList.indexOf(item)) return;
-
-                if (!this.getAcl().checkScope(item)) return;
-
-                return true;
-            }, this);
-
-            this.getLanguage().sortEntityList(this.foreignScopeList);
-
-            this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
+            data.url = url;
+            return data;
         }
 
     });

@@ -58,7 +58,8 @@
         "Email Filters": "Email Filters",
         "Action History": "Action History",
         "Label Manager": "Label Manager",
-        "Lead Capture": "Lead Capture"
+        "Lead Capture": "Lead Capture",
+        "Attachments": "Attachments"
     },
     "layouts": {
         "list": "List",
@@ -215,7 +216,8 @@
         "actionHistory": "Log of user actions.",
         "labelManager": "Customize application labels.",
         "authLog": "Login history.",
-        "leadCapture": "API entry points for Web-to-Lead."
+        "leadCapture": "API entry points for Web-to-Lead.",
+        "attachments": "All file attachments stored in the system."
     },
     "options": {
         "previewSize": {

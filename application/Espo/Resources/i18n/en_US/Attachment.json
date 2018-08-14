@@ -1,5 +1,27 @@
 {
+    "fields": {
+        "role": "Role",
+        "related": "Related",
+        "file": "File",
+        "type": "Type",
+        "field": "Field",
+        "sourceId": "Source ID",
+        "storage": "Storage"
+    },
+    "options": {
+        "role": {
+            "Attachment": "Attachment",
+            "Inline Attachment": "Inline Attachment",
+            "Import File": "Import File",
+            "Export File": "Export File",
+            "Mail Merge": "Mail Merge",
+            "Mass Pdf": "Mass Pdf"
+        }
+    },
     "insertFromSourceLabels": {
         "Document": "Insert Document"
+    },
+    "presetFilters": {
+        "orphan": "Orphan"
     }
 }

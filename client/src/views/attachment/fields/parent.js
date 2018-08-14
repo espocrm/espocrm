@@ -23,14 +23,14 @@
  * Section 5 of the GNU General Public License version 3.
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ * these Appropriate Legal Notices must retain the display of tтhe "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/action-history-record/fields/target', 'views/fields/link-parent', function (Dep) {
+Espo.define('views/attachment/fields/parent', 'views/fields/link-parent', function (Dep) {
 
     return Dep.extend({
 
-        ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue'],
+        ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue', 'Attachment'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
