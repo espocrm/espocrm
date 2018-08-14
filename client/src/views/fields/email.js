@@ -274,9 +274,9 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             });
 
             if (c == $input.size()) {
-                this.$el.find('[data-action="addEmailAddress"]').removeClass('disabled');
+                this.$el.find('[data-action="addEmailAddress"]').removeClass('disabled').removeAttr('disabled');
             } else {
-                this.$el.find('[data-action="addEmailAddress"]').addClass('disabled');
+                this.$el.find('[data-action="addEmailAddress"]').addClass('disabled').attr('disabled', 'disabled');
             }
         },
 

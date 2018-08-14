@@ -209,9 +209,9 @@ Espo.define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             });
 
             if (c == $input.size()) {
-                this.$el.find('[data-action="addPhoneNumber"]').removeClass('disabled');
+                this.$el.find('[data-action="addPhoneNumber"]').removeClass('disabled').removeAttr('disabled');
             } else {
-                this.$el.find('[data-action="addPhoneNumber"]').addClass('disabled');
+                this.$el.find('[data-action="addPhoneNumber"]').addClass('disabled').attr('disabled', 'disabled');
             }
         },
 
