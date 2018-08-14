@@ -309,7 +309,7 @@ Espo.define('view-helper', [], function () {
             }
 
             if (!noWhiteSpace) {
-                if (html) html += ' ';
+                if (html) html += '&nbsp;';
             }
 
             return html;
