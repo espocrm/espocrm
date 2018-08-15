@@ -1811,14 +1811,11 @@ class Record extends \Espo\Core\Services\Base
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
         $attachment->set('type', $mimeType);
+        $attachment->set('contents', $contents);
 
         $this->getEntityManager()->saveEntity($attachment);
 
-        if (!empty($attachment->id)) {
-            $this->getInjection('fileStorageManager')->putContents($attachment, $contents);
-            return $attachment->id;
-        }
-        throw new Error();
+        return $attachment->id;
     }
 
     protected function getAttributeFromEntityForExport(Entity $entity, $attribute)

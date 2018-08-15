@@ -11,6 +11,9 @@
                 {"name": "type"}, {"name": "field"}
             ],
             [
+                {"name": "size"}, false
+            ],
+            [
                 {"name": "storage"}, {"name": "sourceId"}
             ]
         ]

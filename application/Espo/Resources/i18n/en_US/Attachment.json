@@ -6,7 +6,8 @@
         "type": "Type",
         "field": "Field",
         "sourceId": "Source ID",
-        "storage": "Storage"
+        "storage": "Storage",
+        "size": "Size (bytes)"
     },
     "options": {
         "role": {

@@ -90,9 +90,8 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment->set('type', 'text/csv');
         $attachment->set('role', 'Import File');
         $attachment->set('name', 'import-file.csv');
+        $attachment->set('contents', $contents);
         $this->getEntityManager()->saveEntity($attachment);
-
-        $this->getFileStorageManager()->putContents($attachment, $contents);
 
         return array(
             'attachmentId' => $attachment->id
