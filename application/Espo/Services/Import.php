@@ -128,7 +128,6 @@ class Import extends \Espo\Services\Record
             throw new Forbidden();
         }
 
-
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
@@ -296,21 +295,38 @@ class Import extends \Espo\Services\Record
         return true;
     }
 
-    public function runIdleImport($data)
+    public function jobRunIdleImport($data)
     {
+        if (
+            empty($data->userId) ||
+            empty($data->userId) ||
+            !isset($data->importAttributeList) ||
+            !isset($data->params) ||
+            !isset($data->entityType)
+        ) {
+            throw new Error("Import: Bad job data.");
+        }
+
         $entityType = $data->entityType;
-
         $params = json_decode(json_encode($data->params), true);
-
-        $importAttributeList = $data->importAttributeList;
         $attachmentId = $data->attachmentId;
-
         $importId = $data->importId;
+        $importAttributeList = $data->importAttributeList;
+        $userId = $data->userId;
 
-        $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId);
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        if (!$user) {
+            throw new Error("Import: User not found.");
+        }
+        if (!$user->get('isActive')) {
+            throw new Error("Import: User is not active.");
+        }
+
+        $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId, $user);
     }
 
-    public function import($scope, array $importAttributeList, $attachmentId, array $params = array(), $importId = null)
+    public function import($scope, array $importAttributeList, $attachmentId, array $params = array(), $importId = null, $user = null)
     {
         $delimiter = ',';
         if (!empty($params['fieldDelimiter'])) {
@@ -319,6 +335,19 @@ class Import extends \Espo\Services\Record
         $enclosure = '"';
         if (!empty($params['textQualifier'])) {
             $enclosure = $params['textQualifier'];
+        }
+
+        if (!$user) {
+            $user = $this->getUser();
+        }
+
+        if (!$user->isAdmin()) {
+            $forbiddenAttrbuteList = $this->getAclManager()->getScopeForbiddenAttributeList($user, $scope, 'edit');
+            foreach ($importAttributeList as $i => $attribute) {
+                if (in_array($attribute, $forbiddenAttrbuteList)) {
+                    unset($importAttributeList[$i]);
+                }
+            }
         }
 
         $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
@@ -334,7 +363,7 @@ class Import extends \Espo\Services\Record
         if ($importId) {
             $import = $this->getEntityManager()->getEntity('Import', $importId);
             if (!$import) {
-                throw new Error('Import error: Could not find import record.');
+                throw new Error('Import: Could not find import record.');
             }
         } else {
             $import = $this->getEntityManager()->getEntity('Import');
@@ -353,34 +382,35 @@ class Import extends \Espo\Services\Record
             $params['idleMode'] = false;
 
             $job = $this->getEntityManager()->getEntity('Job');
-            $job->set(array(
+            $job->set([
                 'serviceName' => 'Import',
-                'methodName' => 'runIdleImport',
-                'data' => array(
+                'methodName' => 'jobRunIdleImport',
+                'data' => [
                     'entityType' => $scope,
                     'params' => $params,
                     'attachmentId' => $attachmentId,
                     'importAttributeList' => $importAttributeList,
-                    'importId' => $import->id
-                )
-            ));
+                    'importId' => $import->id,
+                    'userId' => $this->getUser()->id
+                ]
+            ]);
             $this->getEntityManager()->saveEntity($job);
 
-            return array(
+            return [
                 'id' => $import->id,
                 'countCreated' => 0,
                 'countUpdated' => 0
-            );
+            ];
         }
 
         try {
             $pdo = $this->getEntityManager()->getPDO();
 
-            $result = array(
-                'importedIds' => array(),
-                'updatedIds' => array(),
-                'duplicateIds' => array()
-            );
+            $result = [
+                'importedIds' => [],
+                'updatedIds' => [],
+                'duplicateIds' => []
+            ];
             $i = -1;
 
             $contents = str_replace("\r\n", "\n", $contents);
