@@ -35,6 +35,7 @@ use Espo\Core\Utils\Util;
 
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\BadRequest;
+use \Espo\Core\Exceptions\Error;
 
 class LeadCapture extends Record
 {
