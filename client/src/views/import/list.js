@@ -36,9 +36,9 @@ Espo.define('views/import/list', 'views/list', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.menu.buttons.unshift({
-                label: this.translate('Import', 'scopeNames'),
+                html: 'New Import',
                 link: '#Import',
-                style: 'danger',
+                style: 'primary',
                 acl: 'edit'
             });
         }

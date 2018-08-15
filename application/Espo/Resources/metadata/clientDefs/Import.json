@@ -1,12 +1,12 @@
 {
     "controller": "controllers/import",
     "recordViews": {
-        "list":"Import.Record.List",
-        "detail": "Import.Record.Detail"
+        "list": "import/record/list"
+        "detail": "import/record/detail"
     },
     "views": {
-    	"list": "Import.List",
-    	"detail": "Import.Detail"
+    	"list": "views/import/list",
+    	"detail": "views/import/detail"
     },
     "bottomPanels": {
     	"detail": [
