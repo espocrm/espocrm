@@ -1493,12 +1493,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.remove(model);
                 this.notify('Removing...');
                 model.destroy({
+                    wait: true,
                     success: function () {
                         this.notify('Removed', 'success');
                         this.removeRecordFromList(id);
                     }.bind(this),
                     error: function () {
                         this.notify('Error occured', 'error');
+                        this.collection.push(model);
                     }.bind(this)
                 });
             }, this);
