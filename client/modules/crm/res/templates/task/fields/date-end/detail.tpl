@@ -1,7 +1,1 @@
-{{#if isOverdue}}
-    <span class="text-danger">
-{{/if}}
-{{dateValue}}
-{{#if isOverdue}}
-    </span>
-{{/if}}
+{{#if dateValue}}<span{{#if isOverdue}} class="text-danger"{{/if}} title="{{dateValue}}">{{dateValue}}</span>{{/if}}
