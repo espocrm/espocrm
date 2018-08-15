@@ -293,6 +293,7 @@ Espo.define(
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
                 } catch (e) {
+                    console.log(e);
                     switch (e.name) {
                         case 'AccessDenied':
                             this.baseController.error403();
